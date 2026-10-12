@@ -1,0 +1,6 @@
+# Local state: the fact journal, raw HTTP cache, price snapshots, briefs.
+# Only small aggregates (research ledger, results, universe) are committed.
+var/
+__pycache__/
+*.pyc
+.pytest_cache/
