@@ -17,6 +17,7 @@ def run(bank: Bank) -> tuple[list[str], list[str]]:
         facts = bank.facts(e, include_downgraded=True)
         errors += bank.journal_errors
         bank.journal_errors = []
+        errors += bank.verify(e)
         if bank.digest(e) != bank.replay_digest(e):
             errors.append(f"{e}: state differs from journal replay")
         for f in facts:

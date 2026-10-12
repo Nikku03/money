@@ -7,8 +7,8 @@ that reasons through a View cannot see the future. Restatements are new facts
 with a later ``known_at``; nothing is overwritten.
 
 Journal: one JSONL shard per entity under ``<home>/bank/``. Ops are ``add`` and
-``downgrade``. State is rebuilt by replaying the journal; ``check`` verifies
-that every stored id still matches its content.
+``downgrade``. State is rebuilt by replaying the journal. Stored ids are trusted
+on load; ``Bank.verify`` (run by ``brain check``) recomputes them from content.
 """
 from __future__ import annotations
 
@@ -67,9 +67,16 @@ class Fact:
             "source": self.source, "context": self.context, "inputs": list(self.inputs),
         }
 
+    def content_id(self) -> str:
+        return hashlib.sha256(canon(self.content()).encode()).hexdigest()[:20]
+
     @property
     def id(self) -> str:
-        return hashlib.sha256(canon(self.content()).encode()).hexdigest()[:20]
+        fid = self.__dict__.get("_id")
+        if fid is None:
+            fid = self.content_id()
+            object.__setattr__(self, "_id", fid)
+        return fid
 
     @property
     def ref(self) -> str:
@@ -149,8 +156,9 @@ class Bank:
         if op == "add":
             f = Fact.from_dict(rec["fact"])
             stored = rec["fact"].get("id")
-            if stored and stored != f.id:
-                self.journal_errors.append(f"{where}: stored id {stored} != content id {f.id}")
+            if stored:
+                # Trusted on load for speed; `verify` (run by `brain check`) recomputes every id.
+                object.__setattr__(f, "_id", stored)
             self._insert(entity, f)
         elif op == "downgrade":
             if rec["id"] not in self._facts[entity]:
@@ -238,6 +246,13 @@ class Bank:
             h.update(fid.encode())
             h.update(b"D" if fid in self._down[entity] else b"A")
         return h.hexdigest()
+
+    def verify(self, entity: str) -> list[str]:
+        """Recompute every fact's id from its content; a mismatch means the journal was altered."""
+        entity = entity.upper()
+        self._load(entity)
+        return [f"{self.shard(entity).name}: stored id {fid} != content id {f.content_id()}"
+                for fid, f in self._facts[entity].items() if f.content_id() != fid]
 
     def replay_digest(self, entity: str) -> str:
         """Digest of the state rebuilt from the journal file alone."""
