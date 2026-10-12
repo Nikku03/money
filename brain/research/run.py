@@ -142,16 +142,19 @@ def report() -> str:
         "Gate (declared before running): TEST mean net excess > 0, permutation p < 0.05, and Benjamini–Hochberg "
         "q < 0.10 across every hypothesis in the ledger.",
         "",
-        "| Hypothesis | TEST net excess / mo | Annualised | Info ratio | Months won | Perm p | BH q | TRAIN net excess / mo | TRAIN p | Verdict |",
-        "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+        "| Hypothesis | TEST net excess / mo | Annualised | Info ratio | Months won | Perm p | BH q | TRAIN net excess / mo | TRAIN p | TEST coverage | Verdict |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
     ]
     for r in rows:
         te, tr = r["test"], r["train"]
         lines.append(
             f"| {r['id']} | {_pct(te['mean_net_excess'])} | {_pct(te['ann_net_excess'], 1)} | {te['info_ratio']:.2f} | "
             f"{te['months_beating_benchmark']}/{te['n_months']} | {te['perm_p']:.4f} | {r['bh_q']:.3f} | "
-            f"{_pct(tr['mean_net_excess'])} | {tr['perm_p']:.4f} | **{r['verdict']}** |")
+            f"{_pct(tr['mean_net_excess'])} | {tr['perm_p']:.4f} | {r.get('test_signal_coverage', float('nan')) * 100:.0f}% | "
+            f"**{r['verdict']}** |")
     lines += [
+        "",
+        "TEST coverage is the share of listed stock-months with a signal value; the rest are not ranked.",
         "",
         "## Controls",
         "",
@@ -169,6 +172,8 @@ def report() -> str:
         "level, not the tilt: survivorship still flatters momentum and growth, and hurts value. A PASS here is an "
         "upper bound.",
         "",
+        *(["## Ledger notes", ""] + [f"- {n['at'][:10]}: {n['text']}" for n in ledger.read() if n["op"] == "note"] + [""]
+          if any(n["op"] == "note" for n in ledger.read()) else []),
         "## Reading this",
         "",
         "- FAIL means the claim did not beat a shuffled signal on unseen months after costs. It does not mean the "

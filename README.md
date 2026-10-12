@@ -30,13 +30,29 @@ One rule did **not** carry over. The cell project split TRAIN and TEST by hashin
 
 Each fact has two dates. `as_of` is what it describes (the quarter that ended 2024-06-30). `known_at` is when the public could first know it (the 10-Q filed 2024-07-31). `bank.view(t)` shows only facts with `known_at <= t`, and every signal and metric reads through a view. A backtest on 2015-03-31 therefore sees 2015's filings, including numbers that were later restated, and never sees 2016's. Most backtests that look too good fail on exactly this.
 
+## What the evidence says so far
+
+First run, 2026-10-12 (`research/RESULTS.md`): **none of the five declared ideas beat a shuffled signal on the 2019–2026 TEST months after costs.**
+
+| Idea | TEST net excess / month | Perm p | Verdict |
+| --- | --- | --- | --- |
+| 12-1 month momentum | +0.11% | 0.18 | FAIL |
+| 1-month reversal | −0.01% | 0.21 | FAIL |
+| Earnings yield (value) | −0.23% | 0.87 | FAIL |
+| Low asset growth | −0.11% | 0.74 | FAIL |
+| Ridge learner on all four | +0.19% | 0.051 | FAIL (BH q 0.26) |
+
+The controls passed: the harness finds a planted edge (oracle p = 0.0005), and random signals pass 3% of the time, near the nominal 5%. So these FAILs are real negatives for this universe, not a broken instrument. As in the cell project, the generic learner came closest, but closest is not a pass.
+
+What this means for making money: textbook signals applied to 60 mega-caps that everyone watches do not carry an edge you can detect after costs. Survivorship alone is worth more than any of them: the equal-weight universe returned 27% a year against SPY's 18%, purely because it was chosen with hindsight. That hindsight is exactly what a real trader doesn't have. Any edge is more likely to come from information the market prices slowly: better data (measured, specific facts, as in the cell project), less-watched stocks, or events. That needs new hypotheses, and each one goes through the same gate.
+
 ## Quick start
 
 ```
 export SEC_USER_AGENT="Your Name your@email.com"
 python -m unittest discover -s tests -t .
 python -m brain ingest AAPL                 # SEC facts, filings, prices, headlines
-python -m brain macro                       # FRED rates, spreads, CPI
+python -m brain macro                       # FRED rates, spreads, CPI (needs FRED_API_KEY)
 python -m brain brief AAPL                  # cited brief -> var/briefs/AAPL.md
 python -m brain ask AAPL us-gaap:NetIncomeLoss --at 2015-06-30   # what was known then
 python -m brain note AAPL "Analyst X cuts to sell on China demand" \
@@ -78,9 +94,11 @@ Requires Python 3.11+, numpy and pandas. Local state lives in `var/` (gitignored
 | SEC EDGAR | Financial statements, filings, identity | US government, public domain. Requires a User-Agent with contact details; at most 10 requests/s |
 | Yahoo Finance chart API | Daily prices, splits | Unofficial, personal research only. Snapshots stay in `var/` and are never committed |
 | Yahoo Finance RSS | Headlines | Links and titles only |
-| FRED | Macro context in briefs | Mostly public domain; revised series are flagged and kept out of backtests |
+| FRED (official API, free key in `FRED_API_KEY`) | Macro context in briefs | Mostly public domain; revised series are flagged and kept out of backtests |
 
 ## Known limits
+
+- Earnings yield covers 85% of TEST stock-months. Some companies tag net income or diluted shares with concepts outside the curated list (see the ledger note). The fix must be declared as a new hypothesis.
 
 - **Survivorship.** The universe is chosen by today's market value, so every member survived and grew. Results report the size of the effect and treat any PASS as an upper bound. Fixing this needs delisted-company price data, which free sources don't provide.
 - Annual fundamentals only for signals (latest 10-K). A trailing-twelve-month version needs quarter arithmetic (Q4 = FY − 9-month YTD).

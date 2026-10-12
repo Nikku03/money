@@ -38,7 +38,8 @@ def append(rec: dict, path=None) -> None:
 
 def git_state() -> dict:
     try:
-        sha = subprocess.run(["git", "rev-parse", "HEAD"], cwd=config.ROOT, capture_output=True, text=True).stdout.strip()
+        r = subprocess.run(["git", "rev-parse", "--verify", "-q", "HEAD"], cwd=config.ROOT, capture_output=True, text=True)
+        sha = r.stdout.strip() if r.returncode == 0 else ""
         dirty = subprocess.run(["git", "status", "--porcelain", "--", "brain"], cwd=config.ROOT,
                                capture_output=True, text=True).stdout.strip()
         return {"commit": sha or None, "brain_dirty": bool(dirty)}
@@ -81,6 +82,11 @@ def latest_results(path=None) -> dict[str, dict]:
         if r["op"] == "result":
             out[r["id"]] = r
     return out
+
+
+def note(text: str, path=None) -> None:
+    """A dated amendment that changes no declaration or result."""
+    append({"op": "note", "text": text, "at": now_iso(), **git_state()}, path)
 
 
 def withdraw(hid: str, reason: str, path=None) -> None:

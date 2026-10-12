@@ -13,7 +13,7 @@ python -m brain check                              # bank invariants; exit 0 = O
 ## Looking into a target (a company or ticker)
 
 1. `python -m brain ingest TICKER`: SEC XBRL financials, the filings list, daily prices and headlines.
-2. `python -m brain macro`: rates, spreads and inflation from FRED.
+2. `python -m brain macro`: rates, spreads and inflation from FRED (needs a free `FRED_API_KEY`).
 3. Read the web for what the bank lacks: earnings call coverage, guidance, product news, regulatory actions, analyst views. For each finding:
    ```
    python -m brain note TICKER "what the page says, in one line" \
