@@ -3,6 +3,11 @@
 Citations look like [ab12cd34]: the first 8 characters of a fact id. ``python -m
 brain show <TICKER> <id-prefix>`` prints the full fact with its source URL. Derived
 numbers are written back to the bank as tier-"derived" facts that cite their inputs.
+
+The pieces are shared with the terminal (``brain/terminal/data.py``): the price
+summary, the derived metrics (computed and written once, here), the filing
+descriptions and the signal evidence. A number on a terminal screen is the number
+in the brief.
 """
 from __future__ import annotations
 
@@ -12,16 +17,19 @@ import math
 import numpy as np
 
 from brain import config, metrics
-from brain.bank import Bank
+from brain.bank import Bank, Fact
 from brain.metrics import M, PriceBook, annual
 from brain.sources.fred import DEFAULT as FRED_SERIES
 from brain.sources.sec import REVENUE
 from brain.timeutil import days_between, now_iso
 
-ITEMS_8K = {"1.01": "material agreement", "1.02": "agreement ended", "2.01": "acquisition/disposal",
-            "2.02": "results", "2.03": "new debt", "2.05": "restructuring", "2.06": "impairment",
-            "3.01": "listing notice", "4.01": "auditor change", "4.02": "non-reliance on past financials",
-            "5.01": "change of control", "5.02": "officer/director change", "5.07": "shareholder vote",
+ITEMS_8K = {"1.01": "material agreement", "1.02": "agreement ended", "1.03": "bankruptcy", "1.04": "mine safety",
+            "1.05": "cybersecurity incident", "2.01": "acquisition/disposal", "2.02": "results", "2.03": "new debt",
+            "2.04": "debt acceleration", "2.05": "restructuring", "2.06": "impairment", "3.01": "listing notice",
+            "3.02": "unregistered equity sale", "3.03": "holders' rights changed", "4.01": "auditor change",
+            "4.02": "non-reliance on past financials", "5.01": "change of control", "5.02": "officer/director change",
+            "5.03": "charter/bylaw change", "5.04": "benefit-plan trading halt", "5.05": "code of ethics change",
+            "5.06": "shell status change", "5.07": "shareholder vote", "5.08": "director nominations",
             "7.01": "Reg FD", "8.01": "other event", "9.01": "exhibits"}
 
 DERIVED_LABELS = {"market_cap": "Market value", "earnings_yield": "Earnings yield", "revenue_growth": "Revenue growth",
@@ -30,6 +38,28 @@ DERIVED_LABELS = {"market_cap": "Market value", "earnings_yield": "Earnings yiel
 
 SIGNAL_TO_HYP = {"mom12_1": "H1-mom12_1", "rev1": "H2-rev1", "earnings_yield": "H3-earnings_yield",
                  "low_asset_growth": "H4-low_asset_growth"}
+
+IDENTITY = (("identity.industry", "Industry"), ("identity.exchanges", "Exchange"),
+            ("identity.fiscal_year_end", "Fiscal year ends (MMDD)"), ("identity.cik", "SEC CIK"),
+            ("identity.website", "Website"))
+INSIDER_FORMS = ("4", "3", "5", "144")
+REPORT_FORMS = ("10-K", "10-Q", "8-K", "20-F", "40-F", "6-K", "10-KT", "10-QT", "DEF 14A")
+
+
+def notable_filing(form) -> bool:
+    """The company's own annual, quarterly and current reports and its proxy (amendments included): what a
+    summary leads with. Everything else stays in the full list (terminal CF): insider and ownership
+    reports, and offering paperwork, of which a bank files several a day (JPM's latest 400 filings
+    were all 424B2, 424B3 or FWP)."""
+    return str(form).upper().split("/")[0] in REPORT_FORMS
+
+
+def identity_value(f: Fact):
+    """An identity fact's value for display. SEC lists one exchange per listed security, so a bank with
+    preferred shares reads "NYSE,NYSE,NYSE,..."; repeats are dropped."""
+    if f.attr == "identity.exchanges" and isinstance(f.value, str):
+        return ", ".join(dict.fromkeys(x.strip() for x in f.value.split(",") if x.strip()))
+    return f.value
 
 
 def cite(*facts) -> str:
@@ -82,6 +112,65 @@ def _quarter(view, t, attrs):
     return cur, (prev[-1] if prev else None)
 
 
+def price_stats(d, c, a, per_year: int = 252) -> dict | None:
+    """Price summary from dates, closes (split-adjusted) and dividend-adjusted closes, all already cut
+    at a view's date. Returns and volatility use ``a`` (total return); levels use ``c``. ``per_year``
+    is sessions per year: 252, or 365 for assets that trade every day, so "1 month" means a month."""
+    if len(a) < 2:
+        return None
+
+    def ret(n):
+        return float(a[-1] / a[-1 - n] - 1) if len(a) > n else float("nan")
+    lr = np.diff(np.log(a[-(per_year + 1):]))
+    prior = int(np.searchsorted(d, str(d[-1])[:4] + "-01-01")) - 1  # last close of the previous year
+    return {"close": float(c[-1]), "date": str(d[-1]), "chg_1d": ret(1), "chg_5d": ret(round(5 * per_year / 252)),
+            "ret_1m": ret(round(per_year / 12)), "ret_3m": ret(round(per_year / 4)),
+            "ret_ytd": float(a[-1] / a[max(prior, 0)] - 1), "ret_12m": ret(per_year),
+            "vol_12m": float(lr.std() * np.sqrt(per_year)), "from_high_12m": float(a[-1] / a[-per_year:].max() - 1),
+            "high_12m": float(c[-per_year:].max()), "low_12m": float(c[-per_year:].min())}
+
+
+def price_summary(view, book: PriceBook, t: str, per_year: int = 252) -> dict | None:
+    """:func:`price_stats` for one ticker in a PriceBook, as of the view's date."""
+    t = t.upper()
+    if not book.has(t):
+        return None
+    d, a = book.adj_upto(view, t)
+    return price_stats(d, book.close[t][: len(a)], a, per_year)
+
+
+def derived(bank: Bank, view, t_: str, book: PriceBook) -> list[tuple[str, M, str | None, Fact]]:
+    """Derived metrics for a ticker as of the view, each written to the bank as a tier-"derived" fact
+    citing its inputs. Returns (name, metric, unit, fact) for the ones that exist."""
+    has_px = book.has(t_)
+    mc = metrics.market_cap(view, t_, book) if has_px else None
+    ey = metrics.earnings_yield(view, t_, book) if has_px else None
+    fcf = metrics.free_cash_flow(view, t_)
+    cand: list[tuple[str, M | None, str | None]] = [
+        ("market_cap", mc, "USD"), ("earnings_yield", ey, "ratio"),
+        ("revenue_growth", metrics.revenue_growth(view, t_), "ratio"),
+        ("net_margin", metrics.ratio(view, t_, "us-gaap:NetIncomeLoss", REVENUE, note="net income / revenue"), "ratio"),
+        ("gross_margin", metrics.ratio(view, t_, "us-gaap:GrossProfit", REVENUE, note="gross profit / revenue"), "ratio"),
+        ("free_cash_flow", fcf, "USD"),
+        ("asset_growth", metrics.asset_growth(view, t_), "ratio")]
+    if fcf and mc and mc.value > 0:
+        cand.append(("fcf_yield", M(fcf.value / mc.value, mc.as_of, [*fcf.inputs, *mc.inputs], "FCF / market value"), "ratio"))
+    out = []
+    for nm, m, unit in cand:
+        if m is None or not math.isfinite(m.value):
+            continue
+        f = metrics.to_fact(t_, nm, m, unit)
+        bank.add(f)
+        out.append((nm, m, unit, f))
+    return out
+
+
+def filing_desc(f) -> str:
+    """8-K item numbers in words ("2.02,9.01" -> "results, exhibits"); empty for other forms."""
+    items = f.context.get("items", "")
+    return ", ".join(ITEMS_8K.get(i.strip(), i.strip()) for i in items.split(",") if i.strip()) if items else ""
+
+
 def build(bank: Bank, ticker: str, t: str | None = None) -> str:
     t_ = ticker.upper()
     view = bank.view(t)
@@ -94,30 +183,21 @@ def build(bank: Bank, ticker: str, t: str | None = None) -> str:
 
     # identity
     rows = []
-    for a, label in (("identity.industry", "Industry"), ("identity.exchanges", "Exchange"),
-                     ("identity.fiscal_year_end", "Fiscal year ends (MMDD)"), ("identity.cik", "SEC CIK"),
-                     ("identity.website", "Website")):
+    for a, label in IDENTITY:
         f = view.latest(t_, a)
         if f:
-            rows.append(f"- {label}: {f.value} {cite(f)}")
+            rows.append(f"- {label}: {identity_value(f)} {cite(f)}")
     if rows:
         L += ["## Identity", "", *rows, ""]
 
     # price
-    if book.has(t_):
-        d, a = book.adj_upto(view, t_)
-        snap = book.snapshot[t_]
-        if len(a) > 1:
-            def ret(n):
-                return a[-1] / a[-1 - n] - 1 if len(a) > n else float("nan")
-            lr = np.diff(np.log(a[-253:]))
-            hi = a[-252:].max()
-            px = book.close_on(view, t_)
-            L += ["## Price", "",
-                  f"- Close {px[1]:,.2f} on {px[0]} {cite(snap)}",
-                  f"- Total return: 1 month {pct(ret(21))}, 3 months {pct(ret(63))}, 12 months {pct(ret(252))}",
-                  f"- Volatility, 12 months annualised: {pct(lr.std() * np.sqrt(252)).lstrip('+')}",
-                  f"- Below 12-month high: {pct(a[-1] / hi - 1)}", ""]
+    ps = price_summary(view, book, t_)
+    if ps:
+        L += ["## Price", "",
+              f"- Close {ps['close']:,.2f} on {ps['date']} {cite(book.snapshot[t_])}",
+              f"- Total return: 1 month {pct(ps['ret_1m'])}, 3 months {pct(ps['ret_3m'])}, 12 months {pct(ps['ret_12m'])}",
+              f"- Volatility, 12 months annualised: {pct(ps['vol_12m']).lstrip('+')}",
+              f"- Below 12-month high: {pct(ps['from_high_12m'])}", ""]
 
     # fundamentals
     rows = []
@@ -147,24 +227,8 @@ def build(bank: Bank, ticker: str, t: str | None = None) -> str:
               "| --- | --- | --- | --- | --- |", *qrows, ""]
 
     # derived, written back to the bank
-    derived: list[tuple[str, M | None, str | None]] = []
-    mc = metrics.market_cap(view, t_, book) if book.has(t_) else None
-    ey = metrics.earnings_yield(view, t_, book) if book.has(t_) else None
-    fcf = metrics.free_cash_flow(view, t_)
-    derived += [("market_cap", mc, "USD"), ("earnings_yield", ey, "ratio"),
-                ("revenue_growth", metrics.revenue_growth(view, t_), "ratio"),
-                ("net_margin", metrics.ratio(view, t_, "us-gaap:NetIncomeLoss", REVENUE, note="net income / revenue"), "ratio"),
-                ("gross_margin", metrics.ratio(view, t_, "us-gaap:GrossProfit", REVENUE, note="gross profit / revenue"), "ratio"),
-                ("free_cash_flow", fcf, "USD"),
-                ("asset_growth", metrics.asset_growth(view, t_), "ratio")]
-    if fcf and mc and mc.value > 0:
-        derived.append(("fcf_yield", M(fcf.value / mc.value, mc.as_of, [*fcf.inputs, *mc.inputs], "FCF / market value"), "ratio"))
     rows = []
-    for nm, m, unit in derived:
-        if m is None or not math.isfinite(m.value):
-            continue
-        f = metrics.to_fact(t_, nm, m, unit)
-        bank.add(f)
+    for nm, m, unit, f in derived(bank, view, t_, book):
         shown = money(m.value) if unit == "USD" else pct(m.value)
         extra = f" (P/E {1 / m.value:,.1f})" if nm == "earnings_yield" and m.value > 0 else ""
         rows.append(f"- {DERIVED_LABELS.get(nm, nm)}: {shown}{extra} {cite(f)} ← {cite(*m.inputs)}")
@@ -174,12 +238,11 @@ def build(bank: Bank, ticker: str, t: str | None = None) -> str:
     # filings
     fil = sorted(view.facts(t_, "filing"), key=lambda f: f.known_at, reverse=True)
     if fil:
-        recent = [f for f in fil if f.value not in ("4", "3", "5", "144")][:10]
+        recent = [f for f in fil if notable_filing(f.value)][:10]
         n4 = sum(1 for f in fil if f.value == "4" and days_between(f.known_at, view.cutoff) <= 90)
-        L += ["## Recent filings", ""]
+        L += ["## Recent filings (10-K, 10-Q, 8-K, proxy)", ""]
         for f in recent:
-            items = f.context.get("items", "")
-            desc = ", ".join(ITEMS_8K.get(i.strip(), i.strip()) for i in items.split(",") if i.strip()) if items else ""
+            desc = filing_desc(f)
             L.append(f"- {f.known_at[:10]} **{f.value}**{' — ' + desc if desc else ''} ([doc]({f.source['url']})) {cite(f)}")
         L += [f"- Insider transaction reports (Form 4) in the last 90 days: {n4}. Form 4 contents are not parsed yet.", ""]
 
@@ -213,38 +276,78 @@ def build(bank: Bank, ticker: str, t: str | None = None) -> str:
     return text
 
 
-def _signals_section(bank: Bank, t_: str) -> list[str]:
+class NoEvidence(LookupError):
+    """The repo or bank lacks what a signal reading needs: the research universe, or prices."""
+
+
+def evidence(bank: Bank, ticker: str) -> dict:
+    """Where ``ticker`` ranks on each tested signal at the last month-end close, against the research
+    universe, with that signal's TEST verdict from the ledger. One computation for the brief's
+    Signals section and the terminal's EV. Raises :class:`NoEvidence` when it cannot be computed."""
     if not config.UNIVERSE.exists():
-        return []
+        raise NoEvidence(f"no research universe ({config.UNIVERSE.name})")
     from brain.research import run as research_run
     from brain.research import signals
+    from brain.research.hypotheses import HYPOTHESES
     from brain.research.panel import build as build_panel
+    t_ = ticker.upper()
     uni = json.loads(config.UNIVERSE.read_text())
     tickers = list(uni["tickers"]) + ([t_] if t_ not in uni["tickers"] else [])
     try:
         panel = build_panel(bank, tickers)
-        vals = signals.compute_last(bank, panel, list(SIGNAL_TO_HYP))
+    except SystemExit as e:  # the panel's way of saying prices are missing
+        raise NoEvidence(str(e)) from None
+    if len(panel.rebal) == 0:
+        raise NoEvidence("not enough price history for a month-end ranking")
+    vals = signals.compute_last(bank, panel, list(SIGNAL_TO_HYP))
+    verdict = {r["id"]: r for r in research_run.verdicts()} if config.LEDGER.exists() else {}
+    claims = {h["id"]: h["claim"] for h in HYPOTHESES}
+    j = tickers.index(t_)
+    rows = []
+    for s, hid in SIGNAL_TO_HYP.items():
+        v = vals[s]
+        x = float(v[j])
+        ok = np.isfinite(v)
+        r = verdict.get(hid)
+        row = {"signal": s, "hypothesis": hid, "value": None, "percentile": None, "in_top_third": None,
+               "verdict": r["verdict"] if r else "not run",
+               "test_net_excess": r["test"]["mean_net_excess"] if r else None,
+               "perm_p": r["test"]["perm_p"] if r else None, "bh_q": r["bh_q"] if r else None,
+               "claim": claims.get(hid, "")}
+        if math.isfinite(x):
+            pctl = (v[ok] < x).sum() / max(ok.sum() - 1, 1)
+            row.update(value=x, percentile=round(float(pctl) * 100), in_top_third=bool(pctl >= 2 / 3))
+        rows.append(row)
+    ctl = next(iter(verdict.values()))["controls"]["pass"] if verdict else None
+    n_pass = sum(r["verdict"] == "PASS" for r in rows)
+    summary = f"{n_pass} of {len(rows)} signals passed their TEST gate."
+    if n_pass == 0:
+        summary += (" A FAIL means the signal did not beat a shuffled signal on unseen months after costs, "
+                    "so a high rank on it is not evidence of an edge.")
+    if ctl is False:
+        summary += " The controls failed: no verdict is valid."
+    return {"ticker": t_, "rebalance_date": str(panel.dates[panel.rebal[-1]]), "universe_size": len(uni["tickers"]),
+            "signals": rows, "controls_pass": ctl, "summary": summary}
+
+
+def _signals_section(bank: Bank, t_: str) -> list[str]:
+    if not config.UNIVERSE.exists():
+        return []
+    try:
+        ev = evidence(bank, t_)
     except (SystemExit, Exception) as e:  # noqa: BLE001 - a brief should still render
         return ["## Signals", "", f"Unavailable: {e}", ""]
-    verdict = {r["id"]: r for r in research_run.verdicts()} if config.LEDGER.exists() else {}
-    j = tickers.index(t_)
-    d = str(panel.dates[panel.rebal[-1]])
     L = ["## Signals vs the research universe", "",
-         f"Ranked on the last month-end close ({d}) against {len(uni['tickers'])} universe stocks. "
+         f"Ranked on the last month-end close ({ev['rebalance_date']}) against {ev['universe_size']} universe stocks. "
          "Top third is what the backtest would hold.", "",
          "| Signal | Value | Percentile | In top third | TEST verdict | TEST net excess / mo |",
          "| --- | --- | --- | --- | --- | --- |"]
-    for s, hid in SIGNAL_TO_HYP.items():
-        v = vals[s]
-        x = v[j]
-        ok = np.isfinite(v)
-        if not math.isfinite(x):
-            L.append(f"| {s} | – | – | – | {verdict.get(hid, {}).get('verdict', 'not run')} | – |")
+    for r in ev["signals"]:
+        if r["value"] is None:
+            L.append(f"| {r['signal']} | – | – | – | {r['verdict']} | – |")
             continue
-        pctl = (v[ok] < x).sum() / max(ok.sum() - 1, 1)
-        r = verdict.get(hid)
-        L.append(f"| {s} | {x:+.3f} | {pctl * 100:.0f} | {'yes' if pctl >= 2 / 3 else 'no'} | "
-                 f"{r['verdict'] if r else 'not run'} | {pct(r['test']['mean_net_excess'], 2) if r else '–'} |")
+        L.append(f"| {r['signal']} | {r['value']:+.3f} | {r['percentile']:.0f} | {'yes' if r['in_top_third'] else 'no'} | "
+                 f"{r['verdict']} | {pct(r['test_net_excess'], 2) if r['test_net_excess'] is not None else '–'} |")
     return L + [""]
 
 

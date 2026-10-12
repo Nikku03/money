@@ -1,0 +1,181 @@
+"""The terminal's command line: `[TICKER] FUNCTION [ARGS...]`, then GO.
+
+Forgiving on purpose, because people type the way other terminals taught them:
+function first (`GP AAPL 5Y`), a bare ticker (`AAPL` means `AAPL DES`), and the
+noise words `US EQUITY <GO>` are all accepted. What it will not do is guess a
+function it does not know: an unknown code is an error with the closest codes as
+the hint. Grammar and shapes: docs/TERMINAL.md section 1.
+"""
+from __future__ import annotations
+
+import difflib
+import re
+from dataclasses import dataclass, field
+
+from brain.markets import BY_SYMBOL
+
+
+@dataclass
+class Command:
+    fn: str                 # upper-case function code, e.g. "GP"
+    ticker: str | None      # upper-case, e.g. "AAPL", "^GSPC"
+    args: list[str] = field(default_factory=list)  # upper-cased, except ASK's question (verbatim)
+    raw: str = ""
+
+
+class CommandError(ValueError):
+    """Bad input. ``message`` says what is wrong; ``hint`` is a command or the closest codes."""
+
+    def __init__(self, message: str, hint: str = ""):
+        super().__init__(message, hint)
+        self.message = message
+        self.hint = hint
+
+    def __str__(self) -> str:
+        return self.message
+
+
+FUNCTIONS: dict[str, dict] = {
+    "HELP": {"scope": "global", "args": "", "desc": "list of functions and keys"},
+    "DES": {"scope": "security", "args": "",
+            "desc": "description: identity, price summary, key derived metrics, latest filings and headlines"},
+    "GP": {"scope": "security", "args": "[RANGE] [CMP...]",
+           "desc": "price chart; RANGE 1M 3M 6M YTD 1Y 2Y 5Y 10Y MAX (default 1Y); up to 3 comparisons rebased to 100"},
+    "FA": {"scope": "security", "args": "", "desc": "financial analysis: up to 10 fiscal years of annual statements and ratios"},
+    "CF": {"scope": "security", "args": "[FORM]", "desc": "company filings, optionally one form (10-K, 8-K, 4 ...)"},
+    "CN": {"scope": "security", "args": "",
+           "desc": "company news: headlines (unscored) and web claims with their source's record"},
+    "EV": {"scope": "security", "args": "",
+           "desc": "evidence: where the ticker ranks on each tested signal, and that signal's TEST verdict"},
+    "BRIEF": {"scope": "security", "args": "", "desc": "the full cited brief"},
+    "SHOW": {"scope": "both", "args": "ID", "desc": "one fact by id prefix: full JSON and source link"},
+    "WEI": {"scope": "global", "args": "", "desc": "world markets: equity indices, volatility, FX, commodities, crypto"},
+    "MOV": {"scope": "global", "args": "", "desc": "research-universe movers: last session and 1 month"},
+    "CURVE": {"scope": "global", "args": "",
+              "desc": "US Treasury par yield curve: latest, 1 month ago, 1 year ago, key spreads"},
+    "ECO": {"scope": "global", "args": "", "desc": "macro table: Treasury yields and spreads, FRED series if ingested"},
+    "RES": {"scope": "global", "args": "", "desc": "research ledger verdicts"},
+    "CLM": {"scope": "global", "args": "", "desc": "web-claim scoring per source"},
+    "ASK": {"scope": "global", "args": "QUESTION...", "desc": "ask the analyst (Claude); it reads the bank through tools"},
+    "INGEST": {"scope": "both", "args": "TICKER | MARKETS | MACRO | UNIVERSE", "desc": "start a background collection job"},
+    "JOBS": {"scope": "global", "args": "", "desc": "background jobs and their logs"},
+}
+
+KEYS = [
+    {"key": "Enter", "desc": "run the command (GO)"},
+    {"key": "Esc", "desc": "clear the command line"},
+    {"key": "Up / Down", "desc": "walk the command history"},
+    {"key": "Tab", "desc": "accept the highlighted completion"},
+    {"key": "F1", "desc": "HELP"},
+    {"key": "Ctrl+1..4", "desc": "focus pane 1-4"},
+    {"key": "Ctrl+Enter", "desc": "run the command in the next pane"},
+    {"key": "Click a ticker", "desc": "run <TICKER> DES in the same pane (Shift: next pane)"},
+    {"key": "Click [abcd1234]", "desc": "show that fact and its source"},
+]
+
+NOISE = {"US", "EQUITY", "EQUITIES", "<GO>", "GO"}
+RANGES = ("1M", "3M", "6M", "YTD", "1Y", "2Y", "5Y", "10Y", "MAX")
+INGEST_KEYWORDS = ("MARKETS", "MACRO", "UNIVERSE")
+TICKER = re.compile(r"[A-Za-z0-9.^=\-]{1,15}")  # fullmatch; same rule as ingest targets
+_FACT_ID = re.compile(r"[0-9A-Fa-f]{4,20}")
+MAX_COMPLETIONS = 12
+NOT_TICKERS = {"MACRO"}  # bank entities that hold macro series, not securities
+
+
+def _is_arg(fn: str, w: str) -> bool:
+    """Tokens that are this function's arguments, never its ticker (so `GP 5Y AAPL` finds AAPL)."""
+    if fn == "GP":
+        return w in RANGES
+    if fn == "CF":  # forms carry a digit (10-K, 8-K, 4, 144); market symbols with digits carry . ^ or =
+        return any(c.isdigit() for c in w) and not any(c in w for c in ".^=")
+    if fn == "SHOW":
+        return "/" in w or (bool(_FACT_ID.fullmatch(w)) and any(c.isdigit() for c in w))
+    if fn == "INGEST":
+        return w in INGEST_KEYWORDS
+    return False
+
+
+def suggest(code: str) -> str:
+    """Hint for an unknown function code: the closest codes, or HELP."""
+    close = difflib.get_close_matches(code.upper(), list(FUNCTIONS), n=3, cutoff=0.5)
+    return f"closest: {', '.join(close)}" if close else "HELP"
+
+
+def _function_position(words: list[str]) -> int | None:
+    """Index of the function code: `[TICKER] FUNCTION` wins over function-first when both read,
+    so a ticker that is also a code (CF, GP) still works as `CF DES`."""
+    w0 = words[0]
+    w1 = words[1] if len(words) > 1 else None
+    if w0 in FUNCTIONS and not (w1 in FUNCTIONS and FUNCTIONS[w0]["scope"] != "global"):
+        return 0
+    if w1 in FUNCTIONS:
+        return 1
+    return None
+
+
+def parse(line: str) -> Command:
+    raw = line if isinstance(line, str) else ""
+    spans = [(m.group().upper(), m.end()) for m in re.finditer(r"\S+", raw)]
+    words = [(w, end) for w, end in spans if w not in NOISE]
+    if not words:
+        raise CommandError("empty command", "HELP")
+    pos = _function_position([w for w, _ in words])
+    if pos is None:
+        if len(words) > 1:
+            raise CommandError(f"unknown function '{words[1][0]}'", suggest(words[1][0]))
+        fn, ticker, after = "DES", words[0][0], []
+    else:
+        fn = words[pos][0]
+        ticker = words[0][0] if pos == 1 else None
+        after = words[pos + 1:]
+
+    args: list[str] = []
+    if fn == "ASK":
+        question = raw[words[pos][1]:].strip()
+        args = [question] if question else []
+    else:
+        scope = FUNCTIONS[fn]["scope"]
+        for w, _ in after:
+            if ticker is None and scope != "global" and not _is_arg(fn, w):
+                ticker = w
+            else:
+                args.append(w)
+
+    if ticker is not None and not TICKER.fullmatch(ticker):
+        raise CommandError(f"'{ticker}' is not a ticker or a function", "HELP")
+    if FUNCTIONS[fn]["scope"] == "security" and ticker is None:
+        raise CommandError(f"{fn} needs a ticker, e.g. AAPL {fn}", f"AAPL {fn}")
+    if fn == "INGEST" and ticker is None and not args:
+        raise CommandError("INGEST needs a target: a ticker, MARKETS, MACRO or UNIVERSE", "INGEST AAPL")
+    if fn == "SHOW" and not args:
+        raise CommandError("SHOW needs a fact id, e.g. AAPL SHOW 9de710d2", f"{ticker or 'AAPL'} DES")
+    return Command(fn=fn, ticker=ticker, args=args, raw=raw)
+
+
+def complete(prefix: str, tickers: list[str]) -> list[dict]:
+    """Completions for the token being typed: function codes and tickers (bank entities plus the
+    world-market symbols, which can be ingested on demand)."""
+    text = prefix or ""
+    if not text.strip():
+        return []
+    toks = text.split()
+    partial = "" if text[-1].isspace() else toks[-1].upper()
+    done = [t.upper() for t in (toks if not partial else toks[:-1]) if t.upper() not in NOISE]
+    fns = [t for t in done if t in FUNCTIONS]
+    if "ASK" in fns:
+        return []  # free text from here on
+    has_ticker = any(t not in FUNCTIONS for t in done)
+
+    out: list[dict] = []
+    if not fns:
+        security_first = sorted(FUNCTIONS, key=lambda c: has_ticker and FUNCTIONS[c]["scope"] == "global")
+        out += [{"text": c, "kind": "function", "desc": FUNCTIONS[c]["desc"]}
+                for c in security_first if c.startswith(partial)]
+    if partial and (not has_ticker or "GP" in fns):  # GP takes comparison tickers
+        known = sorted({t.upper() for t in tickers if t.upper() not in NOT_TICKERS} | set(BY_SYMBOL))
+        for t in known:
+            name = BY_SYMBOL.get(t, {}).get("name", "")
+            if t.startswith(partial) or (len(partial) >= 3 and name.upper().startswith(partial)):
+                out.append({"text": t, "kind": "ticker", "desc": name})
+    out.sort(key=lambda d: d["text"] != partial)  # an exact match first; otherwise order is kept
+    return out[:MAX_COMPLETIONS]

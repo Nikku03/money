@@ -26,7 +26,7 @@ Grammar: `[TICKER] FUNCTION [ARGS...]`, then Enter (the "GO" key). Case-insensit
 | `CN` | security | – | company news: headlines (unscored) + claims noted from the web with their source's record |
 | `EV` | security | – | evidence: where the ticker ranks on each tested signal, and that signal's TEST verdict |
 | `BRIEF` | security | – | the full cited brief (`brain/brief.py`) as markdown |
-| `SHOW` | security | `ID` | one fact by id prefix: full JSON and source link |
+| `SHOW` | both | `ID` or `ENTITY/ID` | one fact by id prefix: full JSON and source link. Searches the ticker's facts, then `MACRO`, then the whole bank, so a citation opens from any pane |
 | `WEI` | global | – | world markets: equity indices, volatility, FX, commodities, crypto |
 | `MOV` | global | – | research-universe movers: last session and 1 month |
 | `CURVE` | global | – | US Treasury par yield curve: latest, 1 month ago, 1 year ago, key spreads |
@@ -37,7 +37,9 @@ Grammar: `[TICKER] FUNCTION [ARGS...]`, then Enter (the "GO" key). Case-insensit
 | `INGEST` | security or global | `TICKER` / `MARKETS` / `MACRO` / `UNIVERSE` | start a background collection job |
 | `JOBS` | global | – | background jobs and their logs |
 
-Unknown function → error `unknown function 'XYZ'` with a hint listing the closest codes. A security function without a ticker → error `FA needs a ticker, e.g. AAPL FA`.
+Unknown function → error `unknown function 'XYZ'` with a hint listing the closest codes (`closest: GP, CF`, or `HELP` when nothing is close). A security function without a ticker → error `FA needs a ticker, e.g. AAPL FA`.
+
+When a line reads both ways, `[TICKER] FUNCTION` wins over function-first, so tickers that are also codes work (`CF DES`, `GP GP 1Y`). A GP range, a CF token that looks like a form (has a digit and no `.^=`), a SHOW fact id and the INGEST keywords are never taken as the ticker, so `GP 5Y` is an error rather than a chart of "5Y". Tickers must match the ingest pattern (§3).
 
 ---
 
@@ -65,7 +67,12 @@ Ticker detection: the first token that is not a known function code and is not a
 
 ```python
 def run(bank: Bank, cmd: Command) -> dict     # dispatch; never raises for user errors
+def run_line(bank: Bank, line: str) -> dict   # parse + run; a parse error is an ok:false result too
 ```
+
+`JOBS`, `ASK` and `INGEST` need the server (jobs, the model), so `data.run` answers them `ok: false`; the server handles them itself (§3).
+
+Point in time: every function reads the bank through a view at the end of the current UTC day (`T23:59:59Z`), not at the current second. A dated close counts as known at the end of its day, so a European close collected this evening would otherwise stay hidden until midnight UTC. Nothing dated after today becomes visible, and `brain/sources/prices.py` drops the bar of a session that is still open.
 
 Every response is a JSON-serialisable dict:
 
@@ -95,7 +102,9 @@ or
  "filings": [{"date": "2026-07-31", "form": "10-Q", "desc": "", "url": "...", "cite": "7a85f912"}],
  "headlines": [{"time": "2026-10-09T13:00:00Z", "title": "...", "url": "...", "source": "finance.yahoo.com", "cite": "..."}]}
 ```
-`metrics` = the derived facts the brief writes (market_cap, earnings_yield, pe, revenue_growth, net_margin, gross_margin, free_cash_flow, fcf_yield, asset_growth), computed through `brain.metrics` and written to the bank with `metrics.to_fact` (same as `brain/brief.py`). `pe` is display-only (1 / earnings_yield, no fact). Up to 5 filings (excluding forms 3/4/5/144) and 5 headlines. Non-equities (indices, FX, ...) have empty identity/metrics/filings.
+`metrics` = the derived facts the brief writes (market_cap, earnings_yield, pe, revenue_growth, net_margin, gross_margin, free_cash_flow, fcf_yield, asset_growth), computed through `brain.metrics` and written to the bank with `metrics.to_fact` (same as `brain/brief.py`). `pe` is display-only (1 / earnings_yield, no fact of its own; it carries a `display` string and cites the earnings-yield fact). `price` also has `chg_5d`. Up to 5 filings and 5 headlines. The filings are the company's own reports, `brain.brief.notable_filing`: 10-K, 10-Q, 8-K, 20-F, 40-F, 6-K, 10-KT, 10-QT, DEF 14A and their amendments (the brief's "Recent filings" uses the same rule). Insider and ownership reports and offering paperwork stay in `CF`; a bank files several 424B2s a day, which would otherwise fill the list. Identity values are shown as filed, except that repeated exchanges are dropped (`NYSE,NYSE,NYSE` → `NYSE`). Non-equities (indices, FX, ...) have empty identity/metrics/filings. `kind` comes from `brain/markets.py` for watched symbols, else `equity` when SEC identity facts exist, else `other` (ETFs such as SPY).
+
+Return windows count trading sessions: 1D, 5D = 5, 1M = 21, 3M = 63, 12M = 252 (as in the brief); crypto trades every day and uses 7, 30, 91 and 365. YTD runs from the last close of the previous year.
 
 #### view `chart` (GP)
 ```json
@@ -106,7 +115,7 @@ or
  "stats": {"first": 254.0, "last": 336.6, "ret": 0.325, "high": 341.0, "low": 210.2, "high_date": "...", "low_date": "..."},
  "splits": [["2020-08-31", 4.0]], "cite": "9de710d2", "kind": "equity"}
 ```
-`series` uses `close` (split-adjusted) for the price axis; `ret` uses `adj` (total return). Downsample evenly to at most 1,500 points, always keeping the first and last. `rebased` is the main ticker's `adj` rebased to 100 at the range start (for comparing); `compare` tickers are rebased the same way on the main ticker's dates (forward-filled, NaN dropped). Missing comparison tickers are listed in `data.missing`.
+`series` uses `close` (split-adjusted) for the price axis; `ret` uses `adj` (total return). Downsample evenly to at most 1,500 points, always keeping the first and last. `rebased` is the main ticker's `adj` rebased to 100 at the range start (for comparing); `compare` tickers are rebased the same way on the main ticker's dates (forward-filled, NaN dropped). Missing comparison tickers are listed in `data.missing` (always present, possibly empty). `splits` lists every split, not only those in the range. YTD starts on the first trading day of the year of the series' last date.
 
 #### view `table` (FA, CF, WEI, MOV, ECO, RES, CLM, JOBS)
 ```json
@@ -115,16 +124,21 @@ or
  "groups": ["Income statement", "Balance sheet"],
  "note": "free text shown under the table"}
 ```
-Column types tell the frontend how to format: `pct` is a fraction (0.123 → +12.3%), `money` is a raw number (4.95e12 → 4.95T), `ticker` cells are clickable (run `<T> DES`), `link` cells hold a URL, `verdict` is PASS/FAIL/... and is colour-coded. Row keys starting with `_` are metadata: `_cite` (fact id prefix), `_url`, `_group` (section header), `_ticker`.
+Column types tell the frontend how to format: `pct` is a fraction (0.123 → +12.3%), `money` is a raw number (4.95e12 → 4.95T), `ticker` cells are clickable (run `<T> DES`), `link` cells hold a URL, `verdict` is PASS/FAIL/... and is colour-coded, `date` is an ISO date or timestamp. Row keys starting with `_` are metadata: `_cite` (fact id prefix), `_url`, `_group` (section header), `_ticker`, and:
+- `_cites`: `{column key: cite}`, one citation per cell (FA).
+- `_type`: overrides a numeric column's type for this row's cells (FA's columns are `money`; its EPS row is `number`, its ratio rows `pct`).
+- `_digits`: decimals for this row's `number` cells (WEI gives FX rows under 10 four decimals: EUR/USD 1.1213).
 
-- **FA**: one row per item, one column per fiscal year (newest first, at most 10). Items: Revenue, Gross profit, Operating income, Net income, EPS diluted, Operating cash flow, Capex, Free cash flow, R&D, Buybacks, Dividends paid, Total assets, Total liabilities, Equity, Cash, Long-term debt; then ratios Gross margin, Operating margin, Net margin, Revenue growth, ROE (net income / equity). Groups: `Income statement`, `Cash flow`, `Balance sheet`, `Ratios`. Use `brain.metrics.annual` (flows: `flow=True`, balance sheet: `flow=False`) through `bank.view()`. Each cell's citation goes in a parallel row key `_cites: {"2025-09-27": "650dff20"}`.
-- **CF**: columns date, form, desc (8-K item names, as in `brain/brief.py` `ITEMS_8K`), link. Up to 200 rows, newest first. Optional form filter from args.
+- **FA**: one row per item, one column per fiscal year (newest first, at most 10). Items: Revenue, Gross profit, Operating income, Net income, EPS diluted, Operating cash flow, Capex, Free cash flow, R&D, Buybacks, Dividends paid, Total assets, Total liabilities, Equity, Cash, Long-term debt; then ratios Gross margin, Operating margin, Net margin, Revenue growth, ROE (net income / equity). Groups: `Income statement`, `Cash flow`, `Balance sheet`, `Ratios` (R&D sits in the income statement). Use `brain.metrics.annual` (flows: `flow=True`, balance sheet: `flow=False`) through `bank.view()`. Each cell's citation goes in a parallel row key `_cites: {"2025-09-27": "650dff20"}`; free cash flow and ratios are computed, so they have none. Columns are fiscal-year end dates, matched across statements within 7 days. Rows with no data are left out. ROE is blank when equity ≤ 0, revenue growth when the prior year's revenue ≤ 0. EPS is put on today's share basis: a figure filed before a later split is divided by it (Apple's FY2017 9.21 → 2.30 after the 2020 4:1 split), the note names the splits, and the citation keeps the as-filed number.
+- **CF**: columns date, form, desc (8-K item names, as in `brain/brief.py` `ITEMS_8K`), link. Up to 200 rows, newest first. Optional form filter from args; a filter matches amendments too (`8-K` shows `8-K/A`).
 - **WEI**: columns symbol (ticker), name, last, chg_1d (pct), chg_5d (pct), ret_1m (pct), ret_ytd (pct), date. Groups in this order: Americas, Europe, Asia-Pacific, Volatility, FX, Commodities, Crypto. Symbols come from `brain/markets.py`. Symbols not yet ingested are omitted, and `note` says `INGEST MARKETS`.
 - **MOV**: groups `Top gainers, last session`, `Top losers, last session`, `Top 1 month`, `Bottom 1 month`; 8 rows each; columns symbol (ticker), name, last, chg_1d, ret_1m. Universe from `universe/us_large.json`.
-- **ECO**: Treasury 3M, 2Y, 10Y, 30Y yields; spreads 10Y−2Y and 10Y−3M (latest, 1 month ago, 1 year ago); then FRED series if ingested (`brain/sources/fred.py` DEFAULT).
-- **RES**: columns id, claim, test_net (pct), perm_p (number, 4 digits), bh_q (3 digits), verdict (verdict). From `brain.research.run.verdicts()`. `note`: controls status and the survivorship line.
+- **ECO**: Treasury 3M, 2Y, 10Y, 30Y yields; spreads 10Y−2Y and 10Y−3M (latest, 1 month ago, 1 year ago); then FRED series if ingested (`brain/sources/fred.py` DEFAULT). Columns series, latest, m1, y1 (numbers), date, source; groups `Treasury yields`, `Treasury spreads`, `FRED`. Treasury rows are labelled `Treasury 10Y par yield, %` and `Treasury 10Y − 2Y, pp` so they never clash with FRED's labels.
+- **RES**: columns id, claim, test_net (pct, label `TEST net/mo`), perm_p (number, 4 digits), bh_q (3 digits), verdict (verdict). From `brain.research.run.verdicts()`; declared hypotheses without a result show `not run`. `note`: controls status and the survivorship line.
 - **CLM**: columns source, n, hits, hit_rate (pct), p_vs_coin; from `brain.claims.score`.
 - **JOBS** is served by the server (§3), same table shape.
+
+Empty data: RES with no results and CLM with no scored claims are `ok: true` with a note (no INGEST fixes them). CN for a ticker with data but no news returns empty lists. Anything else missing is `ok: false` with the command that fixes it: `INGEST <T>`, `INGEST MARKETS` (watched symbols), `INGEST MACRO`, `INGEST UNIVERSE` (MOV, and EV when the universe panel cannot be built). FA and CF on a market symbol hint `<T> GP`.
 
 #### view `news` (CN)
 `data = {"headlines": [{"time","title","url","source","cite"}], "claims": [{"time","text","url","source","tier","direction": 1|-1|0,"cite","record": {"n","hit_rate"} | null}]}` (newest first, up to 50 each).
@@ -136,7 +150,7 @@ Column types tell the frontend how to format: `pct` is a fraction (0.123 → +12
               "verdict": "FAIL", "test_net_excess": 0.0011, "perm_p": 0.1758, "claim": "..."}],
  "controls_pass": true, "summary": "0 of 4 signals passed their TEST gate. ..."}
 ```
-Same computation as `brain/brief.py` `_signals_section` (reuse it via a shared helper; do not duplicate the maths).
+Same computation as `brain/brief.py` `_signals_section` (reuse it via a shared helper, `brain.brief.evidence`; do not duplicate the maths). Signal rows also carry `bh_q`; a withdrawn hypothesis has verdict `WITHDRAWN...` and `bh_q: null`. The signals rank stocks, so EV on a watched market symbol (index, FX, commodity, crypto, volatility) is `ok: false` with hint `<T> GP`.
 
 #### view `markdown` (BRIEF)
 `data = {"markdown": "..."}` (from `brain.brief.build`).
@@ -153,7 +167,7 @@ Same computation as `brain/brief.py` `_signals_section` (reuse it via a shared h
             {"label": "1 year ago", "date": "...", "yields": [...]}],
  "spreads": [{"label": "10Y − 2Y", "latest": 0.44, "m1": 0.40, "y1": 0.10}], "cite": "..."}
 ```
-Yields in percent. The `1.5 Month` column (only in recent years) is dropped.
+Yields in percent. The `1.5 Month` column (only in recent years) is dropped (it stays in the stored series). Spreads, in percentage points: `10Y − 2Y`, `10Y − 3M`, `30Y − 5Y`.
 
 #### Markets and Treasury collection
 - `brain/markets.py`: `MARKETS: list[dict]` with `symbol`, `name`, `group`, `kind`; `ingest(bank, log=print) -> dict` that calls `brain.sources.prices.ingest(symbol, start="2015-01-01")` per symbol and adds the facts (skipping and logging symbols that fail). Symbols:
@@ -193,6 +207,17 @@ Routes:
 | POST | `/api/ingest` | `{"target": "AAPL" \| "MARKETS" \| "MACRO" \| "UNIVERSE"}` | `{"ok": true, "job": {...}}` |
 | GET | `/api/jobs` | – | `{"jobs": [...]}` newest first |
 
+Successful `/api/status`, `/api/complete` and `/api/jobs` responses also carry `"ok": true`.
+
+`/api/run` handles three functions itself instead of passing them to `data.run`:
+- `JOBS`: the jobs table below.
+- `INGEST T1 [T2 ...]`: validates every target (at most 10) before queuing any, then returns the JOBS table titled `INGEST KO: job j1 running`. A target already queued or running returns its existing job.
+- `ASK [question]`: opens the analyst pane and never calls the model (a GET must not spend money): `view: "ask"`, `data = {"question": str, "ticker": str | null, "available": bool, "reason": str}`. The pane then POSTs the question to `/api/ask`.
+
+`/api/fact` requires `ticker` to match the ticker pattern and `id` to be 1–20 hex characters (else 400) and runs `SHOW` directly, so a ticker that is also a function code still works. `/api/ask` takes a question of at most 4,000 characters and keeps the last 50 history messages; the analyst reads the last 10, at most 8,000 characters each, so the frontend sends no more than that and keeps the whole body under 60 KB.
+
+The bank is read in full before `serve()` prints the URL (about 5 s for 60 stocks and the world markets). A Bank otherwise loads each entity on first use, and MOV and EV touch the whole universe, so their first call would hold the bank lock and stall every pane for several seconds. After a job, the fresh Bank is likewise read in full before the swap, outside the lock, and panes keep answering from the old one meanwhile. A reload that started earlier never replaces one that started later.
+
 Security (all required):
 - Bind `127.0.0.1` by default. If `--host` is anything else, print a warning that the terminal has no user accounts.
 - **Host check**: reject (403) any request whose `Host` header is not `127.0.0.1:<port>`, `localhost:<port>` or `[::1]:<port>` when bound to loopback. This blocks DNS-rebinding.
@@ -201,7 +226,7 @@ Security (all required):
 - Responses: `Content-Type: application/json; charset=utf-8`, `Cache-Control: no-store`, `X-Content-Type-Options: nosniff`; the HTML page also gets `Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'` and `Referrer-Policy: no-referrer`.
 - Errors inside a handler → 500 with `{"ok": false, "error": "internal error"}` and the traceback logged to stderr, never sent to the client.
 - Ingest targets are validated: a ticker matches `^[A-Za-z0-9.^=\-]{1,15}$`, or one of the keywords. Jobs run as subprocesses with an argument list (never a shell): `[sys.executable, "-m", "brain", "ingest", T]`, `["markets"]`, `["macro"]`, `["ingest-universe"]`, with `cwd` = repo root and the server's environment. At most 2 concurrent jobs; others queue. Each job keeps the last 200 log lines. When a job finishes, the server replaces its `Bank` with a fresh `Bank()` under the lock, so new facts appear.
-- Job record: `{"id","target","status": "queued|running|done|failed","started","finished","returncode","log": [str]}`. `JOBS` renders them as a table (columns id, target, status, started, finished, last log line).
+- Job record: `{"id","target","status": "queued|running|done|failed","started","finished","returncode","log": [str]}`. `JOBS` renders them as a table (columns id, target, status (text), started, finished (date, UTC), last log line; ticker targets carry `_ticker`); its note gives the running and queued counts and the newest job's last 10 log lines. Ids are `j1`, `j2`, ...; at most 50 jobs wait in the queue and the last 100 are remembered. On shutdown, queued jobs are cancelled and running children are left to finish.
 
 ---
 
@@ -228,7 +253,7 @@ Plain HTML/CSS/JS, no external requests (works offline, passes the CSP above). F
 
 - **Look**: black background, amber function text, white values, green up / red down, monospace throughout (`ui-monospace, "SF Mono", Menlo, Consolas, monospace`), dense 12–13px tables, 1px dividers. No logos.
 - **Layout**: top bar (MONEY TERMINAL, world clocks for New York, London, Mumbai, Tokyo, UTC; bank stats; job indicator; analyst availability), a command line, a 2×2 grid of panes, a bottom ticker tape of WEI rows that scrolls slowly and refreshes every 60 s. Panes resize with the window; at widths under 900px the grid becomes one column.
-- **Panes**: each has a header (pane number, current command, `asof`, a reload button) and a body. Clicking a pane focuses it; the command line targets the focused pane. Default layout on first load: 1 `WEI`, 2 `MOV`, 3 `SPY GP 1Y`, 4 `ASK`. The layout (each pane's command) is saved in `localStorage` (wrapped in try/catch) and restored.
+- **Panes**: each has a header (pane number, current command, title, `asof`, a reload button, a maximise toggle) and a body. The title drops what the command beside it already says (`world markets` under `WEI`, `Apple Inc. · description` under `AAPL DES`); the full title is its tooltip. Clicking a pane focuses it; the command line targets the focused pane. Default layout on first load: 1 `WEI`, 2 `MOV`, 3 `SPY GP 1Y`, 4 `ASK`. The layout (each pane's command) is saved in `localStorage` (wrapped in try/catch) and restored. A reload, a restored layout or the refresh after a job never starts a job or asks the model again: `INGEST X` reruns as `JOBS`, `ASK question` as `ASK`.
 - **Command line**: Enter runs; Esc clears; Up/Down walks history (saved, last 100); typing shows an autocomplete list from `/api/complete` (debounced 120 ms; Tab or click accepts). `F1` runs HELP. `Ctrl+1..4` focuses a pane. `Ctrl+Enter` runs the command in the next pane instead.
 - **Rendering by `view`**:
   - `table`: sticky header; group header rows; numbers right-aligned; `pct` coloured by sign; `ticker` cells clickable (run `<T> DES` in the same pane; Shift-click: next pane); citations shown as a small dim `[abcd1234]` that opens `SHOW` in a popover.
@@ -237,8 +262,8 @@ Plain HTML/CSS/JS, no external requests (works offline, passes the CSP above). F
   - `des`: two-column key/value layout plus mini tables for filings and headlines.
   - `news`, `evidence`, `fact`, `help`: dedicated layouts using the same table styles.
   - `markdown`: rendered by a small safe renderer (escape HTML first; then headings, bold, lists, tables, links restricted to `http:`/`https:` with `rel="noopener noreferrer" target="_blank"`, inline code, `[abcd1234]` citations made clickable).
-  - `ask` (pane running `ASK`): chat log, input at the bottom, "thinking…" indicator while waiting, each answer rendered as markdown with a collapsible list of tool calls. Status shows when the analyst is unavailable, with the hint.
-- **Errors**: `ok: false` renders the error in red and the hint as a clickable command.
+  - `ask` (pane running `ASK`): chat log, input at the bottom, "thinking…" indicator while waiting, each answer rendered as markdown with a collapsible list of tool calls. Status shows when the analyst is unavailable, with the hint. History sent with a question: earlier successful turns only, the last 10 messages, 8,000 characters each, dropping the oldest pairs until the body fits in 60 KB. The chat lives in memory per pane and is not saved.
+- **Errors**: `ok: false` renders the error in red and the hint as a clickable command when it reads as one (a function code first or second); `closest: GP, CF` becomes one link per code with the unknown word replaced. Other hints (`export ANTHROPIC_API_KEY=...`) stay text.
 - **Safety**: all server text is inserted with `textContent` or through the escaping markdown renderer. No `innerHTML` with unescaped data, no `eval`, no inline event handlers (CSP).
 - Every API call sends `X-Terminal-Token` read from `<meta name="terminal-token" content="{{TOKEN}}">`.
 
@@ -251,3 +276,4 @@ Plain HTML/CSS/JS, no external requests (works offline, passes the CSP above). F
 - `tests/test_treasury.py`: CSV parsing with both old (no `1.5 Month`) and new headers.
 - `tests/test_terminal_server.py`: server on port 0 in a thread; 401 without token; 403 with a foreign Host; `/` injects the token; `/static/../x` and unknown static files 404; `/api/run` works; bad JSON 400; oversize body 413; ingest target validation; JOBS listing.
 - `tests/test_analyst.py`: no credentials → `ok: false` with hint; with a fake client, tool calls dispatch to terminal commands and the answer comes back.
+- `tests/test_terminal_static.py`: the page has the token meta, loads only `/static/app.js` and `/static/style.css`, and has no inline script, style or handlers; `app.js` uses no `innerHTML`, `eval` or string timers, calls only routes the server defines, renders every view, and lists the same function codes and ranges as `commands.py`.

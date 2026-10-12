@@ -5,9 +5,10 @@ An agent with web access reads the internet. This repo is what it remembers, and
 ```
  web pages, news ──(agent: `note`)──┐
  SEC EDGAR (filings, XBRL) ─────────┤
- Yahoo prices, FRED macro ──────────┼──► memory bank ──► brief on a target (every line cited)
-                                    │    (sourced,   ──► research engine: declared hypotheses,
-                                    │     timestamped)    matched nulls, TEST-only verdicts
+ Yahoo prices, world markets ───────┤
+ US Treasury curve, FRED macro ─────┼──► memory bank ──► MONEY TERMINAL (local, keyboard-driven; every number cited)
+                                    │    (sourced,   ──► analyst: Claude reading the bank through read-only tools
+                                    │     timestamped)──► research engine: declared hypotheses, matched nulls
                                     └─────────────────► claim scoring: is this source ever right?
 ```
 
@@ -46,13 +47,34 @@ The controls passed: the harness finds a planted edge (oracle p = 0.0005), and r
 
 What this means for making money: textbook signals applied to 60 mega-caps that everyone watches do not carry an edge you can detect after costs. Survivorship alone is worth more than any of them: the equal-weight universe returned 27% a year against SPY's 18%, purely because it was chosen with hindsight. That hindsight is exactly what a real trader doesn't have. Any edge is more likely to come from information the market prices slowly: better data (measured, specific facts, as in the cell project), less-watched stocks, or events. That needs new hypotheses, and each one goes through the same gate.
 
+## The terminal
+
+```
+python -m brain terminal                    # opens http://127.0.0.1:8765
+```
+
+A keyboard-driven market terminal over the memory bank, in the style of professional terminals: type `AAPL GP 5Y SPY` and press Enter. Four panes, a command line with autocomplete and history, world clocks, and a ticker tape. Full spec and user guide: [`docs/TERMINAL.md`](docs/TERMINAL.md).
+
+| Function | What |
+| --- | --- |
+| `DES` `GP` `FA` `CF` `CN` | description, price chart (with comparisons), 10 years of financials, SEC filings, news and web claims |
+| `EV` | the brain's verdict: where a stock ranks on every tested signal, and whether that signal passed its held-out test |
+| `BRIEF` `SHOW` | the cited one-page brief; any fact with its source |
+| `WEI` `MOV` `CURVE` `ECO` | world markets, universe movers, Treasury yield curve, macro |
+| `RES` `CLM` | research verdicts; web-claim track records per source |
+| `ASK` | ask the analyst. Claude answers only from the bank, through read-only tools, citing fact ids (needs `pip install anthropic` and `ANTHROPIC_API_KEY`) |
+| `INGEST` `JOBS` | collect data in the background without leaving the terminal |
+
+It listens on 127.0.0.1 only and requires a per-session token on every API call; a Host check blocks DNS rebinding, and the page's CSP allows no external requests.
+
 ## Quick start
 
 ```
 export SEC_USER_AGENT="Your Name your@email.com"
 python -m unittest discover -s tests -t .
 python -m brain ingest AAPL                 # SEC facts, filings, prices, headlines
-python -m brain macro                       # FRED rates, spreads, CPI (needs FRED_API_KEY)
+python -m brain markets                     # world indices, FX, commodities, crypto (32 symbols)
+python -m brain macro                       # US Treasury curve; FRED series too if FRED_API_KEY is set
 python -m brain brief AAPL                  # cited brief -> var/briefs/AAPL.md
 python -m brain ask AAPL us-gaap:NetIncomeLoss --at 2015-06-30   # what was known then
 python -m brain note AAPL "Analyst X cuts to sell on China demand" \
@@ -83,6 +105,9 @@ Requires Python 3.11+, numpy and pandas. Local state lives in `var/` (gitignored
 | `brain/claims.py` | Store web claims; score them per source |
 | `brain/brief.py` | Cited one-page brief; writes derived facts back |
 | `brain/research/` | Monthly panel, signals, harness (portfolio, costs, permutation null), ledger, hypotheses, runner |
+| `brain/terminal/` | The terminal: command grammar, data functions, local HTTP server and jobs, analyst, static frontend |
+| `brain/markets.py` | The world-markets symbol list and its collector |
+| `docs/TERMINAL.md` | Terminal spec: commands, JSON payloads, routes, security, tests |
 | `research/ledger.jsonl` | Every declaration and result, append-only (committed) |
 | `research/RESULTS.md` | Current verdicts, generated from the ledger (committed) |
 | `universe/us_large.json` | The research universe, its rule, and what the rule rejected (committed) |
@@ -92,8 +117,9 @@ Requires Python 3.11+, numpy and pandas. Local state lives in `var/` (gitignored
 | Source | Used for | Terms |
 | --- | --- | --- |
 | SEC EDGAR | Financial statements, filings, identity | US government, public domain. Requires a User-Agent with contact details; at most 10 requests/s |
-| Yahoo Finance chart API | Daily prices, splits | Unofficial, personal research only. Snapshots stay in `var/` and are never committed |
+| Yahoo Finance chart API | Daily prices and splits for stocks, indices, FX, commodities, crypto | Unofficial, personal research only. Snapshots stay in `var/` and are never committed |
 | Yahoo Finance RSS | Headlines | Links and titles only |
+| US Treasury daily par yield curve | `CURVE`, `ECO`, macro context | US government, public domain; no key |
 | FRED (official API, free key in `FRED_API_KEY`) | Macro context in briefs | Mostly public domain; revised series are flagged and kept out of backtests |
 
 ## Known limits
@@ -105,5 +131,6 @@ Requires Python 3.11+, numpy and pandas. Local state lives in `var/` (gitignored
 - Form 4 insider filings are listed but not parsed. Headlines are stored but not scored.
 - US only. The price source handles other exchanges (e.g. `RELIANCE.NS`), but filings come from SEC.
 - No broker connection, by design.
+- The terminal is single-user and local. Prices are end-of-day snapshots, not a live feed.
 
 Not financial advice.

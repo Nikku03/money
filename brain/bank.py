@@ -36,7 +36,7 @@ def canon(obj) -> str:
     return json.dumps(obj, sort_keys=True, separators=(",", ":"), ensure_ascii=False, default=str)
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class Fact:
     entity: str
     attr: str
@@ -49,6 +49,7 @@ class Fact:
     context: dict = field(default_factory=dict)
     inputs: tuple = ()  # "ENTITY/id" references, for derived facts
     retrieved_at: str | None = None
+    _id: str | None = field(default=None, init=False, repr=False, compare=False)
 
     def __post_init__(self):
         object.__setattr__(self, "entity", self.entity.upper())
@@ -72,7 +73,7 @@ class Fact:
 
     @property
     def id(self) -> str:
-        fid = self.__dict__.get("_id")
+        fid = self._id
         if fid is None:
             fid = self.content_id()
             object.__setattr__(self, "_id", fid)

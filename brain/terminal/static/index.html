@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="terminal-token" content="{{TOKEN}}">
+<title>MONEY TERMINAL</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="/static/style.css">
+<script src="/static/app.js" defer></script>
+</head>
+<body>
+<header id="topbar" class="topbar">
+  <span class="brand">MONEY TERMINAL</span>
+  <span id="clocks" class="clocks" aria-label="World clocks"></span>
+  <span class="spacer"></span>
+  <span id="st-conn" class="st bad" hidden></span>
+  <span id="st-bank" class="st" title="Entities in the memory bank / research-universe size">BANK –</span>
+  <button id="st-jobs" class="st st-btn" type="button" title="Background jobs (runs JOBS)">JOBS –</button>
+  <span id="st-analyst" class="st" title="Analyst availability">ANALYST –</span>
+</header>
+
+<div id="cmdbar" class="cmdbar">
+  <span id="target" class="target" title="Commands run in this pane (Ctrl+1..4 to change, Ctrl+Enter for the next pane)">P1</span>
+  <span class="prompt" aria-hidden="true">&gt;</span>
+  <div class="cmdfield">
+    <input id="cmd" type="text" autocomplete="off" autocapitalize="off" spellcheck="false"
+           aria-label="Command" aria-autocomplete="list" aria-controls="ac"
+           placeholder="AAPL GP 5Y SPY · WEI · ASK what changed in AAPL's margins? — Enter to run, F1 for help">
+    <ul id="ac" class="ac" role="listbox" hidden></ul>
+  </div>
+  <button id="go" class="go" type="button" title="Run (Enter)">GO</button>
+</div>
+
+<main id="grid" class="grid" aria-label="Panes"></main>
+
+<footer id="tape" class="tape" aria-label="World markets ticker">
+  <div id="tape-track" class="tape-track"></div>
+</footer>
+
+<div id="popover" class="popover" role="dialog" aria-label="Fact" hidden></div>
+<noscript><p class="noscript">MONEY TERMINAL needs JavaScript.</p></noscript>
+</body>
+</html>

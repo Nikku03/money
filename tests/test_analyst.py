@@ -92,6 +92,43 @@ class AnalystTest(unittest.TestCase):
         self.assertEqual(len(res["data"]["rows"]), analyst.MAX_TABLE_ROWS)
         self.assertIn("60 more rows", res["data"]["note"])
 
+    def test_real_sdk_round_trip_offline(self):
+        # The fake client above cannot catch a keyword the SDK rejects or a header it does not send, so the
+        # real tool runner runs here too, against a mock transport: one tool call, then the answer.
+        try:
+            import anthropic._base_client as base
+        except ImportError:
+            self.skipTest("Anthropic SDK not installed")
+        http = getattr(base, "httpx2", None) or getattr(base, "httpx", None)
+        if http is None or not hasattr(http, "MockTransport"):
+            self.skipTest("SDK HTTP module not found")
+        import anthropic
+        sent = []
+
+        def handler(request):
+            body = json.loads(request.content)
+            sent.append((request.headers.get("anthropic-beta"), body))
+            content = ([{"type": "tool_use", "id": "toolu_1", "name": "describe", "input": {"ticker": "aapl"}}]
+                       if len(sent) == 1 else [{"type": "text", "text": "AAPL closed at 336.64 [9de710d2]."}])
+            return http.Response(200, json={
+                "id": f"msg_{len(sent)}", "type": "message", "role": "assistant", "model": analyst.MODEL,
+                "content": content, "stop_reason": "tool_use" if len(sent) == 1 else "end_turn",
+                "stop_sequence": None, "usage": {"input_tokens": 10, "output_tokens": 5}})
+
+        client = anthropic.Anthropic(api_key="test", http_client=http.Client(transport=http.MockTransport(handler)))
+        seen = []
+        res = analyst.ask(lambda c: seen.append(c) or {"ok": True, "view": "des", "data": {}}, "How did AAPL close?",
+                          ticker="AAPL", client=client)
+        self.assertTrue(res["ok"], res)
+        self.assertEqual((seen, res["answer"]), (["AAPL DES"], "AAPL closed at 336.64 [9de710d2]."))
+        self.assertEqual(len(sent), 2)
+        beta, body = sent[0]
+        self.assertIn("server-side-fallback-2026-07-01", beta)
+        self.assertEqual((body["model"], body["fallbacks"], body["output_config"]), (analyst.MODEL, "default", {"effort": "high"}))
+        self.assertEqual(len(body["tools"]), 13)
+        tool_results = [b for b in sent[1][1]["messages"][-1]["content"] if b["type"] == "tool_result"]
+        self.assertEqual(len(tool_results), 1)
+
     def test_bad_tool_input_never_reaches_the_bank(self):
         # The SDK's runner turns a tool exception into an is_error tool_result for Claude.
         seen, calls = [], []

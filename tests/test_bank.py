@@ -1,3 +1,4 @@
+import dataclasses
 import json
 
 from brain import check
@@ -8,7 +9,7 @@ from tests.util import TempHome, filed
 class BankTest(TempHome):
     def test_id_ignores_retrieval_time(self):
         a = filed("aapl", "x", 1, "2020-01-01", "2020-02-01")
-        b = Fact(**{**a.__dict__, "retrieved_at": "2026-01-01T00:00:00Z"})
+        b = dataclasses.replace(a, retrieved_at="2026-01-01T00:00:00Z")
         self.assertEqual(a.id, b.id)
         self.assertEqual(a.entity, "AAPL")
         self.assertEqual(a.known_at, "2020-02-01T23:59:59Z")

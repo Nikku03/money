@@ -13,7 +13,7 @@ python -m brain check                              # bank invariants; exit 0 = O
 ## Looking into a target (a company or ticker)
 
 1. `python -m brain ingest TICKER`: SEC XBRL financials, the filings list, daily prices and headlines.
-2. `python -m brain macro`: rates, spreads and inflation from FRED (needs a free `FRED_API_KEY`).
+2. `python -m brain markets` (world indices, FX, commodities, crypto) and `python -m brain macro` (the US Treasury curve; FRED series too when `FRED_API_KEY` is set).
 3. Read the web for what the bank lacks: earnings call coverage, guidance, product news, regulatory actions, analyst views. For each finding:
    ```
    python -m brain note TICKER "what the page says, in one line" \
@@ -24,6 +24,7 @@ python -m brain check                              # bank invariants; exit 0 = O
    - `--known-at` is when the page was published, not when you read it. If you can't find a publication time, leave it out (it defaults to now).
    - `--direction` is what the claim implies for the stock relative to the market over about a month. Use `none` when it implies nothing.
 4. `python -m brain brief TICKER`: a cited one-page summary. Quote numbers from the brief, not from memory.
+5. For a person at a screen, `python -m brain terminal` serves the same bank as a keyboard-driven terminal (`docs/TERMINAL.md`). Its `ASK` analyst follows the same rules as you: bank-only facts, cited ids, verdicts quoted as recorded.
 
 ## Turning an idea into a tested claim
 

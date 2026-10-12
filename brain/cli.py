@@ -33,9 +33,21 @@ def cmd_ingest_universe(a):
 
 def cmd_macro(a):
     from brain.sources import fred
-    bank = _bank()
-    for sid in a.series or list(fred.DEFAULT):
-        print(f"{sid}: {bank.add_many(fred.ingest(sid))}")
+    out = fred.ingest_all(_bank(), a.series or None)
+    return 1 if out["failed"] else 0
+
+
+def cmd_markets(a):
+    from brain import markets
+    out = markets.ingest(_bank())
+    print(f"{len(out['added'])} of {len(markets.MARKETS)} market symbols updated"
+          + (f"; failed: {', '.join(out['failed'])}" if out["failed"] else ""))
+    return 1 if not out["added"] else 0
+
+
+def cmd_terminal(a):
+    from brain.terminal.server import serve
+    serve(a.host, a.port, not a.no_browser)
 
 
 def cmd_note(a):
@@ -135,9 +147,18 @@ def main(argv=None) -> int:
     s = sub.add_parser("ingest-universe", help="refresh SEC facts, filings and prices for the research universe")
     s.set_defaults(fn=cmd_ingest_universe)
 
-    s = sub.add_parser("macro", help="collect FRED macro series")
-    s.add_argument("series", nargs="*")
+    s = sub.add_parser("macro", help="collect the Treasury yield curve, and FRED series when FRED_API_KEY is set")
+    s.add_argument("series", nargs="*", help="FRED series ids (default: the standard set)")
     s.set_defaults(fn=cmd_macro)
+
+    s = sub.add_parser("markets", help="collect daily prices for world indices, FX, commodities and crypto")
+    s.set_defaults(fn=cmd_markets)
+
+    s = sub.add_parser("terminal", help="serve the MONEY TERMINAL on this machine")
+    s.add_argument("--host", default="127.0.0.1", help="bind address (default loopback only)")
+    s.add_argument("--port", type=int, default=8765)
+    s.add_argument("--no-browser", action="store_true", help="do not open a browser tab")
+    s.set_defaults(fn=cmd_terminal)
 
     s = sub.add_parser("note", help="store a claim found on the web, with its source")
     s.add_argument("ticker")
