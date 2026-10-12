@@ -15,13 +15,15 @@ local server is only as private as its checks. Four of them, all required:
 
 The bank is not thread-safe, so one ``Bank`` lives in server state behind an
 RLock and every request that reads it holds the lock. Ingest runs in child
-processes (``jobs.py``); when one finishes, a fresh Bank is swapped in.
+processes (``jobs.py``); when one finishes, a fresh Bank is swapped in. Journals
+are append-only, so the fresh Bank re-reads only the shards that changed.
 """
 from __future__ import annotations
 
 import functools
 import hmac
 import importlib
+import io
 import ipaddress
 import json
 import re
@@ -36,7 +38,7 @@ import webbrowser
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import parse_qs, urlsplit
+from urllib.parse import parse_qs
 
 import numpy as np
 
@@ -53,14 +55,18 @@ MAX_DISCARD = 1024 * 1024  # an oversize body is read and dropped up to this, so
 CSP = ("default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; "
        "frame-ancestors 'none'; base-uri 'none'")
 HEADERS = {"Cache-Control": "no-store", "X-Content-Type-Options": "nosniff",
-           "Content-Security-Policy": CSP, "Referrer-Policy": "no-referrer"}
+           "Content-Security-Policy": CSP, "Referrer-Policy": "no-referrer",
+           # Another site may not load even our script or stylesheet: that would tell it a terminal runs here.
+           "Cross-Origin-Resource-Policy": "same-origin", "Cross-Origin-Opener-Policy": "same-origin"}
 LOOPBACK_NAMES = ("127.0.0.1", "localhost", "::1")
-HOST_HEADER = re.compile(r"(\[[0-9a-f:.]+\]|[a-z0-9.\-]+):(\d{1,5})")
+HOST_HEADER = re.compile(r"(\[[0-9a-f:.]+\]|[a-z0-9.\-]+)(?::(\d{1,5}))?")  # no port: 80, as browsers send it
 FACT_ID = re.compile(r"[0-9A-Fa-f]{1,20}")
 TICKERS_TTL = 10.0  # seconds; completion asks on every keystroke
 MAX_INGEST_TARGETS = 10
 MAX_QUESTION = 4000
 MAX_HISTORY = 50  # older chat turns are dropped; the analyst reads fewer still
+REQUEST_SECONDS = 60  # a whole request (line, headers, body) must arrive within this, however it trickles in
+MAX_CONNECTIONS = 64  # open connections beyond this are closed at once (a browser keeps about 6)
 
 API = {  # path -> (method, handler)
     "/api/run": ("GET", "api_run"),
@@ -86,6 +92,14 @@ def _is_ip(name: str) -> bool:
     try:
         ipaddress.ip_address(name)
         return True
+    except ValueError:
+        return False
+
+
+def _same_ip(a: str, b: str) -> bool:
+    """Two spellings of one IP address ('::1' and '0:0:0:0:0:0:0:1'). Never true for names."""
+    try:
+        return ipaddress.ip_address(a) == ipaddress.ip_address(b.strip("[]"))
     except ValueError:
         return False
 
@@ -118,13 +132,24 @@ def dumps(obj) -> str:
         return json.dumps(data.clean(obj), allow_nan=False, default=_default, ensure_ascii=False)
 
 
-def warm(bank: Bank) -> Bank:
-    """Read every journal shard now. A Bank loads an entity on first use, and MOV or EV touch the whole
-    universe (about 100 MB of journal, 6-7 s): done lazily under the bank lock, that first call stalls
-    every pane, after each start and again after each finished job."""
-    for e in bank.entities():
+def _stat(path: Path) -> tuple | None:
+    try:
+        st = path.stat()
+    except OSError:
+        return None
+    return st.st_ino, st.st_size, st.st_mtime_ns
+
+
+def warm(bank: Bank, names: list[str] | None = None) -> dict[str, tuple | None]:
+    """Read these entities' journal shards now (default: all of them). A Bank loads an entity on first
+    use, and MOV or EV touch the whole universe (about 100 MB of journal, 6-7 s): done lazily under the
+    bank lock, that first call stalls every pane. Returns each shard's stat, taken just before it was read,
+    so a later reload can tell which shards have not changed since."""
+    stats = {}
+    for e in bank.entities() if names is None else names:
+        stats[e.upper()] = _stat(bank.shard(e))
         bank.attrs(e)
-    return bank
+    return stats
 
 
 def _universe_size() -> int:
@@ -149,7 +174,11 @@ class TerminalServer(ThreadingHTTPServer):
         self.quiet = False  # True silences per-request error lines (tests); tracebacks are always logged
         self.jobs = jobs.JobManager(on_finish=self.reload_bank)
         self._tickers: tuple[float, list[str]] | None = None
-        self._generation = self._swapped = 0  # bank reloads started / last one swapped in
+        self._stats: dict[str, tuple | None] = {}  # entity -> its shard's stat when self.bank read it
+        self._reload_cv = threading.Condition()
+        self._reloads_asked = self._reloads_done = 0  # reload_bank calls so far / calls a finished reload covers
+        self._reloading = False
+        self._connections = threading.BoundedSemaphore(MAX_CONNECTIONS)
         self._analyst_logged = False
         super().__init__((host, port), Handler)
 
@@ -162,19 +191,72 @@ class TerminalServer(ThreadingHTTPServer):
         self.jobs.shutdown()
         super().server_close()
 
+    def process_request(self, request, client_address):
+        # One thread per connection, and a client could open thousands: past the cap, close at once.
+        if not self._connections.acquire(blocking=False):
+            self.shutdown_request(request)
+            return
+        try:
+            super().process_request(request, client_address)
+        except BaseException:
+            self._connections.release()
+            raise
+
+    def process_request_thread(self, request, client_address):
+        try:
+            super().process_request_thread(request, client_address)
+        finally:
+            self._connections.release()
+
     # ---------- state ----------
+    def warm_bank(self) -> None:
+        """Read the whole current bank now (before serving), remembering each shard's stat."""
+        stats = warm(self.bank)
+        with self.lock:
+            self._stats = stats
+
     def reload_bank(self, job: dict | None = None) -> None:
-        """A job wrote to the journal from another process; re-read it from scratch. The fresh Bank is
-        read in full before the swap and outside the lock, so panes keep answering from the old one
-        meanwhile. A reload that started earlier never replaces one that started later."""
+        """A job wrote to the journal from another process: swap in a fresh Bank. Returns once a reload
+        that started after this call has swapped, so the caller's facts are then visible. Reloads run one
+        at a time, and every call that arrives during one shares the next, so a burst of finished jobs
+        costs two reloads, not one each."""
+        with self._reload_cv:
+            self._reloads_asked += 1
+            ticket = self._reloads_asked
+            while self._reloading and self._reloads_done < ticket:
+                self._reload_cv.wait()
+            if self._reloads_done >= ticket:
+                return
+            self._reloading, covers, ok = True, self._reloads_asked, False
+        try:
+            self._reload()
+            ok = True
+        finally:
+            with self._reload_cv:
+                self._reloading = False
+                if ok:
+                    self._reloads_done = covers
+                self._reload_cv.notify_all()
+
+    def _reload(self) -> None:
+        """Build the fresh Bank outside the lock, so panes keep answering from the old one meanwhile.
+        Journals are append-only: a shard whose stat is the one the old Bank read is taken over as it
+        is, and only new or changed shards are read (one ticker's ingest reads one shard, not 100 MB)."""
         with self.lock:
-            root = self.bank.root
-            self._generation += 1
-            gen = self._generation
-        fresh = warm(Bank(root))
+            old, known = self.bank, dict(self._stats)
+        fresh = Bank(old.root)
+        caches = [k for k, v in vars(fresh).items() if isinstance(v, dict)]  # per-entity state, empty so far
+        names = fresh.entities()
+        same = {e for e in names if known.get(e.upper()) is not None and _stat(fresh.shard(e)) == known[e.upper()]}
+        stats = warm(fresh, [e for e in names if e not in same])
         with self.lock:
-            if gen > self._swapped:
-                self.bank, self._swapped, self._tickers = fresh, gen, None
+            for e in same:
+                k = e.upper()
+                if all(k in getattr(old, c) for c in caches):
+                    for c in caches:
+                        getattr(fresh, c)[k] = getattr(old, c)[k]
+                    stats[k] = known[k]
+            self.bank, self._stats, self._tickers = fresh, stats, None
 
     def tickers(self) -> list[str]:
         """Bank entities, cached briefly. Holds the lock."""
@@ -186,10 +268,11 @@ class TerminalServer(ThreadingHTTPServer):
 
     def host_allowed(self, value: str) -> bool:
         m = HOST_HEADER.fullmatch(value.strip().lower())
-        if not m or int(m.group(2)) != self.server_port:
+        if not m or int(m.group(2) or 80) != self.server_port:
             return False
         name = m.group(1).strip("[]")
-        if name in LOOPBACK_NAMES:
+        # The loopback names, in any spelling of their address, and the address we bound (the URL we print).
+        if name in LOOPBACK_NAMES or any(_same_ip(name, n) for n in ("127.0.0.1", "::1", self.host)):
             return True
         if self.loopback:
             return False
@@ -250,9 +333,7 @@ class TerminalServer(ThreadingHTTPServer):
         if len(targets) > MAX_INGEST_TARGETS:
             return {**err, "error": f"at most {MAX_INGEST_TARGETS} targets at once", "hint": "JOBS"}
         try:
-            for t in targets:  # all valid, or none queued
-                jobs.validate(t)
-            started = [self.jobs.submit(t) for t in targets]
+            started = self.jobs.submit_many(targets)  # all valid and room for all, or none queued
         except jobs.JobError as e:
             return {**err, "error": e.message, "hint": e.hint}
         title = "INGEST " + ", ".join(f"{j['target']}: job {j['id']} {j['status']}" for j in started)
@@ -274,21 +355,24 @@ def _url_host(host: str) -> str:
 
 
 def serve(host: str = "127.0.0.1", port: int = 8765, open_browser: bool = True) -> None:
+    if not 0 <= port <= 65535:
+        raise SystemExit(f"cannot listen on port {port}: a port is 0-65535. Try another --port.")
     try:
         server, _ = make_server(host, port)
-    except OSError as e:
-        raise SystemExit(f"cannot listen on {host}:{port}: {e.strerror or e}. Try another --port.")
+    except (OSError, OverflowError) as e:
+        raise SystemExit(f"cannot listen on {host}:{port}: {getattr(e, 'strerror', None) or e}. Try another --port.")
     url = f"http://{_url_host(host)}:{server.server_port}/"
     # Read the whole bank before announcing the URL: loading it while serving would slow every request
     # that arrives meanwhile (the reads and the requests take turns on one interpreter lock).
     t0 = time.monotonic()
     print("reading the memory bank...", end=" ", flush=True)
-    warm(server.bank)
+    server.warm_bank()
     print(f"{len(server.tickers())} entities in {time.monotonic() - t0:.1f}s", flush=True)
     if not server.loopback:
         print(f"WARNING: listening on {host or 'all interfaces'}, not loopback. The terminal has no user "
-              f"accounts: anyone who can reach this port can open it, read the bank and start ingest jobs.",
-              file=sys.stderr)
+              f"accounts: anyone who can reach this port can open it, read the bank, start ingest jobs and "
+              f"read their logs, and ask the analyst (ASK), which runs the model on your Anthropic credentials "
+              f"and costs you money.", file=sys.stderr)
     print(f"MONEY TERMINAL on {url}  (Ctrl+C to stop)", flush=True)
     if open_browser:
         try:
@@ -300,7 +384,12 @@ def serve(host: str = "127.0.0.1", port: int = 8765, open_browser: bool = True) 
     except KeyboardInterrupt:
         print("\nstopping", file=sys.stderr)
     finally:
+        left = server.jobs.shutdown()
         server.server_close()
+        for target, log in left:
+            if log:
+                print(f"INGEST {target} is still running and will finish on its own; its output: {log}",
+                      file=sys.stderr)
 
 
 # ---------- requests ----------
@@ -314,10 +403,51 @@ def _param(q: dict, name: str) -> str:
     return (q.get(name) or [""])[0]
 
 
+class _Deadline(io.RawIOBase):
+    """The request side of a connection, with one deadline for a whole request. A socket timeout bounds
+    each recv only, so a client sending a byte every few seconds would otherwise hold its thread forever.
+    The clock starts at a request's first byte; waiting for that byte uses the plain idle timeout."""
+
+    def __init__(self, raw, handler):
+        super().__init__()
+        self.raw, self.handler = raw, handler
+
+    def readable(self):
+        return True
+
+    def readinto(self, b):
+        h = self.handler
+        if h._deadline is None:
+            h.connection.settimeout(h.timeout)
+        else:
+            left = h._deadline - time.monotonic()
+            if left <= 0:
+                raise TimeoutError("the request took too long to arrive")
+            h.connection.settimeout(min(left, h.timeout))
+        n = self.raw.readinto(b)
+        if n and h._deadline is None:
+            h._deadline = time.monotonic() + REQUEST_SECONDS
+        return n
+
+    def close(self):
+        self.raw.close()
+        super().close()
+
+
 class Handler(BaseHTTPRequestHandler):
     server: TerminalServer
     _sent, _consumed = False, True  # reset per request in _handle; protocol errors never drain
-    timeout = 60  # a client that stalls mid-request does not hold a thread forever
+    _deadline = None  # when the request being read must be complete (see _Deadline)
+    timeout = 60  # idle limit per read or write; REQUEST_SECONDS bounds a whole request
+
+    def setup(self):
+        super().setup()
+        self.rfile.close()
+        self.rfile = io.BufferedReader(_Deadline(self.connection.makefile("rb", 0), self))
+
+    def handle_one_request(self):
+        self._deadline = None
+        super().handle_one_request()
 
     def do_GET(self):
         self._handle("GET")
@@ -336,7 +466,7 @@ class Handler(BaseHTTPRequestHandler):
             self.close_connection = True
             self._json(e.code, {"ok": False, "error": e.message})
         except Exception:  # noqa: BLE001 - log it; the client learns nothing but "internal error"
-            _log_exc(f"{method} {urlsplit(self.path).path}")
+            _log_exc(f"{method} {self.path[:200]!r}")  # never re-parse here: the path may be what failed
             if not self._sent:
                 self.close_connection = True
                 self._json(500, {"ok": False, "error": "internal error"})
@@ -344,8 +474,9 @@ class Handler(BaseHTTPRequestHandler):
     def _route(self, method: str) -> None:
         if not self._host_ok():
             return self._json(403, {"ok": False, "error": "forbidden: unexpected Host header"})
-        url = urlsplit(self.path)
-        path = url.path
+        if not self.path.startswith("/"):  # absolute-form (http://other/...) or '*': a browser sends neither
+            raise BadRequest(400, "request target must be a path")
+        path, _, query = self.path.partition("#")[0].partition("?")
         if path.startswith("/api/"):
             if not self._token_ok():
                 return self._json(401, {"ok": False, "error": "missing or wrong X-Terminal-Token"})
@@ -358,7 +489,7 @@ class Handler(BaseHTTPRequestHandler):
             if method == "POST":
                 return getattr(self, name)(self._read_json())
             try:
-                q = parse_qs(url.query, keep_blank_values=True, max_num_fields=20)
+                q = parse_qs(query, keep_blank_values=True, max_num_fields=20)
             except ValueError:
                 raise BadRequest(400, "too many query parameters")
             return getattr(self, name)(q)
@@ -390,7 +521,10 @@ class Handler(BaseHTTPRequestHandler):
         if length > MAX_BODY:
             raise BadRequest(413, f"body larger than {MAX_BODY // 1024} KB")
         self._consumed = True
-        raw = self.rfile.read(length)
+        try:
+            raw = self.rfile.read(length)
+        except TimeoutError:  # the body stalled, or trickled past REQUEST_SECONDS: the client's doing, not ours
+            raise BadRequest(408, "request body timed out")
         if len(raw) != length:
             raise BadRequest(400, "incomplete body")
         ctype = (self.headers.get("Content-Type") or "").split(";")[0].strip().lower()
@@ -427,6 +561,7 @@ class Handler(BaseHTTPRequestHandler):
     def _send(self, code: int, body: bytes, ctype: str, extra: dict | None = None) -> None:
         self._drain()
         self._sent = True
+        self.connection.settimeout(self.timeout)  # reading may have shrunk it toward the request deadline
         self.send_response(code)
         self.send_header("Content-Type", ctype)
         self.send_header("Content-Length", str(len(body)))
@@ -485,10 +620,13 @@ class Handler(BaseHTTPRequestHandler):
         self._json(200, {"ok": True, "items": items})
 
     def api_status(self, q: dict) -> None:
+        # Jobs first: a job stops counting only after its facts are in the bank, so a 0 here means the
+        # tickers read next include them (read the other way round, they could predate the swap).
+        running = self.server.jobs.running()
         tickers = self.server.tickers()
         ok, reason = self.server.analyst_status()
         self._json(200, {"ok": True, "entities": len(tickers), "tickers": tickers, "universe": _universe_size(),
-                         "jobs_running": self.server.jobs.running(), "analyst": {"available": ok, "reason": reason},
+                         "jobs_running": running, "analyst": {"available": ok, "reason": reason},
                          "time": now_iso()})
 
     def api_fact(self, q: dict) -> None:

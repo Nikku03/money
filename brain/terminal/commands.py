@@ -74,7 +74,11 @@ KEYS = [
 ]
 
 NOISE = {"US", "EQUITY", "EQUITIES", "<GO>", "GO"}
+TRAILING_NOISE = {"GO"}  # also a ticker (Grocery Outlet): noise only at the end of a line (`AAPL GO`)
 RANGES = ("1M", "3M", "6M", "YTD", "1Y", "2Y", "5Y", "10Y", "MAX")
+RANGE_SHAPE = re.compile(r"\d+[DWMY]")  # fullmatch; a GP argument even when it is not one of RANGES
+VERBS = {"INGEST", "SHOW"}  # first on a line they are always the function: `INGEST CF` ingests CF
+FREE_ARGS = {"ASK", "HELP"}  # first on a line they are always the function, whatever follows
 INGEST_KEYWORDS = ("MARKETS", "MACRO", "UNIVERSE")
 TICKER = re.compile(r"[A-Za-z0-9.^=\-]{1,15}")  # fullmatch; same rule as ingest targets
 _FACT_ID = re.compile(r"[0-9A-Fa-f]{4,20}")
@@ -85,7 +89,7 @@ NOT_TICKERS = {"MACRO"}  # bank entities that hold macro series, not securities
 def _is_arg(fn: str, w: str) -> bool:
     """Tokens that are this function's arguments, never its ticker (so `GP 5Y AAPL` finds AAPL)."""
     if fn == "GP":
-        return w in RANGES
+        return w in RANGES or bool(RANGE_SHAPE.fullmatch(w))  # `GP 3Y AAPL`: 3Y is a bad range, not the ticker
     if fn == "CF":  # forms carry a digit (10-K, 8-K, 4, 144); market symbols with digits carry . ^ or =
         return any(c.isdigit() for c in w) and not any(c in w for c in ".^=")
     if fn == "SHOW":
@@ -103,10 +107,14 @@ def suggest(code: str) -> str:
 
 def _function_position(words: list[str]) -> int | None:
     """Index of the function code: `[TICKER] FUNCTION` wins over function-first when both read,
-    so a ticker that is also a code (CF, GP) still works as `CF DES`."""
+    so a ticker that is also a code still works: `CF DES`, `MOV DES`, `RES GP 1Y`. Both read only
+    when the second code takes a ticker (`GP MOV 5Y` charts MOV). ASK and HELP take free text, and
+    the verbs INGEST and SHOW take a target, so first on a line they are always the function."""
     w0 = words[0]
     w1 = words[1] if len(words) > 1 else None
-    if w0 in FUNCTIONS and not (w1 in FUNCTIONS and FUNCTIONS[w0]["scope"] != "global"):
+    if w0 in FUNCTIONS:
+        if w1 in FUNCTIONS and FUNCTIONS[w1]["scope"] != "global" and w0 not in VERBS | FREE_ARGS:
+            return 1
         return 0
     if w1 in FUNCTIONS:
         return 1
@@ -116,7 +124,10 @@ def _function_position(words: list[str]) -> int | None:
 def parse(line: str) -> Command:
     raw = line if isinstance(line, str) else ""
     spans = [(m.group().upper(), m.end()) for m in re.finditer(r"\S+", raw)]
-    words = [(w, end) for w, end in spans if w not in NOISE]
+    words = [(w, end) for w, end in spans if w not in NOISE - TRAILING_NOISE]
+    dropped = None  # `AAPL GO` is AAPL; `GO DES` and a bare `GO` are the ticker GO
+    while len(words) > 1 and words[-1][0] in TRAILING_NOISE:
+        dropped = words.pop()[0]
     if not words:
         raise CommandError("empty command", "HELP")
     pos = _function_position([w for w, _ in words])
@@ -141,10 +152,14 @@ def parse(line: str) -> Command:
             else:
                 args.append(w)
 
+    if dropped and ticker is None and (FUNCTIONS[fn]["scope"] == "security" or (fn == "INGEST" and not args)):
+        ticker = dropped  # `DES GO`, `INGEST GO`: the trailing GO was the only ticker on the line
     if ticker is not None and not TICKER.fullmatch(ticker):
         raise CommandError(f"'{ticker}' is not a ticker or a function", "HELP")
     if FUNCTIONS[fn]["scope"] == "security" and ticker is None:
         raise CommandError(f"{fn} needs a ticker, e.g. AAPL {fn}", f"AAPL {fn}")
+    if args and FUNCTIONS[fn]["scope"] == "global" and not FUNCTIONS[fn]["args"] and fn not in FREE_ARGS:
+        raise CommandError(f"{fn} takes no arguments", fn)  # never ignored silently: `MOV XYZ` is not MOV
     if fn == "INGEST" and ticker is None and not args:
         raise CommandError("INGEST needs a target: a ticker, MARKETS, MACRO or UNIVERSE", "INGEST AAPL")
     if fn == "SHOW" and not args:
@@ -160,7 +175,8 @@ def complete(prefix: str, tickers: list[str]) -> list[dict]:
         return []
     toks = text.split()
     partial = "" if text[-1].isspace() else toks[-1].upper()
-    done = [t.upper() for t in (toks if not partial else toks[:-1]) if t.upper() not in NOISE]
+    done = [t.upper() for i, t in enumerate(toks if not partial else toks[:-1])
+            if t.upper() not in NOISE or (i == 0 and t.upper() in TRAILING_NOISE)]  # a leading GO is a ticker
     fns = [t for t in done if t in FUNCTIONS]
     if "ASK" in fns:
         return []  # free text from here on

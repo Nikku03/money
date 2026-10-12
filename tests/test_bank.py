@@ -82,3 +82,33 @@ class BankTest(TempHome):
         self.bank.add(d)
         errors, _ = check.run(Bank(self.bank.root))
         self.assertEqual(errors, [])
+
+    def test_unreadable_first_line_is_recorded_not_raised(self):
+        # An ingest child that dies mid-write can leave a shard whose first line is torn. Every caller of
+        # entities() (terminal start-up, status, completion, SHOW, `brain check`) used to crash on it.
+        good = filed("AAPL", "x", 1, "2020-01-01", "2020-02-01")
+        self.bank.add(good)
+        line = self.bank.shard("AAPL").read_text()
+        (self.bank.root / "MSFT.jsonl").write_text(line[:120])  # torn: no closing brace, no newline
+        (self.bank.root / "_GSPC.jsonl").write_text("\n[1, 2]\n" + line.replace("AAPL", "^GSPC"))
+        fresh = Bank(self.bank.root)
+        self.assertEqual(fresh.entities(), ["AAPL", "MSFT", "_GSPC"])
+        self.assertEqual(len(fresh.journal_errors), 2)
+        self.assertTrue(all("first record" in e for e in fresh.journal_errors))
+        self.assertEqual(fresh.view().latest("AAPL", "x").value, 1)
+        self.assertEqual(fresh.facts("MSFT"), [])
+        self.assertEqual(len(fresh.facts("_GSPC")), 1)  # the malformed record is skipped, the rest replays
+        self.assertTrue(any("_GSPC.jsonl:2: malformed record" in e for e in fresh.journal_errors))
+        errors, _ = check.run(Bank(self.bank.root))
+        self.assertTrue(any(e.startswith("MSFT.jsonl:1: unparseable") for e in errors), errors)
+        self.assertTrue(any("_GSPC.jsonl:2" in e for e in errors), errors)
+
+    def test_torn_multibyte_character_does_not_stop_the_replay(self):
+        f = filed("A", "x", "café", "2020-01-01", "2020-02-01")
+        self.bank.add(f)
+        p = self.bank.shard("A")
+        p.write_bytes(p.read_bytes() + "é".encode()[:1])  # half of a two-byte character, no newline
+        fresh = Bank(self.bank.root)
+        self.assertEqual(fresh.entities(), ["A"])
+        self.assertEqual(fresh.view().latest("A", "x").value, "café")
+        self.assertTrue(any("A.jsonl:2: unparseable" in e for e in fresh.journal_errors))

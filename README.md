@@ -7,7 +7,7 @@ An agent with web access reads the internet. This repo is what it remembers, and
  SEC EDGAR (filings, XBRL) ─────────┤
  Yahoo prices, world markets ───────┤
  US Treasury curve, FRED macro ─────┼──► memory bank ──► MONEY TERMINAL (local, keyboard-driven; every number cited)
-                                    │    (sourced,   ──► analyst: Claude reading the bank through read-only tools
+                                    │    (sourced,   ──► analyst: Claude reading the bank through terminal commands
                                     │     timestamped)──► research engine: declared hypotheses, matched nulls
                                     └─────────────────► claim scoring: is this source ever right?
 ```
@@ -62,7 +62,7 @@ A keyboard-driven market terminal over the memory bank, in the style of professi
 | `BRIEF` `SHOW` | the cited one-page brief; any fact with its source |
 | `WEI` `MOV` `CURVE` `ECO` | world markets, universe movers, Treasury yield curve, macro |
 | `RES` `CLM` | research verdicts; web-claim track records per source |
-| `ASK` | ask the analyst. Claude answers only from the bank, through read-only tools, citing fact ids (needs `pip install anthropic` and `ANTHROPIC_API_KEY`) |
+| `ASK` | ask the analyst. Claude answers only from the bank, through tools that run terminal commands, citing fact ids (needs `pip install anthropic` and `ANTHROPIC_API_KEY` or an `ant auth login` profile). The tools cannot ingest or start jobs; like `BRIEF`, `DES` records the derived metrics it computes |
 | `INGEST` `JOBS` | collect data in the background without leaving the terminal |
 
 It listens on 127.0.0.1 only and requires a per-session token on every API call; a Host check blocks DNS rebinding, and the page's CSP allows no external requests.
@@ -100,7 +100,7 @@ Requires Python 3.11+, numpy and pandas. Local state lives in `var/` (gitignored
 | --- | --- |
 | `brain/bank.py` | Fact, Bank (journal, replay, downgrade), View (point-in-time reads) |
 | `brain/check.py` | Invariants: id integrity, replay, nothing known before it happened, derived facts known after their inputs, series files intact |
-| `brain/sources/` | SEC EDGAR (XBRL facts, filings, identity), Yahoo daily prices and splits, FRED, Yahoo RSS headlines |
+| `brain/sources/` | SEC EDGAR (XBRL facts, filings, identity), Yahoo daily prices and splits, US Treasury par yield curve, FRED, Yahoo RSS headlines |
 | `brain/metrics.py` | Point-in-time metrics (market value, earnings yield, asset growth, margins, FCF), shared by briefs and backtests |
 | `brain/claims.py` | Store web claims; score them per source |
 | `brain/brief.py` | Cited one-page brief; writes derived facts back |

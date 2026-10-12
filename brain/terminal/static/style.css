@@ -167,9 +167,13 @@ a:hover { text-decoration: underline; }
 }
 .pane.focused .pane-num { background: var(--amber); color: #000; }
 .pane-cmd { color: var(--amber); font-weight: 700; flex: 0 0 auto; overflow: hidden; text-overflow: ellipsis; max-width: 40%; }
-.pane-title { color: var(--text); flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
-.pane-asof { color: var(--dim); flex: 0 0 auto; }
-.pane-tools { display: flex; gap: 2px; flex: 0 0 auto; }
+/* When the header is short of room the title gives way first, then the date, then the range buttons
+   (which scroll sideways); the reload and maximise buttons never shrink. */
+.pane-title { color: var(--text); flex: 1 1000 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.pane-asof { color: var(--dim); flex: 0 100 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.pane-tools { display: flex; gap: 2px; flex: 0 1 auto; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+.pane-tools::-webkit-scrollbar { display: none; }
+.pane-tools > *, .pane-head > .btn { flex: 0 0 auto; }
 .pane-busy { color: var(--amber); flex: 0 0 auto; animation: blink 1s steps(2, start) infinite; }
 
 .btn {
@@ -245,7 +249,7 @@ a:hover { text-decoration: underline; }
 .tbl th.num, .tbl td.num { text-align: right; }
 .tbl th.grow, .tbl td.grow { width: 100%; }
 .tbl td.fit { max-width: 0; min-width: calc(var(--grow-min, 14ch) + 16px); overflow: hidden; text-overflow: ellipsis; }
-.tbl td.wrap, .tbl td .wrap { white-space: normal; min-width: 26ch; }
+.tbl td.wrap, .tbl td .wrap { white-space: normal; min-width: 26ch; overflow-wrap: anywhere; }  /* one long token must not widen the table */
 .tbl th.src, .tbl td.src { width: 1%; text-align: right; padding-left: 4px; }
 .tbl tbody tr:hover td { background: var(--hover); }
 .tbl tr.grp td {
@@ -254,6 +258,7 @@ a:hover { text-decoration: underline; }
   border-bottom: 1px solid var(--rule-strong);
 }
 .tbl tr.grp:hover td { background: var(--pane); }
+.tbl tr.grp .grp-label { display: inline-block; position: sticky; left: 8px; }  /* the row's cell spans every column and scrolls */
 .tbl tr.sub td { color: var(--dim); white-space: normal; padding-top: 0; padding-bottom: 5px; border-bottom-color: var(--rule); }
 .tbl tr.sub:hover td { background: transparent; }
 .tbl td:first-child, .tbl th:first-child { position: sticky; left: 0; z-index: 1; background: var(--pane); }
@@ -357,8 +362,9 @@ a:hover { text-decoration: underline; }
 /* ---------- fact ---------- */
 .fact { padding-bottom: 8px; }
 .fact-head { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; padding: 8px 8px 6px; border-bottom: 1px solid var(--rule-strong); }
-.fact-head .attr { color: var(--amber); font-weight: 700; word-break: break-all; }
-.fact .mono-wrap { white-space: pre-wrap; word-break: break-all; }
+.fact-head .attr { color: var(--amber); font-weight: 700; overflow-wrap: anywhere; }
+.fact .mono-wrap { white-space: pre-wrap; overflow-wrap: anywhere; }
+.fact .tbl td.attr { min-width: calc(30ch + 16px); }  /* XBRL concept names are long: break them into a few lines, not letters */
 details.raw { margin: 8px 8px 0; }
 details.raw summary, details.tools summary { color: var(--dim); cursor: pointer; user-select: none; }
 details.raw summary:hover, details.tools summary:hover { color: var(--amber); }
@@ -380,7 +386,7 @@ pre.json {
 .err-hint .cmdlink { margin-right: 10px; }
 
 /* ---------- markdown ---------- */
-.md { padding: 6px 12px 14px; max-width: 128ch; line-height: 1.5; font-size: 12px; }
+.md { padding: 6px 12px 14px; max-width: 128ch; line-height: 1.5; font-size: 12px; overflow-wrap: anywhere; }
 .md > :first-child { margin-top: 4px; }
 .md h1, .md h2, .md h3, .md h4 { color: var(--amber); margin: 14px 0 5px; line-height: 1.3; }
 .md h1 { font-size: 15px; padding-bottom: 4px; border-bottom: 1px solid var(--rule-strong); }
@@ -411,7 +417,7 @@ pre.json {
 .ask-intro { padding: 10px 12px; color: var(--dim); line-height: 1.6; max-width: 100ch; }
 .ask-intro .cmdlink { display: block; margin: 3px 0 0 2px; text-align: left; }
 .turn { border-bottom: 1px solid var(--rule); padding: 6px 0 4px; }
-.turn-q { display: flex; gap: 8px; padding: 0 12px; color: var(--text); font-weight: 600; white-space: pre-wrap; }
+.turn-q { display: flex; gap: 8px; padding: 0 12px; color: var(--text); font-weight: 600; white-space: pre-wrap; overflow-wrap: anywhere; }
 .turn-q .qp { color: var(--amber); flex: 0 0 auto; }
 .turn-a .md { padding-top: 0; }
 .thinking { padding: 6px 12px; color: var(--amber); }
@@ -476,7 +482,6 @@ details.tools li .tn { color: var(--dim); display: inline-block; min-width: 16ch
   .grid { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; grid-auto-rows: minmax(420px, 78vh); overflow-y: auto; }
   .grid.maxed { grid-auto-rows: minmax(0, 1fr); }
   .clocks { gap: 10px; }
-  .pane-asof { display: none; }
   .pane-cmd { max-width: 45%; }
 }
 

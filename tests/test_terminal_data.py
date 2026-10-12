@@ -13,9 +13,10 @@ from brain import brief, config, series
 from brain.bank import Bank, Fact
 from brain.claims import note
 from brain.research.hypotheses import HYPOTHESES
-from brain.sources import treasury
+from brain.net import Response
+from brain.sources import prices, treasury
 from brain.terminal import data
-from brain.terminal.commands import Command
+from brain.terminal.commands import Command, parse
 from brain.timeutil import today
 from tests.util import TempHome, filed, price_snapshot
 
@@ -24,6 +25,8 @@ END = pd.Timestamp(today()) - pd.offsets.BDay(3)
 DAYS = pd.bdate_range(END - pd.DateOffset(years=11, months=6), END).strftime("%Y-%m-%d").tolist()
 CRYPTO_DAYS = pd.date_range(END - pd.DateOffset(years=2), END).strftime("%Y-%m-%d").tolist()
 LAST_FY = END.year - 1 if END >= pd.Timestamp(f"{END.year}-02-15") else END.year - 2
+# A 4:1 split in the middle of FA's ten-year window, relative to today so the tests never age out.
+SPLIT_DATE = f"{LAST_FY - 5}-08-31"
 UNIVERSE = ["AAPL", "BBB", "CCC", "DDD", "EEE", "FFF"]
 
 
@@ -41,7 +44,7 @@ def build_bank(bank: Bank) -> dict:
     for t in [*UNIVERSE, "SPY", "^GSPC"]:
         px[t] = walk(rng, len(DAYS))
         adj = [p * (0.98 + 0.02 * i / len(DAYS)) for i, p in enumerate(px[t])]  # dividends: adj below close early on
-        bank.add(price_snapshot(t, DAYS, px[t], adj=adj, splits=[("2020-08-31", 4.0)] if t == "AAPL" else ()))
+        bank.add(price_snapshot(t, DAYS, px[t], adj=adj, splits=[(SPLIT_DATE, 4.0)] if t == "AAPL" else ()))
     bank.add(price_snapshot("EURUSD=X", DAYS, walk(rng, len(DAYS), 1.1, 0.004)))
     px["BTC-USD"] = walk(rng, len(CRYPTO_DAYS), 30000.0, 0.03)
     bank.add(price_snapshot("BTC-USD", CRYPTO_DAYS, px["BTC-USD"]))
@@ -188,6 +191,12 @@ class SyntheticBankTest(unittest.TestCase):
             self.assertIn(k, keys)
         mc = d["metrics"][keys.index("market_cap")]
         self.assertTrue(mc["cite"] and len(mc["inputs"]) == 2)
+        # every row is dated: the price date for market value and the yields, the fiscal-year end otherwise
+        as_of = {m["key"]: m["as_of"] for m in d["metrics"]}
+        for k in ("market_cap", "earnings_yield", "pe", "fcf_yield"):
+            self.assertEqual(as_of[k], DAYS[-1], k)
+        for k in ("revenue_growth", "net_margin", "gross_margin", "free_cash_flow", "asset_growth"):
+            self.assertEqual(as_of[k], f"{LAST_FY}-12-31", k)
         written = self.bank.facts("AAPL", "derived.market_cap")  # written back, as the brief does
         self.assertIn(mc["cite"], [f.id[:8] for f in written])
         self.assertNotIn("derived.pe", self.bank.attrs("AAPL"))  # P/E is display-only
@@ -221,7 +230,7 @@ class SyntheticBankTest(unittest.TestCase):
         self.assertAlmostEqual(d["stats"]["first"], px[0], places=4)
         self.assertAlmostEqual(d["stats"]["high"], max(px), places=4)
         self.assertEqual(d["stats"]["high_date"], DAYS[int(np.argmax(px))])
-        self.assertEqual(d["splits"], [["2020-08-31", 4.0]])
+        self.assertEqual(d["splits"], [[SPLIT_DATE, 4.0]])
         self.assertEqual((d["kind"], d["cite"] is not None), ("equity", True))
         self.assertEqual(d["rebased"][0]["value"], 100.0)
         self.assertEqual(len(d["rebased"]), len(d["series"]))
@@ -232,11 +241,17 @@ class SyntheticBankTest(unittest.TestCase):
         start = str((END - pd.DateOffset(years=1)).date())
         self.assertEqual(d["series"][0]["date"], min(x for x in DAYS if x >= start))
         ytd = self.run_ok("GP AAPL YTD")["data"]
-        self.assertEqual(ytd["series"][0]["date"], min(x for x in DAYS if x[:4] == DAYS[-1][:4]))
+        self.assertEqual(ytd["series"][0]["date"], max(x for x in DAYS if x[:4] < DAYS[-1][:4]))  # last close of last year
+        self.assertAlmostEqual(ytd["stats"]["ret"], self.run_ok("AAPL DES")["data"]["price"]["ret_ytd"], places=10)
         self.assertEqual(len(self.run_ok("AAPL GP 1M")["data"]["series"]), sum(
             x >= str((END - pd.DateOffset(months=1)).date()) for x in DAYS))
         self.assertIn("one range", self.run_err("AAPL GP 1Y 5Y")["error"])
         self.assertIn("at most 3", self.run_err("AAPL GP SPY BBB CCC DDD")["error"])
+        for bad in ("3Y", "2M", "1W", "20Y"):  # a range we do not draw is an error, never a comparison ticker
+            r = self.run_err(f"AAPL GP {bad}")
+            self.assertEqual((r["error"], r["hint"]), (f"unknown range {bad}; ranges: 1M 3M 6M YTD 1Y 2Y 5Y 10Y MAX",
+                                                       "AAPL GP 1Y"))
+        self.assertTrue(self.run_err("GP 3Y AAPL")["error"].startswith("unknown range 3Y"))
 
     def test_gp_compare_rebased(self):
         r = self.run_ok("AAPL GP 1Y SPY BTC-USD ZZZZ")
@@ -252,6 +267,24 @@ class SyntheticBankTest(unittest.TestCase):
         i0 = DAYS.index(main[0])
         adj = [p * (0.98 + 0.02 * i / len(DAYS)) for i, p in enumerate(spy)]
         self.assertAlmostEqual(d["compare"][0]["points"][-1]["value"], adj[-1] / adj[i0] * 100, places=3)
+
+    def test_gp_compare_that_starts_later(self):
+        # BTC-USD has two years of history: on MAX every line is 100 on its first date, so the legend's
+        # returns (last / 100 - 1) all cover the same period.
+        d = self.run_ok("AAPL GP MAX SPY BTC-USD")["data"]
+        spy, btc = d["compare"]
+        first_btc = min(x for x in DAYS if x >= CRYPTO_DAYS[0])
+        self.assertEqual((spy["start"], btc["start"]), (DAYS[0], first_btc))
+        base = d["rebase_date"]
+        self.assertTrue(first_btc <= base <= DAYS[DAYS.index(first_btc) + 5], base)  # the first shown date
+        at = lambda pts: next(p["value"] for p in pts if p["date"] == base)
+        self.assertEqual((at(d["rebased"]), at(spy["points"]), at(btc["points"])), (100.0, 100.0, 100.0))
+        self.assertEqual(btc["points"][0]["date"], base)
+        adj = {p["date"]: p["adj"] for p in d["series"]}
+        self.assertAlmostEqual(d["rebased"][-1]["value"] / 100 - 1, adj[DAYS[-1]] / adj[base] - 1, places=10)
+        a = self.syn["px"]["BTC-USD"]
+        self.assertAlmostEqual(btc["points"][-1]["value"] / 100 - 1, a[-1] / a[CRYPTO_DAYS.index(base)] - 1, places=8)
+        self.assertEqual(self.run_ok("AAPL GP MAX")["data"]["rebase_date"], DAYS[0])
 
     def test_gp_missing(self):
         self.assertEqual(self.run_err("ZZZZ GP")["hint"], "INGEST ZZZZ")
@@ -283,10 +316,10 @@ class SyntheticBankTest(unittest.TestCase):
         self.assertEqual((err["error"], err["hint"]), ("no SEC facts for ZZZZ", "INGEST ZZZZ"))
 
     def test_fa_eps_on_todays_share_basis(self):
-        # Synthetic AAPL splits 4:1 on 2020-08-31; each FY's 10-K is filed on Feb 10 of the next year.
+        # Synthetic AAPL splits 4:1 on SPLIT_DATE; each FY's 10-K is filed on Feb 10 of the next year.
         d = self.run_ok("AAPL FA")["data"]
         eps = next(r for r in d["rows"] if r["item"] == "EPS diluted")
-        before = [fy for fy in eps if fy[:2] == "20" and fy < "2020-01-01"]  # filed 2020-02-10, before the split
+        before = [fy for fy in eps if fy[:2] == "20" and fy < SPLIT_DATE[:4] + "-01-01"]  # filed before the split
         self.assertTrue(before)
         for fy in [c["key"] for c in d["columns"][1:]]:
             k = int(fy[:4]) - (LAST_FY - 12)
@@ -295,7 +328,7 @@ class SyntheticBankTest(unittest.TestCase):
             cited = next(f for f in self.bank.facts("AAPL", "us-gaap:EarningsPerShareDiluted")
                          if f.id.startswith(eps["_cites"][fy]))
             self.assertAlmostEqual(cited.value, filed_value, places=6)  # the citation keeps the as-filed number
-        self.assertIn("4:1 on 2020-08-31", d["note"])
+        self.assertIn(f"4:1 on {SPLIT_DATE}", d["note"])
 
     def test_cf(self):
         d = self.run_ok("AAPL CF")["data"]
@@ -388,9 +421,11 @@ class SyntheticBankTest(unittest.TestCase):
         by = {g: [r for r in d["rows"] if r["_group"] == g] for g in d["groups"]}
         self.assertTrue(all(0 < len(v) <= 8 for v in by.values()))
         up = [r["chg_1d"] for r in by["Top gainers, last session"]]
+        down = [r["chg_1d"] for r in by["Top losers, last session"]]
         self.assertEqual(up, sorted(up, reverse=True))
-        self.assertEqual(by["Top gainers, last session"][0]["symbol"],
-                         by["Top losers, last session"][-1]["symbol"])
+        self.assertEqual(down, sorted(down))
+        self.assertTrue(all(x > 0 for x in up) and all(x < 0 for x in down))  # a gainer rose; a loser fell
+        self.assertEqual(len(up) + len(down), len(UNIVERSE))
         self.assertIn("Apple Inc.", [r["name"] for r in d["rows"]])
 
     def test_curve(self):
@@ -459,6 +494,35 @@ class EmptyBankTest(TempHome):
             self.assertTrue(data.run_line(self.bank, "RES")["ok"])  # an empty ledger is a fact, not an error
             self.assertTrue(data.run_line(self.bank, "CLM")["ok"])
 
+    def test_ingest_hint_round_trips_for_tickers_that_are_codes(self):
+        # CF Industries, Movado, RPC...: the hint for a code-named ticker must start a job for that ticker.
+        for code in ("CF", "FA", "GP", "MOV", "RES", "ECO", "CLM", "GO"):
+            r = data.run_line(self.bank, f"{code} DES")
+            self.assertEqual((r["fn"], r["ticker"], r["error"], r["hint"]),
+                             ("DES", code, f"nothing in the bank for {code}", f"INGEST {code}"))
+            cmd = parse(r["hint"])
+            self.assertEqual((cmd.fn, cmd.ticker, cmd.args), ("INGEST", code, []), code)
+
+    def test_mov_session_survives_one_stock_ingested_after_the_close(self):
+        days = pd.bdate_range(end=pd.Timestamp(today()) - pd.offsets.BDay(3), periods=40).strftime("%Y-%m-%d").tolist()
+        nxt = (pd.Timestamp(days[-1]) + pd.offsets.BDay(1)).strftime("%Y-%m-%d")
+        moves = {"AAA": 0.02, "BBB": 0.01, "CCC": -0.01, "DDD": -0.03, "EEE": 0.0}
+        for t, m in moves.items():
+            self.bank.add(price_snapshot(t, days, [100.0] * 39 + [100.0 * (1 + m)]))
+        self.bank.add(price_snapshot("KKK", days + [nxt], [100.0] * 40 + [100.1]))  # re-ingested after the close
+        uni = Path(self._tmp.name) / "uni.json"
+        uni.write_text(json.dumps({"tickers": [*moves, "KKK"]}))
+        with mock.patch.object(config, "UNIVERSE", uni):
+            r = data.run_line(self.bank, "MOV")
+        d = r["data"]
+        by = {g: [row["symbol"] for row in d["rows"] if row["_group"] == g] for g in d["groups"]}
+        self.assertEqual(by["Top gainers, last session"], ["AAA", "BBB"])
+        self.assertEqual(by["Top losers, last session"], ["DDD", "CCC"])
+        self.assertIn(f"last session {days[-1]}", d["note"])
+        self.assertIn(f"1 stocks whose last close is not on {days[-1]} are left out", d["note"])
+        self.assertEqual(by["Top 1 month"][0], "AAA")
+        self.assertEqual(r["asof"], nxt)
+
     def test_display_rules_for_banks(self):
         # A bank lists one exchange per listed security and files offering paperwork daily.
         days = pd.bdate_range(end=pd.Timestamp(today()) - pd.offsets.BDay(2), periods=30).strftime("%Y-%m-%d").tolist()
@@ -499,7 +563,25 @@ class EmptyBankTest(TempHome):
         self.assertAlmostEqual(s["ret_ytd"], a[-1] / a[prior] - 1)
         self.assertEqual((s["high_12m"], s["close"]), (400.0, 400.0))
         self.assertAlmostEqual(s["vol_12m"], np.diff(np.log(a[-253:])).std() * np.sqrt(252))
-        self.assertIsNone(brief.price_stats(d[:1], a[:1], a[:1]))
+        self.assertIsNone(brief.price_stats(d[:0], a[:0], a[:0]))
+
+    def test_price_stats_never_relabels_a_shorter_window(self):
+        d = np.array(pd.bdate_range("2024-03-01", periods=120).strftime("%Y-%m-%d"))
+        a = np.linspace(100.0, 160.0, 120)
+        c = a * 0.9  # closes differ from dividend-adjusted closes
+        one = brief.price_stats(d[:1], c[:1], a[:1])  # a single close is still shown
+        self.assertEqual((one["close"], one["date"]), (90.0, "2024-03-01"))
+        self.assertTrue(np.isnan(one["chg_1d"]))
+        s = brief.price_stats(d, c, a)  # four months of history, all in 2024
+        self.assertAlmostEqual(s["ret_1m"], a[-1] / a[-22] - 1)
+        for k in ("ret_12m", "vol_12m", "high_12m", "low_12m", "from_high_12m", "ret_ytd"):
+            self.assertTrue(np.isnan(s[k]), k)  # not "since listing" under a 12-month or YTD label
+        d2 = np.array(pd.bdate_range("2023-01-02", periods=300).strftime("%Y-%m-%d"))
+        a2 = 100 * np.exp(np.sin(np.arange(300) / 20))
+        c2 = a2 * np.linspace(1.2, 1.0, 300)  # dividends: closes drift away from the adjusted series
+        full = brief.price_stats(d2, c2, a2)
+        self.assertAlmostEqual(full["high_12m"], c2[-252:].max())
+        self.assertAlmostEqual(full["from_high_12m"], c2[-1] / c2[-252:].max() - 1)  # same basis as the high
 
     def test_clean(self):
         out = data.clean({"a": float("nan"), "b": [np.float64("inf"), np.int64(3), (1, np.bool_(True))],
@@ -516,6 +598,43 @@ class EmptyBankTest(TempHome):
             self.assertTrue(np.all(np.diff(idx) > 0))
         self.assertEqual(len(data.downsample(4000)), 1500)
         self.assertTrue(math.isclose(np.diff(data.downsample(3000)).mean(), 2999 / 1499))
+
+
+class CachedChartTest(TempHome):
+    """docs/TERMINAL.md section 2 relies on prices.py dropping the bar of a session that is still open."""
+
+    def chart(self, start):
+        day = 86400
+        ts = [start - 4 * day, start - 3 * day, start]  # Thursday, Friday, then Monday's session in progress
+        return {"chart": {"result": [{
+            "meta": {"gmtoffset": -14400, "currency": "USD", "longName": "Test Co",
+                     "regularMarketTime": start + 4 * 3600,
+                     "currentTradingPeriod": {"regular": {"start": start, "end": start + 23400}}},
+            "timestamp": ts,
+            "indicators": {"quote": [{"open": [10, 11, 12], "high": [10, 11, 12], "low": [10, 11, 12],
+                                      "close": [10.0, 11.0, 12.0], "volume": [5, 6, 7]}],
+                           "adjclose": [{"adjclose": [10.0, 11.0, 12.0]}]},
+        }]}}
+
+    def test_midday_body_reread_after_the_close_keeps_no_open_bar(self):
+        start = int(pd.Timestamp("2026-10-12T13:30:00Z").timestamp())
+        body = json.dumps(self.chart(start)).encode()
+        cached = Response("https://query1.finance.yahoo.com/v8/finance/chart/TST", body,
+                          "2026-10-12T17:32:04Z", True)  # fetched at midday, served from the cache
+        after_close = start + 23400 + 3600
+        with mock.patch.object(prices, "fetch", return_value=cached), \
+             mock.patch.object(prices, "time", mock.Mock(time=mock.Mock(return_value=after_close))):
+            facts = prices.ingest("TST")
+        snap = facts[0]
+        self.assertEqual((snap.as_of, snap.context["last"]), ("2026-10-09", "2026-10-09"))
+        self.assertEqual(series.load(snap.value)["close"].tolist(), [10.0, 11.0])
+        self.assertEqual(snap.retrieved_at, "2026-10-12T17:32:04Z")
+        # The same body fetched after the close does hold the day's close.
+        done = Response(cached.url, body, "2026-10-12T21:05:00Z", True)
+        with mock.patch.object(prices, "fetch", return_value=done), \
+             mock.patch.object(prices, "time", mock.Mock(time=mock.Mock(return_value=after_close))):
+            df, _, _, _ = prices.fetch_daily("TST")
+        self.assertEqual(df["date"].iloc[-1], "2026-10-12")
 
 
 if __name__ == "__main__":

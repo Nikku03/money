@@ -36,6 +36,7 @@
 
   const panes = [];
   let focused = 0;
+  let booted = false;  // set once the restored layout has been sent: only later runs scroll a pane into view
   let lastTicker = "AAPL";  // the security that HELP's function codes run against
 
   // ---------- storage (private windows and blocked storage just forget) ----------
@@ -295,7 +296,7 @@
         if (r.group !== undefined) tr.className = "grp";
         const td = h("td");
         td.colSpan = span;
-        if (r.group !== undefined) td.textContent = r.group;
+        if (r.group !== undefined) td.append(h("span", "grp-label", r.group));  // sticky: stays in view when scrolled sideways
         else td.append(r.full);
         tr.append(td);
       } else {
@@ -515,9 +516,9 @@
   const INLINE = new RegExp([
     "(`+)([^`]|[^`][\\s\\S]*?[^`])\\1(?!`)",                // 1,2 code
     "\\*\\*(?=\\S)([\\s\\S]+?)\\*\\*",                     // 3 bold
-    "\\[([^\\]\\n]+)\\]\\(([^)\\s]+)\\)",                    // 4,5 link
+    "\\[([^\\]\\n]+)\\]\\(((?:[^()\\s]|\\([^()\\s]*\\))+)\\)",   // 4,5 link; the URL may hold (balanced) parentheses
     "\\[([0-9a-fA-F]{8,20})\\]",                           // 6 citation
-    "(https?:\\/\\/[^\\s<>()\\[\\]]*[^\\s<>()\\[\\].,;:!?'\"])",   // 7 bare URL
+    "(https?:\\/\\/(?:[^\\s<>()\\[\\]]|\\([^\\s<>()\\[\\]]*\\))*(?:[^\\s<>()\\[\\].,;:!?'\"]|\\([^\\s<>()\\[\\]]*\\)))",  // 7 bare URL, ditto
     "(?<![\\w*])\\*(?=\\S)([^*\\n]+?)\\*(?![\\w*])",         // 8 emphasis
   ].join("|"), "g");
 
@@ -545,8 +546,24 @@
     return parent;
   }
 
-  const LIST_ITEM = /^(\s*)([-*+]|\d{1,3}[.)])\s+(.*)$/;
+  // Block patterns run on every line of claims and answers, so none may backtrack: no two runs that
+  // can trade the same characters (`\s*\|?\s*`, `.*?\s*#*\s*$`), and `[^\n]` rather than `.`, which
+  // stops at U+2028 and makes `$` retry. A heading is parsed without a regex for the same reason.
+  const LIST_ITEM = /^(\s*)([-*+]|\d{1,3}[.)])\s+([^\n]*)$/;
   const BLOCK_START = /^\s*(#{1,6}\s|```|>|[-*+]\s|\d{1,3}[.)]\s|\|)/;
+  const TABLE_RULE = /^\s*(?:\|\s*)?:?-{2,}:?\s*(?:\|\s*:?-{2,}:?\s*)*(?:\|\s*)?$/;
+
+  /** `## Title ##` → {level: 2, text: "Title"}; closing #'s count only after a space (`# C#` keeps its #). */
+  function heading(line) {
+    const m = /^#{1,6}(?=\s)/.exec(line);
+    if (!m) return null;
+    let text = line.slice(m[0].length).trim();
+    let end = text.length;
+    while (end > 0 && text[end - 1] === "#") end -= 1;
+    if (end === 0) text = "";
+    else if (end < text.length && /\s/.test(text[end - 1])) text = text.slice(0, end).trimEnd();
+    return { level: m[0].length, text };
+  }
 
   function splitRow(line) {
     let s = line.trim();
@@ -634,8 +651,8 @@
         root.append(pre);
         continue;
       }
-      if ((m = /^(#{1,6})\s+(.*?)\s*#*\s*$/.exec(line))) {
-        root.append(inline(h("h" + m[1].length), m[2], ctx));
+      if ((m = heading(line))) {
+        root.append(inline(h("h" + m.level), m.text, ctx));
         i += 1;
         continue;
       }
@@ -644,7 +661,7 @@
         i += 1;
         continue;
       }
-      if (/^\s*\|/.test(line) && i + 1 < lines.length && /^\s*\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)*\|?\s*$/.test(lines[i + 1])) {
+      if (/^\s*\|/.test(line) && i + 1 < lines.length && TABLE_RULE.test(lines[i + 1])) {
         const block = [line, lines[i + 1]];
         i += 2;
         while (i < lines.length && /^\s*\|/.test(lines[i])) block.push(lines[i++]);
@@ -768,7 +785,9 @@
       s.append(kvTable(d.metrics.map((m) => {
         const v = metricText(m);
         const growth = /growth/.test(m.key || "");
-        return { label: m.label || m.key, value: v, num: true, cls: growth ? signOf(v) : "", cite: m.cite, ticker: t };
+        // the date the figure describes: a fiscal-year end, or the price date for market value and the yields
+        const asOf = typeof m.as_of === "string" ? m.as_of.slice(0, 10) : "";
+        return { label: m.label || m.key, value: v, num: true, cls: growth ? signOf(v) : "", extra: asOf, cite: m.cite, ticker: t };
       })));
       right.append(s);
     }
@@ -784,7 +803,8 @@
       const s = section("Latest reports", "10-K, 10-Q, 8-K and proxy; CF lists every filing");
       s.append(gridTable([{ label: "Date" }, { label: "Form" }, { label: "Description", cls: "grow" }, { label: "Document" }, { label: "", cls: "src" }],
         d.filings.map((f) => ({
-          cells: [f.date, { text: f.form, cls: "amber" }, f.desc || "", safeUrl(f.url) ? extLink(linkLabel(f.url) + " ↗", f.url) : null, citeEl(f.cite, t)],
+          cells: [f.date, { text: f.form, cls: "amber" }, { text: f.desc || "", cls: "wrap" },  // an 8-K's item list wraps
+            safeUrl(f.url) ? extLink(linkLabel(f.url) + " ↗", f.url) : null, citeEl(f.cite, t)],
         }))));
       root.append(s);
     }
@@ -938,14 +958,14 @@
 
     if ((d.inputs || []).length) {
       const s = section("Inputs", "the facts this one was derived from");
-      s.append(gridTable([{ label: "Fact" }, { label: "Attribute" }, { label: "Value", cls: "grow" }],
+      s.append(gridTable([{ label: "Fact" }, { label: "Attribute", cls: "attr" }, { label: "Value", cls: "grow" }],
         d.inputs.map((x) => {
           const ent = String(x.ref || "").split("/")[0];
           let val = x.value;
           if (isNum(val)) val = val.toLocaleString("en-US", { maximumFractionDigits: 6 });
           else if (val !== null && typeof val === "object") val = JSON.stringify(val);
           const sv = val === null || val === undefined ? null : String(val);
-          return { cells: [citeEl(x.cite, tickerOk(ent) ? ent : t), { node: h("span", "mono-wrap", x.attr || ""), cls: "amber" },
+          return { cells: [citeEl(x.cite, tickerOk(ent) ? ent : t), { node: nameEl(x.attr || "", "mono-wrap"), cls: "amber" },
             sv === null ? null : { node: h("span", "mono-wrap", sv.length > 160 ? sv.slice(0, 159) + "…" : sv), title: sv }] };
         })));
       root.append(s);
@@ -954,6 +974,17 @@
     raw.append(h("summary", "", "JSON"), h("pre", "json", JSON.stringify(f, null, 2)));
     root.append(raw);
     return root;
+  }
+
+  /** A long dotted or camel-case name (us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding) with soft
+   * wrap points between its words, so a narrow column breaks it into words rather than letters. */
+  function nameEl(text, cls) {
+    const el = h("span", cls);
+    String(text).split(/(?<=[a-z0-9])(?=[A-Z])|(?<=[:._/])/).forEach((part, k) => {
+      if (k) el.append(h("wbr"));
+      el.append(document.createTextNode(part));
+    });
+    return el;
   }
 
   function viewFact(p, res) {
@@ -1118,9 +1149,10 @@
       lines = [asLine(d.ticker, PALETTE[0], pts, 1.8)].concat(compare.map((c, k) => asLine(c.ticker, PALETTE[(k + 1) % PALETTE.length],
         c.points.map((x) => [idx.get(x.date), x.value]).filter(([i, v]) => i !== undefined && isNum(v)), 1.3)));
     } else {
-      const ret = d.stats && d.stats.ret;
+      // coloured by the line it draws (close), not by total return: a dividend payer can fall and still return
       const pts = S.map((x, i) => [i, x.close]).filter(([, v]) => isNum(v));
-      lines = [asLine(d.ticker, isNum(ret) && ret < 0 ? "down" : "up", pts, 1.5, { fill: true })];
+      const fell = pts.length > 1 && pts[pts.length - 1][1] < pts[0][1];
+      lines = [asLine(d.ticker, fell ? "down" : "up", pts, 1.5, { fill: true })];
     }
     const vols = rebased ? null : S.map((x) => (isNum(x.volume) && x.volume > 0 ? x.volume : null));
     return { S, dates, lines, rebased, vols: vols && vols.some((v) => v !== null) ? vols : null, kind: d.kind };
@@ -1331,14 +1363,26 @@
         tip.append(tipRow(l.label, isNum(v) ? `${fixed(v, 1)}  ${chg}` : "—", "t-" + l.color));
       }
     } else {
-      const s = m.S[i];
-      const first = m.S[0];
-      const base = isNum(first.adj) && isNum(s.adj) ? s.adj / first.adj - 1 : s.close / first.close - 1;
-      const chg = fmtPct(base);
-      tip.append(tipRow("Close", fmtNum(s.close, priceDigits(s.close))), tipRow("From start", chg, signOf(chg)));
-      if (isNum(s.volume) && s.volume > 0) tip.append(tipRow("Volume", fmtMoney(s.volume)));
+      for (const [k, v, cls] of priceTipRows(m, i)) tip.append(tipRow(k, v, cls));
     }
     placeTip(st, g.xAt(i), y);
+  }
+
+  /** Tooltip rows for day i of a single-security chart: the close and its change from the first close
+   * (what the line shows), then the total return with dividends, labelled as such, when adj is known. */
+  function priceTipRows(m, i) {
+    const s = m.S[i] || {};
+    const rows = [["Close", isNum(s.close) ? fmtNum(s.close, priceDigits(s.close)) : "—", ""]];
+    const first = m.lines[0] && m.lines[0].pts.length ? m.lines[0].pts[0][1] : null;
+    const chg = isNum(s.close) && isNum(first) && first ? fmtPct(s.close / first - 1) : null;
+    rows.push(["From start", chg || "—", signOf(chg)]);
+    const a0 = m.S.find((x) => isNum(x.adj));
+    if (a0 && a0.adj && isNum(s.adj)) {
+      const tr = fmtPct(s.adj / a0.adj - 1);
+      rows.push(["Total return", tr, signOf(tr)]);
+    }
+    if (isNum(s.volume) && s.volume > 0) rows.push(["Volume", fmtMoney(s.volume), ""]);
+    return rows;
   }
 
   function viewChart(p, res) {
@@ -1794,13 +1838,21 @@
   const NOISE = new Set(["US", "EQUITY", "EQUITIES", "<GO>", "GO"]);
 
   /** What a pane may rerun on its own (reload, restore, refresh): never a job start, never a
-   * question to the model. Read from the line itself, since a pending line has no result yet. */
+   * question to the model. Read from the line itself, since a pending line has no result yet.
+   * The server takes the function from the first or second word, and `[TICKER] FUNCTION` wins
+   * when both are codes (`CF INGEST` ingests CF), so INGEST or ASK in either place counts,
+   * whatever the other word is. Dropping every noise word can only move a code forward. */
   function safeRerun(line) {
     const w = String(line).trim().split(/\s+/).map((x) => x.toUpperCase()).filter((x) => !NOISE.has(x));
-    const fn = FUNCS.includes(w[0]) ? w[0] : FUNCS.includes(w[1]) ? w[1] : null;
-    if (fn === "INGEST") return "JOBS";
-    if (fn === "ASK") return w[0] === "ASK" ? "ASK" : `${w[0]} ASK`;
+    if (w[0] === "ASK") return "ASK";  // first on a line, ASK takes the rest as the question
+    if (w[0] === "INGEST" || w[1] === "INGEST") return "JOBS";
+    if (w[1] === "ASK") return `${w[0]} ASK`;
     return String(line).trim();
+  }
+
+  /** The line a pane reruns: the server's own reading wins once it has answered this line. */
+  function rerunLine(line, res) {
+    return res && res.ok && res.fn === "INGEST" ? "JOBS" : safeRerun(line);
   }
 
   class Pane {
@@ -1808,6 +1860,7 @@
       this.i = i;
       this.line = "";
       this.res = null;
+      this.resLine = null;  // the line `res` answered
       this.seq = 0;
       this.disposers = [];
       this.chat = { turns: [], ticker: null, busy: false };
@@ -1821,6 +1874,12 @@
       this.titleEl = h("span", "pane-title");
       this.asofEl = h("span", "pane-asof");
       this.toolsEl = h("span", "pane-tools");
+      this.toolsEl.addEventListener("wheel", (e) => {  // a narrow header scrolls its range buttons sideways
+        const t = this.toolsEl;
+        if (!e.deltaY || t.scrollWidth <= t.clientWidth) return;
+        t.scrollLeft += e.deltaY;
+        e.preventDefault();
+      }, { passive: false });
       this.busyEl = h("span", "pane-busy", "■");
       this.busyEl.hidden = true;
       const reload = button("↻", "Rerun this pane's command", (e) => {
@@ -1849,6 +1908,7 @@
         this.cmdEl.textContent = /^(\S+\s+)?ASK\b/i.test(line) ? "ASK" : line.toUpperCase();
         this.setBusy(true);
       }
+      if (!quiet && booted) reveal(this);  // the user sent this here: show it, even below the fold
       const res = await runCmd(line);
       if (res && res.ok && res.fn === "INGEST") jobsStarted(res);  // even if a newer command owns the pane
       if (seq !== this.seq) return;  // a newer command owns this pane
@@ -1863,7 +1923,12 @@
     }
 
     reload(quiet = false) {
-      if (this.line) this.run(safeRerun(this.line), quiet);
+      if (this.line) this.run(this.safeLine(), quiet);
+    }
+
+    /** This pane's line made safe to rerun, using the result only if it answered this line. */
+    safeLine() {
+      return rerunLine(this.line, this.resLine === this.line ? this.res : null);
     }
 
     setBusy(on) {
@@ -1882,6 +1947,7 @@
     show(res) {
       this.dispose();
       this.res = res;
+      this.resLine = this.line;
       const ok = !!(res && res.ok);
       const view = ok && VIEWS[res.view] ? res.view : "error";
       this.body.className = "pane-body view-" + view;
@@ -1893,6 +1959,7 @@
       this.titleEl.textContent = ok ? paneTitle(res.title, this.cmdEl.textContent) : "";
       this.titleEl.title = ok ? res.title || "" : "";
       this.asofEl.textContent = ok && res.asof ? `as of ${res.asof}` : "";
+      this.asofEl.title = this.asofEl.textContent;  // a narrow header cuts it short
       if (!ok) {
         this.body.append(errorBox(res, this, this.line));
         return;
@@ -1910,11 +1977,11 @@
     }
 
     saveLine() {
-      return safeRerun(this.line);
+      return this.line ? this.safeLine() : "";
     }
   }
 
-  function focusPane(i) {
+  function focusPane(i, show = false) {
     if (!panes[i]) return;
     if (focused !== i) {
       focused = i;
@@ -1922,6 +1989,14 @@
     }
     panes.forEach((p, k) => p.el.classList.toggle("focused", k === i));
     $("#target").textContent = "P" + (i + 1);
+    if (show) reveal(panes[i]);
+  }
+
+  /** In the one-column layout (under 900px) the grid scrolls, so a pane chosen from the keyboard or sent
+   * a command can be below the fold: scroll it into view. Not on a click, which is in view already. */
+  function reveal(p) {
+    const grid = $("#grid");
+    if (p && grid && grid.scrollHeight > grid.clientHeight) p.el.scrollIntoView({ block: "nearest" });
   }
 
   function toggleMax(p) {
@@ -1941,7 +2016,8 @@
     const saved = store.get(KEY_LAYOUT, null);
     const ok = saved && Array.isArray(saved.panes) && saved.panes.length === N_PANES
       && saved.panes.every((s) => typeof s === "string" && s.length <= 500);
-    const lines = ok ? saved.panes.map((s, i) => s.trim() || DEFAULT_LAYOUT[i]) : DEFAULT_LAYOUT.slice();
+    // a layout saved by an older page may hold `CF INGEST` or a question: restoring never reruns those
+    const lines = ok ? saved.panes.map((s, i) => safeRerun(s) || DEFAULT_LAYOUT[i]) : DEFAULT_LAYOUT.slice();
     const focus = ok && Number.isInteger(saved.focus) && saved.focus >= 0 && saved.focus < N_PANES ? saved.focus : 0;
     return { lines, focus };
   }
@@ -2122,7 +2198,7 @@
       const digit = /^Digit([1-4])$/.exec(e.code || "") || /^([1-4])$/.exec(e.key);
       if (e.ctrlKey && !e.altKey && !e.metaKey && !e.shiftKey && digit) {
         e.preventDefault();
-        focusPane(Number(digit[1]) - 1);
+        focusPane(Number(digit[1]) - 1, true);
         cmdInput().focus();
         return;
       }
@@ -2293,7 +2369,7 @@
     ae.title = an.available ? "The analyst (ASK) is available" : `The analyst is unavailable: ${an.reason || "not configured"}`;
 
     if (running < jobsRunning) {
-      // a job finished: new facts may answer panes that were missing data
+      // a job finished: new facts may answer panes that were missing data (an INGEST pane reruns as JOBS)
       for (const p of panes) {
         if (!p.res || !p.res.ok || p.res.fn === "JOBS" || p.res.fn === "INGEST") p.reload(true);
       }
@@ -2381,6 +2457,7 @@
     }
     const { lines, focus } = loadLayout();
     lines.forEach((line, i) => panes[i].run(line));
+    booted = true;
     focusPane(focus);
     bindCommandLine();
     bindKeys();

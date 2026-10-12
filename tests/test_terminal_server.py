@@ -8,8 +8,12 @@ import contextlib
 import http.client
 import io
 import json
+import os
+import socket
+import subprocess
 import sys
 import threading
+import time
 import types
 import unittest
 import urllib.error
@@ -19,6 +23,8 @@ from unittest import mock
 
 import numpy as np
 
+from brain import cli
+from brain.bank import Bank
 from brain.terminal import commands, data, jobs, server
 from tests.util import TempHome, filed
 
@@ -33,6 +39,15 @@ def py(code: str) -> list[str]:
 
 def fake_argv(target: str) -> list[str]:
     return py(f"print('fake ingest {target}')")
+
+
+def wait_until(cond, timeout=20.0):
+    end = time.monotonic() + timeout
+    while not cond():
+        if time.monotonic() > end:
+            return False
+        time.sleep(0.01)
+    return True
 
 
 class ServerTest(TempHome):
@@ -86,6 +101,15 @@ class ServerTest(TempHome):
                                       headers={"Content-Type": "application/json", **kw.pop("headers", {})}, **kw)
         return code, json.loads(raw)
 
+    def raw(self, data: bytes, wait: float = 10) -> bytes:
+        """Send bytes as they are; everything the server answers before closing."""
+        with socket.create_connection(("127.0.0.1", self.port), timeout=wait) as c:
+            c.sendall(data)
+            out = b""
+            while chunk := c.recv(65536):
+                out += chunk
+            return out
+
     def raw_get(self, path):
         """http.client sends the path exactly as given (no normalisation)."""
         c = http.client.HTTPConnection("127.0.0.1", self.port, timeout=10)
@@ -128,6 +152,25 @@ class ServerTest(TempHome):
         self.assertEqual(headers["Cache-Control"], "no-store")
         self.assertFalse([k for k in headers if k.lower().startswith("access-control-")])
 
+    def test_no_other_site_can_load_our_files(self):
+        # A page elsewhere could otherwise probe for a running terminal with <script src> or <link>.
+        for path, token in (("/static/app.js", False), ("/static/style.css", False), ("/", False),
+                            ("/api/status", True)):
+            with self.subTest(path=path):
+                code, headers, _ = self.req(path, token=token)
+                self.assertEqual(code, 200)
+                self.assertEqual(headers["Cross-Origin-Resource-Policy"], "same-origin")
+                self.assertEqual(headers["Cross-Origin-Opener-Policy"], "same-origin")
+
+    def test_absolute_form_targets_are_refused_and_answered(self):
+        for target in (f"http://[x/api/status", f"http://evil.example:{self.port}/", "*"):
+            with self.subTest(target=target):
+                err = io.StringIO()
+                with contextlib.redirect_stderr(err):
+                    out = self.raw(f"GET {target} HTTP/1.1\r\nHost: 127.0.0.1:{self.port}\r\n\r\n".encode())
+                self.assertTrue(out.startswith(b"HTTP/1.0 400"), out[:80])
+                self.assertNotIn("Traceback", err.getvalue())
+
     def test_json_headers_and_no_cors(self):
         code, headers, _ = self.req("/api/status", headers={"Origin": "https://evil.example"})
         self.assertEqual(code, 200)
@@ -167,6 +210,74 @@ class ServerTest(TempHome):
         self.assertEqual(self.req("/api/ask", method="GET")[0], 405)
         self.assertEqual(self.post_json("/api/run", {})[0], 405)
         self.assertEqual(self.get_json("/api/nope")[0], 404)
+        body = b'{"target": "AAPL"}'
+        out = self.raw(f"POST /api/ingest HTTP/1.1\r\nHost: 127.0.0.1:{self.port}\r\nX-Terminal-Token: {self.token}\r\n"
+                       f"Content-Type: application/json\r\nTransfer-Encoding: chunked\r\n\r\n".encode()
+                       + f"{len(body):x}\r\n".encode() + body + b"\r\n0\r\n\r\n")
+        self.assertTrue(out.startswith(b"HTTP/1.0 400"), out[:80])
+        self.assertIn(b"not chunked", out)
+        self.assertEqual(self.server.jobs.list_jobs(), [])
+
+    def test_a_request_must_arrive_within_the_deadline(self):
+        def drip(head: bytes, step: float, seconds: float = 8):
+            """Send ``head``, then one more byte every ``step`` seconds until the server answers or closes;
+            (what it sent, seconds taken)."""
+            t0 = time.monotonic()
+            with socket.create_connection(("127.0.0.1", self.port), timeout=10) as c:
+                c.sendall(head)
+                c.settimeout(step)
+                while time.monotonic() - t0 < seconds:
+                    try:
+                        return c.recv(65536), time.monotonic() - t0
+                    except TimeoutError:
+                        try:
+                            c.sendall(b" ")
+                        except OSError:
+                            break
+                return None, time.monotonic() - t0
+        start = (f"POST /api/ask HTTP/1.1\r\nHost: 127.0.0.1:{self.port}\r\nX-Terminal-Token: {self.token}\r\n"
+                 f"Content-Type: application/json\r\n").encode()
+        err = io.StringIO()
+        with mock.patch.object(server, "REQUEST_SECONDS", 1.0), mock.patch.object(server.Handler, "timeout", 0.6), \
+                contextlib.redirect_stderr(err):
+            # a body byte every 0.3 s never trips the per-read timeout, but the whole request runs out of time
+            out, took = drip(start + b"Content-Length: 1000\r\n\r\n{", 0.3)
+            self.assertTrue(out and out.startswith(b"HTTP/1.0 408"), out and out[:80])
+            self.assertLess(took, 4)
+            # a body that stops: 408 too, and no traceback (it is the client's doing, not ours)
+            out, took = drip(start + b"Content-Length: 1000\r\n\r\n{", 5)
+            self.assertTrue(out and out.startswith(b"HTTP/1.0 408"), out and out[:80])
+            # headers that trickle in: the connection is closed
+            out, took = drip(start + b"X-Pad: ", 0.3)
+            self.assertEqual(out, b"")
+            self.assertLess(took, 4)
+        self.assertNotIn("Traceback", err.getvalue())
+        self.assertEqual(self.get_json("/api/status")[0], 200)  # the server is still fine
+
+    def test_connections_beyond_the_cap_are_closed(self):
+        with mock.patch.object(server, "MAX_CONNECTIONS", 2):
+            srv, _ = server.make_server("127.0.0.1", 0, bank=self.bank)
+        srv.quiet = True
+        t = threading.Thread(target=srv.serve_forever, kwargs={"poll_interval": 0.05}, daemon=True)
+        t.start()
+        try:
+            port = srv.server_port
+            idle = [socket.create_connection(("127.0.0.1", port), timeout=10) for _ in range(2)]
+            try:
+                self.assertTrue(wait_until(lambda: srv._connections._value == 0))  # two threads wait on them
+                with socket.create_connection(("127.0.0.1", port), timeout=10) as extra:
+                    self.assertEqual(extra.recv(100), b"")  # closed at once, no thread started
+            finally:
+                for c in idle:
+                    c.close()
+            self.assertTrue(wait_until(lambda: srv._connections._value == 2))  # slots come back
+            with socket.create_connection(("127.0.0.1", port), timeout=10) as c:
+                c.sendall(f"GET / HTTP/1.1\r\nHost: 127.0.0.1:{port}\r\nConnection: close\r\n\r\n".encode())
+                self.assertTrue(c.recv(100).startswith(b"HTTP/1.0 200"))
+        finally:
+            srv.shutdown()
+            srv.server_close()
+            t.join(5)
 
     def test_internal_errors_hide_details(self):
         def boom(bank, cmd):
@@ -186,16 +297,18 @@ class ServerTest(TempHome):
         seen = []
 
         def fake_run(bank, cmd):
-            seen.append((bank, cmd))
+            seen.append((bank, cmd, self.server.lock._is_owned()))
             return {"ok": True, "fn": cmd.fn, "ticker": cmd.ticker, "args": cmd.args, "title": "t", "asof": None,
                     "view": "help", "data": {"x": float("nan"), "n": np.int64(3)}}
         with mock.patch.object(data, "run", fake_run):
             code, out = self.get_json("/api/run?cmd=HELP")
+            self.assertEqual(self.get_json("/api/fact?ticker=AAPL&id=ab12")[0], 200)
         self.assertEqual(code, 200)
         self.assertTrue(out["ok"])
         self.assertEqual(out["data"], {"x": None, "n": 3})  # NaN never reaches the browser
         self.assertIs(seen[0][0], self.server.bank)
         self.assertEqual(seen[0][1].fn, "HELP")
+        self.assertEqual([s[2] for s in seen], [True, True])  # the bank lock is held while the data layer runs
 
     def test_run_maps_command_errors(self):
         def bad(line):
@@ -308,10 +421,26 @@ class ServerTest(TempHome):
         self.assertEqual((len(sent), sent[-1]["content"]), (server.MAX_HISTORY, "59"))
 
     def test_ask_validates_input(self):
-        for body in ({}, {"question": ""}, {"question": 5}, {"question": "q", "ticker": "A B"},
-                     {"question": "q", "history": "x"}, {"question": "q", "history": [{"role": "system", "content": "x"}]}):
-            with self.subTest(body=body):
-                self.assertEqual(self.post_json("/api/ask", body)[0], 400)
+        fake = types.ModuleType("brain.terminal.analyst")
+        fake.ask = mock.Mock(return_value={"ok": True, "answer": "a"})
+        with mock.patch.dict(sys.modules, {"brain.terminal.analyst": fake}):
+            for body in ({}, {"question": ""}, {"question": 5}, {"question": "q", "ticker": "A B"},
+                         {"question": "q", "history": "x"}, {"question": "q", "history": [{"role": "system", "content": "x"}]},
+                         {"question": "q", "history": [{"role": "user", "content": 5}]},
+                         {"question": "x" * (server.MAX_QUESTION + 1)}):
+                with self.subTest(body=str(body)[:80]):
+                    self.assertEqual(self.post_json("/api/ask", body)[0], 400)
+            fake.ask.assert_not_called()
+            self.assertEqual(self.post_json("/api/ask", {"question": "x" * server.MAX_QUESTION})[0], 200)
+
+    def test_read_only_refuses_ingest_and_ask(self):
+        for line in ("ASK why?", "INGEST AAPL"):
+            with self.subTest(line=line):
+                out = self.server.run_line(line, read_only=True)
+                self.assertFalse(out["ok"])
+                self.assertIn("read-only", out["error"])
+        self.assertTrue(self.server.run_line("ASK why?")["ok"])
+        self.assertEqual(self.server.jobs.list_jobs(), [])
 
     # ---------- jobs ----------
     def test_ingest_target_validation(self):
@@ -339,29 +468,82 @@ class ServerTest(TempHome):
         self.assertIsNot(self.server.bank, old)
         self.assertEqual(self.server.bank.root, old.root)
 
-    def test_reload_reads_the_whole_bank_and_never_goes_back(self):
+    def test_reload_reads_the_whole_bank_then_only_what_changed(self):
         self.bank.add(filed("MSFT", "us-gaap:Revenues", 2.0, "2024-06-30", "2024-07-30"))
         self.server.reload_bank()
+        first = self.server.bank
+        self.assertIsNot(first, self.bank)
+        self.assertEqual(set(first._facts), {"AAPL", "MSFT"})  # read before the swap, not on first request
+        self.assertEqual(first.facts("ZZZ"), [])  # a lookup caches ZZZ as empty
+        child = Bank(first.root)  # a job writing from another process
+        child.add(filed("MSFT", "us-gaap:Revenues", 3.0, "2024-09-30", "2024-10-30"))
+        child.add(filed("NVDA", "us-gaap:Revenues", 4.0, "2024-07-28", "2024-08-28"))
+        child.add(filed("ZZZ", "us-gaap:Revenues", 5.0, "2024-07-28", "2024-08-28"))
+        read, real_warm = [], server.warm
+        with mock.patch.object(server, "warm", lambda b, names=None: read.append(sorted(names)) or real_warm(b, names)):
+            self.server.reload_bank()
         fresh = self.server.bank
-        self.assertIsNot(fresh, self.bank)
-        self.assertEqual(set(fresh._facts), {"AAPL", "MSFT"})  # read before the swap, not on first request
-        # A reload that started earlier but finishes later must not replace a newer bank.
-        gate, started = threading.Event(), threading.Event()
+        self.assertEqual(read, [["MSFT", "NVDA", "ZZZ"]])  # the unchanged AAPL shard is not read again
+        self.assertIs(fresh._facts["AAPL"], first._facts["AAPL"])
+        full = Bank(first.root)
+        self.assertEqual(fresh.entities(), full.entities())
+        for e in full.entities():
+            self.assertEqual((fresh.digest(e), fresh.attrs(e)), (full.digest(e), full.attrs(e)))
+        self.assertEqual(len(fresh.facts("MSFT")), 2)
+        self.assertEqual(len(fresh.facts("ZZZ")), 1)  # not the empty entry the old bank cached
+        self.assertEqual(self.server.tickers(), ["AAPL", "MSFT", "NVDA", "ZZZ"])
+
+    def test_reloads_run_one_at_a_time_and_a_burst_shares_one(self):
+        gate, started, calls = threading.Event(), threading.Event(), []
         real_warm = server.warm
 
-        def slow_warm(bank):
+        def slow_warm(bank, names=None):
+            calls.append(names)
             started.set()
-            gate.wait(10)
-            return real_warm(bank)
+            self.assertTrue(gate.wait(10))
+            return real_warm(bank, names)
         with mock.patch.object(server, "warm", slow_warm):
-            t = threading.Thread(target=self.server.reload_bank)
-            t.start()
+            first = threading.Thread(target=self.server.reload_bank)
+            first.start()
             self.assertTrue(started.wait(10))
-        self.server.reload_bank()  # starts later, finishes first
-        newest = self.server.bank
-        gate.set()
-        t.join(10)
-        self.assertIs(self.server.bank, newest)
+            Bank(self.bank.root).add(filed("MSFT", "us-gaap:Revenues", 2.0, "2024-06-30", "2024-07-30"))
+            burst = [threading.Thread(target=self.server.reload_bank) for _ in range(4)]
+            for t in burst:
+                t.start()
+            self.assertTrue(wait_until(lambda: self.server._reloads_asked == 5))
+            self.assertEqual(len(calls), 1)  # the burst waits: never two reloads at once
+            gate.set()
+            for t in [first, *burst]:
+                t.join(10)
+                self.assertFalse(t.is_alive())
+        self.assertEqual(len(calls), 2)  # the first, then one for the whole burst
+        self.assertEqual(len(self.server.bank.facts("MSFT")), 1)
+
+    def test_a_job_counts_as_running_until_its_facts_are_visible(self):
+        child = ("from brain.bank import Bank, Fact\n"
+                 "Bank().add(Fact(entity='ZZTEST', attr='us-gaap:Revenues', value=5.0, as_of='2024-09-28', "
+                 "known_at='2024-11-01', tier='filed', source={'name': 'test', 'url': 'https://example.test/r'}))\n"
+                 "print('added')")
+        self.server.jobs.argv_for = lambda t: py(child)
+        self.assertEqual(self.get_json("/api/run?cmd=ZZTEST%20FA")[1]["ok"], False)  # caches ZZTEST as empty
+        real_warm, polls = server.warm, []
+
+        def slow_warm(bank, names=None):
+            time.sleep(0.5)  # a reload of the real bank takes seconds
+            return real_warm(bank, names)
+        with mock.patch.object(server, "warm", slow_warm):
+            self.assertTrue(self.post_json("/api/ingest", {"target": "ZZTEST"})[1]["ok"])
+            while True:  # what the page does: poll until no job runs, then refresh its panes
+                status = self.get_json("/api/status")[1]
+                polls.append(status["jobs_running"])
+                if not status["jobs_running"]:
+                    break
+                time.sleep(0.02)
+            with self.server.lock:
+                self.assertEqual(len(self.server.bank.facts("ZZTEST")), 1)
+            self.assertIn("ZZTEST", status["tickers"])
+        self.assertEqual(self.get_json("/api/jobs")[1]["jobs"][0]["status"], "done")
+        self.assertGreater(len(polls), 1)
 
     def test_jobs_listing_via_run(self):
         code, out = self.get_json("/api/run?cmd=JOBS")
@@ -382,6 +564,29 @@ class ServerTest(TempHome):
         code, out = self.get_json("/api/run?cmd=INGEST%20A%3BB")
         self.assertFalse(out["ok"])
 
+    def test_ingest_queues_all_targets_or_none(self):
+        many = " ".join(f"T{i}" for i in range(server.MAX_INGEST_TARGETS + 1))
+        out = self.server.run_line(f"INGEST {many}")
+        self.assertEqual((out["ok"], out["error"]), (False, f"at most {server.MAX_INGEST_TARGETS} targets at once"))
+        out = self.server.run_line("INGEST AAPL MSFT A;B")
+        self.assertFalse(out["ok"])
+        self.assertEqual(self.server.jobs.list_jobs(), [])
+        # No room for all of them: none is queued, rather than the first few with an error.
+        real = self.server.jobs
+        self.server.jobs = jobs.JobManager(max_running=0, argv_for=fake_argv)
+        try:
+            for i in range(jobs.MAX_QUEUED - 5):
+                self.server.jobs.submit(f"Q{i}")
+            out = self.server.run_line("INGEST " + " ".join(f"A{i}" for i in range(10)))
+            self.assertEqual((out["ok"], out["hint"]), (False, "JOBS"))
+            self.assertEqual(self.server.jobs.queued(), jobs.MAX_QUEUED - 5)
+            out = self.server.run_line("INGEST A1 A2 A3 A4 A5 a5 Q0")  # duplicates and a queued target take no room
+            self.assertTrue(out["ok"])
+            self.assertEqual(self.server.jobs.queued(), jobs.MAX_QUEUED)
+        finally:
+            self.server.jobs.shutdown()
+            self.server.jobs = real
+
 
 class HostRulesTest(TempHome):
     def test_non_loopback_bind_accepts_ip_literals_only(self):
@@ -393,6 +598,31 @@ class HostRulesTest(TempHome):
             self.assertTrue(srv.host_allowed(f"192.168.1.20:{p}"))
             self.assertFalse(srv.host_allowed(f"rebind.attacker.test:{p}"))
             self.assertFalse(srv.host_allowed(f"192.168.1.20:{p + 1}"))
+        finally:
+            srv.server_close()
+
+    def test_the_printed_url_is_accepted(self):
+        srv, _ = server.make_server("127.0.0.2", 0)
+        try:
+            p = srv.server_port
+            self.assertTrue(srv.loopback)
+            self.assertTrue(srv.host_allowed(f"127.0.0.2:{p}"))  # what serve() prints for --host 127.0.0.2
+            self.assertTrue(srv.host_allowed(f"127.0.0.1:{p}"))
+            self.assertFalse(srv.host_allowed(f"127.0.0.3:{p}"))
+            self.assertFalse(srv.host_allowed(f"rebind.attacker.test:{p}"))
+            srv.host = "::1"  # no IPv6 here to bind; the check reads only these
+            self.assertTrue(srv.host_allowed(f"[0:0:0:0:0:0:0:1]:{p}"))
+            self.assertTrue(srv.host_allowed(f"[::1]:{p}"))
+            srv.host = "::ffff:127.0.0.1"
+            self.assertTrue(srv.host_allowed(f"[::ffff:7f00:1]:{p}"))  # how a browser writes that address
+            self.assertFalse(srv.host_allowed(f"[::ffff:7f00:2]:{p}"))
+            srv.host, srv.server_port = "127.0.0.1", 80  # a browser leaves out the default port
+            self.assertTrue(srv.host_allowed("127.0.0.1"))
+            self.assertTrue(srv.host_allowed("localhost"))
+            self.assertTrue(srv.host_allowed("127.0.0.1:80"))
+            self.assertFalse(srv.host_allowed("127.0.0.2"))
+            self.assertFalse(srv.host_allowed("evil.example"))
+            self.assertFalse(srv.host_allowed("127.0.0.1:8080"))
         finally:
             srv.server_close()
 
@@ -426,7 +656,47 @@ class ServeTest(TempHome):
         out, err, wb = self._serve("0.0.0.0", False)
         self.assertIn("WARNING", err)
         self.assertIn("no user accounts", err)
+        self.assertIn("Anthropic credentials", err)  # ASK spends the user's money
         wb.assert_not_called()
+
+    def test_serve_says_which_jobs_outlive_it(self):
+        gate = Path(self._tmp.name) / "go"
+        started = []
+
+        def run_then_stop(srv, *a, **kw):
+            srv.jobs.argv_for = lambda t: py(f"import os, time\nprint('working')\n"
+                                             f"while not os.path.exists({str(gate)!r}): time.sleep(0.02)")
+            srv.jobs.submit("AAPL")
+            started.append(srv)
+            self.assertTrue(wait_until(lambda: srv.jobs.list_jobs()[0]["log"]))
+            raise KeyboardInterrupt
+        err = io.StringIO()
+        with mock.patch.object(server.TerminalServer, "serve_forever", autospec=True, side_effect=run_then_stop), \
+                contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(err):
+            server.serve("127.0.0.1", 0, False)
+        try:
+            self.assertIn("INGEST AAPL is still running and will finish on its own; its output: ", err.getvalue())
+            log = err.getvalue().split("its output: ")[1].split()[0]
+            self.assertIn("working", Path(log).read_text())
+        finally:
+            gate.touch()
+            self.assertTrue(started[0].jobs.wait(20))
+
+    def test_out_of_range_port_is_a_message_not_a_traceback(self):
+        for port in (70000, -1):
+            with self.subTest(port=port), self.assertRaises(SystemExit) as cm:
+                server.serve("127.0.0.1", port, False)
+            self.assertIn("0-65535", str(cm.exception))
+        err = io.StringIO()
+        with mock.patch.object(server, "serve") as serve, contextlib.redirect_stderr(err), \
+                self.assertRaises(SystemExit) as cm:
+            cli.main(["terminal", "--port", "70000", "--no-browser"])
+        self.assertEqual(cm.exception.code, 2)
+        self.assertIn("0-65535", err.getvalue())
+        serve.assert_not_called()
+        with mock.patch.object(server, "serve") as serve:
+            cli.main(["terminal", "--port", "0", "--no-browser"])
+        serve.assert_called_once_with("127.0.0.1", 0, False)
 
 
 class JobManagerTest(TempHome):
@@ -468,6 +738,17 @@ class JobManagerTest(TempHome):
         self.assertEqual((j["log"][0], j["log"][-1]), ("line 50", "line 249"))
         self.assertTrue(j["started"] <= j["finished"])
 
+    def test_log_lines_as_a_text_pipe_would_read_them(self):
+        code = ("import sys, time\n"
+                "w = sys.stdout.buffer\n"
+                "w.write(b'caf\\xc3'); w.flush(); time.sleep(0.3)\n"  # a character split across two reads
+                "w.write(b'\\xa9\\r'); w.flush(); time.sleep(0.3)\n"  # and a \\r\\n split across two
+                "w.write(b'\\nwin\\r\\nold mac\\rbad \\xff byte\\nno newline at the end')\n")
+        m = jobs.JobManager(argv_for=lambda t: py(code))
+        jid = m.submit("X")["id"]
+        self.assertTrue(m.wait(20))
+        self.assertEqual(m.get(jid)["log"], ["café", "win", "old mac", "bad \ufffd byte", "no newline at the end"])
+
     def test_job_that_cannot_start_fails_cleanly(self):
         m = jobs.JobManager(argv_for=lambda t: [str(Path(self._tmp.name) / "no-such-program")])
         jid = m.submit("X")["id"]
@@ -483,6 +764,76 @@ class JobManagerTest(TempHome):
         log = m.get(jid)["log"]
         self.assertEqual(Path(log[0]).resolve(), Path(jobs.config.ROOT).resolve())
         self.assertEqual(log[1], "['A=B']")
+
+    def test_job_reads_as_running_until_on_finish_returns(self):
+        gate, seen = threading.Event(), []
+
+        def on_finish(job):
+            seen.append((job["status"], job["returncode"], m.get(job["id"])["status"], m.running()))
+            self.assertTrue(gate.wait(10))
+        m = jobs.JobManager(on_finish=on_finish, argv_for=fake_argv)
+        jid = m.submit("A")["id"]
+        self.assertTrue(wait_until(lambda: seen))
+        self.assertEqual(seen, [("done", 0, "running", 1)])  # on_finish gets the outcome; clients still see running
+        self.assertEqual((m.get(jid)["status"], m.get(jid)["finished"], m.running()), ("running", None, 1))
+        gate.set()
+        self.assertTrue(m.wait(20))
+        j = m.get(jid)
+        self.assertEqual((j["status"], j["returncode"], j["log"], m.running()), ("done", 0, ["fake ingest A"], 0))
+
+    def test_submit_many_is_all_or_nothing(self):
+        m = jobs.JobManager(max_running=0, argv_for=fake_argv)
+        try:
+            for i in range(jobs.MAX_QUEUED - 2):
+                m.submit(f"Q{i}")
+            with self.assertRaises(jobs.JobError):
+                m.submit_many(["A", "B", "C"])
+            with self.assertRaises(jobs.JobError):
+                m.submit_many(["A", "B;"])
+            self.assertEqual(m.queued(), jobs.MAX_QUEUED - 2)
+            got = m.submit_many(["A", "b", "B", "Q0"])
+            self.assertEqual([j["target"] for j in got], ["A", "B", "B", "Q0"])
+            self.assertEqual(got[1]["id"], got[2]["id"])
+            self.assertEqual(m.queued(), jobs.MAX_QUEUED)
+            with self.assertRaises(jobs.JobError):
+                m.submit("C")
+            self.assertEqual(m.submit("q1")["target"], "Q1")  # already queued: no room needed
+        finally:
+            m.shutdown()
+
+    def test_finished_jobs_beyond_the_limit_are_forgotten(self):
+        m = jobs.JobManager(argv_for=lambda t: [str(Path(self._tmp.name) / "no-such-program")])
+        for i in range(jobs.KEEP_JOBS + 5):
+            m.submit(f"T{i}")
+            self.assertTrue(m.wait(20))
+        m.submit("LAST")
+        self.assertTrue(m.wait(20))
+        ids = [j["id"] for j in m.list_jobs()]
+        self.assertEqual(len(ids), jobs.KEEP_JOBS)
+        self.assertEqual((ids[0], ids[-1]), (f"j{jobs.KEEP_JOBS + 6}", "j7"))  # newest first; the oldest are gone
+
+    def test_running_jobs_outlive_the_server(self):
+        """A child must finish its ingest when the server stops: its output goes to a file, not a pipe that
+        dies with the server, and it runs in its own session, out of reach of Ctrl+C in the server's terminal."""
+        marker = Path(self._tmp.name) / "marker"
+        child = ("import os, sys, time\n"
+                 "for i in range(12):\n    print('step', i); time.sleep(0.1)\n"
+                 f"open({str(marker)!r}, 'w').write(str(os.getsid(0)))\n")
+        parent = ("import sys, time\n"
+                  "from brain.terminal import jobs\n"
+                  f"m = jobs.JobManager(argv_for=lambda t: [sys.executable, '-c', {child!r}])\n"
+                  "m.submit('UNIVERSE')\n"
+                  "time.sleep(0.4)\n"
+                  "left = m.shutdown()\n"
+                  "print(left[0][0], left[0][1])\n")
+        out = subprocess.run([sys.executable, "-c", parent], cwd=jobs.config.ROOT, capture_output=True, text=True,
+                             timeout=60, env={**os.environ, "TMPDIR": self._tmp.name})
+        target, log = out.stdout.split()  # the server has exited here
+        self.assertEqual(target, "UNIVERSE", out.stderr)
+        self.assertTrue(wait_until(lambda: marker.exists() and marker.read_text()), "the child died with the server")
+        self.assertNotEqual(int(marker.read_text()), os.getsid(0))
+        self.assertEqual(Path(log).parent, Path(self._tmp.name))
+        self.assertIn("step 11", Path(log).read_text())  # its output is kept for the user
 
     def test_shutdown_cancels_queued(self):
         gate = Path(self._tmp.name) / "go"

@@ -13,10 +13,11 @@ from __future__ import annotations
 
 import json
 import math
+import re
 
 import numpy as np
 
-from brain import config, metrics
+from brain import config, markets, metrics
 from brain.bank import Bank, Fact
 from brain.metrics import M, PriceBook, annual
 from brain.sources.fred import DEFAULT as FRED_SERIES
@@ -60,6 +61,25 @@ def identity_value(f: Fact):
     if f.attr == "identity.exchanges" and isinstance(f.value, str):
         return ", ".join(dict.fromkeys(x.strip() for x in f.value.split(",") if x.strip()))
     return f.value
+
+
+_BIDI_CTRL = dict.fromkeys([*range(0x00, 0x20), 0x7F, 0x200E, 0x200F, *range(0x202A, 0x202F), *range(0x2066, 0x206A)], " ")
+_MD_ACTIVE = str.maketrans({"[": "［", "]": "］", "*": "∗", "`": "ʹ", "|": "¦", "<": "‹", ">": "›", "#": "＃"})
+_SAFE_URL = re.compile(r"https?://[^\s()<>\[\]]+")
+
+
+def safe_inline(text, limit: int = 300) -> str:
+    """Third-party text (headlines, web claims, source names) made inert inside markdown: one line,
+    no control or direction-override characters, markdown-active characters swapped for look-alikes,
+    so a stored claim cannot add headings or tables, fake a citation, or hide a verdict."""
+    s = " ".join(str(text).translate(_BIDI_CTRL).split()).translate(_MD_ACTIVE)
+    return s if len(s) <= limit else s[: limit - 1] + "…"
+
+
+def md_link(text, url) -> str:
+    """A markdown link only for a plain http(s) URL; otherwise the text alone."""
+    t = safe_inline(text)
+    return f"[{t}]({url})" if isinstance(url, str) and _SAFE_URL.fullmatch(url) else t
 
 
 def cite(*facts) -> str:
@@ -114,20 +134,26 @@ def _quarter(view, t, attrs):
 
 def price_stats(d, c, a, per_year: int = 252) -> dict | None:
     """Price summary from dates, closes (split-adjusted) and dividend-adjusted closes, all already cut
-    at a view's date. Returns and volatility use ``a`` (total return); levels use ``c``. ``per_year``
-    is sessions per year: 252, or 365 for assets that trade every day, so "1 month" means a month."""
-    if len(a) < 2:
+    at a view's date. Returns and volatility use ``a`` (total return); levels, the 12-month high and
+    low, and the distance from that high use ``c``. ``per_year`` is sessions per year: 252, or 365 for
+    assets that trade every day, so "1 month" means a month. A window the history does not cover is
+    NaN, never a shorter window under the same label."""
+    if len(a) < 1:
         return None
+    nan = float("nan")
+    n = len(a)
 
-    def ret(n):
-        return float(a[-1] / a[-1 - n] - 1) if len(a) > n else float("nan")
-    lr = np.diff(np.log(a[-(per_year + 1):]))
+    def ret(k):
+        return float(a[-1] / a[-1 - k] - 1) if n > k else nan
     prior = int(np.searchsorted(d, str(d[-1])[:4] + "-01-01")) - 1  # last close of the previous year
+    full = n > per_year  # a whole year of returns behind the last close
+    hi, lo = (float(c[-per_year:].max()), float(c[-per_year:].min())) if full else (nan, nan)
+    lr = np.diff(np.log(a[-(per_year + 1):]))
     return {"close": float(c[-1]), "date": str(d[-1]), "chg_1d": ret(1), "chg_5d": ret(round(5 * per_year / 252)),
             "ret_1m": ret(round(per_year / 12)), "ret_3m": ret(round(per_year / 4)),
-            "ret_ytd": float(a[-1] / a[max(prior, 0)] - 1), "ret_12m": ret(per_year),
-            "vol_12m": float(lr.std() * np.sqrt(per_year)), "from_high_12m": float(a[-1] / a[-per_year:].max() - 1),
-            "high_12m": float(c[-per_year:].max()), "low_12m": float(c[-per_year:].min())}
+            "ret_ytd": float(a[-1] / a[prior] - 1) if prior >= 0 else nan, "ret_12m": ret(per_year),
+            "vol_12m": float(lr.std() * np.sqrt(per_year)) if full else nan,
+            "from_high_12m": float(c[-1] / hi - 1) if full else nan, "high_12m": hi, "low_12m": lo}
 
 
 def price_summary(view, book: PriceBook, t: str, per_year: int = 252) -> dict | None:
@@ -177,7 +203,7 @@ def build(bank: Bank, ticker: str, t: str | None = None) -> str:
     book = PriceBook(bank, [t_, "SPY"], asof=t)
     L = []
     name = view.latest(t_, "identity.name")
-    L += [f"# {t_}{' — ' + name.value if name else ''}", "",
+    L += [f"# {t_}{' — ' + safe_inline(name.value) if name else ''}", "",
           f"Brief as of {view.t}, generated {now_iso()}. Built only from the memory bank. "
           f"[id] cites a fact: `python -m brain show {t_} <id>` prints it with its source.", ""]
 
@@ -186,12 +212,12 @@ def build(bank: Bank, ticker: str, t: str | None = None) -> str:
     for a, label in IDENTITY:
         f = view.latest(t_, a)
         if f:
-            rows.append(f"- {label}: {identity_value(f)} {cite(f)}")
+            rows.append(f"- {label}: {safe_inline(identity_value(f))} {cite(f)}")
     if rows:
         L += ["## Identity", "", *rows, ""]
 
     # price
-    ps = price_summary(view, book, t_)
+    ps = price_summary(view, book, t_, 365 if markets.kind(t_) == "crypto" else 252)
     if ps:
         L += ["## Price", "",
               f"- Close {ps['close']:,.2f} on {ps['date']} {cite(book.snapshot[t_])}",
@@ -231,7 +257,7 @@ def build(bank: Bank, ticker: str, t: str | None = None) -> str:
     for nm, m, unit, f in derived(bank, view, t_, book):
         shown = money(m.value) if unit == "USD" else pct(m.value)
         extra = f" (P/E {1 / m.value:,.1f})" if nm == "earnings_yield" and m.value > 0 else ""
-        rows.append(f"- {DERIVED_LABELS.get(nm, nm)}: {shown}{extra} {cite(f)} ← {cite(*m.inputs)}")
+        rows.append(f"- {DERIVED_LABELS.get(nm, nm)}: {shown}{extra}, as of {m.as_of} {cite(f)} ← {cite(*m.inputs)}")
     if rows:
         L += ["## Derived (written to the bank, each citing its inputs)", "", *rows, ""]
 
@@ -243,14 +269,16 @@ def build(bank: Bank, ticker: str, t: str | None = None) -> str:
         L += ["## Recent filings (10-K, 10-Q, 8-K, proxy)", ""]
         for f in recent:
             desc = filing_desc(f)
-            L.append(f"- {f.known_at[:10]} **{f.value}**{' — ' + desc if desc else ''} ([doc]({f.source['url']})) {cite(f)}")
+            L.append(f"- {f.known_at[:10]} **{safe_inline(f.value)}**{' — ' + safe_inline(desc) if desc else ''} "
+                     f"({md_link('doc', f.source.get('url'))}) {cite(f)}")
         L += [f"- Insider transaction reports (Form 4) in the last 90 days: {n4}. Form 4 contents are not parsed yet.", ""]
 
     # headlines
     hl = sorted(view.facts(t_, "headline"), key=lambda f: f.known_at, reverse=True)[:10]
     if hl:
         L += ["## Headlines (reported, unscored: a headline is not evidence)", ""]
-        L += [f"- {f.known_at[:10]} [{f.value}]({f.source['url']}) — {f.source['name']} {cite(f)}" for f in hl]
+        L += [f"- {f.known_at[:10]} {md_link(f.value, f.source.get('url'))} — {safe_inline(f.source.get('name', ''))} "
+              f"{cite(f)}" for f in hl]
         L.append("")
 
     # web claims
@@ -258,8 +286,8 @@ def build(bank: Bank, ticker: str, t: str | None = None) -> str:
     if cl:
         arrow = {1: "↑", -1: "↓", 0: "·"}
         L += ["## Claims noted from the web (tier opinion/reported; see `score-claims` for each source's record)", ""]
-        L += [f"- {f.known_at[:10]} {arrow.get(f.context.get('direction', 0), '·')} {f.value} "
-              f"([{f.source['name']}]({f.source['url']})) {cite(f)}" for f in cl]
+        L += [f"- {f.known_at[:10]} {arrow.get(f.context.get('direction', 0), '·')} {safe_inline(f.value)} "
+              f"({md_link(f.source.get('name', ''), f.source.get('url'))}) {cite(f)}" for f in cl]
         L.append("")
 
     L += _signals_section(bank, t_)
@@ -331,8 +359,8 @@ def evidence(bank: Bank, ticker: str) -> dict:
 
 
 def _signals_section(bank: Bank, t_: str) -> list[str]:
-    if not config.UNIVERSE.exists():
-        return []
+    if not config.UNIVERSE.exists() or markets.kind(t_):
+        return []  # the signals rank stocks; an index, currency or coin has no place in that ranking
     try:
         ev = evidence(bank, t_)
     except (SystemExit, Exception) as e:  # noqa: BLE001 - a brief should still render

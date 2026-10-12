@@ -50,3 +50,50 @@ class MetricsTest(TempHome):
         self.assertEqual(len(f.inputs), 3)
         for ref in f.inputs:
             self.assertLessEqual(self.bank.get(ref).known_at, f.known_at)
+
+
+class AnnualMergeTest(TempHome):
+    def test_concepts_merge_by_priority_not_by_filing_date(self):
+        # Both debt concepts are filed every year, the total one later; the row must not alternate.
+        for y, (noncur, total) in {2021: (80.0, 90.0), 2022: (70.0, 85.0), 2023: (60.0, 75.0)}.items():
+            self.bank.add_many([
+                filed("X", "us-gaap:LongTermDebtNoncurrent", noncur, f"{y}-12-31", f"{y + 1}-02-10", form="10-K"),
+                filed("X", "us-gaap:LongTermDebt", total, f"{y}-12-31", f"{y + 1}-02-11" if y % 2 else f"{y + 1}-02-09",
+                      form="10-K"),
+            ])
+        s = metrics.annual(self.bank.view("2024-06-01"), "X", ["us-gaap:LongTermDebtNoncurrent", "us-gaap:LongTermDebt"],
+                           flow=False)
+        self.assertEqual([f.value for f in s], [80.0, 70.0, 60.0])
+        self.assertEqual({f.attr for f in s}, {"us-gaap:LongTermDebtNoncurrent"})
+
+    def test_older_concept_fills_years_the_preferred_one_lacks(self):
+        self.bank.add_many([
+            filed("X", "us-gaap:SalesRevenueNet", 100.0, "2016-12-31", "2017-02-10", form="10-K", start="2016-01-01", duration_days=365),
+            filed("X", "us-gaap:Revenues", 120.0, "2018-12-31", "2019-02-10", form="10-K", start="2018-01-01", duration_days=364),
+        ])
+        s = metrics.annual(self.bank.view("2019-06-01"), "X", ["us-gaap:Revenues", "us-gaap:SalesRevenueNet"])
+        self.assertEqual([(f.as_of, f.value) for f in s], [("2016-12-31", 100.0), ("2018-12-31", 120.0)])
+
+
+class StalenessTest(TempHome):
+    def test_ratios_growth_and_fcf_refuse_old_fiscal_years(self):
+        for y in (2008, 2009):
+            self.bank.add_many([
+                filed("X", "us-gaap:Revenues", 100.0 + y - 2008, f"{y}-12-31", f"{y + 1}-02-10", form="10-K",
+                      start=f"{y}-01-01", duration_days=364),
+                filed("X", "us-gaap:NetIncomeLoss", 10.0, f"{y}-12-31", f"{y + 1}-02-10", form="10-K",
+                      start=f"{y}-01-01", duration_days=364),
+                filed("X", "us-gaap:NetCashProvidedByUsedInOperatingActivities", 20.0, f"{y}-12-31", f"{y + 1}-02-10",
+                      form="10-K", start=f"{y}-01-01", duration_days=364),
+                filed("X", "us-gaap:PaymentsToAcquirePropertyPlantAndEquipment", 5.0, f"{y}-12-31", f"{y + 1}-02-10",
+                      form="10-K", start=f"{y}-01-01", duration_days=364),
+            ])
+        fresh, stale = self.bank.view("2010-06-01"), self.bank.view("2026-06-01")
+        net_margin = lambda v: metrics.ratio(v, "X", "us-gaap:NetIncomeLoss", "us-gaap:Revenues")
+        self.assertAlmostEqual(net_margin(fresh).value, 10 / 101)
+        self.assertIsNotNone(metrics.revenue_growth(fresh, "X"))
+        self.assertEqual(metrics.free_cash_flow(fresh, "X").value, 15.0)
+        # Sixteen years on, the same numbers are history, not current metrics.
+        self.assertIsNone(net_margin(stale))
+        self.assertIsNone(metrics.revenue_growth(stale, "X"))
+        self.assertIsNone(metrics.free_cash_flow(stale, "X"))

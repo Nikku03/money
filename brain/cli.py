@@ -50,6 +50,16 @@ def cmd_terminal(a):
     serve(a.host, a.port, not a.no_browser)
 
 
+def _port(text: str) -> int:
+    try:
+        n = int(text)
+    except ValueError:
+        raise argparse.ArgumentTypeError(f"not a port number: {text!r}")
+    if not 0 <= n <= 65535:
+        raise argparse.ArgumentTypeError(f"a port is 0-65535, not {n}")
+    return n
+
+
 def cmd_note(a):
     from brain.claims import note
     f = note(_bank(), a.ticker, a.text, a.source, tier=a.tier, direction=a.direction,
@@ -156,7 +166,7 @@ def main(argv=None) -> int:
 
     s = sub.add_parser("terminal", help="serve the MONEY TERMINAL on this machine")
     s.add_argument("--host", default="127.0.0.1", help="bind address (default loopback only)")
-    s.add_argument("--port", type=int, default=8765)
+    s.add_argument("--port", type=_port, default=8765, help="0-65535; 0 picks a free port (default 8765)")
     s.add_argument("--no-browser", action="store_true", help="do not open a browser tab")
     s.set_defaults(fn=cmd_terminal)
 

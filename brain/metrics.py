@@ -89,14 +89,19 @@ def is_fy_instant(f: Fact) -> bool:
 
 
 def annual(view: View, entity: str, attrs, flow: bool = True) -> list[Fact]:
-    """Latest-known value for each fiscal year, merged across alternative concepts."""
+    """Latest-known value for each fiscal year. Alternative concepts are merged by priority (their
+    order in ``attrs``): a year takes the first concept that reports it, so a company that files
+    both LongTermDebt and LongTermDebtNoncurrent does not alternate between them year by year."""
     attrs = [attrs] if isinstance(attrs, str) else attrs
     pick = is_annual_flow if flow else is_fy_instant
     best: dict[str, Fact] = {}
     for a in attrs:
+        mine: dict[str, Fact] = {}
         for f in view.periods(entity, a, pick):
-            if f.as_of not in best or f.known_at > best[f.as_of].known_at:
-                best[f.as_of] = f
+            if f.as_of not in mine or f.known_at > mine[f.as_of].known_at:
+                mine[f.as_of] = f
+        for k, f in mine.items():
+            best.setdefault(k, f)
     return [best[k] for k in sorted(best)]
 
 
@@ -155,10 +160,12 @@ def _growth(series_: list[Fact]) -> M | None:
 
 
 def revenue_growth(view: View, entity: str) -> M | None:
-    return _growth(annual(view, entity, REVENUE))
+    s = annual(view, entity, REVENUE)
+    return _growth(s) if s and _fresh(view, s[-1]) else None
 
 
 def ratio(view: View, entity: str, num, den, flow_num=True, flow_den=True, note="") -> M | None:
+    """Latest fiscal year both sides report; None when that year is stale (not current)."""
     n = annual(view, entity, num, flow=flow_num)
     d = annual(view, entity, den, flow=flow_den)
     if not n or not d:
@@ -166,7 +173,7 @@ def ratio(view: View, entity: str, num, den, flow_num=True, flow_den=True, note=
     dd = {f.as_of: f for f in d}
     for f in reversed(n):
         if f.as_of in dd and dd[f.as_of].value:
-            return M(f.value / dd[f.as_of].value, f.as_of, [f, dd[f.as_of]], note)
+            return M(f.value / dd[f.as_of].value, f.as_of, [f, dd[f.as_of]], note) if _fresh(view, f) else None
     return None
 
 
@@ -175,6 +182,8 @@ def free_cash_flow(view: View, entity: str) -> M | None:
     cap = {f.as_of: f for f in annual(view, entity, "us-gaap:PaymentsToAcquirePropertyPlantAndEquipment")}
     for f in reversed(ocf):
         if f.as_of in cap:
+            if not _fresh(view, f):
+                return None
             return M(f.value - cap[f.as_of].value, f.as_of, [f, cap[f.as_of]], "operating cash flow - capex")
     return None
 

@@ -99,12 +99,17 @@ def run(bank: Bank, ids: list[str] | None = None, n_random: int = 200) -> list[d
 
 
 def verdicts() -> list[dict]:
+    """Verdicts for every hypothesis with a result. The false-discovery correction runs over all of
+    them, withdrawn ones included: a withdrawn hypothesis was still tried, and dropping it would
+    make every other q-value look better than it is."""
     res = ledger.latest_results()
     gone = ledger.withdrawn()
-    live = [r for k, r in res.items() if k not in gone]
-    qs = bh_adjust([r["test"]["perm_p"] for r in live])
+    q_of = dict(zip(res, bh_adjust([r["test"]["perm_p"] for r in res.values()])))
     rows = []
-    for r, q in zip(live, qs):
+    for k, r in res.items():
+        if k in gone:
+            continue
+        q = q_of[k]
         te = r["test"]
         if not r["controls"]["pass"]:
             v = "NO VERDICT (controls failed)"

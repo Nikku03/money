@@ -39,6 +39,42 @@ class ParseTest(unittest.TestCase):
         self.check("CF CF 10-K", "CF", "CF", ["10-K"])
         self.check("GP GP 1Y", "GP", "GP", ["1Y"])
 
+    def test_global_codes_as_tickers(self):
+        # Movado, RPC, Okeanis Eco Tankers: a global code before a function that takes a ticker is the ticker.
+        self.check("MOV DES", "DES", "MOV")
+        self.check("RES GP 1Y", "GP", "RES", ["1Y"])
+        self.check("ECO FA", "FA", "ECO")
+        self.check("CLM DES", "DES", "CLM")
+        self.check("MOV INGEST", "INGEST", "MOV")
+        self.check("JOBS SHOW 1234abcd", "SHOW", "JOBS", ["1234ABCD"])
+        self.check("GP MOV 5Y", "GP", "MOV", ["5Y"])
+        self.check("ASK FA of AAPL?", "ASK", None, ["FA of AAPL?"])  # free text stays a question
+        self.check("HELP GP", "HELP", None, ["GP"])
+
+    def test_global_functions_take_no_arguments(self):
+        for line, fn in (("MOV XYZ", "MOV"), ("WEI 5Y", "WEI"), ("MOV WEI", "MOV"), ("AAPL CURVE 1Y", "CURVE")):
+            with self.assertRaises(CommandError, msg=line) as cm:
+                parse(line)
+            self.assertEqual((cm.exception.message, cm.exception.hint), (f"{fn} takes no arguments", fn))
+
+    def test_go_is_noise_only_at_the_end(self):
+        self.check("GO DES", "DES", "GO")  # Grocery Outlet
+        self.check("GO", "DES", "GO")
+        self.check("GO US EQUITY GP 5Y <GO>", "GP", "GO", ["5Y"])
+        self.check("GO GO", "DES", "GO")
+        self.check("DES GO", "DES", "GO")
+        self.check("GP 5Y GO", "GP", "GO", ["5Y"])
+        self.check("INGEST GO", "INGEST", "GO")
+        self.check("AAPL GP 5Y GO", "GP", "AAPL", ["5Y"])
+        self.check("INGEST MARKETS GO", "INGEST", None, ["MARKETS"])
+        self.check("WEI GO", "WEI", None)
+
+    def test_range_shaped_tokens_are_gp_arguments(self):
+        self.check("GP 3Y AAPL", "GP", "AAPL", ["3Y"])  # data.run rejects the range; it is never the ticker
+        self.check("AAPL GP 20Y", "GP", "AAPL", ["20Y"])
+        with self.assertRaises(CommandError):
+            parse("GP 3Y")
+
     def test_global_functions(self):
         self.check("WEI", "WEI", None)
         self.check("curve", "CURVE", None)
@@ -58,6 +94,13 @@ class ParseTest(unittest.TestCase):
         self.check("INGEST MARKETS", "INGEST", None, ["MARKETS"])
         self.check("INGEST nvda", "INGEST", "NVDA")
         self.check("NVDA INGEST", "INGEST", "NVDA")
+        # First on the line, INGEST and SHOW are always the function, so the hint `INGEST CF` ingests CF.
+        self.check("INGEST CF", "INGEST", "CF")
+        self.check("INGEST MOV", "INGEST", "MOV")
+        self.check("INGEST FA GP", "INGEST", "FA", ["GP"])
+        self.check("INGEST AAPL CF", "INGEST", "AAPL", ["CF"])
+        self.check("SHOW CF 1234abcd", "SHOW", "CF", ["1234ABCD"])
+        self.check("CF SHOW 1234abcd", "SHOW", "CF", ["1234ABCD"])
 
     def test_errors_with_hints(self):
         with self.assertRaises(CommandError) as cm:
@@ -101,6 +144,7 @@ class CompleteTest(unittest.TestCase):
         self.assertTrue(after and all(d["kind"] == "function" for d in after))
         self.assertEqual(after[0]["text"], "DES")  # security functions before global ones
         self.assertIn("SPY", self.texts("AAPL GP 1Y S"))  # GP comparisons
+        self.assertEqual(complete("GO ", self.TICKERS)[0]["text"], "DES")  # a leading GO is a ticker
 
     def test_limits(self):
         self.assertEqual(complete("", self.TICKERS), [])

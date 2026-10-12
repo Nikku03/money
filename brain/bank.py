@@ -124,13 +124,27 @@ class Bank:
         return self.root / f"{safe}.jsonl"
 
     def entities(self) -> list[str]:
+        """One name per shard, read from its first record. A shard whose first record cannot be
+        read (a torn write, manual damage) still counts, under its file name, and the problem goes
+        to ``journal_errors`` as in ``_load``: one bad line must not stop every caller."""
         out = []
         for p in sorted(self.root.glob("*.jsonl")):
-            with p.open() as fh:
-                first = fh.readline()
-            if first:
-                rec = json.loads(first)
-                out.append(rec.get("fact", rec).get("entity", p.stem))
+            name = None
+            with p.open(errors="replace") as fh:
+                for n, line in enumerate(fh, 1):
+                    if not line.strip():
+                        continue
+                    try:
+                        rec = json.loads(line)
+                        name = rec.get("fact", rec).get("entity", p.stem)
+                    except (ValueError, AttributeError) as e:
+                        self.journal_errors.append(f"{p.name}:{n}: unreadable first record ({e}); "
+                                                   f"entity taken from the file name")
+                    if not isinstance(name, str) or not name:
+                        name = p.stem
+                    break
+            if name is not None:
+                out.append(name)
         return out
 
     def _load(self, entity: str) -> None:
@@ -141,7 +155,7 @@ class Bank:
         p = self.shard(entity)
         if not p.exists():
             return
-        with p.open() as fh:
+        with p.open(errors="replace") as fh:  # a torn multi-byte character must not stop the replay
             for n, line in enumerate(fh, 1):
                 if not line.strip():
                     continue
@@ -150,7 +164,10 @@ class Bank:
                 except json.JSONDecodeError as e:
                     self.journal_errors.append(f"{p.name}:{n}: unparseable ({e})")
                     continue
-                self._apply(entity, rec, where=f"{p.name}:{n}")
+                try:
+                    self._apply(entity, rec, where=f"{p.name}:{n}")
+                except (KeyError, TypeError, ValueError, AttributeError) as e:
+                    self.journal_errors.append(f"{p.name}:{n}: malformed record ({type(e).__name__}: {e})")
 
     def _apply(self, entity: str, rec: dict, where: str = "") -> None:
         op = rec.get("op")

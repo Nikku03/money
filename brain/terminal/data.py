@@ -16,6 +16,7 @@ import dataclasses
 import json
 import math
 import re
+from collections import Counter
 
 import numpy as np
 import pandas as pd
@@ -24,7 +25,8 @@ from brain import brief, claims, config, markets, metrics, series
 from brain.bank import Bank, Fact, View
 from brain.metrics import PriceBook
 from brain.sources import fred, treasury
-from brain.terminal.commands import FUNCTIONS, KEYS, RANGES, TICKER, Command, CommandError, parse, suggest
+from brain.terminal.commands import (FUNCTIONS, KEYS, RANGE_SHAPE, RANGES, TICKER, Command, CommandError, parse,
+                                     suggest)
 from brain.timeutil import days_between, today
 
 MAX_POINTS = 1500
@@ -171,10 +173,10 @@ def _metric_rows(bank: Bank, view: View, t: str, book: PriceBook) -> list[dict]:
     rows = []
     for nm, m, unit, f in brief.derived(bank, view, t, book):
         rows.append({"key": nm, "label": brief.DERIVED_LABELS.get(nm, nm), "value": m.value, "unit": unit,
-                     "cite": cite(f), "inputs": [cite(x) for x in m.inputs]})
+                     "as_of": m.as_of, "cite": cite(f), "inputs": [cite(x) for x in m.inputs]})
         if nm == "earnings_yield" and m.value > 0:  # display only: no fact of its own
-            rows.append({"key": "pe", "label": "P/E", "value": 1 / m.value, "unit": "x", "cite": cite(f),
-                         "inputs": [cite(f)], "display": f"{1 / m.value:,.1f}"})
+            rows.append({"key": "pe", "label": "P/E", "value": 1 / m.value, "unit": "x", "as_of": m.as_of,
+                         "cite": cite(f), "inputs": [cite(f)], "display": f"{1 / m.value:,.1f}"})
     return rows
 
 
@@ -207,7 +209,9 @@ def _range_start(dates: np.ndarray, rng: str) -> int:
     if rng == "MAX":
         return 0
     last = str(dates[-1])
-    start = last[:4] + "-01-01" if rng == "YTD" else _minus_months(last, RANGE_MONTHS[rng])
+    if rng == "YTD":  # from the last close of the previous year, as DES and WEI measure YTD
+        return max(int(np.searchsorted(dates, last[:4] + "-01-01", side="left")) - 1, 0)
+    start = _minus_months(last, RANGE_MONTHS[rng])
     return min(int(np.searchsorted(dates, start, side="left")), len(dates) - 1)
 
 
@@ -225,6 +229,9 @@ def _aligned(df: pd.DataFrame, dates: np.ndarray) -> np.ndarray:
 
 def _gp(bank: Bank, cmd: Command) -> dict:
     t = cmd.ticker
+    bad_range = [a for a in cmd.args if a not in RANGES and RANGE_SHAPE.fullmatch(a)]
+    if bad_range:
+        raise UserError(f"unknown range {bad_range[0]}; ranges: {' '.join(RANGES)}", f"{t} GP 1Y")
     ranges = [a for a in cmd.args if a in RANGES]
     cmps = list(dict.fromkeys(a for a in cmd.args if a not in RANGES))
     if len(ranges) > 1:
@@ -249,28 +256,32 @@ def _gp(bank: Bank, cmd: Command) -> dict:
     idx = downsample(len(w))
     pts = [{"date": wd[i], "close": close[i], "adj": adj[i],
             "volume": int(vol[i]) if math.isfinite(vol[i]) else None} for i in idx]
-    rebased = [{"date": wd[i], "value": adj[i] / adj[0] * 100} for i in idx]
     hi, lo = int(np.argmax(close)), int(np.argmin(close))
     stats = {"first": close[0], "last": close[-1], "ret": adj[-1] / adj[0] - 1, "high": close[hi], "low": close[lo],
              "high_date": wd[hi], "low_date": wd[lo]}
-    compare, missing = [], []
+    lines, missing = [], []
     for c in cmps:
         cs = view.latest(c, PRICE)
-        if cs is None:
-            missing.append(c)
-            continue
-        v = _aligned(_frame(cs, view), wd)
+        v = _aligned(_frame(cs, view), wd) if cs is not None else np.array([])
         ok = np.flatnonzero(np.isfinite(v))
         if not len(ok):
             missing.append(c)
             continue
-        base = v[ok[0]]
-        compare.append({"ticker": c, "points": [{"date": wd[i], "value": v[i] / base * 100}
-                                                for i in idx if math.isfinite(v[i])]})
+        lines.append((c, v, int(ok[0])))
+    # Every line is 100 on one date, so the legend's returns cover one period: the range start, or the
+    # first shown date on which every comparison has a close when one starts later (^GSPC from 2015 on MAX).
+    b = int(idx[np.searchsorted(idx, max([0, *(first for _, _, first in lines)]))])
+    rebased = [{"date": wd[i], "value": adj[i] / adj[b] * 100} for i in idx]
+    compare = []
+    for c, v, first in lines:
+        base = v[b] if math.isfinite(v[b]) else v[first]  # no close on the common date: it ended before
+        compare.append({"ticker": c, "start": wd[first], "points": [{"date": wd[i], "value": v[i] / base * 100}
+                                                                    for i in idx if math.isfinite(v[i])]})
     name = _name(view, t)
     what = f"price {rng}" + (f" vs {', '.join(c['ticker'] for c in compare)}" if compare else "")
-    data = {"ticker": t, "range": rng, "series": pts, "compare": compare, "rebased": rebased, "stats": stats,
-            "splits": snap.context.get("splits", []), "cite": cite(snap), "kind": kind_of(bank, t), "missing": missing}
+    data = {"ticker": t, "range": rng, "series": pts, "compare": compare, "rebased": rebased, "rebase_date": wd[b],
+            "stats": stats, "splits": snap.context.get("splits", []), "cite": cite(snap), "kind": kind_of(bank, t),
+            "missing": missing}
     return _ok(cmd, _title(t, name, what), str(wd[-1]), "chart", data)
 
 
@@ -514,26 +525,30 @@ def _mov(bank: Bank, cmd: Command) -> dict:
     stats = [(t, ps) for t in tickers if (ps := brief.price_summary(view, book, t)) is not None]
     if not stats:
         raise UserError("no prices for the research universe", "INGEST UNIVERSE")
-    last = max(ps["date"] for _, ps in stats)
+    # The session most of the universe last closed on (the latest on a tie): one stock ingested after the
+    # close must not empty the session lists, which rank only stocks whose last close is that session.
+    held = Counter(ps["date"] for _, ps in stats)
+    last = max(held, key=lambda d: (held[d], d))
     names = {t: _name(view, t) for t, _ in stats}
 
-    def rows(sel, key, group, reverse):
-        sel = sorted((x for x in sel if math.isfinite(x[1][key])), key=lambda x: x[1][key], reverse=reverse)[:8]
+    def rows(sel, key, group, reverse, keep=lambda x: True):
+        sel = sorted((x for x in sel if math.isfinite(x[1][key]) and keep(x[1][key])), key=lambda x: x[1][key],
+                     reverse=reverse)[:8]
         return [{"symbol": t, "name": names[t], "last": ps["close"], "chg_1d": ps["chg_1d"], "ret_1m": ps["ret_1m"],
                  "date": ps["date"], "_group": group, "_ticker": t, "_cite": cite(book.snapshot[t])} for t, ps in sel]
     session = [x for x in stats if x[1]["date"] == last]
-    out = (rows(session, "chg_1d", "Top gainers, last session", True)
-           + rows(session, "chg_1d", "Top losers, last session", False)
+    out = (rows(session, "chg_1d", "Top gainers, last session", True, lambda v: v > 0)
+           + rows(session, "chg_1d", "Top losers, last session", False, lambda v: v < 0)
            + rows(stats, "ret_1m", "Top 1 month", True) + rows(stats, "ret_1m", "Bottom 1 month", False))
     cols = [_col("symbol", "Symbol", "ticker"), _col("name", "Name"), _col("last", "Last", "number", 2),
             _col("chg_1d", "1D", "pct"), _col("ret_1m", "1M", "pct")]
-    stale = len(stats) - len(session)
+    off = len(stats) - len(session)
     note = (f"{len(tickers)}-stock research universe (universe/us_large.json); last session {last}. "
-            "Total returns (dividend-adjusted); 1M = 21 sessions."
-            + (f" {stale} stocks without a {last} close are left out of the session lists." if stale else "")
+            "Total returns (dividend-adjusted); 1M = 21 sessions. Gainers rose that session and losers fell."
+            + (f" {off} stocks whose last close is not on {last} are left out of the session lists." if off else "")
             + (f" {len(tickers) - len(stats)} have no prices: INGEST UNIVERSE." if len(stats) < len(tickers) else ""))
     groups = ["Top gainers, last session", "Top losers, last session", "Top 1 month", "Bottom 1 month"]
-    return _ok(cmd, "MOV — research-universe movers", last, "table", _table(cols, out, note, groups))
+    return _ok(cmd, "MOV — research-universe movers", max(held), "table", _table(cols, out, note, groups))
 
 
 # ---------- CURVE and ECO ----------

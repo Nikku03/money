@@ -56,7 +56,10 @@ def fetch_daily(symbol: str, start: str = "2000-01-01"):
     p2 = (int(time.time()) // 86400 + 1) * 86400  # next UTC midnight: same URL all day, so the cache works
     url = CHART.format(sym=symbol.upper(), p1=p1, p2=p2)
     r = fetch(url, ttl=6 * 3600)
-    df, splits, meta = parse_chart(json.loads(r.body))
+    # Judge "session still open" at the time the body was fetched, not now: a body cached at midday and
+    # re-read after the close still holds that midday bar, which is not a close.
+    fetched = datetime.fromisoformat(r.fetched_at.replace("Z", "+00:00")).timestamp()
+    df, splits, meta = parse_chart(json.loads(r.body), now=fetched)
     if df.empty:
         raise ValueError(f"no price rows for {symbol}")
     return df, splits, meta, r
