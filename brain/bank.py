@@ -160,6 +160,8 @@ class Bank:
             self.journal_errors.append(f"{where}: unknown op {op!r}")
 
     def _insert(self, entity: str, f: Fact) -> None:
+        if f.id in self._facts[entity]:
+            return  # the same fact appended twice (e.g. by two processes) is still one fact
         self._facts[entity][f.id] = f
         lst = self._index[entity].setdefault(f.attr, [])
         keys = self._keys[entity].setdefault(f.attr, [])

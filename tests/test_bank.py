@@ -64,6 +64,15 @@ class BankTest(TempHome):
         errors, _ = check.run(Bank(self.bank.root))
         self.assertTrue(any("stored id" in e for e in errors))
 
+    def test_duplicate_journal_lines_replay_as_one_fact(self):
+        f = filed("A", "x", 1, "2020-01-01", "2020-02-01")
+        self.bank.add(f)
+        p = self.bank.shard("A")
+        p.write_text(p.read_text() * 2)  # a second writer appended the same fact
+        fresh = Bank(self.bank.root)
+        self.assertEqual(len(fresh.facts("A")), 1)
+        self.assertEqual(len(fresh.view().facts("A", "x")), 1)
+
     def test_check_passes_clean_bank(self):
         f = filed("A", "x", 1, "2020-01-01", "2020-02-01")
         self.bank.add(f)

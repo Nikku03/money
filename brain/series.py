@@ -2,6 +2,7 @@
 fact per snapshot whose value is the file's sha256. Same data, same file."""
 from __future__ import annotations
 
+import functools
 import hashlib
 import io
 
@@ -31,8 +32,14 @@ def path(sha: str):
     return _dir() / f"{sha}.csv"
 
 
-def load(sha: str) -> pd.DataFrame:
+@functools.lru_cache(maxsize=512)
+def _load_cached(home: str, sha: str) -> pd.DataFrame:
     return pd.read_csv(path(sha), dtype={"date": str})
+
+
+def load(sha: str) -> pd.DataFrame:
+    """Snapshots are content-addressed and immutable, so caching by sha is safe. Returns a copy."""
+    return _load_cached(str(config.home()), sha).copy()
 
 
 def verify(sha: str) -> bool:
