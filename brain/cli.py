@@ -2,10 +2,16 @@
 from __future__ import annotations
 
 import argparse
+import importlib
 import json
 import sys
 
 from brain import config
+
+# Modules that register their own subcommands with ``add_cli(subparsers)``. A module that is not
+# there (or not finished) is skipped, so one part of the brain cannot take the whole CLI down.
+PLUGINS = ("brain.sources.insiders", "brain.sources.aviation", "brain.sources.shipping",
+           "brain.sources.cameras", "brain.watch", "brain.scout")
 
 
 def _bank():
@@ -22,12 +28,15 @@ def cmd_ingest(a):
 
 
 def cmd_ingest_universe(a):
+    from brain.bank import Bank
     from brain.ingest import ingest
     from brain.sources import prices
+    from brain.universe import BROAD
     bank = _bank()
-    uni = json.loads(config.UNIVERSE.read_text())
+    uni = json.loads((BROAD if a.broad else config.UNIVERSE).read_text())
     for t in uni["tickers"]:
-        print(f"{t}: {ingest(bank, t, ('sec', 'filings', 'prices'))}")
+        # One Bank per ticker: a long list must not hold every company's facts in memory at once.
+        print(f"{t}: {ingest(Bank(bank.root), t, ('sec', 'filings', 'prices'))}", flush=True)
     print(f"SPY: {bank.add_many(prices.ingest('SPY'))}")
 
 
@@ -119,7 +128,11 @@ def cmd_score_claims(a):
 
 
 def cmd_universe(a):
-    from brain.universe import build
+    from brain.universe import BROAD, build, build_broad
+    if a.broad:
+        out = build_broad(_bank(), a.max_rank, log=lambda m: print(m, flush=True))
+        print(f"{out['n']} tickers kept, {len(out['rejected'])} rejected -> {BROAD}")
+        return
     out = build(_bank(), a.n)
     print(f"{out['n']} tickers kept, {len(out['rejected'])} rejected -> {config.UNIVERSE}")
 
@@ -131,7 +144,7 @@ def cmd_research(a):
         print("\n".join(f"declared {r['id']} ({r['spec_sha']})" for r in new) or "nothing new to declare")
     elif a.action == "run":
         from brain.research.run import run
-        run(_bank(), a.ids or None, n_random=a.n_random)
+        run(_bank(), a.ids or None, n_random=a.n_random, asof=a.prices_asof)
         print(f"-> {config.RESULTS}")
     elif a.action == "report":
         from brain.research.run import report
@@ -155,6 +168,7 @@ def main(argv=None) -> int:
     s.set_defaults(fn=cmd_ingest)
 
     s = sub.add_parser("ingest-universe", help="refresh SEC facts, filings and prices for the research universe")
+    s.add_argument("--broad", action="store_true", help="the broad universe (universe/us_broad.json)")
     s.set_defaults(fn=cmd_ingest_universe)
 
     s = sub.add_parser("macro", help="collect the Treasury yield curve, and FRED series when FRED_API_KEY is set")
@@ -205,6 +219,9 @@ def main(argv=None) -> int:
 
     s = sub.add_parser("universe", help="rebuild the research universe by its written rule")
     s.add_argument("--n", type=int, default=60)
+    s.add_argument("--broad", action="store_true",
+                   help="build universe/us_broad.json: every qualifying CIK in SEC's first --max-rank rows")
+    s.add_argument("--max-rank", type=int, default=1500)
     s.set_defaults(fn=cmd_universe)
 
     s = sub.add_parser("research", help="declare / run / report / withdraw hypotheses")
@@ -212,7 +229,32 @@ def main(argv=None) -> int:
     s.add_argument("ids", nargs="*")
     s.add_argument("--reason")
     s.add_argument("--n-random", type=int, default=200)
+    s.add_argument("--prices-asof", help="run: use the price snapshots known at this time (reproduce a past run)")
     s.set_defaults(fn=cmd_research)
 
+    add_plugins(sub)
     a = p.parse_args(argv)
     return a.fn(a) or 0
+
+
+def add_plugins(sub, modules=PLUGINS) -> list[str]:
+    """Let each module in ``modules`` register its subcommands; returns the ones that did."""
+    done = []
+    for name in modules:
+        try:
+            mod = importlib.import_module(name)
+        except ModuleNotFoundError as e:
+            if e.name != name:  # the module exists but needs something missing: say so, carry on
+                print(f"warning: {name} not loaded ({e})", file=sys.stderr)
+            continue
+        except Exception as e:  # a module mid-edit or broken: the rest of the CLI still works
+            print(f"warning: {name} not loaded ({type(e).__name__}: {e})", file=sys.stderr)
+            continue
+        if callable(getattr(mod, "add_cli", None)):
+            try:
+                mod.add_cli(sub)
+            except Exception as e:  # e.g. a subcommand name another module already took
+                print(f"warning: {name} subcommands not added ({type(e).__name__}: {e})", file=sys.stderr)
+                continue
+            done.append(name)
+    return done

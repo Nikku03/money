@@ -41,8 +41,10 @@ class Panel:
         return h.hexdigest()[:16]
 
 
-def build(bank: Bank, tickers: list[str], ref: str = "SPY", start: str = "2009-01-01") -> Panel:
-    book = PriceBook(bank, [*tickers, ref])
+def build(bank: Bank, tickers: list[str], ref: str = "SPY", start: str = "2009-01-01", asof: str | None = None) -> Panel:
+    """``asof``: use the price snapshots known at that time (default: the latest), so a past run
+    can be rebuilt exactly from a bank that has taken in newer prices since."""
+    book = PriceBook(bank, [*tickers, ref], asof)
     missing = [t for t in [*tickers, ref] if not book.has(t)]
     if missing:
         raise SystemExit(f"no price snapshot for {missing}; run: python -m brain ingest {' '.join(missing)}")

@@ -1,6 +1,12 @@
-"""Run declared hypotheses, with controls, and write research/RESULTS.md."""
+"""Run declared hypotheses, with controls, and write research/RESULTS.md.
+
+Each hypothesis names its universe (``universe/us_large.json`` unless it says otherwise).
+One panel is built per universe, with its own controls, so adding hypotheses on a new
+universe leaves the H1-H5 panel, and every number computed on it, exactly as it was.
+"""
 from __future__ import annotations
 
+import hashlib
 import json
 import math
 
@@ -16,8 +22,22 @@ from brain.research.stats import bh_adjust
 from brain.timeutil import now_iso
 
 
-def load_universe() -> dict:
-    return json.loads(config.UNIVERSE.read_text())
+def universe_path(name: str | None = None):
+    """The file behind a hypothesis' ``universe`` (the default one is ``config.UNIVERSE``)."""
+    from brain import universe
+    if name is None or name == COMMON["universe"]:
+        return config.UNIVERSE
+    if name == "universe/us_broad.json":
+        return universe.BROAD
+    return config.ROOT / name
+
+
+def load_universe(name: str | None = None) -> dict:
+    return json.loads(universe_path(name).read_text())
+
+
+def universe_sha(name: str | None = None) -> str:
+    return hashlib.sha256(universe_path(name).read_bytes()).hexdigest()[:16]
 
 
 def masks(panel) -> tuple[np.ndarray, np.ndarray]:
@@ -45,26 +65,46 @@ def controls(panel, test, n_random: int = 200) -> dict:
             "random_false_positive_rate": fpr, "n_random": n_random, "pass": bool(ok)}
 
 
-def run(bank: Bank, ids: list[str] | None = None, n_random: int = 200) -> list[dict]:
-    uni = load_universe()
-    hyps = [h for h in HYPOTHESES if not ids or h["id"] in ids]
+def _check_declared(hyps: list[dict]) -> None:
     for h in hyps:
         d = ledger.declared(h["id"])
         if d is None or d["spec_sha"] != ledger.spec_sha(h):
             raise SystemExit(f"{h['id']} is not declared with this spec. Run `python -m brain research declare` "
                              f"and commit the ledger first.")
-    panel = build(bank, uni["tickers"])
+        if h.get("universe_sha") and universe_sha(h.get("universe")) != h["universe_sha"]:
+            raise SystemExit(f"{h['id']} was declared on {h['universe']} with sha {h['universe_sha']}; the file "
+                             f"there now differs. A rebuilt universe is a new experiment: declare a new id.")
+
+
+def run(bank: Bank, ids: list[str] | None = None, n_random: int = 200, asof: str | None = None) -> list[dict]:
+    """Run the declared hypotheses (all, or ``ids``). ``asof`` pins the price snapshots to those known
+    at that time, so a past run can be reproduced from a bank that has newer prices since."""
+    hyps = [h for h in HYPOTHESES if not ids or h["id"] in ids]
+    _check_declared(hyps)
+    groups: dict[str, list[dict]] = {}
+    for h in hyps:
+        groups.setdefault(ledger.spec(h)["universe"], []).append(h)
+    out = []
+    for name, group in groups.items():
+        out += _run_universe(bank, name, group, n_random, asof)
+    report()
+    return out
+
+
+def _run_universe(bank: Bank, name: str, hyps: list[dict], n_random: int, asof: str | None) -> list[dict]:
+    uni = load_universe(name)
+    panel = build(bank, uni["tickers"], asof=asof)
     M = len(panel.entry)
     train, test = masks(panel)
-    print(f"panel: {len(panel.tickers)} tickers, months {panel.months[train[0]]}..{panel.months[test[-1]]} "
+    print(f"panel ({name}): {len(panel.tickers)} tickers, months {panel.months[train[0]]}..{panel.months[test[-1]]} "
           f"(train {len(train)}, test {len(test)})")
 
     ctl = controls(panel, test, n_random)
     print(f"controls: oracle p={ctl['oracle_test_perm_p']:.4f}, random FPR={ctl['random_false_positive_rate']:.3f} "
           f"-> {'PASS' if ctl['pass'] else 'FAIL'}")
 
-    need = sorted({h["signal"] for h in hyps if h["signal"] in signals.HAND}
-                  | {f for h in hyps for f in h.get("features", [])})
+    known = {**signals.HAND, **signals.PER_TICKER}
+    need = sorted({h["signal"] for h in hyps if h["signal"] in known} | {f for h in hyps for f in h.get("features", [])})
     feats = signals.compute(bank, panel, need)
 
     spy = pd.Series(panel.book.adj["SPY"], index=panel.book.dates["SPY"]).reindex(panel.dates).to_numpy()
@@ -84,17 +124,23 @@ def run(bank: Bank, ids: list[str] | None = None, n_random: int = 200) -> list[d
         else:
             S = feats[h["signal"]]
         kw = dict(frac=COMMON["frac"], cost_bps=COMMON["cost_bps"], n_perm=GATE["n_perm"])
+        if "select" in h:  # only hypotheses that name a mode pass it (H1-H5 run exactly as declared)
+            kw["select"] = h["select"]
         tr = harness.evaluate(S[:M], panel.R, panel.listed[:M], train, seed=7, **kw)
         te = harness.evaluate(S[:M], panel.R, panel.listed[:M], test, seed=8, **kw)
         coverage = float(np.isfinite(S[:M][test]).sum() / panel.listed[:M][test].sum())
         rec = {"op": "result", "id": h["id"], "spec_sha": ledger.spec_sha(h), "at": now_iso(),
                **ledger.git_state(), "panel_digest": panel.digest(), "n_tickers": len(panel.tickers),
                "test_signal_coverage": coverage, "train": tr, "test": te, "controls": ctl, "context": context}
+        if name != COMMON["universe"]:
+            rec["universe"] = name
+        if asof:
+            rec["prices_asof"] = asof
         ledger.append(rec)
         out.append(rec)
-        print(f"{h['id']:<22} TEST net excess {te['mean_net_excess']*100:+.2f}%/mo  p={te['perm_p']:.4f}  "
-              f"TRAIN {tr['mean_net_excess']*100:+.2f}%/mo p={tr['perm_p']:.4f}")
-    report()
+        nan = float("nan")
+        print(f"{h['id']:<22} TEST net excess {te.get('mean_net_excess', nan)*100:+.2f}%/mo  p={te['perm_p']:.4f}  "
+              f"TRAIN {tr.get('mean_net_excess', nan)*100:+.2f}%/mo p={tr['perm_p']:.4f}")
     return out
 
 
@@ -113,7 +159,7 @@ def verdicts() -> list[dict]:
         te = r["test"]
         if not r["controls"]["pass"]:
             v = "NO VERDICT (controls failed)"
-        elif te["mean_net_excess"] > GATE["test_mean_net_excess_gt"] and te["perm_p"] < GATE["test_perm_p_lt"] and q < GATE["bh_q"]:
+        elif te.get("mean_net_excess", math.nan) > GATE["test_mean_net_excess_gt"] and te["perm_p"] < GATE["test_perm_p_lt"] and q < GATE["bh_q"]:
             v = "PASS"
         else:
             v = "FAIL"
@@ -128,32 +174,55 @@ def _pct(x, digits=2):
     return "–" if x is None or (isinstance(x, float) and math.isnan(x)) else f"{x*100:+.{digits}f}%"
 
 
+def _universe_of(r: dict) -> str:
+    return r.get("universe") or COMMON["universe"]
+
+
+def _universe_line(name: str, rows: list[dict]) -> str:
+    try:
+        uni = load_universe(name)
+        what = f"{len(uni['tickers'])} US stocks ({uni['rule_short']})"
+    except (OSError, ValueError, KeyError):
+        what = f"{rows[0]['n_tickers']} tickers (universe file missing)"
+    ids = ", ".join(r["id"] for r in rows)
+    return f"- `{name}`: {what}. Hypotheses: {ids}."
+
+
 def report() -> str:
     rows = verdicts()
     if not rows:
         return ""
-    uni = load_universe()
-    r0 = rows[0]
-    ctl, ctx = r0["controls"], r0["context"]
+    by_uni: dict[str, list[dict]] = {}
+    for r in rows:
+        by_uni.setdefault(_universe_of(r), []).append(r)
+    selects = {h["id"]: h.get("select", "top_frac") for h in HYPOTHESES}
     lines = [
         "# Research results",
         "",
         f"Generated {now_iso()} from `research/ledger.jsonl`. Every number below is copied from the ledger.",
         "",
-        f"Universe: {len(uni['tickers'])} US large caps ({uni['rule_short']}). "
-        f"TRAIN {SPLIT['first_rebalance']}..{SPLIT['train_end']}, TEST from {SPLIT['test_start']}. "
-        f"Top third by signal vs the equal-weight universe, monthly, {COMMON['cost_bps']} bps per unit turnover.",
+        f"TRAIN {SPLIT['first_rebalance']}..{SPLIT['train_end']}, TEST from {SPLIT['test_start']}. Monthly, "
+        f"equal weight against the equal-weight universe, {COMMON['cost_bps']} bps per unit turnover. Holdings: "
+        "the top third by signal unless the hypothesis names another selection (Select column; see "
+        "`brain/research/harness.py`).",
+        "",
+        "Universes (each has its own panel and controls):",
+        "",
+        *[_universe_line(name, rs) for name, rs in by_uni.items()],
         "",
         "Gate (declared before running): TEST mean net excess > 0, permutation p < 0.05, and Benjamini–Hochberg "
         "q < 0.10 across every hypothesis in the ledger.",
         "",
-        "| Hypothesis | TEST net excess / mo | Annualised | Info ratio | Months won | Perm p | BH q | TRAIN net excess / mo | TRAIN p | TEST coverage | Verdict |",
-        "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+        "| Hypothesis | Universe | Select | TEST net excess / mo | Annualised | Info ratio | Months won | Perm p | BH q | TRAIN net excess / mo | TRAIN p | TEST coverage | Verdict |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
     ]
+    nan = float("nan")
     for r in rows:
-        te, tr = r["test"], r["train"]
+        te = {"mean_net_excess": nan, "ann_net_excess": nan, "info_ratio": nan, "months_beating_benchmark": 0, **r["test"]}
+        tr = {"mean_net_excess": nan, **r["train"]}
         lines.append(
-            f"| {r['id']} | {_pct(te['mean_net_excess'])} | {_pct(te['ann_net_excess'], 1)} | {te['info_ratio']:.2f} | "
+            f"| {r['id']} | {_universe_of(r).split('/')[-1].removesuffix('.json')} | {selects.get(r['id'], 'top_frac')} | "
+            f"{_pct(te['mean_net_excess'])} | {_pct(te['ann_net_excess'], 1)} | {te['info_ratio']:.2f} | "
             f"{te['months_beating_benchmark']}/{te['n_months']} | {te['perm_p']:.4f} | {r['bh_q']:.3f} | "
             f"{_pct(tr['mean_net_excess'])} | {tr['perm_p']:.4f} | {r.get('test_signal_coverage', float('nan')) * 100:.0f}% | "
             f"**{r['verdict']}** |")
@@ -163,19 +232,29 @@ def report() -> str:
         "",
         "## Controls",
         "",
-        f"- Oracle (next month's actual return as the signal): TEST p = {ctl['oracle_test_perm_p']:.4f}, "
-        f"gross excess {_pct(ctl['oracle_test_mean_gross_excess'])}/mo. The harness can see a real edge.",
-        f"- {ctl['n_random']} random signals: {ctl['random_false_positive_rate']*100:.1f}% reached p < 0.05 "
-        f"(expected about 5%). The null is calibrated.",
-        f"- Controls {'passed' if ctl['pass'] else 'FAILED: no verdicts are valid'}.",
+    ]
+    for name, rs in by_uni.items():
+        ctl = rs[0]["controls"]
+        lines += [
+            f"`{name}`:",
+            "",
+            f"- Oracle (next month's actual return as the signal): TEST p = {ctl['oracle_test_perm_p']:.4f}, "
+            f"gross excess {_pct(ctl['oracle_test_mean_gross_excess'])}/mo. The harness can see a real edge.",
+            f"- {ctl['n_random']} random signals: {ctl['random_false_positive_rate']*100:.1f}% reached p < 0.05 "
+            f"(expected about 5%). The null is calibrated.",
+            f"- Controls {'passed' if ctl['pass'] else 'FAILED: no verdicts on this universe are valid'}.",
+            "",
+        ]
+    lines += ["## Survivorship bias, measured", ""]
+    for name, rs in by_uni.items():
+        ctx = rs[0]["context"]
+        lines.append(f"- `{name}`: over TEST the equal-weight universe returned {_pct(ctx['universe_ew_ann_return_test'], 1)} "
+                     f"a year; SPY returned {_pct(ctx['spy_ann_return_test'], 1)}.")
+    lines += [
         "",
-        "## Survivorship bias, measured",
-        "",
-        f"Over TEST the equal-weight universe returned {_pct(ctx['universe_ew_ann_return_test'], 1)} a year; SPY returned "
-        f"{_pct(ctx['spy_ann_return_test'], 1)}. The gap is mostly selection: the universe is today's largest "
-        "companies, so every member is a survivor and a past winner. Comparing against the same universe cancels the "
-        "level, not the tilt: survivorship still flatters momentum and growth, and hurts value. A PASS here is an "
-        "upper bound.",
+        "The gap is mostly selection: each universe is chosen by today's market value, so every member is a "
+        "survivor and a past winner. Comparing against the same universe cancels the level, not the tilt: "
+        "survivorship still flatters momentum and growth, and hurts value. A PASS here is an upper bound.",
         "",
         *(["## Ledger notes", ""] + [f"- {n['at'][:10]}: {n['text']}" for n in ledger.read() if n["op"] == "note"] + [""]
           if any(n["op"] == "note" for n in ledger.read()) else []),
@@ -183,8 +262,8 @@ def report() -> str:
         "",
         "- FAIL means the claim did not beat a shuffled signal on unseen months after costs. It does not mean the "
         "opposite is true.",
-        f"- {r0['test']['n_months']} TEST months and {r0['n_tickers']} stocks give little power: an edge of a few "
-        "tenths of a percent a month can hide in this noise.",
+        *[f"- `{name}`: {rs[0]['test']['n_months']} TEST months and {rs[0]['n_tickers']} stocks." for name, rs in by_uni.items()],
+        "- Few TEST months give little power: an edge of a few tenths of a percent a month can hide in this noise.",
         "- Not financial advice. Nothing here places orders.",
     ]
     text = "\n".join(lines) + "\n"

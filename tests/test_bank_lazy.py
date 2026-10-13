@@ -102,3 +102,16 @@ class LazyBankTest(TempHome):
         self.assertEqual({x.attr for x in b._facts["A"].values()}, {"filing"})
         self.assertEqual(b.get(f.ref).value, "10-K")
         self.assertIsNone(b.get("A/" + "0" * 20))
+
+
+class CheckIndexTest(TempHome):
+    def test_check_catches_an_index_that_hides_a_record(self):
+        self.bank.add_many([filed("A", "price", i, f"2020-01-{i + 1:02d}", f"2020-01-{i + 1:02d}") for i in range(3)])
+        Bank(self.bank.root).facts("A", "price")
+        self.assertEqual(check.run(Bank(self.bank.root))[0], [])
+        ip = self.bank.shard("A").with_suffix(".jsonl.idx")
+        d = json.loads(ip.read_text())
+        d["attrs"]["price"] = d["attrs"]["price"][:-3]  # one record silently dropped from the index
+        ip.write_text(json.dumps(d))
+        errors, _ = check.run(Bank(self.bank.root))
+        self.assertTrue(any("index disagrees" in e for e in errors), errors)

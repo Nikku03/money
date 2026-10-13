@@ -6,6 +6,10 @@ Rules (from the cell project, carried over):
 - A declared spec is never edited. A change is a new id (H1b, ...), and every
   id ever run counts in the false-discovery correction.
 - TRAIN is for looking. The verdict comes from TEST only.
+
+H3b and H6-H8 run on the broad universe and name their holdings rule (``select``) in
+their own dict: a key added to COMMON would change H1-H5's declared spec hashes.
+``universe_sha`` pins the exact universe file; ``research run`` refuses a different one.
 """
 
 SPLIT = {"first_rebalance": "2011-01-31", "train_end": "2018-12-31", "test_start": "2019-01-01"}
@@ -30,6 +34,9 @@ COMMON = {
     "gate": GATE,
 }
 
+BROAD = "universe/us_broad.json"
+BROAD_SHA = "dc4c64e327b34755"  # sha256[:16] of universe/us_broad.json as built (741 tickers, 2026-10-13)
+
 HYPOTHESES = [
     {"id": "H1-mom12_1", "signal": "mom12_1",
      "claim": "Stocks with the highest return from 12 to 1 months ago beat the universe next month."},
@@ -44,4 +51,29 @@ HYPOTHESES = [
      "features": ["earnings_yield", "low_asset_growth", "mom12_1", "rev1"], "lam": 1.0, "min_months": 24,
      "claim": "A ridge learner on the ranks of the four signals above, refit monthly on months whose "
               "outcome was already realised, beats the universe next month."},
+    {"id": "H3b-earnings_yield_ttm", "signal": "earnings_yield_ttm", "universe": BROAD, "universe_sha": BROAD_SHA,
+     "select": "top_frac",
+     "claim": "Stocks with the highest trailing-twelve-month earnings yield (net income over the last four fiscal "
+              "quarters, Q4 = fiscal year minus nine-month YTD; NetIncomeLoss, else ProfitLoss, else net income "
+              "available to common holders; over market value from diluted, else basic weighted-average shares; "
+              "SEC filings known at the time) beat the universe next month."},
+    {"id": "H6-insider_buying", "signal": "insider_buying", "universe": BROAD, "universe_sha": BROAD_SHA,
+     "select": "positive",
+     "portfolio": "every listed ticker with signal > 0 (at least 3), equal weight, rebalanced monthly",
+     "null": "as many names drawn at random from all listed tickers, same months",
+     "data": "SEC Insider Transactions Data Sets (Forms 4 and 5; amendments skipped) and Form 4 XML; "
+             "non-derivative open-market purchases (code P)",
+     "claim": "Stocks whose officers or directors bought shares in the open market (USD value of code-P trades "
+              "in Form 4/5 filings known in the 90 days to the rebalance day, > 0) beat the universe next month."},
+    {"id": "H7-earnings_reaction", "signal": "earnings_reaction", "universe": BROAD, "universe_sha": BROAD_SHA,
+     "select": "top_frac_vs_all",
+     "portfolio": "top third by signal of listed tickers that have one, equal weight, rebalanced monthly",
+     "null": "as many names drawn at random from all listed tickers, same months",
+     "claim": "Stocks with the strongest 3-day excess reaction over SPY (days -1..+1) to an earnings release "
+              "(8-K item 2.02) known in the 31 days to the rebalance day keep drifting the same way: they beat "
+              "the universe next month."},
+    {"id": "H8-sue", "signal": "sue", "universe": BROAD, "universe_sha": BROAD_SHA, "select": "top_frac",
+     "claim": "Stocks with the highest standardized unexpected earnings (latest quarterly EPS known at the "
+              "rebalance day minus the same quarter a year earlier, over the standard deviation of that "
+              "difference in the 8 prior quarters, split-adjusted) beat the universe next month."},
 ]

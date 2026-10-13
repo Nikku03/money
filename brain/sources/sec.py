@@ -3,6 +3,10 @@
 All public-domain US government data. known_at for a financial fact is the date of
 the filing that first reported that value; a later filing reporting a different
 value for the same period is kept as a restatement.
+
+The submissions JSON lists the latest ~1,000 filings (at least a year) inline and the
+rest in older pages named under ``filings.files``. ``filings_for`` reads them all, so an
+event study can reach back to a company's first EDGAR filings.
 """
 from __future__ import annotations
 
@@ -16,6 +20,7 @@ from brain.timeutil import days_between
 TICKERS_URL = "https://www.sec.gov/files/company_tickers.json"
 FACTS_URL = "https://data.sec.gov/api/xbrl/companyfacts/CIK{cik:010d}.json"
 SUBS_URL = "https://data.sec.gov/submissions/CIK{cik:010d}.json"
+SUBS_PAGE_URL = "https://data.sec.gov/submissions/{name}"
 ARCHIVE = "https://www.sec.gov/Archives/edgar/data/{cik}/{accn}/"
 
 # Curated: enough for growth, margins, valuation, balance-sheet health, cash use.
@@ -31,6 +36,13 @@ CONCEPTS = {
         "NetCashProvidedByUsedInOperatingActivities", "PaymentsToAcquirePropertyPlantAndEquipment",
         "ResearchAndDevelopmentExpense", "PaymentsForRepurchaseOfCommonStock", "PaymentsOfDividends",
         "CommonStockDividendsPerShareDeclared",
+        # Broader coverage for quarterly and TTM metrics (used only by functions added for them, so
+        # the metrics behind declared hypotheses read exactly the concepts they were tested on).
+        "ProfitLoss", "NetIncomeLossAvailableToCommonStockholdersBasic",
+        "NetIncomeLossAvailableToCommonStockholdersDiluted", "WeightedAverageNumberOfSharesOutstandingBasic",
+        "WeightedAverageNumberOfShareOutstandingBasicAndDiluted", "PaymentsToAcquireProductiveAssets",
+        "PaymentsOfDividendsCommonStock", "RevenueFromContractWithCustomerIncludingAssessedTax",
+        "SalesRevenueGoodsNet", "CostOfGoodsAndServicesSold",
     ],
     "dei": ["EntityCommonStockSharesOutstanding", "EntityPublicFloat"],
 }
@@ -89,29 +101,39 @@ def parse_companyfacts(ticker: str, data: dict, fetched_at: str, all_concepts: b
     return out
 
 
-def parse_submissions(ticker: str, data: dict, fetched_at: str) -> tuple[list[Fact], dict]:
-    cik = int(data["cik"])
-    r = data["filings"]["recent"]
+def parse_filings_page(ticker: str, cik: int, cols: dict, fetched_at: str) -> list[Fact]:
+    """One page of filings in the submissions column layout (the inline ``recent`` block, or
+    an older page from ``filings.files``, which has the same columns at its top level)."""
+    def col(k: str, i: int) -> str:
+        v = cols.get(k) or []
+        return (v[i] if i < len(v) else "") or ""
+
     facts = []
-    for i in range(len(r["accessionNumber"])):
-        accn = r["accessionNumber"][i]
-        doc = r["primaryDocument"][i]
+    for i in range(len(cols.get("accessionNumber") or [])):
+        accn = cols["accessionNumber"][i]
+        doc = col("primaryDocument", i)
         url = ARCHIVE.format(cik=cik, accn=accn.replace("-", "")) + doc
         ctx = {"accn": accn}
-        if r.get("items") and r["items"][i]:
-            ctx["items"] = r["items"][i]
-        if r.get("primaryDocDescription") and r["primaryDocDescription"][i]:
-            ctx["description"] = r["primaryDocDescription"][i]
+        if col("items", i):
+            ctx["items"] = col("items", i)
+        if col("primaryDocDescription", i):
+            ctx["description"] = col("primaryDocDescription", i)
         # Accepted after hours, a filing carries the next business day's date and is public from then.
         # known_at is the later of acceptance and the official filing date.
-        filing_date = r["filingDate"][i]
-        accepted = r["acceptanceDateTime"][i]
+        filing_date = cols["filingDate"][i]
+        accepted = col("acceptanceDateTime", i)
         known = accepted if accepted and accepted[:10] >= filing_date else filing_date
-        as_of = min(r["reportDate"][i] or filing_date, filing_date)
+        as_of = min(col("reportDate", i) or filing_date, filing_date)
         facts.append(Fact(
-            entity=ticker, attr="filing", value=r["form"][i], as_of=as_of, known_at=known,
+            entity=ticker, attr="filing", value=cols["form"][i], as_of=as_of, known_at=known,
             tier="filed", source={"name": "SEC EDGAR", "url": url}, context=ctx, retrieved_at=fetched_at,
         ))
+    return facts
+
+
+def parse_submissions(ticker: str, data: dict, fetched_at: str) -> tuple[list[Fact], dict]:
+    cik = int(data["cik"])
+    facts = parse_filings_page(ticker, cik, data["filings"]["recent"], fetched_at)
     identity = {
         "identity.name": data.get("name"),
         "identity.cik": cik,
@@ -124,17 +146,35 @@ def parse_submissions(ticker: str, data: dict, fetched_at: str) -> tuple[list[Fa
     return facts, {k: v for k, v in identity.items() if v not in (None, "")}
 
 
+def older_pages(data: dict) -> list[str]:
+    """File names of the older filing pages a submissions JSON points to (safe names only)."""
+    out = []
+    for f in (data.get("filings") or {}).get("files") or []:
+        name = str(f.get("name", ""))
+        if name and "/" not in name and ".." not in name and name.endswith(".json"):
+            out.append(name)
+    return out
+
+
 def facts_for(ticker: str, all_concepts: bool = False) -> list[Fact]:
     cik = cik_for(ticker)
     data, fetched_at = _get_json(FACTS_URL.format(cik=cik))
     return parse_companyfacts(ticker, data, fetched_at, all_concepts)
 
 
-def filings_for(ticker: str) -> tuple[list[Fact], list[Fact]]:
+def filings_for(ticker: str, all_pages: bool = True, ttl: float = 86400) -> tuple[list[Fact], list[Fact]]:
+    """Every filing EDGAR lists for the ticker's CIK (``all_pages=False``: the inline latest ones only,
+    enough for a frequent refresh) and the identity facts from the same response."""
     cik = cik_for(ticker)
     url = SUBS_URL.format(cik=cik)
-    data, fetched_at = _get_json(url)
+    data, fetched_at = _get_json(url, ttl=ttl)
     facts, ident = parse_submissions(ticker, data, fetched_at)
+    if all_pages:
+        for name in older_pages(data):
+            # Older pages change only when filings roll over from the inline block, and those are
+            # in the bank already, so a week-old copy loses nothing.
+            page, page_at = _get_json(SUBS_PAGE_URL.format(name=name), ttl=max(ttl, 7 * 86400))
+            facts += parse_filings_page(ticker, cik, page, page_at)
     id_facts = [Fact(entity=ticker, attr=k, value=v, as_of=fetched_at[:10], known_at=fetched_at,
                      tier="filed", source={"name": "SEC EDGAR submissions", "url": url},
                      retrieved_at=fetched_at) for k, v in ident.items()]
