@@ -47,6 +47,8 @@ AIRPORTS_URL = "https://davidmegginson.github.io/ourairports-data/airports.csv"
 AIRPORTS_TTL = 30 * 86400
 ADSB_URL = "https://api.adsb.lol/v2/hex/{hex}"
 ADSB_INTERVAL = 1.0  # adsb.lol: at most one request per second
+ADSB_MAX_INTERVAL = 8.0  # after a 429 the spacing doubles, up to this, for the rest of the process
+ADSB_RETRY_S = 5.0   # wait before the one retry of a 429 when the answer names no Retry-After
 FAA_SOURCE = {"name": "FAA Aircraft Registry", "url": REGISTRY_URL}
 ADSB_SOURCE = {"name": "adsb.lol (ODbL)", "url": "https://api.adsb.lol/"}
 
@@ -64,6 +66,7 @@ LINK_HARD_AGE_S = 30 * 86400  # a link this old that cannot be refreshed is not 
 DB_PIA, DB_LADD = 4, 8   # readsb dbFlags bits
 
 _last_live = 0.0
+_live_interval = ADSB_INTERVAL
 _registry_cache: dict = {}
 _airports_cache: dict = {}
 
@@ -298,10 +301,18 @@ def nearest_airport(table: dict, lat: float, lon: float, km: float = AIRPORT_KM)
 
 
 # ---------- positions ----------
-def _live_json(url: str) -> dict:
-    """GET JSON straight into memory: live positions are never written to the HTTP cache."""
-    global _last_live
-    wait = _last_live + ADSB_INTERVAL - time.time()
+def _retry_after(e: urllib.error.HTTPError) -> float:
+    try:
+        return min(60.0, max(1.0, float(e.headers.get("Retry-After") or ADSB_RETRY_S)))
+    except (TypeError, ValueError, AttributeError):  # an HTTP date, or no headers
+        return ADSB_RETRY_S
+
+
+def _live_json(url: str, retry: bool = True) -> dict:
+    """GET JSON straight into memory: live positions are never written to the HTTP cache. adsb.lol
+    publishes no fixed rate, it limits by load: a 429 slows every later request down and is retried once."""
+    global _last_live, _live_interval
+    wait = _last_live + _live_interval - time.time()
     if wait > 0:
         time.sleep(wait)
     _last_live = time.time()
@@ -310,6 +321,10 @@ def _live_json(url: str) -> dict:
         with urllib.request.urlopen(req, timeout=30) as r:
             return json.loads(r.read())
     except urllib.error.HTTPError as e:
+        if e.code == 429 and retry:
+            _live_interval = min(ADSB_MAX_INTERVAL, _live_interval * 2)
+            time.sleep(_retry_after(e))
+            return _live_json(url, retry=False)
         raise FetchError(f"{url}: HTTP {e.code}") from e
     except (urllib.error.URLError, TimeoutError, ConnectionError, ValueError) as e:
         raise FetchError(f"{url}: {e}") from e
@@ -432,6 +447,9 @@ def poll(bank: Bank, state_path: Path | str | None = None, tickers: list[str] | 
         log("  no companies to poll: pass tickers, or add one with: python -m brain watch add aircraft TICKER")
         return 0
     links = _current_links(bank, tickers, log)
+    for t in tickers:
+        if t in links and not links[t]:
+            log(f"  {t}: the FAA registry lists no aircraft registered to the company itself; nothing to poll")
     out = optout()
     planes: dict[str, dict] = {}
     for t, lst in links.items():
@@ -443,6 +461,7 @@ def poll(bank: Bank, state_path: Path | str | None = None, tickers: list[str] | 
     get = get or (lambda h: _live_json(ADSB_URL.format(hex=h)))
     table = table if table is not None else (airports() if planes else {"lat": []})
     facts = []
+    read = 0
     for hex_, p in sorted(planes.items()):
         if opted_out(p["reg"], hex_, out):
             state["aircraft"].pop(hex_, None)
@@ -454,6 +473,7 @@ def poll(bank: Bank, state_path: Path | str | None = None, tickers: list[str] | 
         except FetchError as e:
             log(f"  {p['reg']}: {e}")
             continue
+        read += 1
         t_now = now if now is not None else time.time()
         acs = [a for a in data.get("ac") or [] if str(a.get("hex", "")).lower().lstrip("~") == hex_]
         obs = observe(acs[0], t_now) if acs else None
@@ -474,9 +494,16 @@ def poll(bank: Bank, state_path: Path | str | None = None, tickers: list[str] | 
                                            "departed": ev["departed"], "arrived": ev["arrived"]},
                                   retrieved_at=seen))
             log(f"  {p['reg']}: {ev['from'] or '?'} -> {ev['to']} arrived {ev['arrived']}")
-    for hex_ in [h for h in state["aircraft"] if h not in planes]:
-        state["aircraft"].pop(hex_)  # no longer a watched company's aircraft: forget its last position
+    # An aircraft no company here or in the watchlist owns any more: forget its last position. A poll of a
+    # few tickers by hand keeps the watchlist's aircraft, or the loop would miss their next landing.
+    links_now = _read_json(_links_path(), {})
+    keep = set(planes) | {a["hex"] for t in watched() for a in (links_now.get(t) or {}).get("aircraft", [])
+                          if not opted_out(a.get("reg"), a["hex"], out)}
+    for hex_ in [h for h in state["aircraft"] if h not in keep]:
+        state["aircraft"].pop(hex_)
     _write_json(sp, state)
+    if planes:
+        log(f"  {read} of {len(planes)} aircraft read from adsb.lol")
     return bank.add_many(facts)
 
 

@@ -92,6 +92,7 @@ a:hover { text-decoration: underline; }
 .st.ok b, .st.ok { color: var(--up); }
 .st.bad { color: var(--down); }
 .st.busy { color: var(--amber); }
+.st.warn { color: var(--amber); }
 .st-btn { background: none; border: 0; padding: 0; cursor: pointer; }
 .st-btn:hover { color: var(--amber); }
 .st.busy::before { content: "\25A0 "; animation: blink 1s steps(2, start) infinite; }
@@ -134,6 +135,7 @@ a:hover { text-decoration: underline; }
 .ac li.sel { background: var(--sel); border-left-color: var(--amber); }
 .ac .ac-text { color: var(--text); font-weight: 600; overflow: hidden; text-overflow: ellipsis; }
 .ac .ac-fn .ac-text { color: var(--amber); }
+.ac .ac-kw .ac-text { color: var(--cyan); }
 .ac .ac-kind { color: var(--faint); text-transform: uppercase; font-size: 10px; align-self: center; }
 .ac .ac-desc { color: var(--dim); overflow: hidden; text-overflow: ellipsis; }
 
@@ -266,6 +268,15 @@ a:hover { text-decoration: underline; }
 .tbl tbody tr:hover td:first-child { background: var(--hover); }
 .tbl tr.grp td:first-child { position: static; }
 .tbl .ext { color: var(--link); margin-left: 4px; }
+.tbl tr.dimrow td { color: var(--faint); }  /* an acknowledged alert: still listed, no longer asking for attention */
+.tbl tr.dimrow td .cmdlink, .tbl tr.dimrow td .tk { color: var(--amber-dim); }
+
+/* alert severity and the NEW flag */
+.sev { font-size: 11px; font-weight: 700; letter-spacing: .04em; }
+.sev-high { color: var(--down); }
+.sev-notice { color: var(--amber); }
+.sev-info, .sev-other { color: var(--dim); font-weight: 400; }
+.flag { display: inline-block; padding: 0 4px; background: var(--amber); color: #000; font-size: 10px; font-weight: 700; line-height: 14px; letter-spacing: .05em; }
 
 .verdict { display: inline-block; padding: 0 4px; border: 1px solid; font-size: 11px; line-height: 14px; font-weight: 700; }
 .verdict.pass { color: var(--up); }
@@ -415,6 +426,10 @@ pre.json {
 .ask-status.off { color: #ff8080; white-space: normal; }
 .ask-log { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 4px 0 10px; }
 .ask-intro { padding: 10px 12px; color: var(--dim); line-height: 1.6; max-width: 100ch; }
+.ask-setup { margin: 8px 12px 4px; border: 1px solid #5a1d1d; border-left: 3px solid var(--down); background: #0d0404; max-width: 110ch; }
+.ask-setup .sec-h { border-bottom-color: #5a1d1d; }
+.ask-setup ol { margin: 6px 0 8px; padding-left: 26px; color: var(--text); line-height: 1.6; }
+.ask-setup code { color: var(--cyan); background: #0d0d0d; padding: 0 3px; border: 1px solid var(--rule); white-space: nowrap; }
 .ask-intro .cmdlink { display: block; margin: 3px 0 0 2px; text-align: left; }
 .turn { border-bottom: 1px solid var(--rule); padding: 6px 0 4px; }
 .turn-q { display: flex; gap: 8px; padding: 0 12px; color: var(--text); font-weight: 600; white-space: pre-wrap; overflow-wrap: anywhere; }
@@ -424,6 +439,7 @@ pre.json {
 .thinking .dots::after { content: ""; animation: dots 1.2s steps(4, end) infinite; }
 .thinking .elapsed { color: var(--faint); margin-left: 8px; }
 .turn-meta { padding: 0 12px; color: var(--faint); font-size: 11px; display: flex; flex-wrap: wrap; gap: 2px 14px; }
+.turn-meta .warn { color: var(--amber); }
 details.tools { padding: 0 12px 2px; }
 details.tools ol { margin: 3px 0 4px; padding-left: 24px; color: var(--dim); }
 details.tools li .tn { color: var(--dim); display: inline-block; min-width: 16ch; }

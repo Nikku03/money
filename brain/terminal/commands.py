@@ -48,6 +48,12 @@ FUNCTIONS: dict[str, dict] = {
     "EV": {"scope": "security", "args": "",
            "desc": "evidence: where the ticker ranks on each tested signal, and that signal's TEST verdict"},
     "BRIEF": {"scope": "security", "args": "", "desc": "the full cited brief"},
+    "INS": {"scope": "security", "args": "",
+            "desc": "insider trades (SEC Forms 4/5): open-market buys and sales, newest first, with 90-day totals"},
+    "ERN": {"scope": "security", "args": "",
+            "desc": "earnings by quarter: EPS, EPS YoY, SUE and the stock's reaction and drift vs SPY"},
+    "JET": {"scope": "security", "args": "",
+            "desc": "aircraft the company itself owns (FAA registry) and their airport-to-airport flights"},
     "SHOW": {"scope": "both", "args": "ID", "desc": "one fact by id prefix: full JSON and source link"},
     "WEI": {"scope": "global", "args": "", "desc": "world markets: equity indices, volatility, FX, commodities, crypto"},
     "MOV": {"scope": "global", "args": "", "desc": "research-universe movers: last session and 1 month"},
@@ -56,8 +62,18 @@ FUNCTIONS: dict[str, dict] = {
     "ECO": {"scope": "global", "args": "", "desc": "macro table: Treasury yields and spreads, FRED series if ingested"},
     "RES": {"scope": "global", "args": "", "desc": "research ledger verdicts"},
     "CLM": {"scope": "global", "args": "", "desc": "web-claim scoring per source"},
-    "ASK": {"scope": "global", "args": "QUESTION...", "desc": "ask the analyst (Claude); it reads the bank through tools"},
-    "INGEST": {"scope": "both", "args": "TICKER | MARKETS | MACRO | UNIVERSE", "desc": "start a background collection job"},
+    "SHIP": {"scope": "global", "args": "[AREA]",
+             "desc": "port areas: latest commercial-vessel count per area with its z-score; SHIP AREA charts one"},
+    "CAM": {"scope": "global", "args": "[ID]",
+            "desc": "official traffic cameras: latest vehicle count per camera with its z-score; CAM ID charts one"},
+    "WL": {"scope": "global", "args": "[ADD|DEL TICKER...]",
+           "desc": "watchlist: last price, 1D and latest alert per row; WL ADD / WL DEL edit its tickers"},
+    "ALRT": {"scope": "global", "args": "[ACK ID | ACK ALL]",
+             "desc": "alerts from the watchlist's rules, newest first; ALRT ACK ID acknowledges one"},
+    "ASK": {"scope": "global", "args": "QUESTION...",
+            "desc": "ask the analyst (an open-weight model on Ollama or another local server); it reads the bank"},
+    "INGEST": {"scope": "both", "args": "TICKER | MARKETS | MACRO | UNIVERSE | INSIDERS | WATCH",
+               "desc": "start a background collection job"},
     "JOBS": {"scope": "global", "args": "", "desc": "background jobs and their logs"},
 }
 
@@ -71,6 +87,7 @@ KEYS = [
     {"key": "Ctrl+Enter", "desc": "run the command in the next pane"},
     {"key": "Click a ticker", "desc": "run <TICKER> DES in the same pane (Shift: next pane)"},
     {"key": "Click [abcd1234]", "desc": "show that fact and its source"},
+    {"key": "Click ALRT n", "desc": "(top bar) ALRT: the alerts, n of them unacknowledged"},
 ]
 
 NOISE = {"US", "EQUITY", "EQUITIES", "<GO>", "GO"}
@@ -79,11 +96,13 @@ RANGES = ("1M", "3M", "6M", "YTD", "1Y", "2Y", "5Y", "10Y", "MAX")
 RANGE_SHAPE = re.compile(r"\d+[DWMY]")  # fullmatch; a GP argument even when it is not one of RANGES
 VERBS = {"INGEST", "SHOW"}  # first on a line they are always the function: `INGEST CF` ingests CF
 FREE_ARGS = {"ASK", "HELP"}  # first on a line they are always the function, whatever follows
-INGEST_KEYWORDS = ("MARKETS", "MACRO", "UNIVERSE")
+INGEST_KEYWORDS = ("MARKETS", "MACRO", "UNIVERSE", "INSIDERS", "WATCH")
 TICKER = re.compile(r"[A-Za-z0-9.^=\-]{1,15}")  # fullmatch; same rule as ingest targets
 _FACT_ID = re.compile(r"[0-9A-Fa-f]{4,20}")
 MAX_COMPLETIONS = 12
 NOT_TICKERS = {"MACRO"}  # bank entities that hold macro series, not securities
+ALT_PREFIXES = ("AREA.", "CAM.")  # bank entities of port areas and traffic cameras, not securities
+WL_VERBS = ("ADD", "DEL")
 
 
 def _is_arg(fn: str, w: str) -> bool:
@@ -161,15 +180,68 @@ def parse(line: str) -> Command:
     if args and FUNCTIONS[fn]["scope"] == "global" and not FUNCTIONS[fn]["args"] and fn not in FREE_ARGS:
         raise CommandError(f"{fn} takes no arguments", fn)  # never ignored silently: `MOV XYZ` is not MOV
     if fn == "INGEST" and ticker is None and not args:
-        raise CommandError("INGEST needs a target: a ticker, MARKETS, MACRO or UNIVERSE", "INGEST AAPL")
+        raise CommandError("INGEST needs a target: a ticker, MARKETS, MACRO, UNIVERSE, INSIDERS or WATCH",
+                           "INGEST AAPL")
     if fn == "SHOW" and not args:
         raise CommandError("SHOW needs a fact id, e.g. AAPL SHOW 9de710d2", f"{ticker or 'AAPL'} DES")
     return Command(fn=fn, ticker=ticker, args=args, raw=raw)
 
 
+def is_security(entity: str) -> bool:
+    """A bank entity that is a security (or market symbol): not MACRO, a port area or a camera."""
+    e = entity.upper()
+    return e not in NOT_TICKERS and not e.startswith(ALT_PREFIXES)
+
+
+def _words(words, partial: str, desc: str) -> list[dict]:
+    return [{"text": w, "kind": "keyword", "desc": desc} for w in words if w.startswith(partial)]
+
+
+def _ticker_items(partial: str, tickers: list[str]) -> list[dict]:
+    """Bank securities plus the world-market symbols (which can be ingested on demand), by symbol or name."""
+    out = []
+    known = sorted({t.upper() for t in tickers if is_security(t)} | set(BY_SYMBOL))
+    for t in known:
+        name = BY_SYMBOL.get(t, {}).get("name", "")
+        if t.startswith(partial) or (len(partial) >= 3 and name.upper().startswith(partial)):
+            out.append({"text": t, "kind": "ticker", "desc": name})
+    return out
+
+
+def _area_names(tickers: list[str]) -> list[str]:
+    names = {t.upper()[len("AREA."):] for t in tickers if t.upper().startswith("AREA.")}
+    try:
+        from brain.sources.shipping import AREAS
+        names |= {a["name"] for a in AREAS}
+    except Exception:  # noqa: BLE001 - completion is a convenience; a broken source must not break typing
+        pass
+    return sorted(names)
+
+
+def _arg_items(fn: str, rest: list[str], partial: str, tickers: list[str]) -> list[dict]:
+    """Completions for the arguments of the global functions that take some."""
+    if fn == "SHIP" and not rest:
+        return _words(_area_names(tickers), partial, "port area")
+    if fn == "CAM" and not rest:
+        cams = sorted({t.upper()[len("CAM."):] for t in tickers if t.upper().startswith("CAM.")})
+        return _words(cams, partial, "camera sampled into the bank")
+    if fn == "WL":
+        if not rest:
+            return _words(WL_VERBS, partial, "add tickers to the watchlist, or take them off")
+        if rest[0] in WL_VERBS and partial:
+            return _ticker_items(partial, tickers)
+    if fn == "ALRT":
+        if not rest:
+            return _words(("ACK",), partial, "acknowledge an alert: ALRT ACK ID, or ALRT ACK ALL")
+        if rest == ["ACK"]:
+            return _words(("ALL",), partial, "acknowledge every alert")
+    return []
+
+
 def complete(prefix: str, tickers: list[str]) -> list[dict]:
-    """Completions for the token being typed: function codes and tickers (bank entities plus the
-    world-market symbols, which can be ingested on demand)."""
+    """Completions for the token being typed: function codes, tickers (bank securities plus the
+    world-market symbols, which can be ingested on demand) and the keywords some functions take
+    (INGEST targets, SHIP areas, CAM ids, WL ADD/DEL, ALRT ACK)."""
     text = prefix or ""
     if not text.strip():
         return []
@@ -180,18 +252,21 @@ def complete(prefix: str, tickers: list[str]) -> list[dict]:
     fns = [t for t in done if t in FUNCTIONS]
     if "ASK" in fns:
         return []  # free text from here on
+    fn = fns[0] if fns else None
+    rest = done[done.index(fn) + 1:] if fn else []
     has_ticker = any(t not in FUNCTIONS for t in done)
 
     out: list[dict] = []
-    if not fns:
-        security_first = sorted(FUNCTIONS, key=lambda c: has_ticker and FUNCTIONS[c]["scope"] == "global")
-        out += [{"text": c, "kind": "function", "desc": FUNCTIONS[c]["desc"]}
-                for c in security_first if c.startswith(partial)]
-    if partial and (not has_ticker or "GP" in fns):  # GP takes comparison tickers
-        known = sorted({t.upper() for t in tickers if t.upper() not in NOT_TICKERS} | set(BY_SYMBOL))
-        for t in known:
-            name = BY_SYMBOL.get(t, {}).get("name", "")
-            if t.startswith(partial) or (len(partial) >= 3 and name.upper().startswith(partial)):
-                out.append({"text": t, "kind": "ticker", "desc": name})
+    if fn in ("SHIP", "CAM", "WL", "ALRT"):
+        out = _arg_items(fn, rest, partial, tickers)
+    else:
+        if not fns:
+            security_first = sorted(FUNCTIONS, key=lambda c: has_ticker and FUNCTIONS[c]["scope"] == "global")
+            out += [{"text": c, "kind": "function", "desc": FUNCTIONS[c]["desc"]}
+                    for c in security_first if c.startswith(partial)]
+        if fn == "INGEST" and not rest:
+            out += _words(INGEST_KEYWORDS, partial, "background collection job")
+        if partial and (not has_ticker or "GP" in fns):  # GP takes comparison tickers
+            out += _ticker_items(partial, tickers)
     out.sort(key=lambda d: d["text"] != partial)  # an exact match first; otherwise order is kept
     return out[:MAX_COMPLETIONS]

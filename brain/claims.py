@@ -22,15 +22,19 @@ DIRECTIONS = {"up": 1, "down": -1, "none": 0}
 
 
 def note(bank: Bank, ticker: str, text: str, url: str, *, tier: str = "opinion", direction: str = "none",
-         known_at: str | None = None, horizon_days: int = 21, attr: str = "claim") -> Fact:
+         known_at: str | None = None, horizon_days: int = 21, attr: str = "claim", noted_by: str | None = None) -> Fact:
+    """``noted_by`` records who read the page when it was not a person or agent at the CLI (``brain scout``
+    passes ``scout:<model>``), so claims can later be scored by who noted them as well as by source."""
     if tier not in ("opinion", "reported"):
         raise ValueError("web claims are tier 'opinion' (views, forecasts) or 'reported' (factual news)")
     known = known_at or now_iso()
     if known > now_iso():
         raise ValueError("known_at is in the future")
+    context = {"direction": DIRECTIONS[direction], "horizon_days": horizon_days}
+    if noted_by:
+        context["noted_by"] = noted_by
     f = Fact(entity=ticker, attr=attr, value=text, as_of=known[:10], known_at=known, tier=tier,
-             source={"name": urlparse(url).hostname or url, "url": url},
-             context={"direction": DIRECTIONS[direction], "horizon_days": horizon_days}, retrieved_at=now_iso())
+             source={"name": urlparse(url).hostname or url, "url": url}, context=context, retrieved_at=now_iso())
     bank.add(f)
     return f
 

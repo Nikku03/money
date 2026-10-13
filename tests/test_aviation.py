@@ -264,9 +264,69 @@ class PollTest(TempHome):
             self.poll(T0)
         self.assertEqual(self.calls, ["a00001"])
 
+    def test_partial_poll_keeps_the_watchlists_aircraft(self):
+        st = config.home() / "aviation_state.json"
+        links_p = config.home() / "aviation_links.json"
+        links = json.loads(links_p.read_text())
+        links["BETA"] = dict(links["ACME"], aircraft=[{"hex": "b00001", "reg": "N1BT"}, {"hex": "b00002", "reg": "N2BT"}])
+        links_p.write_text(json.dumps(links))
+        (config.home() / "aviation_optout.txt").write_text("N2BT\n")
+        state = {"aircraft": {"b00001": {"phase": "airborne"}, "b00002": {"phase": "airborne"},
+                              "c00001": {"phase": "ground"}}, "blocked": {}}
+        st.write_text(json.dumps(state))
+        (config.home() / "watchlist.json").write_text(json.dumps({"aircraft_of": ["BETA"]}))
+        self.poll(T0)  # ACME by hand: BETA is still watched, c00001 is nobody's, N2BT opted out
+        self.assertEqual(sorted(json.loads(st.read_text())["aircraft"]), ["a00001", "a00002", "a00042", "b00001"])
+        (config.home() / "watchlist.json").write_text(json.dumps({"aircraft_of": []}))
+        self.poll(T0 + 60)
+        self.assertEqual(sorted(json.loads(st.read_text())["aircraft"]), ["a00001", "a00002", "a00042"])
+
     def test_no_companies(self):
         self.assertEqual(av.poll(self.bank, tickers=[], get=self.get, table=self.apts, log=lambda *_: None), 0)
         self.assertEqual(self.calls, [])
+
+
+class LiveTest(TempHome):
+    def setUp(self):
+        super().setUp()
+        self._saved = (av._last_live, av._live_interval)
+        av._last_live, av._live_interval = 0.0, av.ADSB_INTERVAL
+
+    def tearDown(self):
+        av._last_live, av._live_interval = self._saved
+        super().tearDown()
+
+    def answers(self, *codes):
+        """urlopen stand-in: each call answers the next code (an HTTPError unless 200)."""
+        import urllib.error
+        seq = list(codes)
+
+        def urlopen(req, timeout=None):
+            code = seq.pop(0)
+            if code != 200:
+                raise urllib.error.HTTPError(req.full_url, code, "x", {"Retry-After": "2"}, None)
+            return contextlib.nullcontext(io.BytesIO(b'{"ac": []}'))
+        return urlopen
+
+    def test_429_slows_down_and_retries_once(self):
+        sleeps = []
+        with mock.patch.object(av.urllib.request, "urlopen", self.answers(429, 200)), \
+                mock.patch.object(av.time, "sleep", sleeps.append):
+            self.assertEqual(av._live_json("https://api.adsb.lol/v2/hex/a00001"), {"ac": []})
+        self.assertIn(2.0, sleeps)  # Retry-After honoured
+        self.assertEqual(av._live_interval, 2 * av.ADSB_INTERVAL)
+        with mock.patch.object(av.urllib.request, "urlopen", self.answers(429, 429)), \
+                mock.patch.object(av.time, "sleep", sleeps.append):
+            with self.assertRaises(av.FetchError):
+                av._live_json("https://api.adsb.lol/v2/hex/a00001")
+        self.assertEqual(av._live_interval, 4 * av.ADSB_INTERVAL)
+
+    def test_other_errors_are_not_retried(self):
+        with mock.patch.object(av.urllib.request, "urlopen", self.answers(404, 200)), \
+                mock.patch.object(av.time, "sleep", lambda s: None):
+            with self.assertRaises(av.FetchError):
+                av._live_json("https://api.adsb.lol/v2/hex/a00001")
+        self.assertEqual(av._live_interval, av.ADSB_INTERVAL)
 
 
 class CliTest(TempHome):

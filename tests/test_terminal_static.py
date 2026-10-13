@@ -240,7 +240,8 @@ globalThis.ResizeObserver = class { observe() {} disconnect() {} };
 const calls = [];
 globalThis.fetch = async (url, init = {}) => {
   const u = new URL(url, "http://terminal.test");
-  calls.push({ path: u.pathname, cmd: u.searchParams.get("cmd"), body: init.body ? JSON.parse(init.body) : null });
+  calls.push({ path: u.pathname, cmd: u.searchParams.get("cmd"), url: u.searchParams.get("ticker"),
+               body: init.body ? JSON.parse(init.body) : null });
   let data = { ok: false, error: "no canned response" };
   if (u.pathname === "/api/run" && input.responses && input.responses[u.searchParams.get("cmd")]) data = input.responses[u.searchParams.get("cmd")];
   else if (u.pathname === "/api/status") data = input.status || { ok: true, jobs_running: 0, analyst: {} };
@@ -476,6 +477,181 @@ class AppBehaviourTest(unittest.TestCase):
         self.assertEqual(out["ctrl4"], [0, 0, 0, 1])
         self.assertEqual(out["click"], [0, 0, 0, 1])
         self.assertEqual(out["run"], [0, 1, 0, 1])
+
+
+    # ---------- v2 ----------
+    def test_writes_rerun_as_the_list_they_showed(self):
+        lines = ["WL ADD NVDA", "wl del aapl", "AAPL WL ADD MSFT", "WL ADD GP", "ALRT ACK 1a2b3c4d", "ALRT ACK ALL",
+                 "WL", "ALRT", "SHIP LA-LONG-BEACH", "CAM TFL.00002.00865", "AAPL INS"]
+        res = {line: server_res(line) for line in lines}
+        out = run_app("""
+          const safeRerun = app("safeRerun"), rerunLine = app("rerunLine");
+          const o = {};
+          for (const line of input.lines) o[line] = [safeRerun(line), rerunLine(line, input.res[line]), rerunLine(line, null)];
+          return { o, restored: app("loadLayout")().lines };
+        """, lines=lines, res=res, storage={"money-terminal.layout.v1": {
+            "panes": ["WL ADD NVDA", "ALRT ACK ALL", "WL DEL AAPL", "AAPL INS"], "focus": 0}})
+        for line in ("WL ADD NVDA", "wl del aapl", "AAPL WL ADD MSFT", "WL ADD GP"):
+            self.assertEqual(out["o"][line], ["WL"] * 3, line)
+        for line in ("ALRT ACK 1a2b3c4d", "ALRT ACK ALL"):
+            self.assertEqual(out["o"][line], ["ALRT"] * 3, line)
+        for line in ("WL", "ALRT", "SHIP LA-LONG-BEACH", "CAM TFL.00002.00865", "AAPL INS"):
+            self.assertEqual(out["o"][line], [line] * 3, line)
+        self.assertEqual(out["restored"], ["WL", "ALRT", "WL", "AAPL INS"])
+
+    def test_table_rows_carry_commands_entities_and_severity(self):
+        d = {"columns": [{"key": "new", "label": "", "type": "flag"}, {"key": "severity", "label": "Severity", "type": "severity"},
+                         {"key": "entity", "label": "Entity", "type": "ticker"}, {"key": "message", "label": "Alert", "type": "text"},
+                         {"key": "ack", "label": "", "type": "text"}],
+             "rows": [{"new": "NEW", "severity": "high", "entity": "AREA.LA-LONG-BEACH", "message": "30 vessels", "ack": "ACK",
+                       "_cite": "abcd1234", "_entity": "AREA.LA-LONG-BEACH",
+                       "_cmds": {"entity": "SHIP LA-LONG-BEACH", "ack": "ALRT ACK abcd1234ef01"}},
+                      {"new": "", "severity": "notice", "entity": "LA-X", "message": "seen", "ack": None, "_dim": True,
+                       "_ticker": "AAPL", "_cmds": {"entity": "SHIP LA-X"}}],
+             "groups": [], "note": "INGEST WATCH collects; see RES and ALRT, not RES-X."}
+        out = run_app("""
+          const runs = [];
+          const pane = { run: (line) => runs.push(line) };
+          const root = app("dataTable")(input.d, { pane, ticker: null });
+          const trs = all(root).filter((e) => e.tagName === "TR" && e.parentNode.tagName === "TBODY");
+          const links = all(root).filter((e) => e.className === "cmdlink");
+          for (const b of links) b.listeners.click[0]({ stopPropagation() {}, shiftKey: false });
+          const cite = all(root).find((e) => e.className === "cite");
+          cite.listeners.click[0]({ stopPropagation() {} });
+          await settle();
+          return { runs, rowCls: trs.map((tr) => tr.className), labels: links.map((b) => b.textContent),
+                   sev: all(root).filter((e) => e.tagName === "TD" && /\\bsev\\b/.test(e.className)).map((e) => [e.className, e.textContent]),
+                   flags: all(root).filter((e) => e.className === "flag").map((e) => e.textContent),
+                   fact: calls.filter((c) => c.path === "/api/fact").length,
+                   factUrl: calls.filter((c) => c.path === "/api/fact").map((c) => c.url) };
+        """, d=d)
+        self.assertEqual(out["rowCls"], ["", "dimrow"])
+        # the row command wins over the ticker type: LA-X reads as a ticker but runs SHIP
+        self.assertEqual(out["labels"], ["AREA.LA-LONG-BEACH", "ACK", "LA-X", "INGEST WATCH", "RES", "ALRT"])
+        self.assertEqual(out["runs"], ["SHIP LA-LONG-BEACH", "ALRT ACK abcd1234ef01", "SHIP LA-X", "INGEST WATCH", "RES", "ALRT"])
+        self.assertEqual(out["sev"], [["sev sev-high", "HIGH"], ["sev sev-notice", "NOTICE"]])
+        self.assertEqual(out["flags"], ["NEW"])
+        self.assertEqual((out["fact"], out["factUrl"]), (1, ["AREA.LA-LONG-BEACH"]))  # the row's entity, not MACRO
+
+    def test_citations_of_ports_and_cameras_look_in_their_entity(self):
+        out = run_app("""
+          await app("showFact")("AREA.LA-LONG-BEACH", "abcd1234", null);
+          await app("showFact")("CAM.CALTRANS.D04.TVB04I880ATTRUCKSCALES", "abcd1234", null);
+          await app("showFact")("not an entity!", "abcd1234", null);
+          return calls.filter((c) => c.path === "/api/fact").map((c) => c.url);
+        """)
+        self.assertEqual(out, ["AREA.LA-LONG-BEACH", "CAM.CALTRANS.D04.TVB04I880ATTRUCKSCALES", "MACRO"])
+
+    def test_count_chart(self):
+        series = [{"date": "2026-10-12T22:00:00Z", "value": 10, "cite": "a1b2c3d4", "parts": {"cargo": 5, "tanker": 2}},
+                  {"date": "2026-10-13T04:00:00Z", "value": 12, "cite": "a1b2c3d5", "parts": {"cargo": 6, "tanker": 3}},
+                  {"date": "2026-10-13T10:00:00Z", "value": 30, "cite": "a1b2c3d6", "parts": {"cargo": 15, "tanker": 7}}]
+        d = {"entity": "AREA.LA-LONG-BEACH", "name": "LA-LONG-BEACH", "kind": "count", "unit": "vessels", "series": series,
+             "stats": {"first": 10, "last": 30, "high": 30, "low": 10, "high_date": series[2]["date"],
+                       "low_date": series[0]["date"], "mean": 17.33, "n": 3, "z": 9.9, "z_samples": 2},
+             "cite": "a1b2c3d6", "source": {"name": "aisstream.io", "url": "https://aisstream.io/"}}
+        out = run_app("""
+          const m = app("countModel")(input.d);
+          const pane = { body: document.createElement("div"), toolsEl: document.createElement("span"), disposers: [], run() {} };
+          app("viewChart")(pane, { ok: true, fn: "SHIP", args: ["LA-LONG-BEACH"], view: "chart", data: input.d });
+          const strip = all(pane.body).find((e) => e.className === "chart-stats");
+          return { tip: m.tipRows(2), digits: m.digits, ref: m.ref, label: m.label(m.dates[2]), color: m.lines[0].color,
+                   ticks: app("timeTicks")(m.dates, 600).map((t) => t.label), tools: pane.toolsEl.childNodes.length,
+                   strip: strip.childNodes.map((s) => s.textContent).filter(Boolean) };
+        """, d=d)
+        self.assertEqual(out["tip"], [["Vessels", "30", ""], ["cargo", "15", "dim"], ["tanker", "7", "dim"]])
+        self.assertEqual((out["digits"], out["ref"], out["label"], out["color"]), (0, 17.33, "2026-10-13 10:00", "amber"))
+        self.assertEqual(out["ticks"], ["22:00", "04:00", "10:00"])  # samples within a day: labelled by the hour
+        self.assertEqual(out["tools"], 0)  # no price ranges on a count chart
+        self.assertEqual(out["strip"][:3], ["Last30", "z+9.9", "Mean17.3"])
+
+    def test_count_axis_is_whole_numbers(self):
+        out = run_app("""
+          const nice = app("niceTicks");
+          return { flat: nice(2, 4, 6, 1), wide: nice(0, 300, 6, 1), price: nice(2.94, 3.06, 6) };
+        """)
+        self.assertEqual((out["flat"]["ticks"], out["flat"]["decimals"]), ([2, 3, 4], 0))  # one value, 3 cars
+        self.assertEqual((out["wide"]["step"], out["wide"]["decimals"]), (50, 0))
+        self.assertEqual(out["price"]["decimals"], 3)  # prices keep their fractions (step 0.025)
+
+    def test_alert_count_in_the_top_bar(self):
+        responses = {"ALRT": server_res("ALRT", data={"columns": [], "rows": [], "unacked": 2}), "WL": server_res("WL")}
+        out = run_app("""
+          const Pane = app("Pane"), panes = app("panes");
+          for (let i = 0; i < 4; i += 1) panes.push(new Pane(i));
+          await panes[0].run("ALRT");
+          await panes[1].run("WL");
+          await settle();
+          const el = document.querySelector("#st-alerts");
+          const seen = [];
+          const show = app("showAlerts");
+          show({ unacked: 2, high: 1 }); seen.push([el.textContent, el.className]);
+          const before = calls.length;
+          show({ unacked: 2, high: 1 });
+          const same = calls.length - before;
+          show({ unacked: 0, high: 0 }); seen.push([el.textContent, el.className]);
+          await settle();
+          const reran = calls.slice(before).filter((c) => c.path === "/api/run").map((c) => c.cmd);
+          show({ unacked: 3, high: 0 }); seen.push([el.textContent, el.className]);
+          show(null); seen.push([el.textContent, el.className]);
+          return { seen, same, reran };
+        """, responses=responses)
+        self.assertEqual(out["seen"], [["ALRT 2", "st st-btn bad"], ["ALRT 0", "st st-btn"], ["ALRT 3", "st st-btn warn"],
+                                       ["ALRT ?", "st st-btn bad"]])
+        self.assertEqual(out["same"], 0)  # no change, no refresh
+        self.assertEqual(sorted(out["reran"]), ["ALRT", "WL"])  # a change refreshes the panes that show alerts
+
+    def test_nowrap_columns_cut_long_text(self):
+        long = "COST headline: " + "x" * 120
+        out = run_app("""
+          const root = app("dataTable")({ columns: [{ key: "a", label: "A", type: "text", nowrap: true },
+                                                    { key: "b", label: "B", type: "text" }],
+                                          rows: [{ a: input.long, b: input.long }] }, { pane: null });
+          const tds = all(root).filter((e) => e.tagName === "TD");
+          return tds.map((td) => [td.className, td.title || "", td.textContent.length]);
+        """, long=long)
+        self.assertNotIn("wrap", out[0][0].split())
+        self.assertEqual(out[0][1], long)  # the whole text on hover
+        self.assertIn("wrap", out[1][0].split())
+
+    def test_alrt_offers_ack_all(self):
+        out = run_app("""
+          const runs = [];
+          const pane = { body: document.createElement("div"), toolsEl: document.createElement("span"), disposers: [],
+                         run: (l) => runs.push(l) };
+          app("viewTable")(pane, { ok: true, fn: "ALRT", args: [], data: { columns: [], rows: [], unacked: 3 } });
+          const b = pane.toolsEl.childNodes[0];
+          b.listeners.click[0]({ stopPropagation() {} });
+          const none = { body: document.createElement("div"), toolsEl: document.createElement("span"), disposers: [], run() {} };
+          app("viewTable")(none, { ok: true, fn: "ALRT", args: [], data: { columns: [], rows: [], unacked: 0 } });
+          return { label: b.textContent, runs, none: none.toolsEl.childNodes.length };
+        """)
+        self.assertEqual((out["label"], out["runs"], out["none"]), ("ACK ALL", ["ALRT ACK ALL"], 0))
+
+    def test_analyst_off_says_how_to_start_it(self):
+        reason = ("nothing answered at http://127.0.0.1:11434/v1 (BRAIN_LLM_URL): start Ollama (`ollama serve`, "
+                  "then `ollama pull qwen3:8b`), or set BRAIN_LLM_URL to another OpenAI-compatible server")
+        out = run_app("""
+          await app("refreshStatus")();
+          const ae = document.querySelector("#st-analyst");
+          const Pane = app("Pane");
+          const off = new Pane(0), on = new Pane(1);
+          off.show({ ok: true, fn: "ASK", args: [], view: "ask", data: { available: false, reason: input.reason, model: "qwen3:8b" } });
+          on.show({ ok: true, fn: "ASK", args: [], view: "ask", data: { available: true, reason: "", model: "qwen3:8b" } });
+          const text = (p) => p.body.textContent;
+          return { bar: ae.textContent, title: ae.title, off: text(off), on: text(on),
+                   setup: all(off.body).filter((e) => e.className === "ask-setup").length,
+                   onSetup: all(on.body).filter((e) => e.className === "ask-setup").length };
+        """, reason=reason, status={"ok": True, "jobs_running": 0, "analyst": {"available": False, "reason": reason},
+                                    "alerts": {"unacked": 0, "high": 0}})
+        self.assertEqual(out["bar"], "ANALYST OFF · OLLAMA / BRAIN_LLM_URL")
+        self.assertIn(reason, out["title"])
+        self.assertIn(reason, out["off"])
+        self.assertEqual((out["setup"], out["onSetup"]), (1, 0))
+        for words in ("ollama pull qwen3:8b", "BRAIN_LLM_URL", "BRAIN_LLM_MODEL", "llama.cpp, vLLM, LM Studio"):
+            self.assertIn(words, out["off"])
+        self.assertIn("qwen3:8b. Answers only from the bank's tools", out["on"])
+        self.assertNotIn("Anthropic", out["off"] + out["on"] + out["title"])
 
 
 if __name__ == "__main__":

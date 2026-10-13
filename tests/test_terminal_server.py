@@ -442,6 +442,93 @@ class ServerTest(TempHome):
         self.assertTrue(self.server.run_line("ASK why?")["ok"])
         self.assertEqual(self.server.jobs.list_jobs(), [])
 
+    # ---------- v2: writes, alerts, alternative-data facts ----------
+    def _alert(self, entity="AAPL", severity="high"):
+        from brain.bank import Fact
+        f = Fact(entity=entity, attr="alert", value=f"{entity} moved", as_of="2026-01-02",
+                 known_at="2026-01-02T10:00:00Z", tier="derived", source={"name": "brain.watch", "rule": "price_move"},
+                 context={"rule": "price_move", "severity": severity, "keys": [f"price:{entity}"]})
+        self.bank.add(f)
+        return f
+
+    def test_watchlist_and_acks_change_only_from_the_command_line(self):
+        from brain import watch
+        code, out = self.get_json("/api/run?cmd=WL%20ADD%20aapl%20msft")
+        self.assertEqual((code, out["ok"], out["fn"], out["args"]), (200, True, "WL", ["ADD", "AAPL", "MSFT"]))
+        self.assertEqual(watch.load()["tickers"], ["AAPL", "MSFT"])
+        f = self._alert()
+        self.assertEqual(self.get_json("/api/status")[1]["alerts"], {"unacked": 1, "high": 1})
+        for line in ("WL DEL AAPL", f"ALRT ACK {f.id[:8]}", "ALRT ACK ALL"):  # the analyst's reader
+            with self.subTest(line=line):
+                out = self.server.run_line(line, read_only=True)
+                self.assertFalse(out["ok"])
+                self.assertIn("is not available here (read-only)", out["error"])
+        self.assertEqual(watch.load()["tickers"], ["AAPL", "MSFT"])
+        self.assertTrue(self.server.run_line("ALRT", read_only=True)["ok"])  # reading is fine
+        self.assertTrue(self.server.run_line("WL", read_only=True)["ok"])
+        code, out = self.get_json(f"/api/run?cmd=ALRT%20ACK%20{f.id[:8]}")
+        self.assertEqual((out["ok"], out["data"]["unacked"]), (True, 0))
+        self.assertEqual(watch.acked(), {f.id})
+        self.assertEqual(self.get_json("/api/status")[1]["alerts"], {"unacked": 0, "high": 0})
+        out = self.get_json("/api/run?cmd=WL%20DEL%20MSFT")[1]
+        self.assertTrue(out["ok"])
+        self.assertEqual(watch.load()["tickers"], ["AAPL"])
+
+    def test_writes_hold_the_bank_lock(self):
+        seen = []
+
+        def fake_run(bank, cmd, writes=False):
+            seen.append((cmd.fn, writes, self.server.lock._is_owned()))
+            return {"ok": True, "fn": cmd.fn, "ticker": None, "args": cmd.args, "title": "t", "asof": None,
+                    "view": "table", "data": {}}
+        with mock.patch.object(data, "run", fake_run):
+            self.get_json("/api/run?cmd=WL%20ADD%20AAPL")
+            self.get_json("/api/run?cmd=ALRT")
+        self.assertEqual(seen, [("WL", True, True), ("ALRT", False, True)])
+
+    def test_status_carries_alerts_and_the_model(self):
+        with mock.patch.dict(os.environ, {"BRAIN_LLM_MODEL": "llama3.1:8b"}):
+            out = self.get_json("/api/status")[1]
+        self.assertEqual(out["alerts"], {"unacked": 0, "high": 0})
+        self.assertEqual(out["analyst"]["model"], "llama3.1:8b")
+        self._alert("MSFT", "notice")
+        from brain import watch
+        watch.save({"tickers": ["MSFT"]})
+        self.assertEqual(self.get_json("/api/status")[1]["alerts"], {"unacked": 1, "high": 0})
+        watch.state_path().write_text("{broken")
+        err = io.StringIO()
+        with contextlib.redirect_stderr(err):
+            code, out = self.get_json("/api/status")  # a broken state file never breaks the status poll
+            self.assertEqual(self.get_json("/api/status")[0], 200)
+        self.assertEqual((code, out["alerts"]), (200, {"unacked": None, "high": None}))
+        self.assertEqual(err.getvalue().count("alert count unavailable"), 1)  # logged once, as one line
+        self.assertNotIn("Traceback", err.getvalue())
+        out = self.get_json("/api/run?cmd=ALRT")[1]
+        self.assertFalse(out["ok"])
+        self.assertIn("not valid JSON", out["error"])
+
+    def test_fact_for_ports_and_cameras(self):
+        from brain.bank import Fact
+        f = Fact(entity="AREA.LA-LONG-BEACH", attr="ships.count", value=12, as_of="2026-01-02",
+                 known_at="2026-01-02T10:00:00Z", tier="reported", source={"name": "aisstream.io", "url": "https://aisstream.io/"})
+        self.bank.add(f)
+        code, out = self.get_json(f"/api/fact?ticker=AREA.LA-LONG-BEACH&id={f.id[:8]}")
+        self.assertEqual((code, out["ok"], out["data"]["fact"]["id"]), (200, True, f.id))
+        self.assertEqual(out["args"], [f"AREA.LA-LONG-BEACH/{f.id[:8].upper()}"])
+        for bad in ("AREA.LA%20B", "AREA./x", "CAM.A%2FB", "AREA." + "X" * 101):
+            with self.subTest(bad=bad):
+                self.assertEqual(self.get_json(f"/api/fact?ticker={bad}&id=ab12")[0], 400)
+
+    def test_ingest_insiders_and_watch(self):
+        out = self.server.run_line("INGEST INSIDERS WATCH")
+        self.assertTrue(out["ok"], out)
+        self.assertTrue(self.server.jobs.wait(20))
+        rows = self.get_json("/api/run?cmd=JOBS")[1]["data"]["rows"]
+        self.assertEqual(sorted(r["target"] for r in rows), ["INSIDERS", "WATCH"])
+        self.assertTrue(all("_ticker" not in r for r in rows))  # keywords, not tickers
+        out = self.get_json("/api/run?cmd=INGEST")[1]
+        self.assertIn("INSIDERS or WATCH", out["error"])
+
     # ---------- jobs ----------
     def test_ingest_target_validation(self):
         bad = ["AAPL; rm -rf /", "../etc", "A" * 16, "AAPL\n", "", " AAPL", "$(id)", "-h", "--all-concepts",
@@ -661,7 +748,9 @@ class ServeTest(TempHome):
         out, err, wb = self._serve("0.0.0.0", False)
         self.assertIn("WARNING", err)
         self.assertIn("no user accounts", err)
-        self.assertIn("Anthropic credentials", err)  # ASK spends the user's money
+        self.assertIn("BRAIN_LLM_URL", err)  # ASK runs the configured model server
+        self.assertIn("change the watchlist, acknowledge alerts", err)  # the two commands that write
+        self.assertNotIn("Anthropic", err)
         wb.assert_not_called()
 
     def test_serve_says_which_jobs_outlive_it(self):
@@ -715,6 +804,9 @@ class JobManagerTest(TempHome):
         self.assertEqual(jobs.argv_for("MARKETS"), [exe, "-m", "brain", "markets"])
         self.assertEqual(jobs.argv_for("MACRO"), [exe, "-m", "brain", "macro"])
         self.assertEqual(jobs.argv_for("UNIVERSE"), [exe, "-m", "brain", "ingest-universe"])
+        self.assertEqual(jobs.validate("insiders"), "INSIDERS")
+        self.assertEqual(jobs.argv_for("INSIDERS"), [exe, "-m", "brain", "insiders"])
+        self.assertEqual(jobs.argv_for("WATCH"), [exe, "-m", "brain", "watch", "run", "--once"])
         for t in ("AAPL\n", "A/B", "A B", "x" * 16, "", "-X", "A;B", "A|B", "A&B", "`id`"):
             with self.subTest(t=t), self.assertRaises(jobs.JobError):
                 jobs.validate(t)

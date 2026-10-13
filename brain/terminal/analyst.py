@@ -1,4 +1,4 @@
-"""The terminal's analyst: Claude reading the memory bank through tools that run terminal commands.
+"""The terminal's analyst: an open-weight model reading the memory bank through tools that run terminal commands.
 
 The tools only read, with one exception that BRIEF shares: DES records the derived metrics it
 computes (market value, margins, ...) as derived facts, so the ids it cites resolve with SHOW.
@@ -10,30 +10,52 @@ comes from a tool that runs a terminal command against the bank, and every claim
 cites the fact ids those tools returned. Research verdicts are quoted as they are,
 FAILs included.
 
-Uses the Anthropic SDK's tool runner. Credentials come from the environment
-(ANTHROPIC_API_KEY, ANTHROPIC_AUTH_TOKEN, or an `ant auth login` profile).
+The model runs on any OpenAI-compatible server (Ollama by default; llama.cpp, vLLM, LM Studio)
+through ``brain.llm``; settings are BRAIN_LLM_URL, BRAIN_LLM_MODEL and BRAIN_LLM_KEY. The tool
+loop is ours, and it expects a model that is smaller and less reliable than a frontier one: a
+tool call written as text is parsed, arguments that are not JSON go back to the model as an
+error, the conversation is trimmed to the server's context window (wide tables lose their oldest
+columns before anything is cut mid-string), and it stops after MAX_ROUNDS requests. The result's
+``citations`` says which cited fact ids appeared in this answer's tool results and which did not.
+``run_loop`` is shared with ``brain.scout``.
 """
 from __future__ import annotations
 
 import json
 import re
+import threading
+import time
+from dataclasses import dataclass, field
 from typing import Callable
 
-MODEL = "claude-opus-5-5"
-MAX_ITERATIONS = 12
+from brain import llm
+from brain.timeutil import today
+
+MAX_ROUNDS = 8              # model requests per answer
+MAX_CALLS_PER_ROUND = 8     # tool calls the loop runs from one response; the rest get an error result
 MAX_HISTORY = 10
 MAX_TABLE_ROWS = 40
 MAX_CHART_POINTS = 60
 MAX_TEXT = 600              # characters kept from any one string in a tool result (headlines, claims, notes)
-MAX_RESULT_CHARS = 40_000   # a serialized tool result is cut to this; real ones are under 15,000
+MAX_RESULT_CHARS = 40_000   # a serialized tool result is cut to this (less when the context is small)
+MIN_RESULT_CHARS = 2_000
+MAX_ANSWER_TOKENS = 2048
+TEMPERATURE = 0.2
+CHARS_PER_TOKEN = 3.0       # first guess; lowered to what the server's usage shows after each request
 FACT_ID = re.compile(r"[0-9a-f]{4,20}")  # the data layer's rule for SHOW
-NO_CREDENTIALS = "no Anthropic credentials: export ANTHROPIC_API_KEY=... (or run `ant auth login`)"
+PERIOD = re.compile(r"[0-9A-Z]{1,4}")
+FORM = re.compile(r"[0-9A-Z/\-]{1,12}")
+ELIDED = json.dumps({"elided": True, "note": "an earlier tool result was removed to fit the model's context "
+                                            "window; call the tool again if you need it"})
+LAST_ROUND = ("This is your last turn: answer now from the tool results above, as your instructions say. "
+              "Do not call more tools.")
 
 SYSTEM = """You are the analyst inside MONEY TERMINAL, a research terminal built on a memory bank of public market data.
 
 What you can know: only what your tools return. Each tool runs a terminal command against the bank: SEC filings and XBRL financials, daily prices, headlines, claims noted from the web, Treasury and FRED macro series, and the research ledger, where trading hypotheses are tested against shuffled-signal nulls on held-out months. Do not use outside knowledge of prices, earnings or news; it may be stale or wrong. If the bank lacks something, say so and name the command that would collect it (for example `INGEST NVDA`, `INGEST MARKETS`, `INGEST MACRO`).
 
 How to answer:
+- Call the tools you need first. When the results answer the question, write the answer; do not call a tool again for data you already have.
 - Cite every number and fact with the fact id the tool returned, written as [abcd1234] (the `cite` fields). Numbers you compute yourself from cited facts should say so.
 - Keep the evidence tiers apart: filed (SEC) and market (prices) facts are records; headlines are reports; claims and opinions are not evidence until their source's record (CLM) shows they beat a coin flip.
 - When you discuss whether a signal or strategy works, quote its research verdict from EV or RES exactly, with its TEST numbers. A FAIL means it did not beat a shuffled signal on unseen months after costs. Never present a failed or untested idea as an edge.
@@ -42,33 +64,14 @@ How to answer:
 - Write for a terminal: short sections, tables where they help, dates on time-sensitive numbers."""
 
 
+def system_prompt() -> str:
+    return f"{SYSTEM}\n\nToday's date (UTC): {today()}."
+
+
 # ---------- availability ----------
-def _client():
-    """A client whose credentials resolve, or (None, why not). Building one reads the environment and the
-    `ant auth login` profile but makes no request. A named profile that is missing, or a directory with
-    no usable profile, is reported here rather than as an error halfway through a question."""
-    import anthropic
-
-    try:
-        client = anthropic.Anthropic()
-    except (anthropic.AnthropicError, TypeError, ValueError, OSError) as e:
-        return None, f"no usable Anthropic credentials: {e}"[:300]
-    if client.api_key or client.auth_token or client.credentials is not None:
-        return client, ""
-    client.close()
-    return None, NO_CREDENTIALS
-
-
 def available() -> tuple[bool, str]:
-    try:
-        import anthropic  # noqa: F401
-    except ImportError:
-        return False, "the analyst needs the Anthropic SDK: pip install anthropic"
-    client, reason = _client()
-    if client is None:
-        return False, reason
-    client.close()
-    return True, ""
+    """Whether the model server answers and lists the model; the reason names the setting to fix if not."""
+    return llm.available()
 
 
 # ---------- tool results ----------
@@ -114,141 +117,404 @@ def _compact(res: dict) -> dict:
             if len(data.get(k) or []) > 20:
                 data[k] = data[k][:20]
     res["data"] = data
-    return _clip(res)
+    return _readable(_clip(res))
 
 
-def _serialize(res: dict) -> str:
-    """The tool result as JSON, at most about MAX_RESULT_CHARS; an oversize one is cut and says so."""
-    s = json.dumps(_compact(res), allow_nan=False, default=str)
-    if len(s) <= MAX_RESULT_CHARS:
+def _readable(x):
+    """Whole numbers of a million or more with thousands separators, as strings: 112010000000 becomes
+    "112,010,000,000". Exact, and models (small ones especially) misread long digit runs by a factor of ten."""
+    if isinstance(x, dict):
+        return {k: _readable(v) for k, v in x.items()}
+    if isinstance(x, list):
+        return [_readable(v) for v in x]
+    if isinstance(x, (int, float)) and not isinstance(x, bool) and abs(x) >= 1e6 and float(x).is_integer() \
+            and abs(x) < 1e18:
+        return f"{int(x):,}"
+    return x
+
+
+def _narrow(res: dict, limit: int) -> str | None:
+    """A table too big for ``limit`` as a smaller table: columns go from the right (FA's oldest years) down to
+    three, then rows from the bottom down to five, then columns down to one. None if even that is too big.
+    Whole rows and columns keep their numbers and cites intact, where a cut string would lose them."""
+    data = res.get("data") or {}
+    cols, rows = list(data.get("columns") or []), list(data.get("rows") or [])
+    if res.get("view") != "table" or len(cols) < 2 or not rows:
+        return None
+    all_keys = {c.get("key") for c in cols}
+    n_cols, n_rows = len(cols), len(rows)
+
+    def build(nc: int, nr: int) -> str:
+        keep = {c.get("key") for c in cols[:nc]}
+        out_rows = []
+        for r in rows[:nr]:
+            r2 = {k: v for k, v in r.items() if k not in all_keys or k in keep}
+            if isinstance(r2.get("_cites"), dict):
+                r2["_cites"] = {k: v for k, v in r2["_cites"].items() if k in keep}
+            out_rows.append(r2)
+        cut = []
+        if nc < n_cols:
+            cut.append(f"showing the first {nc} of {n_cols} columns")
+        if nr < n_rows:
+            cut.append(f"the first {nr} of {n_rows} rows")
+        note = ((data.get("note") or "") + f" [cut to fit the model's context: {', '.join(cut)}]").strip()
+        return json.dumps({**res, "data": {**data, "columns": cols[:nc], "rows": out_rows, "note": note}},
+                          allow_nan=False, default=str)
+
+    nc, nr = n_cols, n_rows
+    while True:
+        s = build(nc, nr)
+        if len(s) <= limit:
+            return s
+        if nc > 4:
+            nc -= 1
+        elif nr > 5:
+            nr -= 1
+        elif nc > 2:
+            nc -= 1
+        else:
+            return None
+
+
+def _serialize(res: dict, limit: int = MAX_RESULT_CHARS) -> str:
+    """The tool result as JSON, at most about ``limit`` characters; an oversize one is cut and says so."""
+    small = _compact(res)
+    s = json.dumps(small, allow_nan=False, default=str)
+    if len(s) <= limit:
         return s
+    narrow = _narrow(small, limit) if isinstance(small, dict) else None
+    if narrow is not None:
+        return narrow
     head = _clip({k: res.get(k) for k in ("ok", "fn", "ticker", "title", "asof", "view")}) if isinstance(res, dict) else {}
-    note = f"result was {len(s):,} characters; only the first {MAX_RESULT_CHARS:,} are shown, as a string"
-    return json.dumps({**head, "truncated": True, "note": note, "partial": s[:MAX_RESULT_CHARS]}, default=str)
+    note = f"result was {len(s):,} characters; only the first {limit:,} are shown, as a string"
+    return json.dumps({**head, "truncated": True, "note": note, "partial": s[:limit]}, default=str)
 
 
-def _tools(run: Callable[[str], dict], calls: list):
-    from anthropic import beta_tool
-    from anthropic.lib.tools import ToolError
+# ---------- tools ----------
+class ToolError(ValueError):
+    """A rejected tool input. Its text goes back to the model as an error result; nothing runs."""
 
-    def go(name: str, cmd: str) -> str:
-        calls.append({"name": name, "input": cmd})
+
+@dataclass(frozen=True)
+class Tool:
+    """One function the model may call: an OpenAI function schema and a handler of validated arguments."""
+    name: str
+    description: str
+    params: dict = field(default_factory=dict)   # name -> (JSON type, description)
+    required: tuple = ()
+    handler: Callable[[dict], str] = lambda a: "{}"
+
+    def spec(self) -> dict:
+        props = {k: {"type": t, "description": d} for k, (t, d) in self.params.items()}
+        return {"type": "function", "function": {
+            "name": self.name, "description": self.description,
+            "parameters": {"type": "object", "properties": props, "required": list(self.required)}}}
+
+    def call(self, args: dict | None) -> str:
+        """Run with the model's arguments. Unknown keys are dropped; a missing required one is a ToolError."""
+        if args is None:
+            args = {}
+        if not isinstance(args, dict):
+            raise ToolError(f"{self.name} takes an object of arguments, not {type(args).__name__}")
+        args = {k: v for k, v in args.items() if k in self.params and v is not None}
+        missing = [k for k in self.required if k not in args or str(args[k]).strip() == ""]
+        if missing:
+            raise ToolError(f"{self.name} needs {', '.join(missing)}")
+        return self.handler(args)
+
+
+def _tk(t) -> str:
+    t = str(t).strip().upper()
+    if not t or len(t) > 15 or any(c.isspace() for c in t):
+        raise ToolError(f"not a ticker: {t[:40]!r} (a symbol of at most 15 characters, no spaces)")
+    return t
+
+
+def _fid(f) -> str:
+    fid = str(f).strip().strip("[]").lower()
+    if not FACT_ID.fullmatch(fid):
+        raise ToolError(f"not a fact id: {fid[:40]!r} (4-20 hexadecimal characters, as cited)")
+    return fid
+
+
+def _period(p) -> str:
+    p = str(p or "").strip().upper() or "1Y"
+    if not PERIOD.fullmatch(p):
+        raise ToolError(f"not a period: {p[:40]!r} (one of 1M 3M 6M YTD 1Y 2Y 5Y 10Y MAX)")
+    return p
+
+
+def _form(f) -> str:
+    f = str(f or "").strip().upper()
+    if f and not FORM.fullmatch(f):
+        raise ToolError(f"not a form type: {f[:40]!r} (e.g. 10-K, 10-Q, 8-K, 4)")
+    return f
+
+
+def _compare(c) -> str:
+    return " ".join(_tk(x) for x in str(c or "").split()[:3])
+
+
+TICKER = ("string", "Symbol, e.g. AAPL, ^GSPC, EURUSD=X, BTC-USD.")
+# name, description, params, required, command builder
+_BANK_TOOLS = [
+    ("describe", "Overview of a security: identity, latest price and returns, key derived metrics, latest filings "
+                 "and headlines (terminal DES).", {"ticker": TICKER}, ("ticker",),
+     lambda a: f"{_tk(a['ticker'])} DES"),
+    ("price_history", "Price history with return, high and low over a period, optionally against other symbols "
+                      "rebased to 100 (terminal GP).",
+     {"ticker": TICKER, "period": ("string", "One of 1M 3M 6M YTD 1Y 2Y 5Y 10Y MAX (default 1Y)."),
+      "compare": ("string", 'Optional space-separated symbols to compare against, e.g. "SPY QQQ".')}, ("ticker",),
+     lambda a: f"{_tk(a['ticker'])} GP {_period(a.get('period'))} {_compare(a.get('compare'))}".strip()),
+    ("financials", "Up to ten fiscal years of annual statements from SEC filings, with margins, growth and ROE "
+                   "(terminal FA).", {"ticker": ("string", "Symbol of a US-listed company.")}, ("ticker",),
+     lambda a: f"{_tk(a['ticker'])} FA"),
+    ("filings", "The company's SEC filings, newest first, optionally one form type (terminal CF).",
+     {"ticker": TICKER, "form": ("string", "Optional form filter, e.g. 10-K, 10-Q, 8-K, 4.")}, ("ticker",),
+     lambda a: f"{_tk(a['ticker'])} CF {_form(a.get('form'))}".strip()),
+    ("news", "Headlines (unscored) and claims noted from the web, with each claim source's track record "
+             "(terminal CN).", {"ticker": TICKER}, ("ticker",), lambda a: f"{_tk(a['ticker'])} CN"),
+    ("evidence", "Where the security ranks on each tested signal and that signal's research verdict on held-out "
+                 "months (terminal EV).", {"ticker": TICKER}, ("ticker",), lambda a: f"{_tk(a['ticker'])} EV"),
+    ("show_fact", "One fact in full, with its source URL and, for derived facts, its inputs (terminal SHOW).",
+     {"ticker": ("string", "The entity the fact belongs to, e.g. AAPL or MACRO."),
+      "fact_id": ("string", "The id or its first 8 characters, as cited.")}, ("ticker", "fact_id"),
+     lambda a: f"{_tk(a['ticker'])} SHOW {_fid(a['fact_id'])}"),
+    ("research_results", "Every hypothesis in the research ledger with its TEST result, false-discovery q-value "
+                         "and verdict (terminal RES).", {}, (), lambda a: "RES"),
+    ("world_markets", "Equity indices, volatility, FX, commodities and crypto: last level and returns "
+                      "(terminal WEI).", {}, (), lambda a: "WEI"),
+    ("movers", "Biggest gainers and losers in the research universe, last session and one month (terminal MOV).",
+     {}, (), lambda a: "MOV"),
+    ("yield_curve", "US Treasury par yield curve now, a month ago and a year ago, with key spreads "
+                    "(terminal CURVE).", {}, (), lambda a: "CURVE"),
+    ("macro", "Macro table: Treasury yields and spreads, plus FRED series when collected (terminal ECO).",
+     {}, (), lambda a: "ECO"),
+    ("claim_scores", "How often each web source's directional claims were right against the market, with a "
+                     "coin-flip test (terminal CLM).", {}, (), lambda a: "CLM"),
+]
+
+
+def _tools(run: Callable[[str], dict], calls: list, cap: Callable[[], int] = lambda: MAX_RESULT_CHARS) -> list[Tool]:
+    """The read-only bank tools. Each validates its input, runs one terminal command through ``run`` and
+    appends ``{"name", "input": command}`` to ``calls``; a rejected input raises ToolError before that."""
+    def make(name, build):
+        def handler(args: dict) -> str:
+            cmd = build(args)  # ToolError here: nothing ran
+            calls.append({"name": name, "input": cmd})
+            try:
+                return _serialize(run(cmd), cap())
+            except Exception as e:  # noqa: BLE001 - surface as a tool error, not a crash
+                return json.dumps({"ok": False, "error": f"{type(e).__name__}: {e}"[:MAX_TEXT]})
+        return handler
+
+    return [Tool(name, desc, params, req, make(name, build)) for name, desc, params, req, build in _BANK_TOOLS]
+
+
+def bank_reader(bank, lock=None) -> Callable[[str], dict]:
+    """A read-only command runner over ``bank``, like the server's: INGEST, ASK and JOBS are refused,
+    and with ``lock`` each command holds it."""
+    from brain.terminal import commands, data
+    lock = lock or threading.RLock()
+
+    def run(line: str) -> dict:
         try:
-            return _serialize(run(cmd))
-        except Exception as e:  # noqa: BLE001 - surface as a tool error, not a crash
-            return json.dumps({"ok": False, "error": f"{type(e).__name__}: {e}"[:MAX_TEXT]})
+            cmd = commands.parse(line)
+        except commands.CommandError as e:
+            return {"ok": False, "fn": None, "ticker": None, "args": [], "error": e.message, "hint": e.hint}
+        if cmd.fn in ("INGEST", "ASK", "JOBS"):
+            return {"ok": False, "fn": cmd.fn, "ticker": cmd.ticker, "args": cmd.args,
+                    "error": f"{cmd.fn} is not available here (read-only)", "hint": "HELP"}
+        with lock:
+            return data.run(bank, cmd)
+    return run
 
-    # Rejected inputs raise ToolError: the runner hands its text to Claude as an is_error result. Any other
-    # exception would reach Claude too, but the SDK logs a traceback for each one.
-    def tk(t: str) -> str:
-        t = str(t).strip().upper()
-        if not t or len(t) > 15 or any(c.isspace() for c in t):
-            raise ToolError(f"not a ticker: {t[:40]!r} (a symbol of at most 15 characters, no spaces)")
-        return t
 
-    @beta_tool
-    def describe(ticker: str) -> str:
-        """Overview of a security: identity, latest price and returns, key derived metrics, latest filings and headlines (terminal DES).
+# ---------- reading the model's tool calls ----------
+_CALL_MARKUP = re.compile(r"</?tool_call>|<\|python_tag\|>|```(?:json)?")
+_THINK = re.compile(r"<think>.*?(?:</think>|$)", re.S)
 
-        Args:
-            ticker: Symbol, e.g. AAPL, ^GSPC, EURUSD=X, BTC-USD.
-        """
-        return go("describe", f"{tk(ticker)} DES")
 
-    @beta_tool
-    def price_history(ticker: str, period: str = "1Y", compare: str = "") -> str:
-        """Price history with return, high and low over a period, optionally against other symbols rebased to 100 (terminal GP).
+def _as_call(obj, known: set[str]) -> dict | None:
+    """A text tool call: a JSON object naming a known tool, e.g. {"name": "describe", "arguments": {...}}."""
+    if not isinstance(obj, dict):
+        return None
+    if isinstance(obj.get("function"), dict):
+        obj = obj["function"]
+    name = obj.get("name") or obj.get("tool") or (obj.get("function") if isinstance(obj.get("function"), str) else None)
+    if not isinstance(name, str) or name not in known:
+        return None
+    args = next((obj[k] for k in ("arguments", "parameters", "args", "input") if k in obj), {})
+    return {"id": None, "name": name, "arguments": args}
 
-        Args:
-            ticker: Symbol.
-            period: One of 1M 3M 6M YTD 1Y 2Y 5Y 10Y MAX.
-            compare: Optional space-separated symbols to compare against, e.g. "SPY QQQ".
-        """
-        cmp_ = " ".join(tk(c) for c in compare.split()[:3])
-        return go("price_history", f"{tk(ticker)} GP {period.strip().upper() or '1Y'} {cmp_}".strip())
 
-    @beta_tool
-    def financials(ticker: str) -> str:
-        """Up to ten fiscal years of annual statements from SEC filings, with margins, growth and ROE (terminal FA).
+def text_tool_calls(text: str, known: set[str]) -> list[dict]:
+    """Tool calls some models write as text (Qwen's <tool_call> blocks, fenced JSON, bare objects)."""
+    text = _unthink(text)
+    if "{" not in text:
+        return []
+    s = _CALL_MARKUP.sub(" ", text)
+    dec, out, i = json.JSONDecoder(), [], 0
+    while (i := s.find("{", i)) != -1:
+        try:
+            obj, end = dec.raw_decode(s, i)
+        except ValueError:
+            i += 1
+            continue
+        call = _as_call(obj, known)
+        if call:
+            out.append(call)
+        i = end
+    if not out and "<tool_call>" in text:
+        # A tool-call block that is not valid JSON: hand it back as a call whose arguments do not parse,
+        # so the model hears what was wrong instead of the block being taken for an answer.
+        for block in re.findall(r"<tool_call>(.*?)(?:</tool_call>|$)", text, re.S):
+            m = re.search(r'"(?:name|tool)"\s*:\s*"([^"]{1,60})"', block)
+            out.append({"id": None, "name": m.group(1) if m else "(unnamed)", "arguments": block.strip()[:500] or "?"})
+    return out
 
-        Args:
-            ticker: Symbol of a US-listed company.
-        """
-        return go("financials", f"{tk(ticker)} FA")
 
-    @beta_tool
-    def filings(ticker: str, form: str = "") -> str:
-        """The company's SEC filings, newest first, optionally one form type (terminal CF).
+def _content(msg: dict) -> str:
+    c = msg.get("content")
+    if isinstance(c, list):  # content parts
+        return "".join(p.get("text", "") for p in c if isinstance(p, dict))
+    return c if isinstance(c, str) else ""
 
-        Args:
-            ticker: Symbol.
-            form: Optional form filter, e.g. 10-K, 10-Q, 8-K, 4.
-        """
-        return go("filings", f"{tk(ticker)} CF {form.strip().upper()}".strip())
 
-    @beta_tool
-    def news(ticker: str) -> str:
-        """Headlines (unscored) and claims noted from the web, with each claim source's track record (terminal CN).
+def _calls(msg: dict, known: set[str]) -> tuple[list[dict], bool]:
+    """(calls, from_text). Structured ``tool_calls`` (or legacy ``function_call``) first, else text."""
+    raw = msg.get("tool_calls")
+    if not raw and isinstance(msg.get("function_call"), dict):  # the pre-tools OpenAI shape
+        raw = [{"function": msg["function_call"]}]
+    calls = []
+    for c in raw if isinstance(raw, list) else []:
+        fn = c.get("function") if isinstance(c, dict) else None
+        if isinstance(fn, dict):
+            calls.append({"id": c.get("id"), "name": str(fn.get("name") or ""), "arguments": fn.get("arguments")})
+    if calls:
+        return calls, False
+    return text_tool_calls(_content(msg), known), True
 
-        Args:
-            ticker: Symbol.
-        """
-        return go("news", f"{tk(ticker)} CN")
 
-    @beta_tool
-    def evidence(ticker: str) -> str:
-        """Where the security ranks on each tested signal and that signal's research verdict on held-out months (terminal EV).
+def _arguments(raw) -> tuple[dict | None, str | None]:
+    """(arguments, error). Servers send a JSON string; some send an object."""
+    if raw is None or raw == "":
+        return {}, None
+    if isinstance(raw, dict):
+        return raw, None
+    if isinstance(raw, str):
+        try:
+            v = json.loads(raw)
+        except ValueError as e:
+            return None, f"the arguments are not valid JSON ({e.msg} at character {e.pos}): {raw[:200]!r}"
+        if isinstance(v, dict):
+            return v, None
+        if v is None:
+            return {}, None
+    return None, f"the arguments must be a JSON object, not {raw!r:.200}"
 
-        Args:
-            ticker: Symbol.
-        """
-        return go("evidence", f"{tk(ticker)} EV")
 
-    @beta_tool
-    def show_fact(ticker: str, fact_id: str) -> str:
-        """One fact in full, with its source URL and, for derived facts, its inputs (terminal SHOW).
+def _unthink(text: str) -> str:
+    """Drop a reasoning model's thinking: everything up to the last </think> (the opening tag may be in the
+    prompt, not the output), and a <think> block cut off unclosed."""
+    text = text or ""
+    if "</think>" in text:
+        text = text.rsplit("</think>", 1)[1]
+    return _THINK.sub(" ", text)
 
-        Args:
-            ticker: The entity the fact belongs to, e.g. AAPL or MACRO.
-            fact_id: The id or its first 8 characters, as cited.
-        """
-        fid = str(fact_id).strip().strip("[]").lower()
-        if not FACT_ID.fullmatch(fid):
-            raise ToolError(f"not a fact id: {fid[:40]!r} (4-20 hexadecimal characters, as cited)")
-        return go("show_fact", f"{tk(ticker)} SHOW {fid}")
 
-    @beta_tool
-    def research_results() -> str:
-        """Every hypothesis in the research ledger with its TEST result, false-discovery q-value and verdict (terminal RES)."""
-        return go("research_results", "RES")
+def _clean(text: str) -> str:
+    return _unthink(text).strip()
 
-    @beta_tool
-    def world_markets() -> str:
-        """Equity indices, volatility, FX, commodities and crypto: last level and returns (terminal WEI)."""
-        return go("world_markets", "WEI")
 
-    @beta_tool
-    def movers() -> str:
-        """Biggest gainers and losers in the research universe, last session and one month (terminal MOV)."""
-        return go("movers", "MOV")
+def _execute(call: dict, tools: dict[str, Tool]) -> str:
+    tool = tools.get(call["name"])
+    if tool is None:
+        return json.dumps({"ok": False, "error": f"no tool named {call['name'][:60]!r}; the tools are: "
+                                                 + ", ".join(tools)})
+    args, err = _arguments(call["arguments"])
+    if err:
+        return json.dumps({"ok": False, "error": f"{call['name']}: {err}"})
+    try:
+        return tool.call(args)
+    except ToolError as e:
+        return json.dumps({"ok": False, "error": str(e)})
+    except Exception as e:  # noqa: BLE001 - a broken tool is an error result, not a crashed answer
+        return json.dumps({"ok": False, "error": f"{call['name']} failed: {type(e).__name__}: {e}"[:MAX_TEXT]})
 
-    @beta_tool
-    def yield_curve() -> str:
-        """US Treasury par yield curve now, a month ago and a year ago, with key spreads (terminal CURVE)."""
-        return go("yield_curve", "CURVE")
 
-    @beta_tool
-    def macro() -> str:
-        """Macro table: Treasury yields and spreads, plus FRED series when collected (terminal ECO)."""
-        return go("macro", "ECO")
+# ---------- fitting the context window ----------
+class Budget:
+    """How many characters of conversation fit the model's context. The characters per token start as a
+    guess and are measured from the server's own ``prompt_tokens`` after each request."""
 
-    @beta_tool
-    def claim_scores() -> str:
-        """How often each web source's directional claims were right against the market, with a coin-flip test (terminal CLM)."""
-        return go("claim_scores", "CLM")
+    def __init__(self, ctx: int, fixed_chars: int = 0):
+        self.ctx = max(1024, int(ctx))
+        self.fixed = fixed_chars
+        self.ratio = CHARS_PER_TOKEN
 
-    return [describe, price_history, financials, filings, news, evidence, show_fact, research_results,
-            world_markets, movers, yield_curve, macro, claim_scores]
+    def answer_tokens(self) -> int:
+        return min(MAX_ANSWER_TOKENS, self.ctx // 8)
+
+    def chars(self) -> int:
+        """Characters of messages (after the system prompt and tool schemas) that fit, with a 15% margin."""
+        return max(4000, int((self.ctx - self.answer_tokens()) * self.ratio * 0.85) - self.fixed)
+
+    def result_chars(self) -> int:
+        return max(MIN_RESULT_CHARS, min(MAX_RESULT_CHARS, self.chars() // 2))
+
+    def measured(self, chars_sent: int, prompt_tokens) -> None:
+        """Only ever lowers the ratio: the schemas measured first are wordier than the digit-heavy results."""
+        if isinstance(prompt_tokens, int) and prompt_tokens > 100:
+            self.ratio = max(1.5, min(self.ratio, chars_sent / prompt_tokens))
+
+
+def _size(m: dict) -> int:
+    n = len(m.get("content") or "") + 16
+    if m.get("tool_calls"):
+        n += len(json.dumps(m["tool_calls"]))
+    return n
+
+
+def fit(convo: list[dict], budget: int, n_history: int = 0) -> list[dict]:
+    """The conversation cut to ``budget`` characters: older history turns go first (the last two stay),
+    then tool results of earlier rounds (replaced by a note), then the rest of the history, and last
+    the latest round's results are shortened. The current question is never cut."""
+    msgs = [dict(m) for m in convo]
+    total = sum(_size(m) for m in msgs)
+    if total <= budget:
+        return msgs
+    hist, rest = msgs[:n_history], msgs[n_history:]
+
+    def drop_history(keep: int):
+        nonlocal total
+        while len(hist) > keep:
+            total -= _size(hist.pop(0))
+        while hist and hist[0]["role"] != "user":  # history starts with a user turn
+            total -= _size(hist.pop(0))
+
+    drop_history(2)
+    if total > budget:
+        last_round = max((i for i, m in enumerate(rest) if m.get("tool_calls")), default=len(rest))
+        for m in rest[:last_round]:
+            if total <= budget:
+                break
+            if m["role"] == "tool" and m["content"] != ELIDED:
+                total += len(ELIDED) - len(m["content"])
+                m["content"] = ELIDED
+    if total > budget:
+        drop_history(0)
+    if total > budget:
+        tail = [m for m in rest if m["role"] == "tool" and m["content"] != ELIDED]
+        over = total - budget
+        size = sum(len(m["content"]) for m in tail)
+        for m in tail:
+            share = int(len(m["content"]) * max(0.0, 1 - over / size)) if size else 0
+            keep = max(500, share)
+            if keep < len(m["content"]):
+                cut = len(m["content"]) - keep
+                m["content"] = m["content"][:keep] + f"… [{cut:,} characters cut to fit the context]"
+    return hist + rest
 
 
 # ---------- the loop ----------
@@ -268,98 +534,122 @@ def _messages(question: str, ticker: str | None, history: list | None) -> list[d
     return msgs
 
 
-def _usage(messages: list) -> dict:
-    """Tokens for the whole answer, not its last request: every request the tool runner made and, within
-    each, every fallback attempt (``usage.iterations``; top-level usage covers only the attempt that produced
-    the message). ``input_tokens`` includes tokens written to and read from the prompt cache;
-    ``cache_read_input_tokens`` is the part read from it."""
-    def n(part, key) -> int:
-        v = getattr(part, key, None)
-        return v if isinstance(v, int) else 0
-
+def _usage(responses: list[dict]) -> dict:
+    """Tokens over every request the loop made, as the server counted them (None when it did not)."""
     tin = tout = cached = 0
-    seen = False
-    for m in messages:
-        u = getattr(m, "usage", None)
-        if u is None:
+    seen = seen_cache = False
+    for r in responses:
+        u = r.get("usage")
+        if not isinstance(u, dict):
             continue
         seen = True
-        for part in (getattr(u, "iterations", None) or [u]):
-            tin += n(part, "input_tokens") + n(part, "cache_creation_input_tokens") + n(part, "cache_read_input_tokens")
-            cached += n(part, "cache_read_input_tokens")
-            tout += n(part, "output_tokens")
-    if not seen:
-        return {"input_tokens": None, "output_tokens": None, "cache_read_input_tokens": None, "requests": len(messages)}
-    return {"input_tokens": tin, "output_tokens": tout, "cache_read_input_tokens": cached, "requests": len(messages)}
+        tin += int(u.get("prompt_tokens") or 0)
+        tout += int(u.get("completion_tokens") or 0)
+        details = u.get("prompt_tokens_details")
+        c = details.get("cached_tokens") if isinstance(details, dict) else None
+        if isinstance(c, int):
+            seen_cache, cached = True, cached + c
+    return {"input_tokens": tin if seen else None, "output_tokens": tout if seen else None,
+            "cache_read_input_tokens": cached if seen_cache else None, "requests": len(responses)}
+
+
+def run_loop(client, system: str, messages: list[dict], tools: list[Tool], max_rounds: int = MAX_ROUNDS,
+             budget: Budget | None = None, n_history: int = 0) -> dict:
+    """Ask, run the tools the model calls, send their results back; repeat until it answers or
+    ``max_rounds`` requests were made. Returns the analyst's result shape (without ``tool_calls``)."""
+    by_name = {t.name: t for t in tools}
+    specs = [t.spec() for t in tools]
+    fixed = len(system) + len(json.dumps(specs))
+    budget = budget or Budget(getattr(client, "ctx", llm.DEFAULT_CTX))
+    budget.fixed = fixed
+    convo = list(messages)
+    responses: list[dict] = []
+    model = getattr(client, "model", None)
+    t0 = time.monotonic()
+    answer, finish, msg = "", None, {}
+
+    def failed(e: llm.LLMError) -> dict:
+        error, hint = llm.describe_error(e, client)
+        return {"ok": False, "error": error, "hint": hint, "model": model, "usage": _usage(responses),
+                "rounds": len(responses), "seconds": round(time.monotonic() - t0, 1)}
+
+    stopped = False
+    for rnd in range(1, max_rounds + 1):
+        if rnd == max_rounds and rnd > 1:
+            convo.append({"role": "user", "content": LAST_ROUND})
+        for attempt in (0, 1):
+            sent = [{"role": "system", "content": system}] + fit(convo, budget.chars(), n_history)
+            try:
+                resp = client.complete(sent, tools=specs, temperature=TEMPERATURE, max_tokens=budget.answer_tokens())
+                break
+            except llm.LLMError as e:
+                limit = e.context_limit()
+                if attempt == 0 and limit:  # the server said how big its window is: fit to it and retry once
+                    budget.ctx, budget.ratio = min(budget.ctx, limit), max(1.0, budget.ratio * 0.75)
+                    continue
+                return failed(e)
+        responses.append(resp)
+        budget.measured(fixed + sum(_size(m) for m in sent[1:]), (resp.get("usage") or {}).get("prompt_tokens"))
+        model = resp.get("model") or model
+        choice = resp["choices"][0]
+        msg, finish = choice["message"], choice.get("finish_reason")
+        calls, from_text = _calls(msg, set(by_name))
+        if not calls:
+            answer = _clean(_content(msg))
+            break
+        if rnd == max_rounds:  # its calls would run with nobody to read the results
+            stopped = True
+            break
+        canon = []
+        for i, c in enumerate(calls):
+            args, _ = _arguments(c["arguments"])
+            canon.append({"id": str(c.get("id") or f"call_{rnd}_{i}"), "type": "function",
+                          "function": {"name": c["name"], "arguments": json.dumps(args if args is not None else {})}})
+        convo.append({"role": "assistant", "content": "" if from_text else _clean(_content(msg)), "tool_calls": canon})
+        for i, (c, cc) in enumerate(zip(calls, canon)):
+            out = (_execute(c, by_name) if i < MAX_CALLS_PER_ROUND else
+                   json.dumps({"ok": False, "error": f"at most {MAX_CALLS_PER_ROUND} tool calls are run per turn"}))
+            convo.append({"role": "tool", "tool_call_id": cc["id"], "content": out})
+    if stopped:
+        # The last request still wanted tools: any text with it is a preamble, not an answer.
+        answer = (_clean(_content(msg)) + f"\n\n*(stopped after {max_rounds} tool rounds without a final answer; "
+                                           f"ask a narrower question)*").strip()
+        finish = "tool_calls"
+    usage = _usage(responses)
+    seconds = round(time.monotonic() - t0, 1)
+    if not answer:
+        return {"ok": False, "error": "the model returned an empty answer", "model": model, "usage": usage,
+                "rounds": len(responses), "seconds": seconds,
+                "hint": "ask again, or use a larger model (BRAIN_LLM_MODEL)"}
+    if finish == "length":
+        answer += "\n\n*(answer cut off at the length limit)*"
+    return {"ok": True, "answer": answer, "model": model, "stop_reason": finish or "stop", "usage": usage,
+            "rounds": len(responses), "seconds": seconds,
+            "citations": check_citations(answer, [m["content"] for m in convo if m["role"] == "tool"])}
+
+
+def check_citations(answer: str, results: list[str]) -> dict:
+    """Which fact ids the answer cites appear in this answer's tool results (``verified``) and which do not
+    (``unverified``: from an earlier turn, or made up; small models do that)."""
+    cited: list[str] = []
+    for group in re.findall(r"\[([^\[\]]{4,200})\]", answer or ""):
+        for tok in re.split(r"[\s,;]+", group.strip().lower()):
+            if FACT_ID.fullmatch(tok) and tok not in cited:
+                cited.append(tok)
+    blob = "\n".join(results).lower()
+    return {"verified": [c for c in cited if c in blob], "unverified": [c for c in cited if c not in blob]}
 
 
 def ask(bank_reader: Callable[[str], dict], question: str, ticker: str | None = None,
         history: list | None = None, client=None) -> dict:
+    """Answer ``question`` from the bank. ``client``: a ``brain.llm.Client`` (default: from the environment)."""
     if not question or not question.strip():
         return {"ok": False, "error": "empty question", "hint": "ASK what is AAPL's free cash flow trend?"}
-    try:
-        import anthropic
-    except ImportError:
-        return {"ok": False, "error": "analyst unavailable", "hint": "the analyst needs the Anthropic SDK: pip install anthropic"}
-    own = client is None
-    if own:
-        client, reason = _client()
-        if client is None:
-            return {"ok": False, "error": "analyst unavailable", "hint": reason}
-
+    client = client or llm.Client.from_env()
     calls: list[dict] = []
-    messages: list = []
-    tools = _tools(bank_reader, calls)
-    try:
-        runner = client.beta.messages.tool_runner(
-            model=MODEL,
-            max_tokens=16000,
-            system=SYSTEM,
-            tools=tools,
-            messages=_messages(question, ticker, history),
-            output_config={"effort": "high"},
-            cache_control={"type": "ephemeral"},
-            betas=["server-side-fallback-2026-07-01"],
-            fallbacks="default",
-            max_iterations=MAX_ITERATIONS,
-        )
-        messages.extend(runner)  # one message per request
-    except anthropic.AuthenticationError:
-        return {"ok": False, "error": "Anthropic rejected the credentials", "hint": "check ANTHROPIC_API_KEY"}
-    except anthropic.RateLimitError:
-        return {"ok": False, "error": "rate limited by the Anthropic API", "hint": "try again in a minute"}
-    except anthropic.APIStatusError as e:
-        return {"ok": False, "error": f"Anthropic API error {e.status_code}", "hint": str(e.message)[:300]}
-    except anthropic.APIConnectionError:
-        return {"ok": False, "error": "could not reach the Anthropic API", "hint": "check the network"}
-    except (anthropic.CredentialsError, anthropic.WorkloadIdentityError) as e:
-        return {"ok": False, "error": "no usable Anthropic credentials", "hint": str(e)[:300]}
-    except anthropic.AnthropicError as e:
-        return {"ok": False, "error": f"Anthropic SDK error ({type(e).__name__})", "hint": str(e)[:300]}
-    finally:
-        if own:
-            client.close()
-
-    if not messages:
-        return {"ok": False, "error": "no response from the analyst", "hint": ""}
-    final = messages[-1]
-    usage = _usage(messages)
-    if final.stop_reason == "refusal":
-        return {"ok": False, "error": "the model declined this request", "tool_calls": calls, "usage": usage,
-                "hint": getattr(getattr(final, "stop_details", None), "explanation", None) or "rephrase the question"}
-    answer = "\n\n".join(b.text for b in final.content if b.type == "text").strip()
-    if final.stop_reason == "max_tokens":
-        answer += "\n\n*(answer cut off at the length limit)*"
-    elif final.stop_reason in ("tool_use", "pause_turn"):
-        # The runner stopped at MAX_ITERATIONS while Claude still wanted tools, so any text is a preamble
-        # ("Let me also check the curve."), not an answer. Its last round of tools ran but Claude never saw them.
-        answer += (f"\n\n*(stopped after {MAX_ITERATIONS} tool rounds without a final answer; "
-                   f"ask a narrower question)*")
-    return {
-        "ok": True,
-        "answer": answer.strip(),
-        "tool_calls": calls,
-        "model": getattr(final, "model", MODEL),
-        "stop_reason": final.stop_reason,
-        "usage": usage,
-    }
+    budget = Budget(getattr(client, "ctx", llm.DEFAULT_CTX))
+    tools = _tools(bank_reader, calls, budget.result_chars)
+    msgs = _messages(question, ticker, history)
+    out = run_loop(client, system_prompt(), msgs, tools, MAX_ROUNDS, budget, n_history=len(msgs) - 1)
+    out["tool_calls"] = calls
+    return out

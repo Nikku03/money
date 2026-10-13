@@ -12,6 +12,7 @@ import pandas as pd
 from brain import brief, config, series
 from brain.bank import Bank, Fact
 from brain.claims import note
+from brain.metrics import PriceBook
 from brain.research.hypotheses import HYPOTHESES
 from brain.net import Response
 from brain.sources import prices, treasury
@@ -464,9 +465,28 @@ class SyntheticBankTest(unittest.TestCase):
         self.assertEqual(rows["H1-mom12_1"]["claim"], "claim H1-mom12_1")
         self.assertEqual(rows["H3-earnings_yield"]["verdict"], "not run")
         self.assertIsNone(rows["H4-low_asset_growth"]["bh_q"])
-        self.assertEqual([c["type"] for c in d["columns"]], ["text", "text", "pct", "number", "number", "verdict"])
-        self.assertIn("Controls passed", d["note"])
+        self.assertEqual([c["type"] for c in d["columns"]], ["text", "text", "text", "pct", "number", "number", "verdict"])
+        self.assertEqual({r["universe"] for r in d["rows"]}, {"us_large"})
+        self.assertIn("Controls passed on us_large", d["note"])
         self.assertIn("+27.0% a year", d["note"])
+
+    def test_res_reports_each_universe_once(self):
+        broad = {"op": "result", "id": "H6-insider_buying", "spec_sha": "s", "at": "2026-02-01T00:00:00Z",
+                 "universe": "universe/us_broad.json", "test": {"mean_net_excess": 0.0001, "perm_p": 0.3}, "train": {},
+                 "controls": {"pass": True, "oracle_test_perm_p": 0.0005, "random_false_positive_rate": 0.05,
+                              "n_random": 200},
+                 "context": {"spy_ann_return_test": 0.18, "universe_ew_ann_return_test": 0.31}}
+        declare = {"op": "declare", "id": "H6-insider_buying", "spec_sha": "s", "at": "2026-01-15T00:00:00Z",
+                   "spec": {"claim": "insiders", "universe": "universe/us_broad.json"}}
+        path = Path(self._tmp.name) / "ledger2.jsonl"
+        path.write_text("".join(json.dumps(r) + "\n" for r in ledger_records() + [declare, broad]))
+        with mock.patch.object(config, "LEDGER", path):
+            d = self.run_ok("RES")["data"]
+        rows = {r["id"]: r for r in d["rows"]}
+        self.assertEqual((rows["H6-insider_buying"]["universe"], rows["H1-mom12_1"]["universe"]), ("us_broad", "us_large"))
+        self.assertEqual(d["note"].count("Controls passed on "), 2)
+        self.assertIn("Controls passed on us_broad", d["note"])
+        self.assertIn("+31.0% a year", d["note"])
 
     def test_clm(self):
         d = self.run_ok("CLM")["data"]
@@ -635,6 +655,540 @@ class CachedChartTest(TempHome):
              mock.patch.object(prices, "time", mock.Mock(time=mock.Mock(return_value=after_close))):
             df, _, _, _ = prices.fetch_daily("TST")
         self.assertEqual(df["date"].iloc[-1], "2026-10-12")
+
+
+
+# ---------- v2: insider trades, earnings, aircraft, ports, cameras, watchlist, alerts ----------
+TODAY = pd.Timestamp(today())
+V2_DAYS = pd.bdate_range(TODAY - pd.DateOffset(years=7), END).strftime("%Y-%m-%d").tolist()
+V2_YEARS = list(range(TODAY.year - 5, TODAY.year - 1))  # fully reported, whatever today's date
+LA_BBOX = [33.60, -118.35, 33.80, -118.05]
+
+
+def ago(days: int, hour: str = "T21:00:00Z") -> str:
+    return (TODAY - pd.Timedelta(days=days)).strftime("%Y-%m-%d") + hour
+
+
+def trade(t, code, shares, price, days, owner="Doe Jane", rel="director", title=None, accn=None, known=None, lot=None):
+    ctx = {"code": code, "price": price, "value_usd": round(shares * price, 2), "owner": owner, "owner_cik": "0001",
+           "relationship": rel, "title": title, "accn": accn or f"acc-{days}-{code}", "ownership": "D"}
+    if lot:
+        ctx["lot"] = lot
+    return Fact(entity=t, attr="insider.trade", value=float(shares), unit="shares", as_of=ago(days + 2)[:10],
+                known_at=known or ago(days), tier="filed",
+                source={"name": "SEC Form 4", "url": f"https://www.sec.gov/Archives/edgar/data/1/{ctx['accn']}-index.htm"},
+                context=ctx)
+
+
+def ships(name, n, at, bbox=LA_BBOX, window=300):
+    from brain.sources import shipping
+    summary = {"vessels": n, "cargo": n // 2, "tanker": n // 4, "other": n - n // 2 - n // 4, "untyped": 0,
+               "anchored": 1, "moored": n // 2, "underway": n - 1 - n // 2, "window_s": window, "bbox": list(bbox)}
+    return shipping.to_fact(summary, {"name": name, "bbox": list(bbox)}, at)
+
+
+def camera(cid, n, at, name="Example Rd / Depot"):
+    return Fact(entity=f"CAM.{cid}", attr="camera.vehicles", value=n, unit="vehicles", as_of=at[:10], known_at=at,
+                tier="reported", source={"name": "TfL JamCams", "url": "https://api.tfl.gov.uk/"},
+                context={"car": n - 2, "truck": 1, "bus": 1, "motorcycle": 0, "provider": "TFL", "name": name,
+                         "lat": 51.5, "lon": -0.1, "detector": "yolox-2022nov", "threshold": 0.5})
+
+
+def alert(entity, rule, severity, msg, at, inputs=()):
+    return Fact(entity=entity, attr="alert", value=msg, as_of=at[:10], known_at=at, tier="derived",
+                source={"name": "brain.watch", "rule": rule},
+                context={"rule": rule, "severity": severity, "keys": [f"{rule}:{msg}"]},
+                inputs=tuple(f.ref for f in inputs), retrieved_at=at)
+
+
+AIRPORTS = {"KSJC": "San Jose Intl", "KTEB": "Teterboro"}
+SHIP_COUNTS = [10, 11, 9, 10, 12, 10, 11, 9, 10, 11, 10, 12, 10, 30]
+CAM_COUNTS = [20, 22, 19, 21, 20, 23, 18, 20, 21, 22, 19, 21]
+
+
+def build_v2(bank: Bank, home: Path) -> dict:
+    from tests.test_quarterly import fiscal_year, known_dates
+    rng = np.random.default_rng(11)
+    px = {t: walk(rng, len(V2_DAYS)) for t in ("XCO", "SPY")}
+    for t, v in px.items():
+        bank.add(price_snapshot(t, V2_DAYS, v))
+    bank.add(price_snapshot("NOSEC", V2_DAYS[-30:], px["SPY"][-30:]))  # prices only, like an ETF
+    bank.add_many([filed("XCO", "identity.name", "Example Co", V2_DAYS[0], V2_DAYS[0]),
+                   filed("XCO", "identity.cik", 1234, V2_DAYS[0], V2_DAYS[0]),
+                   filed("ZCO", "identity.name", "Zed Co", V2_DAYS[0], V2_DAYS[0]),
+                   filed("ZCO", "identity.cik", 5678, V2_DAYS[0], V2_DAYS[0])])
+    # quarterly EPS: Q1-Q3 from 10-Qs and Q4 only as the year minus nine months; a release after each report
+    eps = "us-gaap:EarningsPerShareDiluted"
+    for k, y in enumerate(V2_YEARS):
+        bank.add_many(fiscal_year("XCO", eps, y, [1.0 + 0.1 * k, 1.1 + 0.1 * k, 0.9 + 0.12 * k, 1.3 + 0.15 * k],
+                                  known_dates(y)))
+        for kd in known_dates(y):
+            bank.add(Fact(entity="XCO", attr="filing", value="8-K", as_of=kd, known_at=kd + "T21:00:00Z", tier="filed",
+                          source={"name": "SEC EDGAR", "url": f"https://www.sec.gov/x/8k-{kd}.htm"},
+                          context={"items": "2.02,9.01", "accn": f"8k-{kd}"}))
+    # insider trades: inside and outside the 90-day window, one filing read both live and in bulk
+    live = trade("XCO", "P", 10000, 50.0, 30, owner="Doe Jane", rel="director", accn="acc-live",
+                 known=ago(30, "T14:05:00Z"))
+    trades = [live, trade("XCO", "P", 10000, 50.0, 30, owner="Doe Jane", rel="director", accn="acc-live",
+                          known=ago(30, "T23:59:59Z")),  # the bulk copy of the same filing
+              trade("XCO", "S", 2000, 55.0, 10, owner="Roe Richard", rel="officer", title="CFO"),
+              trade("XCO", "P", 1000, 52.0, 40, owner="Big Fund LP", rel="ten_percent_owner"),
+              trade("XCO", "P", 500, 40.0, 200, owner="Doe Jane", rel="director,officer", title="CEO")]
+    bank.add_many(trades)
+    # aircraft: two tails registered to the company; one of them opted out
+    reg_at = ago(5, "T10:00:00Z")
+    planes = [Fact(entity="XCO", attr="aircraft.registered", value=r, as_of=reg_at[:10], known_at=reg_at, tier="reported",
+                   source={"name": "FAA Aircraft Registry", "url": "https://registry.faa.gov/database/ReleasableAircraft.zip"},
+                   context={"hex": h_, "model": "GULFSTREAM G280", "year": 2018, "owner": "EXAMPLE CO"})
+              for r, h_ in (("N1XC", "a00001"), ("N2XC", "a00002"))]
+    flights = [Fact(entity="XCO", attr="aircraft.flight", value=to, as_of=arr[:10], known_at=arr, tier="reported",
+                    source={"name": "adsb.lol (ODbL)", "url": "https://api.adsb.lol/"},
+                    context={"hex": h_, "reg": r, "from": frm, "to": to, "from_name": AIRPORTS[frm],
+                             "to_name": AIRPORTS[to], "departed": dep, "arrived": arr})
+               for r, h_, frm, to, dep, arr in (
+                   ("N1XC", "a00001", "KSJC", "KTEB", ago(3, "T12:00:00Z"), ago(3, "T17:10:00Z")),
+                   ("N1XC", "a00001", "KTEB", "KSJC", ago(2, "T12:00:00Z"), ago(2, "T18:00:00Z")),
+                   ("N2XC", "a00002", "KSJC", "KTEB", ago(1, "T12:00:00Z"), ago(1, "T17:00:00Z")))]
+    bank.add_many(planes + flights)
+    (home / "aviation_optout.txt").write_text("N2XC  # asked not to be tracked\n")
+    (home / "aviation_links.json").write_text(json.dumps({"XCO": {"name": "Example Co", "registry_fetched_at": reg_at,
+                                                                  "aircraft": [{"reg": "N1XC", "hex": "a00001"},
+                                                                               {"reg": "N2XC", "hex": "a00002"}]}}))
+    # port areas: a watched one with a jump in its last sample, and one sampled but not watched
+    la = [ships("LA-LONG-BEACH", n, ago(len(SHIP_COUNTS) - i, "T12:00:00Z")) for i, n in enumerate(SHIP_COUNTS)]
+    bank.add_many(la + [ships("TESTBOX", 4, ago(1, "T09:00:00Z"), bbox=[1, 2, 3, 4])])
+    cams = [camera("TFL.00001.00001", n, ago(len(CAM_COUNTS) - i, "T08:00:00Z")) for i, n in enumerate(CAM_COUNTS)]
+    bank.add_many(cams + [camera("TFL.00009.00009", 7, ago(1, "T07:00:00Z"), name="Elsewhere")])
+    from brain import watch
+    watch.save({"tickers": ["XCO", "SPY"], "aircraft_of": ["XCO"], "areas": [{"name": "LA-LONG-BEACH"}],
+                "sites": [{"name": "Depot", "ticker": "XCO", "cameras": ["TFL.00001.00001", "TFL.00001.00002"]}]})
+    alerts = [alert("XCO", "insider_buy", "high", "XCO insider buying: Doe Jane bought", ago(29, "T15:00:00Z"), [live]),
+              alert("XCO", "aircraft", "notice", "XCO aircraft N1XC landed at KSJC", ago(2, "T18:30:00Z"), flights[1:2]),
+              alert("AREA.LA-LONG-BEACH", "ships", "high", "AREA.LA-LONG-BEACH: 30 vessels, z +9.9", ago(1, "T12:05:00Z"),
+                    la[-1:])]
+    bank.add_many(alerts)
+    return {"px": px, "trades": trades, "flights": flights, "la": la, "cams": cams, "alerts": alerts}
+
+
+def v2_ledger() -> list[dict]:
+    at = "2026-01-01T00:00:00Z"
+    ctl = {"pass": True, "oracle_test_perm_p": 0.0005, "random_false_positive_rate": 0.03, "n_random": 200}
+    ctx = {"spy_ann_return_test": 0.18, "universe_ew_ann_return_test": 0.27}
+    recs = [{"op": "declare", "id": h, "spec_sha": "s", "spec": {"claim": f"claim {h}"}, "at": at}
+            for h in ("H6-insider_buying", "H7-earnings_reaction", "H8-sue")]
+    recs += [{"op": "result", "id": h, "spec_sha": "s", "at": at, "test": {"mean_net_excess": net, "perm_p": p},
+              "train": {}, "controls": ctl, "context": ctx}
+             for h, net, p in (("H6-insider_buying", -0.0012, 0.43), ("H7-earnings_reaction", 0.0004, 0.31))]
+    return recs
+
+
+class V2Base(unittest.TestCase):
+    """A synthetic home with every kind of v2 data; tests that change the watchlist or acknowledge alerts
+    restore what they changed."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls._tmp = tempfile.TemporaryDirectory()
+        cls.home = Path(cls._tmp.name)
+        cls._old = os.environ.get("MONEY_HOME")
+        os.environ["MONEY_HOME"] = str(cls.home)
+        (cls.home / "ledger.jsonl").write_text("".join(json.dumps(r) + "\n" for r in v2_ledger()))
+        (cls.home / "universe.json").write_text(json.dumps({"tickers": ["XCO", "ZCO"]}))
+        from brain import universe
+        cls._patches = [mock.patch.object(config, "UNIVERSE", cls.home / "universe.json"),
+                        mock.patch.object(config, "LEDGER", cls.home / "ledger.jsonl"),
+                        mock.patch.object(universe, "BROAD", cls.home / "none.json")]
+        for p in cls._patches:
+            p.start()
+        cls.bank = Bank()
+        cls.syn = build_v2(cls.bank, cls.home)
+
+    @classmethod
+    def tearDownClass(cls):
+        for p in cls._patches:
+            p.stop()
+        if cls._old is None:
+            os.environ.pop("MONEY_HOME", None)
+        else:
+            os.environ["MONEY_HOME"] = cls._old
+        cls._tmp.cleanup()
+
+    def run_ok(self, line, writes=False):
+        r = data.run(self.bank, parse(line), writes=writes)
+        self.assertTrue(r["ok"], (line, r.get("error"), r.get("hint")))
+        json.dumps(r, allow_nan=False)
+        for k in ("fn", "ticker", "args", "title", "asof", "view", "data"):
+            self.assertIn(k, r)
+        if r["view"] == "table":
+            d = r["data"]
+            keys = {c["key"] for c in d["columns"]}
+            for row in d["rows"]:
+                self.assertLessEqual({k for k in row if not k.startswith("_")}, keys, line)
+                for k, cmd in row.get("_cmds", {}).items():
+                    self.assertIn(k, keys)
+                    self.assertTrue(parse(cmd).fn, cmd)  # every row command parses
+        return r
+
+    def run_err(self, line, writes=False):
+        r = data.run_line(self.bank, line) if not writes else data.run(self.bank, parse(line), writes=True)
+        self.assertFalse(r["ok"], line)
+        self.assertTrue(r["error"])
+        json.dumps(r, allow_nan=False)
+        return r
+
+
+class V2FunctionsTest(V2Base):
+    def test_help_and_parse(self):
+        codes = [f["code"] for f in self.run_ok("HELP")["data"]["functions"]]
+        for c in ("INS", "ERN", "JET", "SHIP", "CAM", "WL", "ALRT"):
+            self.assertIn(c, codes)
+
+    # ---------- INS ----------
+    def test_ins(self):
+        r = self.run_ok("XCO INS")
+        d = r["data"]
+        self.assertEqual(r["title"], "XCO — Example Co · insider trades · 90 days: bought $552,000, sold $110,000")
+        self.assertEqual([c["key"] for c in d["columns"]],
+                         ["filed", "traded", "owner", "relationship", "code", "shares", "price", "value", "ownership"])
+        self.assertEqual(len(d["rows"]), 4)  # the live and bulk copies of one filing count once
+        filed_ = [row["filed"] for row in d["rows"]]
+        self.assertEqual(filed_, sorted(filed_, reverse=True))
+        self.assertEqual(r["asof"], filed_[0])
+        first = d["rows"][0]
+        self.assertEqual((first["code"], first["owner"], first["relationship"], first["value"]),
+                         ("S", "Roe Richard", "officer (CFO)", 110000.0))
+        self.assertTrue(first["_cite"] and first["_url"].startswith("https://www.sec.gov/"))
+        self.assertIn("10% owner", [row["relationship"] for row in d["rows"]])
+        self.assertTrue({row["code"] for row in d["rows"]} <= {"P", "S"})
+        # 90 days: the director's $500,000 and the 10% owner's $52,000 bought, $110,000 sold
+        self.assertIn("bought $552,000 in 2 trades and sold $110,000 in 1", d["note"])
+        self.assertIn("officers and directors bought $500,000", d["note"])
+        self.assertIn("Research: H6-insider_buying FAIL (TEST net excess -0.12% a month, permutation p 0.430)", d["note"])
+
+    def test_ins_missing_and_wrong_kinds(self):
+        self.assertEqual(self.run_err("^GSPC INS")["hint"], "^GSPC GP")
+        self.assertEqual(self.run_err("NOSEC INS")["hint"], "INGEST NOSEC")  # prices only: no SEC filer
+        self.assertEqual(self.run_err("QQQQ INS")["hint"], "INGEST QQQQ")
+        r = self.run_err("ZCO INS")  # in a research universe, never read
+        self.assertEqual((r["error"], r["hint"]), ("no insider trades for ZCO in the bank", "INGEST INSIDERS"))
+        with mock.patch.object(config, "UNIVERSE", self.home / "none.json"):
+            self.assertEqual(self.run_err("ZCO INS")["hint"], "python -m brain insiders ZCO")
+        done = self.home / "insiders_done.json"
+        done.write_text(json.dumps({"2025q1": [5678]}))
+        try:
+            d = self.run_ok("ZCO INS")["data"]  # read, and nothing was filed: an empty list, not an error
+        finally:
+            done.unlink()
+        self.assertEqual(d["rows"], [])
+        self.assertIn("No open-market purchases or sales", d["note"])
+
+    # ---------- ERN ----------
+    def test_ern(self):
+        from brain import events
+        r = self.run_ok("XCO ERN")
+        d = r["data"]
+        self.assertEqual([c["key"] for c in d["columns"]], ["period_end", "filed", "release", "eps", "eps_from", "eps_yoy",
+                                                            "sue", "car_3d", "drift_20d", "drift_60d"])
+        self.assertEqual(d["columns"][4]["type"], "flag")
+        view = self.bank.view(today() + "T23:59:59Z")
+        table = events.earnings_table(view, "XCO", PriceBook(self.bank, ["XCO", "SPY"], asof=today()))
+        self.assertEqual(len(d["rows"]), len(table))
+        self.assertEqual(len(d["rows"]), 4 * len(V2_YEARS))
+        ends = [row["period_end"] for row in d["rows"]]
+        self.assertEqual(ends, sorted(ends, reverse=True))
+        self.assertEqual(ends[0], f"{V2_YEARS[-1]}-12-31")
+        for row, t in zip(d["rows"], table):
+            for k in ("eps", "eps_yoy", "sue", "car_3d", "drift_20d", "drift_60d"):
+                if t[k] is None:
+                    self.assertIsNone(row[k], k)
+                else:
+                    self.assertAlmostEqual(row[k], t[k], places=12, msg=k)
+            self.assertEqual(row["eps_from"], "FY − 9M" if row["period_end"].endswith("12-31") else "")
+        q4 = d["rows"][0]
+        self.assertAlmostEqual(q4["eps"], 1.3 + 0.15 * (len(V2_YEARS) - 1))
+        self.assertEqual(q4["release"], f"{V2_YEARS[-1] + 1}-02-20")
+        self.assertIsNotNone(q4["car_3d"])  # windows long closed
+        self.assertIsNotNone(q4["drift_60d"])
+        self.assertEqual(q4["_cites"]["car_3d"], q4["_cites"]["release"])
+        self.assertTrue(q4["_url"].endswith(f"8k-{V2_YEARS[-1] + 1}-02-20.htm"))
+        self.assertEqual(len(q4["_refs"]), 3)  # the year, the nine months, the release
+        self.assertIsNotNone(d["rows"][4]["sue"])  # enough history by the last year
+        self.assertIn("Research: H7-earnings_reaction FAIL", d["note"])
+        self.assertIn("Research: H8-sue has no result yet", d["note"])
+        self.assertEqual(self.run_err("^GSPC ERN")["hint"], "^GSPC GP")
+        self.assertEqual(self.run_err("ZCO ERN")["hint"], "INGEST ZCO")
+
+    # ---------- JET ----------
+    def test_jet(self):
+        r = self.run_ok("XCO JET")
+        d = r["data"]
+        self.assertEqual(d["groups"], ["Registered aircraft", "Flights, newest first"])
+        planes = [row for row in d["rows"] if row["_group"] == "Registered aircraft"]
+        flights = [row for row in d["rows"] if row["_group"] == "Flights, newest first"]
+        self.assertEqual([p_["reg"] for p_ in planes], ["N1XC"])  # N2XC opted out: not shown anywhere
+        self.assertEqual([(f["from"], f["to"]) for f in flights],
+                         [("KTEB Teterboro", "KSJC San Jose Intl"), ("KSJC San Jose Intl", "KTEB Teterboro")])
+        self.assertEqual(flights[0]["departed"], ago(2, "T12:00:00Z"))
+        self.assertEqual(flights[0]["model"], "GULFSTREAM G280")
+        self.assertEqual(planes[0]["year"], "2018")
+        self.assertEqual([c["key"] for c in d["columns"]], ["reg", "model", "year", "from", "to", "departed", "arrived"])
+        self.assertNotIn("N2XC", json.dumps(r))
+        self.assertIn("who was on board is not known and not inferred", d["note"])
+        self.assertIn("2 flights recorded", d["note"])
+        self.assertEqual(r["asof"], flights[0]["arrived"][:10])
+
+    def test_jet_sold_aircraft_and_missing_links(self):
+        links = self.home / "aviation_links.json"
+        old = links.read_text()
+        links.write_text(json.dumps({"XCO": {"registry_fetched_at": ago(0, "T01:00:00Z"), "aircraft": []}}))
+        try:
+            d = self.run_ok("XCO JET")["data"]  # a newer registry download no longer lists N1XC
+        finally:
+            links.write_text(old)
+        self.assertEqual([row for row in d["rows"] if row["_group"] == "Registered aircraft"], [])
+        self.assertEqual(len(d["columns"]), 7)  # its flights stay on record
+        self.assertIn("No aircraft are registered in Example Co's own name", d["note"])
+        state = self.home / "aviation_state.json"  # the poller saw N1XC's LADD flag: gone from JET, flights too
+        state.write_text(json.dumps({"aircraft": {}, "blocked": {"A00001": "FAA LADD/PIA"}}))
+        try:
+            d = self.run_ok("XCO JET")["data"]
+        finally:
+            state.unlink()
+        self.assertEqual(d["rows"], [])
+        self.assertNotIn("N1XC", json.dumps(d))
+        self.assertEqual(self.run_ok("WL")["data"]["rows"][2]["last"], 1)  # restored: one aircraft again
+        r = self.run_err("ZCO JET")
+        self.assertEqual(r["hint"], "python -m brain jets link ZCO")
+        self.assertEqual(self.run_err("^GSPC JET")["hint"], "^GSPC GP")
+
+    # ---------- SHIP ----------
+    def test_ship_table(self):
+        r = self.run_ok("SHIP")
+        d = r["data"]
+        self.assertEqual(d["groups"], ["Watched areas", "Other sampled areas"])
+        rows = {row["area"]: row for row in d["rows"]}
+        la = rows["LA-LONG-BEACH"]
+        prior = np.array(SHIP_COUNTS[:-1], dtype=float)
+        self.assertAlmostEqual(la["z"], (30 - prior.mean()) / prior.std(ddof=1))
+        self.assertEqual((la["vessels"], la["n"], la["window_s"], la["_group"]), (30, len(SHIP_COUNTS), 300, "Watched areas"))
+        self.assertEqual((la["cargo"], la["tanker"], la["moored"]), (15, 7, 15))
+        self.assertEqual(la["_cmds"], {"area": "SHIP LA-LONG-BEACH"})
+        self.assertEqual(la["_entity"], "AREA.LA-LONG-BEACH")
+        box = rows["TESTBOX"]
+        self.assertEqual((box["_group"], box["vessels"], box["z"]), ("Other sampled areas", 4, None))  # one sample: no z
+        self.assertIn("pleasure and sailing craft are never counted", d["note"])
+
+    def test_ship_area_chart(self):
+        r = self.run_ok("SHIP LA-LONG-BEACH")
+        d = r["data"]
+        self.assertEqual((r["view"], d["kind"], d["unit"], d["entity"]), ("chart", "count", "vessels", "AREA.LA-LONG-BEACH"))
+        self.assertEqual([x["value"] for x in d["series"]], SHIP_COUNTS)
+        self.assertEqual(d["series"][-1]["parts"]["cargo"], 15)
+        self.assertTrue(all(x["cite"] for x in d["series"]))
+        st = d["stats"]
+        self.assertEqual((st["last"], st["high"], st["low"], st["n"], st["z_samples"]), (30, 30, 9, 14, 13))
+        self.assertAlmostEqual(st["mean"], float(np.mean(SHIP_COUNTS)))
+        self.assertEqual(st["high_date"], d["series"][-1]["date"])
+        self.assertIn("SHIP — LA-LONG-BEACH", r["title"])
+        self.assertEqual(self.run_err("SHIP HOUSTON")["hint"], "python -m brain watch add area HOUSTON")
+        self.assertIn("unknown area NOPE", self.run_err("SHIP NOPE")["error"])
+        self.assertEqual(self.run_err("SHIP A B")["hint"], "SHIP A")
+        self.assertIn("not an area name", self.run_err("SHIP .X")["error"])
+
+    def test_ship_chart_downsamples(self):
+        many = [ships("BIGAREA", 10 + i % 5, (TODAY - pd.Timedelta(minutes=15 * (2000 - i))).strftime("%Y-%m-%dT%H:%M:%SZ"))
+                for i in range(2000)]
+        self.bank.add_many(many)
+        d = self.run_ok("SHIP BIGAREA")["data"]
+        self.assertLessEqual(len(d["series"]), data.MAX_POINTS)
+        self.assertEqual((d["series"][0]["date"], d["series"][-1]["date"]), (many[0].known_at, many[-1].known_at))
+        self.assertEqual(d["stats"]["n"], 2000)
+
+    # ---------- CAM ----------
+    def test_cam(self):
+        d = self.run_ok("CAM")["data"]
+        self.assertEqual(d["groups"], ["Depot · XCO", "Other sampled cameras"])
+        rows = {row["camera"]: row for row in d["rows"]}
+        main = rows["TFL.00001.00001"]
+        prior = np.array(CAM_COUNTS[:-1], dtype=float)
+        self.assertAlmostEqual(main["z"], (CAM_COUNTS[-1] - prior.mean()) / prior.std(ddof=1))
+        self.assertEqual((main["vehicles"], main["car"], main["n"], main["name"]), (21, 19, 12, "Example Rd / Depot"))
+        self.assertEqual(main["_cmds"], {"camera": "CAM TFL.00001.00001"})
+        self.assertEqual(rows["TFL.00001.00002"]["n"], 0)  # watched, never sampled
+        self.assertNotIn("vehicles", rows["TFL.00001.00002"])
+        self.assertEqual(rows["TFL.00009.00009"]["_group"], "Other sampled cameras")
+        self.assertIn("no people, faces or number plates", d["note"])
+        placeholder = camera("TFL.00009.00010", 0, "2026-10-12T10:00:00Z")  # a provider's "unavailable" frame
+        self.bank.add(placeholder)
+        self.bank.downgrade(placeholder.entity, placeholder.id, "placeholder frame")
+        self.assertNotIn("TFL.00009.00010", {row["camera"] for row in self.run_ok("CAM")["data"]["rows"]})
+
+    def test_cam_chart(self):
+        for line in ("CAM TFL.00001.00001", "CAM cam.tfl.00001.00001"):
+            r = self.run_ok(line)
+            self.assertEqual((r["view"], r["data"]["kind"], r["data"]["unit"]), ("chart", "count", "vehicles"))
+            self.assertEqual([x["value"] for x in r["data"]["series"]], CAM_COUNTS)
+            self.assertEqual(set(r["data"]["series"][0]["parts"]), {"car", "truck", "bus", "motorcycle"})
+        self.assertEqual(self.run_err("CAM TFL.00001.00002")["hint"], "INGEST WATCH")
+        self.assertEqual(self.run_err("CAM TFL.7")["hint"], "python -m brain cams sample TFL.7")
+        self.assertIn("not a camera id", self.run_err("CAM ../X")["error"])
+
+    # ---------- WL ----------
+    def test_wl(self):
+        r = self.run_ok("WL")
+        d = r["data"]
+        self.assertEqual(d["groups"], ["Tickers", "Company aircraft", "Port areas", "Camera sites"])
+        by = {(row["_group"], row["item"]): row for row in d["rows"]}
+        xco = by[("Tickers", "XCO")]
+        self.assertAlmostEqual(xco["last"], self.syn["px"]["XCO"][-1], places=4)
+        self.assertAlmostEqual(xco["chg_1d"], self.syn["px"]["XCO"][-1] / self.syn["px"]["XCO"][-2] - 1, places=6)
+        self.assertEqual((xco["name"], xco["measure"], xco["_ticker"]), ("Example Co", "close", "XCO"))
+        self.assertTrue(xco["alert"].startswith("XCO insider buying"))  # the aircraft alert belongs to its own row
+        self.assertEqual(xco["_cites"]["alert"], self.syn["alerts"][0].id[:8])
+        self.assertIsNone(by[("Tickers", "SPY")]["alert"])
+        news = alert("XCO", "headline", "info", "XCO headline: something", ago(0, "T00:00:01Z"))
+        self.bank.add(news)  # newer, but only info: the insider alert stays the row's
+        try:
+            again = {(row["_group"], row["item"]): row for row in self.run_ok("WL")["data"]["rows"]}
+            self.assertTrue(again[("Tickers", "XCO")]["alert"].startswith("XCO insider buying"))
+        finally:
+            self.bank.downgrade("XCO", news.id, "test fixture")
+        jets = by[("Company aircraft", "XCO")]
+        self.assertEqual((jets["last"], jets["_digits"], jets["_cmds"]), (1, 0, {"item": "XCO JET"}))
+        self.assertTrue(jets["alert"].startswith("XCO aircraft N1XC landed"))
+        area = by[("Port areas", "LA-LONG-BEACH")]
+        self.assertEqual((area["last"], area["_entity"], area["_cmds"]), (30, "AREA.LA-LONG-BEACH", {"item": "SHIP LA-LONG-BEACH"}))
+        self.assertTrue(area["alert"].startswith("AREA.LA-LONG-BEACH: 30 vessels"))
+        cam = by[("Camera sites", "TFL.00001.00001")]
+        self.assertEqual((cam["last"], cam["name"]), (21, "Depot · XCO"))
+        self.assertEqual([c["key"] for c in d["columns"]],
+                         ["item", "name", "last", "chg_1d", "alert", "alert_at", "measure", "date"])
+        self.assertIsNone(by[("Camera sites", "TFL.00001.00002")]["last"])
+        self.assertIn("3 unacknowledged alerts (ALRT)", d["note"])
+        self.assertTrue(next(c for c in d["columns"] if c["key"] == "alert")["nowrap"])
+        self.assertIn("a 1-day move of 5% or more", d["note"])
+
+    def test_writes_need_the_server(self):
+        for line in ("WL ADD AAPL", "WL DEL XCO", "ALRT ACK ALL", "ALRT ACK abcd"):
+            r = self.run_err(line)
+            self.assertIn("runs only from the terminal's own command line", r["error"])
+            self.assertEqual(r["hint"], line.split()[0])
+        self.assertTrue(data.is_write(parse("WL ADD AAPL")))
+        self.assertFalse(data.is_write(parse("WL")))
+        self.assertFalse(data.is_write(parse("ALRT")))
+        from brain import watch
+        self.assertEqual(watch.load()["tickers"], ["XCO", "SPY"])  # nothing changed
+
+    def test_bad_arguments(self):
+        self.assertEqual(self.run_err("WL FOO")["hint"], "WL")
+        self.assertEqual(self.run_err("ALRT FOO")["hint"], "ALRT")
+        for line in ("ALRT ACK", "ALRT ACK xyz!", "ALRT ACK 12", "ALRT ACK ab12 cd34"):
+            self.assertIn("ALRT ACK takes one alert id", self.run_err(line, writes=True)["error"], line)
+        self.assertIn("needs tickers", self.run_err("WL ADD", writes=True)["error"])
+
+    # ---------- ALRT ----------
+    def test_alrt(self):
+        r = self.run_ok("ALRT")
+        d = r["data"]
+        self.assertEqual([c["key"] for c in d["columns"]], ["new", "at", "severity", "entity", "rule", "message", "ack"])
+        self.assertEqual([c["type"] for c in d["columns"]][:3], ["flag", "date", "severity"])
+        times = [row["at"] for row in d["rows"]]
+        self.assertEqual(times, sorted(times, reverse=True))
+        self.assertEqual((d["unacked"], d["high"]), (3, 2))
+        self.assertTrue(all(row["new"] == "NEW" and row["ack"] == "ACK" for row in d["rows"]))
+        area = d["rows"][0]
+        self.assertEqual((area["entity"], area["severity"], area["rule"]), ("AREA.LA-LONG-BEACH", "high", "ships"))
+        self.assertEqual(area["_cmds"]["entity"], "SHIP LA-LONG-BEACH")
+        self.assertTrue(area["_cmds"]["ack"].startswith("ALRT ACK ") and len(area["_cmds"]["ack"].split()[-1]) == 12)
+        self.assertEqual(d["rows"][1]["_ticker"], "XCO")
+        self.assertEqual(r["asof"], times[0][:10])
+        self.assertIn("3 of 3 unacknowledged", d["note"])
+
+    def test_alrt_puts_high_before_info_within_one_check(self):
+        at = ago(0, "T00:00:02Z")
+        same = [alert("XCO", "headline", "info", "XCO headline: zzz", at), alert("XCO", "filing", "high", "XCO filed 8-K", at),
+                alert("XCO", "price_move", "notice", "XCO -6.0%", at)]
+        self.bank.add_many(same)
+        try:
+            rows = self.run_ok("ALRT")["data"]["rows"]
+        finally:
+            for f in same:
+                self.bank.downgrade("XCO", f.id, "test fixture")
+        self.assertEqual([r["severity"] for r in rows[:3]], ["high", "notice", "info"])
+        self.assertEqual(rows[3]["at"], self.syn["alerts"][2].known_at)  # older checks after
+
+    def test_no_nan_anywhere(self):
+        for line in ("XCO INS", "XCO ERN", "XCO JET", "SHIP", "SHIP LA-LONG-BEACH", "CAM", "CAM TFL.00001.00001", "WL",
+                     "ALRT"):
+            self.run_ok(line)
+
+
+class V2WritesTest(V2Base):
+    """Commands that change the watchlist and the alert state, as the server runs them."""
+
+    def test_wl_add_and_del(self):
+        from brain import watch
+        r = self.run_ok("WL ADD nvda aapl nvda", writes=True)
+        self.assertEqual((r["fn"], r["args"]), ("WL", ["ADD", "NVDA", "AAPL", "NVDA"]))
+        self.assertEqual(r["title"], "WL — watchlist · added NVDA, AAPL")
+        self.assertEqual(watch.load()["tickers"], ["XCO", "SPY", "NVDA", "AAPL"])
+        items = [row["item"] for row in r["data"]["rows"] if row["_group"] == "Tickers"]
+        self.assertEqual(items, ["XCO", "SPY", "NVDA", "AAPL"])
+        r = self.run_ok("WL DEL NVDA AAPL ZZZ", writes=True)
+        self.assertEqual(r["title"], "WL — watchlist · removed NVDA, AAPL; not on it: ZZZ")
+        self.assertEqual(watch.load()["tickers"], ["XCO", "SPY"])
+        self.assertIn("is not a ticker", self.run_err("WL ADD A;B", writes=True)["error"])
+
+    def test_wl_with_a_broken_file_is_an_error_and_is_kept(self):
+        from brain import watch
+        p = watch.watchlist_path()
+        old = p.read_text()
+        p.write_text("{not json")
+        try:
+            for line in ("WL", "WL ADD AAPL", "SHIP", "CAM"):
+                r = self.run_err(line, writes=line.startswith("WL ADD"))
+                self.assertIn("is not valid JSON", r["error"])
+            self.assertEqual(p.read_text(), "{not json")  # never overwritten
+        finally:
+            p.write_text(old)
+
+    def test_ack_one_then_all(self):
+        from brain import watch
+        state = watch.state_path()
+        try:
+            first = self.syn["alerts"][0]
+            r = self.run_ok(f"ALRT ACK {first.id[:10]}", writes=True)
+            self.assertEqual(r["title"], f"ALRT — alerts · acknowledged {first.id[:8]}")
+            d = r["data"]
+            self.assertEqual(d["unacked"], 2)
+            row = next(x for x in d["rows"] if x["_cite"] == first.id[:8])
+            self.assertEqual((row["new"], row["ack"], row.get("_dim"), "ack" in row["_cmds"]), ("", None, True, False))
+            self.assertIn(first.id, watch.acked())
+            self.assertIn("2 unacknowledged alerts", self.run_ok("WL")["data"]["note"])
+            r = self.run_err("ALRT ACK 0000ffff", writes=True)
+            self.assertEqual((r["error"], r["hint"]), ("no alert with id 0000ffff", "ALRT"))
+            r = self.run_ok("ALRT ACK ALL", writes=True)
+            self.assertEqual((r["title"], r["data"]["unacked"]), ("ALRT — alerts · acknowledged 2 alerts", 0))
+            self.assertTrue(all(x.get("_dim") for x in r["data"]["rows"]))
+        finally:
+            state.unlink(missing_ok=True)
+
+
+class V2EmptyHomeTest(TempHome):
+    def test_global_functions_say_what_to_do(self):
+        with mock.patch.object(config, "LEDGER", Path(self._tmp.name) / "none.jsonl"):
+            for line, words in (("SHIP", "No port areas are watched or sampled yet. Built-in areas: LA-LONG-BEACH"),
+                                ("CAM", "No camera sites are watched or sampled yet"),
+                                ("WL", "The watchlist is empty. WL ADD AAPL adds a ticker"),
+                                ("ALRT", "No alerts yet")):
+                r = data.run_line(self.bank, line)
+                self.assertTrue(r["ok"], (line, r.get("error")))
+                self.assertEqual(r["data"]["rows"], [])
+                self.assertIn(words, r["data"]["note"])
+                json.dumps(r, allow_nan=False)
+            self.assertEqual(data.run_line(self.bank, "ALRT")["data"]["unacked"], 0)
+            self.assertEqual(data.run_line(self.bank, "AAPL INS")["hint"], "INGEST AAPL")
+            self.assertEqual(data.run_line(self.bank, "AAPL ERN")["hint"], "INGEST AAPL")
 
 
 if __name__ == "__main__":

@@ -739,6 +739,20 @@ def refresh(bank: Bank, log=print) -> dict:
     return out
 
 
+def summary(out: dict) -> str:
+    """refresh's result as one line: what each source added ("-" when it did not run or failed)."""
+    def n(v) -> str:
+        return "-" if v is None else f"+{v}"
+    parts = [f"{t} " + " ".join(f"{k} {n(v)}" for k, v in c.items()) for t, c in (out.get("tickers") or {}).items()]
+    if out.get("aircraft") is not None:
+        parts.append(f"flights {n(out['aircraft'])}")
+    parts += [f"{a} vessels {v}" for a, v in (out.get("areas") or {}).items() if v is not None]
+    if out.get("cameras") is not None:
+        parts.append(f"camera samples {n(out['cameras'])}")
+    bad = len(out.get("errors") or []) + len(out.get("skipped") or [])
+    return ("; ".join(parts) or "nothing watched") + (f" ({bad} skipped or failed, above)" if bad else "")
+
+
 class _Skip(Exception):
     """Raised by refresh's guard when a source cannot run here, so its remaining calls are not tried."""
 
@@ -779,7 +793,8 @@ def run(every_s: int = 900, log=print, *, cycles: int | None = None, sleep=time.
             start = time.monotonic()
             bank = Bank()  # a fresh one each cycle: memory stays bounded, other processes' writes are read
             try:
-                refresh(bank, log=log)
+                got = refresh(bank, log=log)
+                log(f"{now_iso()[:16]}Z refreshed: {summary(got)}")
             except Exception as e:
                 log(f"refresh failed ({type(e).__name__}: {e})")
             try:
@@ -831,9 +846,16 @@ def _print_watchlist(w: dict) -> None:
     print(f"rules        {'  '.join(shown)}")
 
 
+def _split_kind(values: list[str]) -> tuple[str, list[str]]:
+    """``[KIND] VALUE...``: the kind word may be left out for tickers (``watch add AAPL MSFT``). A lone
+    kind word is a ticker (SITE is SiteOne Landscape Supply)."""
+    if len(values) > 1 and values[0].lower() in KINDS:
+        return _kind(values[0]), values[1:]
+    return "tickers", values
+
+
 def _cmd_add(a) -> int:
-    vals = a.values
-    kind = _kind(a.kind)
+    kind, vals = _split_kind(a.values)
     try:
         if kind in ("tickers", "aircraft_of"):
             for v in vals:
@@ -865,8 +887,8 @@ def _cmd_add(a) -> int:
 
 
 def _cmd_remove(a) -> int:
-    kind = _kind(a.kind)
-    vals = [" ".join(a.values)] if kind == "sites" else a.values
+    kind, vals = _split_kind(a.values)
+    vals = [" ".join(vals)] if kind == "sites" else vals
     status = 0
     for v in vals:
         try:
@@ -966,9 +988,9 @@ def _cmd_alerts(a) -> int:
 def add_cli(sub) -> None:
     p = sub.add_parser("watch", help="watchlist: tickers, company aircraft, port areas, camera sites; run the loop")
     ws = p.add_subparsers(dest="watch_cmd", required=True)
-    s = ws.add_parser("add", help="add to the watchlist: ticker T..., aircraft T..., area NAME, site NAME")
-    s.add_argument("kind", choices=["ticker", "aircraft", "area", "site"])
-    s.add_argument("values", nargs="+")
+    s = ws.add_parser("add", help="add to the watchlist: [ticker] T..., aircraft T..., area NAME, site NAME")
+    s.add_argument("values", nargs="+", metavar="[KIND] VALUE",
+                   help="KIND is ticker (the default), aircraft, area or site")
     s.add_argument("--bbox", nargs=4, type=float, metavar=("LAT_MIN", "LON_MIN", "LAT_MAX", "LON_MAX"),
                    help="area: its box, when it is not a built-in port area")
     s.add_argument("--seconds", type=int, help="area: AIS listening window per sample (default 300)")
@@ -979,8 +1001,8 @@ def add_cli(sub) -> None:
     s.add_argument("--max", type=int, default=3, help="site --near: at most this many cameras (default 3)")
     s.set_defaults(fn=_cmd_add)
     s = ws.add_parser("remove", help="take an entry off the watchlist (alerts already written stay)")
-    s.add_argument("kind", choices=["ticker", "aircraft", "area", "site"])
-    s.add_argument("values", nargs="+")
+    s.add_argument("values", nargs="+", metavar="[KIND] VALUE",
+                   help="KIND is ticker (the default), aircraft, area or site")
     s.set_defaults(fn=_cmd_remove)
     s = ws.add_parser("list", help="show the watchlist and its rules")
     s.add_argument("--json", action="store_true")

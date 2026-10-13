@@ -548,3 +548,19 @@ class CliTest(WatchTest):
         self.assertEqual(self.cli("alerts", "ack", aid[:6])[0], 0)
         self.assertEqual(self.cli("alerts", "list", "--unacked")[1].strip(), "no unacknowledged alerts")
         self.assertEqual(self.cli("alerts", "ack-all")[1].strip(), "0 alerts acknowledged")
+
+    def test_refresh_summary(self):
+        self.assertEqual(watch.summary({}), "nothing watched")
+        out = {"tickers": {"X": {"filings": 2, "prices": None}}, "aircraft": 0, "areas": {"LA": 12},
+               "cameras": None, "skipped": ["port areas skipped"], "errors": []}
+        self.assertEqual(watch.summary(out), "X filings +2 prices -; flights +0; LA vessels 12 (1 skipped or failed, above)")
+
+    def test_kind_defaults_to_ticker(self):
+        self.assertEqual(self.cli("watch", "add", "aapl", "msft")[0], 0)
+        self.assertEqual(self.cli("watch", "add", "site")[0], 0)  # a lone kind word is a ticker (SiteOne)
+        self.assertEqual(self.cli("watch", "add", "aircraft", "aapl")[0], 0)
+        w = watch.load()
+        self.assertEqual((w["tickers"], w["aircraft_of"]), (["AAPL", "MSFT", "SITE"], ["AAPL"]))
+        self.assertEqual(self.cli("watch", "remove", "msft")[0], 0)
+        self.assertEqual(self.cli("watch", "remove", "ticker", "site")[0], 0)
+        self.assertEqual(watch.load()["tickers"], ["AAPL"])

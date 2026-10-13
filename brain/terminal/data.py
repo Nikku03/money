@@ -17,6 +17,7 @@ import json
 import math
 import re
 from collections import Counter
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -27,7 +28,7 @@ from brain.metrics import PriceBook
 from brain.sources import fred, treasury
 from brain.terminal.commands import (FUNCTIONS, KEYS, RANGE_SHAPE, RANGES, TICKER, Command, CommandError, parse,
                                      suggest)
-from brain.timeutil import days_between, today
+from brain.timeutil import days_between, norm_known_at, today
 
 MAX_POINTS = 1500
 RANGE_MONTHS = {"1M": 1, "3M": 3, "6M": 6, "1Y": 12, "2Y": 24, "5Y": 60, "10Y": 120}
@@ -155,10 +156,12 @@ def _table(columns: list[dict], rows: list[dict], note: str = "", groups: list[s
     return {"columns": columns, "rows": rows, "groups": groups, "note": note}
 
 
-def _col(key: str, label: str, type_: str = "text", digits: int | None = None) -> dict:
+def _col(key: str, label: str, type_: str = "text", digits: int | None = None, nowrap: bool = False) -> dict:
     c = {"key": key, "label": label, "type": type_}
     if digits is not None:
         c["digits"] = digits
+    if nowrap:  # long text is cut with an ellipsis (full text in the tooltip) rather than wrapped
+        c["nowrap"] = True
     return c
 
 
@@ -397,7 +400,7 @@ def _cf(bank: Bank, cmd: Command) -> dict:
     cols = [_col("date", "Date", "date"), _col("form", "Form"), _col("desc", "Description"), _col("link", "Document", "link")]
     note = (f"{len(rows)} of {len(shown)} {'form ' + want + ' ' if want else ''}filings, newest first; "
             f"{len(fil)} in the bank. "
-            "Date is when the filing became public. Form 4 contents are not parsed yet.")
+            "Date is when the filing became public. INS lists the open-market trades in Forms 4 and 5.")
     name = _name(view, t)
     what = f"filings{' ' + want if want else ''}"
     return _ok(cmd, _title(t, name, what), rows[0]["date"] if rows else fil[0].known_at[:10], "table",
@@ -641,29 +644,46 @@ def _eco(bank: Bank, cmd: Command) -> dict:
 
 
 # ---------- RES ----------
+def _universe_name(path) -> str:
+    """'universe/us_broad.json' -> 'us_broad'."""
+    from brain.research.hypotheses import COMMON
+    return Path(str(path or COMMON["universe"])).stem
+
+
 def _res(bank: Bank, cmd: Command) -> dict:
     from brain.research import ledger
     from brain.research import run as research_run
     recs = ledger.read() if config.LEDGER.exists() else []
     declared = {r["id"]: r for r in recs if r["op"] == "declare"}
     results = research_run.verdicts() if recs else []
-    rows = [{"id": r["id"], "claim": declared.get(r["id"], {}).get("spec", {}).get("claim", ""),
+    rows = [{"id": r["id"], "universe": _universe_name(r.get("universe")),
+             "claim": declared.get(r["id"], {}).get("spec", {}).get("claim", ""),
              "test_net": r["test"]["mean_net_excess"], "perm_p": r["test"]["perm_p"], "bh_q": r["bh_q"],
              "verdict": r["verdict"]} for r in results]
     ran = {r["id"] for r in results}
-    rows += [{"id": hid, "claim": d["spec"].get("claim", ""), "test_net": None, "perm_p": None, "bh_q": None,
-              "verdict": "not run"} for hid, d in declared.items() if hid not in ran]
-    cols = [_col("id", "Hypothesis"), _col("claim", "Claim"), _col("test_net", "TEST net/mo", "pct"),
-            _col("perm_p", "Perm p", "number", 4), _col("bh_q", "BH q", "number", 3), _col("verdict", "Verdict", "verdict")]
+    rows += [{"id": hid, "universe": _universe_name(d["spec"].get("universe")), "claim": d["spec"].get("claim", ""),
+              "test_net": None, "perm_p": None, "bh_q": None, "verdict": "not run"}
+             for hid, d in declared.items() if hid not in ran]
+    cols = [_col("id", "Hypothesis"), _col("universe", "Universe"), _col("claim", "Claim"),
+            _col("test_net", "TEST net/mo", "pct"), _col("perm_p", "Perm p", "number", 4),
+            _col("bh_q", "BH q", "number", 3), _col("verdict", "Verdict", "verdict")]
     if results:
-        ctl, ctx = results[0]["controls"], results[0]["context"]
-        note = (f"Controls {'passed' if ctl['pass'] else 'FAILED: no verdict is valid'} (oracle TEST p = "
-                f"{ctl['oracle_test_perm_p']:.4f}; {ctl['random_false_positive_rate'] * 100:.1f}% of "
-                f"{ctl['n_random']} random signals reached p < 0.05). Gate: TEST net excess > 0, permutation p < 0.05, "
-                f"BH q < 0.10. Survivorship: over TEST the equal-weight universe returned "
-                f"{ctx['universe_ew_ann_return_test'] * 100:+.1f}% a year against SPY's "
-                f"{ctx['spy_ann_return_test'] * 100:+.1f}%; members were chosen by today's market value, so any PASS "
-                "is an upper bound.")
+        # Controls and survivorship belong to a universe's panel: say each one's once.
+        by_universe: dict[str, dict] = {}
+        for r in results:
+            by_universe.setdefault(_universe_name(r.get("universe")), r)
+        parts = []
+        for name, r in by_universe.items():
+            ctl, ctx = r["controls"], r["context"]
+            parts.append(f"Controls {'passed' if ctl['pass'] else 'FAILED: no verdict on it is valid'} on {name} "
+                         f"(oracle TEST p = {ctl['oracle_test_perm_p']:.4f}; "
+                         f"{ctl['random_false_positive_rate'] * 100:.1f}% of {ctl['n_random']} random signals reached "
+                         f"p < 0.05); over TEST its equal-weight universe returned "
+                         f"{ctx['universe_ew_ann_return_test'] * 100:+.1f}% a year against SPY's "
+                         f"{ctx['spy_ann_return_test'] * 100:+.1f}%.")
+        note = (" ".join(parts) + " Gate: TEST net excess > 0, permutation p < 0.05, BH q < 0.10 (over every "
+                "hypothesis with a result). Universe members were chosen by today's market value, so any PASS is an "
+                "upper bound.")
     else:
         note = "No results in the ledger yet: declare, commit, then `python -m brain research run`."
     asof = max((r["at"][:10] for r in recs if r["op"] == "result"), default=None)
@@ -683,18 +703,665 @@ def _clm(bank: Bank, cmd: Command) -> dict:
     return _ok(cmd, "CLM — web claims scored by source", today(), "table", _table(cols, rows, note, []))
 
 
+# ---------- shared by the v2 functions ----------
+def _money(x: float | None) -> str:
+    """$4.95T, $1.79M, $502,855: the note's way of writing a dollar amount."""
+    if x is None or not math.isfinite(x):
+        return "n/a"
+    a = abs(x)
+    for div, unit in ((1e12, "T"), (1e9, "B"), (1e6, "M")):
+        if a >= div:
+            return f"${x / div:,.2f}{unit}"
+    return f"${x:,.0f}"
+
+
+def _research_tickers() -> set[str]:
+    """Tickers of every research universe file (the ones `brain insiders` reads by default)."""
+    from brain.universe import BROAD
+    out: set[str] = set()
+    for p in (config.UNIVERSE, BROAD):
+        try:
+            out |= {str(t).upper() for t in json.loads(p.read_text())["tickers"]}
+        except (OSError, ValueError, KeyError, TypeError):
+            pass
+    return out
+
+
+def _research_line(signal: str) -> str:
+    """One sentence on the tested hypothesis behind a signal, quoted from the ledger as it stands."""
+    from brain.research.hypotheses import HYPOTHESES
+    hid = next((h["id"] for h in HYPOTHESES if h["signal"] == signal), None)
+    if hid is None:
+        return ""
+    v = None
+    if config.LEDGER.exists():
+        from brain.research import run as research_run
+        v = next((r for r in research_run.verdicts() if r["id"] == hid), None)
+    if v is None:
+        return f" Research: {hid} has no result yet (RES)."
+    net, p = v["test"].get("mean_net_excess"), v["test"].get("perm_p")
+    nums = []
+    if isinstance(net, (int, float)) and math.isfinite(net):
+        nums.append(f"TEST net excess {net * 100:+.2f}% a month")
+    if isinstance(p, (int, float)) and math.isfinite(p):
+        nums.append(f"permutation p {p:.3f}")
+    return f" Research: {hid} {v['verdict']}" + (f" ({', '.join(nums)})" if nums else "") + "; see RES."
+
+
+def _alt_entities(bank: Bank, prefix: str) -> list[str]:
+    """Bank entities whose name starts with ``prefix`` (AREA., CAM.), from their shards' first records."""
+    out = []
+    for p in sorted(bank.root.glob(prefix + "*.jsonl")):
+        with p.open(errors="replace") as fh:
+            line = fh.readline()
+        try:
+            rec = json.loads(line)
+            name = rec.get("fact", rec).get("entity")
+        except (ValueError, AttributeError):
+            name = None
+        name = name if isinstance(name, str) and name.upper().startswith(prefix) else p.stem
+        out.append(name.upper())
+    return list(dict.fromkeys(out))
+
+
+def _samples(view: View, entity: str, attr: str) -> list[Fact]:
+    return sorted(view.facts(entity, attr), key=lambda f: (f.known_at, f.id))
+
+
+def _zscore(facts: list[Fact], same) -> tuple[float | None, int]:
+    """The newest sample against the previous comparable ones, the way the alert rules read it
+    (``brain.watch``: up to 30 samples, at least 10, a spread above zero). (z, samples compared)."""
+    from brain import watch
+    if not facts:
+        return None, 0
+    last = facts[-1]
+    prior = [g for g in facts[:-1] if same(g, last)][-watch.Z_WINDOW:]
+    if len(prior) < watch.Z_MIN:
+        return None, len(prior)
+    vals = np.array([float(g.value) for g in prior])
+    sd = float(vals.std(ddof=1))
+    if not sd > 0:
+        return None, len(prior)
+    return (float(last.value) - float(vals.mean())) / sd, len(prior)
+
+
+def _same_ships(g: Fact, f: Fact) -> bool:
+    return (g.context.get("window_s"), g.context.get("bbox")) == (f.context.get("window_s"), f.context.get("bbox"))
+
+
+def _same_camera(g: Fact, f: Fact) -> bool:
+    return (g.context.get("detector"), g.context.get("threshold")) == (f.context.get("detector"), f.context.get("threshold"))
+
+
+def _count_chart(cmd: Command, title: str, entity: str, name: str, facts: list[Fact], unit: str, parts, same) -> dict:
+    """View ``chart`` with ``kind: "count"``: one point per sample (vessels in an area, vehicles in a frame)."""
+    vals = np.array([float(f.value) for f in facts])
+    idx = downsample(len(facts))
+    pts = [{"date": facts[i].known_at, "value": facts[i].value, "cite": cite(facts[i]),
+            "parts": {k: facts[i].context.get(k) for k in parts}} for i in idx]
+    hi, lo = int(np.argmax(vals)), int(np.argmin(vals))
+    z, compared = _zscore(facts, same)
+    stats = {"first": vals[0], "last": vals[-1], "high": vals[hi], "low": vals[lo], "high_date": facts[hi].known_at,
+             "low_date": facts[lo].known_at, "mean": float(vals.mean()), "n": len(facts), "z": z, "z_samples": compared}
+    data = {"entity": entity, "name": name, "kind": "count", "unit": unit, "series": pts, "stats": stats,
+            "cite": cite(facts[-1]), "source": dict(facts[-1].source)}
+    return _ok(cmd, title, facts[-1].known_at[:10], "chart", data)
+
+
+def _watchlist() -> dict:
+    from brain import watch
+    try:
+        return watch.load()
+    except ValueError as e:  # a file that is not valid JSON: say so, never treat it as empty
+        raise UserError(str(e), "") from None
+
+
+def _not_market(t: str, what: str) -> None:
+    if markets.kind(t):
+        raise UserError(f"{what}; {t} is a market symbol ({markets.kind(t)})", f"{t} GP")
+
+
+def _company(bank: Bank, t: str, what: str) -> None:
+    """INS and JET are about a company that files with the SEC: not an index, not an ETF's prices alone."""
+    _not_market(t, what)
+    _require(bank, t)
+    if kind_of(bank, t) != "equity":
+        raise UserError(f"no SEC identity for {t} in the bank; {what}", _ingest_hint(t))
+
+
+# ---------- INS ----------
+INS_ROWS = 200
+ROLE_NAMES = {"officer": "officer", "director": "director", "ten_percent_owner": "10% owner", "other": "other"}
+
+
+def _role(c: dict) -> str:
+    rel = ", ".join(ROLE_NAMES.get(r, r) for r in str(c.get("relationship") or "").split(",") if r)
+    return rel + (f" ({c['title']})" if c.get("title") else "")
+
+
+def _insiders_read_for(view: View, t: str) -> bool:
+    """SEC's quarterly insider data sets have been read for this issuer (var/insiders_done.json holds
+    the CIKs read per quarter), so no trades means none were filed, not that nobody looked."""
+    f = view.latest(t, "identity.cik")
+    try:
+        cik = int(f.value) if f is not None else None
+        done = json.loads((config.home() / "insiders_done.json").read_text())
+    except (OSError, ValueError, TypeError):
+        return False
+    return cik is not None and any(isinstance(v, list) and cik in v for v in done.values())
+
+
+def _ins(bank: Bank, cmd: Command) -> dict:
+    from brain.sources import insiders
+    t = cmd.ticker
+    _company(bank, t, "INS lists insider trades in a company's own shares")
+    view = _view(bank)
+    fs = sorted(insiders.trades(view, t), key=lambda f: (f.known_at[:10], f.as_of, f.id), reverse=True)
+    if not fs and not _insiders_read_for(view, t):
+        hint = "INGEST INSIDERS" if t in _research_tickers() else f"python -m brain insiders {t}"
+        raise UserError(f"no insider trades for {t} in the bank", hint)
+    rows = [{"filed": f.known_at[:10], "traded": f.as_of, "owner": f.context.get("owner"), "relationship": _role(f.context),
+             "code": f.context.get("code"), "shares": f.value, "price": f.context.get("price"),
+             "value": f.context.get("value_usd"), "ownership": f.context.get("ownership"),
+             "_cite": cite(f), "_url": f.source.get("url")} for f in fs[:INS_ROWS]]
+    tot = insiders.buy_sell_totals(view, t, 90)
+    cut = norm_known_at((pd.Timestamp(view.t) - pd.Timedelta(days=90)).strftime("%Y-%m-%d"))
+    od = sum(float(f.context.get("value_usd") or 0.0) for f in fs
+             if f.known_at > cut and f.context.get("code") == "P" and insiders.is_officer_or_director(f))
+    note = (f"Filed in the 90 days to {view.t}: insiders bought {_money(tot['buy_usd'])} in {tot['buys']} trade"
+            f"{'s' if tot['buys'] != 1 else ''} and sold {_money(tot['sell_usd'])} in {tot['sells']}; officers and "
+            f"directors bought {_money(od)} (what the insider_buying signal measures). "
+            if fs else f"No open-market purchases or sales by {t}'s insiders are on file. ")
+    if len(fs) > INS_ROWS:
+        note += f"The newest {INS_ROWS} of {len(fs)} trades are shown. "
+    note += ("Open-market purchases (code P) and sales (S) from SEC Forms 4 and 5, newest filing first; awards, "
+             "option exercises, gifts, tax withholding and amendments are left out. Insiders appear in their public "
+             "role, as the filing states it. D/I: held directly or indirectly. History comes from SEC's quarterly "
+             "data sets (INGEST INSIDERS); Form 4s filed this quarter from live reads (INGEST WATCH reads them for "
+             "watched tickers).") + _research_line("insider_buying")
+    cols = [_col("filed", "Filed", "date"), _col("traded", "Traded", "date"), _col("owner", "Insider"),
+            _col("relationship", "Relationship"), _col("code", "Code"), _col("shares", "Shares", "number", 0),
+            _col("price", "Price", "number", 2), _col("value", "Value", "money"), _col("ownership", "D/I")]
+    what = "insider trades" + (f" · 90 days: bought {_money(tot['buy_usd'])}, sold {_money(tot['sell_usd'])}" if fs else "")
+    return _ok(cmd, _title(t, _name(view, t), what), rows[0]["filed"] if rows else None, "table",
+               _table(cols, rows, note, []))
+
+
+# ---------- ERN ----------
+def _ern(bank: Bank, cmd: Command) -> dict:
+    from brain import events
+    t = cmd.ticker
+    _not_market(t, "ERN reads a company's quarterly reports")
+    view = _view(bank)
+    book = PriceBook(bank, [t, "SPY"], asof=_now())
+    table = events.earnings_table(view, t, book)
+    if not table:
+        raise UserError(f"no quarterly EPS for {t} in the bank", _ingest_hint(t))
+    evs = {e.ref: e for e in events.earnings_events(view, t)}
+    rows = []
+    for r in table:
+        eps_refs = [x for x in r["cite"] if x not in evs]
+        ev = next((evs[x] for x in r["cite"] if x in evs), None)
+        cites = {"eps": eps_refs[0].partition("/")[2][:8]} if eps_refs else {}
+        if ev is not None:
+            cites.update({k: cite(ev) for k in ("release", "car_3d", "drift_20d", "drift_60d")})
+        rows.append({"period_end": r["period_end"], "filed": r["filed"], "release": ev.known_at[:10] if ev else None,
+                     "eps": r["eps"], "eps_from": "FY − 9M" if len(eps_refs) > 1 else "",
+                     "eps_yoy": r["eps_yoy"], "sue": r["sue"], "car_3d": r["car_3d"], "drift_20d": r["drift_20d"],
+                     "drift_60d": r["drift_60d"], "_cite": cites.get("eps"), "_cites": cites,
+                     "_url": ev.source.get("url") if ev else None, "_refs": list(r["cite"])})
+    cols = [_col("period_end", "Quarter end", "date"), _col("filed", "EPS filed", "date"),
+            _col("release", "Release", "date"), _col("eps", "EPS", "number", 2), _col("eps_from", "Derived", "flag"),
+            _col("eps_yoy", "EPS YoY", "pct", 1), _col("sue", "SUE", "signed", 2), _col("car_3d", "3-day", "pct"),
+            _col("drift_20d", "Drift 20d", "pct"), _col("drift_60d", "Drift 60d", "pct")]
+    note = ("Quarterly EPS from 10-Q and 10-K XBRL (diluted, else basic), on today's share basis; a fourth quarter "
+            "not reported on its own is the fiscal year minus the nine months (flagged FY − 9M). EPS YoY: the "
+            "change from the same quarter a year earlier, over that quarter's absolute EPS. SUE: the same change "
+            "divided by its standard deviation over the 8 quarters before (at least 6 needed). Release: the first "
+            "earnings 8-K (item 2.02) within 90 days after the quarter ended. Reactions are the stock's total "
+            "return minus SPY's: 3-day from the session before the release to the session after, drifts over "
+            "sessions +2 to +21 and +2 to +61; blank until the window has closed.")
+    for sym in (t, "SPY"):
+        if not book.has(sym):
+            note += f" No prices for {sym}, so no reactions: INGEST {sym}."
+    note += _research_line("earnings_reaction") + _research_line("sue")
+    return _ok(cmd, _title(t, _name(view, t), "earnings"), rows[0]["filed"], "table", _table(cols, rows, note, []))
+
+
+# ---------- JET ----------
+def _blocked_hexes() -> set[str]:
+    """Mode S codes the poller found in the FAA's LADD or PIA programs (the owner asked not to be tracked)."""
+    try:
+        state = json.loads((config.home() / "aviation_state.json").read_text())
+        return {str(h).lower() for h in (state.get("blocked") or {})}
+    except (OSError, ValueError, AttributeError):
+        return set()
+
+
+def _aircraft(view: View, t: str) -> tuple[list[Fact], list[Fact], dict | None]:
+    """(registered aircraft, recorded flights, the registry link) for a company. Tails in the opt-out file
+    and aircraft the poller found in LADD/PIA are left out. A link made against a newer registry download
+    than the facts says which tails the company still owns."""
+    from brain.sources import aviation
+    try:
+        link = json.loads((config.home() / "aviation_links.json").read_text()).get(t)
+    except (OSError, ValueError, AttributeError):
+        link = None
+    out, blocked = aviation.optout(), _blocked_hexes()
+
+    def hidden(reg, hex_) -> bool:
+        return aviation.opted_out(reg, hex_, out) or str(hex_ or "").lower() in blocked
+    planes = [f for f in aviation.registered(view, t) if not hidden(f.value, f.context.get("hex"))]
+    if planes and isinstance(link, dict) and str(link.get("registry_fetched_at") or "") > max(f.known_at for f in planes):
+        owned = {str(a.get("reg")) for a in link.get("aircraft") or []}
+        planes = [f for f in planes if f.value in owned]  # sold since: the newer download no longer lists it
+    flights = [f for f in aviation.flights(view, t) if not hidden(f.context.get("reg"), f.context.get("hex"))]
+    return planes, flights, link if isinstance(link, dict) else None
+
+
+def _place(code, name) -> str | None:
+    if not code and not name:
+        return None
+    return f"{code or ''} {name or ''}".strip()
+
+
+JET_FLIGHTS = 50
+
+
+def _jet(bank: Bank, cmd: Command) -> dict:
+    t = cmd.ticker
+    _company(bank, t, "JET lists aircraft a company owns")
+    view = _view(bank)
+    planes, flights, link = _aircraft(view, t)
+    if not planes and not flights and link is None:
+        raise UserError(f"{t} has not been looked up in the FAA aircraft registry", f"python -m brain jets link {t}")
+    model = {f.value: f.context.get("model") for f in planes}
+    rows = [{"reg": f.value, "model": f.context.get("model"),
+             "year": str(f.context["year"]) if f.context.get("year") is not None else None,
+             "_group": "Registered aircraft", "_cite": cite(f), "_url": f.source.get("url")} for f in planes]
+    for f in flights[:JET_FLIGHTS]:
+        x = f.context
+        rows.append({"reg": x.get("reg") or x.get("hex"), "model": model.get(x.get("reg")),
+                     "from": _place(x.get("from"), x.get("from_name")), "to": _place(x.get("to") or f.value, x.get("to_name")),
+                     "departed": x.get("departed"), "arrived": x.get("arrived") or f.known_at,
+                     "_group": "Flights, newest first", "_cite": cite(f), "_url": f.source.get("url")})
+    name = _name(view, t) or t
+    reg_date = max([f.as_of for f in planes] + [str((link or {}).get("registry_fetched_at") or "")[:10]])
+    if planes:
+        note = (f"{len(planes)} aircraft registered to {name} itself in the FAA registry"
+                + (f" (download of {reg_date})" if reg_date else "") + ": a corporate registrant whose name matches the "
+                "company's SEC name exactly. ")
+    else:
+        note = f"No aircraft are registered in {name}'s own name in the FAA registry" + \
+               (f" (download of {reg_date}). " if reg_date else ". ")
+    try:
+        watched = t in _watchlist()["aircraft_of"]
+    except UserError:  # a broken watchlist file is WL's error to report; the registry still answers
+        watched = False
+    if watched:
+        note += (f"{len(flights)} flights recorded" + (f", the newest {JET_FLIGHTS} shown" if len(flights) > JET_FLIGHTS else "")
+                 + "; INGEST WATCH polls positions. ")
+    else:
+        note += (f"Flights are recorded only while {t} is on the watchlist's aircraft list "
+                 f"(python -m brain watch add aircraft {t}; then INGEST WATCH polls). ")
+    note += ("Individuals, trusts and other LLCs are never matched; aircraft in the FAA's privacy programs (LADD, PIA) "
+             "and tails in aviation_optout.txt are left out. Flights are airport to airport with times; who was on "
+             "board is not known and not inferred. Sources: FAA Aircraft Registry (public domain), adsb.lol (ODbL), "
+             "OurAirports.")
+    cols = [_col("reg", "Registration"), _col("model", "Model"), _col("year", "Year")]
+    if flights:
+        cols += [_col("from", "From"), _col("to", "To"), _col("departed", "Departed (UTC)", "date"),
+                 _col("arrived", "Arrived (UTC)", "date")]
+    dates = [r["arrived"][:10] for r in rows if r.get("arrived")] + ([reg_date] if reg_date else [])
+    return _ok(cmd, _title(t, name, "aircraft"), max(dates) if dates else None, "table",
+               _table(cols, rows, note, ["Registered aircraft", "Flights, newest first"]))
+
+
+# ---------- SHIP ----------
+AREA_NAME = re.compile(r"[A-Z0-9][A-Z0-9_-]{0,39}")
+SHIP_PARTS = ("cargo", "tanker", "other", "anchored", "moored", "underway")
+
+
+def _ship(bank: Bank, cmd: Command) -> dict:
+    from brain.sources import shipping
+    if len(cmd.args) > 1:
+        raise UserError("SHIP takes one area at a time", f"SHIP {cmd.args[0]}")
+    view = _view(bank)
+    w = _watchlist()
+    watched = [a["name"] for a in w["areas"]]
+    builtin = [a["name"] for a in shipping.AREAS]
+    if cmd.args:
+        name = cmd.args[0]
+        if not AREA_NAME.fullmatch(name):
+            raise UserError(f"'{name}' is not an area name", "SHIP")
+        facts = _samples(view, f"AREA.{name}", "ships.count")
+        if not facts:
+            if name in watched:
+                hint = "INGEST WATCH"
+            elif name in builtin:
+                hint = f"python -m brain watch add area {name}"
+            else:
+                raise UserError(f"unknown area {name}; built-in areas: {', '.join(builtin)}", "SHIP")
+            raise UserError(f"no vessel counts for {name} yet", hint)
+        return _count_chart(cmd, f"SHIP — {name} · vessels", f"AREA.{name}", name, facts, "vessels", SHIP_PARTS,
+                            _same_ships)
+    sampled = [e[len("AREA."):] for e in _alt_entities(bank, "AREA.")]
+    rows = []
+    for name in list(dict.fromkeys(watched + sampled)):
+        facts = _samples(view, f"AREA.{name}", "ships.count")
+        row = {"area": name, "_group": "Watched areas" if name in watched else "Other sampled areas",
+               "_entity": f"AREA.{name}", "_cmds": {"area": f"SHIP {name}"}, "n": len(facts)}
+        if facts:
+            f = facts[-1]
+            z, _ = _zscore(facts, _same_ships)
+            row.update({"vessels": f.value, "z": z, **{k: f.context.get(k) for k in SHIP_PARTS},
+                        "window_s": f.context.get("window_s"), "at": f.known_at, "_cite": cite(f),
+                        "_url": f.source.get("url")})
+        rows.append(row)
+    cols = [_col("area", "Area"), _col("vessels", "Vessels", "number", 0), _col("z", "z", "signed", 1)] + \
+           [_col(k, k.capitalize(), "number", 0) for k in SHIP_PARTS] + \
+           [_col("window_s", "Window s", "number", 0), _col("at", "Sampled (UTC)", "date"), _col("n", "Samples", "number", 0)]
+    note = ("Commercial vessels seen in each area's box during one AIS listening window (aisstream.io): cargo (AIS "
+            "types 70-79), tanker (80-89) and other; pleasure and sailing craft are never counted, and only the "
+            "counts are stored, never a vessel's identity or track. z: the newest count against up to 30 earlier "
+            "samples with the same window and box (10 needed). SHIP NAME charts an area; INGEST WATCH samples the "
+            "watched ones (a free AISSTREAM_API_KEY is needed); python -m brain watch add area NAME watches one.")
+    if not rows:
+        note = f"No port areas are watched or sampled yet. Built-in areas: {', '.join(builtin)}. " + note
+    times = [r["at"] for r in rows if r.get("at")]
+    return _ok(cmd, "SHIP — port areas", max(times)[:10] if times else None, "table",
+               _table(cols, rows, note, ["Watched areas", "Other sampled areas"]))
+
+
+# ---------- CAM ----------
+CAMERA_ID = re.compile(r"[A-Z]+\.[A-Z0-9._-]{1,100}")
+CAM_PARTS = ("car", "truck", "bus", "motorcycle")
+
+
+def _cam(bank: Bank, cmd: Command) -> dict:
+    if len(cmd.args) > 1:
+        raise UserError("CAM takes one camera id at a time", f"CAM {cmd.args[0]}")
+    view = _view(bank)
+    w = _watchlist()
+    if cmd.args:
+        cid = cmd.args[0].upper()
+        cid = cid[len("CAM."):] if cid.startswith("CAM.") else cid
+        if not CAMERA_ID.fullmatch(cid):
+            raise UserError(f"'{cmd.args[0]}' is not a camera id (e.g. TFL.00002.00865)", "CAM")
+        facts = _samples(view, f"CAM.{cid}", "camera.vehicles")
+        if not facts:
+            watched = any(c.upper() == cid for s in w["sites"] for c in s["cameras"])
+            raise UserError(f"no vehicle counts for camera {cid} yet",
+                            "INGEST WATCH" if watched else f"python -m brain cams sample {cid}")
+        label = facts[-1].context.get("name") or cid
+        return _count_chart(cmd, f"CAM — {cid} · {label} · vehicles", f"CAM.{cid}", label, facts, "vehicles",
+                            CAM_PARTS, _same_camera)
+    rows, seen = [], set()
+
+    def row(cid: str, group: str) -> dict:
+        facts = _samples(view, f"CAM.{cid}", "camera.vehicles")
+        r = {"camera": cid, "_group": group, "_entity": f"CAM.{cid}", "_cmds": {"camera": f"CAM {cid}"},
+             "n": len(facts)}
+        if facts:
+            f = facts[-1]
+            z, _ = _zscore(facts, _same_camera)
+            r.update({"name": f.context.get("name"), "vehicles": f.value, "z": z,
+                      **{k: f.context.get(k) for k in CAM_PARTS}, "at": f.known_at, "_cite": cite(f),
+                      "_url": f.source.get("url")})
+        return r
+
+    groups = []
+    for s in w["sites"]:
+        group = s["name"] + (f" · {s['ticker']}" if s.get("ticker") else "")
+        groups.append(group)
+        for c in s["cameras"]:
+            cid = c.upper()
+            if cid not in seen:
+                seen.add(cid)
+                rows.append(row(cid, group))
+    for e in _alt_entities(bank, "CAM."):
+        cid = e[len("CAM."):]
+        if cid not in seen:
+            seen.add(cid)
+            r = row(cid, "Other sampled cameras")
+            if r["n"]:  # an unwatched camera whose only samples were provider placeholders (downgraded): nothing to show
+                rows.append(r)
+    cols = [_col("camera", "Camera"), _col("name", "Name"), _col("vehicles", "Vehicles", "number", 0),
+            _col("z", "z", "signed", 1)] + [_col(k, k.capitalize(), "number", 0) for k in CAM_PARTS] + \
+           [_col("at", "Sampled (UTC)", "date"), _col("n", "Samples", "number", 0)]
+    note = ("Vehicles counted in one frame of each camera by an open detector (YOLOX, COCO classes car, truck, bus "
+            "and motorcycle, score 0.5 or more). Frames are processed in memory and never stored; no people, faces "
+            "or number plates are detected. Only official open traffic cameras: Transport for London JamCams "
+            "(Powered by TfL Open Data) and Caltrans CCTV. z: the newest count against up to 30 earlier samples by "
+            "the same detector (10 needed). CAM ID charts a camera; INGEST WATCH samples the watched sites "
+            "(needs opencv-python-headless); python -m brain watch add site NAME --near LAT LON watches a place.")
+    if not rows:
+        note = "No camera sites are watched or sampled yet. " + note
+    times = [r["at"] for r in rows if r.get("at")]
+    return _ok(cmd, "CAM — traffic cameras", max(times)[:10] if times else None, "table",
+               _table(cols, rows, note, groups + ["Other sampled cameras"]))
+
+
+# ---------- WL ----------
+def _rules_text(r: dict) -> str:
+    def on(k):
+        return r.get(k) is not None and r.get(k) is not False
+    parts = []
+    if on("price_move"):
+        parts.append(f"a 1-day move of {float(r['price_move']) * 100:g}% or more")
+    if on("insider_buy_usd"):
+        parts.append(f"insider buying by an officer or director of {_money(float(r['insider_buy_usd']))} or more")
+    if on("earnings_car"):
+        parts.append(f"each earnings release (high when the 3-day reaction is {float(r['earnings_car']) * 100:g}% "
+                     "or more)")
+    if r.get("forms"):
+        parts.append(f"filings of forms {', '.join(map(str, r['forms']))}")
+    if on("zscore"):
+        parts.append(f"vessel and vehicle counts {float(r['zscore']):g} sd or more from usual")
+    if r.get("headlines", True):
+        parts.append("new headlines")
+    parts.append("company aircraft landings")
+    return "; ".join(parts)
+
+
+def _wl(bank: Bank, cmd: Command, done: str = "") -> dict:
+    from brain import watch
+    w = _watchlist()
+    view = _view(bank)
+    latest: dict[str, list[Fact]] = {}
+    for f in watch.alerts(bank, entities=watch.watched_entities(w)):  # newest first
+        latest.setdefault(f.entity, []).append(f)
+
+    def alert(entity: str, keep=lambda f: True) -> dict:
+        """The newest notice or high alert of the row (headlines are info and would bury them), else the newest."""
+        fs = [f for f in latest.get(entity.upper(), []) if keep(f)]
+        a = next((f for f in fs if f.context.get("severity") in ("notice", "high")), fs[0] if fs else None)
+        return {"alert": a.value if a else None, "alert_at": a.known_at if a else None,
+                "_cites": {"alert": cite(a)} if a else {}}
+
+    rows = []
+    book = PriceBook(bank, w["tickers"], asof=_now())
+    for t in w["tickers"]:
+        ps = brief.price_summary(view, book, t, _per_year(t)) if book.has(t) else None
+        rows.append({"item": t, "name": _name(view, t), "measure": "close", "last": ps["close"] if ps else None,
+                     "chg_1d": ps["chg_1d"] if ps else None, "date": ps["date"] if ps else None,
+                     **alert(t, lambda f: f.context.get("rule") != "aircraft"), "_group": "Tickers", "_ticker": t,
+                     "_cite": cite(book.snapshot.get(t))})
+    for t in w["aircraft_of"]:
+        planes, flights, _ = _aircraft(view, t)
+        last = flights[0] if flights else None
+        rows.append({"item": t, "name": _name(view, t), "measure": "aircraft", "last": len(planes), "_digits": 0,
+                     "date": (last.context.get("arrived") or last.known_at) if last else None,
+                     **alert(t, lambda f: f.context.get("rule") == "aircraft"), "_group": "Company aircraft",
+                     "_ticker": t, "_cmds": {"item": f"{t} JET"}, "_cite": cite(last)})
+    for a in w["areas"]:
+        e = f"AREA.{a['name']}"
+        facts = _samples(view, e, "ships.count")
+        f = facts[-1] if facts else None
+        rows.append({"item": a["name"], "name": "port area", "measure": "vessels", "last": f.value if f else None,
+                     "_digits": 0, "date": f.known_at if f else None, **alert(e), "_group": "Port areas",
+                     "_entity": e, "_cmds": {"item": f"SHIP {a['name']}"}, "_cite": cite(f)})
+    for s in w["sites"]:
+        for c in s["cameras"]:
+            e = f"CAM.{c.upper()}"
+            facts = _samples(view, e, "camera.vehicles")
+            f = facts[-1] if facts else None
+            label = s["name"] + (f" · {s['ticker']}" if s.get("ticker") else "")  # CAM names the camera itself
+            rows.append({"item": c.upper(), "name": label, "measure": "vehicles",
+                         "last": f.value if f else None, "_digits": 0, "date": f.known_at if f else None, **alert(e),
+                         "_group": "Camera sites", "_entity": e, "_cmds": {"item": f"CAM {c.upper()}"},
+                         "_cite": cite(f)})
+    unacked = watch.unacked(bank)
+    # what a narrow pane shows first: the item, its last value and move, the alert; then the details
+    cols = [_col("item", "Item", "ticker"), _col("name", "Name"), _col("last", "Last", "number", 2),
+            _col("chg_1d", "1D", "pct"), _col("alert", "Latest alert", nowrap=True),
+            _col("alert_at", "Alert time (UTC)", "date"), _col("measure", "Measure"), _col("date", "As of", "date")]
+    if rows:
+        note = (f"{len(unacked)} unacknowledged alert{'s' if len(unacked) != 1 else ''} (ALRT). Rules: "
+                f"{_rules_text(w['rules'])}. INGEST WATCH collects what is new for every row and checks the rules; "
+                "python -m brain watch run repeats that every 15 minutes. ")
+    else:
+        note = "The watchlist is empty. WL ADD AAPL adds a ticker. "
+    note += ("WL ADD T and WL DEL T edit the tickers; company aircraft, port areas and camera sites are added from "
+             "the shell: python -m brain watch add aircraft T | area NAME | site NAME --near LAT LON.")
+    title = "WL — watchlist" + (f" · {done}" if done else "")
+    return _ok(cmd, title, today(), "table",
+               _table(cols, rows, note, ["Tickers", "Company aircraft", "Port areas", "Camera sites"]))
+
+
+def _wl_edit(bank: Bank, cmd: Command) -> dict:
+    from brain import watch
+    verb, vals = cmd.args[0], list(dict.fromkeys(cmd.args[1:]))
+    if not vals:
+        raise UserError(f"WL {verb} needs tickers, e.g. WL {verb} AAPL", "WL")
+    bad = [v for v in vals if not TICKER.fullmatch(v)]
+    if bad:
+        raise UserError(f"'{bad[0]}' is not a ticker", "WL")
+    _watchlist()  # a broken file is an error here too, never overwritten
+    missing = []
+    for v in vals:
+        try:
+            watch.add("ticker", v) if verb == "ADD" else watch.remove("ticker", v)
+        except KeyError:
+            missing.append(v)
+        except ValueError as e:
+            raise UserError(str(e), "WL") from None
+    changed = [v for v in vals if v not in missing]
+    done = (f"{'added' if verb == 'ADD' else 'removed'} {', '.join(changed)}" if changed else "") + \
+           (f"{'; ' if changed else ''}not on it: {', '.join(missing)}" if missing else "")
+    return _wl(bank, cmd, done)
+
+
+# ---------- ALRT ----------
+ALRT_ROWS = 200
+ACK_ID = re.compile(r"[0-9A-Fa-f]{4,20}")
+
+
+def _alrt(bank: Bank, cmd: Command, done: str = "") -> dict:
+    from brain import watch
+    try:
+        acked = watch.acked()
+    except ValueError as e:
+        raise UserError(str(e), "") from None
+    # newest first; within one check (one known_at), high before notice before info, so headlines bury nothing
+    fs = sorted(watch.alerts(bank), key=lambda f: (f.known_at, watch.SEVERITY.get(f.context.get("severity"), 0), f.id),
+                reverse=True)
+    unacked = [f for f in fs if f.id not in acked]
+    rows = []
+    for f in fs[:ALRT_ROWS]:
+        new = f.id not in acked
+        e = f.entity
+        row = {"new": "NEW" if new else "", "at": f.known_at, "severity": f.context.get("severity"), "entity": e,
+               "rule": f.context.get("rule"), "message": f.value, "ack": "ACK" if new else None,
+               "_cite": cite(f), "_entity": e, "_cmds": {}}
+        if new:
+            row["_cmds"]["ack"] = f"ALRT ACK {f.id[:12]}"
+        else:
+            row["_dim"] = True
+        if e.startswith("AREA."):
+            row["_cmds"]["entity"] = f"SHIP {e[len('AREA.'):]}"
+        elif e.startswith("CAM."):
+            row["_cmds"]["entity"] = f"CAM {e[len('CAM.'):]}"
+        else:
+            row["_ticker"] = e
+        rows.append(row)
+    cols = [_col("new", "", "flag"), _col("at", "Time (UTC)", "date"), _col("severity", "Severity", "severity"),
+            _col("entity", "Entity", "ticker"), _col("rule", "Rule"), _col("message", "Alert"), _col("ack", "")]
+    if fs:
+        note = (f"{len(unacked)} of {len(fs)} unacknowledged" + (f"; the newest {ALRT_ROWS} shown" if len(fs) > ALRT_ROWS
+                                                                 else "") + ". ACK (ALRT ACK ID) acknowledges one, "
+                "ALRT ACK ALL every one. ")
+    else:
+        note = "No alerts yet. Put tickers on the watchlist (WL ADD AAPL); INGEST WATCH then collects and checks. "
+    note += ("Alerts come from the watchlist's rules (WL), each citing the facts that set it off. An alert says where "
+             "to look; it is not evidence that a price will move.")
+    title = "ALRT — alerts" + (f" · {done}" if done else "")
+    data = {**_table(cols, rows, note, []), "unacked": len(unacked),
+            "high": sum(f.context.get("severity") == "high" for f in unacked)}
+    return _ok(cmd, title, fs[0].known_at[:10] if fs else today(), "table", data)
+
+
+def _alrt_ack(bank: Bank, cmd: Command) -> dict:
+    from brain import watch
+    rest = cmd.args[1:]
+    if len(rest) != 1 or not (rest[0] == "ALL" or ACK_ID.fullmatch(rest[0])):
+        raise UserError("ALRT ACK takes one alert id (4 or more hex characters, as shown) or ALL", "ALRT")
+    try:
+        if rest[0] == "ALL":
+            n = watch.ack_all(bank)
+            done = f"acknowledged {n} alert{'s' if n != 1 else ''}"
+        else:
+            f = watch.ack(bank, rest[0].lower())
+            done = f"acknowledged {f.id[:8]}"
+    except (KeyError, ValueError) as e:
+        raise UserError(str(e.args[0]) if e.args else str(e), "ALRT") from None
+    return _alrt(bank, cmd, done)
+
+
+# ---------- writes ----------
+WRITES = {"WL": ("ADD", "DEL"), "ALRT": ("ACK",)}  # function -> first argument that changes state
+
+
+def is_write(cmd: Command) -> bool:
+    """Commands that change local state (the watchlist, acknowledged alerts). The server runs them only
+    for its own command line, never for the analyst's read-only tools."""
+    return bool(cmd.args) and cmd.args[0] in WRITES.get(cmd.fn, ())
+
+
+def _wl_or_edit(bank: Bank, cmd: Command) -> dict:
+    if not cmd.args:
+        return _wl(bank, cmd)
+    if cmd.args[0] in WRITES["WL"]:
+        return _wl_edit(bank, cmd)
+    raise UserError("WL takes no arguments, or ADD or DEL and tickers", "WL")
+
+
+def _alrt_or_ack(bank: Bank, cmd: Command) -> dict:
+    if not cmd.args:
+        return _alrt(bank, cmd)
+    if cmd.args[0] == "ACK":
+        return _alrt_ack(bank, cmd)
+    raise UserError("ALRT takes no arguments, or ACK ID, or ACK ALL", "ALRT")
+
+
 HANDLERS = {"HELP": _help, "DES": _des, "GP": _gp, "FA": _fa, "CF": _cf, "CN": _cn, "EV": _ev, "BRIEF": _brief,
-            "SHOW": _show, "WEI": _wei, "MOV": _mov, "CURVE": _curve, "ECO": _eco, "RES": _res, "CLM": _clm}
+            "INS": _ins, "ERN": _ern, "JET": _jet, "SHOW": _show, "WEI": _wei, "MOV": _mov, "CURVE": _curve,
+            "ECO": _eco, "RES": _res, "CLM": _clm, "SHIP": _ship, "CAM": _cam, "WL": _wl_or_edit, "ALRT": _alrt_or_ack}
 
 
-def run(bank: Bank, cmd: Command) -> dict:
-    """Run one command. User errors come back as ``ok: false`` with a hint; bugs raise."""
+def run(bank: Bank, cmd: Command, writes: bool = False) -> dict:
+    """Run one command. User errors come back as ``ok: false`` with a hint; bugs raise. Commands that
+    change the watchlist or acknowledge alerts (``is_write``) run only with ``writes=True``: the
+    server passes it for its own command line, never for the analyst's read-only tools."""
     if cmd.ticker:
         cmd = dataclasses.replace(cmd, ticker=cmd.ticker.upper())
         if not TICKER.fullmatch(cmd.ticker):
             return clean(_err(cmd, f"'{cmd.ticker}' is not a ticker", "HELP"))
     if cmd.fn in SERVER_ONLY:
         return clean(_err(cmd, SERVER_ONLY[cmd.fn], "HELP"))
+    if is_write(cmd) and not writes:
+        return clean(_err(cmd, f"{cmd.fn} {cmd.args[0]} changes the {'watchlist' if cmd.fn == 'WL' else 'alerts'}; "
+                               "it runs only from the terminal's own command line", cmd.fn))
     handler = HANDLERS.get(cmd.fn)
     if handler is None:
         return clean(_err(cmd, f"unknown function '{cmd.fn}'", suggest(cmd.fn)))

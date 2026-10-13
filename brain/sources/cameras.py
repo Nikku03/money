@@ -281,7 +281,7 @@ def _cmd_sample(a) -> int:
         f = v.latest(f"CAM.{cid}", "camera.vehicles")
         if f is not None:
             c = f.context
-            print(f"{cid}: {f.value} vehicles (car {c['car']}, truck {c['truck']}, bus {c['bus']}, "
+            print(f"{cid}: {f.value} vehicle{'s' if f.value != 1 else ''} (car {c['car']}, truck {c['truck']}, bus {c['bus']}, "
                   f"motorcycle {c['motorcycle']}) at {f.known_at} [{f.id[:8]}]")
     print(f"{n} sample{'s' if n != 1 else ''} written")
     return 0

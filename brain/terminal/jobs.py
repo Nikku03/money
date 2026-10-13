@@ -12,9 +12,15 @@ must not kill a child halfway through an ingest, and a child writing to a pipe
 nobody reads any more dies at its next print.
 
 What reaches the child is fixed here. A target is a ticker matching a strict
-pattern or one of three keywords, and it becomes one element of an argument
+pattern or one of the keywords, and it becomes one element of an argument
 list (never a shell string), so nothing typed into the browser can reach a
 command interpreter or smuggle in an option.
+
+Two keywords run more than a fetch. INSIDERS reads SEC's quarterly insider data
+sets for the research universes (quarters already read are skipped, so after the
+first run it only picks up a newly published quarter). WATCH is one round of the
+watchlist loop: collect what is new for everything watched, then check the alert
+rules (``python -m brain watch run --once``).
 """
 from __future__ import annotations
 
@@ -35,7 +41,9 @@ from brain import config
 from brain.timeutil import now_iso
 
 TICKER = re.compile(r"[A-Za-z0-9.^=\-]{1,15}")  # matched with fullmatch: no trailing-newline loophole
-KEYWORDS = {"MARKETS": ["markets"], "MACRO": ["macro"], "UNIVERSE": ["ingest-universe"]}
+KEYWORDS = {"MARKETS": ["markets"], "MACRO": ["macro"], "UNIVERSE": ["ingest-universe"],
+            "INSIDERS": ["insiders"], "WATCH": ["watch", "run", "--once"]}
+TARGETS_TEXT = "a ticker, MARKETS, MACRO, UNIVERSE, INSIDERS or WATCH"
 MAX_RUNNING = 2
 LOG_LINES = 200
 MAX_QUEUED = 50
@@ -52,7 +60,7 @@ class JobError(ValueError):
 def validate(target) -> str:
     """The canonical (upper-case) target, or JobError. Keywords are case-insensitive."""
     if not isinstance(target, str) or not target:
-        raise JobError("ingest needs a target: a ticker, MARKETS, MACRO or UNIVERSE")
+        raise JobError(f"ingest needs a target: {TARGETS_TEXT}")
     if target.upper() in KEYWORDS:
         return target.upper()
     if not TICKER.fullmatch(target):
@@ -271,7 +279,8 @@ def table(jobs: list[dict]) -> dict:
     running = sum(j["status"] == "running" for j in jobs)
     queued = sum(j["status"] == "queued" for j in jobs)
     if not jobs:
-        note = "No background jobs. Start one with INGEST AAPL, INGEST MARKETS, INGEST MACRO or INGEST UNIVERSE."
+        note = ("No background jobs. Start one with INGEST AAPL, INGEST MARKETS, INGEST MACRO, INGEST UNIVERSE, "
+                "INGEST INSIDERS or INGEST WATCH.")
     else:
         note = (f"{running} running, {queued} queued (at most {MAX_RUNNING} run at once). "
                 f"New facts appear when a job finishes.")

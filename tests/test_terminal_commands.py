@@ -118,6 +118,33 @@ class ParseTest(unittest.TestCase):
             with self.assertRaises(CommandError, msg=bad):
                 parse(bad)
 
+    def test_v2_functions(self):
+        self.check("AAPL INS", "INS", "AAPL")
+        self.check("ins aapl", "INS", "AAPL")
+        self.check("NVDA US EQUITY ERN <GO>", "ERN", "NVDA")
+        self.check("JET COST", "JET", "COST")
+        self.check("SHIP", "SHIP", None)
+        self.check("ship la-long-beach", "SHIP", None, ["LA-LONG-BEACH"])
+        self.check("CAM TFL.00002.00865", "CAM", None, ["TFL.00002.00865"])
+        self.check("CAM CALTRANS.D04.tvb04i880attruckscales", "CAM", None, ["CALTRANS.D04.TVB04I880ATTRUCKSCALES"])
+        self.check("WL", "WL", None)
+        self.check("WL ADD nvda aapl", "WL", None, ["ADD", "NVDA", "AAPL"])
+        self.check("WL DEL GP", "WL", None, ["DEL", "GP"])  # a ticker that is a code, after WL's verb
+        self.check("ALRT", "ALRT", None)
+        self.check("ALRT ACK 1a2b3c4d", "ALRT", None, ["ACK", "1A2B3C4D"])
+        self.check("ALRT ACK ALL", "ALRT", None, ["ACK", "ALL"])
+        self.check("INGEST INSIDERS", "INGEST", None, ["INSIDERS"])
+        self.check("INGEST WATCH", "INGEST", None, ["WATCH"])
+        self.check("INGEST AAPL WATCH", "INGEST", "AAPL", ["WATCH"])
+        # Seanergy Maritime trades as SHIP: [TICKER] FUNCTION still wins, and a bare SHIP is the function
+        self.check("SHIP DES", "DES", "SHIP")
+        self.check("SHIP GP 1Y", "GP", "SHIP", ["1Y"])
+        self.check("INGEST SHIP", "INGEST", "SHIP")
+        for line, hint in (("INS", "AAPL INS"), ("ERN", "AAPL ERN"), ("JET", "AAPL JET")):
+            with self.assertRaises(CommandError) as cm:
+                parse(line)
+            self.assertEqual(cm.exception.hint, hint)
+
     def test_every_function_parses(self):
         for code, spec in FUNCTIONS.items():
             line = f"AAPL {code} 1234abcd" if code == "SHOW" else f"AAPL {code}"
@@ -145,6 +172,26 @@ class CompleteTest(unittest.TestCase):
         self.assertEqual(after[0]["text"], "DES")  # security functions before global ones
         self.assertIn("SPY", self.texts("AAPL GP 1Y S"))  # GP comparisons
         self.assertEqual(complete("GO ", self.TICKERS)[0]["text"], "DES")  # a leading GO is a ticker
+
+    def test_v2_argument_completion(self):
+        tickers = self.TICKERS + ["CAM.TFL.00002.00389", "AREA.TESTBOX", "AREA.LA-LONG-BEACH"]
+        texts = lambda q: [d["text"] for d in complete(q, tickers)]
+        self.assertNotIn("CAM.TFL.00002.00389", texts("c"))  # cameras and areas are not securities
+        self.assertNotIn("AREA.TESTBOX", texts("a"))
+        self.assertIn("CAM", texts("c"))
+        self.assertEqual(texts("SHIP T"), ["TESTBOX"])
+        self.assertIn("LA-LONG-BEACH", texts("SHIP "))  # sampled and built-in areas
+        self.assertIn("HOUSTON", texts("SHIP H"))
+        self.assertTrue(all(d["kind"] == "keyword" for d in complete("SHIP ", tickers)))
+        self.assertEqual(texts("CAM "), ["TFL.00002.00389"])
+        self.assertEqual(texts("SHIP TESTBOX "), [])  # one area at a time
+        self.assertEqual(texts("WL "), ["ADD", "DEL"])
+        self.assertEqual(texts("WL ADD A"), ["AAPL", "ABT", "AMD"])
+        self.assertEqual(texts("ALRT "), ["ACK"])
+        self.assertEqual(texts("ALRT ACK "), ["ALL"])
+        self.assertEqual(texts("INGEST "), ["MARKETS", "MACRO", "UNIVERSE", "INSIDERS", "WATCH"])
+        self.assertEqual(texts("INGEST I")[0], "INSIDERS")
+        self.assertIn("INS", texts("AAPL I"))
 
     def test_limits(self):
         self.assertEqual(complete("", self.TICKERS), [])

@@ -1,83 +1,286 @@
 import functools
 import json
-import os
-import tempfile
 import unittest
-from pathlib import Path
-from types import SimpleNamespace
-from unittest import mock
 
 import pandas as pd
 
+from brain import llm
 from brain.terminal import analyst, server
 from brain.timeutil import today
+from tests.test_llm import FakeOpenAI, closed_port_url
 from tests.util import TempHome, filed, price_snapshot
 
 
-class FakeRunner:
-    """Stands in for client.beta.messages.tool_runner: calls one tool, then answers."""
-
-    def __init__(self, kw, tool_name, tool_input):
-        self.kw, self.tool_name, self.tool_input = kw, tool_name, tool_input
-        self.tool_output = None
-
-    def __iter__(self):
-        tool = next(t for t in self.kw["tools"] if t.name == self.tool_name)
-        yield SimpleNamespace(stop_reason="tool_use", model=analyst.MODEL, usage=None,
-                              content=[SimpleNamespace(type="tool_use", name=self.tool_name, input=self.tool_input)])
-        self.tool_output = json.loads(tool.call(self.tool_input))
-        yield SimpleNamespace(stop_reason="end_turn", model=analyst.MODEL,
-                              usage=SimpleNamespace(input_tokens=1200, output_tokens=80),
-                              content=[SimpleNamespace(type="text", text="AAPL closed at 336.64 [9de710d2].")])
+def tool_call(n, name="describe", args=None, raw=None):
+    return {"id": f"call_{n}", "type": "function",
+            "function": {"name": name, "arguments": raw if raw is not None else json.dumps(args if args is not None else {"ticker": "aapl"})}}
 
 
-class FakeClient:
-    def __init__(self, tool_name="describe", tool_input=None):
-        self.kw = None
-        self.runner = None
-        outer = self
-
-        class Messages:
-            def tool_runner(self, **kw):
-                outer.kw = kw
-                outer.runner = FakeRunner(kw, tool_name, tool_input or {"ticker": "aapl"})
-                return outer.runner
-
-        self.beta = SimpleNamespace(messages=Messages())
+def calls_msg(*calls, content=None):
+    return {"role": "assistant", "content": content, "tool_calls": list(calls)}
 
 
-class AnalystTest(unittest.TestCase):
-    def test_unavailable_without_credentials(self):
-        with tempfile.TemporaryDirectory() as d, mock.patch.dict(os.environ, {}, clear=True), \
-                mock.patch.object(Path, "home", return_value=Path(d)):
-            ok, reason = analyst.available()
-            self.assertFalse(ok)
-            self.assertIn("ANTHROPIC_API_KEY", reason)
-            res = analyst.ask(lambda c: {}, "how is AAPL doing?")
-            self.assertFalse(res["ok"])
-            self.assertIn("ANTHROPIC_API_KEY", res["hint"])
+def text_msg(text):
+    return {"role": "assistant", "content": text}
 
-    def test_tools_read_the_bank_through_terminal_commands(self):
+
+def completion(msg, finish="stop", usage=None, model="served-model"):
+    return {"id": "x", "object": "chat.completion", "model": model,
+            "choices": [{"index": 0, "message": msg, "finish_reason": finish}],
+            "usage": usage or {"prompt_tokens": 1000, "completion_tokens": 10}}
+
+
+class AskCase(unittest.TestCase):
+    def run_ask(self, reply, question="How did AAPL close?", history=None, reader=None, ticker="AAPL", **client_kw):
+        """reply(n, body) -> the n-th response (see FakeOpenAI). Returns (result, request bodies, commands run)."""
         seen = []
+        reader = reader or (lambda c: seen.append(c) or {"ok": True, "view": "des",
+                                                         "data": {"price": {"close": 336.64, "cite": "9de710d2"}}})
+        with FakeOpenAI(reply) as srv:
+            res = analyst.ask(reader, question, ticker=ticker, history=history, client=srv.client(**client_kw))
+        return res, srv.requests, seen
 
-        def reader(cmd):
-            seen.append(cmd)
-            return {"ok": True, "view": "des", "data": {"price": {"close": 336.64, "cite": "9de710d2"}}}
 
-        fake = FakeClient()
-        res = analyst.ask(reader, "How did AAPL close?", ticker="AAPL", client=fake)
-        self.assertTrue(res["ok"])
+class AnalystLoopTest(AskCase):
+    def test_tools_read_the_bank_through_terminal_commands(self):
+        def reply(n, body):
+            return calls_msg(tool_call(1)) if n == 1 else text_msg("AAPL closed at 336.64 [9de710d2].")
+        res, sent, seen = self.run_ask(reply)
+        self.assertTrue(res["ok"], res)
         self.assertEqual(seen, ["AAPL DES"])
         self.assertEqual(res["tool_calls"], [{"name": "describe", "input": "AAPL DES"}])
-        self.assertIn("[9de710d2]", res["answer"])
-        self.assertEqual(fake.runner.tool_output["data"]["price"]["close"], 336.64)
-        kw = fake.kw
-        self.assertEqual(kw["model"], "claude-opus-5-5")
-        self.assertEqual(kw["fallbacks"], "default")
-        self.assertIn("server-side-fallback-2026-07-01", kw["betas"])
-        self.assertNotIn("tool_choice", kw)
-        self.assertTrue(kw["messages"][-1]["content"].startswith("(Security in focus: AAPL)"))
+        self.assertEqual(res["answer"], "AAPL closed at 336.64 [9de710d2].")
+        self.assertEqual((res["model"], res["stop_reason"], res["rounds"]), ("served-model", "stop", 2))
+        self.assertEqual(res["citations"], {"verified": ["9de710d2"], "unverified": []})
+        self.assertEqual(res["usage"], {"input_tokens": 2000, "output_tokens": 20, "cache_read_input_tokens": None,
+                                        "requests": 2})
+        first, second = sent
+        self.assertEqual(first["model"], "fake-model")
+        self.assertEqual(first["tool_choice"], "auto")
+        self.assertEqual(len(first["tools"]), 13)
+        self.assertEqual({t["type"] for t in first["tools"]}, {"function"})
+        names = [t["function"]["name"] for t in first["tools"]]
+        self.assertEqual(names[:3], ["describe", "price_history", "financials"])
+        self.assertEqual(first["messages"][0]["role"], "system")
+        for rule in ("cite", "[abcd1234]", "third-party text", "do not place orders", "FAIL", "INGEST"):
+            self.assertIn(rule, first["messages"][0]["content"])
+        self.assertTrue(first["messages"][-1]["content"].startswith("(Security in focus: AAPL)"))
+        # The tool's result went back as a tool message answering the call's id.
+        tool_msgs = [m for m in second["messages"] if m["role"] == "tool"]
+        self.assertEqual([m["tool_call_id"] for m in tool_msgs], ["call_1"])
+        self.assertEqual(json.loads(tool_msgs[0]["content"])["data"]["price"]["close"], 336.64)
+        asst = [m for m in second["messages"] if m["role"] == "assistant"][-1]
+        self.assertEqual(asst["tool_calls"][0]["function"], {"name": "describe", "arguments": '{"ticker": "aapl"}'})
 
+    def test_tool_schemas_are_openai_functions(self):
+        specs = {t.name: t.spec() for t in analyst._tools(lambda c: {}, [])}
+        self.assertEqual(len(specs), 13)
+        ph = specs["price_history"]["function"]["parameters"]
+        self.assertEqual((ph["type"], ph["required"]), ("object", ["ticker"]))
+        self.assertEqual(set(ph["properties"]), {"ticker", "period", "compare"})
+        self.assertEqual(specs["research_results"]["function"]["parameters"]["properties"], {})
+        self.assertEqual(specs["show_fact"]["function"]["parameters"]["required"], ["ticker", "fact_id"])
+
+    def test_tool_calls_written_as_text_are_parsed(self):
+        # Small models served without a tool parser write the call into the content.
+        def reply(n, body):
+            if n == 1:
+                return text_msg('<tool_call>\n{{"name": "describe", "arguments": {"ticker": "AAPL"}}}\n</tool_call>')
+            if n == 2:
+                return text_msg('I will check the curve.\n```json\n{"name": "yield_curve", "arguments": {}}\n```')
+            return text_msg("Done [9de710d2].")
+        res, sent, seen = self.run_ask(reply)
+        self.assertTrue(res["ok"], res)
+        self.assertEqual(seen, ["AAPL DES", "CURVE"])
+        asst = [m for m in sent[1]["messages"] if m["role"] == "assistant"][-1]
+        self.assertEqual(asst["content"], "")  # the call is sent back structured, not twice
+        self.assertEqual(asst["tool_calls"][0]["function"]["name"], "describe")
+        self.assertEqual(res["answer"], "Done [9de710d2].")
+
+    def test_json_naming_no_known_tool_is_an_answer(self):
+        res, sent, seen = self.run_ask(lambda n, b: text_msg('The record is {"name": "Apple", "cik": 320193}.'))
+        self.assertEqual((res["ok"], seen, len(sent)), (True, [], 1))
+        self.assertIn("320193", res["answer"])
+
+    def test_bad_arguments_and_unknown_tools_go_back_as_errors(self):
+        def reply(n, body):
+            if n == 1:
+                return calls_msg(tool_call(1, raw='{"ticker": "AAPL"'),            # not JSON
+                                 tool_call(2, raw='["AAPL"]'),                      # not an object
+                                 tool_call(3, "buy_stock", {"ticker": "AAPL"}),     # no such tool
+                                 tool_call(4, "describe", {"ticker": "AAPL DES; RES"}),
+                                 tool_call(5, "show_fact", {"ticker": "AAPL", "fact_id": "zzzz"}),
+                                 tool_call(6, "describe", {}))                      # missing argument
+            return text_msg("I could not look that up.")
+        res, sent, seen = self.run_ask(reply)
+        self.assertTrue(res["ok"], res)
+        self.assertEqual(seen, [])
+        self.assertEqual(res["tool_calls"], [])
+        out = {m["tool_call_id"]: json.loads(m["content"]) for m in sent[1]["messages"] if m["role"] == "tool"}
+        self.assertEqual(len(out), 6)
+        self.assertTrue(all(o["ok"] is False for o in out.values()))
+        self.assertIn("not valid JSON", out["call_1"]["error"])
+        self.assertIn("must be a JSON object", out["call_2"]["error"])
+        self.assertIn("no tool named 'buy_stock'", out["call_3"]["error"])
+        self.assertIn("not a ticker", out["call_4"]["error"])
+        self.assertIn("not a fact id", out["call_5"]["error"])
+        self.assertIn("describe needs ticker", out["call_6"]["error"])
+        # A server would refuse its own invalid JSON echoed back: the history carries "{}" instead.
+        asst = [m for m in sent[1]["messages"] if m["role"] == "assistant"][-1]
+        self.assertEqual(asst["tool_calls"][0]["function"]["arguments"], "{}")
+
+    def test_a_broken_text_tool_call_is_an_error_not_an_answer(self):
+        def reply(n, body):
+            if n == 1:
+                return text_msg('<tool_call>\n{"name": "describe", "arguments": {"ticker": AAPL}}\n</tool_call>')
+            return text_msg("Sorry.")
+        res, sent, seen = self.run_ask(reply)
+        self.assertEqual((res["answer"], seen), ("Sorry.", []))
+        tool = [m for m in sent[1]["messages"] if m["role"] == "tool"][0]
+        self.assertIn("not valid JSON", json.loads(tool["content"])["error"])
+
+    def test_stopping_at_the_round_limit_is_not_an_answer(self):
+        res, sent, seen = self.run_ask(lambda n, b: calls_msg(tool_call(n, "yield_curve", {}),
+                                                              content=f"Let me also check the curve ({n})."))
+        self.assertEqual(len(sent), analyst.MAX_ROUNDS)
+        self.assertEqual(analyst.MAX_ROUNDS, 8)
+        self.assertTrue(res["ok"], res)
+        self.assertEqual(res["stop_reason"], "tool_calls")
+        self.assertIn(f"stopped after {analyst.MAX_ROUNDS} tool rounds without a final answer", res["answer"])
+        self.assertEqual(len(seen), analyst.MAX_ROUNDS - 1)  # the last round's calls are not run: nobody would read them
+        self.assertEqual(res["usage"]["requests"], analyst.MAX_ROUNDS)
+        self.assertEqual(res["usage"]["input_tokens"], 1000 * analyst.MAX_ROUNDS)
+        # The last request tells the model to answer now.
+        self.assertEqual(sent[-1]["messages"][-1], {"role": "user", "content": analyst.LAST_ROUND})
+        self.assertNotIn(analyst.LAST_ROUND, json.dumps(sent[-2]["messages"]))
+
+    def test_length_marks_the_answer_cut_off_and_empty_is_not_ok(self):
+        res, _, _ = self.run_ask(lambda n, b: completion(text_msg("AAPL closed at"), finish="length"))
+        self.assertTrue(res["ok"])
+        self.assertTrue(res["answer"].startswith("AAPL closed at"))
+        self.assertIn("cut off at the length limit", res["answer"])
+        self.assertEqual(res["stop_reason"], "length")
+        res, _, _ = self.run_ask(lambda n, b: text_msg("   "))
+        self.assertEqual((res["ok"], res["error"]), (False, "the model returned an empty answer"))
+
+    def test_thinking_is_not_part_of_the_answer(self):
+        res, _, _ = self.run_ask(lambda n, b: text_msg("<think>The user wants {\"name\": \"describe\"}.</think>\n\nNo data."))
+        self.assertEqual(res["answer"], "No data.")
+        res, _, _ = self.run_ask(lambda n, b: text_msg("hidden reasoning</think>Answer [abcd1234]."))
+        self.assertEqual(res["answer"], "Answer [abcd1234].")
+
+    def test_server_errors_become_ok_false_results(self):
+        cases = [(lambda n, b: (401, {"error": {"message": "bad key"}}), "the model server rejected the request", "BRAIN_LLM_KEY"),
+                 (lambda n, b: (404, {"error": "model 'qwen3:8b' not found, try pulling it first"}),
+                  "the model server does not know this model or path", "ollama pull"),
+                 (lambda n, b: (500, {"error": {"message": "CUDA out of memory"}}), "model server error 500", "CUDA"),
+                 (lambda n, b: (200, {"object": "chat.completion", "choices": []}), "the model server's answer was not chat-completions JSON", "/v1")]
+        for reply, error, hint in cases:
+            with self.subTest(error=error):
+                res, _, seen = self.run_ask(reply)
+                self.assertEqual((res["ok"], res["error"]), (False, error))
+                self.assertIn(hint, res["hint"])
+                self.assertEqual((seen, res["tool_calls"]), ([], []))
+
+    def test_an_unreachable_server_names_the_setting_and_ollama(self):
+        res = analyst.ask(lambda c: {}, "how is AAPL doing?", client=llm.Client(url=closed_port_url()))
+        self.assertEqual((res["ok"], res["error"]), (False, "could not reach the model server"))
+        self.assertIn("BRAIN_LLM_URL", res["hint"])
+        self.assertIn("ollama", res["hint"])
+        self.assertEqual(analyst.ask(lambda c: {}, "  ")["error"], "empty question")
+
+    def test_available_asks_the_configured_server(self):
+        import os
+        from unittest import mock
+        with mock.patch.dict(os.environ, {"BRAIN_LLM_URL": closed_port_url(), "BRAIN_LLM_MODEL": "qwen3:8b"}):
+            ok, reason = analyst.available()
+        self.assertFalse(ok)
+        self.assertIn("BRAIN_LLM_URL", reason)
+        self.assertIn("ollama pull qwen3:8b", reason)
+        with FakeOpenAI(models=("qwen3:8b",)) as srv, \
+                mock.patch.dict(os.environ, {"BRAIN_LLM_URL": srv.url, "BRAIN_LLM_MODEL": "qwen3:8b"}):
+            self.assertEqual(analyst.available(), (True, ""))
+
+    def test_an_error_after_tool_calls_keeps_them(self):
+        def reply(n, body):
+            return calls_msg(tool_call(1)) if n == 1 else (503, {"error": "loading model"})
+        res, _, seen = self.run_ask(reply)
+        self.assertFalse(res["ok"])
+        self.assertEqual(res["tool_calls"], [{"name": "describe", "input": "AAPL DES"}])
+        self.assertEqual(res["usage"]["requests"], 1)
+
+    def test_history_reaches_the_request(self):
+        hist = [{"role": "user", "content": "What about MSFT?"}, {"role": "assistant", "content": "MSFT closed at 500 [aaaa1111]."}]
+        _, sent, _ = self.run_ask(lambda n, b: text_msg("ok"), history=hist)
+        msgs = sent[0]["messages"]
+        self.assertEqual([(m["role"], m["content"]) for m in msgs[1:3]], [(h["role"], h["content"]) for h in hist])
+        self.assertEqual(msgs[3]["role"], "user")
+        self.assertIn("How did AAPL close?", msgs[3]["content"])
+
+    def test_a_context_overflow_is_retried_once_to_fit_what_the_server_said(self):
+        big = {"ok": True, "view": "des", "data": {"blob": ["x" * 500] * 60, "cite": "9de710d2"}}
+
+        def reply(n, body):
+            if n == 1:
+                return calls_msg(tool_call(1), tool_call(2, "financials", {"ticker": "AAPL"}))
+            if n == 2:
+                return (400, {"error": {"message": "Requested tokens (40000) exceed context window of 4096"}})
+            return text_msg("fits now")
+        res, sent, seen = self.run_ask(reply, reader=lambda c: big, ctx=200_000)
+        self.assertTrue(res["ok"], res)
+        self.assertEqual(res["answer"], "fits now")
+        self.assertEqual(len(sent), 3)
+        self.assertLess(len(json.dumps(sent[2]["messages"])), len(json.dumps(sent[1]["messages"])))
+        self.assertLess(len(json.dumps(sent[2]["messages"])), 4096 * 4)
+
+
+class FitTest(unittest.TestCase):
+    def convo(self):
+        hist = [{"role": "user" if i % 2 == 0 else "assistant", "content": f"h{i} " + "y" * 3000} for i in range(6)]
+        q = {"role": "user", "content": "the question"}
+        r1 = [{"role": "assistant", "content": "", "tool_calls": [tool_call(1)]},
+              {"role": "tool", "tool_call_id": "call_1", "content": "a" * 5000}]
+        r2 = [{"role": "assistant", "content": "", "tool_calls": [tool_call(2)]},
+              {"role": "tool", "tool_call_id": "call_2", "content": "b" * 5000}]
+        return hist + [q] + r1 + r2, len(hist)
+
+    def test_nothing_is_cut_when_it_fits(self):
+        convo, n = self.convo()
+        self.assertEqual(analyst.fit(convo, 10 ** 6, n), convo)
+
+    def test_older_history_then_older_results_go_first(self):
+        convo, n = self.convo()
+        out = analyst.fit(convo, 12_000, n)
+        self.assertEqual([m["content"][:2] for m in out if m["role"] != "tool"][:2], ["h4", "h5"])
+        self.assertEqual(out[0]["role"], "user")
+        tools = [m["content"] for m in out if m["role"] == "tool"]
+        self.assertEqual(tools[0], analyst.ELIDED)
+        self.assertEqual(tools[1], "b" * 5000)  # the latest round stays whole while it can
+        self.assertIn({"role": "user", "content": "the question"}, out)
+        self.assertEqual(convo[-1]["content"], "b" * 5000)  # the input is not changed
+
+    def test_the_latest_results_are_cut_last(self):
+        convo, n = self.convo()
+        out = analyst.fit(convo, 3_000, n)
+        self.assertEqual([m for m in out if m["content"].startswith("h")], [])
+        latest = [m["content"] for m in out if m["role"] == "tool"][-1]
+        self.assertTrue(latest.startswith("b" * 500))
+        self.assertIn("characters cut to fit the context", latest)
+        self.assertIn({"role": "user", "content": "the question"}, out)
+
+    def test_budget_learns_the_servers_token_ratio(self):
+        b = analyst.Budget(8192, fixed_chars=6000)
+        before = b.chars()
+        b.measured(20_000, 10_000)  # 2 characters per token: denser than the first guess
+        self.assertEqual(b.ratio, 2.0)
+        self.assertLess(b.chars(), before)
+        b.measured(40_000, 10_000)  # never raised again
+        self.assertEqual(b.ratio, 2.0)
+        self.assertGreaterEqual(b.result_chars(), analyst.MIN_RESULT_CHARS)
+        self.assertLessEqual(analyst.Budget(10 ** 6).result_chars(), analyst.MAX_RESULT_CHARS)
+
+
+class ToolsTest(unittest.TestCase):
     def test_history_is_trimmed_and_starts_with_user(self):
         hist = [{"role": "assistant", "content": "hi"}] + [
             {"role": "user" if i % 2 == 0 else "assistant", "content": f"m{i}"} for i in range(30)]
@@ -97,59 +300,24 @@ class AnalystTest(unittest.TestCase):
         self.assertEqual(len(res["data"]["rows"]), analyst.MAX_TABLE_ROWS)
         self.assertIn("60 more rows", res["data"]["note"])
 
-    def test_real_sdk_round_trip_offline(self):
-        # The fake client above cannot catch a keyword the SDK rejects or a header it does not send, so the
-        # real tool runner runs here too, against a mock transport: one tool call, then the answer.
-        try:
-            import anthropic._base_client as base
-        except ImportError:
-            self.skipTest("Anthropic SDK not installed")
-        http = getattr(base, "httpx2", None) or getattr(base, "httpx", None)
-        if http is None or not hasattr(http, "MockTransport"):
-            self.skipTest("SDK HTTP module not found")
-        import anthropic
-        sent = []
-
-        def handler(request):
-            body = json.loads(request.content)
-            sent.append((request.headers.get("anthropic-beta"), body))
-            content = ([{"type": "tool_use", "id": "toolu_1", "name": "describe", "input": {"ticker": "aapl"}}]
-                       if len(sent) == 1 else [{"type": "text", "text": "AAPL closed at 336.64 [9de710d2]."}])
-            return http.Response(200, json={
-                "id": f"msg_{len(sent)}", "type": "message", "role": "assistant", "model": analyst.MODEL,
-                "content": content, "stop_reason": "tool_use" if len(sent) == 1 else "end_turn",
-                "stop_sequence": None, "usage": {"input_tokens": 10, "output_tokens": 5}})
-
-        client = anthropic.Anthropic(api_key="test", http_client=http.Client(transport=http.MockTransport(handler)))
-        seen = []
-        res = analyst.ask(lambda c: seen.append(c) or {"ok": True, "view": "des", "data": {}}, "How did AAPL close?",
-                          ticker="AAPL", client=client)
-        self.assertTrue(res["ok"], res)
-        self.assertEqual((seen, res["answer"]), (["AAPL DES"], "AAPL closed at 336.64 [9de710d2]."))
-        self.assertEqual(len(sent), 2)
-        beta, body = sent[0]
-        self.assertIn("server-side-fallback-2026-07-01", beta)
-        self.assertEqual((body["model"], body["fallbacks"], body["output_config"]), (analyst.MODEL, "default", {"effort": "high"}))
-        self.assertEqual(len(body["tools"]), 13)
-        tool_results = [b for b in sent[1][1]["messages"][-1]["content"] if b["type"] == "tool_result"]
-        self.assertEqual(len(tool_results), 1)
-
     def test_bad_tool_input_never_reaches_the_bank(self):
-        # ToolError: the SDK's runner hands the message to Claude as an is_error tool_result (see the
-        # mock-transport test below), without logging a traceback as it does for other exceptions.
-        from anthropic.lib.tools import ToolError
         seen, calls = [], []
         tools = {t.name: t for t in analyst._tools(lambda c: seen.append(c) or {}, calls)}
         for name, bad in [("describe", {"ticker": "AAPL DES; RES"}), ("show_fact", {"ticker": "AAPL", "fact_id": "../x"}),
                           ("show_fact", {"ticker": "AAPL", "fact_id": "zzzz"}), ("show_fact", {"ticker": "AAPL", "fact_id": "ÉÉÉÉ"}),
                           ("show_fact", {"ticker": "AAPL", "fact_id": "abc"}),
-                          ("price_history", {"ticker": "AAPL", "compare": "SPY WAYTOOLONGSYMBOL123"})]:
-            with self.assertRaises(ToolError, msg=bad):
+                          ("price_history", {"ticker": "AAPL", "compare": "SPY WAYTOOLONGSYMBOL123"}),
+                          ("price_history", {"ticker": "AAPL", "period": "1Y SPY"}),
+                          ("filings", {"ticker": "AAPL", "form": "10-K\nRES"}),
+                          ("describe", {}), ("describe", "AAPL")]:
+            with self.assertRaises(analyst.ToolError, msg=bad):
                 tools[name].call(bad)
         self.assertEqual(seen, [])
         self.assertEqual(calls, [])
         tools["show_fact"].call({"ticker": "aapl", "fact_id": "[9DE710D2]"})
-        self.assertEqual(seen, ["AAPL SHOW 9de710d2"])
+        tools["price_history"].call({"ticker": "aapl", "period": None, "compare": "spy qqq", "extra": 1})
+        tools["filings"].call({"ticker": "aapl", "form": "8-k"})
+        self.assertEqual(seen, ["AAPL SHOW 9de710d2", "AAPL GP 1Y SPY QQQ", "AAPL CF 8-K"])
 
     def test_tool_results_are_capped_in_size(self):
         # One long stored headline or claim used to go to the model whole, on every news call.
@@ -165,18 +333,38 @@ class AnalystTest(unittest.TestCase):
         self.assertTrue(back["data"]["headlines"][0]["title"].endswith(f"[{200_000 - analyst.MAX_TEXT} more characters cut]"))
         self.assertTrue(back["data"]["claims"][0]["text"].startswith("x" * analyst.MAX_TEXT))
         # Many fields, each under the per-string limit, are cut as a whole and say so.
-        rows = [{"desc": "y" * 500, "_cite": f"{i:08x}"} for i in range(analyst.MAX_TABLE_ROWS)]
-        wide = {"ok": True, "fn": "CF", "ticker": "ZZ", "view": "table",
-                "data": {"rows": rows, "columns": [{"key": f"c{i}", "label": "z" * 500} for i in range(200)]}}
+        wide = {"ok": True, "fn": "DES", "ticker": "ZZ", "view": "des",
+                "data": {f"k{i}": "y" * 500 for i in range(200)}}
         out = analyst._serialize(wide)
         self.assertLessEqual(len(out), analyst.MAX_RESULT_CHARS + 1000)
         back = json.loads(out)
         self.assertTrue(back["truncated"])
         self.assertIn("only the first", back["note"])
-        self.assertEqual((back["fn"], back["ticker"]), ("CF", "ZZ"))
-        # Real-sized results are unchanged.
-        small = {"ok": True, "view": "des", "data": {"metrics": [{"key": "market_cap", "value": 4.95e12, "cite": "292044a9"}]}}
-        self.assertEqual(json.loads(analyst._serialize(small)), small)
+        self.assertEqual((back["fn"], back["ticker"]), ("DES", "ZZ"))
+        # A table that size keeps whole rows and columns instead.
+        rows = [{"desc": "y" * 500, "_cite": f"{i:08x}"} for i in range(analyst.MAX_TABLE_ROWS)]
+        wide = {"ok": True, "fn": "CF", "ticker": "ZZ", "view": "table",
+                "data": {"rows": rows, "columns": [{"key": f"c{i}", "label": "z" * 500} for i in range(200)]}}
+        back = json.loads(analyst._serialize(wide))
+        self.assertNotIn("truncated", back)
+        self.assertEqual(back["data"]["rows"][0]["_cite"], "00000000")
+        self.assertIn("cut to fit the model's context", back["data"]["note"])
+        # A smaller context gives a smaller cap.
+        small_cap = {t.name: t for t in analyst._tools(lambda c: wide, [], cap=lambda: 5000)}
+        self.assertLessEqual(len(small_cap["filings"].call({"ticker": "zz"})), 5000)
+        # Real-sized results are unchanged, but for big whole numbers, which get thousands separators.
+        small = {"ok": True, "view": "des", "data": {"metrics": [{"key": "market_cap", "value": 4.95e12, "cite": "292044a9"},
+                                                                 {"key": "pe", "value": 31.5, "cite": "292044aa"}]}}
+        back = json.loads(analyst._serialize(small))
+        self.assertEqual(back["data"]["metrics"][0]["value"], "4,950,000,000,000")
+        back["data"]["metrics"][0]["value"] = 4.95e12
+        self.assertEqual(back, small)
+
+    def test_big_whole_numbers_are_written_for_reading(self):
+        self.assertEqual(analyst._readable({"a": [112010000000, -93736000000, 7.46, 2025, 1_000_000, 1234567.5, True,
+                                                  "112010000000", None]}),
+                         {"a": ["112,010,000,000", "-93,736,000,000", 7.46, 2025, "1,000,000", 1234567.5, True,
+                                "112010000000", None]})
 
     def test_bank_reader_exception_becomes_a_tool_error_payload(self):
         calls = []
@@ -188,185 +376,46 @@ class AnalystTest(unittest.TestCase):
         self.assertEqual(out, {"ok": False, "error": "RuntimeError: bank on fire"})
         self.assertEqual(calls, [{"name": "describe", "input": "AAPL DES"}])
 
+    def test_citations_are_checked_against_the_tool_results(self):
+        results = ['{"cite": "9de710d2"}', '{"_cites": {"2025": "4dd81b1a"}}']
+        answer = "Net income [4DD81B1A]; close [9de710d2, 9de710d2]; revenue [deadbeef]; see [note] and [1]."
+        self.assertEqual(analyst.check_citations(answer, results),
+                         {"verified": ["4dd81b1a", "9de710d2"], "unverified": ["deadbeef"]})
+        self.assertEqual(analyst.check_citations("no cites", results), {"verified": [], "unverified": []})
 
-def _http():
-    try:
-        import anthropic._base_client as base
-    except ImportError:
-        return None
-    http = getattr(base, "httpx2", None) or getattr(base, "httpx", None)
-    return http if http is not None and hasattr(http, "MockTransport") else None
+    def test_wide_tables_lose_columns_then_rows_not_whole_rows_of_text(self):
+        cols = [{"key": "item", "label": "Item"}] + [{"key": f"y{i}", "label": f"y{i}"} for i in range(10)]
+        rows = [{"item": f"row{r}", "_cites": {f"y{i}": f"{r:04x}{i:04x}" for i in range(10)},
+                 **{f"y{i}": 123456789000 + i for i in range(10)}} for r in range(20)]
+        res = {"ok": True, "fn": "FA", "view": "table", "data": {"columns": cols, "rows": rows, "note": "n"}}
+        out = json.loads(analyst._serialize(res, 3000))
+        data = out["data"]
+        self.assertLessEqual(len(json.dumps(out)), 3000)
+        self.assertEqual([c["key"] for c in data["columns"]], ["item", "y0", "y1", "y2"])
+        self.assertEqual(set(data["rows"][0]), {"item", "_cites", "y0", "y1", "y2"})
+        self.assertEqual(set(data["rows"][0]["_cites"]), {"y0", "y1", "y2"})
+        self.assertIn("first 4 of 11 columns", data["note"])
+        self.assertIn(f"of 20 rows", data["note"])
+        self.assertEqual(data["rows"][0]["item"], "row0")
 
-
-def _msg(n, content, stop="end_turn", usage=None, **extra):
-    return {"id": f"msg_{n}", "type": "message", "role": "assistant", "model": analyst.MODEL, "content": content,
-            "stop_reason": stop, "stop_sequence": None, "usage": usage or {"input_tokens": 10, "output_tokens": 5}, **extra}
-
-
-def _tool_use(n, name="describe", inp=None):
-    return {"type": "tool_use", "id": f"toolu_{n}", "name": name, "input": inp if inp is not None else {"ticker": "aapl"}}
-
-
-class RealRunnerTest(unittest.TestCase):
-    """The SDK's own tool runner against a mock transport: what each kind of response becomes."""
-
-    def setUp(self):
-        self.http = _http()
-        if self.http is None:
-            self.skipTest("Anthropic SDK (with its HTTP module) not installed")
-        import anthropic
-        self.anthropic = anthropic
-
-    def run_ask(self, reply, question="How did AAPL close?", history=None, reader=None):
-        """reply(n, body) -> a message dict, (status, error dict), or an exception for the n-th request."""
-        http, sent, seen = self.http, [], []
-
-        def handler(request):
-            body = json.loads(request.content)
-            sent.append(body)
-            r = reply(len(sent), body)
-            if isinstance(r, Exception):
-                raise r
-            status, payload = r if isinstance(r, tuple) else (200, r)
-            return http.Response(status, json=payload)
-
-        client = self.anthropic.Anthropic(api_key="test", max_retries=0,
-                                          http_client=http.Client(transport=http.MockTransport(handler)))
-        res = analyst.ask(reader or (lambda c: seen.append(c) or {"ok": True, "view": "des", "data": {}}),
-                          question, ticker="AAPL", history=history, client=client)
-        return res, sent, seen
-
-    def test_stopping_at_the_tool_round_limit_is_not_an_answer(self):
-        # Text next to the last tool call is a preamble ("Let me also check..."), not the answer.
-        res, sent, _ = self.run_ask(lambda n, b: _msg(n, [{"type": "text", "text": f"Let me also check the curve ({n})."},
-                                                             _tool_use(n, "yield_curve", {})], stop="tool_use",
-                                                         usage={"input_tokens": 100 * n, "output_tokens": 5}))
-        self.assertEqual(len(sent), analyst.MAX_ITERATIONS)
-        self.assertTrue(res["ok"], res)
-        self.assertEqual(res["stop_reason"], "tool_use")
-        self.assertIn(f"stopped after {analyst.MAX_ITERATIONS} tool rounds without a final answer", res["answer"])
-        self.assertEqual(res["usage"]["input_tokens"], sum(100 * n for n in range(1, analyst.MAX_ITERATIONS + 1)))
-        self.assertEqual(res["usage"]["output_tokens"], 5 * analyst.MAX_ITERATIONS)
-        self.assertEqual(res["usage"]["requests"], analyst.MAX_ITERATIONS)
-
-    def test_refusal_is_not_ok_and_keeps_the_explanation_and_tool_calls(self):
-        def reply(n, body):
-            if n == 1:
-                return _msg(n, [_tool_use(n)], stop="tool_use")
-            return _msg(n, [], stop="refusal", stop_details={"type": "refusal", "category": "cyber",
-                                                              "explanation": "This request was declined."})
-        res, _, _ = self.run_ask(reply)
-        self.assertFalse(res["ok"])
-        self.assertEqual(res["hint"], "This request was declined.")
-        self.assertEqual(res["tool_calls"], [{"name": "describe", "input": "AAPL DES"}])
-
-    def test_max_tokens_marks_the_answer_cut_off(self):
-        res, _, _ = self.run_ask(lambda n, b: _msg(n, [{"type": "text", "text": "AAPL closed at"}], stop="max_tokens"))
-        self.assertTrue(res["ok"])
-        self.assertTrue(res["answer"].startswith("AAPL closed at"))
-        self.assertIn("cut off at the length limit", res["answer"])
-
-    def test_api_errors_become_ok_false_results(self):
-        def err(status, kind):
-            return lambda n, b: (status, {"type": "error", "error": {"type": kind, "message": f"{kind} happened"}})
-        cases = [(err(401, "authentication_error"), "Anthropic rejected the credentials"),
-                 (err(429, "rate_limit_error"), "rate limited by the Anthropic API"),
-                 (err(500, "api_error"), "Anthropic API error 500"),
-                 (err(529, "overloaded_error"), "Anthropic API error 529"),
-                 (lambda n, b: self.http.ConnectError("connection refused"), "could not reach the Anthropic API")]
-        for reply, error in cases:
-            with self.subTest(error=error):
-                res, _, seen = self.run_ask(reply)
-                self.assertEqual((res["ok"], res["error"]), (False, error))
-                self.assertIn("hint", res)
-                self.assertEqual(seen, [])
-
-    def test_rejected_tool_input_reaches_claude_as_an_error_without_a_traceback(self):
-        def reply(n, body):
-            if n == 1:
-                return _msg(n, [_tool_use(1, "describe", {"ticker": "AAPL DES; RES"}),
-                                _tool_use(2, "show_fact", {"ticker": "AAPL", "fact_id": "zzzz"})], stop="tool_use")
-            return _msg(n, [{"type": "text", "text": "I could not look that up."}])
-        with self.assertNoLogs("anthropic", level="ERROR"):
-            res, sent, seen = self.run_ask(reply)
-        self.assertTrue(res["ok"], res)
-        self.assertEqual(seen, [])
-        results = [b for b in sent[1]["messages"][-1]["content"] if b["type"] == "tool_result"]
-        self.assertEqual([r.get("is_error") for r in results], [True, True])
-        self.assertIn("not a ticker", json.dumps(results[0]["content"]))
-        self.assertIn("not a fact id", json.dumps(results[1]["content"]))
-
-    def test_history_reaches_the_request(self):
-        hist = [{"role": "user", "content": "What about MSFT?"}, {"role": "assistant", "content": "MSFT closed at 500 [aaaa1111]."}]
-        _, sent, _ = self.run_ask(lambda n, b: _msg(n, [{"type": "text", "text": "ok"}]), history=hist)
-        msgs = sent[0]["messages"]
-        self.assertEqual([(m["role"], m["content"]) for m in msgs[:2]], [(h["role"], h["content"]) for h in hist])
-        self.assertEqual(msgs[2]["role"], "user")
-        self.assertIn("How did AAPL close?", json.dumps(msgs[2]["content"]))
-
-    def test_usage_counts_every_request_cache_reads_and_fallback_attempts(self):
-        def reply(n, body):
-            if n == 1:
-                return _msg(n, [_tool_use(n)], stop="tool_use",
-                            usage={"input_tokens": 100, "output_tokens": 5, "cache_creation_input_tokens": 2000,
-                                   "cache_read_input_tokens": 0})
-            # The first model declined, a fallback served: top-level usage is the serving attempt only.
-            it = [{"type": "message", "input_tokens": 50, "output_tokens": 3, "cache_creation_input_tokens": 0,
-                   "cache_read_input_tokens": 2000},
-                  {"type": "fallback_message", "model": "claude-opus-5", "input_tokens": 60, "output_tokens": 7,
-                   "cache_creation_input_tokens": 2100, "cache_read_input_tokens": 0}]
-            return _msg(n, [{"type": "text", "text": "done"}],
-                        usage={"input_tokens": 60, "output_tokens": 7, "cache_creation_input_tokens": 2100,
-                               "cache_read_input_tokens": 0, "iterations": it})
-        res, sent, _ = self.run_ask(reply)
-        self.assertEqual(len(sent), 2)
-        self.assertEqual(res["usage"], {"input_tokens": 100 + 2000 + 50 + 2000 + 60 + 2100, "output_tokens": 15,
-                                        "cache_read_input_tokens": 2000, "requests": 2})
-
-
-class CredentialsTest(unittest.TestCase):
-    def env(self, home, **env):
-        return [mock.patch.dict(os.environ, env, clear=True), mock.patch.object(Path, "home", return_value=Path(home))]
-
-    def check(self, home, expect_ok, **env):
-        p = self.env(home, **env)
-        with p[0], p[1]:
-            ok, reason = analyst.available()
-            res = analyst.ask(lambda c: {}, "how is AAPL doing?")  # must not raise
-        self.assertEqual(ok, expect_ok, reason)
-        return reason, res
-
-    def test_an_empty_config_directory_is_not_credentials(self):
-        with tempfile.TemporaryDirectory() as d:
-            (Path(d) / ".config" / "anthropic").mkdir(parents=True)
-            reason, res = self.check(d, False)
-        self.assertIn("ANTHROPIC_API_KEY", reason)
-        self.assertEqual((res["ok"], res["error"]), (False, "analyst unavailable"))
-        self.assertIn("ANTHROPIC_API_KEY", res["hint"])
-
-    def test_a_missing_named_profile_is_reported_not_raised(self):
-        with tempfile.TemporaryDirectory() as d:
-            reason, res = self.check(d, False, ANTHROPIC_PROFILE="work")
-        self.assertIn("no usable Anthropic credentials", reason)
-        self.assertFalse(res["ok"])
-        self.assertIn("work", res["hint"])
-
-    def test_an_identity_token_file_alone_is_not_credentials(self):
-        with tempfile.TemporaryDirectory() as d:
-            self.check(d, False, ANTHROPIC_IDENTITY_TOKEN_FILE=str(Path(d) / "token"))
-
-    def test_an_api_key_is_available(self):
-        with tempfile.TemporaryDirectory() as d:
-            p = self.env(d, ANTHROPIC_API_KEY="sk-test")
-            with p[0], p[1]:
-                self.assertEqual(analyst.available(), (True, ""))
+    def test_text_tool_call_shapes(self):
+        known = {"describe", "yield_curve"}
+        cases = [('<tool_call>\n{"name": "describe", "arguments": {"ticker": "AAPL"}}\n</tool_call>', ["describe"]),
+                 ('{"type": "function", "function": {"name": "describe", "arguments": "{\\"ticker\\": \\"AAPL\\"}"}}', ["describe"]),
+                 ('<|python_tag|>{"name": "yield_curve", "parameters": {}}', ["yield_curve"]),
+                 ('{"name": "describe", "arguments": {"ticker": "A"}}\n{"name": "yield_curve"}', ["describe", "yield_curve"]),
+                 ('Apple {"name": "Apple Inc."} reported [abcd1234].', []),
+                 ("no json here", [])]
+        for text, names in cases:
+            with self.subTest(text=text):
+                self.assertEqual([c["name"] for c in analyst.text_tool_calls(text, known)], names)
 
 
 class ReaderTest(TempHome):
     """What the server's reader for the analyst may do to the bank: DES records derived metrics (as BRIEF
     does, so the ids it cites resolve), and nothing else is written; INGEST and ASK are refused."""
 
-    def test_the_analysts_reader_writes_only_derived_facts(self):
+    def add_aapl(self):
         end = pd.Timestamp(today()) - pd.offsets.BDay(3)
         days = pd.bdate_range(end - pd.DateOffset(years=2), end).strftime("%Y-%m-%d").tolist()
         self.bank.add(price_snapshot("AAPL", days, [100.0 + 0.1 * i for i in range(len(days))]))
@@ -375,6 +424,9 @@ class ReaderTest(TempHome):
             for attr, v in (("us-gaap:Revenues", 100e9), ("us-gaap:NetIncomeLoss", 25e9)):
                 self.bank.add(filed("AAPL", attr, v * (1.1 if y == last_fy else 1), f"{y}-12-31", f"{y + 1}-02-10",
                                     form="10-K", start=f"{y}-01-01", duration_days=364))
+
+    def test_the_analysts_reader_writes_only_derived_facts(self):
+        self.add_aapl()
         shard = self.bank.shard("AAPL")
         before = shard.read_text().splitlines()
         srv, _ = server.make_server("127.0.0.1", 0, bank=self.bank)
@@ -391,3 +443,29 @@ class ReaderTest(TempHome):
         self.assertTrue(all(r["op"] == "add" and r["fact"]["tier"] == "derived" and r["fact"]["attr"].startswith("derived.")
                             for r in added), added)
         self.assertEqual(sorted(p.name for p in self.bank.root.glob("*.jsonl")), ["AAPL.jsonl"])
+
+    def test_bank_reader_is_read_only_like_the_servers(self):
+        self.add_aapl()
+        read = analyst.bank_reader(self.bank)
+        self.assertTrue(read("AAPL FA")["ok"])
+        for line in ("INGEST MSFT", "ASK what now?", "JOBS", "", "NOPE NOPE NOPE"):
+            self.assertFalse(read(line)["ok"], line)
+
+    def test_a_whole_answer_against_a_bank(self):
+        self.add_aapl()
+
+        def reply(n, body):
+            if n == 1:
+                return calls_msg(tool_call(1, "financials", {"ticker": "AAPL"}))
+            tool = [m for m in body["messages"] if m["role"] == "tool"][-1]
+            cite = json.loads(tool["content"])["data"]["rows"][0].get("_cite") or "none"
+            return text_msg(f"See [{cite}].")
+        with FakeOpenAI(reply) as srv:
+            res = analyst.ask(analyst.bank_reader(self.bank), "AAPL revenue?", client=srv.client())
+        self.assertTrue(res["ok"], res)
+        self.assertEqual(res["tool_calls"], [{"name": "financials", "input": "AAPL FA"}])
+        self.assertRegex(res["answer"], r"\[[0-9a-f]{8}\]|\[none\]")
+
+
+if __name__ == "__main__":
+    unittest.main()

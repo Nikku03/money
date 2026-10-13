@@ -17,6 +17,10 @@ The bank is not thread-safe, so one ``Bank`` lives in server state behind an
 RLock and every request that reads it holds the lock. Ingest runs in child
 processes (``jobs.py``); when one finishes, a fresh Bank is swapped in. Journals
 are append-only, so the fresh Bank re-reads only the shards that changed.
+
+Two commands change local state: WL ADD/DEL (the watchlist) and ALRT ACK (which
+alerts were seen). They run only from the page's own command line, under the same
+token as everything else; the analyst's read-only reader is refused them.
 """
 from __future__ import annotations
 
@@ -61,6 +65,7 @@ HEADERS = {"Cache-Control": "no-store", "X-Content-Type-Options": "nosniff",
 LOOPBACK_NAMES = ("127.0.0.1", "localhost", "::1")
 HOST_HEADER = re.compile(r"(\[[0-9a-f:.]+\]|[a-z0-9.\-]+)(?::(\d{1,5}))?")  # no port: 80, as browsers send it
 FACT_ID = re.compile(r"[0-9A-Fa-f]{1,20}")
+ALT_ENTITY = re.compile(r"(?:AREA|CAM)\.[A-Za-z0-9._-]{1,100}")  # port areas and cameras: SHOW by ENTITY/id
 TICKERS_TTL = 10.0  # seconds; completion asks on every keystroke
 MAX_INGEST_TARGETS = 10
 MAX_QUESTION = 4000
@@ -107,6 +112,14 @@ def _same_ip(a: str, b: str) -> bool:
 def _analyst():
     """Imported on use, never at module level: a missing or broken analyst must not stop the terminal."""
     return importlib.import_module("brain.terminal.analyst")
+
+
+def _analyst_model() -> str:
+    """The model the analyst asks (BRAIN_LLM_MODEL), for the status line; empty if brain.llm cannot load."""
+    try:
+        return str(importlib.import_module("brain.llm").settings().model or "")
+    except Exception:  # noqa: BLE001 - the status line must not fail over a label
+        return ""
 
 
 def _log_exc(where: str) -> None:
@@ -173,6 +186,7 @@ class TerminalServer(ThreadingHTTPServer):
         self._reloading = False
         self._connections = threading.BoundedSemaphore(MAX_CONNECTIONS)
         self._analyst_logged = False
+        self._alerts_logged = False
         super().__init__((host, port), Handler)
 
     def server_bind(self):
@@ -268,9 +282,27 @@ class TerminalServer(ThreadingHTTPServer):
                 _log_exc("analyst")
             return False, f"the analyst failed to load ({type(e).__name__}); see the server log"
 
+    def alert_counts(self) -> dict:
+        """Unacknowledged alerts for the top bar: ``{"unacked": n, "high": k}``, or nulls when the watchlist
+        or the alert state cannot be read (ALRT then says why)."""
+        try:
+            from brain import watch
+            with self.lock:
+                fs = watch.unacked(self.bank)
+        except Exception as e:  # noqa: BLE001 - a broken state file must not break the status poll
+            if not self._alerts_logged:
+                self._alerts_logged = True
+                if isinstance(e, ValueError):  # a watchlist or state file that is not valid JSON: ALRT says which
+                    print(f"[terminal] alert count unavailable: {e}", file=sys.stderr)
+                else:
+                    _log_exc("alert count")
+            return {"unacked": None, "high": None}
+        return {"unacked": len(fs), "high": sum(f.context.get("severity") == "high" for f in fs)}
+
     # ---------- commands ----------
     def run_line(self, line: str, read_only: bool = False) -> dict:
-        """One terminal command. ``read_only`` (the analyst's tools) refuses INGEST and ASK."""
+        """One terminal command. ``read_only`` (the analyst's tools) refuses INGEST and ASK, and the
+        commands that change the watchlist or acknowledge alerts."""
         line = (line or "").strip()
         if not line:
             return {"ok": False, "fn": None, "ticker": None, "args": [], "error": "empty command", "hint": "HELP"}
@@ -278,9 +310,10 @@ class TerminalServer(ThreadingHTTPServer):
             cmd = commands.parse(line)
         except commands.CommandError as e:
             return {"ok": False, "fn": None, "ticker": None, "args": [], "error": e.message, "hint": e.hint}
-        if read_only and cmd.fn in ("INGEST", "ASK"):
+        if read_only and (cmd.fn in ("INGEST", "ASK") or data.is_write(cmd)):
+            what = f"{cmd.fn} {cmd.args[0]}" if data.is_write(cmd) else cmd.fn
             return {"ok": False, "fn": cmd.fn, "ticker": cmd.ticker, "args": cmd.args,
-                    "error": f"{cmd.fn} is not available here (read-only)", "hint": "HELP"}
+                    "error": f"{what} is not available here (read-only)", "hint": "HELP"}
         if cmd.fn == "JOBS":
             return self.jobs_view(cmd)
         if cmd.fn == "INGEST":
@@ -288,6 +321,8 @@ class TerminalServer(ThreadingHTTPServer):
         if cmd.fn == "ASK":
             return self.ask_view(cmd)
         with self.lock:
+            if data.is_write(cmd):
+                return data.run(self.bank, cmd, writes=True)
             return data.run(self.bank, cmd)
 
     def ask_view(self, cmd) -> dict:
@@ -297,7 +332,8 @@ class TerminalServer(ThreadingHTTPServer):
         question = " ".join(cmd.args).strip()
         return {"ok": True, "fn": "ASK", "ticker": cmd.ticker, "args": list(cmd.args), "title": "ASK · analyst",
                 "asof": today(), "view": "ask",
-                "data": {"question": question, "ticker": cmd.ticker, "available": ok, "reason": reason}}
+                "data": {"question": question, "ticker": cmd.ticker, "available": ok, "reason": reason,
+                         "model": _analyst_model()}}
 
     def jobs_view(self, cmd, title: str = "Background jobs") -> dict:
         return {"ok": True, "fn": cmd.fn, "ticker": cmd.ticker, "args": list(cmd.args), "title": title,
@@ -307,8 +343,7 @@ class TerminalServer(ThreadingHTTPServer):
         targets = ([cmd.ticker] if cmd.ticker else []) + list(cmd.args)
         err = {"ok": False, "fn": cmd.fn, "ticker": cmd.ticker, "args": list(cmd.args)}
         if not targets:
-            return {**err, "error": "INGEST needs a target: a ticker, MARKETS, MACRO or UNIVERSE",
-                    "hint": "INGEST AAPL"}
+            return {**err, "error": f"INGEST needs a target: {jobs.TARGETS_TEXT}", "hint": "INGEST AAPL"}
         if len(targets) > MAX_INGEST_TARGETS:
             return {**err, "error": f"at most {MAX_INGEST_TARGETS} targets at once", "hint": "JOBS"}
         try:
@@ -349,8 +384,8 @@ def serve(host: str = "127.0.0.1", port: int = 8765, open_browser: bool = True) 
     if not server.loopback:
         print(f"WARNING: listening on {host or 'all interfaces'}, not loopback. The terminal has no user "
               f"accounts: anyone who can reach this port can open it, read the bank, start ingest jobs and "
-              f"read their logs, and ask the analyst (ASK), which runs the model on your Anthropic credentials "
-              f"and costs you money.", file=sys.stderr)
+              f"read their logs, change the watchlist, acknowledge alerts, and ask the analyst (ASK), which runs "
+              f"the model server set by BRAIN_LLM_URL.", file=sys.stderr)
     print(f"MONEY TERMINAL on {url}  (Ctrl+C to stop)", flush=True)
     if open_browser:
         try:
@@ -604,15 +639,21 @@ class Handler(BaseHTTPRequestHandler):
         tickers = self.server.tickers()
         ok, reason = self.server.analyst_status()
         self._json(200, {"ok": True, "entities": len(tickers), "tickers": tickers, "universe": _universe_size(),
-                         "jobs_running": running, "analyst": {"available": ok, "reason": reason},
-                         "time": now_iso()})
+                         "jobs_running": running,
+                         "analyst": {"available": ok, "reason": reason, "model": _analyst_model()},
+                         "alerts": self.server.alert_counts(), "time": now_iso()})
 
     def api_fact(self, q: dict) -> None:
         ticker, fid = _param(q, "ticker").strip(), _param(q, "id").strip().strip("[]")
-        if not (jobs.TICKER.fullmatch(ticker) and FACT_ID.fullmatch(fid)):
-            raise BadRequest(400, "need ticker=<symbol>&id=<hex fact id prefix>")
+        alt = bool(ALT_ENTITY.fullmatch(ticker))
+        if not ((jobs.TICKER.fullmatch(ticker) or alt) and FACT_ID.fullmatch(fid)):
+            raise BadRequest(400, "need ticker=<symbol or AREA./CAM. entity>&id=<hex fact id prefix>")
         # Built directly, not parsed: a ticker that is also a function code (CF, GP) would parse as the function.
-        cmd = commands.Command(fn="SHOW", ticker=ticker.upper(), args=[fid.upper()], raw=f"{ticker} SHOW {fid}")
+        if alt:  # longer than a ticker: SHOW takes it as ENTITY/id
+            ref = f"{ticker.upper()}/{fid.upper()}"
+            cmd = commands.Command(fn="SHOW", ticker=None, args=[ref], raw=f"SHOW {ref}")
+        else:
+            cmd = commands.Command(fn="SHOW", ticker=ticker.upper(), args=[fid.upper()], raw=f"{ticker} SHOW {fid}")
         with self.server.lock:
             res = data.run(self.server.bank, cmd)
         self._json(200, res)

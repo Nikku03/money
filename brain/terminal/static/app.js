@@ -12,13 +12,14 @@
   // ---------- constants ----------
   const $ = (sel, root = document) => root.querySelector(sel);
   const TOKEN = ($('meta[name="terminal-token"]') || {}).content || "";
-  const FUNCS = ["HELP", "DES", "GP", "FA", "CF", "CN", "EV", "BRIEF", "SHOW", "WEI", "MOV", "CURVE", "ECO", "RES",
-    "CLM", "ASK", "INGEST", "JOBS"];
-  const SECURITY_FNS = new Set(["DES", "GP", "FA", "CF", "CN", "EV", "BRIEF"]);
+  const FUNCS = ["HELP", "DES", "GP", "FA", "CF", "CN", "EV", "BRIEF", "INS", "ERN", "JET", "SHOW", "WEI", "MOV",
+    "CURVE", "ECO", "RES", "CLM", "SHIP", "CAM", "WL", "ALRT", "ASK", "INGEST", "JOBS"];
+  const SECURITY_FNS = new Set(["DES", "GP", "FA", "CF", "CN", "EV", "BRIEF", "INS", "ERN", "JET"]);
   const RANGES = ["1M", "3M", "6M", "YTD", "1Y", "2Y", "5Y", "10Y", "MAX"];
   const DEFAULT_LAYOUT = ["WEI", "MOV", "SPY GP 1Y", "ASK"];
   const N_PANES = 4;
   const TICKER_RE = /^[A-Za-z0-9.^=-]{1,15}$/;
+  const ALT_ENTITY_RE = /^(?:AREA|CAM)\.[A-Za-z0-9._-]{1,100}$/;  // port areas and cameras: facts, not securities
   const HEX_ID = /^[0-9a-fA-F]{4,20}$/;
   const KEY_LAYOUT = "money-terminal.layout.v1";
   const KEY_HISTORY = "money-terminal.history.v1";
@@ -31,6 +32,7 @@
   const ASK_MSG = 8000;  // characters per earlier message; the analyst reads no more
   const ASK_BODY = 60000;  // bytes; the server refuses bodies over 64 KB
   const NUMERIC = new Set(["number", "pct", "money", "signed"]);
+  const SEVERITIES = new Set(["info", "notice", "high"]);
   const PALETTE = ["amber", "cyan", "magenta", "lime"];
   const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -206,6 +208,11 @@
     return typeof t === "string" && TICKER_RE.test(t);
   }
 
+  /** A bank entity a citation can be looked up in: a ticker, or a port area or camera (AREA.X, CAM.Y). */
+  function entityOk(t) {
+    return tickerOk(t) || (typeof t === "string" && ALT_ENTITY_RE.test(t));
+  }
+
   // ---------- clickable pieces ----------
   function focusedPane() {
     return panes[focused];
@@ -377,6 +384,12 @@
       }
       case "verdict":
         return verdictEl(v);
+      case "severity": {
+        const s = String(v).toLowerCase();
+        return { text: s.toUpperCase(), cls: "sev sev-" + (SEVERITIES.has(s) ? s : "other") };
+      }
+      case "flag":
+        return v === "" ? "" : h("span", "flag", String(v));
       default: {
         const s = typeof v === "object" ? JSON.stringify(v) : String(v);
         return s.length > 48 ? { text: s, cls: "wrap" } : s;
@@ -403,13 +416,19 @@
     }));
     if (showSrc) head.push({ label: "Src", cls: "src", title: "The fact behind the row: click to show it" });
 
-    const rowTicker = (r) => (tickerOk(r._ticker) ? r._ticker : ctx.ticker);
+    // the entity a row's citations belong to: a port area or camera, the row's ticker, or the pane's
+    const rowTicker = (r) => (entityOk(r._entity) ? r._entity : tickerOk(r._ticker) ? r._ticker : ctx.ticker);
     const body = [];
     const emit = (r) => {
       const cells = cols.map((c) => {
         const type = r._type && NUMERIC.has(c.type) ? r._type : c.type || "text";
         const digits = r._digits != null && type === "number" ? r._digits : c.digits;
-        const cell = cellFor(r[c.key], type, digits, r, ctx);
+        let cell = cellFor(r[c.key], type, digits, r, ctx);
+        if (c.nowrap && cell && typeof cell === "object" && !(cell instanceof Node) && cell.cls === "wrap") {
+          cell = { text: cell.text, title: cell.text };  // one line, cut with an ellipsis; the whole text on hover
+        }
+        const cmd = r._cmds && typeof r._cmds[c.key] === "string" ? r._cmds[c.key] : null;
+        if (cmd && r[c.key] != null && r[c.key] !== "") cell = cmdLink(cmd, ctx.pane, String(r[c.key]));
         const cid = r._cites && r._cites[c.key];
         if (cid && cell !== null) {
           const obj = typeof cell === "string" ? { text: cell } : cell instanceof Node ? { node: cell } : cell;
@@ -427,7 +446,7 @@
         if (r._url && !hasLinkCol && safeUrl(r._url)) s.append(extLink("↗", r._url, "ext"));
         cells.push(s);
       }
-      body.push({ cells });
+      body.push({ cells, cls: r._dim ? "dimrow" : "" });
     };
 
     let groups = Array.isArray(d.groups) && d.groups.length ? d.groups.slice() : [];
@@ -449,10 +468,10 @@
     return wrap;
   }
 
-  /** Notes are plain text; the INGEST commands they mention are clickable. */
+  /** Notes are plain text; the INGEST commands they mention, and RES and ALRT, are clickable. */
   function noteEl(text, ctx) {
     const el = h("div", "note");
-    const re = /\bINGEST (?:MARKETS|MACRO|UNIVERSE)\b/g;
+    const re = /\bINGEST (?:MARKETS|MACRO|UNIVERSE|INSIDERS|WATCH)\b|\b(?:RES|ALRT)\b(?![-\w])/g;
     const s = String(text);
     let at = 0;
     for (const m of s.matchAll(re)) {
@@ -697,7 +716,8 @@
     const intro = h("div", "help-intro");
     intro.append(document.createTextNode("Type "), h("span", "kbd", "[TICKER] FUNCTION [ARGS]"),
       document.createTextNode(" then Enter. Function first, a bare ticker and US EQUITY <GO> also work. Try: "));
-    for (const ex of ["AAPL DES", "AAPL GP 5Y SPY MSFT", "AAPL FA", "WEI", "CURVE", "RES", "ASK"]) intro.append(cmdLink(ex, p));
+    ["AAPL DES", "AAPL GP 5Y SPY MSFT", "AAPL FA", "AAPL INS", "AAPL ERN", "WEI", "CURVE", "RES", "WL", "ALRT", "ASK"]
+      .forEach((ex, k) => intro.append(...(k ? [document.createTextNode(" · ")] : []), cmdLink(ex, p)));
     root.append(intro);
 
     const cols = h("div", "help-cols");
@@ -834,7 +854,14 @@
   }
 
   function viewTable(p, res) {
-    p.body.append(dataTable(res.data || {}, { pane: p, ticker: res.ticker }));
+    const d = res.data || {};
+    if (res.fn === "ALRT" && isNum(d.unacked) && d.unacked > 0) {
+      p.toolsEl.append(button("ACK ALL", `Acknowledge all ${d.unacked} unacknowledged alerts (ALRT ACK ALL)`, (e) => {
+        e.stopPropagation();
+        p.run("ALRT ACK ALL");
+      }, "btn"));
+    }
+    p.body.append(dataTable(d, { pane: p, ticker: res.ticker }));
   }
 
   function viewNews(p, res) {
@@ -923,10 +950,10 @@
 
   function factBody(d, pane) {
     const f = (d && d.fact) || {};
-    const t = tickerOk(f.entity) ? f.entity : null;
+    const t = entityOk(f.entity) ? f.entity : null;
     const root = h("div", "fact");
     const head = h("div", "fact-head");
-    head.append(t && t !== "MACRO" ? tickerEl(t, pane) : h("span", "amber", f.entity || ""), h("span", "attr", f.attr || ""));
+    head.append(tickerOk(t) && t !== "MACRO" ? tickerEl(t, pane) : h("span", "amber", f.entity || ""), h("span", "attr", f.attr || ""));
     if (f.tier) head.append(h("span", "badge", f.tier));
     if (d.downgraded) head.append(h("span", "badge bad", "downgraded"));
     root.append(head);
@@ -965,7 +992,7 @@
           if (isNum(val)) val = val.toLocaleString("en-US", { maximumFractionDigits: 6 });
           else if (val !== null && typeof val === "object") val = JSON.stringify(val);
           const sv = val === null || val === undefined ? null : String(val);
-          return { cells: [citeEl(x.cite, tickerOk(ent) ? ent : t), { node: nameEl(x.attr || "", "mono-wrap"), cls: "amber" },
+          return { cells: [citeEl(x.cite, entityOk(ent) ? ent : t), { node: nameEl(x.attr || "", "mono-wrap"), cls: "amber" },
             sv === null ? null : { node: h("span", "mono-wrap", sv.length > 160 ? sv.slice(0, 159) + "…" : sv), title: sv }] };
         })));
       root.append(s);
@@ -1016,10 +1043,11 @@
     return ctx;
   }
 
-  function niceTicks(lo, hi, maxTicks) {
-    const raw = (hi - lo) / Math.max(1, maxTicks);
+  /** Round axis values between lo and hi; `minStep` 1 keeps a count's axis to whole numbers. */
+  function niceTicks(lo, hi, maxTicks, minStep = 0) {
+    const raw = Math.max((hi - lo) / Math.max(1, maxTicks), minStep);
     const mag = 10 ** Math.floor(Math.log10(raw));
-    const step = [1, 2, 2.5, 5, 10].map((k) => k * mag).find((s) => s >= raw) || 10 * mag;
+    const step = Math.max(minStep, [1, 2, 2.5, 5, 10].map((k) => k * mag).find((s) => s >= raw) || 10 * mag);
     const ticks = [];
     for (let v = Math.ceil(lo / step) * step; v <= hi + step * 1e-9; v += step) ticks.push(Number(v.toPrecision(12)));
     const str = String(Number(step.toPrecision(6)));
@@ -1039,8 +1067,15 @@
     const maxTicks = Math.max(2, Math.floor(width / 78));
     const span = (Date.parse(dates[n - 1]) - Date.parse(dates[0])) / 864e5;
     if (!(span >= 75)) {
+      // samples taken through the day (ships, cameras) are labelled by the hour over a day or two
       const k = Math.max(1, Math.ceil(n / maxTicks));
-      for (let i = 0; i < n; i += k) out.push({ i, label: `${MONTHS[+dates[i].slice(5, 7) - 1]} ${+dates[i].slice(8, 10)}` });
+      const hours = span < 2 && /T\d{2}:\d{2}/.test(dates[0]);
+      let prev = "";
+      for (let i = 0; i < n; i += k) {
+        const label = hours ? dates[i].slice(11, 16) : `${MONTHS[+dates[i].slice(5, 7) - 1]} ${+dates[i].slice(8, 10)}`;
+        if (label !== prev) out.push({ i, label });
+        prev = label;
+      }
       return out;
     }
     const months = span / 30.44;
@@ -1177,7 +1212,8 @@
       hi = Math.max(hi, 100);
     }
     if (!isFinite(lo)) return;
-    const pad = (hi - lo) * 0.06 || Math.abs(hi) * 0.02 || 1;
+    const count = m.kind === "count";  // vessels, vehicles: whole numbers, so at least one either side
+    const pad = Math.max((hi - lo) * 0.06 || Math.abs(hi) * 0.02 || 1, count ? 1 : 0);
     lo -= pad;
     hi += pad;
 
@@ -1186,9 +1222,9 @@
     const volH = m.vols ? Math.max(24, Math.round((H - top - bottom) * 0.16)) : 0;
     const gap = m.vols ? 6 : 0;
     const priceH = H - top - bottom - volH - gap;
-    const { ticks, decimals } = niceTicks(lo, hi, Math.max(2, Math.floor(priceH / 44)));
+    const { ticks, decimals } = niceTicks(lo, hi, Math.max(2, Math.floor(priceH / 44)), count ? 1 : 0);
     const dec = decimals;
-    const tagDigits = m.rebased ? 1 : priceDigits(hi);
+    const tagDigits = m.rebased ? 1 : m.digits != null ? m.digits : priceDigits(hi);
     ctx.font = `600 11px ${font}`;
     const labelW = Math.max(...ticks.map((v) => ctx.measureText(fixed(v, dec)).width), ctx.measureText(fixed(hi, tagDigits)).width + 8);
     const axisW = Math.ceil(labelW) + 16;
@@ -1241,8 +1277,8 @@
     ctx.lineTo(plot.x + plot.w, crisp(plot.y + plot.h));
     ctx.stroke();
 
-    // reference: start price, or 100 when rebased
-    const ref = m.rebased ? 100 : m.lines[0].pts.length ? m.lines[0].pts[0][1] : null;
+    // reference: start price, 100 when rebased, or the model's own (a count chart's mean)
+    const ref = m.rebased ? 100 : isNum(m.ref) ? m.ref : m.lines[0].pts.length ? m.lines[0].pts[0][1] : null;
     if (ref !== null) {
       ctx.save();
       ctx.setLineDash([2, 3]);
@@ -1343,7 +1379,7 @@
       axisTag(ctx, g.plot.x + g.plot.w + 1, y, fixed(v, g.tagDigits), css("amber"), "#000");
     }
     // date tag on the time axis
-    const date = m.dates[i];
+    const date = m.label ? m.label(m.dates[i]) : m.dates[i];
     ctx.font = `600 11px ${fontFamily()}`;
     const dw = ctx.measureText(date).width + 8;
     const dx = Math.max(g.plot.x, Math.min(g.xAt(i) - dw / 2, g.plot.x + g.plot.w - dw));
@@ -1363,7 +1399,7 @@
         tip.append(tipRow(l.label, isNum(v) ? `${fixed(v, 1)}  ${chg}` : "—", "t-" + l.color));
       }
     } else {
-      for (const [k, v, cls] of priceTipRows(m, i)) tip.append(tipRow(k, v, cls));
+      for (const [k, v, cls] of (m.tipRows ? m.tipRows(i) : priceTipRows(m, i))) tip.append(tipRow(k, v, cls));
     }
     placeTip(st, g.xAt(i), y);
   }
@@ -1385,8 +1421,72 @@
     return rows;
   }
 
+  // sample counts (SHIP AREA, CAM ID): the price chart's frame, one point per sample
+  function countModel(d) {
+    const S = Array.isArray(d.series) ? d.series : [];
+    const dates = S.map((x) => String(x.date));
+    const pts = S.map((x, i) => [i, x.value]).filter(([, v]) => isNum(v));
+    const line = { label: d.name || d.entity || "", color: "amber", pts, values: new Map(pts), width: 1.5, fill: true };
+    const unit = String(d.unit || "count");
+    return {
+      S, dates, lines: [line], rebased: false, vols: null, kind: "count", digits: 0,
+      ref: d.stats && isNum(d.stats.mean) ? d.stats.mean : null,
+      label: fmtTime,
+      tipRows: (i) => {
+        const s = S[i] || {};
+        const rows = [[unit[0].toUpperCase() + unit.slice(1), isNum(s.value) ? fmtNum(s.value, 0) : "—", ""]];
+        for (const [k, v] of Object.entries(s.parts && typeof s.parts === "object" ? s.parts : {})) {
+          if (isNum(v)) rows.push([k, fmtNum(v, 0), "dim"]);
+        }
+        return rows;
+      },
+    };
+  }
+
+  function viewCountChart(p, res) {
+    const d = res.data || {};
+    const st = d.stats || {};
+    const strip = h("div", "chart-stats");
+    const kv = (k, v, cls) => {
+      const s = h("span");
+      s.append(h("span", "k", k), h("span", "v " + (cls || ""), v == null ? "—" : v));
+      strip.append(s);
+    };
+    const model = countModel(d);
+    kv("Last", fmtNum(st.last, 0));
+    const z = fmtSigned(st.z, 1);
+    kv("z", z, z ? signOf(z) : "");
+    kv("Mean", fmtNum(st.mean, 1));
+    kv("High", st.high_date ? `${fmtNum(st.high, 0)} ${fmtTime(st.high_date)}` : fmtNum(st.high, 0));
+    kv("Low", st.low_date ? `${fmtNum(st.low, 0)} ${fmtTime(st.low_date)}` : fmtNum(st.low, 0));
+    kv("Samples", isNum(st.n) ? String(st.n) : null);
+    const c = citeEl(d.cite, entityOk(d.entity) ? d.entity : null);
+    if (c) strip.append(c);
+    p.body.append(strip);
+    if (!model.dates.length) {
+      p.body.append(h("div", "empty", "No samples."));
+      return;
+    }
+    const frame = chartFrame(p);
+    frame.model = model;
+    frame.draw = drawPrice;
+    frame.hover = hoverPrice;
+    frame.over.setAttribute("aria-label", `${d.name || d.entity || ""}: ${d.unit || "count"} per sample`);
+    p.body.append(frame.wrap);
+    const src = d.source && typeof d.source === "object" ? d.source : {};
+    const lg = h("div", "legend");
+    lg.append(h("span", "dim", `${d.unit || "count"} per sample; dashed line: the mean. z: the newest sample against up to 30 `
+      + "earlier comparable ones."));
+    if (src.name) lg.append(extLink(String(src.name), src.url, "dim"));
+    p.body.append(lg);
+  }
+
   function viewChart(p, res) {
     const d = res.data || {};
+    if (d.kind === "count") {
+      viewCountChart(p, res);
+      return;
+    }
     const t = d.ticker || res.ticker;
     const extra = (res.args || []).filter((a) => !RANGES.includes(String(a).toUpperCase()));
     for (const r of RANGES) {
@@ -1655,10 +1755,12 @@
     const status = h("div", "ask-status" + (d.available ? "" : " off"));
     if (d.available) {
       status.append(h("span", "badge ok", "analyst ready"),
-        h("span", "", "Answers only from the bank's tools and cites fact ids." + (chat.ticker ? ` Security in focus: ${chat.ticker}.` : "")));
+        h("span", "", (d.model ? `${d.model}. ` : "") + "Answers only from the bank's tools and cites fact ids."
+          + (chat.ticker ? ` Security in focus: ${chat.ticker}.` : "")));
     } else {
       status.append(h("span", "badge bad", "analyst unavailable"), h("span", "", d.reason || "not configured"));
     }
+    chat.setup = d.available ? null : setupEl(d.model);
     const log = h("div", "ask-log");
     const form = h("div", "ask-form");
     const input = h("textarea", "ask-input");
@@ -1692,6 +1794,7 @@
     });
     const paint = () => {
       log.replaceChildren();
+      if (chat.setup) log.append(chat.setup);
       if (!chat.turns.length) log.append(askIntro(p, input));
       for (const t of chat.turns) log.append(turnEl(t, p));
       log.scrollTop = log.scrollHeight;
@@ -1701,6 +1804,27 @@
     p.disposers.push(() => { p.ask = null; });
     paint();
     if (d.question) askQuestion(p, d.question);
+  }
+
+  /** How to bring the analyst up: it runs on an open-weight model behind an OpenAI-compatible server. */
+  function setupEl(model) {
+    const m = model || "qwen3:8b";
+    const box = h("div", "ask-setup");
+    box.append(h("div", "sec-h", "Start the analyst"));
+    const ol = h("ol");
+    const li = (...parts) => {
+      const el = h("li");
+      for (const x of parts) el.append(typeof x === "string" ? document.createTextNode(x) : x);
+      ol.append(el);
+    };
+    li("Ollama (the default): install it from ollama.com, run ", h("code", "", "OLLAMA_CONTEXT_LENGTH=16384 ollama serve"),
+      ", then ", h("code", "", `ollama pull ${m}`), ".");
+    li("Or another OpenAI-compatible server (llama.cpp, vLLM, LM Studio): set ", h("code", "", "BRAIN_LLM_URL"),
+      " to its address ending in /v1 and ", h("code", "", "BRAIN_LLM_MODEL"), " to a model it lists (",
+      h("code", "", "BRAIN_LLM_KEY"), " if it wants a key), then restart the terminal.");
+    li("Run ASK again: the terminal checks the server every few seconds. Nothing leaves this machine unless BRAIN_LLM_URL points elsewhere.");
+    box.append(ol);
+    return box;
   }
 
   function askIntro(p, input) {
@@ -1768,6 +1892,11 @@
         meta.append(h("span", "", `${isNum(u.input_tokens) ? u.input_tokens.toLocaleString("en-US") : "?"} in · ${isNum(u.output_tokens) ? u.output_tokens.toLocaleString("en-US") : "?"} out`));
       }
       if (res.stop_reason) meta.append(h("span", "", res.stop_reason));
+      const un = res.citations && Array.isArray(res.citations.unverified) ? res.citations.unverified : [];
+      if (un.length) {
+        meta.append(h("span", "warn", `${un.length} cited id${un.length === 1 ? "" : "s"} not in this answer's tool results: `
+          + un.slice(0, 6).map((x) => `[${x}]`).join(" ")));
+      }
       if (turn.t1) meta.append(h("span", "", `${((turn.t1 - turn.t0) / 1000).toFixed(1)}s`));
       a.append(meta);
     }
@@ -1847,12 +1976,19 @@
     if (w[0] === "ASK") return "ASK";  // first on a line, ASK takes the rest as the question
     if (w[0] === "INGEST" || w[1] === "INGEST") return "JOBS";
     if (w[1] === "ASK") return `${w[0]} ASK`;
+    // a watchlist edit or an acknowledgement is done once: rerun as the list it showed
+    if ((w[0] === "WL" || w[1] === "WL") && (w.includes("ADD") || w.includes("DEL"))) return "WL";
+    if ((w[0] === "ALRT" || w[1] === "ALRT") && w.includes("ACK")) return "ALRT";
     return String(line).trim();
   }
 
+  const WRITES = { WL: ["ADD", "DEL"], ALRT: ["ACK"] };
+
   /** The line a pane reruns: the server's own reading wins once it has answered this line. */
   function rerunLine(line, res) {
-    return res && res.ok && res.fn === "INGEST" ? "JOBS" : safeRerun(line);
+    if (res && res.ok && res.fn === "INGEST") return "JOBS";
+    if (res && res.ok && WRITES[res.fn] && (res.args || []).length && WRITES[res.fn].includes(String(res.args[0]))) return res.fn;
+    return safeRerun(line);
   }
 
   class Pane {
@@ -2086,7 +2222,7 @@
     const list = $("#ac");
     list.replaceChildren();
     ac.items.forEach((it, k) => {
-      const li = h("li", (it.kind === "function" ? "ac-fn" : "ac-tk") + (k === ac.sel ? " sel" : ""));
+      const li = h("li", (it.kind === "function" ? "ac-fn" : it.kind === "keyword" ? "ac-kw" : "ac-tk") + (k === ac.sel ? " sel" : ""));
       li.setAttribute("role", "option");
       li.setAttribute("aria-selected", k === ac.sel ? "true" : "false");
       li.append(h("span", "ac-text", it.text), h("span", "ac-kind", it.kind || ""), h("span", "ac-desc", it.desc || ""));
@@ -2255,15 +2391,16 @@
     el.replaceChildren(head, body);
     el.hidden = false;
     placePopover();
-    const t = tickerOk(ticker) ? ticker : "MACRO";
+    const t = entityOk(ticker) ? ticker : "MACRO";
     const res = await api("/api/fact?" + new URLSearchParams({ ticker: t, id }));
     if (seq !== popSeq) return;
     body.replaceChildren(res && res.ok ? factBody(res.data || {}, focusedPane()) : errorBox(res, focusedPane()));
     const ent = res && res.ok && res.data && res.data.fact ? res.data.fact.entity : null;
-    if (tickerOk(ent)) {
-      tools.append(button("OPEN IN PANE", `Run ${ent} SHOW ${id} in pane ${focused + 1}`, () => {
+    if (entityOk(ent)) {
+      const line = tickerOk(ent) ? `${ent} SHOW ${id}` : `SHOW ${ent}/${id}`;  // AREA.X and CAM.Y are no tickers
+      tools.append(button("OPEN IN PANE", `Run ${line} in pane ${focused + 1}`, () => {
         closePopover();
-        focusedPane().run(`${ent} SHOW ${id}`);
+        focusedPane().run(line);
       }, "btn"));
     }
     placePopover();
@@ -2326,6 +2463,26 @@
 
   let jobsRunning = 0;
   let statusTimer = 0;
+  let alertsSeen = null;  // unacknowledged count at the last status poll
+
+  /** The top bar's alert count; a change refreshes the panes showing ALRT or WL. */
+  function showAlerts(al) {
+    const el = $("#st-alerts");
+    const a = al && typeof al === "object" ? al : {};
+    if (!isNum(a.unacked)) {
+      el.textContent = "ALRT ?";
+      el.className = "st st-btn bad";
+      el.title = "The alert state could not be read: run ALRT to see why";
+      return;
+    }
+    el.textContent = `ALRT ${a.unacked}`;
+    el.className = "st st-btn" + (a.high > 0 ? " bad" : a.unacked > 0 ? " warn" : "");
+    el.title = `${a.unacked} unacknowledged alert${a.unacked === 1 ? "" : "s"}${a.high ? `, ${a.high} high` : ""}: click to run ALRT`;
+    if (alertsSeen !== null && a.unacked !== alertsSeen) {
+      for (const p of panes) if (p.res && p.res.ok && (p.res.fn === "ALRT" || p.res.fn === "WL")) p.reload(true);
+    }
+    alertsSeen = a.unacked;
+  }
 
   /** Poll status every STATUS_EVERY ms, or every JOBS_POLL ms while jobs are active. */
   function scheduleStatus(ms) {
@@ -2364,9 +2521,12 @@
     jobs.className = "st st-btn" + (running ? " busy" : "");
     const an = s.analyst || {};
     const ae = $("#st-analyst");
-    ae.textContent = an.available ? "ANALYST ON" : "ANALYST OFF";
-    ae.className = "st " + (an.available ? "ok" : "bad");
-    ae.title = an.available ? "The analyst (ASK) is available" : `The analyst is unavailable: ${an.reason || "not configured"}`;
+    // the analyst is an open-weight model on a local server: when it is off, say what to start or set
+    ae.textContent = an.available ? "ANALYST ON" : "ANALYST OFF · OLLAMA / BRAIN_LLM_URL";
+    ae.className = "st st-btn " + (an.available ? "ok" : "bad");
+    ae.title = an.available ? `The analyst (ASK) is available${an.model ? `: ${an.model}` : ""}. Click to open it.`
+      : `The analyst is unavailable: ${an.reason || "not configured"}. Click for how to start it.`;
+    showAlerts(s.alerts);
 
     if (running < jobsRunning) {
       // a job finished: new facts may answer panes that were missing data (an INGEST pane reruns as JOBS)
@@ -2466,6 +2626,8 @@
     buildClocks();
     watchPixelRatio();
     $("#st-jobs").addEventListener("click", () => focusedPane().run("JOBS"));
+    $("#st-alerts").addEventListener("click", () => focusedPane().run("ALRT"));
+    $("#st-analyst").addEventListener("click", () => focusedPane().run("ASK"));
     refreshStatus();
     refreshTape();
     scheduleStatus(STATUS_EVERY);

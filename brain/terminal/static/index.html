@@ -18,7 +18,8 @@
   <span id="st-conn" class="st bad" hidden></span>
   <span id="st-bank" class="st" title="Entities in the memory bank / research-universe size">BANK –</span>
   <button id="st-jobs" class="st st-btn" type="button" title="Background jobs (runs JOBS)">JOBS –</button>
-  <span id="st-analyst" class="st" title="Analyst availability">ANALYST –</span>
+  <button id="st-alerts" class="st st-btn" type="button" title="Unacknowledged alerts (runs ALRT)">ALRT –</button>
+  <button id="st-analyst" class="st st-btn" type="button" title="Analyst availability (runs ASK)">ANALYST –</button>
 </header>
 
 <div id="cmdbar" class="cmdbar">
@@ -27,7 +28,7 @@
   <div class="cmdfield">
     <input id="cmd" type="text" autocomplete="off" autocapitalize="off" spellcheck="false"
            aria-label="Command" aria-autocomplete="list" aria-controls="ac"
-           placeholder="AAPL GP 5Y SPY · WEI · ASK what changed in AAPL's margins? — Enter to run, F1 for help">
+           placeholder="AAPL GP 5Y SPY · AAPL INS · WL · ASK what changed in AAPL's margins? — Enter to run, F1 for help">
     <ul id="ac" class="ac" role="listbox" hidden></ul>
   </div>
   <button id="go" class="go" type="button" title="Run (Enter)">GO</button>
