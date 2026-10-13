@@ -12,6 +12,8 @@ from brain.timeutil import days_between, today
 
 
 def run(bank: Bank) -> tuple[list[str], list[str]]:
+    # Check the journal itself: replay every shard from scratch, ignoring the sidecar indexes.
+    bank = Bank(bank.root, use_index=False)
     errors, warnings = [], []
     for e in bank.entities():
         facts = bank.facts(e, include_downgraded=True)

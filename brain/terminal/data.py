@@ -451,7 +451,7 @@ def _brief(bank: Bank, cmd: Command) -> dict:
 
 # ---------- SHOW ----------
 def _find(bank: Bank, entity: str, prefix: str) -> list[Fact]:
-    return [f for f in bank.facts(entity, include_downgraded=True) if f.id.startswith(prefix)]
+    return bank.find(entity, prefix)
 
 
 def _show(bank: Bank, cmd: Command) -> dict:

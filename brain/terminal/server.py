@@ -132,24 +132,18 @@ def dumps(obj) -> str:
         return json.dumps(data.clean(obj), allow_nan=False, default=_default, ensure_ascii=False)
 
 
-def _stat(path: Path) -> tuple | None:
-    try:
-        st = path.stat()
-    except OSError:
-        return None
-    return st.st_ino, st.st_size, st.st_mtime_ns
+WARM_ATTRS = ("series.price_daily", "identity.name", "identity.industry", "identity.exchanges")
 
 
-def warm(bank: Bank, names: list[str] | None = None) -> dict[str, tuple | None]:
-    """Read these entities' journal shards now (default: all of them). A Bank loads an entity on first
-    use, and MOV or EV touch the whole universe (about 100 MB of journal, 6-7 s): done lazily under the
-    bank lock, that first call stalls every pane. Returns each shard's stat, taken just before it was read,
-    so a later reload can tell which shards have not changed since."""
-    stats = {}
-    for e in bank.entities() if names is None else names:
-        stats[e.upper()] = _stat(bank.shard(e))
-        bank.attrs(e)
-    return stats
+def warm(bank: Bank, names: list[str] | None = None) -> int:
+    """Bring every shard's index up to date and read the records the opening screens need (prices and
+    names). The bank reads the rest lazily, one attribute at a time, so this takes seconds, not the
+    minutes a full read of a large bank would. Returns the number of entities seen."""
+    names = bank.entities() if names is None else names
+    for e in names:
+        for a in WARM_ATTRS:
+            bank.facts(e, a)
+    return len(names)
 
 
 def _universe_size() -> int:
@@ -174,7 +168,6 @@ class TerminalServer(ThreadingHTTPServer):
         self.quiet = False  # True silences per-request error lines (tests); tracebacks are always logged
         self.jobs = jobs.JobManager(on_finish=self.reload_bank)
         self._tickers: tuple[float, list[str]] | None = None
-        self._stats: dict[str, tuple | None] = {}  # entity -> its shard's stat when self.bank read it
         self._reload_cv = threading.Condition()
         self._reloads_asked = self._reloads_done = 0  # reload_bank calls so far / calls a finished reload covers
         self._reloading = False
@@ -210,10 +203,9 @@ class TerminalServer(ThreadingHTTPServer):
 
     # ---------- state ----------
     def warm_bank(self) -> None:
-        """Read the whole current bank now (before serving), remembering each shard's stat."""
-        stats = warm(self.bank)
+        """Index the bank and read prices and names before serving (see :func:`warm`)."""
         with self.lock:
-            self._stats = stats
+            warm(self.bank)
 
     def reload_bank(self, job: dict | None = None) -> None:
         """A job wrote to the journal from another process: swap in a fresh Bank. Returns once a reload
@@ -239,24 +231,11 @@ class TerminalServer(ThreadingHTTPServer):
                 self._reload_cv.notify_all()
 
     def _reload(self) -> None:
-        """Build the fresh Bank outside the lock, so panes keep answering from the old one meanwhile.
-        Journals are append-only: a shard whose stat is the one the old Bank read is taken over as it
-        is, and only new or changed shards are read (one ticker's ingest reads one shard, not 100 MB)."""
+        """Take in what a job appended to the journal from another process. The Bank reads only the
+        bytes appended since it last looked, and only for attributes it has already read."""
         with self.lock:
-            old, known = self.bank, dict(self._stats)
-        fresh = Bank(old.root)
-        caches = [k for k, v in vars(fresh).items() if isinstance(v, dict)]  # per-entity state, empty so far
-        names = fresh.entities()
-        same = {e for e in names if known.get(e.upper()) is not None and _stat(fresh.shard(e)) == known[e.upper()]}
-        stats = warm(fresh, [e for e in names if e not in same])
-        with self.lock:
-            for e in same:
-                k = e.upper()
-                if all(k in getattr(old, c) for c in caches):
-                    for c in caches:
-                        getattr(fresh, c)[k] = getattr(old, c)[k]
-                    stats[k] = known[k]
-            self.bank, self._stats, self._tickers = fresh, stats, None
+            self.bank.refresh()
+            self._tickers = None
 
     def tickers(self) -> list[str]:
         """Bank entities, cached briefly. Holds the lock."""
@@ -362,8 +341,7 @@ def serve(host: str = "127.0.0.1", port: int = 8765, open_browser: bool = True) 
     except (OSError, OverflowError) as e:
         raise SystemExit(f"cannot listen on {host}:{port}: {getattr(e, 'strerror', None) or e}. Try another --port.")
     url = f"http://{_url_host(host)}:{server.server_port}/"
-    # Read the whole bank before announcing the URL: loading it while serving would slow every request
-    # that arrives meanwhile (the reads and the requests take turns on one interpreter lock).
+    # Index the bank and read prices and names before announcing the URL, so the first screens are quick.
     t0 = time.monotonic()
     print("reading the memory bank...", end=" ", flush=True)
     server.warm_bank()

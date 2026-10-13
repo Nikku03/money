@@ -453,8 +453,10 @@ class ServerTest(TempHome):
                 self.assertFalse(out["ok"])
         self.assertEqual(self.server.jobs.list_jobs(), [])
 
-    def test_ingest_runs_job_and_swaps_bank(self):
-        old = self.server.bank
+    def test_ingest_runs_job_and_refreshes_bank(self):
+        bank, refreshed = self.server.bank, []
+        real = bank.refresh
+        bank.refresh = lambda: refreshed.append(1) or real()
         code, out = self.post_json("/api/ingest", {"target": "brk.b"})
         self.assertEqual(code, 200)
         self.assertTrue(out["ok"])
@@ -465,44 +467,46 @@ class ServerTest(TempHome):
         code, out = self.get_json("/api/jobs")
         j = out["jobs"][0]
         self.assertEqual((j["status"], j["returncode"], j["log"]), ("done", 0, ["fake ingest BRK.B"]))
-        self.assertIsNot(self.server.bank, old)
-        self.assertEqual(self.server.bank.root, old.root)
+        self.assertIs(self.server.bank, bank)  # the same Bank, brought up to date in place
+        self.assertEqual(refreshed, [1])
 
-    def test_reload_reads_the_whole_bank_then_only_what_changed(self):
+    def test_reload_reads_only_what_other_processes_appended(self):
+        bank = self.server.bank
         self.bank.add(filed("MSFT", "us-gaap:Revenues", 2.0, "2024-06-30", "2024-07-30"))
         self.server.reload_bank()
-        first = self.server.bank
-        self.assertIsNot(first, self.bank)
-        self.assertEqual(set(first._facts), {"AAPL", "MSFT"})  # read before the swap, not on first request
-        self.assertEqual(first.facts("ZZZ"), [])  # a lookup caches ZZZ as empty
-        child = Bank(first.root)  # a job writing from another process
+        self.assertEqual(len(bank.facts("MSFT", "us-gaap:Revenues")), 1)
+        self.assertEqual(bank.facts("ZZZ", "us-gaap:Revenues"), [])  # read once while empty
+        aapl_size = bank.shard("AAPL").stat().st_size
+        msft_indexed = bank._idx["MSFT"].size
+        child = Bank(bank.root)  # a job writing from another process
         child.add(filed("MSFT", "us-gaap:Revenues", 3.0, "2024-09-30", "2024-10-30"))
         child.add(filed("NVDA", "us-gaap:Revenues", 4.0, "2024-07-28", "2024-08-28"))
         child.add(filed("ZZZ", "us-gaap:Revenues", 5.0, "2024-07-28", "2024-08-28"))
-        read, real_warm = [], server.warm
-        with mock.patch.object(server, "warm", lambda b, names=None: read.append(sorted(names)) or real_warm(b, names)):
+        scanned, real_scan = [], Bank._scan
+        with mock.patch.object(Bank, "_scan", lambda b, e, ix, fh, st: scanned.append((e, ix.size)) or real_scan(b, e, ix, fh, st)):
             self.server.reload_bank()
-        fresh = self.server.bank
-        self.assertEqual(read, [["MSFT", "NVDA", "ZZZ"]])  # the unchanged AAPL shard is not read again
-        self.assertIs(fresh._facts["AAPL"], first._facts["AAPL"])
-        full = Bank(first.root)
-        self.assertEqual(fresh.entities(), full.entities())
+        self.assertNotIn("AAPL", [e for e, _ in scanned])  # an unchanged shard is not read again
+        self.assertEqual([at for e, at in scanned if e == "MSFT"], [msft_indexed])  # only the appended tail
+        self.assertEqual(bank.shard("AAPL").stat().st_size, aapl_size)
+        self.assertEqual(len(bank.facts("MSFT", "us-gaap:Revenues")), 2)
+        self.assertEqual(len(bank.facts("ZZZ", "us-gaap:Revenues")), 1)  # not the empty read from before
+        self.assertEqual(len(bank.facts("NVDA", "us-gaap:Revenues")), 1)
+        full = Bank(bank.root)
         for e in full.entities():
-            self.assertEqual((fresh.digest(e), fresh.attrs(e)), (full.digest(e), full.attrs(e)))
-        self.assertEqual(len(fresh.facts("MSFT")), 2)
-        self.assertEqual(len(fresh.facts("ZZZ")), 1)  # not the empty entry the old bank cached
+            self.assertEqual((bank.digest(e), bank.attrs(e)), (full.digest(e), full.attrs(e)))
         self.assertEqual(self.server.tickers(), ["AAPL", "MSFT", "NVDA", "ZZZ"])
 
     def test_reloads_run_one_at_a_time_and_a_burst_shares_one(self):
         gate, started, calls = threading.Event(), threading.Event(), []
-        real_warm = server.warm
+        bank = self.server.bank
+        real_refresh = bank.refresh
 
-        def slow_warm(bank, names=None):
-            calls.append(names)
+        def slow_refresh():
+            calls.append(1)
             started.set()
             self.assertTrue(gate.wait(10))
-            return real_warm(bank, names)
-        with mock.patch.object(server, "warm", slow_warm):
+            return real_refresh()
+        with mock.patch.object(bank, "refresh", slow_refresh):
             first = threading.Thread(target=self.server.reload_bank)
             first.start()
             self.assertTrue(started.wait(10))
@@ -526,12 +530,13 @@ class ServerTest(TempHome):
                  "print('added')")
         self.server.jobs.argv_for = lambda t: py(child)
         self.assertEqual(self.get_json("/api/run?cmd=ZZTEST%20FA")[1]["ok"], False)  # caches ZZTEST as empty
-        real_warm, polls = server.warm, []
+        polls, bank = [], self.server.bank
+        real_refresh = bank.refresh
 
-        def slow_warm(bank, names=None):
-            time.sleep(0.5)  # a reload of the real bank takes seconds
-            return real_warm(bank, names)
-        with mock.patch.object(server, "warm", slow_warm):
+        def slow_refresh():
+            time.sleep(0.5)  # taking in a big job's output can take a moment
+            return real_refresh()
+        with mock.patch.object(bank, "refresh", slow_refresh):
             self.assertTrue(self.post_json("/api/ingest", {"target": "ZZTEST"})[1]["ok"])
             while True:  # what the page does: poll until no job runs, then refresh its panes
                 status = self.get_json("/api/status")[1]
