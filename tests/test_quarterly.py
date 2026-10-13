@@ -66,6 +66,24 @@ class QuarterlyTest(TempHome):
         self.assertEqual(metrics.quarterly(self.bank.view("2024-03-01"), "X", NI)[0].value, 10.0)
 
 
+    def test_q4_takes_the_nine_months_as_they_stood_when_the_year_was_filed(self):
+        # The year as first filed (10-K, Feb 2024) against the nine months recast in next year's Q3 10-Q
+        # (Nov 2024) would mix two bases: Q4 stays the year minus the nine months known in Feb 2024.
+        self.bank.add_many(fiscal_year("X", NI, 2023, [10.0, 20.0, 30.0, 45.0], known_dates(2023)))
+        self.bank.add(q("X", NI, 80.0, "2023-01-01", "2023-09-30", "2024-11-01"))  # recast comparative
+        q4 = metrics.quarterly(self.bank.view("2024-12-01"), "X", NI)[-1]
+        self.assertEqual((q4.end, q4.value), ("2023-12-31", 45.0))
+        self.assertEqual(q4.known_at, "2024-02-20T23:59:59Z")
+        # Once the year itself is recast in a later 10-K, the recast nine months known by then go with it.
+        self.bank.add(q("X", NI, 120.0, "2023-01-01", "2023-12-31", "2025-02-20", form="10-K"))
+        q4 = metrics.quarterly(self.bank.view("2025-03-01"), "X", NI)[-1]
+        self.assertEqual((q4.end, q4.value), ("2023-12-31", 40.0))
+        # A year with no nine months known by its filing has no derived Q4.
+        self.bank.add(q("X", NI, 200.0, "2022-01-01", "2022-12-31", "2023-02-20", form="10-K"))
+        self.bank.add(q("X", NI, 150.0, "2022-01-01", "2022-09-30", "2023-11-01"))  # first seen a year later
+        ends = [x.end for x in metrics.quarterly(self.bank.view("2025-03-01"), "X", NI)]
+        self.assertNotIn("2022-12-31", ends)
+
 class TtmTest(TempHome):
     def test_sum_of_four_contiguous_quarters(self):
         self.bank.add_many(fiscal_year("X", NI, 2023, [10.0, 20.0, 30.0, 45.0], known_dates(2023)))

@@ -39,7 +39,8 @@ DERIVED_LABELS = {"market_cap": "Market value", "earnings_yield": "Earnings yiel
 
 SIGNAL_TO_HYP = {"mom12_1": "H1-mom12_1", "rev1": "H2-rev1", "earnings_yield": "H3-earnings_yield",
                  "low_asset_growth": "H4-low_asset_growth"}
-# The hypotheses on the broad universe (H3b, H6-H8) are found in HYPOTHESES by their universe; their signals
+# The hypotheses on the broad universe (H3c, H6, H7b, H8b) are found in HYPOTHESES by their universe (a withdrawn
+# one gives way to its successor, hypotheses.current); their signals
 # are per-ticker ones, read one stock at a time and cached per month-end (signals.cross_section).
 EVIDENCE_BUDGET_S = 15.0   # seconds a call may spend ranking the broad universe; the rest waits for the next call
 BROAD_MIN_SHARE = 0.5      # rank against the broad universe only when the bank holds at least this share of it
@@ -400,7 +401,7 @@ def evidence(bank: Bank, ticker: str, budget_s: float | None = EVIDENCE_BUDGET_S
     Signals section and the terminal's EV. Raises :class:`NoEvidence` when it cannot be computed.
 
     The first rows are H1-H4 against ``config.UNIVERSE``. Then, when the bank holds the broad universe
-    (``universe/us_broad.json``), one row per hypothesis declared on it (H3b, H6-H8), ranked against it
+    (``universe/us_broad.json``), one row per current hypothesis declared on it (H3c, H6, H7b, H8b), ranked against it
     and marked with ``universe``, ``select`` and ``held`` (what the backtest would hold by that
     hypothesis' rule); ``broad`` says how far that ranking got. A month's first broad ranking reads every
     stock's filings: ``budget_s`` bounds the seconds one call spends on it, and until it is complete those
@@ -459,9 +460,9 @@ def evidence(bank: Bank, ticker: str, budget_s: float | None = EVIDENCE_BUDGET_S
 
 
 def _broad_hypotheses() -> list[dict]:
-    from brain.research import signals
-    from brain.research.hypotheses import BROAD, HYPOTHESES
-    return [h for h in HYPOTHESES if h.get("universe") == BROAD and h["signal"] in signals.PER_TICKER]
+    from brain.research import ledger, signals
+    from brain.research.hypotheses import BROAD, current
+    return [h for h in current(ledger.withdrawn()) if h.get("universe") == BROAD and h["signal"] in signals.PER_TICKER]
 
 
 def _broad_evidence(bank: Bank, t_: str, verdict: dict, claims: dict, budget_s: float | None) -> dict:

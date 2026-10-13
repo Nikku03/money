@@ -7,7 +7,7 @@ Rules (from the cell project, carried over):
   id ever run counts in the false-discovery correction.
 - TRAIN is for looking. The verdict comes from TEST only.
 
-H3b and H6-H8 run on the broad universe and name their holdings rule (``select``) in
+H3b, H3c and H6-H8b run on the broad universe and name their holdings rule (``select``) in
 their own dict: a key added to COMMON would change H1-H5's declared spec hashes.
 ``universe_sha`` pins the exact universe file; ``research run`` refuses a different one.
 """
@@ -76,4 +76,41 @@ HYPOTHESES = [
      "claim": "Stocks with the highest standardized unexpected earnings (latest quarterly EPS known at the "
               "rebalance day minus the same quarter a year earlier, over the standard deviation of that "
               "difference in the 8 prior quarters, split-adjusted) beat the universe next month."},
+    # H3b, H7 and H8 were withdrawn after review found two mistakes in the code behind them (see the
+    # ledger): a derived Q4 paired the year as first filed with nine months recast later, and every
+    # 2.02 filing within 20 days of another was dropped as a duplicate, losing results that followed a
+    # pre-announcement. The corrected versions below are new ids; all of them count in the BH correction.
+    {"id": "H3c-earnings_yield_ttm", "signal": "earnings_yield_ttm", "universe": BROAD, "universe_sha": BROAD_SHA,
+     "select": "top_frac",
+     "claim": "Stocks with the highest trailing-twelve-month earnings yield (net income over the last four fiscal "
+              "quarters, Q4 = fiscal year minus the nine-month YTD as known when that year was filed; "
+              "NetIncomeLoss, else ProfitLoss, else net income available to common holders; over market value "
+              "from diluted, else basic weighted-average shares; SEC filings known at the time) beat the "
+              "universe next month."},
+    {"id": "H7b-earnings_reaction", "signal": "earnings_reaction", "universe": BROAD, "universe_sha": BROAD_SHA,
+     "select": "top_frac_vs_all",
+     "portfolio": "top third by signal of listed tickers that have one, equal weight, rebalanced monthly",
+     "null": "as many names drawn at random from all listed tickers, same months",
+     "claim": "Stocks with the strongest 3-day excess reaction over SPY (days -1..+1) to the latest earnings "
+              "release (8-K item 2.02; a re-file within a day or an 8-K/A within 20 days is the same release) "
+              "known in the 31 days to the rebalance day keep drifting the same way: they beat the universe "
+              "next month."},
+    {"id": "H8b-sue", "signal": "sue", "universe": BROAD, "universe_sha": BROAD_SHA, "select": "top_frac",
+     "claim": "Stocks with the highest standardized unexpected earnings (latest quarterly EPS known at the "
+              "rebalance day minus the same quarter a year earlier, over the standard deviation of that "
+              "difference in the 8 prior quarters, split-adjusted; Q4 = fiscal-year EPS minus nine-month EPS "
+              "as known when the year was filed) beat the universe next month."},
 ]
+
+
+def current(withdrawn=()) -> list[dict]:
+    """HYPOTHESES as a reader should see them: a withdrawn hypothesis gives way to any later one on the
+    same signal and universe (H7 to H7b). One with no successor stays, so its withdrawal is still
+    shown. The ledger and the false-discovery correction keep every id regardless."""
+    out = []
+    for i, h in enumerate(HYPOTHESES):
+        same = lambda g: g["signal"] == h["signal"] and g.get("universe") == h.get("universe")  # noqa: E731
+        if h["id"] in withdrawn and any(same(g) for g in HYPOTHESES[i + 1:]):
+            continue
+        out.append(h)
+    return out

@@ -915,7 +915,7 @@ class V2FunctionsTest(V2Base):
         self.assertEqual(len(q4["_refs"]), 3)  # the year, the nine months, the release
         self.assertIsNotNone(d["rows"][4]["sue"])  # enough history by the last year
         self.assertIn("Research: H7-earnings_reaction FAIL", d["note"])
-        self.assertIn("Research: H8-sue has no result yet", d["note"])
+        self.assertIn("Research: H8b-sue has no result yet", d["note"])  # neither has one: the latest
         self.assertEqual(self.run_err("^GSPC ERN")["hint"], "^GSPC GP")
         self.assertEqual(self.run_err("ZCO ERN")["hint"], "INGEST ZCO")
 

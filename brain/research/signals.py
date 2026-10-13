@@ -84,7 +84,7 @@ def low_asset_growth(ctx: MonthCtx) -> np.ndarray:
 HAND = {"mom12_1": mom12_1, "rev1": rev1, "earnings_yield": earnings_yield, "low_asset_growth": low_asset_growth}
 
 
-# ---------- per-ticker signals (H3b, H6-H8) ----------
+# ---------- per-ticker signals (H3b-H3c, H6-H8b) ----------
 INSIDER_DAYS = 90
 EVENT_DAYS = 31
 
@@ -111,8 +111,8 @@ def insider_buying(ctx: MonthCtx, t: str) -> float:
 
 def earnings_reaction(ctx: MonthCtx, t: str) -> float | None:
     """car_3d (excess return over SPY, days -1..+1) of the latest earnings release known in the 31 days
-    to the rebalance day whose three days have closed by then. A 2.02 filing within 20 days of an
-    earlier one is the same release (events.distinct). None when there is no such release."""
+    to the rebalance day whose three days have closed by then. A re-file within a day and an 8-K/A
+    within 20 days are the same release (events.distinct). None when there is no such release."""
     evs = [e for e in events.distinct(events.earnings_events(ctx.view, t))
            if days_between(e.known_at, ctx.date) <= EVENT_DAYS]
     for e in reversed(evs):

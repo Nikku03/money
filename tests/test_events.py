@@ -128,3 +128,30 @@ class EventsTest(TempHome):
         self.assertTrue(np.isnan(val["2024-06"]))                   # known 58 days before the June rebalance
         self.assertTrue(np.isnan(val["2024-07"]))                   # July 31 release: day +1 not closed yet
         self.assertAlmostEqual(val["2024-08"], full(july))
+
+    def test_distinct_keeps_separate_releases_close_together(self):
+        evs = [filing("Y", "8-K", "2024-01-09T12:00:00Z", "2.02", "pre"),    # preliminary revenue
+               filing("Y", "8-K", "2024-01-10T12:00:00Z", "2.02", "copy"),   # the same release again, next day
+               filing("Y", "8-K/A", "2024-01-20T12:00:00Z", "2.02", "amd"),  # amends it
+               filing("Y", "8-K", "2024-01-23T21:30:00Z", "2.02", "res"),    # the results, 14 days later
+               filing("Y", "8-K", "2024-01-24T12:00:00Z", "2.02", "slides"),
+               filing("Y", "8-K/A", "2024-03-20T12:00:00Z", "2.02", "late")]  # an amendment long after: kept
+        self.assertEqual([e.context["accn"] for e in events.distinct(evs)], ["pre", "res", "late"])
+        # A run of filings each within a day of the one before is compared with the last release kept,
+        # not the last filing seen, so it does not swallow a release two days after the first.
+        run = [filing("Y", "8-K", f"2024-04-0{d}T12:00:00Z", "2.02", f"d{d}") for d in (1, 2, 3)]
+        self.assertEqual([e.context["accn"] for e in events.distinct(run)], ["d1", "d3"])
+
+    def test_results_soon_after_a_pre_announcement_are_matched(self):
+        ends = pd.date_range("2022-12-31", periods=6, freq="QE").strftime("%Y-%m-%d").tolist()
+        for v, end in zip([1.0, 1.1, 1.2, 1.3, 1.2, 1.3], ends):
+            start = (pd.Timestamp(end) - pd.offsets.QuarterBegin(startingMonth=1)).strftime("%Y-%m-%d")
+            known = (pd.Timestamp(end) + pd.Timedelta(days=35)).strftime("%Y-%m-%d")
+            self.bank.add(q("X", EPS, v, start, end, known, unit="USD/shares"))
+        pre = filing("X", "8-K", "2024-04-22T12:00:00Z", "2.02,9.01", "pre")  # 10 days before the May 1 results
+        self.bank.add(pre)
+        view = self.bank.view("2024-12-31")
+        self.assertEqual([e.context["accn"] for e in events.distinct(events.earnings_events(view, "X"))],
+                         ["pre", "a1", "a5"])
+        rows = {r["period_end"]: r for r in events.earnings_table(view, "X", self.book)}
+        self.assertEqual(rows["2024-03-31"]["cite"][-1], self.release.ref)

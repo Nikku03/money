@@ -16,7 +16,8 @@ from tests.test_quarterly import EPS, q
 from tests.util import TempHome, filed, price_snapshot
 
 H1_H4 = ["H1-mom12_1", "H2-rev1", "H3-earnings_yield", "H4-low_asset_growth"]
-BROAD_IDS = ["H3b-earnings_yield_ttm", "H6-insider_buying", "H7-earnings_reaction", "H8-sue"]
+WITHDRAWN = ["H3b-earnings_yield_ttm", "H7-earnings_reaction", "H8-sue"]  # as the ledger records them
+BROAD_IDS = ["H6-insider_buying", "H3c-earnings_yield_ttm", "H7b-earnings_reaction", "H8b-sue"]
 
 
 def filing(t, form, known, items="", accn=None):
@@ -117,7 +118,7 @@ class BriefSectionsTest(TempHome):
 
 def _universe_bank(bank, large, broad):
     """Prices 2009..mid-2021; fiscal-year facts for ``large`` (H1-H4); quarterly EPS, net income, shares,
-    earnings 8-Ks and director purchases for ``broad`` (H3b, H6-H8)."""
+    earnings 8-Ks and director purchases for ``broad`` (H3c, H6, H7b, H8b)."""
     days = pd.bdate_range("2009-01-01", "2021-06-30").strftime("%Y-%m-%d").tolist()
     rng = np.random.default_rng(3)
     for t in [*broad, "SPY"]:
@@ -167,6 +168,7 @@ class BroadEvidenceTest(TempHome):
         recs = [{"op": "result", "id": h, "spec_sha": "s", "at": "2026-01-01T00:00:00Z", "controls": ctl,
                  "test": {"mean_net_excess": net, "perm_p": p}, "train": {}, "context": {}}
                 for h, net, p in (("H1-mom12_1", 0.0011, 0.18), ("H6-insider_buying", 0.00002, 0.28))]
+        recs += [{"op": "withdraw", "id": h, "reason": "a code mistake", "at": "2026-01-02T00:00:00Z"} for h in WITHDRAWN]
         (self.home / "ledger.jsonl").write_text("".join(json.dumps(r) + "\n" for r in recs))
         self.patches = [mock.patch.object(config, "UNIVERSE", self.home / "large.json"),
                         mock.patch.object(config, "LEDGER", self.home / "ledger.jsonl"),
@@ -205,7 +207,7 @@ class BroadEvidenceTest(TempHome):
             self.assertEqual(r["universe"], "universe/us_broad.json")
             self.assertIsInstance(r["held"], bool)
         rows = {r["hypothesis"]: r for r in ev["signals"]}
-        self.assertEqual((rows["H6-insider_buying"]["verdict"], rows["H8-sue"]["verdict"]), ("FAIL", "not run"))
+        self.assertEqual((rows["H6-insider_buying"]["verdict"], rows["H8b-sue"]["verdict"]), ("FAIL", "not run"))
         self.assertEqual(rows["H6-insider_buying"]["held"], rows["H6-insider_buying"]["value"] > 0)
         json.dumps(ev, allow_nan=False)
 

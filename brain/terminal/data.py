@@ -745,15 +745,20 @@ def _research_tickers() -> set[str]:
 
 
 def _research_line(signal: str) -> str:
-    """One sentence on the tested hypothesis behind a signal, quoted from the ledger as it stands."""
-    from brain.research.hypotheses import HYPOTHESES
-    hid = next((h["id"] for h in HYPOTHESES if h["signal"] == signal), None)
-    if hid is None:
+    """One sentence on the tested hypothesis behind a signal, quoted from the ledger as it stands: the
+    latest current one on the signal with a result (a withdrawn one gives way to its successor,
+    hypotheses.current), else the latest declared."""
+    from brain.research import ledger
+    from brain.research.hypotheses import current
+    ids = [h["id"] for h in current(ledger.withdrawn()) if h["signal"] == signal]
+    if not ids:
         return ""
-    v = None
+    results = {}
     if config.LEDGER.exists():
         from brain.research import run as research_run
-        v = next((r for r in research_run.verdicts() if r["id"] == hid), None)
+        results = {r["id"]: r for r in research_run.verdicts()}
+    hid = next((i for i in reversed(ids) if i in results), ids[-1])
+    v = results.get(hid)
     if v is None:
         return f" Research: {hid} has no result yet (RES)."
     net, p = v["test"].get("mean_net_excess"), v["test"].get("perm_p")

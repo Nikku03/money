@@ -297,7 +297,7 @@ _BANK_TOOLS = [
     ("news", "Headlines (unscored) and claims noted from the web, with each claim source's track record "
              "(terminal CN).", {"ticker": TICKER}, ("ticker",), lambda a: f"{_tk(a['ticker'])} CN"),
     ("evidence", "Where the security ranks on each tested signal and that signal's research verdict on held-out "
-                 "months: H1-H4 against the 60-stock universe, then H3b and H6-H8 against the 741-stock one, with "
+                 "months: H1-H4 against the 60-stock universe, then H3c, H6, H7b and H8b against the 741-stock one, with "
                  "whether the backtest would hold it (terminal EV).", {"ticker": TICKER}, ("ticker",), lambda a: f"{_tk(a['ticker'])} EV"),
     ("show_fact", "One fact in full, with its source URL and, for derived facts, its inputs (terminal SHOW).",
      {"ticker": ("string", "The entity the fact belongs to, e.g. AAPL or MACRO."),

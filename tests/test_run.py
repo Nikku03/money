@@ -14,7 +14,8 @@ from brain.research import harness, hypotheses, ledger, run, signals
 from tests.util import TempHome, filed, price_snapshot
 
 H1_H5 = ["H1-mom12_1", "H2-rev1", "H3-earnings_yield", "H4-low_asset_growth", "H5-ridge"]
-NEW = ["H3b-earnings_yield_ttm", "H6-insider_buying", "H7-earnings_reaction", "H8-sue"]
+NEW = ["H3b-earnings_yield_ttm", "H6-insider_buying", "H7-earnings_reaction", "H8-sue",
+       "H3c-earnings_yield_ttm", "H7b-earnings_reaction", "H8b-sue"]
 
 
 def usd(f: Fact) -> Fact:
@@ -31,8 +32,9 @@ class DeclaredSpecsTest(TempHome):
         recorded = {r["id"]: r["spec_sha"] for r in ledger.read(config.ROOT / "research" / "ledger.jsonl")
                     if r["op"] == "declare"}
         by_id = {h["id"]: h for h in hypotheses.HYPOTHESES}
-        for hid in H1_H5:  # adding H3b..H8 (and select modes) must not move a declared hash
+        for hid in recorded:  # a declared spec is never edited: adding H3b..H8b (and select modes) moves no hash
             self.assertEqual(ledger.spec_sha(by_id[hid]), recorded[hid], hid)
+        for hid in H1_H5:
             self.assertNotIn("select", by_id[hid])
         self.assertEqual(len(by_id), len(hypotheses.HYPOTHESES))
         for hid in NEW:
@@ -45,6 +47,16 @@ class DeclaredSpecsTest(TempHome):
         self.assertEqual({by_id[h]["select"] for h in NEW}, {"top_frac", "positive", "top_frac_vs_all"})
         self.assertEqual(run.universe_path("universe/us_broad.json"), universe.BROAD)
 
+
+    def test_a_withdrawn_hypothesis_gives_way_to_its_successor(self):
+        ids = lambda gone: [h["id"] for h in hypotheses.current(gone)]  # noqa: E731
+        self.assertEqual(ids(()), [h["id"] for h in hypotheses.HYPOTHESES])
+        shown = ids({"H7-earnings_reaction": "x", "H8-sue": "x", "H8b-sue": "x", "H2-rev1": "x"})
+        self.assertNotIn("H7-earnings_reaction", shown)
+        self.assertIn("H7b-earnings_reaction", shown)
+        self.assertNotIn("H8-sue", shown)       # H8b follows it, withdrawn too: the last one stays
+        self.assertIn("H8b-sue", shown)
+        self.assertIn("H2-rev1", shown)         # no successor: its withdrawal is still shown
 
 class RunEndToEndTest(TempHome):
     def setUp(self):
@@ -120,7 +132,7 @@ class RunEndToEndTest(TempHome):
             out = run.run(self.bank, n_random=20)
         self.assertEqual([r["id"] for r in out], H1_H5 + NEW)
         for r in out:  # synthetic releases come 35 days after each quarter: one month in three has one
-            self.assertGreater(r["test"]["n_months"], 6 if r["id"] == "H7-earnings_reaction" else 20, r["id"])
+            self.assertGreater(r["test"]["n_months"], 6 if r["id"].startswith("H7") else 20, r["id"])
             self.assertGreater(r["test_signal_coverage"], 0.2, r["id"])
         # H1-H5 on their own panel come out exactly as when they ran alone.
         for a, b in zip(alone, out[:5]):

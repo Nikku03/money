@@ -198,7 +198,7 @@ def to_fact(entity: str, name: str, m: M, unit: str | None = None) -> Fact:
 
 # ---------- quarters and trailing twelve months (new; nothing above reads them) ----------
 # A 10-Q reports the quarter; the 10-K reports only the year, so Q4 is the year minus the
-# nine-month year-to-date that ends at Q3, known once both are known. The metrics behind
+# nine-month year-to-date that ends at Q3, as that stood when the year was filed. The metrics behind
 # declared hypotheses (earnings_yield, asset_growth, market_cap) do not use any of this.
 QUARTER_DAYS = (80, 100)
 YEAR_DAYS = (330, 400)
@@ -242,12 +242,15 @@ def _plus_day(d: str) -> str:
 def _quarters_of(view: View, entity: str, attr: str, value) -> dict[str, Quarter]:
     out = {end: Quarter(f.context["start"], end, value(f), f.known_at, [f], False, f.unit)
            for end, f in _by_end(view, entity, attr, *QUARTER_DAYS).items()}
-    ytd = list(_by_end(view, entity, attr, *NINE_MONTH_DAYS).values())
+    ytd = view.facts(entity, attr, lambda f: (d := _dur(f)) is not None and NINE_MONTH_DAYS[0] <= d <= NINE_MONTH_DAYS[1])
     for end, y in _by_end(view, entity, attr, *YEAR_DAYS, annual_form=True).items():
         if end in out:
             continue  # the company reported Q4 itself
+        # The nine months as they stood when this year's figure was filed: a later recast of the nine
+        # months (a comparative in next year's 10-Q) against the year as first filed would mix two
+        # bases. Every version is a candidate, not only the latest, so the vintage can be chosen.
         same_year = [n for n in ytd if n.unit == y.unit and abs(days_between(n.context["start"], y.context["start"])) <= 3
-                     and QUARTER_DAYS[0] <= days_between(n.as_of, end) <= QUARTER_DAYS[1]]
+                     and QUARTER_DAYS[0] <= days_between(n.as_of, end) <= QUARTER_DAYS[1] and n.known_at <= y.known_at]
         if not same_year:
             continue
         n = max(same_year, key=lambda f: (f.as_of, f.known_at))

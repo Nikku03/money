@@ -97,7 +97,7 @@ A keyboard-driven market terminal over the memory bank: type `AAPL GP 5Y SPY` an
 | `JET` | the company's own registered aircraft and their recorded flights |
 | `SHIP` `CAM` | vessel counts per port area, vehicle counts per camera, each with a z-score; `SHIP AREA` and `CAM ID` chart one |
 | `WL` `ALRT` | the watchlist with last price, 1-day move and latest alert; notice and high alerts newest first, `ALRT ALL` with the info ones (`WL ADD T`, `ALRT ACK ID`) |
-| `EV` | the brain's verdict: where a stock ranks on every tested signal (H1-H4 against the 60-stock universe, H3b and H6-H8 against the 741-stock one), and whether that signal passed its held-out test |
+| `EV` | the brain's verdict: where a stock ranks on every tested signal (H1-H4 against the 60-stock universe, H3c, H6, H7b and H8b against the 741-stock one), and whether that signal passed its held-out test |
 | `BRIEF` `SHOW` | the cited one-page brief; any fact with its source |
 | `WEI` `MOV` `CURVE` `ECO` | world markets, universe movers, Treasury yield curve, macro |
 | `RES` `CLM` | research verdicts per universe; web-claim track records per source |

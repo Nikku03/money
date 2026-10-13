@@ -24,7 +24,8 @@ from brain.timeutil import days_between
 NEW_YORK = ZoneInfo("America/New_York")
 CLOSE = time(16, 0)
 EARNINGS_FORMS = ("8-K", "8-K/A")
-SAME_EVENT_DAYS = 20   # a 2.02 filing this soon after another is the same release (an amendment, a re-file)
+REFILE_DAYS = 1        # a 2.02 filing this soon after a release is a re-file of it (the slides, a second copy)
+AMEND_DAYS = 20        # an 8-K/A this soon after a release amends it
 MATCH_DAYS = 90        # a quarter's release comes within this many days of its end
 
 
@@ -39,13 +40,17 @@ def earnings_events(view: View, ticker: str) -> list[Fact]:
     return sorted(view.facts(ticker, "filing", is_earnings), key=lambda f: (f.known_at, f.id))
 
 
-def distinct(events: list[Fact], gap_days: int = SAME_EVENT_DAYS) -> list[Fact]:
-    """The first filing of each release: one within ``gap_days`` of the previous is the same event."""
-    out, last = [], None
+def distinct(events: list[Fact]) -> list[Fact]:
+    """One filing per earnings release, the first. A 2.02 filing within a day of the last release kept
+    is a re-file of it, and an 8-K/A within 20 days amends it. Any other 2.02 filing is a release of
+    its own, however soon it follows: a pre-announcement and the results two weeks later are two."""
+    out: list[Fact] = []
     for e in events:
-        if last is None or days_between(last.known_at, e.known_at) > gap_days:
-            out.append(e)
-        last = e
+        if out:
+            gap = days_between(out[-1].known_at, e.known_at)
+            if gap <= REFILE_DAYS or (str(e.value).upper() == "8-K/A" and gap <= AMEND_DAYS):
+                continue
+        out.append(e)
     return out
 
 

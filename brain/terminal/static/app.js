@@ -897,7 +897,7 @@
   }
 
   /** EV: the H1-H4 rows against the research universe, then the hypotheses declared on the broad one
-   * (H3b, H6-H8), each group under its universe. "Held" is what that hypothesis' backtest would hold: the
+   * (H3c, H6, H7b, H8b: a withdrawn hypothesis gives way to its successor), each group under its universe. "Held" is what that hypothesis' backtest would hold: the
    * top third by signal, or for select `positive` every stock above 0. A broad ranking still being filled
    * (`broad.status` pending) shows the stock's value without a rank. */
   function viewEvidence(p, res) {

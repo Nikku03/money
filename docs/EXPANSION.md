@@ -31,7 +31,7 @@ def ttm(view, entity, attrs) -> M | None                       # sum of the last
 def sue(view, entity) -> M | None                              # (EPS_q - EPS_{q-4}) / sd of that difference over the 8 prior quarters (>= 6 needed)
 def earnings_yield_ttm(view, entity, book) -> M | None         # TTM net income (NetIncomeLoss, then ProfitLoss, then ...AvailableToCommonStockholdersBasic) / market value; same sanity bound as earnings_yield
 ```
-Quarters: a reported quarter has duration 80–100 days. Q4 = annual (330–400 days, 10-K) minus the 9-month YTD (260–280 days) ending at Q3, known when both are known. Concepts merge by priority (as `metrics.annual` does).
+Quarters: a reported quarter has duration 80–100 days. Q4 = annual (330–400 days, 10-K) minus the 9-month YTD (260–280 days) ending at Q3, the version of the YTD known when that annual figure was filed (a YTD recast later would mix two bases), known when the annual is known. Concepts merge by priority (as `metrics.annual` does).
 
 ### 1.4 Earnings events and reactions (`brain/events.py`)
 ```python
@@ -40,6 +40,9 @@ def reaction(book, view, ticker, event, bench="SPY") -> dict | None
     # {"date": event day (first close at or after known_at), "car_3d": excess return day -1 .. day +1 vs bench,
     #  "drift_20d": excess return day +2 .. day +21, "drift_60d": ..day +61 (None when not yet known at view.t),
     #  "event": event.ref}
+def distinct(events) -> list[Fact]
+    # one filing per release: drops a 2.02 filing within a day of the last kept one (a re-file) and an
+    # 8-K/A within 20 days of it (an amendment); a pre-announcement and the results after it are two releases
 def earnings_table(view, ticker, book) -> list[dict]
     # newest first: {"period_end", "filed", "eps", "eps_yoy", "sue", "car_3d", "drift_20d", "drift_60d", "cite"}
 ```
@@ -67,6 +70,11 @@ Declared before any run (CLAUDE.md). All on `universe/us_broad.json`, same split
 | `H6-insider_buying` | `insider_buying`: dollar value of open-market purchases by officers and directors in the 90 days to the rebalance day (by filing date) | `positive` | stocks with insider buying beat the universe next month |
 | `H7-earnings_reaction` | `earnings_reaction`: `car_3d` of an earnings event known in the 31 days to the rebalance day | `top_frac_vs_all` | strong earnings-day reactions keep drifting the same way next month |
 | `H8-sue` | `sue` from the latest quarter known at the rebalance day | top third | standardized unexpected earnings predicts next month's excess return |
+| `H3c-earnings_yield_ttm` | as H3b, Q4 from the nine months as known when the year was filed | top third | as H3b (H3b withdrawn: mixed-vintage Q4) |
+| `H7b-earnings_reaction` | as H7, with `events.distinct` keeping releases that follow a pre-announcement | `top_frac_vs_all` | as H7 (H7 withdrawn: real releases dropped as duplicates) |
+| `H8b-sue` | as H8, Q4 EPS from the nine months as known when the year was filed | top third | as H8 (H8 withdrawn: mixed-vintage Q4) |
+
+H3b, H7 and H8 were run and then withdrawn for the code mistakes named in the ledger; their results stay in the ledger and count in the false-discovery correction. Readers (brief, EV, ERN, the analyst) show the successor (`hypotheses.current`).
 
 `select` lives in the hypothesis dict only (adding keys to `COMMON` would change H1–H5's declared spec hashes, which `research run` would then refuse). Modes: `top_frac` (default, today's behaviour: top third of stocks with a value; the null shuffles among stocks with a value), `top_frac_vs_all` (same holdings; the null draws the same number of names from all listed stocks, so "has an event at all" is part of what is tested), `positive` (every listed stock with signal > 0, at least 3; the null draws the same number from all listed stocks). `research run` builds one panel per universe and must reproduce H1–H5 exactly (same panel digest) when re-run.
 
