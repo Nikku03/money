@@ -44,3 +44,13 @@ Every hypothesis ever run counts in the false-discovery correction, so trying tw
 - This repo places no orders. Do not add code that connects to a broker or trades real money.
 - Claims are not evidence. Run `python -m brain score-claims` before trusting any source's direction calls. In the related cell project, curated literature signs were right about half the time; assume the same of market commentary until a source's record shows otherwise.
 - Report negatives as plainly as positives. If every hypothesis fails, say so.
+
+## Alternative data: where the legal and ethical lines are
+
+These sources watch the physical world. They stay useful and legal only inside these lines; code and agents must not cross them.
+
+- **Aircraft (ADS-B).** Track only aircraft whose FAA registered owner is the company itself, a corporate asset. Never track aircraft registered to individuals. Never try to see through trusts, LLCs or privacy programs (FAA PIA/LADD) to find who owns or rides in an aircraft. Do not infer who was on board. Records are airport to airport, with times. Tails in `var/aviation_optout.txt` are never tracked.
+- **Ships (AIS).** Count commercial vessels (cargo, tanker) in watched port areas. Pleasure and sailing craft are dropped. Store aggregate counts per area, not individual tracks.
+- **Cameras.** Only official government traffic cameras published for public viewing under open terms (Transport for London JamCams, Caltrans). Never private, unsecured or login-protected cameras. Count vehicles only. Frames are processed in memory and discarded, never stored. No detection or identification of people, faces or number plates.
+- **Web reading.** Respect robots.txt, identify the client, rate-limit, and never get around paywalls, logins or bot checks.
+- Credit the sources: adsb.lol (ODbL), TfL Open Data, Caltrans, aisstream.io, OurAirports, FAA.
