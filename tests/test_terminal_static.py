@@ -101,6 +101,10 @@ class StylesheetTest(unittest.TestCase):
         for sel in (".tbl td.wrap", ".tbl td .wrap", ".md", ".turn-q"):
             self.assertEqual(self.decl(sel, "overflow-wrap"), "anywhere", sel)
         self.assertEqual(self.decl(".md pre", "overflow-x"), "auto")
+        # prose keeps its measure; a wide table (the brief's insider trades, 9 columns) may use the pane's width
+        self.assertEqual(self.decl(".md > *", "max-width"), "128ch")
+        self.assertEqual((self.decl(".md > .md-table", "max-width"), self.decl(".md .md-table", "overflow-x")),
+                         ("100%", "auto"))
 
     def test_pane_header_keeps_its_buttons(self):
         # nine range buttons in a 500px header used to push reload and maximise out of the clipped header
@@ -593,13 +597,22 @@ class AppBehaviourTest(unittest.TestCase):
           await settle();
           const reran = calls.slice(before).filter((c) => c.path === "/api/run").map((c) => c.cmd);
           show({ unacked: 3, high: 0 }); seen.push([el.textContent, el.className]);
+          await settle();
+          const mark = calls.length;
+          show({ unacked: 3, high: 0, info: 2 });  // a headline came in: the count stays, the panes refresh
+          const infoTitle = el.title, infoText = el.textContent;
+          await settle();
+          const reranInfo = calls.slice(mark).filter((c) => c.path === "/api/run").map((c) => c.cmd);
           show(null); seen.push([el.textContent, el.className]);
-          return { seen, same, reran };
+          return { seen, same, reran, infoTitle, infoText, reranInfo };
         """, responses=responses)
         self.assertEqual(out["seen"], [["ALRT 2", "st st-btn bad"], ["ALRT 0", "st st-btn"], ["ALRT 3", "st st-btn warn"],
                                        ["ALRT ?", "st st-btn bad"]])
         self.assertEqual(out["same"], 0)  # no change, no refresh
         self.assertEqual(sorted(out["reran"]), ["ALRT", "WL"])  # a change refreshes the panes that show alerts
+        self.assertEqual(out["infoText"], "ALRT 3")  # notice and high only
+        self.assertTrue(out["infoTitle"].endswith("(and 2 info: ALRT ALL)"), out["infoTitle"])
+        self.assertEqual(sorted(out["reranInfo"]), ["ALRT", "WL"])
 
     def test_nowrap_columns_cut_long_text(self):
         long = "COST headline: " + "x" * 120
@@ -619,14 +632,102 @@ class AppBehaviourTest(unittest.TestCase):
           const runs = [];
           const pane = { body: document.createElement("div"), toolsEl: document.createElement("span"), disposers: [],
                          run: (l) => runs.push(l) };
-          app("viewTable")(pane, { ok: true, fn: "ALRT", args: [], data: { columns: [], rows: [], unacked: 3 } });
+          app("viewTable")(pane, { ok: true, fn: "ALRT", args: [], data: { columns: [], rows: [], unacked: 3, info: 2,
+                                                                          note: "2 info alerts: ALRT ALL lists them." } });
           const b = pane.toolsEl.childNodes[0];
           b.listeners.click[0]({ stopPropagation() {} });
+          const note = all(pane.body).filter((e) => e.className === "cmdlink").map((e) => e.textContent);
+          const every = { body: document.createElement("div"), toolsEl: document.createElement("span"), disposers: [], run() {} };
+          app("viewTable")(every, { ok: true, fn: "ALRT", args: ["ALL"], data: { columns: [], rows: [], unacked: 5, info: 2 } });
           const none = { body: document.createElement("div"), toolsEl: document.createElement("span"), disposers: [], run() {} };
           app("viewTable")(none, { ok: true, fn: "ALRT", args: [], data: { columns: [], rows: [], unacked: 0 } });
-          return { label: b.textContent, runs, none: none.toolsEl.childNodes.length };
+          return { label: b.textContent, title: b.title, everyTitle: every.toolsEl.childNodes[0].title, runs, note,
+                   none: none.toolsEl.childNodes.length };
         """)
         self.assertEqual((out["label"], out["runs"], out["none"]), ("ACK ALL", ["ALRT ACK ALL"], 0))
+        self.assertEqual(out["title"], "Acknowledge all 3 unacknowledged alerts, and the 2 info ones not listed (ALRT ACK ALL)")
+        self.assertEqual(out["everyTitle"], "Acknowledge all 5 unacknowledged alerts (ALRT ACK ALL)")
+        self.assertEqual(out["note"], ["ALRT ALL"])  # the note's ALRT ALL runs as one command
+
+    def test_evidence_groups_rows_by_universe_with_held_and_pending(self):
+        row = {"signal": "mom12_1", "hypothesis": "H1-mom12_1", "value": 0.25, "percentile": 80, "in_top_third": True,
+               "verdict": "FAIL", "test_net_excess": 0.0011, "perm_p": 0.17, "bh_q": 0.5, "claim": ""}
+        broad = [{**row, "signal": "insider_buying", "hypothesis": "H6-insider_buying", "value": 2500000.0,
+                  "percentile": None, "in_top_third": None, "held": None, "select": "positive",
+                  "universe": "universe/us_broad.json", "universe_size": 741},
+                 {**row, "signal": "sue", "hypothesis": "H8-sue", "value": 1.5, "percentile": 90, "in_top_third": True,
+                  "held": False, "select": "top_frac", "universe": "universe/us_broad.json", "universe_size": 741}]
+        data = {"ticker": "AAPL", "rebalance_date": "2026-09-30", "universe": "universe/us_large.json", "universe_size": 60,
+                "signals": [row, *broad], "controls_pass": True, "summary": "0 of 3 signals passed.",
+                "broad": {"universe": "universe/us_broad.json", "status": "pending", "universe_size": 741, "computed": 40, "total": 741,
+                          "rebalance_date": "2026-09-30"}}
+        out = run_app("""
+          const pane = { body: document.createElement("div"), toolsEl: document.createElement("span"), disposers: [], run() {} };
+          app("viewEvidence")(pane, { ok: true, fn: "EV", ticker: "AAPL", args: [], view: "evidence", data: input.data });
+          const trs = all(pane.body).filter((e) => e.tagName === "TR");
+          const done = { body: document.createElement("div"), toolsEl: document.createElement("span"), disposers: [], run() {} };
+          const only = { ...input.data, signals: [input.data.signals[0]],
+                         broad: { universe: "universe/us_broad.json", status: "unavailable", universe_size: 741, reason: "the bank holds 3 of its 741 stocks" } };
+          app("viewEvidence")(done, { ok: true, fn: "EV", ticker: "AAPL", args: [], view: "evidence", data: only });
+          return { rows: trs.map((tr) => tr.childNodes.map((td) => td.textContent)),
+                   meta: all(pane.body).filter((e) => e.className === "ev-meta").map((e) => e.textContent),
+                   groups: all(done.body).filter((e) => e.className === "grp").length,
+                   note: all(done.body).filter((e) => e.className === "note").map((e) => e.textContent) };
+        """, data=data)
+        rows = out["rows"]
+        self.assertEqual(rows[0][:6], ["Signal", "Hypothesis", "Select", "Value", "Pctl", "Held"])
+        self.assertEqual(rows[1], ["us_large · 60 stocks"])
+        self.assertEqual(rows[2][:3], ["mom12_1", "H1-mom12_1", "top_frac"])
+        self.assertEqual(rows[2][5], "yes")  # H1-H4: held is the top third
+        self.assertEqual(rows[3], ["us_broad · 741 stocks"])
+        self.assertIn("40 of 741 stocks so far", rows[4][0])
+        self.assertEqual((rows[5][0], rows[5][2], rows[5][3], rows[5][4], rows[5][5]),
+                         ("insider_buying", "positive", "$2.50M", "—", "—"))  # pending: a value, no rank, no held
+        self.assertEqual((rows[6][0], rows[6][5]), ("sue", "no"))  # the row's own held, not the top third
+        self.assertIn("us_broad ranking 40/741", out["meta"][0])
+        self.assertEqual(out["groups"], 0)  # one universe: no group rows
+        self.assertIn("Not ranked against us_broad: the bank holds 3 of its 741 stocks.", out["note"][0])
+
+    def test_answer_flags_unverified_numbers_and_links_only_verified_citations(self):
+        res = {"ok": True, "answer": "Revenue rose to $391B [9de710d2]; the margin is 46% [deadbeef0011].",
+               "model": "qwen", "usage": {}, "stop_reason": "stop", "tool_calls": [],
+               "citations": {"verified": ["9de710d2"], "unverified": ["deadbeef0011", "not an id"]},
+               "unverified_numbers": ["46%", {"text": "12.5x"}, 7, "46%", None]}
+        out = run_app("""
+          const pane = { body: document.createElement("div"), toolsEl: document.createElement("span"), disposers: [], run() {} };
+          const turn = (r) => ({ q: "why?", ticker: "AAPL", t0: 0, t1: 1500, res: r, timers: [] });
+          const el = app("turnEl")(turn(input.res), pane);
+          const cls = (c) => all(el).filter((e) => e.className === c);
+          const links = cls("cite");
+          links[links.length - 1].listeners.click[0]({ stopPropagation() {} });  // the Sources line's
+          await settle();
+          const plain = app("turnEl")(turn({ ok: true, answer: "No numbers [9de710d2].", tool_calls: [] }), pane);
+          return { warn: cls("ask-warn").map((e) => e.textContent), links: links.map((b) => b.textContent),
+                   flagged: cls("cite-bad").map((e) => [e.textContent, e.tagName]),
+                   cites: cls("ask-cites").map((e) => e.textContent),
+                   facts: calls.filter((c) => c.path === "/api/fact").map((c) => c.url),
+                   plain: all(plain).filter((e) => /ask-warn|ask-cites|cite-bad/.test(e.className)).length,
+                   plainLinks: all(plain).filter((e) => e.className === "cite").length };
+        """, res=res)
+        self.assertEqual(len(out["warn"]), 1)
+        self.assertIn("3 numbers in this answer are in none of its tool results: 46%, 12.5x, 7.", out["warn"][0])
+        self.assertEqual(out["links"], ["[9de710d2]", "[9de710d2]"])  # in the text, and under it
+        self.assertEqual(out["flagged"], [["[deadbeef]", "SPAN"], ["[deadbeef]", "SPAN"]])  # never a button
+        self.assertTrue(out["cites"][0].startswith("Sources [9de710d2]"))
+        self.assertIn("not in this answer's tool results", out["cites"][0])
+        self.assertEqual(out["facts"], ["AAPL"])
+        self.assertEqual((out["plain"], out["plainLinks"]), (0, 1))  # an answer without the fields: as before
+
+    def test_analyst_busy_is_shown_as_busy(self):
+        out = run_app("""
+          await app("refreshStatus")();
+          const ae = document.querySelector("#st-analyst");
+          return { bar: ae.textContent, cls: ae.className, title: ae.title };
+        """, status={"ok": True, "jobs_running": 0, "alerts": {"unacked": 0, "high": 0},
+                     "analyst": {"available": True, "reason": "busy answering a question", "model": "qwen"}})
+        self.assertEqual(out["bar"], "ANALYST BUSY")
+        self.assertIn("warn", out["cls"])
+        self.assertIn("qwen, busy answering a question", out["title"])
 
     def test_analyst_off_says_how_to_start_it(self):
         reason = ("nothing answered at http://127.0.0.1:11434/v1 (BRAIN_LLM_URL): start Ollama (`ollama serve`, "

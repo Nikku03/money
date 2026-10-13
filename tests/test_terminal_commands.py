@@ -133,6 +133,7 @@ class ParseTest(unittest.TestCase):
         self.check("ALRT", "ALRT", None)
         self.check("ALRT ACK 1a2b3c4d", "ALRT", None, ["ACK", "1A2B3C4D"])
         self.check("ALRT ACK ALL", "ALRT", None, ["ACK", "ALL"])
+        self.check("alrt all", "ALRT", None, ["ALL"])
         self.check("INGEST INSIDERS", "INGEST", None, ["INSIDERS"])
         self.check("INGEST WATCH", "INGEST", None, ["WATCH"])
         self.check("INGEST AAPL WATCH", "INGEST", "AAPL", ["WATCH"])
@@ -187,7 +188,8 @@ class CompleteTest(unittest.TestCase):
         self.assertEqual(texts("SHIP TESTBOX "), [])  # one area at a time
         self.assertEqual(texts("WL "), ["ADD", "DEL"])
         self.assertEqual(texts("WL ADD A"), ["AAPL", "ABT", "AMD"])
-        self.assertEqual(texts("ALRT "), ["ACK"])
+        self.assertEqual(texts("ALRT "), ["ACK", "ALL"])
+        self.assertEqual(texts("ALRT AL"), ["ALL"])
         self.assertEqual(texts("ALRT ACK "), ["ALL"])
         self.assertEqual(texts("INGEST "), ["MARKETS", "MACRO", "UNIVERSE", "INSIDERS", "WATCH"])
         self.assertEqual(texts("INGEST I")[0], "INSIDERS")

@@ -49,20 +49,33 @@ def masks(panel) -> tuple[np.ndarray, np.ndarray]:
 
 
 def controls(panel, test, n_random: int = 200) -> dict:
-    """Positive control (oracle) must win; random signals must pass at about the nominal rate."""
+    """Positive control (oracle) must win; random signals redrawn every month must pass at about the
+    nominal rate. Those two are the declared gate.
+
+    Also reported, outside the gate: as many random scores held fixed per stock in every month, as a
+    slow-moving signal (fundamentals) is. The null redraws its holdings every month, so it ignores how
+    long real holdings persist; for such a signal it is too narrow and its p-values too small. The
+    rate at which these reach p < 0.05 says by how much, on this universe."""
     M = len(panel.entry)
-    oracle = np.vstack([panel.R, np.full((1, panel.R.shape[1]), np.nan)])
+    N = panel.R.shape[1]
+    oracle = np.vstack([panel.R, np.full((1, N), np.nan)])
     kw = dict(frac=COMMON["frac"], cost_bps=COMMON["cost_bps"])
     o = harness.evaluate(oracle[:M], panel.R, panel.listed[:M], test, n_perm=2000, seed=1, **kw)
     rng = np.random.default_rng(12345)
     ps = []
     for s in range(n_random):
-        S = rng.random((M, panel.R.shape[1]))
+        S = rng.random((M, N))
         ps.append(harness.evaluate(S, panel.R, panel.listed[:M], test, n_perm=500, seed=100 + s, **kw)["perm_p"])
     fpr = float(np.mean(np.array(ps) < 0.05))
+    fixed = np.random.default_rng(54321)  # its own stream: the monthly draws above stay as they were
+    pf = []
+    for s in range(n_random):
+        S = np.tile(fixed.random(N), (M, 1))
+        pf.append(harness.evaluate(S, panel.R, panel.listed[:M], test, n_perm=500, seed=5000 + s, **kw)["perm_p"])
     ok = o["perm_p"] < 0.001 and 0.01 <= fpr <= 0.10
     return {"oracle_test_perm_p": o["perm_p"], "oracle_test_mean_gross_excess": o["mean_gross_excess"],
-            "random_false_positive_rate": fpr, "n_random": n_random, "pass": bool(ok)}
+            "random_false_positive_rate": fpr, "n_random": n_random,
+            "persistent_random_false_positive_rate": float(np.mean(np.array(pf) < 0.05)), "pass": bool(ok)}
 
 
 def _check_declared(hyps: list[dict]) -> None:
@@ -101,7 +114,8 @@ def _run_universe(bank: Bank, name: str, hyps: list[dict], n_random: int, asof: 
 
     ctl = controls(panel, test, n_random)
     print(f"controls: oracle p={ctl['oracle_test_perm_p']:.4f}, random FPR={ctl['random_false_positive_rate']:.3f} "
-          f"-> {'PASS' if ctl['pass'] else 'FAIL'}")
+          f"-> {'PASS' if ctl['pass'] else 'FAIL'} (fixed per stock, not gated: "
+          f"FPR={ctl['persistent_random_false_positive_rate']:.3f})")
 
     known = {**signals.HAND, **signals.PER_TICKER}
     need = sorted({h["signal"] for h in hyps if h["signal"] in known} | {f for h in hyps for f in h.get("features", [])})
@@ -188,6 +202,17 @@ def _universe_line(name: str, rows: list[dict]) -> str:
     return f"- `{name}`: {what}. Hypotheses: {ids}."
 
 
+def _persistent_line(ctl: dict) -> str:
+    """What the controls say about signals that persist (results recorded before this check lack it)."""
+    why = ("The null redraws its holdings every month, so for a signal that persists from month to month "
+           "(fundamentals, slow-moving events) it is too narrow and the p-value too small")
+    if "persistent_random_false_positive_rate" not in ctl:
+        return f"- Random scores held fixed per stock were not tried in this run. {why}, by an amount not measured here."
+    return (f"- {ctl['n_random']} random scores held fixed per stock in every month: "
+            f"{ctl['persistent_random_false_positive_rate']*100:.1f}% reached p < 0.05. {why}; above about 5%, "
+            f"this is by how much. Reported, not part of the declared gate.")
+
+
 def report() -> str:
     rows = verdicts()
     if not rows:
@@ -240,8 +265,10 @@ def report() -> str:
             "",
             f"- Oracle (next month's actual return as the signal): TEST p = {ctl['oracle_test_perm_p']:.4f}, "
             f"gross excess {_pct(ctl['oracle_test_mean_gross_excess'])}/mo. The harness can see a real edge.",
-            f"- {ctl['n_random']} random signals: {ctl['random_false_positive_rate']*100:.1f}% reached p < 0.05 "
-            f"(expected about 5%). The null is calibrated.",
+            f"- {ctl['n_random']} random signals, redrawn every month: {ctl['random_false_positive_rate']*100:.1f}% "
+            f"reached p < 0.05 (expected about 5%). This is what the null is checked against: signals that change "
+            f"from month to month.",
+            _persistent_line(ctl),
             f"- Controls {'passed' if ctl['pass'] else 'FAILED: no verdicts on this universe are valid'}.",
             "",
         ]

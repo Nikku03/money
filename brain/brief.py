@@ -39,6 +39,14 @@ DERIVED_LABELS = {"market_cap": "Market value", "earnings_yield": "Earnings yiel
 
 SIGNAL_TO_HYP = {"mom12_1": "H1-mom12_1", "rev1": "H2-rev1", "earnings_yield": "H3-earnings_yield",
                  "low_asset_growth": "H4-low_asset_growth"}
+# The hypotheses on the broad universe (H3b, H6-H8) are found in HYPOTHESES by their universe; their signals
+# are per-ticker ones, read one stock at a time and cached per month-end (signals.cross_section).
+EVIDENCE_BUDGET_S = 15.0   # seconds a call may spend ranking the broad universe; the rest waits for the next call
+BROAD_MIN_SHARE = 0.5      # rank against the broad universe only when the bank holds at least this share of it
+EARNINGS_ROWS = 8
+INSIDER_DAYS = 90
+INSIDER_ROWS = 10
+ROLE_NAMES = {"officer": "officer", "director": "director", "ten_percent_owner": "10% owner", "other": "other"}
 
 IDENTITY = (("identity.industry", "Industry"), ("identity.exchanges", "Exchange"),
             ("identity.fiscal_year_end", "Fiscal year ends (MMDD)"), ("identity.cik", "SEC CIK"),
@@ -197,7 +205,78 @@ def filing_desc(f) -> str:
     return ", ".join(ITEMS_8K.get(i.strip(), i.strip()) for i in items.split(",") if i.strip()) if items else ""
 
 
-def build(bank: Bank, ticker: str, t: str | None = None) -> str:
+def insider_role(c: dict) -> str:
+    """An insider's relationship to the issuer and title, as the filing states them."""
+    rel = ", ".join(ROLE_NAMES.get(r, r) for r in str(c.get("relationship") or "").split(",") if r)
+    return rel + (f" ({c['title']})" if c.get("title") else "")
+
+
+def _ref_cite(ref: str) -> str:
+    return f"[{ref.partition('/')[2][:8]}]"
+
+
+def _earnings_section(view, t_: str, book: PriceBook) -> list[str]:
+    """The last quarters of ``events.earnings_table``: what the terminal's ERN shows, as of the view."""
+    from brain import events
+    rows = events.earnings_table(view, t_, book)[:EARNINGS_ROWS]
+    if not rows:
+        return []
+    evs = {e.ref: e for e in events.earnings_events(view, t_)}
+    L = [f"## Quarterly earnings, last {len(rows)} quarters (SEC filings)", "",
+         "EPS from 10-Q and 10-K XBRL (diluted, else basic), on the share basis at the brief's date; a fourth quarter not reported "
+         "on its own is the fiscal year minus the nine months. YoY: the change from the same quarter a year earlier "
+         "over that quarter's absolute EPS. SUE: the same change over its standard deviation in the 8 quarters before "
+         "(at least 6 needed). Release: the quarter's earnings 8-K (item 2.02), the last one public by the day the EPS "
+         "was filed. 3-day and 20-day drift: the stock's total return minus SPY's, sessions -1..+1 and +2..+21 around "
+         "the release; blank until the window has closed.", "",
+         "| Quarter end | EPS filed | Release | EPS | YoY | SUE | 3-day | 20-day drift | Facts |",
+         "| --- | --- | --- | --- | --- | --- | --- | --- | --- |"]
+    for r in rows:
+        ev = next((evs[x] for x in r["cite"] if x in evs), None)
+        sue = "–" if r["sue"] is None else f"{r['sue']:+.2f}"
+        L.append(f"| {r['period_end']} | {r['filed']} | {ev.known_at[:10] if ev else '–'} | {r['eps']:,.2f} | "
+                 f"{pct(r['eps_yoy'])} | {sue} | {pct(r['car_3d'])} | {pct(r['drift_20d'])} | "
+                 f"{' '.join(_ref_cite(x) for x in r['cite'])} |")
+    return L + [""]
+
+
+def _insider_section(view, t_: str) -> list[str]:
+    """Open-market trades filed in the 90 days to the view: totals, then the newest few. Insiders appear
+    as the filing names them, in the role it states, and nothing else about them."""
+    from brain.sources import insiders
+    cut = insiders.since(view, INSIDER_DAYS)
+    recent = sorted(insiders.trades(view, t_, lambda f: f.known_at > cut),
+                    key=lambda f: (f.known_at[:10], f.as_of, f.id), reverse=True)
+    L = [f"## Insider trades, last {INSIDER_DAYS} days (SEC Forms 4 and 5)", ""]
+    if not recent:
+        if insiders.dataset_read_for(view, t_) or view.facts(t_, insiders.ATTR):
+            return L + [f"- No open-market purchases or sales filed in the {INSIDER_DAYS} days to {view.t}.", ""]
+        return L + [f"- No insider trades in the bank for {t_}: `python -m brain insiders {t_}` reads them.", ""]
+    tot = insiders.buy_sell_totals(view, t_, INSIDER_DAYS)
+    od = sum(f.context.get("value_usd") or 0.0 for f in recent
+             if f.context.get("code") == "P" and insiders.is_officer_or_director(f))
+    L += [f"Open-market purchases (P) and sales (S) filed in the {INSIDER_DAYS} days to {view.t}, newest filing "
+          "first; awards, option exercises, gifts, tax withholding and amendments are left out. Each insider appears "
+          "as the filing names them, in the role it states.", "",
+          f"- Bought ${money(tot['buy_usd'])} in {tot['buys']} trade{'s' if tot['buys'] != 1 else ''}; sold "
+          f"${money(tot['sell_usd'])} in {tot['sells']}. Officers and directors bought ${money(od)} (what H6's "
+          "insider_buying signal measures).", "",
+          "| Filed | Traded | Insider | Role, as filed | Code | Shares | Price | Value (USD) | Fact |",
+          "| --- | --- | --- | --- | --- | --- | --- | --- | --- |"]
+    for f in recent[:INSIDER_ROWS]:
+        c = f.context
+        price = "–" if c.get("price") is None else f"{c['price']:,.2f}"
+        L.append(f"| {f.known_at[:10]} | {f.as_of} | {safe_inline(c.get('owner') or '–', 80)} | "
+                 f"{safe_inline(insider_role(c) or '–', 80)} | {'P, buy' if c.get('code') == 'P' else 'S, sale'} | "
+                 f"{f.value:,.0f} | {price} | {money(c.get('value_usd'))} | {cite(f)} |")
+    if len(recent) > INSIDER_ROWS:
+        L.append(f"\n{len(recent) - INSIDER_ROWS} more in the window: `{t_} INS` in the terminal lists them all.")
+    return L + [""]
+
+
+def build(bank: Bank, ticker: str, t: str | None = None, evidence_budget_s: float | None = EVIDENCE_BUDGET_S) -> str:
+    """The brief, as the bank stood at ``t``. ``evidence_budget_s`` bounds the time spent ranking the broad
+    universe (None: no bound; a month's first ranking reads every stock's filings, a minute or more on a full bank)."""
     t_ = ticker.upper()
     view = bank.view(t)
     book = PriceBook(bank, [t_, "SPY"], asof=t)
@@ -261,6 +340,10 @@ def build(bank: Bank, ticker: str, t: str | None = None) -> str:
     if rows:
         L += ["## Derived (written to the bank, each citing its inputs)", "", *rows, ""]
 
+    stock = not markets.kind(t_)  # an index, currency or coin files no 10-Q and has no insiders
+    if stock:
+        L += _earnings_section(view, t_, book)
+
     # filings
     fil = sorted(view.facts(t_, "filing"), key=lambda f: f.known_at, reverse=True)
     if fil:
@@ -271,7 +354,10 @@ def build(bank: Bank, ticker: str, t: str | None = None) -> str:
             desc = filing_desc(f)
             L.append(f"- {f.known_at[:10]} **{safe_inline(f.value)}**{' — ' + safe_inline(desc) if desc else ''} "
                      f"({md_link('doc', f.source.get('url'))}) {cite(f)}")
-        L += [f"- Insider transaction reports (Form 4) in the last 90 days: {n4}. Form 4 contents are not parsed yet.", ""]
+        L += [f"- Insider transaction reports (Form 4) filed in the last 90 days: {n4}, awards and option exercises "
+              f"included; the open-market trades in them are under Insider trades.", ""]
+    if stock:
+        L += _insider_section(view, t_)
 
     # headlines
     hl = sorted(view.facts(t_, "headline"), key=lambda f: f.known_at, reverse=True)[:10]
@@ -290,7 +376,7 @@ def build(bank: Bank, ticker: str, t: str | None = None) -> str:
               f"({md_link(f.source.get('name', ''), f.source.get('url'))}) {cite(f)}" for f in cl]
         L.append("")
 
-    L += _signals_section(bank, t_)
+    L += _signals_section(bank, t_, evidence_budget_s)
     L += _macro_section(view)
     L += ["## Caveats", "",
           "- Annual figures are the latest fiscal year in a 10-K; quarterly rows are for orientation.",
@@ -308,10 +394,17 @@ class NoEvidence(LookupError):
     """The repo or bank lacks what a signal reading needs: the research universe, or prices."""
 
 
-def evidence(bank: Bank, ticker: str) -> dict:
+def evidence(bank: Bank, ticker: str, budget_s: float | None = EVIDENCE_BUDGET_S) -> dict:
     """Where ``ticker`` ranks on each tested signal at the last month-end close, against the research
     universe, with that signal's TEST verdict from the ledger. One computation for the brief's
-    Signals section and the terminal's EV. Raises :class:`NoEvidence` when it cannot be computed."""
+    Signals section and the terminal's EV. Raises :class:`NoEvidence` when it cannot be computed.
+
+    The first rows are H1-H4 against ``config.UNIVERSE``. Then, when the bank holds the broad universe
+    (``universe/us_broad.json``), one row per hypothesis declared on it (H3b, H6-H8), ranked against it
+    and marked with ``universe``, ``select`` and ``held`` (what the backtest would hold by that
+    hypothesis' rule); ``broad`` says how far that ranking got. A month's first broad ranking reads every
+    stock's filings: ``budget_s`` bounds the seconds one call spends on it, and until it is complete those
+    rows carry the ticker's own value without a rank."""
     if not config.UNIVERSE.exists():
         raise NoEvidence(f"no research universe ({config.UNIVERSE.name})")
     from brain.research import run as research_run
@@ -347,6 +440,8 @@ def evidence(bank: Bank, ticker: str) -> dict:
             row.update(value=x, percentile=round(float(pctl) * 100), in_top_third=bool(pctl >= 2 / 3))
         rows.append(row)
     ctl = next(iter(verdict.values()))["controls"]["pass"] if verdict else None
+    broad = _broad_evidence(bank, t_, verdict, claims, budget_s)
+    rows += broad.pop("rows")
     n_pass = sum(r["verdict"] == "PASS" for r in rows)
     summary = f"{n_pass} of {len(rows)} signals passed their TEST gate."
     if n_pass == 0:
@@ -354,15 +449,78 @@ def evidence(bank: Bank, ticker: str) -> dict:
                     "so a high rank on it is not evidence of an edge.")
     if ctl is False:
         summary += " The controls failed: no verdict is valid."
-    return {"ticker": t_, "rebalance_date": str(panel.dates[panel.rebal[-1]]), "universe_size": len(uni["tickers"]),
-            "signals": rows, "controls_pass": ctl, "summary": summary}
+    if broad["status"] == "pending":
+        summary += (f" The broad-universe ranking is not complete yet ({broad['computed']} of {broad['total']} "
+                    "stocks); its rows show this stock's value without a rank until it is.")
+    from brain.research.hypotheses import COMMON  # the H1-H4 rows' universe, named as a hypothesis names it
+    return {"ticker": t_, "rebalance_date": str(panel.dates[panel.rebal[-1]]), "universe": COMMON["universe"],
+            "universe_size": len(uni["tickers"]), "signals": rows, "controls_pass": ctl, "summary": summary,
+            "broad": broad}
 
 
-def _signals_section(bank: Bank, t_: str) -> list[str]:
+def _broad_hypotheses() -> list[dict]:
+    from brain.research import signals
+    from brain.research.hypotheses import BROAD, HYPOTHESES
+    return [h for h in HYPOTHESES if h.get("universe") == BROAD and h["signal"] in signals.PER_TICKER]
+
+
+def _broad_evidence(bank: Bank, t_: str, verdict: dict, claims: dict, budget_s: float | None) -> dict:
+    """Rows for the hypotheses on the broad universe, and how far their ranking got: status "complete",
+    "pending" (the budget ran out first; the next call goes on from the cache) or "unavailable"."""
+    from brain.research import harness, signals
+    from brain.research import run as research_run
+    from brain.research.hypotheses import BROAD, COMMON
+    hyps = _broad_hypotheses()
+    out = {"universe": BROAD, "rows": []}
+    path = research_run.universe_path(BROAD)
+    if not hyps or not path.exists():
+        return {**out, "status": "unavailable", "reason": f"no {BROAD}"}
+    try:
+        tickers = [str(t).upper() for t in json.loads(path.read_text())["tickers"]]
+    except (OSError, ValueError, KeyError, TypeError) as e:
+        return {**out, "status": "unavailable", "reason": f"{BROAD} unreadable ({e})"}
+    held_here = sum(bank.shard(t).exists() for t in tickers)
+    if held_here < BROAD_MIN_SHARE * len(tickers):
+        return {**out, "status": "unavailable", "universe_size": len(tickers),
+                "reason": f"the bank holds {held_here} of its {len(tickers)} stocks "
+                          f"(`python -m brain ingest-universe --broad` adds them)"}
+    names = list(dict.fromkeys(h["signal"] for h in hyps))
+    every = tickers + ([t_] if t_ not in tickers else [])
+    cache = config.home() / "cache" / "evidence" / f"{research_run.universe_sha(BROAD)}.json"
+    try:
+        cs = signals.cross_section(bank, every, names, cache_path=cache, budget_s=budget_s, first=[t_])
+    except SystemExit as e:  # no SPY prices, or too little history
+        return {**out, "status": "unavailable", "universe_size": len(tickers), "reason": str(e)}
+    j = every.index(t_)
+    done = cs["complete"]
+    for h in hyps:
+        v = cs["values"][h["signal"]]
+        x = float(v[j])
+        r = verdict.get(h["id"])
+        row = {"signal": h["signal"], "hypothesis": h["id"], "value": None, "percentile": None, "in_top_third": None,
+               "verdict": r["verdict"] if r else "not run",
+               "test_net_excess": r["test"]["mean_net_excess"] if r else None,
+               "perm_p": r["test"]["perm_p"] if r else None, "bh_q": r["bh_q"] if r else None,
+               "claim": claims.get(h["id"], ""), "universe": BROAD, "universe_size": len(tickers),
+               "select": h.get("select", "top_frac"), "held": None}
+        if math.isfinite(x):
+            row["value"] = x
+            if done:
+                ok = cs["listed"] & np.isfinite(v)
+                pctl = (v[ok] < x).sum() / max(ok.sum() - 1, 1)
+                hold, _ = harness.choose(v, cs["listed"], COMMON["frac"], row["select"])
+                row.update(percentile=round(float(pctl) * 100), in_top_third=bool(pctl >= 2 / 3),
+                           held=bool(hold is not None and j in set(hold.tolist())))
+        out["rows"].append(row)
+    return {**out, "status": "complete" if done else "pending", "universe_size": len(tickers),
+            "rebalance_date": cs["rebalance_date"], "computed": cs["computed"], "total": cs["total"]}
+
+
+def _signals_section(bank: Bank, t_: str, budget_s: float | None = EVIDENCE_BUDGET_S) -> list[str]:
     if not config.UNIVERSE.exists() or markets.kind(t_):
         return []  # the signals rank stocks; an index, currency or coin has no place in that ranking
     try:
-        ev = evidence(bank, t_)
+        ev = evidence(bank, t_, budget_s)
     except (SystemExit, Exception) as e:  # noqa: BLE001 - a brief should still render
         return ["## Signals", "", f"Unavailable: {e}", ""]
     L = ["## Signals vs the research universe", "",
@@ -370,13 +528,38 @@ def _signals_section(bank: Bank, t_: str) -> list[str]:
          "Top third is what the backtest would hold.", "",
          "| Signal | Value | Percentile | In top third | TEST verdict | TEST net excess / mo |",
          "| --- | --- | --- | --- | --- | --- |"]
+    broad = [r for r in ev["signals"] if r.get("universe")]
     for r in ev["signals"]:
+        if r.get("universe"):
+            continue
         if r["value"] is None:
             L.append(f"| {r['signal']} | – | – | – | {r['verdict']} | – |")
             continue
         L.append(f"| {r['signal']} | {r['value']:+.3f} | {r['percentile']:.0f} | {'yes' if r['in_top_third'] else 'no'} | "
                  f"{r['verdict']} | {pct(r['test_net_excess'], 2) if r['test_net_excess'] is not None else '–'} |")
-    return L + [""]
+    L.append("")
+    b = ev.get("broad") or {}
+    if broad:
+        L += [f"Against the {b['universe_size']} stocks of `{b['universe']}` on the same day, for the hypotheses "
+              "declared on it. Would hold: what that hypothesis' backtest holds (top third by signal; for "
+              "`positive`, every stock above 0).", ""]
+        if b.get("status") == "pending":
+            L += [f"Ranking not complete: {b['computed']} of {b['total']} stocks computed so far. A month's first "
+                  "ranking reads every stock's filings; each brief or EV goes on where the last stopped, and "
+                  "until then this stock's own value is shown without a rank.", ""]
+        L += ["| Signal | Hypothesis | Select | Value | Percentile | Would hold | TEST verdict | TEST net excess / mo |",
+              "| --- | --- | --- | --- | --- | --- | --- | --- |"]
+        for r in broad:
+            val = "–" if r["value"] is None else ("$" + money(r["value"]) if r["signal"] == "insider_buying"
+                                                   else f"{r['value']:+.3f}")
+            pc = "–" if r["percentile"] is None else f"{r['percentile']:.0f}"
+            held = "–" if r["held"] is None else ("yes" if r["held"] else "no")
+            tn = pct(r["test_net_excess"], 2) if r["test_net_excess"] is not None else "–"
+            L.append(f"| {r['signal']} | {r['hypothesis']} | {r['select']} | {val} | {pc} | {held} | {r['verdict']} | {tn} |")
+        L.append("")
+    elif b.get("status") == "unavailable" and b.get("universe_size"):
+        L += [f"Not ranked against `{b['universe']}`: {b['reason']}.", ""]
+    return L
 
 
 def _macro_section(view) -> list[str]:

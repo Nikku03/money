@@ -5,9 +5,11 @@ YOLOX-S (Apache-2.0) as packaged by the OpenCV model zoo on Hugging Face
 downloaded once to ``<home>/models/`` and checked against a pinned sha256 before every load.
 
 The lines from CLAUDE.md ("Alternative data"), enforced here: the counter takes image bytes, never
-a path, and writes nothing. Only the four COCO vehicle classes are scored at all; the person class
-and every other class are not read from the network output, so nothing about people can be
-reported. No faces, no number plates, no tracking across frames.
+a path, and writes nothing. Only the four COCO vehicle classes are scored and reported. The person
+class is never read from the network output, so nothing about people can be reported. The other
+non-vehicle classes (train, boat, airplane, ...) are read only to veto a box whose best class is
+not a vehicle, as the reference decode labels it: a tram scored train 0.95 and bus 0.6 is a train,
+not a bus. No faces, no number plates, no tracking across frames.
 
 Optional dependency: ``opencv-python-headless`` (``pip install money-brain[alt]``). Without it
 :class:`VehicleCounter` raises :class:`Unavailable` with that hint; the post-processing below is
@@ -31,10 +33,15 @@ MODEL_URL = f"https://huggingface.co/{MODEL_REPO}/resolve/{MODEL_REVISION}/{MODE
 MODEL_SHA256 = "c5c2d13e59ae883e6af3b45daea64af4833a4951c92d116ec270d9ddbe998063"
 MODEL_SIZE = 35_858_002
 DETECTOR = "yolox-2022nov"
+DECODE = 2  # how the output is read; 2: a box whose best class is not a vehicle (train, boat) is vetoed.
+            # Samples with another decode (none recorded: 1) count differently, so they are not compared.
 INPUT = 640
 STRIDES = (8, 16, 32)
 SCORE, NMS = 0.5, 0.5
-VEHICLES = {"car": 2, "motorcycle": 3, "bus": 5, "truck": 7}  # COCO class ids; nothing else is read
+VEHICLES = {"car": 2, "motorcycle": 3, "bus": 5, "truck": 7}  # COCO class ids: the only ones reported
+PERSON = 0  # COCO class id: never read
+CLASSES = 80
+RIVALS = tuple(c for c in range(CLASSES) if c != PERSON and c not in VEHICLES.values())  # read only to veto
 MAX_IMAGE_BYTES = 10 * 1024 * 1024
 PLACEHOLDER_WHITE = 0.5  # share of near-white pixels above which a frame is a provider's notice, not a view
 
@@ -147,8 +154,10 @@ def nms(boxes: np.ndarray, scores: np.ndarray, thr: float) -> list[int]:
 def postprocess(raw: np.ndarray, ratio: float = 1.0, score: float = SCORE, nms_thr: float = NMS,
                 size: int = INPUT) -> list[dict]:
     """Vehicle detections from one YOLOX output, shape (rows, 85): box regression (4), objectness, then
-    80 class probabilities. Only the vehicle class columns are read. Suppression runs across the vehicle
-    classes together, so one pickup scored as both car and truck counts once."""
+    80 class probabilities. A box is a vehicle when its best vehicle class scores at least ``score`` and at
+    least as high as every non-vehicle class other than person (the person column is never read): the
+    reference decode's argmax, without people. Suppression runs across the vehicle classes together, so
+    one pickup scored as both car and truck counts once."""
     raw = np.asarray(raw, dtype=np.float32).reshape(-1, raw.shape[-1])
     grid, stride = anchors(size)
     if len(raw) != len(grid):
@@ -158,7 +167,8 @@ def postprocess(raw: np.ndarray, ratio: float = 1.0, score: float = SCORE, nms_t
     scores = raw[:, 4:5] * cls
     best = scores.argmax(1)
     top = scores.max(1)
-    m = top >= score
+    rival = raw[:, [5 + c for c in RIVALS if 5 + c < raw.shape[1]]].max(1, initial=0.0)
+    m = (top >= score) & (cls.max(1) >= rival)
     if not m.any():
         return []
     xy = (raw[m, :2] + grid[m]) * stride[m]

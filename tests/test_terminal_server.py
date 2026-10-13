@@ -163,7 +163,7 @@ class ServerTest(TempHome):
                 self.assertEqual(headers["Cross-Origin-Opener-Policy"], "same-origin")
 
     def test_absolute_form_targets_are_refused_and_answered(self):
-        for target in (f"http://[x/api/status", f"http://evil.example:{self.port}/", "*"):
+        for target in ("http://[x/api/status", f"http://evil.example:{self.port}/", "*"):
             with self.subTest(target=target):
                 err = io.StringIO()
                 with contextlib.redirect_stderr(err):
@@ -457,7 +457,7 @@ class ServerTest(TempHome):
         self.assertEqual((code, out["ok"], out["fn"], out["args"]), (200, True, "WL", ["ADD", "AAPL", "MSFT"]))
         self.assertEqual(watch.load()["tickers"], ["AAPL", "MSFT"])
         f = self._alert()
-        self.assertEqual(self.get_json("/api/status")[1]["alerts"], {"unacked": 1, "high": 1})
+        self.assertEqual(self.get_json("/api/status")[1]["alerts"], {"unacked": 1, "high": 1, "info": 0})
         for line in ("WL DEL AAPL", f"ALRT ACK {f.id[:8]}", "ALRT ACK ALL"):  # the analyst's reader
             with self.subTest(line=line):
                 out = self.server.run_line(line, read_only=True)
@@ -469,7 +469,7 @@ class ServerTest(TempHome):
         code, out = self.get_json(f"/api/run?cmd=ALRT%20ACK%20{f.id[:8]}")
         self.assertEqual((out["ok"], out["data"]["unacked"]), (True, 0))
         self.assertEqual(watch.acked(), {f.id})
-        self.assertEqual(self.get_json("/api/status")[1]["alerts"], {"unacked": 0, "high": 0})
+        self.assertEqual(self.get_json("/api/status")[1]["alerts"], {"unacked": 0, "high": 0, "info": 0})
         out = self.get_json("/api/run?cmd=WL%20DEL%20MSFT")[1]
         self.assertTrue(out["ok"])
         self.assertEqual(watch.load()["tickers"], ["AAPL"])
@@ -489,23 +489,48 @@ class ServerTest(TempHome):
     def test_status_carries_alerts_and_the_model(self):
         with mock.patch.dict(os.environ, {"BRAIN_LLM_MODEL": "llama3.1:8b"}):
             out = self.get_json("/api/status")[1]
-        self.assertEqual(out["alerts"], {"unacked": 0, "high": 0})
+        self.assertEqual(out["alerts"], {"unacked": 0, "high": 0, "info": 0})
         self.assertEqual(out["analyst"]["model"], "llama3.1:8b")
         self._alert("MSFT", "notice")
         from brain import watch
         watch.save({"tickers": ["MSFT"]})
-        self.assertEqual(self.get_json("/api/status")[1]["alerts"], {"unacked": 1, "high": 0})
+        self.assertEqual(self.get_json("/api/status")[1]["alerts"], {"unacked": 1, "high": 0, "info": 0})
+        self._alert("MSFT", "info")  # a headline: counted apart, not in the number the top bar shows
+        self.assertEqual(self.get_json("/api/status")[1]["alerts"], {"unacked": 1, "high": 0, "info": 1})
         watch.state_path().write_text("{broken")
         err = io.StringIO()
         with contextlib.redirect_stderr(err):
             code, out = self.get_json("/api/status")  # a broken state file never breaks the status poll
             self.assertEqual(self.get_json("/api/status")[0], 200)
-        self.assertEqual((code, out["alerts"]), (200, {"unacked": None, "high": None}))
+        self.assertEqual((code, out["alerts"]), (200, {"unacked": None, "high": None, "info": None}))
         self.assertEqual(err.getvalue().count("alert count unavailable"), 1)  # logged once, as one line
         self.assertNotIn("Traceback", err.getvalue())
         out = self.get_json("/api/run?cmd=ALRT")[1]
         self.assertFalse(out["ok"])
         self.assertIn("not valid JSON", out["error"])
+
+    def test_files_of_the_wrong_shape_are_user_errors_not_500s(self):
+        from brain import watch
+        cases = [(watch.state_path(), "[]", ("ALRT", "WL", "ALRT ACK ALL", "WL ADD MSFT")),
+                 (watch.state_path(), '{"acked": 5}', ("ALRT", "WL", "ALRT ACK ALL", "WL ADD MSFT")),
+                 (watch.watchlist_path(), '{"tickers": ["AAPL"], "areas": 5}', ("WL", "WL ADD MSFT")),
+                 (watch.watchlist_path(), '{"tickers": "AAPL"}', ("WL", "WL ADD MSFT"))]
+        err = io.StringIO()
+        with contextlib.redirect_stderr(err):
+            for path, text, lines in cases:
+                path.write_text(text)
+                for line in lines:
+                    with self.subTest(text=text, line=line):
+                        code, out = self.get_json("/api/run?cmd=" + line.replace(" ", "%20"))
+                        self.assertEqual((code, out["ok"]), (200, False))
+                        self.assertIn(str(path), out["error"])
+                        self.assertIn("fix or remove it", out["error"])
+                self.assertEqual(path.read_text(), text)  # never saved over
+                code, out = self.get_json("/api/status")
+                self.assertEqual(code, 200)
+                self.assertTrue(self.get_json("/api/run?cmd=HELP")[1]["ok"])
+                path.unlink()
+        self.assertNotIn("Traceback", err.getvalue())
 
     def test_fact_for_ports_and_cameras(self):
         from brain.bank import Fact

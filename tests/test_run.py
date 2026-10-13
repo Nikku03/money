@@ -1,6 +1,8 @@
 import contextlib
 import json
+import unittest
 from pathlib import Path
+from types import SimpleNamespace
 from unittest import mock
 
 import numpy as np
@@ -134,6 +136,10 @@ class RunEndToEndTest(TempHome):
             self.assertIn(hid, text)
         self.assertIn("`universe/us_broad.json`: 12 US stocks (synthetic broad)", text)
         self.assertIn("| H6-insider_buying | us_broad | positive |", text)
+        self.assertNotIn("The null is calibrated.", text)  # the control tests monthly redraws, nothing more
+        self.assertIn("20 random scores held fixed per stock in every month:", text)
+        for r in out:
+            self.assertIn("persistent_random_false_positive_rate", r["controls"])
 
     def test_pinned_prices_reproduce_a_run_after_new_prices_arrive(self):
         with self.patched():
@@ -157,3 +163,35 @@ class RunEndToEndTest(TempHome):
             with self.assertRaises(SystemExit) as cm:
                 run.run(self.bank, ["H8-sue"], n_random=5)
         self.assertIn("declare a new id", str(cm.exception))
+
+
+class ControlsTest(unittest.TestCase):
+    def test_a_random_score_fixed_per_stock_is_reported_not_gated(self):
+        # Stocks with their own mean return: holding the same names every month spreads results wider than
+        # the null's monthly redraws, so a random score fixed per stock "passes" too often.
+        rng = np.random.default_rng(11)
+        M, N = 60, 45
+        R = rng.normal(0, 0.03, N) + rng.normal(0, 0.05, (M, N))
+        panel = SimpleNamespace(R=R, listed=np.ones((M + 1, N), bool), entry=np.arange(M))
+        ctl = run.controls(panel, np.arange(M), n_random=40)
+        self.assertGreater(ctl["persistent_random_false_positive_rate"], ctl["random_false_positive_rate"] + 0.1)
+        self.assertEqual(ctl["pass"], ctl["oracle_test_perm_p"] < 0.001 and 0.01 <= ctl["random_false_positive_rate"] <= 0.10)
+
+    def test_results_recorded_before_the_check_say_it_was_not_tried(self):
+        import tempfile
+        ctl = {"pass": True, "oracle_test_perm_p": 0.0005, "oracle_test_mean_gross_excess": 0.08,
+               "random_false_positive_rate": 0.03, "n_random": 200}  # as H1-H8 were recorded
+        te = {"mean_net_excess": -0.001, "ann_net_excess": -0.012, "info_ratio": -0.2, "months_beating_benchmark": 40,
+              "n_months": 92, "perm_p": 0.7}
+        rec = {"op": "result", "id": "H1-mom12_1", "spec_sha": "s", "at": "2026-01-01T00:00:00Z", "n_tickers": 60,
+               "test": te, "train": {"mean_net_excess": 0.001, "perm_p": 0.2}, "controls": ctl,
+               "context": {"spy_ann_return_test": 0.18, "universe_ew_ann_return_test": 0.27}}
+        with tempfile.TemporaryDirectory() as d:
+            led = Path(d) / "ledger.jsonl"
+            led.write_text(json.dumps(rec) + "\n")
+            with mock.patch.object(config, "LEDGER", led), mock.patch.object(config, "RESULTS", Path(d) / "R.md"):
+                text = run.report()
+        self.assertNotIn("The null is calibrated.", text)
+        self.assertIn("200 random signals, redrawn every month: 3.0% reached p < 0.05", text)
+        self.assertIn("Random scores held fixed per stock were not tried in this run.", text)
+

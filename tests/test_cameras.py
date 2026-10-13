@@ -151,8 +151,8 @@ class SampleTest(TempHome):
         f = self.bank.facts("CAM.CALTRANS.D04.TV512I880ATMOWRY", "camera.vehicles")[0]
         self.assertEqual((f.attr, f.value, f.tier, f.unit), ("camera.vehicles", 5, "reported", "vehicles"))
         self.assertEqual(set(f.context), {"car", "truck", "bus", "motorcycle", "provider", "name", "lat", "lon",
-                                          "detector", "threshold"})
-        self.assertEqual((f.context["detector"], f.context["threshold"]), ("yolox-2022nov", 0.5))
+                                          "detector", "threshold", "decode"})
+        self.assertEqual((f.context["detector"], f.context["threshold"], f.context["decode"]), ("yolox-2022nov", 0.5, 2))
         self.assertEqual(f.source, {"name": "Caltrans CCTV", "url": cams.PROVIDERS["CALTRANS"]["page"]})
         self.assertEqual(f.as_of, f.known_at[:10])
         for p, b in all_bytes_under(Path(config.home())):

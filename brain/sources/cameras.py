@@ -250,7 +250,8 @@ def sample(bank: Bank, camera_ids: list[str], counter=None, frame=fetch_frame, l
                           context={"car": int(n["car"]), "truck": int(n["truck"]), "bus": int(n["bus"]),
                                    "motorcycle": int(n["motorcycle"]), "provider": cam["provider"],
                                    "name": cam["name"], "lat": cam["lat"], "lon": cam["lon"],
-                                   "detector": vision.DETECTOR, "threshold": vision.SCORE},
+                                   "detector": vision.DETECTOR, "threshold": vision.SCORE,
+                                   "decode": vision.DECODE},
                           retrieved_at=t))
     return bank.add_many(facts)
 

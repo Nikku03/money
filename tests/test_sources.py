@@ -1,4 +1,3 @@
-import time
 import unittest
 
 from brain.sources import news, prices, sec

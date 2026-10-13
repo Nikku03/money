@@ -10,14 +10,19 @@ run ticker by ticker, each through its own Bank on the same journal.
 """
 from __future__ import annotations
 
+import json
+import math
+import os
+import time
 from dataclasses import dataclass
 from datetime import date, timedelta
+from pathlib import Path
 
 import numpy as np
 
 from brain import events, metrics
 from brain.bank import Bank, View
-from brain.research.panel import Panel
+from brain.research.panel import Panel, build
 from brain.sources import insiders
 from brain.timeutil import days_between, norm_known_at
 
@@ -194,7 +199,8 @@ def ridge_learner(features: dict[str, np.ndarray], panel: Panel, lam: float = 1.
 
 
 def compute_last(bank: Bank, panel: Panel, names) -> dict[str, np.ndarray]:
-    """Signals on the latest rebalance day only (for briefs)."""
+    """Signals on the latest rebalance day only (for briefs). Per-ticker signals read through the
+    ``bank`` given; for a broad universe use :func:`cross_section`, which reads one ticker at a time."""
     m = len(panel.rebal) - 1
     i = int(panel.rebal[m])
     d = str(panel.dates[i])
@@ -207,3 +213,124 @@ def compute_last(bank: Bank, panel: Panel, names) -> dict[str, np.ndarray]:
             vals = [PER_TICKER[n](ctx, t) for t in panel.tickers]
             out[n] = np.array([np.nan if v is None else v for v in vals], dtype=float)
     return out
+
+
+# ---------- one rebalance day, many tickers, one at a time (briefs, the terminal's EV) ----------
+CROSS_SECTION_VERSION = 1  # bump when a per-ticker signal's code changes: cached values are then recomputed
+CROSS_SECTION_CHUNK = 10   # tickers per price read
+
+
+def _shard_state(bank: Bank, t: str) -> list[int]:
+    try:
+        st = os.stat(bank.shard(t))
+    except FileNotFoundError:
+        return [0, 0]
+    return [st.st_ino, st.st_size]
+
+
+def _unchanged_for(bank: Bank, t: str, state, cutoff: str) -> bool:
+    """True when ``t``'s journal shard has only grown since ``state`` and every record appended since adds
+    a fact known after ``cutoff``: a view at the rebalance day sees exactly what it saw then. Daily prices
+    and new filings are known after a past month-end; a backfill (older filings, an insider data set) is
+    not, and neither is a downgrade, so those recompute."""
+    now = _shard_state(bank, t)
+    if now == list(state):
+        return True
+    if now[0] != state[0] or now[1] < state[1]:
+        return False
+    with open(bank.shard(t), "rb") as fh:
+        fh.seek(state[1])
+        tail = fh.read(now[1] - state[1])
+    for line in tail.splitlines():
+        if not line.strip():
+            continue
+        try:
+            rec = json.loads(line)
+            if rec.get("op") != "add" or not rec["fact"]["known_at"] > cutoff:
+                return False
+        except (ValueError, KeyError, TypeError, AttributeError):
+            return False
+    return True
+
+
+def _finite(v) -> float | None:
+    return float(v) if v is not None and math.isfinite(v) else None
+
+
+def _save_cache(path: Path, key: dict, entries: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_name(f"{path.name}.{os.getpid()}.tmp")
+    try:
+        tmp.write_text(json.dumps({"key": key, "tickers": entries}, separators=(",", ":")))
+        os.replace(tmp, path)
+    except OSError:
+        tmp.unlink(missing_ok=True)  # a cache: the values can always be computed again
+
+
+def cross_section(bank: Bank, tickers: list[str], names, cache_path=None, budget_s: float | None = None,
+                  first=()) -> dict:
+    """Per-ticker signals ``names`` for every ticker on the latest rebalance day, as the backtest computes
+    them there: each ticker through its own Bank on the journal (freed after it), only listed tickers
+    valued, prices from a panel on the same calendar.
+
+    ``cache_path`` keeps each ticker's values with the state of its journal shard, so a later call on the
+    same rebalance day recomputes only tickers that gained something that day's view can see.
+    ``budget_s`` bounds the time spent computing; the tickers in ``first`` are always computed. Returns
+    ``{"rebalance_date", "values": {name: (N,) array, NaN = no value}, "listed": (N,) bool, "computed",
+    "total", "complete"}``; with ``complete`` False the values are a partial cross-section."""
+    names = [n for n in dict.fromkeys(names) if n in PER_TICKER]
+    base = build(bank, [])  # SPY's calendar: every panel built from this bank has these rebalance days
+    m = len(base.rebal) - 1
+    if m < 0:
+        raise SystemExit("not enough price history for a month-end ranking")
+    d = str(base.dates[base.rebal[m]])
+    cutoff = norm_known_at(d)
+    key = {"version": CROSS_SECTION_VERSION, "rebalance_date": d, "names": sorted(names)}
+    path = Path(cache_path) if cache_path else None
+    entries: dict = {}
+    if path is not None:
+        try:
+            c = json.loads(path.read_text())
+            entries = c["tickers"] if c.get("key") == key and isinstance(c.get("tickers"), dict) else {}
+        except (OSError, ValueError, KeyError, TypeError, AttributeError):
+            entries = {}
+    want = list(dict.fromkeys([*(t.upper() for t in first), *(t.upper() for t in tickers)]))
+    must = {t.upper() for t in first}
+    stale = [t for t in want if not isinstance(entries.get(t), dict)
+             or not _unchanged_for(bank, t, entries[t].get("state") or [0, 0], cutoff)]
+    pending = set(stale)
+    start = time.monotonic()
+    now = bank.view()
+    for k in range(0, len(stale), CROSS_SECTION_CHUNK):
+        chunk = stale[k:k + CROSS_SECTION_CHUNK]
+        if budget_s is not None and time.monotonic() - start > budget_s:
+            chunk = [t for t in chunk if t in must]
+            if not chunk:
+                continue
+        states = {t: _shard_state(bank, t) for t in chunk}  # before reading: a write meanwhile is seen next time
+        priced = [t for t in chunk if now.latest(t, "series.price_daily") is not None]
+        for t in chunk:
+            entries[t] = {"state": states[t], "listed": False, "values": dict.fromkeys(names)}
+        if priced:
+            panel = build(bank, priced)
+            i = int(panel.rebal[m])
+            assert str(panel.dates[i]) == d, "one calendar for every panel on this bank"
+            for j, t in enumerate(priced):
+                if not panel.listed[m, j]:
+                    continue  # never held or ranked: the harness ignores unlisted names
+                b = Bank(bank.root, use_index=bank.use_index)
+                ctx = MonthCtx(m, i, d, panel.adj[: i + 1], b.view(d), panel)
+                entries[t] = {"state": states[t], "listed": True,
+                              "values": {n: _finite(PER_TICKER[n](ctx, t)) for n in names}}
+        pending.difference_update(chunk)
+        if path is not None:
+            _save_cache(path, key, entries)
+    nan = float("nan")
+    tk = [t.upper() for t in tickers]
+
+    def val(t, n):
+        v = (entries.get(t) or {}).get("values", {}).get(n) if t not in pending else None
+        return nan if v is None else float(v)
+    return {"rebalance_date": d, "values": {n: np.array([val(t, n) for t in tk], dtype=float) for n in names},
+            "listed": np.array([t not in pending and bool((entries.get(t) or {}).get("listed")) for t in tk]),
+            "computed": sum(t not in pending for t in tk), "total": len(tk), "complete": not (pending & set(tk))}

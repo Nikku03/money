@@ -59,6 +59,18 @@ class PostprocessTest(unittest.TestCase):
         raw[:, 5 + PERSON] = np.nan  # if the person column were read, scores would go NaN
         self.assertEqual(vision.postprocess(raw), base)
 
+    def test_a_box_whose_best_class_is_not_a_vehicle_is_not_counted(self):
+        TRAIN, BOAT, BUS = 6, 8, 5
+        tram = synthetic([(row_at(100, 100), 100, 100, 120, 60, 0.95, TRAIN, 0.95)])
+        tram[row_at(100, 100), 5 + BUS] = 0.6  # a tram: train 0.95, bus 0.6 -> a train, as the reference decode says
+        self.assertEqual(vision.tally(vision.postprocess(tram))["vehicles"], 0)
+        bus = synthetic([(row_at(100, 100), 100, 100, 120, 60, 0.95, BUS, 0.9)])
+        bus[row_at(100, 100), 5 + TRAIN] = 0.6  # a bus that looks a little like a train is still a bus
+        bus[row_at(100, 100), 5 + BOAT] = 0.3
+        bus[:, 5 + PERSON] = np.nan  # the veto reads the other classes, never the person column
+        self.assertEqual(vision.tally(vision.postprocess(bus)), {"car": 0, "truck": 0, "bus": 1, "motorcycle": 0,
+                                                                 "vehicles": 1})
+
     def test_one_object_scored_as_car_and_truck_counts_once(self):
         raw = synthetic([
             (row_at(100, 100), 100, 100, 60, 40, 0.9, 2, 0.90),

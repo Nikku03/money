@@ -680,10 +680,11 @@ def trade(t, code, shares, price, days, owner="Doe Jane", rel="director", title=
                 context=ctx)
 
 
-def ships(name, n, at, bbox=LA_BBOX, window=300):
+def ships(name, n, at, bbox=LA_BBOX, window=300, **extra):
     from brain.sources import shipping
     summary = {"vessels": n, "cargo": n // 2, "tanker": n // 4, "other": n - n // 2 - n // 4, "untyped": 0,
-               "anchored": 1, "moored": n // 2, "underway": n - 1 - n // 2, "window_s": window, "bbox": list(bbox)}
+               "anchored": 1, "moored": n // 2, "underway": n - 1 - n // 2, "window_s": window, "bbox": list(bbox),
+               **extra}
     return shipping.to_fact(summary, {"name": name, "bbox": list(bbox)}, at)
 
 
@@ -961,6 +962,25 @@ class V2FunctionsTest(V2Base):
         self.assertEqual(r["hint"], "python -m brain jets link ZCO")
         self.assertEqual(self.run_err("^GSPC JET")["hint"], "^GSPC GP")
 
+    def test_a_tail_opted_out_after_its_alert_is_shown_nowhere(self):
+        optout = self.home / "aviation_optout.txt"
+        old = optout.read_text()
+        flight, landed = self.syn["flights"][1], self.syn["alerts"][1]
+        self.assertEqual(self.run_ok(f"SHOW XCO/{flight.id[:12]}")["data"]["fact"]["id"], flight.id)
+        optout.write_text(old + "N1XC\n")  # by hand, before any poll withdraws what was recorded
+        try:
+            alrt, wl = self.run_ok("ALRT")["data"], self.run_ok("WL")["data"]
+            refused = [self.run_err(f"SHOW XCO/{f.id[:12]}") for f in (flight, landed)]
+        finally:
+            optout.write_text(old)
+        self.assertNotIn("N1XC", json.dumps(alrt) + json.dumps(wl))
+        self.assertEqual(alrt["unacked"], 2)
+        jets = next(r for r in wl["rows"] if r["_group"] == "Company aircraft")
+        self.assertEqual((jets["last"], jets["alert"]), (0, None))
+        for r in refused:
+            self.assertIn("no longer tracked", r["error"])
+        self.assertEqual(self.run_ok(f"SHOW XCO/{landed.id[:12]}")["data"]["fact"]["id"], landed.id)  # restored
+
     # ---------- SHIP ----------
     def test_ship_table(self):
         r = self.run_ok("SHIP")
@@ -991,9 +1011,43 @@ class V2FunctionsTest(V2Base):
         self.assertEqual(st["high_date"], d["series"][-1]["date"])
         self.assertIn("SHIP — LA-LONG-BEACH", r["title"])
         self.assertEqual(self.run_err("SHIP HOUSTON")["hint"], "python -m brain watch add area HOUSTON")
+        from brain import watch
+        watch.add("area", "HOUSTON")  # watched, never sampled: INGEST WATCH samples it only with an AIS key
+        try:
+            with mock.patch.dict(os.environ, {"AISSTREAM_API_KEY": ""}):
+                hint = self.run_err("SHIP HOUSTON")["hint"]
+            with mock.patch.dict(os.environ, {"AISSTREAM_API_KEY": "k"}):
+                self.assertEqual(self.run_err("SHIP HOUSTON")["hint"], "INGEST WATCH")
+        finally:
+            watch.remove("area", "HOUSTON")
+        self.assertIn("export AISSTREAM_API_KEY=", hint)
+        self.assertIn("restart the terminal", hint)
+        self.assertFalse(hint.startswith("INGEST"))
         self.assertIn("unknown area NOPE", self.run_err("SHIP NOPE")["error"])
         self.assertEqual(self.run_err("SHIP A B")["hint"], "SHIP A")
         self.assertIn("not an area name", self.run_err("SHIP .X")["error"])
+
+    def test_z_needs_ten_earlier_samples(self):
+        counts = [10, 14, 9, 12, 11, 13, 8, 12, 10]  # nine priors with a spread, then a jump
+        self.bank.add_many([ships("FEWAREA", n, ago(20 - i, "T06:00:00Z")) for i, n in enumerate(counts + [40])])
+        row = next(r for r in self.run_ok("SHIP")["data"]["rows"] if r["area"] == "FEWAREA")
+        st = self.run_ok("SHIP FEWAREA")["data"]["stats"]
+        self.assertEqual((row["z"], st["z"], st["z_samples"]), (None, None, 9))  # nine are not enough
+        self.bank.add(ships("FEWAREA", 41, ago(10, "T06:00:00Z")))
+        st = self.run_ok("SHIP FEWAREA")["data"]["stats"]
+        prior = np.array(counts + [40], dtype=float)
+        self.assertEqual(st["z_samples"], 10)
+        self.assertAlmostEqual(st["z"], (41 - prior.mean()) / prior.std(ddof=1))
+
+    def test_z_compares_only_samples_on_the_same_basis(self):
+        old = [30, 34, 29, 32, 31, 33, 28, 32, 30, 31, 29]  # every typed vessel, before the basis was recorded
+        self.bank.add_many([ships("BASISAREA", n, ago(30 - i, "T06:00:00Z")) for i, n in enumerate(old)])
+        self.bank.add(ships("BASISAREA", 12, ago(5, "T06:00:00Z"), basis="cargo+tanker"))
+        row = next(r for r in self.run_ok("SHIP")["data"]["rows"] if r["area"] == "BASISAREA")
+        st = self.run_ok("SHIP BASISAREA")["data"]["stats"]
+        self.assertEqual((row["z"], st["z"], st["z_samples"]), (None, None, 0))  # no drop: another basis
+        self.assertEqual(row["untyped"], 0)  # tallied beside the count
+        self.assertIn("same window, box and basis", self.run_ok("SHIP")["data"]["note"])
 
     def test_ship_chart_downsamples(self):
         many = [ships("BIGAREA", 10 + i % 5, (TODAY - pd.Timedelta(minutes=15 * (2000 - i))).strftime("%Y-%m-%dT%H:%M:%SZ"))
@@ -1029,8 +1083,14 @@ class V2FunctionsTest(V2Base):
             self.assertEqual((r["view"], r["data"]["kind"], r["data"]["unit"]), ("chart", "count", "vehicles"))
             self.assertEqual([x["value"] for x in r["data"]["series"]], CAM_COUNTS)
             self.assertEqual(set(r["data"]["series"][0]["parts"]), {"car", "truck", "bus", "motorcycle"})
-        self.assertEqual(self.run_err("CAM TFL.00001.00002")["hint"], "INGEST WATCH")
-        self.assertEqual(self.run_err("CAM TFL.7")["hint"], "python -m brain cams sample TFL.7")
+        with mock.patch.object(data.importlib.util, "find_spec", return_value=object()):  # OpenCV installed
+            self.assertEqual(self.run_err("CAM TFL.00001.00002")["hint"], "INGEST WATCH")
+            self.assertEqual(self.run_err("CAM TFL.7")["hint"], "python -m brain cams sample TFL.7")
+        with mock.patch.object(data.importlib.util, "find_spec", return_value=None):  # not: say so first
+            self.assertEqual(self.run_err("CAM TFL.00001.00002")["hint"],
+                             "vehicle counting needs OpenCV: pip install opencv-python-headless, restart the terminal, "
+                             "then INGEST WATCH")
+            self.assertTrue(self.run_err("CAM TFL.7")["hint"].endswith("then python -m brain cams sample TFL.7"))
         self.assertIn("not a camera id", self.run_err("CAM ../X")["error"])
 
     # ---------- WL ----------
@@ -1064,9 +1124,11 @@ class V2FunctionsTest(V2Base):
         self.assertEqual([c["key"] for c in d["columns"]],
                          ["item", "name", "last", "chg_1d", "alert", "alert_at", "measure", "date"])
         self.assertIsNone(by[("Camera sites", "TFL.00001.00002")]["last"])
-        self.assertIn("3 unacknowledged alerts (ALRT)", d["note"])
+        self.assertIn("3 unacknowledged alerts (ALRT). Rules:", d["note"])
         self.assertTrue(next(c for c in d["columns"] if c["key"] == "alert")["nowrap"])
         self.assertIn("a 1-day move of 5% or more", d["note"])
+        self.assertNotIn("new headlines", d["note"])  # a new watchlist: off, and the note says how to turn it on
+        self.assertIn("headlines are off (python -m brain watch rule headlines on", d["note"])
 
     def test_writes_need_the_server(self):
         for line in ("WL ADD AAPL", "WL DEL XCO", "ALRT ACK ALL", "ALRT ACK abcd"):
@@ -1110,12 +1172,24 @@ class V2FunctionsTest(V2Base):
                 alert("XCO", "price_move", "notice", "XCO -6.0%", at)]
         self.bank.add_many(same)
         try:
-            rows = self.run_ok("ALRT")["data"]["rows"]
+            r = self.run_ok("ALRT ALL")
+            default = self.run_ok("ALRT")
+            wl = self.run_ok("WL")["data"]["note"]
         finally:
             for f in same:
                 self.bank.downgrade("XCO", f.id, "test fixture")
+        rows = r["data"]["rows"]
         self.assertEqual([r["severity"] for r in rows[:3]], ["high", "notice", "info"])
         self.assertEqual(rows[3]["at"], self.syn["alerts"][2].known_at)  # older checks after
+        self.assertEqual((r["title"], r["data"]["unacked"], r["data"]["info"]), ("ALRT — alerts · all, info included", 6, 1))
+        self.assertNotIn("not listed", r["data"]["note"])
+        # the default list, and its counts, leave the info alert out
+        d = default["data"]
+        self.assertEqual([x["severity"] for x in d["rows"]], ["high", "notice", "high", "notice", "high"])
+        self.assertEqual((default["title"], d["unacked"], d["high"], d["info"]), ("ALRT — alerts", 5, 3, 1))
+        self.assertIn("1 info alert (headlines; 1 unacknowledged) is not listed or counted: ALRT ALL lists them", d["note"])
+        self.assertIn("5 unacknowledged alerts (ALRT), and 1 info (ALRT ALL)", wl)
+        self.assertEqual(self.run_err("ALRT ALL X")["hint"], "ALRT")
 
     def test_no_nan_anywhere(self):
         for line in ("XCO INS", "XCO ERN", "XCO JET", "SHIP", "SHIP LA-LONG-BEACH", "CAM", "CAM TFL.00001.00001", "WL",
@@ -1138,6 +1212,16 @@ class V2WritesTest(V2Base):
         self.assertEqual(r["title"], "WL — watchlist · removed NVDA, AAPL; not on it: ZZZ")
         self.assertEqual(watch.load()["tickers"], ["XCO", "SPY"])
         self.assertIn("is not a ticker", self.run_err("WL ADD A;B", writes=True)["error"])
+
+    def test_wl_add_of_a_watched_ticker_says_so(self):
+        from brain import watch
+        r = self.run_ok("WL ADD XCO MSFT", writes=True)
+        try:
+            self.assertEqual(r["title"], "WL — watchlist · added MSFT; already on it: XCO")
+            self.assertEqual(self.run_ok("WL ADD XCO", writes=True)["title"], "WL — watchlist · already on it: XCO")
+            self.assertEqual(watch.load()["tickers"], ["XCO", "SPY", "MSFT"])
+        finally:
+            watch.remove("ticker", "MSFT")
 
     def test_wl_with_a_broken_file_is_an_error_and_is_kept(self):
         from brain import watch

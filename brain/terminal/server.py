@@ -283,8 +283,9 @@ class TerminalServer(ThreadingHTTPServer):
             return False, f"the analyst failed to load ({type(e).__name__}); see the server log"
 
     def alert_counts(self) -> dict:
-        """Unacknowledged alerts for the top bar: ``{"unacked": n, "high": k}``, or nulls when the watchlist
-        or the alert state cannot be read (ALRT then says why)."""
+        """Unacknowledged alerts for the top bar: ``{"unacked": n, "high": k, "info": i}``. ``unacked`` counts
+        notice and high alerts, what ALRT lists; ``info`` the info ones (headlines) that only ALRT ALL lists.
+        Nulls when the watchlist or the alert state cannot be read (ALRT then says why)."""
         try:
             from brain import watch
             with self.lock:
@@ -292,12 +293,13 @@ class TerminalServer(ThreadingHTTPServer):
         except Exception as e:  # noqa: BLE001 - a broken state file must not break the status poll
             if not self._alerts_logged:
                 self._alerts_logged = True
-                if isinstance(e, ValueError):  # a watchlist or state file that is not valid JSON: ALRT says which
+                if isinstance(e, ValueError):  # a watchlist or state file that cannot be read: ALRT says which
                     print(f"[terminal] alert count unavailable: {e}", file=sys.stderr)
                 else:
                     _log_exc("alert count")
-            return {"unacked": None, "high": None}
-        return {"unacked": len(fs), "high": sum(f.context.get("severity") == "high" for f in fs)}
+            return {"unacked": None, "high": None, "info": None}
+        info = sum(watch.is_info(f) for f in fs)
+        return {"unacked": len(fs) - info, "high": sum(f.context.get("severity") == "high" for f in fs), "info": info}
 
     # ---------- commands ----------
     def run_line(self, line: str, read_only: bool = False) -> dict:

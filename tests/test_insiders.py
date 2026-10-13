@@ -208,6 +208,22 @@ class IngestTest(TempHome):
         self.assertEqual(accns, ["0000000001-24-000001"] * 3 + ["0000000001-24-000004"])
         self.assertEqual(len(insiders.trades(self.bank.view(), "EXC")), 4)
 
+    def test_default_start_covers_h6s_first_lookback(self):
+        # H6's first TRAIN rebalance counts purchases filed in the 90 days before it; a rebuild that follows
+        # the documented command (no --start) must read the data set holding the first of those days.
+        import argparse
+        from datetime import date, timedelta
+        from brain.research import hypotheses, signals
+        first = date.fromisoformat(hypotheses.SPLIT["first_rebalance"]) - timedelta(days=signals.INSIDER_DAYS)
+        need = f"{first.year}q{(first.month - 1) // 3 + 1}"
+        p = argparse.ArgumentParser()
+        insiders.add_cli(p.add_subparsers())
+        self.assertEqual(p.parse_args(["insiders"]).start, need)
+        asked = []
+        with mock.patch.object(insiders, "_fetch_dataset", side_effect=lambda q, log: asked.append(q)):
+            insiders.ingest_bulk(self.bank, {111: "EXC"}, log=lambda m: None)
+        self.assertEqual(asked[0], need)
+
     def test_rereading_a_quarter_adds_only_what_is_missing(self):
         # A filing read before lots were numbered holds one copy of two identical lots; a re-read adds
         # the second and nothing else.

@@ -92,6 +92,29 @@ class EventsTest(TempHome):
         self.assertIsNone(prev["sue"])      # only five
         self.assertIsNone(rows[-1]["sue"])
 
+    def test_release_is_the_last_one_public_by_the_eps_filing(self):
+        ends = pd.date_range("2022-12-31", periods=7, freq="QE").strftime("%Y-%m-%d").tolist()
+        for v, end in zip([1.0, 1.1, 1.2, 1.3, 1.2, 1.3, 1.4], ends):  # EPS filed 35 days after each quarter
+            start = (pd.Timestamp(end) - pd.offsets.QuarterBegin(startingMonth=1)).strftime("%Y-%m-%d")
+            known = (pd.Timestamp(end) + pd.Timedelta(days=35)).strftime("%Y-%m-%d")
+            self.bank.add(q("X", EPS, v, start, end, known, unit="USD/shares"))
+        pre1 = filing("X", "8-K", "2024-04-09T12:00:00Z", "2.02,9.01", "pre1")  # Q1 2024 pre-announcement
+        guid = filing("X", "8-K", "2024-06-12T12:00:00Z", "2.02,9.01", "guid")  # guidance, after Q1's 10-Q
+        pre3 = filing("X", "8-K", "2023-10-10T12:00:00Z", "2.02", "pre3")       # Q3 2023 interim update
+        res3 = filing("X", "8-K", "2023-11-05T00:30:00Z", "2.02", "res3")       # 20:30 New York on the 10-Q's day
+        late4 = filing("X", "8-K", "2024-02-20T12:00:00Z", "2.02", "late4")     # Q4 2023: only after its EPS
+        self.bank.add_many([pre1, guid, pre3, res3, late4])
+        rows = {r["period_end"]: r for r in events.earnings_table(self.bank.view("2024-12-31"), "X", self.book)}
+        q1 = rows["2024-03-31"]
+        self.assertEqual(q1["filed"], "2024-05-05")
+        self.assertEqual(q1["cite"][-1], self.release.ref)  # the results, not the warning before or the guidance after
+        full = events.reaction(self.book, self.bank.view("2024-12-31"), "X", self.release)
+        self.assertAlmostEqual(q1["car_3d"], full["car_3d"])
+        self.assertEqual(rows["2023-09-30"]["cite"][-1], res3.ref)   # same New York day as the filing counts
+        self.assertEqual(rows["2023-12-31"]["cite"][-1], late4.ref)  # nothing by the filing: the first after it
+        self.assertEqual(rows["2024-06-30"]["cite"][-1], events.earnings_events(self.bank.view("2024-12-31"), "X")[-1].ref)
+        self.assertEqual(len(rows["2023-03-31"]["cite"]), 1)         # no release in its window: EPS only
+
     def test_earnings_reaction_signal_is_point_in_time(self):
         from brain.research import signals
         from brain.research.panel import build

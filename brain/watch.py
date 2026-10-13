@@ -16,8 +16,12 @@ time, so an alert is never known before its inputs. Acknowledged alert ids and t
 last check live in ``<home>/alerts_state.json``.
 
 The alternative-data lines in CLAUDE.md hold here too: aircraft alerts say airport to airport and
-nothing about who flew; a registration or hex in ``aviation_optout.txt`` never alerts; sites take
-only cameras of the official open providers.
+nothing about who flew; a registration or hex in ``aviation_optout.txt``, or one the poller found in
+the FAA's LADD/PIA programs, never alerts, and alerts written about it before are no longer listed;
+sites take only cameras of the official open providers.
+
+New watchlists start with the headline rule off (each headline is an info alert, and they bury the
+rest); a watchlist file written before that keeps the setting it had.
 """
 from __future__ import annotations
 
@@ -37,8 +41,11 @@ from brain import config
 from brain.bank import Bank, Fact, View
 from brain.timeutil import days_between, norm_known_at, now_iso
 
+# Headlines are off for a new watchlist: each is an info alert, and a few tickers make dozens a day
+# that bury the rest (python -m brain watch rule headlines on turns them on).
 DEFAULT_RULES = {"price_move": 0.05, "insider_buy_usd": 100000, "earnings_car": 0.05, "zscore": 3.0,
-                 "forms": ["8-K", "10-K", "10-Q", "SC 13D", "S-1"], "headlines": True}
+                 "forms": ["8-K", "10-K", "10-Q", "SC 13D", "S-1"], "headlines": False}
+LEGACY_RULES = {"headlines": True}  # defaults a watchlist file written before they changed was checked with
 KINDS = {"ticker": "tickers", "tickers": "tickers", "aircraft": "aircraft_of", "aircraft_of": "aircraft_of",
          "area": "areas", "areas": "areas", "site": "sites", "sites": "sites"}
 SEVERITY = {"info": 0, "notice": 1, "high": 2}
@@ -47,8 +54,8 @@ GRACE_DAYS = 3            # later checks re-read this far before the previous on
 REACTION_DAYS = 10        # an earnings release's 3-day reaction is looked for this long after it
 PRICE_BARS = 5            # at most this many new daily bars are checked per snapshot
 Z_WINDOW, Z_MIN = 30, 10  # z-score against the previous 30 comparable samples; at least 10 needed
-AREA_SECONDS = 300
 FILINGS_TTL = 900         # the recent-filings list is re-read at most every 15 minutes
+PRICES_TTL = 900          # so are the daily bars (brain.sources.prices.ingest's ttl)
 MIN_EVERY_S = 60
 NTFY_TIMEOUT = 10
 NTFY_MAX_BYTES = 4000     # ntfy turns longer bodies into attachments
@@ -89,44 +96,123 @@ def _write_json(p: Path, obj) -> None:
 
 
 # ---------- the watchlist ----------
+class _Shape(ValueError):
+    """A watchlist or state field of the wrong type; load() names the file."""
+
+
+def _list(raw: dict, key: str, what: str = "a list") -> list:
+    v = raw.get(key)
+    if v is None:
+        return []
+    if not isinstance(v, list):
+        raise _Shape(f"{key} must be {what}, not {json.dumps(v)[:60]}")
+    return v
+
+
+def _strings(raw: dict, key: str) -> list[str]:
+    v = _list(raw, key, "a list of strings")
+    if not all(isinstance(x, str) for x in v):
+        raise _Shape(f"{key} must be a list of strings")
+    return [x.strip() for x in v if x.strip()]
+
+
 def _norm_area(a) -> dict:
-    a = {"name": a} if isinstance(a, str) else dict(a)
-    a["name"] = str(a.get("name", "")).strip().upper()
+    a = {"name": a} if isinstance(a, str) else a
+    if not isinstance(a, dict) or not isinstance(a.get("name", ""), str):
+        raise _Shape(f"areas: each entry is a name or {{\"name\": ..., \"bbox\": [...]}}, not {json.dumps(a)[:60]}")
+    a = dict(a)
+    a["name"] = a.get("name", "").strip().upper()
+    if a["name"] and not re.fullmatch(r"[A-Z0-9][A-Z0-9_-]{0,39}", a["name"]):
+        raise _Shape(f"areas: {a['name']!r} is not an area name (letters, digits, '-' and '_')")
+    try:
+        if a.get("bbox") is not None:
+            a["bbox"] = _bbox(a["bbox"])
+        if a.get("seconds") is not None:
+            a["seconds"] = int(a["seconds"])
+            if not 10 <= a["seconds"] <= 3600:
+                raise ValueError("seconds is 10-3600")
+    except (TypeError, ValueError) as e:
+        raise _Shape(f"areas: {a['name']}: {e}") from None
     return a
 
 
-def _norm_site(s: dict) -> dict:
+def _norm_site(s, providers: set[str]) -> dict:
+    if not isinstance(s, dict) or not isinstance(s.get("name", ""), str):
+        raise _Shape(f"sites: each entry is {{\"name\": ..., \"cameras\": [...]}}, not {json.dumps(s)[:60]}")
     s = dict(s)
-    s["name"] = str(s.get("name", "")).strip()
-    if s.get("ticker"):
-        s["ticker"] = str(s["ticker"]).strip().upper()
-    s["cameras"] = list(dict.fromkeys(str(c).strip() for c in s.get("cameras") or [] if str(c).strip()))
+    s["name"] = s.get("name", "").strip()
+    try:
+        if s.get("ticker"):
+            s["ticker"] = _symbol(s["ticker"])
+        cams = _strings(s, "cameras")
+        s["cameras"] = list(dict.fromkeys(_camera_id(c, providers) for c in cams))
+        for k in ("lat", "lon"):
+            if s.get(k) is not None:
+                s[k] = float(s[k])
+    except (TypeError, ValueError) as e:
+        raise _Shape(f"sites: {s['name'] or 'a site'}: {e}") from None
     return s
 
 
+def _norm_rules(raw) -> dict:
+    if raw is None:
+        return {}
+    if not isinstance(raw, dict):
+        raise _Shape("rules must be an object of rule: value")
+    for k, v in raw.items():
+        if k not in DEFAULT_RULES or v is None or v is False:  # unknown rules are kept as they are; off is off
+            continue
+        if k == "forms":
+            ok = isinstance(v, list) and all(isinstance(x, str) for x in v)
+        elif k == "headlines":
+            ok = isinstance(v, bool)
+        else:
+            ok = isinstance(v, (int, float)) and not isinstance(v, bool) and v >= 0
+        if not ok:
+            want = {"forms": "a list of form names", "headlines": "true or false"}.get(k, "a number >= 0, or null")
+            raise _Shape(f"rules.{k} must be {want}, not {json.dumps(v)[:60]}")
+    return raw
+
+
 def _normalize(raw: dict) -> dict:
-    w = dict(raw)  # keys this module does not know are kept
+    """Every section present, each entry checked (_Shape names the first field of the wrong type or
+    form), default rules filled in. Keys this module does not know are kept."""
+    w = dict(raw)
     for k in ("tickers", "aircraft_of"):
-        w[k] = list(dict.fromkeys(str(t).strip().upper() for t in raw.get(k) or [] if str(t).strip()))
-    w["areas"] = [a for a in (_norm_area(x) for x in raw.get("areas") or []) if a["name"]]
-    w["sites"] = [s for s in (_norm_site(x) for x in raw.get("sites") or [] if isinstance(x, dict)) if s["name"]]
-    w["rules"] = {**DEFAULT_RULES, **(raw.get("rules") or {})}
+        try:
+            w[k] = list(dict.fromkeys(_symbol(t) for t in _strings(raw, k)))
+        except _Shape:
+            raise
+        except ValueError as e:
+            raise _Shape(f"{k}: {e}") from None
+    w["areas"] = [a for a in (_norm_area(x) for x in _list(raw, "areas")) if a["name"]]
+    sites = _list(raw, "sites")
+    providers = _camera_providers() if sites else set()
+    w["sites"] = [s for s in (_norm_site(x, providers) for x in sites) if s["name"]]
+    w["rules"] = {**DEFAULT_RULES, **_norm_rules(raw.get("rules"))}
     return w
 
 
 def load() -> dict:
     """The watchlist, with every section present and default rules filled in. A file that is not
-    valid JSON is an error, not an empty watchlist: saving over it would lose what it held."""
+    valid JSON, or holds a field of the wrong type, is an error, not an empty watchlist: saving over
+    it would lose what it held. A watchlist written before a default changed keeps the default it
+    was written under (LEGACY_RULES), so headlines stay on in one that never set them."""
     p = watchlist_path()
     try:
         raw = json.loads(p.read_text())
     except FileNotFoundError:
-        raw = {}
+        return _normalize({})
     except ValueError as e:
         raise ValueError(f"{p} is not valid JSON ({e}); fix or remove it") from e
     if not isinstance(raw, dict):
-        raise ValueError(f"{p} must hold a JSON object")
-    return _normalize(raw)
+        raise ValueError(f"{p} must hold a JSON object; fix or remove it")
+    if raw.get("rules") is None or isinstance(raw.get("rules"), dict):
+        raw = {**raw, "rules": {**LEGACY_RULES, **(raw.get("rules") or {})}}
+    try:
+        return _normalize(raw)
+    except _Shape as e:
+        raise ValueError(f"{p}: {e}; fix or remove it") from None
 
 
 def save(w: dict) -> None:
@@ -273,6 +359,8 @@ def watched_entities(w: dict) -> list[str]:
 
 # ---------- alert state: last check, acknowledged ids ----------
 def _read_state() -> dict:
+    """The state file: a JSON object with last_check (a time or null) and lists of strings acked and
+    entities. Anything else is an error naming the field, never read as something it is not."""
     p = state_path()
     try:
         s = json.loads(p.read_text())
@@ -280,8 +368,20 @@ def _read_state() -> dict:
         s = {}
     except ValueError as e:
         raise ValueError(f"{p} is not valid JSON ({e}); fix or remove it") from e
-    return {**s, "last_check": s.get("last_check"), "acked": list(s.get("acked") or []),
-            "entities": list(s.get("entities") or [])}
+    if not isinstance(s, dict):
+        raise ValueError(f"{p} must hold a JSON object; fix or remove it")
+    try:
+        last = s.get("last_check")
+        if last is not None:
+            if not isinstance(last, str):
+                raise _Shape("last_check must be a time like 2026-10-13T21:44:52Z, or null")
+            try:
+                last = norm_known_at(last)
+            except ValueError:
+                raise _Shape(f"last_check {last[:40]!r} is not a time like 2026-10-13T21:44:52Z") from None
+        return {**s, "last_check": last, "acked": _strings(s, "acked"), "entities": _strings(s, "entities")}
+    except _Shape as e:
+        raise ValueError(f"{p}: {e}; fix or remove it") from None
 
 
 @contextlib.contextmanager
@@ -301,7 +401,9 @@ def acked() -> set[str]:
 
 def alerts(bank: Bank, unacked_only: bool = False, limit: int | None = None,
            entities: list[str] | None = None) -> list[Fact]:
-    """Alerts newest first: of ``entities``, or of everything watched plus anything that ever alerted."""
+    """Alerts newest first: of ``entities``, or of everything watched plus anything that ever alerted.
+    An aircraft alert about a tail opted out or found in LADD/PIA since it was written is left out,
+    whether or not the aviation module has withdrawn it yet."""
     if entities is None:
         try:
             w = load()
@@ -310,12 +412,21 @@ def alerts(bank: Bank, unacked_only: bool = False, limit: int | None = None,
         entities = list(dict.fromkeys(watched_entities(w) + _read_state()["entities"]))
     done = acked() if unacked_only else set()
     out = [f for e in dict.fromkeys(x.upper() for x in entities) for f in bank.facts(e, "alert") if f.id not in done]
+    if any(is_aircraft(f) for f in out):
+        hide = untracked()
+        out = [f for f in out if not (is_aircraft(f) and hide(*aircraft_of(bank, f)))]
     out.sort(key=lambda f: (f.known_at, f.id), reverse=True)
     return out[:limit] if limit else out
 
 
 def unacked(bank: Bank) -> list[Fact]:
     return alerts(bank, unacked_only=True)
+
+
+def is_info(f: Fact) -> bool:
+    """An info alert (a headline): the terminal's alert count and its ALRT list leave these out, and
+    ntfy does not push them; ALRT ALL and ``python -m brain alerts`` list them."""
+    return f.context.get("severity") == "info"
 
 
 def ack(bank: Bank, ident: str) -> Fact:
@@ -462,8 +573,10 @@ def _insider_buy(c: _Check, t: str) -> None:
     by_filing: dict[str, dict[tuple, Fact]] = {}
     for f in c.new(t, "insider.trade", lambda f: f.context.get("code") == "P" and _officer_or_director(f)):
         x = f.context
-        key = (x.get("owner_cik"), f.as_of, f.value, x.get("price"), x.get("ownership"))
-        by_filing.setdefault(x.get("accn") or f.id, {}).setdefault(key, f)  # a bulk and a live copy count once
+        # A bulk and a live copy of one transaction count once; repeated identical transactions in one
+        # filing carry lot numbers (brain.sources.insiders), so each of those counts, as in insiders.trades.
+        key = (x.get("owner_cik"), f.as_of, f.value, x.get("price"), x.get("ownership"), x.get("lot"))
+        by_filing.setdefault(x.get("accn") or f.id, {}).setdefault(key, f)
     for accn, trades in by_filing.items():
         fs = list(trades.values())
         usd = sum(float(f.context.get("value_usd") or 0.0) for f in fs)
@@ -511,27 +624,66 @@ def _earnings(c: _Check, t: str) -> None:
 
 
 def _headline(c: _Check, t: str) -> None:
-    if not c.rules.get("headlines", True):
+    """Each new headline, as an info alert (off by default: DEFAULT_RULES)."""
+    if not _on(c.rules.get("headlines")):
         return
     for f in c.new(t, "headline"):
         c.emit(t, "headline", "info", f"{t} headline: {f.value} ({f.source.get('name', '?')})", f.as_of, [f],
                [f"headline:{f.source.get('url') or f.id}"])
 
 
-def _opted_out():
+def blocked_hexes() -> set[str]:
+    """Mode S codes the aircraft poller found in the FAA's LADD or PIA programs (aviation_state.json)."""
     try:
-        from brain.sources.aviation import opted_out
-        return opted_out
+        state = json.loads((config.home() / "aviation_state.json").read_text())
+        return {str(h).strip().lower() for h in (state.get("blocked") or {})}
+    except (OSError, ValueError, AttributeError, TypeError):
+        return set()
+
+
+def untracked():
+    """A test ``(reg, hex) -> bool``: the aircraft must not be tracked or shown, because its registration
+    or hex is in aviation_optout.txt or the poller found it in LADD/PIA. Read once per call of this."""
+    try:
+        from brain.sources import aviation
+        out = aviation.optout()
+        opted = lambda reg, hex_: aviation.opted_out(reg, hex_, out)  # noqa: E731
     except Exception:  # the aviation module unavailable: read the opt-out file the same way, more simply
         p = config.home() / "aviation_optout.txt"
         toks = {ln.split("#", 1)[0].strip().upper() for ln in p.read_text().splitlines()} if p.exists() else set()
-        return lambda reg, hex_: bool({str(reg or "").upper(), str(reg or "").upper().lstrip("N"),
-                                       str(hex_ or "").upper()} & (toks - {""}))
+        opted = lambda reg, hex_: bool({str(reg or "").upper(), str(reg or "").upper().lstrip("N"),  # noqa: E731
+                                        str(hex_ or "").upper()} & (toks - {""}))
+    blocked = blocked_hexes()
+    return lambda reg, hex_: opted(reg, hex_) or str(hex_ or "").strip().lower() in blocked
+
+
+def aircraft_of(bank: Bank, f: Fact) -> tuple[str | None, str | None]:
+    """(registration, hex) an aircraft fact is about: a registration, a flight, or an aircraft alert
+    (its own context, else its rule key ``aircraft:<hex>:<arrived>``, else the flight it cites)."""
+    x = f.context
+    if f.attr == "aircraft.registered":
+        return str(f.value), x.get("hex")
+    reg, hex_ = x.get("reg"), x.get("hex")
+    if f.attr == "alert":
+        for k in x.get("keys") or []:
+            parts = str(k).split(":")
+            if not hex_ and parts[0] == "aircraft" and len(parts) >= 3:
+                hex_ = parts[1]
+        for ref in f.inputs if not reg else ():
+            g = bank.get(ref)
+            if g is not None and g.attr == "aircraft.flight":
+                reg, hex_ = reg or g.context.get("reg"), hex_ or g.context.get("hex")
+    return reg, hex_
+
+
+def is_aircraft(f: Fact) -> bool:
+    return f.attr in ("aircraft.registered", "aircraft.flight") or (
+        f.attr == "alert" and f.context.get("rule") == "aircraft")
 
 
 def _aircraft(c: _Check, t: str) -> None:
     """A company-registered aircraft landed: airport to airport, with times, nothing about who flew."""
-    out = _opted_out()
+    out = untracked()
     for f in c.new(t, "aircraft.flight"):
         x = f.context
         if out(x.get("reg"), x.get("hex")):
@@ -541,11 +693,13 @@ def _aircraft(c: _Check, t: str) -> None:
         c.emit(t, "aircraft", "notice",
                f"{t} aircraft {x.get('reg') or x.get('hex')} landed at {to} from {frm}; "
                f"departed {x.get('departed') or '?'}, arrived {x.get('arrived') or f.known_at}",
-               f.as_of, [f], [f"aircraft:{x.get('hex') or f.id}:{x.get('arrived') or f.known_at}"])
+               f.as_of, [f], [f"aircraft:{x.get('hex') or f.id}:{x.get('arrived') or f.known_at}"],
+               reg=x.get("reg"), hex=x.get("hex"))
 
 
 def _zscore(c: _Check, entity: str, attr: str, rule: str, same, describe) -> None:
-    """Each new sample vs the previous Z_WINDOW comparable ones (same window or detector): |z| >=
+    """Each new sample vs the previous Z_WINDOW comparable ones (``same``: window, box and basis, or detector,
+    threshold and decode): |z| >=
     rules.zscore alerts. Fewer than Z_MIN prior samples, or no spread among them, says nothing."""
     thr = c.rules.get("zscore")
     if not _on(thr):
@@ -578,17 +732,20 @@ def _zscore(c: _Check, entity: str, attr: str, rule: str, same, describe) -> Non
 def _ships(c: _Check, entity: str) -> None:
     def describe(f: Fact) -> str:
         x = f.context
-        return (f"{entity}: {f.value} vessels in {x.get('window_s')} s (cargo {x.get('cargo')}, "
+        return (f"{entity}: {f.value} commercial vessels in {x.get('window_s')} s (cargo {x.get('cargo')}, "
                 f"tanker {x.get('tanker')}) at {f.known_at[:16]}Z")
-    same = lambda g, f: (g.context.get("window_s"), g.context.get("bbox")) == (f.context.get("window_s"), f.context.get("bbox"))
+    # comparable: the same window, box and basis (what the value counts; samples before the basis was
+    # recorded counted every typed vessel, so they are not compared with commercial-only counts)
+    same = lambda g, f: all(g.context.get(k) == f.context.get(k) for k in ("window_s", "bbox", "basis"))
     _zscore(c, entity, "ships.count", "ships", same, describe)
 
 
 def _camera(c: _Check, entity: str, site: dict) -> None:
     label = site["name"] + (f", {site['ticker']}" if site.get("ticker") else "")
     describe = lambda f: f"{entity} ({label}): {f.value} vehicles at {f.known_at[:16]}Z"
-    same = lambda g, f: (g.context.get("detector"), g.context.get("threshold")) == \
-        (f.context.get("detector"), f.context.get("threshold"))
+    # comparable: the same detector, threshold and decode (vision.DECODE; samples before it was recorded
+    # read the output another way)
+    same = lambda g, f: all(g.context.get(k) == f.context.get(k) for k in ("detector", "threshold", "decode"))
     _zscore(c, entity, "camera.vehicles", "camera", same, describe)
 
 
@@ -650,8 +807,10 @@ def _src_insiders(bank: Bank, t: str, log) -> int:
 
 
 def _src_prices(bank: Bank, t: str, log) -> int:
-    from brain.ingest import ingest
-    return ingest(bank, t, ("prices",), log=log).get("prices", 0)
+    """The daily bars, re-read at most every PRICES_TTL rather than the ingest cache's hours, so a close
+    can alert soon after the session ends (a body read mid-session holds no bar for that day)."""
+    from brain.sources import prices
+    return bank.add_many(prices.ingest(t.upper(), ttl=PRICES_TTL))
 
 
 def _src_news(bank: Bank, t: str, log) -> int | None:
@@ -667,7 +826,7 @@ def _src_aircraft(bank: Bank, tickers: list[str], log) -> int:
 def _src_area(bank: Bank, area: dict, log) -> int:
     from brain.sources import shipping
     spec = {"name": area["name"], "bbox": area["bbox"]} if area.get("bbox") else area["name"]
-    return shipping.sample(bank, spec, seconds=int(area.get("seconds") or AREA_SECONDS)).value
+    return shipping.sample(bank, spec, seconds=int(area.get("seconds") or shipping.DEFAULT_SECONDS)).value
 
 
 def _src_cameras(bank: Bank, ids: list[str], log) -> int:
@@ -943,7 +1102,7 @@ def _cmd_rule(a) -> int:
 
 
 def _cmd_run(a) -> int:
-    print(f"watching every {a.every} s; Ctrl+C stops", flush=True)
+    print("one round of refresh and check" if a.once else f"watching every {a.every} s; Ctrl+C stops", flush=True)
     run(a.every, log=lambda m: print(m, flush=True), cycles=1 if a.once else None)
     return 0
 
@@ -993,7 +1152,7 @@ def add_cli(sub) -> None:
                    help="KIND is ticker (the default), aircraft, area or site")
     s.add_argument("--bbox", nargs=4, type=float, metavar=("LAT_MIN", "LON_MIN", "LAT_MAX", "LON_MAX"),
                    help="area: its box, when it is not a built-in port area")
-    s.add_argument("--seconds", type=int, help="area: AIS listening window per sample (default 300)")
+    s.add_argument("--seconds", type=int, help="area: AIS listening window per sample (default 420 s, longer than the six-minute static-data cycle)")
     s.add_argument("--ticker", help="site: the company it is about")
     s.add_argument("--cameras", nargs="+", metavar="ID", help="site: official camera ids (brain cams near LAT LON)")
     s.add_argument("--near", nargs=2, type=float, metavar=("LAT", "LON"), help="site: take the nearest official cameras")

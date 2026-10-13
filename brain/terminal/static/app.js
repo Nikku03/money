@@ -468,10 +468,10 @@
     return wrap;
   }
 
-  /** Notes are plain text; the INGEST commands they mention, and RES and ALRT, are clickable. */
+  /** Notes are plain text; the INGEST commands they mention, and RES, ALRT and ALRT ALL, are clickable. */
   function noteEl(text, ctx) {
     const el = h("div", "note");
-    const re = /\bINGEST (?:MARKETS|MACRO|UNIVERSE|INSIDERS|WATCH)\b|\b(?:RES|ALRT)\b(?![-\w])/g;
+    const re = /\bINGEST (?:MARKETS|MACRO|UNIVERSE|INSIDERS|WATCH)\b|\b(?:RES|ALRT(?: ALL)?)\b(?![-\w])/g;
     const s = String(text);
     let at = 0;
     for (const m of s.matchAll(re)) {
@@ -553,7 +553,10 @@
         inline(b, m[3], ctx);
         parent.append(b);
       } else if (m[4] !== undefined) parent.append(extLink(m[4], m[5]));
-      else if (m[6] !== undefined) parent.append(citeEl(m[6].toLowerCase(), ctx.ticker));
+      else if (m[6] !== undefined) {  // an id the analyst's tool results never returned is flagged, not linked
+        const id = m[6].toLowerCase();
+        parent.append(ctx.unverified && ctx.unverified.has(id) ? unverifiedCite(id) : citeEl(id, ctx.ticker));
+      }
       else if (m[7] !== undefined) parent.append(extLink(m[7], m[7]));
       else if (m[8] !== undefined) {
         const em = h("em");
@@ -856,7 +859,9 @@
   function viewTable(p, res) {
     const d = res.data || {};
     if (res.fn === "ALRT" && isNum(d.unacked) && d.unacked > 0) {
-      p.toolsEl.append(button("ACK ALL", `Acknowledge all ${d.unacked} unacknowledged alerts (ALRT ACK ALL)`, (e) => {
+      // the default list leaves info alerts out, but ACK ALL acknowledges them too
+      const hidden = (res.args || [])[0] !== "ALL" && isNum(d.info) && d.info > 0 ? `, and the ${d.info} info ones not listed` : "";
+      p.toolsEl.append(button("ACK ALL", `Acknowledge all ${d.unacked} unacknowledged alerts${hidden} (ALRT ACK ALL)`, (e) => {
         e.stopPropagation();
         p.run("ALRT ACK ALL");
       }, "btn"));
@@ -891,47 +896,79 @@
     p.body.append(root);
   }
 
+  /** EV: the H1-H4 rows against the research universe, then the hypotheses declared on the broad one
+   * (H3b, H6-H8), each group under its universe. "Held" is what that hypothesis' backtest would hold: the
+   * top third by signal, or for select `positive` every stock above 0. A broad ranking still being filled
+   * (`broad.status` pending) shows the stock's value without a rank. */
   function viewEvidence(p, res) {
     const d = res.data || {};
+    const b = d.broad && typeof d.broad === "object" ? d.broad : {};
     const root = h("div", "evidence");
     const head = h("div", "ev-head");
     head.append(h("div", "ev-summary", d.summary || ""));
     const meta = h("div", "ev-meta");
     const ctl = d.controls_pass === true ? h("span", "badge ok", "controls pass")
       : d.controls_pass === false ? h("span", "badge bad", "controls failed") : h("span", "badge", "controls n/a");
-    meta.append(ctl, h("span", "", `Ranked at ${d.rebalance_date || "—"}`), h("span", "", `Universe ${d.universe_size == null ? "—" : d.universe_size} stocks`));
+    const size = (n) => (n == null ? "—" : String(n));
+    const uni = (u) => String(u || "").replace(/^.*\//, "").replace(/\.json$/, "");  // universe/us_broad.json -> us_broad
+    meta.append(ctl, h("span", "", `Ranked at ${d.rebalance_date || "—"}`),
+      h("span", "", `${uni(d.universe) || "Universe"} ${size(d.universe_size)} stocks`));
+    if (b.status === "complete") meta.append(h("span", "", `${uni(b.universe)} ${size(b.universe_size)} stocks`));
+    else if (b.status === "pending") {
+      const pend = h("span", "badge warn", `${uni(b.universe) || "broad"} ranking ${size(b.computed)}/${size(b.total)}`);
+      pend.title = "The month's first broad ranking reads every stock's filings; run EV again to go on where it stopped";
+      meta.append(pend);
+    }
     head.append(meta);
     root.append(head);
 
+    const signals = Array.isArray(d.signals) ? d.signals : [];
+    const groups = [[uni(d.universe) || "research universe", d.universe_size, signals.filter((s) => !s.universe)]];
+    const broad = signals.filter((s) => s.universe);
+    if (broad.length) groups.push([uni(b.universe || broad[0].universe), b.universe_size ?? broad[0].universe_size, broad]);
     const rows = [];
-    for (const s of d.signals || []) {
-      const pctl = isNum(s.percentile) ? s.percentile : null;
-      let rank = null;
-      if (pctl !== null) {
-        const wrap = h("span", "nowrap");
-        wrap.append(document.createTextNode(String(pctl).padStart(3, " ")));
-        const bar = h("span", "bar");
-        const fill = h("span", "fill" + (s.in_top_third ? " top" : ""));
-        fill.style.width = Math.max(0, Math.min(100, pctl)) + "%";
-        bar.append(fill);
-        wrap.append(bar);
-        rank = wrap;
+    for (const [name, n, list] of groups) {
+      if (groups.length > 1) rows.push({ group: `${name} · ${size(n)} stocks` });
+      if (list === broad && b.status === "pending") {
+        rows.push({ full: document.createTextNode(`Ranking not complete: ${size(b.computed)} of ${size(b.total)} stocks so far. `
+          + "This stock's value is shown without a rank until it is; EV again goes on where it stopped."), cls: "sub" });
       }
-      const tn = fmtPct(s.test_net_excess, 2);
-      rows.push({ cells: [
-        { text: s.signal, cls: "amber" }, s.hypothesis || "", { text: fmtNum(s.value, 4), cls: "num" }, rank,
-        s.in_top_third == null ? null : s.in_top_third ? { text: "yes", cls: "amber" } : { text: "no", cls: "dim" },
-        verdictEl(s.verdict || "not run"), tn === null ? null : { text: tn, cls: "num " + signOf(tn) },
-        { text: fmtNum(s.perm_p, 4), cls: "num" }, { text: fmtNum(s.bh_q, 3), cls: "num" },
-      ] });
-      if (s.claim) rows.push({ full: document.createTextNode(s.claim), cls: "sub" });
+      for (const s of list) {
+        const pctl = isNum(s.percentile) ? s.percentile : null;
+        let rank = null;
+        if (pctl !== null) {
+          const wrap = h("span", "nowrap");
+          wrap.append(document.createTextNode(String(pctl).padStart(3, " ")));
+          const bar = h("span", "bar");
+          const fill = h("span", "fill" + (s.in_top_third ? " top" : ""));
+          fill.style.width = Math.max(0, Math.min(100, pctl)) + "%";
+          bar.append(fill);
+          wrap.append(bar);
+          rank = wrap;
+        }
+        const held = s.universe ? s.held : s.in_top_third;
+        const tn = fmtPct(s.test_net_excess, 2);
+        const value = s.signal === "insider_buying" && isNum(s.value) ? "$" + fmtMoney(s.value) : fmtNum(s.value, 4);  // USD bought
+        rows.push({ cells: [
+          { text: s.signal, cls: "amber" }, s.hypothesis || "", { text: s.select || "top_frac", cls: "dim" },
+          { text: value, cls: "num" }, rank,
+          held == null ? null : held ? { text: "yes", cls: "amber" } : { text: "no", cls: "dim" },
+          verdictEl(s.verdict || "not run"), tn === null ? null : { text: tn, cls: "num " + signOf(tn) },
+          { text: fmtNum(s.perm_p, 4), cls: "num" }, { text: fmtNum(s.bh_q, 3), cls: "num" },
+        ] });
+        if (s.claim) rows.push({ full: document.createTextNode(s.claim), cls: "sub" });
+      }
     }
     root.append(gridTable([
-      { label: "Signal" }, { label: "Hypothesis" }, { label: "Value", cls: "num" }, { label: "Pctl", title: "Percentile in the research universe" },
-      { label: "Top ⅓" }, { label: "Verdict" }, { label: "TEST net/mo", cls: "num" }, { label: "Perm p", cls: "num" }, { label: "BH q", cls: "num" },
+      { label: "Signal" }, { label: "Hypothesis" }, { label: "Select", title: "How the backtest picks holdings: top_frac (top third), top_frac_vs_all, positive (every stock above 0)" },
+      { label: "Value", cls: "num" }, { label: "Pctl", title: "Percentile in the hypothesis' universe" },
+      { label: "Held", title: "What the backtest would hold: the top third by signal; for select positive, every stock above 0" },
+      { label: "Verdict" }, { label: "TEST net/mo", cls: "num" }, { label: "Perm p", cls: "num" }, { label: "BH q", cls: "num" },
     ], rows));
-    root.append(noteEl("Percentile is the security's rank on each signal across the research universe at the last month-end. "
-      + "A verdict is the signal's TEST result after costs against a shuffled-signal null; a high rank on a FAIL signal is not evidence of an edge.", { pane: p }));
+    let note = "Percentile is the security's rank on each signal across its hypothesis' universe at the last month-end. "
+      + "A verdict is the signal's TEST result after costs against a shuffled-signal null; a high rank on a FAIL signal is not evidence of an edge.";
+    if (b.status === "unavailable" && b.reason && b.universe_size) note += ` Not ranked against ${uni(b.universe)}: ${b.reason}.`;
+    root.append(noteEl(note, { pane: p }));
     p.body.append(root);
   }
 
@@ -1864,7 +1901,14 @@
       turn.timers.push(timer);
       a.append(th);
     } else if (res.ok) {
-      a.append(renderMarkdown(res.answer || "", { pane: p, ticker: turn.ticker || "MACRO" }));
+      const cites = res.citations && typeof res.citations === "object" ? res.citations : {};
+      const unverified = factIds(cites.unverified);
+      const ctx = { pane: p, ticker: turn.ticker || "MACRO", unverified: new Set(unverified) };
+      a.append(renderMarkdown(res.answer || "", ctx));
+      const nums = answerNumbers(res.unverified_numbers);
+      if (nums.length) a.append(numbersWarning(nums));
+      const verified = factIds(cites.verified).filter((x) => !ctx.unverified.has(x));
+      if (verified.length || unverified.length) a.append(sourcesEl(verified, unverified, ctx));
     } else {
       a.append(errorBox(res, p));
     }
@@ -1892,15 +1936,68 @@
         meta.append(h("span", "", `${isNum(u.input_tokens) ? u.input_tokens.toLocaleString("en-US") : "?"} in · ${isNum(u.output_tokens) ? u.output_tokens.toLocaleString("en-US") : "?"} out`));
       }
       if (res.stop_reason) meta.append(h("span", "", res.stop_reason));
-      const un = res.citations && Array.isArray(res.citations.unverified) ? res.citations.unverified : [];
-      if (un.length) {
-        meta.append(h("span", "warn", `${un.length} cited id${un.length === 1 ? "" : "s"} not in this answer's tool results: `
-          + un.slice(0, 6).map((x) => `[${x}]`).join(" ")));
-      }
       if (turn.t1) meta.append(h("span", "", `${((turn.t1 - turn.t0) / 1000).toFixed(1)}s`));
       a.append(meta);
     }
     el.append(a);
+    return el;
+  }
+
+  const MAX_SHOWN_IDS = 40;
+  const MAX_SHOWN_NUMBERS = 12;
+
+  /** Fact ids from the analyst's `citations` lists: hex strings, lower case, each once. */
+  function factIds(list) {
+    if (!Array.isArray(list)) return [];
+    return [...new Set(list.filter((x) => typeof x === "string" && HEX_ID.test(x)).map((x) => x.toLowerCase()))];
+  }
+
+  /** The analyst's `unverified_numbers`: numbers written in the answer that none of its tool results hold,
+   * as strings ("4.95T", "23.1%"); a number, or an object with text, number or value, is read too. */
+  function answerNumbers(list) {
+    if (!Array.isArray(list)) return [];
+    const out = [];
+    for (const x of list) {
+      const v = typeof x === "string" || typeof x === "number" ? x
+        : x && typeof x === "object" ? (x.text ?? x.number ?? x.value) : null;
+      const t = v === null || v === undefined ? "" : String(v).trim();
+      if (t && !out.includes(t)) out.push(t);
+    }
+    return out;
+  }
+
+  /** A warning under an answer: numbers it states that its tool results do not hold (made up, or computed). */
+  function numbersWarning(nums) {
+    const box = h("div", "ask-warn");
+    const n = nums.length;
+    const shown = nums.slice(0, MAX_SHOWN_NUMBERS).join(", ") + (n > MAX_SHOWN_NUMBERS ? `, and ${n - MAX_SHOWN_NUMBERS} more` : "");
+    box.append(h("span", "badge warn", "unverified"),
+      h("span", "", ` ${n} number${n === 1 ? "" : "s"} in this answer ${n === 1 ? "is" : "are"} in none of its tool results: `),
+      h("span", "nums", shown),
+      h("span", "", ". The model may have computed or made them up: check them against the cited facts."));
+    return box;
+  }
+
+  /** The fact ids an answer cites: those its tool results returned open SHOW; the others are flagged, not linked. */
+  function sourcesEl(verified, unverified, ctx) {
+    const box = h("div", "ask-cites");
+    if (verified.length) {
+      box.append(h("span", "dim", "Sources "));
+      for (const id of verified.slice(0, MAX_SHOWN_IDS)) box.append(citeEl(id, ctx.ticker), document.createTextNode(" "));
+      if (verified.length > MAX_SHOWN_IDS) box.append(h("span", "dim", `+${verified.length - MAX_SHOWN_IDS}`));
+    }
+    if (unverified.length) {
+      const bad = h("span", "warn");
+      bad.append(document.createTextNode(`${verified.length ? " · " : ""}not in this answer's tool results (from an earlier answer, or made up): `));
+      for (const id of unverified.slice(0, MAX_SHOWN_IDS)) bad.append(unverifiedCite(id), document.createTextNode(" "));
+      box.append(bad);
+    }
+    return box;
+  }
+
+  function unverifiedCite(id) {
+    const el = h("span", "cite-bad", `[${String(id).slice(0, 8)}]`);
+    el.title = `Fact id ${id} is in none of this answer's tool results: from an earlier answer, or made up`;
     return el;
   }
 
@@ -2463,9 +2560,10 @@
 
   let jobsRunning = 0;
   let statusTimer = 0;
-  let alertsSeen = null;  // unacknowledged count at the last status poll
+  let alertsSeen = null;  // the counts at the last status poll
 
-  /** The top bar's alert count; a change refreshes the panes showing ALRT or WL. */
+  /** The top bar's alert count: notice and high alerts, what ALRT lists (info ones, headlines, only in
+   * the tooltip: ALRT ALL lists them). A change in either refreshes the panes showing ALRT or WL. */
   function showAlerts(al) {
     const el = $("#st-alerts");
     const a = al && typeof al === "object" ? al : {};
@@ -2475,13 +2573,16 @@
       el.title = "The alert state could not be read: run ALRT to see why";
       return;
     }
+    const info = isNum(a.info) ? a.info : 0;
     el.textContent = `ALRT ${a.unacked}`;
     el.className = "st st-btn" + (a.high > 0 ? " bad" : a.unacked > 0 ? " warn" : "");
-    el.title = `${a.unacked} unacknowledged alert${a.unacked === 1 ? "" : "s"}${a.high ? `, ${a.high} high` : ""}: click to run ALRT`;
-    if (alertsSeen !== null && a.unacked !== alertsSeen) {
+    el.title = `${a.unacked} unacknowledged alert${a.unacked === 1 ? "" : "s"}${a.high ? `, ${a.high} high` : ""}: click to run ALRT`
+      + (info ? ` (and ${info} info: ALRT ALL)` : "");
+    const seen = `${a.unacked}/${info}`;
+    if (alertsSeen !== null && seen !== alertsSeen) {
       for (const p of panes) if (p.res && p.res.ok && (p.res.fn === "ALRT" || p.res.fn === "WL")) p.reload(true);
     }
-    alertsSeen = a.unacked;
+    alertsSeen = seen;
   }
 
   /** Poll status every STATUS_EVERY ms, or every JOBS_POLL ms while jobs are active. */
@@ -2522,9 +2623,11 @@
     const an = s.analyst || {};
     const ae = $("#st-analyst");
     // the analyst is an open-weight model on a local server: when it is off, say what to start or set
-    ae.textContent = an.available ? "ANALYST ON" : "ANALYST OFF · OLLAMA / BRAIN_LLM_URL";
-    ae.className = "st st-btn " + (an.available ? "ok" : "bad");
-    ae.title = an.available ? `The analyst (ASK) is available${an.model ? `: ${an.model}` : ""}. Click to open it.`
+    // available with a reason: the server is busy answering a question (brain.llm.BUSY), so it was not probed
+    const busy = !!an.available && !!an.reason;
+    ae.textContent = an.available ? (busy ? "ANALYST BUSY" : "ANALYST ON") : "ANALYST OFF · OLLAMA / BRAIN_LLM_URL";
+    ae.className = "st st-btn " + (an.available ? (busy ? "warn" : "ok") : "bad");
+    ae.title = an.available ? `The analyst (ASK) is available${an.model ? `: ${an.model}` : ""}${busy ? `, ${an.reason}` : ""}. Click to open it.`
       : `The analyst is unavailable: ${an.reason || "not configured"}. Click for how to start it.`;
     showAlerts(s.alerts);
 

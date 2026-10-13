@@ -28,12 +28,12 @@ def filing(t, form, known, items="", accn=None):
 
 
 def trade(t, shares, price, known, accn="0001-26-000001", code="P", rel="director", owner="DOE JANE", title=None,
-          day=None):
+          day=None, ownership="D", lot=None):
     return Fact(entity=t, attr="insider.trade", value=shares, unit="shares", as_of=day or known[:10], known_at=known,
                 tier="filed", source={"name": "SEC Form 4", "url": f"https://example.test/{accn}-index.htm"},
                 context={"code": code, "price": price, "value_usd": round(shares * price, 2), "owner": owner,
                          "owner_cik": "0000000001", "relationship": rel, "title": title, "accn": accn,
-                         "ownership": "D"})
+                         "ownership": ownership, **({"lot": lot} if lot else {})})
 
 
 def sample(entity, attr, value, known, **ctx):
@@ -41,14 +41,14 @@ def sample(entity, attr, value, known, **ctx):
                 source={"name": "test feed", "url": "https://example.test/feed"}, context=ctx)
 
 
-def ships(value, known, window_s=300):
+def ships(value, known, window_s=300, **extra):
     return sample("AREA.TEST-PORT", "ships.count", value, known, window_s=window_s, bbox=AREA["bbox"], cargo=value,
-                  tanker=0, other=0, anchored=0, moored=0, underway=value)
+                  tanker=0, other=0, anchored=0, moored=0, underway=value, **extra)
 
 
-def vehicles(value, known):
+def vehicles(value, known, **extra):
     return sample(f"CAM.{CAM}", "camera.vehicles", value, known, car=value, truck=0, bus=0, motorcycle=0,
-                  provider="TFL", name="Test Rd", lat=51.5, lon=-0.1, detector="yolox-2022nov", threshold=0.5)
+                  provider="TFL", name="Test Rd", lat=51.5, lon=-0.1, detector="yolox-2022nov", threshold=0.5, **extra)
 
 
 def flight(t, known, reg="N100XX", hex_="a00001"):
@@ -152,6 +152,51 @@ class WatchlistTest(WatchTest):
         with self.assertRaises(ValueError):
             watch.load()
 
+    def test_headlines_are_off_for_a_new_watchlist_and_kept_in_an_old_one(self):
+        p = config.home() / "watchlist.json"
+        self.assertFalse(watch.load()["rules"]["headlines"])
+        watch.add("ticker", "X")
+        self.assertIs(json.loads(p.read_text())["rules"]["headlines"], False)  # saved as off
+        p.write_text(json.dumps({"tickers": ["X"], "rules": {"zscore": 4}}))  # written before the default changed
+        self.assertIs(watch.load()["rules"]["headlines"], True)
+        watch.add("ticker", "Y")
+        self.assertIs(json.loads(p.read_text())["rules"]["headlines"], True)  # and it stays on when saved
+        p.write_text(json.dumps({"tickers": ["X"]}))
+        self.assertIs(watch.load()["rules"]["headlines"], True)
+        p.write_text(json.dumps({"tickers": ["X"], "rules": {"headlines": False}}))
+        self.assertIs(watch.load()["rules"]["headlines"], False)
+
+    def test_fields_of_the_wrong_shape_are_errors_naming_the_field(self):
+        p = config.home() / "watchlist.json"
+        cases = {'{"tickers": "AAPL"}': "tickers must be a list of strings",
+                 '{"tickers": [5]}': "tickers must be a list of strings",
+                 '{"tickers": ["A;B"]}': "tickers: not a ticker",
+                 '{"tickers": ["AAPL"], "areas": 5}': "areas must be a list",
+                 '{"areas": [7]}': "areas: each entry is a name",
+                 '{"areas": [{"name": "BOX", "bbox": [3, 2, 1, 4]}]}': "areas: BOX: bbox",
+                 '{"sites": {"name": "x"}}': "sites must be a list",
+                 '{"sites": ["Plant"]}': "sites: each entry is",
+                 '{"sites": [{"name": "Plant", "cameras": "TFL.1"}]}': "sites: Plant: cameras must be a list",
+                 '{"sites": [{"name": "Lobby", "cameras": ["HOMECAM.1"]}]}': "sites: Lobby: 'HOMECAM.1'",
+                 '{"rules": []}': "rules must be an object",
+                 '{"rules": {"zscore": "3"}}': "rules.zscore must be a number",
+                 '{"rules": {"forms": "8-K"}}': "rules.forms must be a list",
+                 '{"rules": {"headlines": "on"}}': "rules.headlines must be true or false"}
+        for text, words in cases.items():
+            with self.subTest(text=text):
+                p.write_text(text)
+                with self.assertRaises(ValueError) as e:
+                    watch.load()
+                self.assertIn(str(p), str(e.exception))
+                self.assertIn(words, str(e.exception))
+                self.assertIn("fix or remove it", str(e.exception))
+                with self.assertRaises(ValueError):
+                    watch.add("ticker", "MSFT")
+                self.assertEqual(p.read_text(), text)  # never saved over
+        p.write_text(json.dumps({"tickers": [" aapl ", ""], "rules": {"zscore": None, "headlines": False}, "x": 1}))
+        w = watch.load()
+        self.assertEqual((w["tickers"], w["rules"]["zscore"], w["x"]), (["AAPL"], None, 1))
+
 
 class PriceRuleTest(WatchTest):
     def test_move_alerts_once_per_bar_and_cites_the_snapshot(self):
@@ -230,6 +275,35 @@ class FilingAndInsiderRuleTest(WatchTest):
         self.bank.add(trade("X", 1000, 60.0, at(DAYS[12], "23:59"), "f1", day=DAYS[8]))
         self.assertEqual(self.check(at(DAYS[13], "12:00")), [])
 
+    def test_repeated_identical_lots_each_count(self):
+        # One filing's six purchases at one price: 3, 1 and 2 shares held indirectly, 3 directly, then 1 and 2
+        # indirectly again. The repeats are distinct transactions (lot 2), so 12 shares, not 9.
+        self.watching(tickers=["X"], rules={"insider_buy_usd": 6000})
+        k, p = at(DAYS[10], "21:00"), 576.33
+        self.bank.add_many([trade("X", n, p, k, "f9", day=DAYS[9], ownership=o, lot=lot)
+                            for n, o, lot in ((3, "I", None), (1, "I", None), (2, "I", None), (3, "D", None),
+                                              (1, "I", 2), (2, "I", 2))])
+        out = self.check(at(DAYS[11], "12:00"))
+        self.assertEqual(self.rules(out), ["insider_buy"])
+        self.assertEqual(out[0].context["value_usd"], 6915.96)
+        self.assertEqual(len(out[0].inputs), 6)
+        self.assertIn("bought 12 shares for $6,916", out[0].value)
+
+    def test_a_filing_read_live_and_in_bulk_in_one_check_counts_once(self):
+        # Both copies are new in the same check: the sum is one copy's, lots included, never both.
+        self.watching(tickers=["X"])
+        live, bulk = at(DAYS[10], "14:05"), at(DAYS[10], "23:59")
+        for known in (live, bulk):
+            self.bank.add_many([trade("X", 500, 60.0, known, "f7", day=DAYS[9]),               # $60k in all
+                                trade("X", 500, 60.0, known, "f7", day=DAYS[9], lot=2),
+                                trade("X", 1000, 60.0, known, "f6", day=DAYS[9]),              # $120k in all
+                                trade("X", 1000, 60.0, known, "f6", day=DAYS[9], lot=2)])
+        out = self.check(at(DAYS[11], "12:00"))
+        self.assertEqual([f.context["keys"] for f in out], [["insider:f6"]])  # f7 stays below $100k
+        self.assertEqual(out[0].context["value_usd"], 120000.0)
+        self.assertEqual(out[0].context["severity"], "notice")
+        self.assertIn("bought 2,000 shares for $120,000", out[0].value)
+
 
 class EarningsRuleTest(WatchTest):
     E = 30
@@ -296,6 +370,22 @@ class AltDataRuleTest(WatchTest):
         self.assert_cited(out)
         self.assertEqual(self.check(at(DAYS[0], "15:00")), [])
 
+    def test_ship_counts_on_another_basis_are_not_compared(self):
+        # Samples written before the count became commercial-only (no "basis") counted every typed vessel:
+        # a commercial-only count after them is no drop, and alerts only against samples on its own basis.
+        self.watching(areas=[AREA])
+        self.bank.add_many([ships(v, at(DAYS[0], f"{h:02d}:00")) for h, v in enumerate(
+            [200, 204, 198, 201, 199, 203, 197, 200, 202, 201, 199])])
+        self.bank.add(ships(100, at(DAYS[0], "12:00"), basis="cargo+tanker"))
+        self.assertEqual(self.check(at(DAYS[0], "13:00")), [])  # 11 older samples, none on its basis
+        new = [100, 102, 98, 101, 99, 103, 97, 100, 102]
+        self.bank.add_many([ships(v, at(DAYS[1], f"{h:02d}:00"), basis="cargo+tanker") for h, v in enumerate(new)])
+        self.bank.add(ships(160, at(DAYS[1], "10:00"), basis="cargo+tanker"))
+        out = self.check(at(DAYS[1], "11:00"))
+        self.assertEqual([f.context["rule"] for f in out], ["ships"])
+        self.assertEqual(len(out[0].inputs), 11)  # the sample and its ten priors on the same basis
+        self.assertIn("commercial vessels", out[0].value)
+
     def test_camera_spike_names_the_site_and_flat_history_says_nothing(self):
         self.watching(sites=[SITE])
         quiet = [5, 6, 4, 5, 7, 5, 6, 4, 5, 6, 5, 4]
@@ -312,29 +402,65 @@ class AltDataRuleTest(WatchTest):
         self.bank.add(Fact(**{**vehicles(9, at(DAYS[2], "13:00")).content(), "entity": cam2}))
         self.assertEqual(self.check(at(DAYS[2], "14:00")), [])     # no spread among the priors: no z-score
 
+    def test_camera_counts_from_another_decode_are_not_compared(self):
+        from brain import vision
+        self.watching(sites=[SITE])
+        quiet = [5, 6, 4, 5, 7, 5, 6, 4, 5, 6, 5, 4]  # read before the decode was recorded
+        self.bank.add_many([vehicles(v, at(DAYS[1], f"{h:02d}:00")) for h, v in enumerate(quiet)])
+        self.bank.add(vehicles(40, at(DAYS[1], "13:00"), decode=vision.DECODE))
+        self.assertEqual(self.check(at(DAYS[1], "14:00")), [])  # no earlier sample read the same way
+        self.bank.add_many([vehicles(v, at(DAYS[2], f"{h:02d}:00"), decode=vision.DECODE) for h, v in enumerate(quiet)])
+        self.bank.add(vehicles(40, at(DAYS[2], "13:00"), decode=vision.DECODE))
+        out = self.check(at(DAYS[2], "14:00"))
+        self.assertEqual([f.context["rule"] for f in out], ["camera"])
+        self.assertEqual(len(out[0].inputs), 14)  # the sample, the first 40 and the 12 quiet ones read the same way
+
     def test_landings_alert_and_opted_out_tails_do_not(self):
         self.watching(aircraft_of=["X"])
-        self.bank.add_many([flight("X", at(DAYS[3], "15:00")), flight("X", at(DAYS[3], "16:00"), "N200YY", "a00002")])
+        self.bank.add_many([flight("X", at(DAYS[3], "15:00")), flight("X", at(DAYS[3], "16:00"), "N200YY", "a00002"),
+                            flight("X", at(DAYS[3], "16:30"), "N300ZZ", "a00003")])
         (config.home() / "aviation_optout.txt").write_text("N200YY  # asked not to be tracked\n")
+        (config.home() / "aviation_state.json").write_text(json.dumps({"aircraft": {}, "blocked": {"A00003": "LADD"}}))
         out = self.check(at(DAYS[3], "17:00"))
         self.assertEqual([f.context["rule"] for f in out], ["aircraft"])
         self.assertIn("N100XX landed at KSJC (San Jose Intl) from KTEB (Teterboro)", out[0].value)
+        self.assertEqual((out[0].context["reg"], out[0].context["hex"]), ("N100XX", "a00001"))
         self.assert_cited(out)
 
-    def test_headlines_are_info(self):
-        self.watching(tickers=["X"])
+    def test_alerts_about_a_tail_opted_out_later_are_not_listed(self):
+        self.watching(aircraft_of=["X"])
+        self.bank.add_many([flight("X", at(DAYS[3], "15:00")), flight("X", at(DAYS[3], "16:00"), "N200YY", "a00002")])
+        by = {f.context["reg"]: f for f in self.check(at(DAYS[3], "17:00"))}
+        bare = lambda f, **kw: Fact(**{**f.content(), "known_at": at(DAYS[3], "17:01"), **kw, "context": {  # noqa: E731
+            **{k: v for k, v in f.context.items() if k not in ("reg", "hex")}, **kw.pop("context", {})}})
+        # alerts written before alerts named their aircraft: one found by its rule key, one by the flight it cites
+        self.bank.add_many([bare(by["N100XX"]), bare(by["N200YY"], context={"keys": ["aircraft-old"]})])
+        self.assertEqual(len(watch.alerts(self.bank)), 4)
+        (config.home() / "aviation_optout.txt").write_text("N100XX\n")  # by hand: nothing withdrawn yet
+        shown = watch.alerts(self.bank)
+        self.assertEqual(len(shown), 2)
+        self.assertNotIn("N100XX", " ".join(f.value for f in shown))
+        (config.home() / "aviation_state.json").write_text(json.dumps({"blocked": {"a00002": "FAA LADD/PIA"}}))
+        self.assertEqual(watch.alerts(self.bank), [])
+        self.assertEqual(watch.unacked(self.bank), [])
+        self.assertEqual(watch.ack_all(self.bank), 0)
+
+    def test_headlines_are_off_by_default_and_info_when_on(self):
+        self.watching(tickers=["X"])                                 # a new watchlist: headlines off
         self.bank.add(headline("X", "X opens a plant", at(DAYS[4], "09:00"), "https://news.example/1"))
-        out = self.check(at(DAYS[4], "10:00"))
+        self.assertEqual(self.check(at(DAYS[4], "10:00")), [])
+        self.watching(tickers=["X"], rules={"headlines": True})  # python -m brain watch rule headlines on
+        out = self.check(at(DAYS[4], "11:00"))
         self.assertEqual([(f.context["rule"], f.context["severity"]) for f in out], [("headline", "info")])
         self.watching(tickers=["X"], rules={"headlines": False})
-        self.bank.add(headline("X", "X again", at(DAYS[4], "11:00"), "https://news.example/2"))
+        self.bank.add(headline("X", "X again", at(DAYS[4], "11:30"), "https://news.example/2"))
         self.assertEqual(self.check(at(DAYS[4], "12:00")), [])
 
 
 class AckAndStateTest(WatchTest):
     def setUp(self):
         super().setUp()
-        self.watching(tickers=["X"])
+        self.watching(tickers=["X"], rules={"headlines": True})
         self.bank.add_many([headline("X", f"story {i}", at(DAYS[5], f"0{i}:00"), f"https://news.example/{i}")
                             for i in range(1, 4)])
         self.first = self.check(at(DAYS[5], "12:00"))
@@ -366,6 +492,23 @@ class AckAndStateTest(WatchTest):
         watch.remove("ticker", "X")
         self.assertEqual(len(watch.alerts(self.bank)), 3)
 
+    def test_a_state_file_of_the_wrong_shape_is_an_error_naming_the_field(self):
+        p = config.home() / "alerts_state.json"
+        for text, words in (("[]", "must hold a JSON object"), ('{"acked": 5}', "acked must be a list of strings"),
+                            ('{"acked": [1]}', "acked must be a list of strings"),
+                            ('{"entities": "X"}', "entities must be a list of strings"),
+                            ('{"last_check": 5}', "last_check must be a time"),
+                            ('{"last_check": "soon"}', "last_check 'soon' is not a time")):
+            with self.subTest(text=text):
+                p.write_text(text)
+                for fn in (watch.acked, lambda: watch.alerts(self.bank), lambda: watch.ack_all(self.bank),
+                           lambda: self.check(at(DAYS[6], "12:00"))):
+                    with self.assertRaises(ValueError) as e:
+                        fn()
+                    self.assertIn(str(p), str(e.exception))
+                    self.assertIn(words, str(e.exception))
+                self.assertEqual(p.read_text(), text)
+
     def test_explicit_since_and_state(self):
         state = json.loads((config.home() / "alerts_state.json").read_text())
         self.assertEqual((state["last_check"], state["entities"]), (at(DAYS[5], "12:00"), ["X"]))
@@ -384,7 +527,7 @@ class AckAndStateTest(WatchTest):
 
 class NotifyTest(WatchTest):
     def alerts(self):
-        self.watching(tickers=["X"])
+        self.watching(tickers=["X"], rules={"headlines": True})
         self.bank.add(headline("X", "story", at(DAYS[5], "01:00"), "https://news.example/1"))
         self.bank.add(price_snapshot("X", DAYS[:6], [100.0] * 5 + [80.0]))
         return self.check(at(DAYS[6], "01:00"))
@@ -476,7 +619,7 @@ class RefreshAndRunTest(WatchTest):
         self.assertEqual(len(out["skipped"]), 1)
 
     def test_run_survives_a_failed_refresh_and_prints_one_line_per_alert(self):
-        self.watching(tickers=["X"])
+        self.watching(tickers=["X"], rules={"headlines": True})
         self.bank.add_many([headline("X", f"story {i}", f"2026-10-0{i}T09:00:00Z", f"https://news.example/{i}")
                             for i in range(1, 3)])
         calls = []
@@ -498,6 +641,23 @@ class RefreshAndRunTest(WatchTest):
         lines = [m for m in self.log if "headline:" in m]
         self.assertEqual(len(lines), 2)                       # two alerts, one line each, on the first round only
         self.assertEqual(push.call_count, 2)
+
+    def test_prices_are_read_with_a_short_ttl(self):
+        from brain.sources import prices
+        seen = []
+
+        def fetch(url, ttl):  # what prices.ingest asks the HTTP cache for
+            seen.append(ttl)
+            raise RuntimeError("stop here")
+
+        with mock.patch.object(prices, "fetch", fetch):
+            with self.assertRaises(RuntimeError):
+                watch._src_prices(self.bank, "x", self.log.append)
+            with self.assertRaises(RuntimeError):
+                prices.ingest("X")  # an ordinary ingest keeps the long cache
+        self.assertEqual(seen, [watch.PRICES_TTL, prices.TTL])
+        self.assertLessEqual(watch.PRICES_TTL, 900)
+        self.assertGreater(prices.TTL, watch.PRICES_TTL)
 
     def test_ctrl_c_stops_the_loop(self):
         self.watching()
@@ -528,6 +688,8 @@ class CliTest(WatchTest):
 
     def test_watch_and_alerts_commands(self):
         self.assertEqual(self.cli("watch", "add", "ticker", "x", "y")[0], 0)
+        self.assertIn("headlines off", self.cli("watch", "list")[1])  # a new watchlist
+        self.assertEqual(self.cli("watch", "rule", "headlines", "on")[0], 0)
         self.assertEqual(self.cli("watch", "add", "site", "Plant", "One", "--ticker", "x", "--cameras", CAM)[0], 0)
         self.assertEqual(self.cli("watch", "add", "area", "box", "--bbox", "1", "2", "3", "4")[0], 0)
         self.assertEqual(self.cli("watch", "rule", "price_move", "0.03")[0], 0)
@@ -548,6 +710,16 @@ class CliTest(WatchTest):
         self.assertEqual(self.cli("alerts", "ack", aid[:6])[0], 0)
         self.assertEqual(self.cli("alerts", "list", "--unacked")[1].strip(), "no unacknowledged alerts")
         self.assertEqual(self.cli("alerts", "ack-all")[1].strip(), "0 alerts acknowledged")
+
+    def test_run_once_says_it_is_one_round(self):
+        with mock.patch.object(watch, "run") as run:
+            code, text = self.cli("watch", "run", "--once")
+        self.assertEqual((code, text.splitlines()[0]), (0, "one round of refresh and check"))
+        self.assertEqual(run.call_args.kwargs["cycles"], 1)
+        with mock.patch.object(watch, "run") as run:
+            text = self.cli("watch", "run", "--every", "15m")[1]
+        self.assertEqual(text.splitlines()[0], "watching every 900 s; Ctrl+C stops")
+        self.assertIsNone(run.call_args.kwargs["cycles"])
 
     def test_refresh_summary(self):
         self.assertEqual(watch.summary({}), "nothing watched")

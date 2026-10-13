@@ -186,6 +186,86 @@ class ClientTest(unittest.TestCase):
         self.assertEqual(cm.exception.kind, "timeout")
         self.assertIn("BRAIN_LLM_TIMEOUT", llm.describe_error(cm.exception, srv.client())[1])
 
+    def test_the_key_stays_on_its_origin_across_redirects(self):
+        # urllib copies Authorization to any redirect target; a hop to another host must not carry the key.
+        seen = []
+
+        class H(BaseHTTPRequestHandler):
+            def log_message(self, *a):
+                pass
+
+            def do_GET(self):
+                seen.append((self.headers.get("Host"), self.path, self.headers.get("Authorization")))
+                port = self.server.server_port
+                where = {"/v1/models": f"http://localhost:{port}/elsewhere/models",   # another origin
+                         "/v2/models": "/v2/moved/models"}.get(self.path)             # the same origin
+                if where:
+                    self.send_response(302)
+                    self.send_header("Location", where)
+                    self.send_header("Content-Length", "0")
+                    self.end_headers()
+                    return
+                raw = json.dumps({"data": [{"id": "m"}]}).encode()
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Content-Length", str(len(raw)))
+                self.end_headers()
+                self.wfile.write(raw)
+        httpd = ThreadingHTTPServer(("127.0.0.1", 0), H)
+        httpd.daemon_threads = True
+        threading.Thread(target=httpd.serve_forever, kwargs={"poll_interval": 0.02}, daemon=True).start()
+        try:
+            port = httpd.server_port
+            with mock.patch.dict(os.environ, {"no_proxy": "*", "NO_PROXY": "*"}):
+                self.assertEqual(llm.Client(url=f"http://127.0.0.1:{port}/v1", key="sk-test-123").models(), ["m"])
+                self.assertEqual(llm.Client(url=f"http://127.0.0.1:{port}/v2", key="sk-test-123").models(), ["m"])
+        finally:
+            httpd.shutdown()
+            httpd.server_close()
+        self.assertEqual(seen, [(f"127.0.0.1:{port}", "/v1/models", "Bearer sk-test-123"),
+                                (f"localhost:{port}", "/elsewhere/models", None),
+                                (f"127.0.0.1:{port}", "/v2/models", "Bearer sk-test-123"),
+                                (f"127.0.0.1:{port}", "/v2/moved/models", "Bearer sk-test-123")])
+
+    def test_a_server_answering_this_process_is_busy_not_off(self):
+        # llama.cpp's server answers one request at a time: a status probe during an answer timed out and the
+        # terminal showed ANALYST OFF next to an analyst that was thinking.
+        go, started = threading.Event(), threading.Event()
+
+        def reply(n, body):
+            started.set()
+            go.wait(10)
+            return {"role": "assistant", "content": "done"}
+        with FakeOpenAI(reply, models=("m",)) as srv, \
+                mock.patch.dict(os.environ, {"BRAIN_LLM_URL": srv.url, "BRAIN_LLM_MODEL": "m"}):
+            llm._available_cache.clear()
+            t = threading.Thread(target=lambda: llm.chat([{"role": "user", "content": "x"}]))
+            t.start()
+            try:
+                self.assertTrue(started.wait(10))
+                self.assertEqual(llm.available(max_age=0), (True, llm.BUSY))
+                self.assertTrue(llm.Client.from_env().busy())
+                self.assertEqual([h for h in srv.headers if "Content-Length" not in h], [])  # no probe sent
+            finally:
+                go.set()
+                t.join(10)
+            self.assertFalse(llm.Client.from_env().busy())
+            self.assertEqual(llm.available(max_age=0), (True, ""))
+        llm._available_cache.clear()
+        # A probe that times out is not a question: raising BRAIN_LLM_TIMEOUT would not help it.
+        import socket
+        quiet = socket.socket()
+        quiet.bind(("127.0.0.1", 0))
+        quiet.listen(5)  # accepts connections, never answers
+        try:
+            ok, why = llm.Client(url=f"http://127.0.0.1:{quiet.getsockname()[1]}/v1").available(timeout=0.5)
+        finally:
+            quiet.close()
+        self.assertFalse(ok)
+        self.assertIn("GET /models within 0.5 s", why)
+        self.assertIn("busy with another request", why)
+        self.assertNotIn("BRAIN_LLM_TIMEOUT", why)
+
     def test_loopback_bypasses_proxies(self):
         with mock.patch.dict(os.environ, {"http_proxy": "http://127.0.0.1:9", "HTTP_PROXY": "http://127.0.0.1:9",
                                           "no_proxy": "", "NO_PROXY": ""}):

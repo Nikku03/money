@@ -51,11 +51,14 @@ def parse_chart(data: dict, now: float | None = None) -> tuple[pd.DataFrame, lis
     return df, splits, keep
 
 
-def fetch_daily(symbol: str, start: str = "2000-01-01"):
+TTL = 6 * 3600  # how long a fetched chart body is reused; the watch loop passes a shorter one
+
+
+def fetch_daily(symbol: str, start: str = "2000-01-01", ttl: float = TTL):
     p1 = int(datetime.fromisoformat(start).replace(tzinfo=timezone.utc).timestamp())
     p2 = (int(time.time()) // 86400 + 1) * 86400  # next UTC midnight: same URL all day, so the cache works
     url = CHART.format(sym=symbol.upper(), p1=p1, p2=p2)
-    r = fetch(url, ttl=6 * 3600)
+    r = fetch(url, ttl=ttl)
     # Judge "session still open" at the time the body was fetched, not now: a body cached at midday and
     # re-read after the close still holds that midday bar, which is not a close.
     fetched = datetime.fromisoformat(r.fetched_at.replace("Z", "+00:00")).timestamp()
@@ -65,8 +68,10 @@ def fetch_daily(symbol: str, start: str = "2000-01-01"):
     return df, splits, meta, r
 
 
-def ingest(symbol: str, start: str = "2000-01-01") -> list[Fact]:
-    df, splits, meta, r = fetch_daily(symbol, start)
+def ingest(symbol: str, start: str = "2000-01-01", ttl: float = TTL) -> list[Fact]:
+    """The daily bars and splits as facts. ``ttl``: seconds a cached chart body is reused (the watch
+    loop re-reads every 15 minutes so a close can alert soon after the session ends)."""
+    df, splits, meta, r = fetch_daily(symbol, start, ttl)
     sha = series.store(df)
     src = {"name": "Yahoo Finance chart API (unofficial)", "url": f"https://finance.yahoo.com/quote/{symbol.upper()}/history"}
     out = [Fact(entity=symbol, attr="series.price_daily", value=sha, as_of=df["date"].iloc[-1],

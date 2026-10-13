@@ -64,7 +64,7 @@ What this means for making money: textbook signals, including the well-known eve
 | Insider trades | Open-market purchases (P) and sales (S) from SEC Forms 4 and 5: quarterly bulk data sets from 2010q4, plus each new Form 4 | `brain insiders T`, terminal `T INS` |
 | More stocks | `universe/us_broad.json`: 741 stocks from SEC's first 1,500 filers by the same written rule as the 60-stock universe | `brain universe --broad`, `brain ingest-universe --broad` |
 | Corporate aircraft | Aircraft the FAA lists as registered to the company itself, and their airport-to-airport flights | `brain jets link T`, `brain jets poll`, terminal `T JET` |
-| Shipping | Commercial vessels (cargo, tanker, other) counted in port areas, as aggregate counts | `brain ships sample AREA`, terminal `SHIP` |
+| Shipping | Commercial vessels (cargo and tanker) counted in port areas, as aggregate counts; other and untyped vessels are tallied beside the count | `brain ships sample AREA`, terminal `SHIP` |
 | Traffic cameras | Vehicles counted in official public traffic-camera frames near a place (a company's plant, office or depot) | `brain cams near LAT LON`, `brain cams sample ID`, terminal `CAM` |
 | Watchlist and alerts | Tickers, company aircraft, port areas and camera sites; rules for price moves, filings, insider buys, earnings reactions, landings, unusual counts, headlines | `brain watch ...`, `brain alerts ...`, terminal `WL`, `ALRT` |
 | Analyst and scout | An open-weight model (Ollama, llama.cpp, vLLM, LM Studio) answers from the bank; the scout reads public web pages and notes claims with their sources | terminal `ASK`, `brain scout T` |
@@ -74,9 +74,9 @@ What this means for making money: textbook signals, including the well-known eve
 They are in [`CLAUDE.md`](CLAUDE.md) ("Hard rules" and "Alternative data") and they are requirements. The code enforces them rather than asking nicely:
 
 - **Public information only.** Executives appear only in their public role, as their filings state it. Insider records keep name, SEC CIK, relationship and title; addresses, signatures and remarks are never read into the bank. Nothing on private individuals.
-- **Aircraft.** Only aircraft whose FAA registrant is a corporation or LLC whose name equals the company's SEC name. Individuals, trusts, other LLCs and co-owners never match; there is no fuzzy matching. Aircraft in the FAA's LADD and PIA privacy programs are dropped the moment they are seen and never polled again. Tails or hexes in `var/aviation_optout.txt` (`brain jets optout N123AB`) are never linked, polled or shown. Stored: airport to airport, with times. No tracks, no callsigns, no guess at who was on board.
-- **Ships.** Counts per area by type and status. Pleasure and sailing craft are dropped, and no vessel's identity or track is stored.
-- **Cameras.** Only official government traffic cameras published for public viewing under open terms: Transport for London JamCams and Caltrans. A camera is sampled only by its id in the provider's own listing, from the provider's own image host; there is no way to point the sampler at another URL, a private camera or a login-protected one. Frames are counted in memory and dropped, never written to disk. The detector reads only the four vehicle classes; people, faces and number plates are not detected at all.
+- **Aircraft.** Only aircraft whose FAA registrant is a corporation or LLC whose name equals the company's SEC name word for word, legal form included (WEST LAKE HOLDINGS INC is not WESTLAKE CORP; an LLC registrant matches only a company that is itself an LLC). Individuals, trusts, other LLCs and co-owners never match; there is no fuzzy matching. Aircraft in the FAA's LADD and PIA privacy programs are dropped the moment they are seen and never polled again. Tails or hexes in `var/aviation_optout.txt` (`brain jets optout N123AB`) are never linked, polled or shown, and what was recorded about them before (registration, flights, the alerts citing them) is withdrawn. Stored: airport to airport, with times. No tracks, no callsigns, no guess at who was on board.
+- **Ships.** Counts per area by type and status; the count is of commercial vessels (cargo, tanker). Pleasure and sailing craft are dropped, a vessel whose type was not heard is never in the count, and no vessel's identity or track is stored.
+- **Cameras.** Only official government traffic cameras published for public viewing under open terms: Transport for London JamCams and Caltrans. A camera is sampled only by its id in the provider's own listing, from the provider's own image host; there is no way to point the sampler at another URL, a private camera or a login-protected one. Frames are counted in memory and dropped, never written to disk. The detector reports only the four vehicle classes and never reads the person class (the other classes are read only to veto a box that is a train or a boat, not a bus); people, faces and number plates are not detected at all.
 - **Web reading.** The scout obeys robots.txt, names itself, waits a second between requests to a host, refuses private and local addresses, and reports a paywall, login or bot check as blocked and moves on. It can only note a claim from a page it actually read in that run.
 - **SEC.** Every request carries `SEC_USER_AGENT`, and all SEC requests from every process using the same `var/` take turns through one lock, so the machine stays under 10 per second even with two terminal jobs running.
 - **No orders.** Nothing connects to a broker.
@@ -96,12 +96,12 @@ A keyboard-driven market terminal over the memory bank: type `AAPL GP 5Y SPY` an
 | `ERN` | earnings by quarter: EPS, EPS YoY, SUE, 3-day reaction, 20- and 60-day drift, with the H7 and H8 verdicts |
 | `JET` | the company's own registered aircraft and their recorded flights |
 | `SHIP` `CAM` | vessel counts per port area, vehicle counts per camera, each with a z-score; `SHIP AREA` and `CAM ID` chart one |
-| `WL` `ALRT` | the watchlist with last price, 1-day move and latest alert; alerts newest first (`WL ADD T`, `ALRT ACK ID`) |
-| `EV` | the brain's verdict: where a stock ranks on every tested signal, and whether that signal passed its held-out test |
+| `WL` `ALRT` | the watchlist with last price, 1-day move and latest alert; notice and high alerts newest first, `ALRT ALL` with the info ones (`WL ADD T`, `ALRT ACK ID`) |
+| `EV` | the brain's verdict: where a stock ranks on every tested signal (H1-H4 against the 60-stock universe, H3b and H6-H8 against the 741-stock one), and whether that signal passed its held-out test |
 | `BRIEF` `SHOW` | the cited one-page brief; any fact with its source |
 | `WEI` `MOV` `CURVE` `ECO` | world markets, universe movers, Treasury yield curve, macro |
 | `RES` `CLM` | research verdicts per universe; web-claim track records per source |
-| `ASK` | ask the analyst, an open-weight model on a server you run. It answers only from the bank, through read-only tools that run terminal commands, and cites fact ids. Its tools cover DES, GP, FA, CF, CN, EV, SHOW, RES, WEI, MOV, CURVE, ECO and CLM; they do not yet include INS, ERN or the alternative data |
+| `ASK` | ask the analyst, an open-weight model on a server you run. It answers only from the bank, through read-only tools that run terminal commands, and cites fact ids. Its tools cover DES, GP, FA, CF, CN, EV, SHOW, RES, WEI, MOV, CURVE, ECO, CLM, INS, ERN, JET, SHIP, CAM, WL and ALRT (reading only). Under each answer the pane flags cited ids and numbers that none of its tool results hold |
 | `INGEST` `JOBS` | collect data in the background: a ticker, `MARKETS`, `MACRO`, `UNIVERSE`, `INSIDERS`, `WATCH` |
 
 It listens on 127.0.0.1 only and requires a per-session token on every API call; a Host check blocks DNS rebinding, and the page's CSP allows no external requests.
@@ -149,7 +149,7 @@ python -m brain ingest AAPL                 # SEC facts, filings, prices, headli
 python -m brain insiders AAPL               # insider trades: bulk history (first run fetches ~700 MB of SEC data sets, cached), then recent Form 4s
 python -m brain markets                     # world indices, FX, commodities, crypto (32 symbols)
 python -m brain macro                       # US Treasury curve; FRED series too if FRED_API_KEY is set
-python -m brain brief AAPL                  # cited brief -> var/briefs/AAPL.md
+python -m brain brief AAPL                  # cited brief -> var/briefs/AAPL.md (a month's first ranks all 741 broad stocks: about a minute)
 python -m brain ask AAPL us-gaap:NetIncomeLoss --at 2015-06-30   # what was known then
 python -m brain note AAPL "Analyst X cuts to sell on China demand" \
     --source https://... --known-at 2026-10-09T13:00:00Z --direction down
@@ -179,7 +179,7 @@ Research:
 ```
 python -m brain universe --broad            # rebuild universe/us_broad.json by its rule (about 40 minutes; frozen in git)
 python -m brain ingest-universe --broad     # refresh its data
-python -m brain insiders                    # bulk insider data sets for every universe ticker
+python -m brain insiders                    # bulk insider data sets for every universe ticker, from 2010q4 (H6's first rebalance looks back 90 days)
 python -m brain research declare            # declare hypotheses in brain/research/hypotheses.py, then commit
 python -m brain research run                # run, append results to the ledger, write research/RESULTS.md
 ```
@@ -245,8 +245,8 @@ Everything runs offline in the unit tests (fixtures, a fake OpenAI-compatible se
 - **Survivorship.** Both universes are chosen by today's market value, so every member survived and grew. Results report the size of the effect and treat any PASS as an upper bound. Fixing this needs delisted-company price data, which free sources don't provide.
 - **Alternative data has no history yet.** Aircraft flights, vessel counts and vehicle counts start when you start collecting them. No hypothesis on them can be tested until there are years of samples, and a single camera frame is a noisy count.
 - **Coverage.** H7 has a value for 35% of TEST stock-months (an earnings release in the 31 days before the rebalance); quarterly EPS is missing where a company tags it outside the curated XBRL concepts.
-- The analyst's tools do not yet read `INS`, `ERN`, `JET`, `SHIP`, `CAM`, `WL` or `ALRT`; ask about those in the terminal directly. The brief (`brain brief`) does not yet include quarterly earnings or insider trades.
-- Headline alerts are many (every new headline is an `info` alert); turn them off with `brain watch rule headlines off`.
+- The analyst checks its own answer, not its reasoning: the ASK pane flags cited ids its tools never returned and numbers none of its tool results hold, but a number it computed correctly from cited facts is flagged too, and one it copied from the wrong row is not.
+- Headline alerts are many (every new headline is an `info` alert), so they are off for a new watchlist (`brain watch rule headlines on` turns them on); the terminal's alert count and `ALRT` leave info alerts out, and `ALRT ALL` lists them.
 - US filings only. The price source handles other exchanges (e.g. `RELIANCE.NS`), but filings come from SEC. Cameras: London and California only.
 - No broker connection, by design.
 - The terminal is single-user and local. Prices are end-of-day snapshots, not a live feed.

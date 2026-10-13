@@ -9,11 +9,15 @@ Settings (environment):
 
 - ``BRAIN_LLM_URL``: base URL ending in ``/v1`` (default ``http://127.0.0.1:11434/v1``, Ollama).
 - ``BRAIN_LLM_MODEL``: the model as the server lists it (default ``qwen3:8b``, Apache-2.0).
-- ``BRAIN_LLM_KEY``: optional bearer token (vLLM ``--api-key``, a gateway). Sent only as a header.
+- ``BRAIN_LLM_KEY``: optional bearer token (vLLM ``--api-key``, a gateway). Sent only as a header, and only
+  to the configured server: a redirect to another scheme, host or port does not carry it.
 - ``BRAIN_LLM_TIMEOUT``: seconds per request (default 300; a CPU-only machine is slow).
 - ``BRAIN_LLM_CTX``: the context window the server gives the model, in tokens (default 16384).
   The analyst trims what it sends to fit. Ollama's own default is smaller and it cuts silently,
   so run it with ``OLLAMA_CONTEXT_LENGTH=16384 ollama serve``.
+
+Servers such as llama.cpp's answer one request at a time, so while this process waits on a chat
+completion, ``available()`` reports the server as available (busy) instead of probing it.
 """
 from __future__ import annotations
 
@@ -22,6 +26,7 @@ import json
 import os
 import re
 import socket
+import threading
 import time
 import urllib.error
 import urllib.request
@@ -39,6 +44,9 @@ _LOOPBACK = ("localhost", "127.0.0.1", "::1")
 _CONTEXT_LIMIT = re.compile(r"(?:context window of|maximum context length is|context size (?:of|is)?|n_ctx[ =:]+)"
                             r"\s*(\d{3,7})", re.I)
 _available_cache: dict[tuple, tuple[float, tuple[bool, str]]] = {}
+_in_flight: dict[tuple, int] = {}   # (url, model, key) -> chat completions this process is waiting on
+_in_flight_lock = threading.Lock()
+BUSY = "busy answering a question"
 
 
 class LLMError(RuntimeError):
@@ -68,6 +76,25 @@ def _env_float(name: str, default: float) -> float:
         return default
 
 
+def _origin(url: str) -> tuple:
+    u = urlparse(url)
+    return u.scheme.lower(), (u.hostname or "").lower(), u.port or {"http": 80, "https": 443}.get(u.scheme.lower())
+
+
+class _Redirect(urllib.request.HTTPRedirectHandler):
+    """urllib copies every header to a redirect's target, Authorization included, whatever its host. This
+    keeps the key on the origin it was configured for (as curl and requests do): a hop to another scheme,
+    host or port goes without it."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        new = super().redirect_request(req, fp, code, msg, headers, newurl)
+        if new is not None and _origin(new.full_url) != _origin(req.full_url):
+            for hdrs in (new.headers, new.unredirected_hdrs):
+                for k in [k for k in hdrs if k.lower() == "authorization"]:
+                    del hdrs[k]
+        return new
+
+
 @dataclass
 class Client:
     url: str = DEFAULT_URL
@@ -88,8 +115,16 @@ class Client:
     def _opener(self):
         # A model on this machine is reached directly, whatever proxy the environment names.
         if (urlparse(self.url).hostname or "") in _LOOPBACK:
-            return urllib.request.build_opener(urllib.request.ProxyHandler({}))
-        return urllib.request.build_opener()
+            return urllib.request.build_opener(urllib.request.ProxyHandler({}), _Redirect)
+        return urllib.request.build_opener(_Redirect)
+
+    def _key(self) -> tuple:
+        return self.url, self.model, self.key
+
+    def busy(self) -> bool:
+        """This process is waiting on a chat completion from this server and model."""
+        with _in_flight_lock:
+            return _in_flight.get(self._key(), 0) > 0
 
     def _request(self, path: str, body: dict | None = None, timeout: float | None = None) -> dict:
         url = self.url.rstrip("/") + path
@@ -133,6 +168,10 @@ class Client:
         try:
             ids = self.models(timeout)
         except LLMError as e:
+            if e.kind == "timeout":  # a probe, not a question: BRAIN_LLM_TIMEOUT does not apply to it
+                return False, (f"no answer from {self.url} to GET /models within {timeout:g} s; the server may be "
+                               f"busy with another request (llama.cpp's serves one at a time) or still loading "
+                               f"the model")
             return False, describe_error(e, self)[1]
         if any(_same_model(self.model, i) for i in ids):
             return True, ""
@@ -149,7 +188,16 @@ class Client:
             body["tools"], body["tool_choice"] = tools, "auto"
         if max_tokens:
             body["max_tokens"] = int(max_tokens)
-        out = self._request("/chat/completions", body, timeout)
+        key = self._key()
+        with _in_flight_lock:
+            _in_flight[key] = _in_flight.get(key, 0) + 1
+        try:
+            out = self._request("/chat/completions", body, timeout)
+        finally:
+            with _in_flight_lock:
+                _in_flight[key] -= 1
+                if not _in_flight[key]:
+                    del _in_flight[key]
         choices = out.get("choices")
         if not (isinstance(choices, list) and choices and isinstance(choices[0], dict)
                 and isinstance(choices[0].get("message"), dict)):
@@ -233,9 +281,13 @@ def settings() -> Client:
 
 def available(max_age: float = AVAILABLE_TTL) -> tuple[bool, str]:
     """(True, "") when the server answers ``GET <url>/models`` and lists the model. Cached for
-    ``max_age`` seconds, since the terminal asks on every status poll."""
+    ``max_age`` seconds, since the terminal asks on every status poll. While this process waits on a
+    chat completion from the server, it is not probed (a one-request-at-a-time server would not answer
+    in time): (True, BUSY)."""
     c = Client.from_env()
-    key = (c.url, c.model, c.key)
+    key = c._key()
+    if c.busy():
+        return True, BUSY
     hit = _available_cache.get(key)
     if hit and time.monotonic() - hit[0] < max_age:
         return hit[1]

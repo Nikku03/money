@@ -101,7 +101,9 @@ def cmd_show(a):
 
 def cmd_brief(a):
     from brain.brief import build
-    text = build(_bank(), a.ticker, a.at)
+    # Offline, the brief completes the broad-universe ranking (about a minute the first time each month)
+    # instead of stopping at the terminal's time budget.
+    text = build(_bank(), a.ticker, a.at, evidence_budget_s=None)
     print(text)
     print(f"\n(saved to {config.home() / 'briefs' / (a.ticker.upper() + '.md')})", file=sys.stderr)
 

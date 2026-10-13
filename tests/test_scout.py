@@ -1,7 +1,11 @@
 import argparse
 import json
 import os
+import socket
+import threading
+import time
 import unittest
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from unittest import mock
 
 from brain import config, scout
@@ -201,8 +205,8 @@ class ScoutTest(TempHome):
         return reader_for({"https://news.example/robots.txt": robots("User-agent: *\nDisallow: /secret\n"),
                            "https://news.example/acme": html()})
 
-    def run_scout(self, reply, search=None, **kw):
-        reader, web, _ = self.web()
+    def run_scout(self, reply, search=None, pages=None, **kw):
+        reader, web, _ = reader_for(pages) if pages else self.web()
         logs = []
         with FakeOpenAI(reply) as srv:
             out = scout.scout(self.bank, "acme", "What happened at Acme?", client=srv.client(), search=search,
@@ -253,6 +257,63 @@ class ScoutTest(TempHome):
                          [("https://news.example/acme", True), ("https://news.example/secret/memo", False)])
         self.assertEqual(out["answer"], "Noted one claim.")
         self.assertTrue(any(line.startswith("noted [") for line in logs))
+
+    def test_claims_are_never_dated_before_the_page_that_makes_them(self):
+        # A small model easily enters the date of the event a page describes; score-claims would then score
+        # the claim on the very move it reports.
+        undated = "<html><head><title>Acme</title></head><body><p>Acme jumped after earnings.</p></body></html>"
+        pages = {"https://news.example/robots.txt": (404, {}, ""), "https://news.example/acme": html(),
+                 "https://news.example/undated": html(undated)}
+
+        def reply(n, body):
+            if n == 1:
+                return {"role": "assistant", "content": None, "tool_calls": [
+                    call(1, "read_page", {"url": "https://news.example/acme"}),
+                    call(2, "read_page", {"url": "https://news.example/undated"})]}
+            if n == 2:
+                return {"role": "assistant", "content": None, "tool_calls": [
+                    call(3, "note_claim", {"text": "Acme jumped after earnings", "url": "https://news.example/acme",
+                                           "direction": "up", "tier": "reported", "published": "2024-01-02"}),
+                    call(4, "note_claim", {"text": "Acme jumped", "url": "https://news.example/undated",
+                                           "direction": "up", "tier": "reported", "published": "2025-01-02"}),
+                    call(5, "note_claim", {"text": "Acme updated", "url": "https://news.example/acme",
+                                           "direction": "none", "tier": "reported",
+                                           "published": "2026-10-09T18:00:00Z"})]}
+            return {"role": "assistant", "content": "done"}
+        before = scout.now_iso()
+        out, sent, _ = self.run_scout(reply, pages=pages)
+        res = self.tool_results(sent[2])
+        self.assertEqual(res["call_3"]["known_at"], "2026-10-09T13:00:00Z")  # the page's own time, not 2024
+        self.assertIn("earlier than the page's own publication time", res["call_3"]["note"])
+        self.assertGreaterEqual(res["call_4"]["known_at"], before)  # no date on the page: when it was read
+        self.assertIn("states no publication time", res["call_4"]["note"])
+        self.assertEqual(res["call_5"]["known_at"], "2026-10-09T18:00:00Z")  # later than the page's: kept
+        self.assertNotIn("note", res["call_5"])
+        stored = {c.value: c.known_at for c in self.bank.facts("ACME", "claim")}
+        self.assertEqual(stored["Acme jumped after earnings"], "2026-10-09T13:00:00Z")
+        self.assertGreaterEqual(stored["Acme jumped"], before)
+        self.assertIn("never the date of the event a page describes", sent[0]["messages"][0]["content"])
+
+    def test_claims_are_filed_under_the_page_as_finally_read(self):
+        # A page reached through a redirector on a reputable host is that other site's claim.
+        pages = {"https://reputable.example/robots.txt": (404, {}, ""),
+                 "https://reputable.example/out?to=acme": (302, {"location": "https://other.example/acme"}, ""),
+                 "https://other.example/robots.txt": (404, {}, ""), "https://other.example/acme": html()}
+
+        def reply(n, body):
+            if n == 1:
+                return {"role": "assistant", "content": None, "tool_calls": [
+                    call(1, "read_page", {"url": "https://reputable.example/out?to=acme"})]}
+            if n == 2:
+                return {"role": "assistant", "content": None, "tool_calls": [
+                    call(2, "note_claim", {"text": "Acme beat", "url": "https://reputable.example/out?to=acme",
+                                           "direction": "up", "tier": "reported"})]}
+            return {"role": "assistant", "content": "done"}
+        out, sent, _ = self.run_scout(reply, pages=pages)
+        self.assertEqual(self.tool_results(sent[2])["call_2"]["url"], "https://other.example/acme")
+        (c,) = self.bank.facts("ACME", "claim")
+        self.assertEqual(c.source, {"name": "other.example", "url": "https://other.example/acme"})
+        self.assertEqual(out["notes"][0]["url"], "https://other.example/acme")
 
     def test_web_search_is_offered_only_with_a_search_backend(self):
         def reply(n, body):
@@ -324,6 +385,215 @@ class TextTest(unittest.TestCase):
             self.assertTrue(scout._private_literal(host), host)
         for host in ("www.sec.gov", "8.8.8.8", "example.com"):
             self.assertFalse(scout._private_literal(host), host)
+
+    def test_hosts_that_are_not_plain_or_not_public_are_refused(self):
+        refused = ["%31%32%37.0.0.1", "%6c%6f%63%61%6c%68%6f%73%74", "%31%36%39.254.169.254",  # urllib unquotes these
+                   "100.64.0.1", "100.100.100.100",                       # shared/CGNAT: Tailscale's tailnet
+                   "::ffff:127.0.0.1", "64:ff9b::7f00:1", "2002:7f00:1::", "::127.0.0.1", "fe80::1%eth0",
+                   "2606:4700::1111%25x", "198.18.0.1", "0.0.0.0", "224.0.0.1",
+                   "127.1", "2130706433", "0x7f.0.0.1", "0177.0.0.1", "\uff11\uff12\uff17.\uff10.\uff10.\uff11",
+                   "intranet", "metadata.google.internal", "nas.lan", "a..b", "a b.example", "x@y.example"]
+        for host in refused:
+            with self.subTest(host=host), self.assertRaises(PermissionError):
+                scout.vet_host(host)
+        self.assertEqual(scout.vet_host("WWW.SEC.GOV."), "www.sec.gov")
+        self.assertEqual(scout.vet_host("b\u00fccher.example"), "xn--bcher-kva.example")  # IDNA, as the connection
+        self.assertEqual(scout.vet_host("[2606:4700::1111]"), "2606:4700::1111")
+        self.assertEqual(scout.vet_host("8.8.8.8"), "8.8.8.8")
+        for url in ("http://%31%32%37.0.0.1:1/", "http://user@example.com/", "file:///etc/passwd"):
+            with self.subTest(url=url), self.assertRaises(PermissionError):
+                scout.http_get(url, {})
+
+    def test_only_common_text_encodings_are_decoded(self):
+        # Python's punycode codec is quadratic: a 3 MB body named charset=punycode took minutes.
+        for ctype, name in [("text/html; charset=punycode", "utf-8"), ("text/plain; charset=rot13", "utf-8"),
+                            ('text/html; charset="ISO-8859-1"', "iso8859-1"), ("text/html; charset=windows-1252", "cp1252"),
+                            ("text/html; charset=Shift_JIS", "shift_jis"), ("text/html", "utf-8"),
+                            ("text/html; charset=nonsense", "utf-8")]:
+            self.assertEqual(scout._charset(ctype), name, ctype)
+        body = b"a" * 400_000 + b"-" + b"9" * 400_000
+        r, _, _ = reader_for({"https://p.example/robots.txt": (404, {}, ""),
+                              "https://p.example/p": (200, {"content-type": "text/plain; charset=punycode"}, body)})
+        t0 = time.monotonic()
+        res = r.read("https://p.example/p")
+        self.assertLess(time.monotonic() - t0, 2.0)
+        self.assertTrue(res["ok"])
+        self.assertTrue(res["text"].startswith("aaaa"))
+
+
+class _Local:
+    """A local HTTP server for the fetcher's own tests; records each request's path and Host header."""
+
+    def __init__(self, handler=None):
+        self.hits = []
+        outer = self
+
+        class H(BaseHTTPRequestHandler):
+            def log_message(self, *a):
+                pass
+
+            def do_GET(self):
+                outer.hits.append((self.path, self.headers.get("Host")))
+                if handler:
+                    return handler(self)
+                if self.path == "/robots.txt":
+                    self.send_response(404)
+                    self.send_header("Content-Length", "0")
+                    self.end_headers()
+                    return
+                body = b"internal-only data"
+                self.send_response(200)
+                self.send_header("Content-Type", "text/plain")
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+
+        self.httpd = ThreadingHTTPServer(("127.0.0.1", 0), H)
+        self.httpd.daemon_threads = True
+        self.port = self.httpd.server_port
+        threading.Thread(target=self.httpd.serve_forever, kwargs={"poll_interval": 0.02}, daemon=True).start()
+
+    def close(self):
+        self.httpd.shutdown()
+        self.httpd.server_close()
+
+
+def fake_dns(table, calls=None):
+    """getaddrinfo answering from ``table`` (name -> address, or a list of addresses served in turn)."""
+    real = socket.getaddrinfo
+
+    def lookup(host, port, *a, **kw):
+        if host in table:
+            ans = table[host]
+            if isinstance(ans, list):
+                ans = ans[len([c for c in (calls or []) if c == host]) % len(ans)]
+            if calls is not None:
+                calls.append(host)
+            if ans is None:
+                raise socket.gaierror(socket.EAI_NONAME, "Name or service not known")
+            return [(socket.AF_INET, socket.SOCK_STREAM, 6, "", (ans, port or 0))]
+        return real(host, port, *a, **kw)
+    return lookup
+
+
+class FetchTest(unittest.TestCase):
+    """The real fetcher (``http_get``): what it checks is what it connects to, and one fetch has one deadline."""
+
+    def setUp(self):
+        p = mock.patch.object(scout, "_proxy_for", return_value=None)  # direct, whatever this machine's proxies
+        p.start()
+        self.addCleanup(p.stop)
+
+    def test_encoded_hosts_never_reach_a_local_server(self):
+        srv = _Local()
+        self.addCleanup(srv.close)
+        r = scout.PageReader(min_interval=0)
+        for host in ("%31%32%37.0.0.1", "%6c%6f%63%61%6c%68%6f%73%74", "127.0.0.1", "localhost", "2130706433"):
+            with self.subTest(host=host):
+                url = f"http://{host}:{srv.port}/secret"
+                self.assertFalse(r.read(url)["ok"])
+                self.assertFalse(r.was_read(url))
+        # The same through a redirect from a public page: each hop is checked by the fetcher itself.
+        real = scout.http_get
+
+        def fetch(url, headers):
+            if url.startswith("https://public.example/"):
+                if url.endswith("/robots.txt"):
+                    return 404, {}, b""
+                return 302, {"location": f"http://%31%32%37.0.0.1:{srv.port}/via-redirect"}, b""
+            return real(url, headers)
+        r = scout.PageReader(fetch=fetch, min_interval=0)
+        res = r.read("https://public.example/article")
+        self.assertFalse(res["ok"])
+        self.assertIn("not a plain host name", res["error"])
+        self.assertFalse(r.was_read("https://public.example/article"))
+        self.assertEqual(srv.hits, [])
+
+    def test_the_connection_goes_to_the_address_that_was_checked(self):
+        # DNS rebinding: a zero-TTL name answers a public address to the check and loopback to the connection.
+        lookups, connected = [], []
+
+        def connect(addr, *a, **kw):
+            connected.append(addr)
+            raise ConnectionRefusedError("test: no network")
+        with mock.patch("socket.getaddrinfo", fake_dns({"rebind.example": ["93.184.216.34", "127.0.0.1"]}, lookups)), \
+                mock.patch("socket.create_connection", connect):
+            with self.assertRaises(ConnectionRefusedError):
+                scout.http_get("http://rebind.example:8080/x", {})
+            self.assertEqual((lookups, connected), (["rebind.example"], [("93.184.216.34", 8080)]))
+            with self.assertRaises(PermissionError):  # the next answer is loopback: refused, nothing connects
+                scout.http_get("http://rebind.example:8080/x", {})
+            self.assertEqual(connected, [("93.184.216.34", 8080)])
+        with mock.patch("socket.getaddrinfo", lambda *a, **k: [
+                (socket.AF_INET, socket.SOCK_STREAM, 6, "", ("93.184.216.34", 80)),
+                (socket.AF_INET, socket.SOCK_STREAM, 6, "", ("10.0.0.7", 80))]), \
+                mock.patch("socket.create_connection", connect):
+            with self.assertRaises(PermissionError):  # every address must be public, not only the first
+                scout.http_get("http://mixed.example/x", {})
+        self.assertEqual(len(connected), 1)
+
+    def test_unresolvable_names_fail_closed_unless_a_proxy_resolves_them(self):
+        connected = []
+
+        def connect(addr, *a, **kw):
+            connected.append(addr)
+            raise ConnectionRefusedError("test")
+        with mock.patch("socket.getaddrinfo", fake_dns({"nowhere.example": None, "local.example": "127.0.0.1"})), \
+                mock.patch("socket.create_connection", connect):
+            with self.assertRaises(socket.gaierror):
+                scout.http_get("http://nowhere.example/x", {})
+            self.assertEqual(connected, [])
+            with mock.patch.object(scout, "_proxy_for", return_value="http://proxy.example:3128"):
+                with self.assertRaises(ConnectionRefusedError):
+                    scout.http_get("http://nowhere.example/x", {})
+                self.assertEqual(connected, [("proxy.example", 3128)])
+                with self.assertRaises(PermissionError):  # resolvable here, to a local address: refused even so
+                    scout.http_get("http://local.example/x", {})
+        self.assertEqual(len(connected), 1)
+
+    def test_a_pinned_fetch_keeps_the_name_for_the_host_header(self):
+        srv = _Local()
+        self.addCleanup(srv.close)
+        with mock.patch("socket.getaddrinfo", fake_dns({"site.example": "127.0.0.1"})), \
+                mock.patch.object(scout, "_public_ip", return_value=True):  # let the test server count as public
+            status, hdrs, body = scout.http_get(f"http://site.example:{srv.port}/a?b=1", {"User-Agent": "t"})
+        self.assertEqual((status, body, hdrs["content-type"]), (200, b"internal-only data", "text/plain"))
+        self.assertEqual(srv.hits, [("/a?b=1", f"site.example:{srv.port}")])
+
+    def test_a_fetch_has_one_wall_clock_limit(self):
+        # A server that drips one byte every 0.2 s never trips a per-read timeout; the whole fetch is bounded.
+        def drip(h):
+            if h.path == "/headers":
+                try:
+                    h.wfile.write(b"HTTP/1.1 200 OK\r\n")
+                    for _ in range(40):
+                        time.sleep(0.2)
+                        h.wfile.write(b"X: y\r\n")
+                        h.wfile.flush()
+                except OSError:
+                    pass
+                return
+            h.send_response(200)
+            h.send_header("Content-Type", "text/plain")
+            h.send_header("Content-Length", "40")
+            h.end_headers()
+            for _ in range(40):
+                time.sleep(0.2)
+                try:
+                    h.wfile.write(b"x")
+                    h.wfile.flush()
+                except OSError:
+                    return
+        srv = _Local(drip)
+        self.addCleanup(srv.close)
+        with mock.patch("socket.getaddrinfo", fake_dns({"drip.example": "127.0.0.1"})), \
+                mock.patch.object(scout, "_public_ip", return_value=True):
+            for path in ("/body", "/headers"):
+                with self.subTest(path=path):
+                    t0 = time.monotonic()
+                    with self.assertRaises(TimeoutError):
+                        scout.http_get(f"http://drip.example:{srv.port}{path}", {}, timeout=1.0)
+                    self.assertLess(time.monotonic() - t0, 2.5)
 
 
 if __name__ == "__main__":

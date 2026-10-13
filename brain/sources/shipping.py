@@ -2,12 +2,15 @@
 
 The lines from CLAUDE.md ("Alternative data"), enforced here: only aggregate counts per area are
 stored, never an individual vessel's track or identity. Messages are summarized in memory and
-dropped; the fact holds counts by type and navigational status. Pleasure craft and sailing vessels
-(AIS ship types 36 and 37) are dropped from every count. Only ship stations (MMSI 2xxxxxxxx to
-7xxxxxxxx) count, not base stations, aids to navigation or SAR aircraft.
+dropped; the fact holds counts by type and navigational status. The count itself (the fact's
+value) is of commercial vessels only: cargo (AIS ship types 70-79) and tankers (80-89). Pleasure
+craft and sailing vessels (36, 37) are dropped from every count. Only ship stations (MMSI
+2xxxxxxxx to 7xxxxxxxx) count, not base stations, aids to navigation or SAR aircraft.
 
-A vessel's type comes from its ShipStaticData broadcast (every six minutes), so a short window
-sees some vessels without one; they count as "other" and are also reported as "untyped".
+A vessel's type comes from its ShipStaticData broadcast (every six minutes), so the default window
+(``DEFAULT_SECONDS``) is longer than that. A vessel heard without one could be a pleasure craft: it
+is never in the count, only tallied as "untyped". Other typed vessels (tugs, passenger ships,
+fishing vessels) are tallied as "other", outside the count too.
 
 Source (credit it): aisstream.io, free key in ``AISSTREAM_API_KEY``. Needs the optional
 ``websockets`` package (``pip install money-brain[alt]``).
@@ -28,6 +31,8 @@ SOURCE = {"name": "aisstream.io", "url": "https://aisstream.io/"}
 CARGO, TANKER = range(70, 80), range(80, 90)
 PLEASURE = {36, 37}  # sailing, pleasure craft: never counted
 ANCHORED, MOORED = 1, 5  # AIS navigational status
+DEFAULT_SECONDS = 420  # longer than the six-minute ShipStaticData cycle, so most vessels are typed
+BASIS = "cargo+tanker"  # what the value counts; samples on another basis are not comparable
 
 # bbox: [lat_min, lon_min, lat_max, lon_max], covering the terminals and the usual anchorages.
 AREAS: list[dict] = [
@@ -106,9 +111,10 @@ def _inside(bbox, lat, lon) -> bool:
 def summarize(messages: list[dict], area: dict, window_s: int) -> dict:
     """Aggregate counts from aisstream messages. Pure; nothing about any one vessel is returned.
 
-    A vessel counts when it reported a position inside the bbox. Type from its ShipStaticData:
-    70-79 cargo, 80-89 tanker, 36/37 dropped, anything else (or no static data yet) other. Status
-    from its latest position report: 1 anchored, 5 moored, else underway."""
+    A vessel is seen when it reported a position inside the bbox. Type from its ShipStaticData:
+    70-79 cargo, 80-89 tanker, 36/37 dropped, any other type "other", no static data heard "untyped".
+    ``vessels`` (the fact's value) is cargo + tanker; status, from each one's latest position report
+    (1 anchored, 5 moored, else underway), is of those too. "other" and "untyped" are tallies beside it."""
     bbox = area["bbox"]
     types: dict[int, int] = {}
     status: dict[int, tuple[str, int, int]] = {}  # mmsi -> (time, order, nav status)
@@ -137,19 +143,23 @@ def summarize(messages: list[dict], area: dict, window_s: int) -> dict:
             if mmsi not in status or key >= status[mmsi][:2]:
                 status[mmsi] = (*key, nav)
     out = {"vessels": 0, "cargo": 0, "tanker": 0, "other": 0, "untyped": 0,
-           "anchored": 0, "moored": 0, "underway": 0, "window_s": int(window_s), "bbox": list(bbox)}
+           "anchored": 0, "moored": 0, "underway": 0, "window_s": int(window_s), "bbox": list(bbox),
+           "basis": BASIS}
     for mmsi, (_, _, nav) in status.items():
         t = types.get(mmsi)
+        if t is None:  # type not heard: possibly a pleasure craft, so never counted
+            out["untyped"] += 1
+            continue
         if t in PLEASURE:
             continue
-        out["vessels"] += 1
         if t in CARGO:
             out["cargo"] += 1
         elif t in TANKER:
             out["tanker"] += 1
         else:
             out["other"] += 1
-            out["untyped"] += t is None
+            continue
+        out["vessels"] += 1
         out["anchored" if nav == ANCHORED else "moored" if nav == MOORED else "underway"] += 1
     return out
 
@@ -190,8 +200,9 @@ async def _collect(url: str, key: str, bbox: list[float], seconds: float) -> lis
     return out
 
 
-def sample(bank: Bank, area, seconds: int = 300, key: str | None = None, url: str = AIS_URL) -> Fact:
-    """Listen to AIS in the area for ``seconds``, write one ``ships.count`` fact, return it."""
+def sample(bank: Bank, area, seconds: int = DEFAULT_SECONDS, key: str | None = None, url: str = AIS_URL) -> Fact:
+    """Listen to AIS in the area for ``seconds``, write one ``ships.count`` fact (commercial vessels: cargo
+    and tanker), return it."""
     key = key or os.environ.get("AISSTREAM_API_KEY", "").strip()
     if not key:
         raise Unavailable("AIS sampling needs a free aisstream.io key: export AISSTREAM_API_KEY=...")
@@ -212,8 +223,9 @@ def _cmd_sample(a) -> int:
         print(e)
         return 1
     c = f.context
-    print(f"{f.entity}: {f.value} vessels in {c['window_s']} s (cargo {c['cargo']}, tanker {c['tanker']}, "
-          f"other {c['other']}; anchored {c['anchored']}, moored {c['moored']}, underway {c['underway']}) [{f.id[:8]}]")
+    print(f"{f.entity}: {f.value} commercial vessels in {c['window_s']} s (cargo {c['cargo']}, tanker {c['tanker']}; "
+          f"anchored {c['anchored']}, moored {c['moored']}, underway {c['underway']}); also seen: other {c['other']}, "
+          f"untyped {c['untyped']} [{f.id[:8]}]")
     return 0
 
 
@@ -228,7 +240,8 @@ def add_cli(sub) -> None:
     ss = p.add_subparsers(dest="ships_cmd", required=True)
     s = ss.add_parser("sample", help="listen to one area and store the vessel counts")
     s.add_argument("area")
-    s.add_argument("--seconds", type=int, default=300)
+    s.add_argument("--seconds", type=int, default=DEFAULT_SECONDS,
+                   help=f"listening window (default {DEFAULT_SECONDS}: longer than the six-minute static-data cycle)")
     s.set_defaults(fn=_cmd_sample)
     s = ss.add_parser("areas", help="list the port areas")
     s.set_defaults(fn=_cmd_areas)

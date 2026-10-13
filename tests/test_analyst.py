@@ -1,5 +1,6 @@
 import functools
 import json
+import pathlib
 import unittest
 
 import pandas as pd
@@ -52,17 +53,19 @@ class AnalystLoopTest(AskCase):
         self.assertEqual(res["answer"], "AAPL closed at 336.64 [9de710d2].")
         self.assertEqual((res["model"], res["stop_reason"], res["rounds"]), ("served-model", "stop", 2))
         self.assertEqual(res["citations"], {"verified": ["9de710d2"], "unverified": []})
+        self.assertEqual(res["unverified_numbers"], [])
         self.assertEqual(res["usage"], {"input_tokens": 2000, "output_tokens": 20, "cache_read_input_tokens": None,
                                         "requests": 2})
         first, second = sent
         self.assertEqual(first["model"], "fake-model")
         self.assertEqual(first["tool_choice"], "auto")
-        self.assertEqual(len(first["tools"]), 13)
+        self.assertEqual(len(first["tools"]), 20)
         self.assertEqual({t["type"] for t in first["tools"]}, {"function"})
         names = [t["function"]["name"] for t in first["tools"]]
         self.assertEqual(names[:3], ["describe", "price_history", "financials"])
         self.assertEqual(first["messages"][0]["role"], "system")
-        for rule in ("cite", "[abcd1234]", "third-party text", "do not place orders", "FAIL", "INGEST"):
+        for rule in ("cite", "[abcd1234]", "third-party text", "do not place orders", "FAIL", "INGEST",
+                     "insider trades", "not tested signals", "Use only numbers that are in the tool results"):
             self.assertIn(rule, first["messages"][0]["content"])
         self.assertTrue(first["messages"][-1]["content"].startswith("(Security in focus: AAPL)"))
         # The tool's result went back as a tool message answering the call's id.
@@ -74,7 +77,12 @@ class AnalystLoopTest(AskCase):
 
     def test_tool_schemas_are_openai_functions(self):
         specs = {t.name: t.spec() for t in analyst._tools(lambda c: {}, [])}
-        self.assertEqual(len(specs), 13)
+        self.assertEqual(len(specs), 20)
+        self.assertEqual(list(specs)[-7:], ["insider_trades", "earnings", "aircraft", "ports", "cameras", "watchlist",
+                                            "alerts"])
+        self.assertEqual(specs["ports"]["function"]["parameters"]["required"], [])
+        self.assertEqual(set(specs["cameras"]["function"]["parameters"]["properties"]), {"camera_id"})
+        self.assertEqual(specs["alerts"]["function"]["parameters"]["properties"], {})
         ph = specs["price_history"]["function"]["parameters"]
         self.assertEqual((ph["type"], ph["required"]), ("object", ["ticker"]))
         self.assertEqual(set(ph["properties"]), {"ticker", "period", "compare"})
@@ -96,6 +104,19 @@ class AnalystLoopTest(AskCase):
         self.assertEqual(asst["content"], "")  # the call is sent back structured, not twice
         self.assertEqual(asst["tool_calls"][0]["function"]["name"], "describe")
         self.assertEqual(res["answer"], "Done [9de710d2].")
+
+    def test_numbers_that_no_tool_returned_are_flagged(self):
+        # Qwen2.5-1.5B called only `filings` (a list with no financial values), then wrote eleven revenue and
+        # free-cash-flow figures with no ids; the answer came back with nothing to warn about.
+        def reply(n, body):
+            if n == 1:
+                return calls_msg(tool_call(1))
+            return text_msg("AAPL closed at $336.64 [9de710d2], about $337. In 2024 it had $287 billion in "
+                            "revenue and FCF was $56 billion; margins rose 2.5% over 90 days.")
+        res, _, _ = self.run_ask(reply, question="What are AAPL's revenue and FCF over the last 90 days?")
+        self.assertTrue(res["ok"], res)
+        self.assertEqual(res["unverified_numbers"], ["$287 billion", "$56 billion", "2.5%"])
+        self.assertEqual(res["citations"], {"verified": ["9de710d2"], "unverified": []})
 
     def test_json_naming_no_known_tool_is_an_answer(self):
         res, sent, seen = self.run_ask(lambda n, b: text_msg('The record is {"name": "Apple", "cik": 320193}.'))
@@ -303,7 +324,11 @@ class ToolsTest(unittest.TestCase):
     def test_bad_tool_input_never_reaches_the_bank(self):
         seen, calls = [], []
         tools = {t.name: t for t in analyst._tools(lambda c: seen.append(c) or {}, calls)}
-        for name, bad in [("describe", {"ticker": "AAPL DES; RES"}), ("show_fact", {"ticker": "AAPL", "fact_id": "../x"}),
+        for name, bad in [("ports", {"area": "ROTTERDAM; RES"}), ("ports", {"area": "DES"}), ("ports", {"area": "a b"}),
+                          ("ports", {"area": "ACK ALL"}), ("cameras", {"camera_id": "TFL 1"}),
+                          ("cameras", {"camera_id": "../x"}), ("cameras", {"camera_id": "ACK"}),
+                          ("insider_trades", {"ticker": "AAPL INS; WL ADD X"}), ("earnings", {}), ("aircraft", {}),
+                          ("describe", {"ticker": "AAPL DES; RES"}), ("show_fact", {"ticker": "AAPL", "fact_id": "../x"}),
                           ("show_fact", {"ticker": "AAPL", "fact_id": "zzzz"}), ("show_fact", {"ticker": "AAPL", "fact_id": "ÉÉÉÉ"}),
                           ("show_fact", {"ticker": "AAPL", "fact_id": "abc"}),
                           ("price_history", {"ticker": "AAPL", "compare": "SPY WAYTOOLONGSYMBOL123"}),
@@ -383,6 +408,43 @@ class ToolsTest(unittest.TestCase):
                          {"verified": ["4dd81b1a", "9de710d2"], "unverified": ["deadbeef"]})
         self.assertEqual(analyst.check_citations("no cites", results), {"verified": [], "unverified": []})
 
+    def test_only_ids_the_tools_returned_verify_a_citation(self):
+        # Any bracketed hex run found anywhere in the results used to count: years, dates, accession numbers.
+        dated = ['{"fy": "2025-09-27", "prior": "2024-09-28", "_cite": "650dff20"}']
+        self.assertEqual(analyst.check_citations("FY [2025] beat [2024]; see [abcd1234] and [650dff20].", dated),
+                         {"verified": ["650dff20"], "unverified": ["abcd1234"]})
+        url = ['{"url": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000018/", "cite": "1a2b3c4d"}']
+        self.assertEqual(analyst.check_citations("Net income [0001] rose [000032019326]; [1a2b3c]; [1a2b]", url),
+                         {"verified": ["1a2b3c"], "unverified": ["000032019326", "1a2b"]})
+        shapes = ['{"rows": [{"_cites": {"y0": "4dd81b1a"}, "_refs": ["AAPL/c0ffee00aa"]}], '
+                  '"inputs": [{"ref": "AAPL/0123abcd", "value": "112010000000"}], "fact": {"id": "fedcba9876543210"}}',
+                  '{"ok": true, "id": "beadfeed"}',                               # note_claim's answer
+                  '{"truncated": true, "partial": "{\\"rows\\": [{\\"_cite\\": \\"aaaa1111\\", \\"x\\": "}',
+                  '{"rows": [{"_cite": "bbbb2222"}, {"_cite": "cccc3333", "na… [9,999 characters cut to fit the context]']
+        ans = ("[4dd81b1a] [c0ffee00] [0123abcd] [fedcba98] [beadfeed] [aaaa1111] [bbbb2222] [cccc3333] "
+               "[11201000]")
+        self.assertEqual(analyst.check_citations(ans, shapes)["unverified"], ["11201000"])
+
+    def test_numbers_are_checked_with_rounding_and_units(self):
+        results = [json.dumps({"ok": True, "data": {
+            "rows": [{"revenue": "391,035,000,000", "gross_margin": 0.4621, "eps": 6.08, "chg": -0.0323,
+                      "_cite": "650dff20"}],
+            "price": {"close": 336.64}, "note": "Filed in 90 days: sold $92.91M in 19 trades; 8% of shares"}}),
+            '{"rows": [{"cap": 4.95e12}, {"x": "1,234,567.5"}], "cut… [9 characters cut]']
+        ok = ("Revenue was $391.0 billion [650dff20] (391,035 million; $391B; 391.04 in a $B table), gross margin "
+              "46.2% (0.46), EPS $6.08, down 3.2% (−3.23%, -0.03), close 336.64 or about $337, insiders sold "
+              "$92.9 million (92.91M; $93M) in 19 trades, 8 percent, market value $4.95 trillion, 1,234,567.5; "
+              "in FY2024 Q3 the 10-K and S-1 filed 2025-09-27 at 13:00 [2025] (see `AAPL FA`, https://x.example/"
+              "a/123456); 3M; 12 rows, 2024 vs 2023.")
+        self.assertEqual(analyst.check_numbers(ok, results), [])
+        bad = ("Revenue was $395 billion, margin 47.5%, EPS +6.5, $108.8B of FCF, 1,250 employees, 31.5x P/E, "
+               "a 250 basis-point move.")
+        self.assertEqual(analyst.check_numbers(bad, results),
+                         ["$395 billion", "47.5%", "+6.5", "$108.8B", "1,250", "31.5x", "250"])
+        self.assertEqual(analyst.check_numbers("over 250 days", results, ["the last 250 days"]), [])  # the question
+        self.assertEqual(analyst.check_numbers("$1.2 billion", []), ["$1.2 billion"])  # no tool ran
+
+
     def test_wide_tables_lose_columns_then_rows_not_whole_rows_of_text(self):
         cols = [{"key": "item", "label": "Item"}] + [{"key": f"y{i}", "label": f"y{i}"} for i in range(10)]
         rows = [{"item": f"row{r}", "_cites": {f"y{i}": f"{r:04x}{i:04x}" for i in range(10)},
@@ -395,7 +457,7 @@ class ToolsTest(unittest.TestCase):
         self.assertEqual(set(data["rows"][0]), {"item", "_cites", "y0", "y1", "y2"})
         self.assertEqual(set(data["rows"][0]["_cites"]), {"y0", "y1", "y2"})
         self.assertIn("first 4 of 11 columns", data["note"])
-        self.assertIn(f"of 20 rows", data["note"])
+        self.assertIn("of 20 rows", data["note"])
         self.assertEqual(data["rows"][0]["item"], "row0")
 
     def test_text_tool_call_shapes(self):
@@ -448,8 +510,34 @@ class ReaderTest(TempHome):
         self.add_aapl()
         read = analyst.bank_reader(self.bank)
         self.assertTrue(read("AAPL FA")["ok"])
-        for line in ("INGEST MSFT", "ASK what now?", "JOBS", "", "NOPE NOPE NOPE"):
+        for line in ("INGEST MSFT", "ASK what now?", "JOBS", "", "NOPE NOPE NOPE", "WL ADD MSFT", "WL DEL AAPL",
+                     "ALRT ACK ALL", "ALRT ACK abcd1234"):
             self.assertFalse(read(line)["ok"], line)
+        for line in ("WL ADD MSFT", "WL DEL AAPL", "ALRT ACK ALL", "ALRT ACK abcd1234"):
+            self.assertIn("is not available here (read-only)", read(line)["error"], line)
+
+    def test_the_new_tools_read_insiders_earnings_alt_data_and_alerts(self):
+        self.add_aapl()
+        home = pathlib.Path(self._tmp.name)
+
+        def files():
+            return sorted(str(p.relative_to(home)) for p in home.rglob("*") if p.is_file())
+        before = files()
+        calls = []
+        tools = {t.name: t for t in analyst._tools(analyst.bank_reader(self.bank), calls)}
+        out = [json.loads(tools[name].call(args)) for name, args in [
+            ("insider_trades", {"ticker": "aapl"}), ("earnings", {"ticker": "aapl"}), ("aircraft", {"ticker": "aapl"}),
+            ("ports", {}), ("ports", {"area": "area.rotterdam"}), ("cameras", {}),
+            ("cameras", {"camera_id": "cam.tfl.00002.00865"}), ("watchlist", {}), ("alerts", {"ack": "ALL"})]]
+        self.assertEqual([c["input"] for c in calls], ["AAPL INS", "AAPL ERN", "AAPL JET", "SHIP", "SHIP ROTTERDAM",
+                                                       "CAM", "CAM TFL.00002.00865", "WL", "ALRT"])
+        self.assertEqual([o.get("fn") for o in out], ["INS", "ERN", "JET", "SHIP", "SHIP", "CAM", "CAM", "WL", "ALRT"])
+        for o in (out[3], out[5], out[7], out[8]):  # the lists answer on an empty bank; the rest say what is missing
+            self.assertTrue(o["ok"], o)
+        for o in out[:3] + [out[4], out[6]]:
+            self.assertFalse(o["ok"], o)
+            self.assertTrue(o.get("hint"), o)
+        self.assertEqual(files(), before)  # reading the watchlist and the alerts wrote nothing
 
     def test_a_whole_answer_against_a_bank(self):
         self.add_aapl()

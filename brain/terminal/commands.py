@@ -68,8 +68,9 @@ FUNCTIONS: dict[str, dict] = {
             "desc": "official traffic cameras: latest vehicle count per camera with its z-score; CAM ID charts one"},
     "WL": {"scope": "global", "args": "[ADD|DEL TICKER...]",
            "desc": "watchlist: last price, 1D and latest alert per row; WL ADD / WL DEL edit its tickers"},
-    "ALRT": {"scope": "global", "args": "[ACK ID | ACK ALL]",
-             "desc": "alerts from the watchlist's rules, newest first; ALRT ACK ID acknowledges one"},
+    "ALRT": {"scope": "global", "args": "[ALL | ACK ID | ACK ALL]",
+             "desc": "notice and high alerts from the watchlist's rules, newest first; ALRT ALL adds info "
+                     "(headlines); ALRT ACK ID acknowledges one"},
     "ASK": {"scope": "global", "args": "QUESTION...",
             "desc": "ask the analyst (an open-weight model on Ollama or another local server); it reads the bank"},
     "INGEST": {"scope": "both", "args": "TICKER | MARKETS | MACRO | UNIVERSE | INSIDERS | WATCH",
@@ -232,7 +233,8 @@ def _arg_items(fn: str, rest: list[str], partial: str, tickers: list[str]) -> li
             return _ticker_items(partial, tickers)
     if fn == "ALRT":
         if not rest:
-            return _words(("ACK",), partial, "acknowledge an alert: ALRT ACK ID, or ALRT ACK ALL")
+            return (_words(("ACK",), partial, "acknowledge an alert: ALRT ACK ID, or ALRT ACK ALL")
+                    + _words(("ALL",), partial, "every alert, info (headlines) included"))
         if rest == ["ACK"]:
             return _words(("ALL",), partial, "acknowledge every alert")
     return []
@@ -241,7 +243,7 @@ def _arg_items(fn: str, rest: list[str], partial: str, tickers: list[str]) -> li
 def complete(prefix: str, tickers: list[str]) -> list[dict]:
     """Completions for the token being typed: function codes, tickers (bank securities plus the
     world-market symbols, which can be ingested on demand) and the keywords some functions take
-    (INGEST targets, SHIP areas, CAM ids, WL ADD/DEL, ALRT ACK)."""
+    (INGEST targets, SHIP areas, CAM ids, WL ADD/DEL, ALRT ACK/ALL)."""
     text = prefix or ""
     if not text.strip():
         return []

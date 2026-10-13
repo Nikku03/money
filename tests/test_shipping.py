@@ -33,8 +33,8 @@ MESSAGES = [
     static(311000003, 84), pos(311000003, nav=5),                       # tanker, moored
     static(411000004, 37), pos(411000004, nav=0),                       # pleasure craft: dropped
     static(411000005, 36), pos(411000005, nav=0),                       # sailing: dropped
-    static(511000006, 52), pos(511000006, nav=0),                       # tug: other
-    pos(611000007, nav=15),                                             # no static data yet: other, untyped
+    static(511000006, 52), pos(511000006, nav=0),                       # tug: other, not counted
+    pos(611000007, nav=15),                                             # no static data yet: untyped, not counted
     static(711000008, 70), pos(711000008, lat=12.0, nav=0),             # outside the box: not counted
     pos(3669999, nav=0),                                                # not a ship station MMSI
     static(211000009, 71),                                              # static data but no position: not seen
@@ -45,25 +45,37 @@ MESSAGES = [
 class SummarizeTest(unittest.TestCase):
     def test_counts(self):
         s = sh.summarize(MESSAGES, AREA, 300)
-        self.assertEqual(s["vessels"], 5)
-        self.assertEqual((s["cargo"], s["tanker"], s["other"], s["untyped"]), (2, 1, 2, 1))
-        self.assertEqual((s["anchored"], s["moored"], s["underway"]), (1, 2, 2))
-        self.assertEqual((s["window_s"], s["bbox"]), (300, AREA["bbox"]))
+        self.assertEqual(s["vessels"], 3)  # commercial: cargo and tanker
+        self.assertEqual((s["cargo"], s["tanker"], s["other"], s["untyped"]), (2, 1, 1, 1))
+        self.assertEqual((s["anchored"], s["moored"], s["underway"]), (1, 2, 0))  # of the commercial vessels
+        self.assertEqual((s["window_s"], s["bbox"], s["basis"]), (300, AREA["bbox"], "cargo+tanker"))
+
+    def test_untyped_vessels_are_never_counted(self):
+        # A pleasure craft whose static data fell outside the window, beside one whose static data was heard.
+        msgs = [pos(366000001), pos(366000002), static(366000002, 37)]
+        s = sh.summarize(msgs, AREA, 300)
+        self.assertEqual((s["vessels"], s["other"], s["untyped"]), (0, 0, 1))
+        self.assertEqual((s["anchored"], s["moored"], s["underway"]), (0, 0, 0))
+
+    def test_default_window_outlasts_the_static_data_cycle(self):
+        import inspect
+        self.assertGreaterEqual(sh.DEFAULT_SECONDS, 6 * 60 + 30)
+        self.assertEqual(inspect.signature(sh.sample).parameters["seconds"].default, sh.DEFAULT_SECONDS)
 
     def test_aggregates_only(self):
         s = sh.summarize(MESSAGES, AREA, 300)
         self.assertEqual(set(s), {"vessels", "cargo", "tanker", "other", "untyped", "anchored", "moored",
-                                  "underway", "window_s", "bbox"})
+                                  "underway", "window_s", "bbox", "basis"})
         text = json.dumps(s)
         for m in ("211000001", "311000003"):
             self.assertNotIn(m, text)
 
     def test_fact_shape(self):
         f = sh.to_fact(sh.summarize(MESSAGES, AREA, 300), AREA, "2026-10-13T10:05:00Z")
-        self.assertEqual((f.entity, f.attr, f.value, f.tier), ("AREA.TEST-PORT", "ships.count", 5, "reported"))
+        self.assertEqual((f.entity, f.attr, f.value, f.tier), ("AREA.TEST-PORT", "ships.count", 3, "reported"))
         self.assertEqual((f.as_of, f.known_at), ("2026-10-13", "2026-10-13T10:05:00Z"))
-        self.assertLessEqual({"cargo", "tanker", "other", "anchored", "moored", "underway", "window_s", "bbox"},
-                             set(f.context))
+        self.assertLessEqual({"cargo", "tanker", "other", "anchored", "moored", "underway", "window_s", "bbox",
+                              "basis"}, set(f.context))
         self.assertNotIn("vessels", f.context)
         self.assertEqual(f.source["name"], "aisstream.io")
 
@@ -134,7 +146,7 @@ class SampleTest(TempHome):
         self.assertEqual(sub["APIKey"], "k")
         self.assertEqual(sub["BoundingBoxes"], [[[10.0, 20.0], [11.0, 21.0]]])
         self.assertEqual(sub["FilterMessageTypes"], ["PositionReport", "ShipStaticData"])
-        self.assertEqual(f.value, 5)
+        self.assertEqual(f.value, 3)
         self.assertEqual([g.id for g in self.bank.facts("AREA.TEST-PORT", "ships.count")], [f.id])
 
 
@@ -144,6 +156,7 @@ class CliTest(unittest.TestCase):
         sh.add_cli(p.add_subparsers(dest="cmd"))
         a = p.parse_args(["ships", "sample", "HOUSTON", "--seconds", "60"])
         self.assertEqual((a.area, a.seconds, a.fn), ("HOUSTON", 60, sh._cmd_sample))
+        self.assertEqual(p.parse_args(["ships", "sample", "HOUSTON"]).seconds, sh.DEFAULT_SECONDS)
         self.assertEqual(p.parse_args(["ships", "areas"]).fn, sh._cmd_areas)
 
 

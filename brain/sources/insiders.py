@@ -42,6 +42,10 @@ FORMS = ("4", "5")
 SOURCE = "SEC Form 4"
 RELATIONSHIPS = (("officer", "Officer"), ("director", "Director"), ("ten_percent_owner", "TenPercentOwner"),
                  ("other", "Other"))
+# The first quarterly data set to read by default. H6's first TRAIN rebalance (SPLIT["first_rebalance"],
+# 2011-01-31) counts purchases filed in the 90 days before it (signals.INSIDER_DAYS), back to 2010-11-02,
+# so a rebuild needs 2010q4; tests/test_insiders.py keeps the two in step.
+DEFAULT_START = "2010q4"
 _MONTHS = {m: i for i, m in enumerate(("JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV",
                                        "DEC"), 1)}
 
@@ -167,7 +171,7 @@ def _done_path():
 
 def _load_done() -> dict[str, list[int]]:
     try:
-        return {k: list(v) for k, v in json.loads(_done_path().read_text()).items()}
+        return {k: list(v) for k, v in json.loads(_done_path().read_text()).items() if isinstance(v, list)}
     except (OSError, ValueError, AttributeError):
         return {}
 
@@ -205,7 +209,7 @@ def _fetch_dataset(q: str, log=print):
     return None
 
 
-def ingest_bulk(bank: Bank, cik_to_ticker: dict[int, str], start: str = "2011q1", log=print) -> dict:
+def ingest_bulk(bank: Bank, cik_to_ticker: dict[int, str], start: str = DEFAULT_START, log=print) -> dict:
     """Every quarterly data set from ``start`` to the last ended quarter, for these issuers. A quarter
     already read for an issuer is remembered in var/insiders_done.json and skipped."""
     done = _load_done()
@@ -323,9 +327,26 @@ def is_officer_or_director(f: Fact) -> bool:
     return bool(rel & {"officer", "director"})
 
 
+def since(view, days: int = 90) -> str:
+    """A trade counts as filed in the ``days`` to the view when its known_at is after this (the window
+    the insider_buying signal uses on a rebalance day)."""
+    return norm_known_at((datetime.fromisoformat(view.t) - timedelta(days=days)).strftime("%Y-%m-%d"))
+
+
+def dataset_read_for(view, ticker: str) -> bool:
+    """SEC's quarterly data sets have been read for this issuer (var/insiders_done.json holds the CIKs read
+    per quarter), so no trades on file means none were filed, not that nobody looked."""
+    f = view.latest(ticker, "identity.cik")
+    try:
+        cik = int(f.value) if f is not None else None
+    except (TypeError, ValueError):
+        return False
+    return cik is not None and any(cik in v for v in _load_done().values())
+
+
 def buy_sell_totals(view, ticker: str, days: int = 90) -> dict:
     """USD bought and sold by insiders in filings known in the last ``days`` to the view."""
-    cut = norm_known_at((datetime.fromisoformat(view.t) - timedelta(days=days)).strftime("%Y-%m-%d"))
+    cut = since(view, days)
     tot = {"buy_usd": 0.0, "sell_usd": 0.0, "buys": 0, "sells": 0}
     for f in trades(view, ticker, lambda f: f.known_at > cut):
         v = f.context.get("value_usd") or 0.0
@@ -383,7 +404,9 @@ def cmd_insiders(a) -> int:
 def add_cli(sub) -> None:
     s = sub.add_parser("insiders", help="insider open-market trades (SEC Forms 4/5): bulk history, then recent Form 4s")
     s.add_argument("tickers", nargs="*", help="default: every ticker in the research universes (bulk only)")
-    s.add_argument("--start", default="2011q1", help="first quarterly data set to read (default 2011q1)")
+    s.add_argument("--start", default=DEFAULT_START,
+                   help=f"first quarterly data set to read (default {DEFAULT_START}: H6's first rebalance looks back "
+                        f"90 days into it)")
     s.add_argument("--days", type=int, default=120, help="recent Form 4s: how far back (default 120 days)")
     s.add_argument("--live-only", action="store_true", help="skip the quarterly data sets")
     s.set_defaults(fn=cmd_insiders)

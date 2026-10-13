@@ -93,12 +93,20 @@ def _first_known(view: View, f: Fact) -> str:
     return min([g.known_at for g in same] or [f.known_at])
 
 
-def _match(events: list[Fact], q: Quarter) -> Fact | None:
-    for e in events:
-        gap = days_between(q.end, e.known_at)
-        if 0 < gap <= MATCH_DAYS:
-            return e
-    return None
+def _ny_date(known_at: str) -> str:
+    """The New York calendar date of a UTC time (EDGAR dates a filing in Eastern time)."""
+    return datetime.fromisoformat(known_at.replace("Z", "+00:00")).astimezone(NEW_YORK).date().isoformat()
+
+
+def _match(events: list[Fact], q: Quarter, filed: str) -> Fact | None:
+    """The quarter's results release among the distinct earnings releases in the 90 days after it ended:
+    the last one public by the day its EPS was filed (``filed``, compared as New York dates, so a
+    release the evening before the 10-Q counts). A pre-announcement or an interim update earlier in
+    the window gives way to the results that followed it, and a guidance 8-K after the filing is not
+    taken. When every release in the window came after the EPS filing, the first of them."""
+    window = [e for e in events if 0 < days_between(q.end, e.known_at) <= MATCH_DAYS]
+    by_filing = [e for e in window if _ny_date(e.known_at) <= filed[:10]]
+    return by_filing[-1] if by_filing else (window[0] if window else None)
 
 
 def earnings_table(view: View, ticker: str, book: PriceBook) -> list[dict]:
@@ -107,9 +115,10 @@ def earnings_table(view: View, ticker: str, book: PriceBook) -> list[dict]:
     ``eps`` is diluted EPS (basic if that is all there is) on the share basis at the view;
     ``eps_yoy`` the fractional change from the same quarter a year earlier,
     (EPS_q - EPS_{q-4}) / |EPS_{q-4}|; ``sue`` as ``metrics.sue``; the reactions are those of the
-    earnings release matched to the quarter (the first one within 90 days after its end), None
-    when there is none or its window is not complete at the view. ``filed`` is when the quarter's
-    EPS was first public; ``cite`` lists the refs of the facts behind the row."""
+    earnings release matched to the quarter (``_match``: the last one within 90 days after its end
+    that was public by the day its EPS was filed), None when there is none or its window is not
+    complete at the view. ``filed`` is when the quarter's EPS was first public; ``cite`` lists the
+    refs of the facts behind the row, the release last."""
     qs = eps_quarters(view, ticker)
     events = distinct(earnings_events(view, ticker))
     rows = []
@@ -117,11 +126,12 @@ def earnings_table(view: View, ticker: str, book: PriceBook) -> list[dict]:
         j = next((k for k in range(i - 1, -1, -1) if 350 <= days_between(qs[k].end, q.end) <= 380), None)
         prev = qs[j].value if j is not None else None
         s = sue_at(qs, i)
-        ev = _match(events, q)
+        filed = max(_first_known(view, f) for f in q.inputs)[:10]
+        ev = _match(events, q, filed)
         r = reaction(book, view, ticker, ev) if ev is not None else None
         rows.append({
             "period_end": q.end,
-            "filed": max(_first_known(view, f) for f in q.inputs)[:10],
+            "filed": filed,
             "eps": q.value,
             "eps_yoy": (q.value - prev) / abs(prev) if prev else None,
             "sue": s[0] if s else None,
