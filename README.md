@@ -34,7 +34,7 @@ Each fact has two dates. `as_of` is what it describes (the quarter that ended 20
 
 ## What the evidence says so far
 
-Nine hypotheses have been declared and run (`research/RESULTS.md`). **None beat a shuffled signal on the 2019–2026 TEST months after costs.**
+Twelve hypotheses have been declared and run (`research/RESULTS.md`); three of those were withdrawn after review found code mistakes behind them and were re-run under new ids. **None beat a shuffled signal on the 2019–2026 TEST months after costs.**
 
 | Idea | Universe | TEST net excess / month | Perm p | Verdict |
 | --- | --- | --- | --- | --- |
@@ -42,15 +42,18 @@ Nine hypotheses have been declared and run (`research/RESULTS.md`). **None beat 
 | H2 1-month reversal | 60 large caps | −0.01% | 0.21 | FAIL |
 | H3 earnings yield (value) | 60 large caps | −0.23% | 0.87 | FAIL |
 | H4 low asset growth | 60 large caps | −0.11% | 0.74 | FAIL |
-| H5 ridge learner on H1–H4 | 60 large caps | +0.19% | 0.051 | FAIL (BH q 0.46) |
-| H3b trailing-twelve-month earnings yield | 741 stocks | −0.11% | 0.88 | FAIL |
+| H5 ridge learner on H1–H4 | 60 large caps | +0.19% | 0.051 | FAIL (BH q 0.61) |
+| H3c trailing-twelve-month earnings yield | 741 stocks | −0.11% | 0.88 | FAIL |
 | H6 insider buying (officers and directors, 90 days) | 741 stocks | +0.00% | 0.28 | FAIL |
-| H7 earnings-day reaction drift | 741 stocks | −0.24% | 0.60 | FAIL |
-| H8 standardized unexpected earnings (SUE) | 741 stocks | −0.06% | 0.51 | FAIL |
+| H7b earnings-day reaction drift | 741 stocks | −0.24% | 0.58 | FAIL |
+| H8b standardized unexpected earnings (SUE) | 741 stocks | −0.05% | 0.49 | FAIL |
+| H3b, H7, H8 (first versions) | 741 stocks | −0.11%, −0.24%, −0.06% | 0.88, 0.60, 0.51 | withdrawn |
 
-The controls passed on both universes: the harness finds a planted edge (oracle p = 0.0005), and random signals pass 3–4% of the time, near the nominal 5%. So these are real negatives for these universes, not a broken instrument.
+H3b, H7 and H8 were withdrawn, not deleted. A derived fourth quarter mixed a fiscal year as first filed with nine months recast later (H3b, H8). Earnings releases that came within 20 days of a pre-announcement were dropped as duplicates (H7). The corrected versions were declared and committed before they ran, on the same price snapshots, and came out within a few hundredths of a percent of the first versions. The withdrawn runs still count in the false-discovery correction.
 
-H6 is the instructive one. On the TRAIN months (2011–2018) insider buying earned +0.11% a month with p = 0.008, the kind of result that gets written up. On the months it had never seen it earned nothing. That is why the split exists. Every hypothesis ever run counts in the false-discovery correction, so H5's q rose from 0.26 to 0.46 when H3b–H8 were added; trying more variants costs something, as it should.
+The controls passed on both universes: the harness finds a planted edge (oracle p = 0.0005), and random signals pass 3–4% of the time, near the nominal 5%. Random scores held fixed per stock pass 5.5% of the time on the broad universe. That is the case for slow signals like earnings yield and SUE, and it too is near nominal. On the 60-stock universe that check was not run (a smaller test found it too lenient there), so read the large-cap p-values as optimistic. These are real negatives for these universes, not a broken instrument.
+
+H6 is the instructive one. On the TRAIN months (2011–2018) insider buying earned +0.11% a month with p = 0.008, the kind of result that gets written up. On the months it had never seen it earned nothing. That is why the split exists. Every hypothesis ever run counts in the false-discovery correction, so H5's q rose from 0.26 to 0.61 as H3b–H8b were added, withdrawn ones included; trying more variants costs something, as it should.
 
 What this means for making money: textbook signals, including the well-known event ones (insider buying, post-earnings drift, SUE), do not carry an edge you can detect after costs in these universes. Both universes are chosen by today's market value, so they are survivors; the equal-weight broad universe returned 20% a year over TEST against SPY's 18%, mostly for that reason. Any edge is more likely to come from information the market prices slowly, and each new idea goes through the same gate. The alternative data below (aircraft, ships, cameras) is collected so that ideas about it can be tested once enough history exists; none has been tested yet.
 
@@ -93,7 +96,7 @@ A keyboard-driven market terminal over the memory bank: type `AAPL GP 5Y SPY` an
 | --- | --- |
 | `DES` `GP` `FA` `CF` `CN` | description, price chart (with comparisons), 10 years of financials, SEC filings, news and web claims |
 | `INS` | insider trades, newest filing first, with 90-day buy and sell totals and the H6 verdict |
-| `ERN` | earnings by quarter: EPS, EPS YoY, SUE, 3-day reaction, 20- and 60-day drift, with the H7 and H8 verdicts |
+| `ERN` | earnings by quarter: EPS, EPS YoY, SUE, 3-day reaction, 20- and 60-day drift, with the H7b and H8b verdicts |
 | `JET` | the company's own registered aircraft and their recorded flights |
 | `SHIP` `CAM` | vessel counts per port area, vehicle counts per camera, each with a z-score; `SHIP AREA` and `CAM ID` chart one |
 | `WL` `ALRT` | the watchlist with last price, 1-day move and latest alert; notice and high alerts newest first, `ALRT ALL` with the info ones (`WL ADD T`, `ALRT ACK ID`) |
@@ -244,7 +247,7 @@ Everything runs offline in the unit tests (fixtures, a fake OpenAI-compatible se
 
 - **Survivorship.** Both universes are chosen by today's market value, so every member survived and grew. Results report the size of the effect and treat any PASS as an upper bound. Fixing this needs delisted-company price data, which free sources don't provide.
 - **Alternative data has no history yet.** Aircraft flights, vessel counts and vehicle counts start when you start collecting them. No hypothesis on them can be tested until there are years of samples, and a single camera frame is a noisy count.
-- **Coverage.** H7 has a value for 35% of TEST stock-months (an earnings release in the 31 days before the rebalance); quarterly EPS is missing where a company tags it outside the curated XBRL concepts.
+- **Coverage.** H7b has a value for 36% of TEST stock-months (an earnings release in the 31 days before the rebalance); quarterly EPS is missing where a company tags it outside the curated XBRL concepts.
 - The analyst checks its own answer, not its reasoning: the ASK pane flags cited ids its tools never returned and numbers none of its tool results hold, but a number it computed correctly from cited facts is flagged too, and one it copied from the wrong row is not.
 - Headline alerts are many (every new headline is an `info` alert), so they are off for a new watchlist (`brain watch rule headlines on` turns them on); the terminal's alert count and `ALRT` leave info alerts out, and `ALRT ALL` lists them.
 - US filings only. The price source handles other exchanges (e.g. `RELIANCE.NS`), but filings come from SEC. Cameras: London and California only.

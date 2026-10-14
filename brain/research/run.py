@@ -245,23 +245,31 @@ def report() -> str:
     for r in rows:
         te = {"mean_net_excess": nan, "ann_net_excess": nan, "info_ratio": nan, "months_beating_benchmark": 0, **r["test"]}
         tr = {"mean_net_excess": nan, **r["train"]}
+        q = f"{r['bh_q']:.3f}" if math.isfinite(r["bh_q"]) else "–"
         lines.append(
             f"| {r['id']} | {_universe_of(r).split('/')[-1].removesuffix('.json')} | {selects.get(r['id'], 'top_frac')} | "
             f"{_pct(te['mean_net_excess'])} | {_pct(te['ann_net_excess'], 1)} | {te['info_ratio']:.2f} | "
-            f"{te['months_beating_benchmark']}/{te['n_months']} | {te['perm_p']:.4f} | {r['bh_q']:.3f} | "
+            f"{te['months_beating_benchmark']}/{te['n_months']} | {te['perm_p']:.4f} | {q} | "
             f"{_pct(tr['mean_net_excess'])} | {tr['perm_p']:.4f} | {r.get('test_signal_coverage', float('nan')) * 100:.0f}% | "
-            f"**{r['verdict']}** |")
+            f"**{r['verdict'].split(':')[0]}** |")
     lines += [
         "",
         "TEST coverage is the share of listed stock-months with a signal value; the rest are not ranked.",
         "",
-        "## Controls",
-        "",
     ]
+    gone = [r for r in rows if r["verdict"].startswith("WITHDRAWN")]
+    if gone:
+        lines += ["## Withdrawn", "",
+                  "Run, then withdrawn for a mistake. The result stays in the ledger and still counts in the "
+                  "Benjamini–Hochberg correction (so its own q is not shown).", ""]
+        lines += [f"- {r['id']}: {r['verdict'].split(':', 1)[1].strip()}" for r in gone]
+        lines.append("")
+    lines += ["## Controls", ""]
     for name, rs in by_uni.items():
-        ctl = rs[0]["controls"]
+        last = max(rs, key=lambda r: r["at"])  # the latest run on this universe
+        ctl = last["controls"]
         lines += [
-            f"`{name}`:",
+            f"`{name}` (latest run, {last['at'][:10]}):",
             "",
             f"- Oracle (next month's actual return as the signal): TEST p = {ctl['oracle_test_perm_p']:.4f}, "
             f"gross excess {_pct(ctl['oracle_test_mean_gross_excess'])}/mo. The harness can see a real edge.",

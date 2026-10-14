@@ -207,3 +207,26 @@ class ControlsTest(unittest.TestCase):
         self.assertIn("200 random signals, redrawn every month: 3.0% reached p < 0.05", text)
         self.assertIn("Random scores held fixed per stock were not tried in this run.", text)
 
+    def test_report_lists_withdrawals_and_takes_controls_from_the_latest_run(self):
+        import tempfile
+        te = {"mean_net_excess": -0.001, "ann_net_excess": -0.012, "info_ratio": -0.2, "months_beating_benchmark": 40,
+              "n_months": 92, "perm_p": 0.7}
+        base = {"op": "result", "spec_sha": "s", "n_tickers": 60, "test": te, "train": {"mean_net_excess": 0.001, "perm_p": 0.2},
+                "context": {"spy_ann_return_test": 0.18, "universe_ew_ann_return_test": 0.27}}
+        old = {"oracle_test_perm_p": 0.0005, "oracle_test_mean_gross_excess": 0.08, "pass": True,
+               "random_false_positive_rate": 0.03, "n_random": 200}
+        recs = [{**base, "id": "H1-mom12_1", "at": "2026-01-01T00:00:00Z", "controls": old},
+                {**base, "id": "H2-rev1", "at": "2026-02-01T00:00:00Z",
+                 "controls": {**old, "persistent_random_false_positive_rate": 0.055}},
+                {"op": "withdraw", "id": "H1-mom12_1", "reason": "a code mistake: details", "at": "2026-02-02T00:00:00Z"}]
+        with tempfile.TemporaryDirectory() as d:
+            led = Path(d) / "ledger.jsonl"
+            led.write_text("".join(json.dumps(r) + "\n" for r in recs))
+            with mock.patch.object(config, "LEDGER", led), mock.patch.object(config, "RESULTS", Path(d) / "R.md"):
+                text = run.report()
+        self.assertIn("| 40/92 | 0.7000 | – | +0.10% |", text)  # counted in BH, its own q not shown
+        self.assertIn("**WITHDRAWN** |", text)
+        self.assertIn("- H1-mom12_1: a code mistake: details", text)
+        self.assertIn("(latest run, 2026-02-01)", text)
+        self.assertNotIn("Random scores held fixed per stock were not tried in this run.", text)
+
