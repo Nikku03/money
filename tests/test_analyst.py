@@ -59,14 +59,18 @@ class AnalystLoopTest(AskCase):
         first, second = sent
         self.assertEqual(first["model"], "fake-model")
         self.assertEqual(first["tool_choice"], "auto")
-        self.assertEqual(len(first["tools"]), 20)
+        self.assertEqual(len(first["tools"]), 21)
         self.assertEqual({t["type"] for t in first["tools"]}, {"function"})
         names = [t["function"]["name"] for t in first["tools"]]
         self.assertEqual(names[:3], ["describe", "price_history", "financials"])
         self.assertEqual(first["messages"][0]["role"], "system")
         for rule in ("cite", "[abcd1234]", "third-party text", "do not place orders", "FAIL", "INGEST",
-                     "insider trades", "not tested signals", "Use only numbers that are in the tool results"):
+                     "insider trades", "not tested signals", "Use only numbers that are in the tool results",
+                     "track_record, the record D1 weighs", "(shown in CLM and DEC)", "lean beside it is unproven"):
             self.assertIn(rule, first["messages"][0]["content"])
+        # The loop's tool results and conversation are for the judge; ASK's answer does not carry them.
+        self.assertNotIn("results", res)
+        self.assertNotIn("convo", res)
         self.assertTrue(first["messages"][-1]["content"].startswith("(Security in focus: AAPL)"))
         # The tool's result went back as a tool message answering the call's id.
         tool_msgs = [m for m in second["messages"] if m["role"] == "tool"]
@@ -77,9 +81,11 @@ class AnalystLoopTest(AskCase):
 
     def test_tool_schemas_are_openai_functions(self):
         specs = {t.name: t.spec() for t in analyst._tools(lambda c: {}, [])}
-        self.assertEqual(len(specs), 20)
-        self.assertEqual(list(specs)[-7:], ["insider_trades", "earnings", "aircraft", "ports", "cameras", "watchlist",
-                                            "alerts"])
+        self.assertEqual(len(specs), 21)
+        self.assertEqual(list(specs)[-8:], ["insider_trades", "earnings", "aircraft", "ports", "cameras", "watchlist",
+                                            "alerts", "decision"])
+        self.assertEqual(specs["decision"]["function"]["parameters"]["required"], ["ticker"])
+        self.assertIn("latest recorded decision", specs["decision"]["function"]["description"])
         self.assertEqual(specs["ports"]["function"]["parameters"]["required"], [])
         self.assertEqual(set(specs["cameras"]["function"]["parameters"]["properties"]), {"camera_id"})
         self.assertEqual(specs["alerts"]["function"]["parameters"]["properties"], {})
@@ -253,6 +259,53 @@ class AnalystLoopTest(AskCase):
         self.assertEqual(len(sent), 3)
         self.assertLess(len(json.dumps(sent[2]["messages"])), len(json.dumps(sent[1]["messages"])))
         self.assertLess(len(json.dumps(sent[2]["messages"])), 4096 * 4)
+
+    def run_loop(self, reply, deadline=None, max_rounds=analyst.MAX_ROUNDS):
+        seen, calls = [], []
+        tools = analyst._tools(lambda c: seen.append(c) or {"ok": True, "view": "des",
+                                                           "data": {"price": {"close": 336.64, "cite": "9de710d2"}}},
+                               calls)
+        with FakeOpenAI(reply) as srv:
+            out = analyst.run_loop(srv.client(), "sys", [{"role": "user", "content": "q"}], tools,
+                                   max_rounds=max_rounds, deadline=deadline)
+        return out, srv.requests, seen
+
+    def test_run_loop_hands_back_the_tool_results_and_the_conversation(self):
+        out, sent, _ = self.run_loop(lambda n, b: calls_msg(tool_call(1)) if n == 1 else text_msg("Done [9de710d2]."))
+        self.assertEqual((out["ok"], out["stop_reason"]), (True, "stop"))
+        self.assertEqual(len(out["results"]), 1)
+        self.assertEqual(json.loads(out["results"][0])["data"]["price"]["cite"], "9de710d2")
+        self.assertEqual([m["role"] for m in out["convo"]], ["user", "assistant", "tool"])
+        self.assertEqual(out["convo"], sent[1]["messages"][1:])  # as sent, without the system prompt
+        # An empty answer still hands them back (the judge asks for one repair with them).
+        out, _, _ = self.run_loop(lambda n, b: calls_msg(tool_call(1)) if n == 1 else text_msg(" "))
+        self.assertEqual((out["ok"], out["error"]), (False, "the model returned an empty answer"))
+        self.assertEqual(len(out["results"]), 1)
+
+    def test_run_loop_ends_at_its_deadline_like_its_last_round(self):
+        import time
+        for clock in (time.monotonic, time.time):
+            with self.subTest(clock=clock.__name__):
+                # Past the deadline after round 1: round 2 is the last; its tool calls are not run.
+                out, sent, seen = self.run_loop(lambda n, b: calls_msg(tool_call(n), content="Checking more."),
+                                                deadline=clock() - 1)
+                self.assertEqual(len(sent), 2)
+                self.assertEqual(seen, ["AAPL DES"])
+                self.assertEqual(sent[1]["messages"][-1], {"role": "user", "content": analyst.LAST_ROUND})
+                self.assertTrue(out["ok"], out)
+                self.assertEqual(out["stop_reason"], "deadline")
+                self.assertIn("stopped at the time limit after 2 rounds without a final answer", out["answer"])
+                # The model answering in that last round: its answer, marked as stopped by the deadline.
+                out, sent, _ = self.run_loop(lambda n, b: calls_msg(tool_call(n)) if n == 1 else text_msg("Up [9de710d2]."),
+                                             deadline=clock() - 1)
+                self.assertEqual((out["answer"], out["stop_reason"], len(sent)), ("Up [9de710d2].", "deadline", 2))
+                # Time left: the loop runs as before.
+                out, sent, seen = self.run_loop(lambda n, b: calls_msg(tool_call(n)) if n < 4 else text_msg("Done."),
+                                                deadline=clock() + 600)
+                self.assertEqual((out["stop_reason"], len(sent), len(seen)), ("stop", 4, 3))
+        self.assertFalse(analyst.expired(None))
+        self.assertTrue(analyst.expired(time.monotonic() - 0.001))
+        self.assertFalse(analyst.expired(time.time() + 60))
 
 
 class FitTest(unittest.TestCase):
@@ -515,6 +568,21 @@ class ReaderTest(TempHome):
             self.assertFalse(read(line)["ok"], line)
         for line in ("WL ADD MSFT", "WL DEL AAPL", "ALRT ACK ALL", "ALRT ACK abcd1234"):
             self.assertIn("is not available here (read-only)", read(line)["error"], line)
+        # DEC NEW starts a decide job; the analyst's tools only read decisions.
+        from brain.terminal import commands
+        self.assertFalse(read("AAPL DEC NEW")["ok"])
+        if "DEC" in commands.FUNCTIONS:  # the terminal's DEC function
+            self.assertIn("DEC NEW is not available here (read-only)", read("AAPL DEC NEW")["error"])
+
+    def test_the_decision_tool_reads_the_latest_decision(self):
+        seen, calls = [], []
+        tools = {t.name: t for t in analyst._tools(lambda c: seen.append(c) or {"ok": False, "error": "no decision"},
+                                                   calls)}
+        tools["decision"].call({"ticker": "aapl"})
+        self.assertEqual(seen, ["AAPL DEC"])
+        with self.assertRaises(analyst.ToolError):
+            tools["decision"].call({"ticker": "AAPL DEC NEW"})
+        self.assertEqual(seen, ["AAPL DEC"])
 
     def test_the_new_tools_read_insiders_earnings_alt_data_and_alerts(self):
         self.add_aapl()

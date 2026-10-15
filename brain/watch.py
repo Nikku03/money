@@ -784,6 +784,34 @@ def check(bank: Bank, since: str | None = None, *, now: str | None = None, log=p
     return sorted(c.out, key=lambda f: (f.as_of, f.entity, f.id))
 
 
+def alert(bank: Bank, entity: str, rule: str, severity: str, message: str, inputs: list[Fact], keys: list[str],
+          known_at: str, **extra) -> Fact | None:
+    """Write one alert as watch.check would (same fact shape, same key de-duplication), add the entity to the
+    alerts state's 'entities', and push it with notify() when push is configured. None when a key was used.
+    For alerts raised outside the rules (``brain decide`` on a changed decision); it takes check's lock, so
+    the two cannot write the same key at once."""
+    if severity not in SEVERITY:
+        raise ValueError(f"unknown severity {severity!r}; use one of {', '.join(SEVERITY)}")
+    entity = entity.upper()
+    known = norm_known_at(known_at)
+    with _locked("alerts.check.lock"):
+        _read_state()  # a malformed state file is an error before anything is written
+        used = set()
+        for g in bank.facts(entity, "alert", include_downgraded=True):  # a withdrawn alert is not re-raised
+            used.update(g.context.get("keys") or [])
+        if any(k in used for k in keys):
+            return None
+        f = Fact(entity=entity, attr="alert", value=message, as_of=known[:10], known_at=known, tier="derived",
+                 source={"name": "brain.watch", "rule": rule},
+                 context={"rule": rule, "severity": severity, "keys": list(keys), **extra},
+                 inputs=tuple(dict.fromkeys(g.ref for g in inputs)), retrieved_at=now_iso())
+        bank.add(f)
+        with _state() as s:
+            s["entities"].append(entity)
+    notify([f])
+    return f
+
+
 def line(f: Fact) -> str:
     """One alert as one line: when, severity, short id, message."""
     return f"{f.known_at[:16]}Z {f.context.get('severity', '?'):<6} [{f.id[:8]}] {f.value}"

@@ -3,7 +3,9 @@
 Errors: journal corruption (stored id != content, unreadable lines), a sidecar index
 that disagrees with the journal, a filed or market fact known before the date it
 describes, a derived fact without inputs or known before one of its inputs, a series
-snapshot whose file is missing or altered.
+snapshot whose file is missing or altered. A model's own call (an opinion fact whose
+source name starts with ``llm:``) is held to the derived rules: it needs no URL, but it
+must cite facts the bank holds, each known no later than the call.
 
 Each entity is replayed from its journal alone, one at a time, so memory stays at the
 size of the largest entity however big the bank grows.
@@ -55,13 +57,15 @@ def run(bank: Bank) -> tuple[list[str], list[str]]:
             tag = f"{e}/{f.id} {f.attr}"
             if not f.source.get("name"):
                 errors.append(f"{tag}: source has no name")
-            if f.tier != "derived" and not f.source.get("url"):
+            # a model's judgment cites the facts it read instead of a page
+            from_inputs = f.tier == "derived" or (f.tier == "opinion" and str(f.source.get("name") or "").startswith("llm:"))
+            if not from_inputs and not f.source.get("url"):
                 errors.append(f"{tag}: non-derived fact without a source url")
             if f.tier in ("filed", "market") and f.known_at[:10] < f.as_of:
                 errors.append(f"{tag}: known_at {f.known_at} before as_of {f.as_of}")
-            if f.tier == "derived":
+            if from_inputs:
                 if not f.inputs:
-                    errors.append(f"{tag}: derived fact cites no inputs")
+                    errors.append(f"{tag}: {'derived fact' if f.tier == 'derived' else 'model opinion'} cites no inputs")
                 for ref in f.inputs:
                     ent, _, fid = ref.partition("/")
                     if ent.upper() != e.upper():

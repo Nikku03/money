@@ -454,9 +454,11 @@ def evidence(bank: Bank, ticker: str, budget_s: float | None = EVIDENCE_BUDGET_S
         summary += (f" The broad-universe ranking is not complete yet ({broad['computed']} of {broad['total']} "
                     "stocks); its rows show this stock's value without a rank until it is.")
     from brain.research.hypotheses import COMMON  # the H1-H4 rows' universe, named as a hypothesis names it
+    # coverage: universe stocks with a price on the rebalance day, the ones the backtest ranks there
+    ranked = int(panel.listed[-1][:len(uni["tickers"])].sum())
     return {"ticker": t_, "rebalance_date": str(panel.dates[panel.rebal[-1]]), "universe": COMMON["universe"],
-            "universe_size": len(uni["tickers"]), "signals": rows, "controls_pass": ctl, "summary": summary,
-            "broad": broad}
+            "universe_size": len(uni["tickers"]), "coverage": {"ranked": ranked, "universe_size": len(uni["tickers"])},
+            "signals": rows, "controls_pass": ctl, "summary": summary, "broad": broad}
 
 
 def _broad_hypotheses() -> list[dict]:
@@ -513,8 +515,11 @@ def _broad_evidence(bank: Bank, t_: str, verdict: dict, claims: dict, budget_s: 
                 row.update(percentile=round(float(pctl) * 100), in_top_third=bool(pctl >= 2 / 3),
                            held=bool(hold is not None and j in set(hold.tolist())))
         out["rows"].append(row)
+    # coverage: universe stocks computed so far and listed on the rebalance day (the ones ranked)
+    ranked = int(cs["listed"][:len(tickers)].sum())
     return {**out, "status": "complete" if done else "pending", "universe_size": len(tickers),
-            "rebalance_date": cs["rebalance_date"], "computed": cs["computed"], "total": cs["total"]}
+            "rebalance_date": cs["rebalance_date"], "computed": cs["computed"], "total": cs["total"],
+            "coverage": {"ranked": ranked, "universe_size": len(tickers)}}
 
 
 def _signals_section(bank: Bank, t_: str, budget_s: float | None = EVIDENCE_BUDGET_S) -> list[str]:
