@@ -4,3 +4,4 @@ var/
 __pycache__/
 *.pyc
 .pytest_cache/
+*.pid
