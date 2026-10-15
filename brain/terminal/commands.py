@@ -54,6 +54,10 @@ FUNCTIONS: dict[str, dict] = {
             "desc": "earnings by quarter: EPS, EPS YoY, SUE and the stock's reaction and drift vs SPY"},
     "JET": {"scope": "security", "args": "",
             "desc": "aircraft the company itself owns (FAA registry) and their airport-to-airport flights"},
+    "DEC": {"scope": "both", "args": "[NEW]",
+            "desc": "paper decision under policy D1: evidence weights, the unproven lean, the explanation and the "
+                    "history; DEC alone lists every stock's latest and the scorecard; T DEC NEW decides afresh "
+                    "(background job)"},
     "SHOW": {"scope": "both", "args": "ID", "desc": "one fact by id prefix: full JSON and source link"},
     "WEI": {"scope": "global", "args": "", "desc": "world markets: equity indices, volatility, FX, commodities, crypto"},
     "MOV": {"scope": "global", "args": "", "desc": "research-universe movers: last session and 1 month"},
@@ -104,6 +108,7 @@ MAX_COMPLETIONS = 12
 NOT_TICKERS = {"MACRO"}  # bank entities that hold macro series, not securities
 ALT_PREFIXES = ("AREA.", "CAM.")  # bank entities of port areas and traffic cameras, not securities
 WL_VERBS = ("ADD", "DEL")
+DEC_NEW = "NEW"  # T DEC NEW decides afresh in a background job; T DEC reads the latest recorded decision
 
 
 def _is_arg(fn: str, w: str) -> bool:
@@ -116,6 +121,8 @@ def _is_arg(fn: str, w: str) -> bool:
         return "/" in w or (bool(_FACT_ID.fullmatch(w)) and any(c.isdigit() for c in w))
     if fn == "INGEST":
         return w in INGEST_KEYWORDS
+    if fn == "DEC":
+        return w == DEC_NEW
     return False
 
 
@@ -185,7 +192,22 @@ def parse(line: str) -> Command:
                            "INGEST AAPL")
     if fn == "SHOW" and not args:
         raise CommandError("SHOW needs a fact id, e.g. AAPL SHOW 9de710d2", f"{ticker or 'AAPL'} DES")
+    if fn == "DEC" and args and args != [DEC_NEW]:
+        raise CommandError("DEC takes no arguments, or NEW", f"{ticker} DEC" if ticker else "DEC")
+    if fn == "DEC" and args and ticker is None:  # a decision is about one stock; the hint lists them, it starts nothing
+        raise CommandError("DEC NEW needs a ticker, e.g. AAPL DEC NEW", "DEC")
     return Command(fn=fn, ticker=ticker, args=args, raw=raw)
+
+
+def dec_line(t: str, new: bool = False) -> str | None:
+    """``T DEC`` (``T DEC NEW``) for a row's command or a hint, or None when the line would not read back as
+    DEC on T: a ticker that is a verb or takes free text (INGEST, SHOW, ASK, HELP) comes first as the function."""
+    line = f"{t} DEC" + (f" {DEC_NEW}" if new else "")
+    try:
+        c = parse(line)
+    except CommandError:
+        return None
+    return line if (c.fn, c.ticker, c.args) == ("DEC", t, [DEC_NEW] if new else []) else None
 
 
 def is_security(entity: str) -> bool:
@@ -243,7 +265,7 @@ def _arg_items(fn: str, rest: list[str], partial: str, tickers: list[str]) -> li
 def complete(prefix: str, tickers: list[str]) -> list[dict]:
     """Completions for the token being typed: function codes, tickers (bank securities plus the
     world-market symbols, which can be ingested on demand) and the keywords some functions take
-    (INGEST targets, SHIP areas, CAM ids, WL ADD/DEL, ALRT ACK/ALL)."""
+    (INGEST targets, SHIP areas, CAM ids, WL ADD/DEL, ALRT ACK/ALL, DEC NEW)."""
     text = prefix or ""
     if not text.strip():
         return []
@@ -268,6 +290,8 @@ def complete(prefix: str, tickers: list[str]) -> list[dict]:
                     for c in security_first if c.startswith(partial)]
         if fn == "INGEST" and not rest:
             out += _words(INGEST_KEYWORDS, partial, "background collection job")
+        if fn == "DEC" and DEC_NEW not in rest and len(rest) <= 1:  # `DEC AAPL NEW` reads like `AAPL DEC NEW`
+            out += _words((DEC_NEW,), partial, "decide afresh in a background job (paper only): T DEC NEW")
         if partial and (not has_ticker or "GP" in fns):  # GP takes comparison tickers
             out += _ticker_items(partial, tickers)
     out.sort(key=lambda d: d["text"] != partial)  # an exact match first; otherwise order is kept

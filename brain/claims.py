@@ -11,7 +11,9 @@ expect the same of market commentary until a source's record says otherwise.
 section 3.3): a call is scored only on sessions after the bank held it, calls made
 in the same window count as one bet, and a source needs enough bets, a one-sided
 test, a false-discovery correction across sources and a lower confidence bound on
-its hit rate before its calls weigh anything.
+its hit rate before its calls weigh anything. Its calls must also be priced: calls
+whose window closed with no close for their stock count against it, so a record
+cannot be made by fetching prices only for the calls that went its way.
 """
 from __future__ import annotations
 
@@ -22,10 +24,16 @@ import numpy as np
 from brain.bank import Bank, Fact
 from brain.metrics import PriceBook
 from brain.research.stats import bh_adjust, binom_lower_bound, binom_one_sided_greater, binom_two_sided
-from brain.timeutil import days_between, now_iso, today
+from brain.timeutil import days_between, norm_known_at, now_iso, today
 
 DIRECTIONS = {"up": 1, "down": -1, "none": 0}
 STALE_CLOSE_DAYS = 4   # a stock's close older than this, at a benchmark session, is no close for it
+# A call whose exit is this many benchmark sessions past, with still no outcome, is "unpriced": its stock's
+# closes are missing (never ingested, not refreshed, delisted). It is scored as soon as they arrive, but a
+# source is not proven while more than UNPRICED_MAX_SHARE of its closed calls are unpriced, so a record
+# cannot be built by pricing only the calls that went its way.
+GRACE_SESSIONS = 5
+UNPRICED_MAX_SHARE = 0.10
 
 
 def note(bank: Bank, ticker: str, text: str, url: str, *, tier: str = "opinion", direction: str = "none",
@@ -39,8 +47,11 @@ def note(bank: Bank, ticker: str, text: str, url: str, *, tier: str = "opinion",
         raise ValueError(f"a claim's source is an http(s) URL with a host, not {str(url)[:80]!r}")
     if tier not in ("opinion", "reported"):
         raise ValueError("web claims are tier 'opinion' (views, forecasts) or 'reported' (factual news)")
-    known = known_at or now_iso()
-    if known > now_iso():
+    raw = str(known_at).strip() if known_at else ""
+    known = norm_known_at(raw) if raw else now_iso()
+    # A time is compared in UTC, whatever offset the page wrote it with. A date alone stands for the end of
+    # that UTC day, so today's date is accepted (a page that gives only its date) and a later one is not.
+    if (raw[:10] > today()) if len(raw) == 10 else (known > now_iso()):
         raise ValueError("known_at is in the future")
     context = {"direction": DIRECTIONS[direction], "horizon_days": horizon_days}
     if noted_by:
@@ -131,6 +142,24 @@ def outcome(book: PriceBook, ticker: str, anchor: str, horizon: int, benchmark: 
     return {"entry": str(bd[j0]), "exit": str(bd[j1]), "excess": float(excess)}
 
 
+def scored_at(book: PriceBook, ticker: str, anchor: str, horizon: int, t: str,
+              benchmark: str = "SPY") -> tuple[str, dict | None]:
+    """("scored", outcome) when the call's window closed by t and both closes are there; ("unpriced", None)
+    when the benchmark's book at t holds GRACE_SESSIONS sessions past its exit and the stock still has no
+    outcome; else ("pending", None). Whether a call is unpriced is read from the benchmark's calendar alone,
+    so it cannot depend on what the stock did."""
+    o = outcome(book, ticker, anchor, horizon, benchmark)
+    if o is not None and o["exit"] <= t[:10]:  # no exit after t
+        return "scored", o
+    b = benchmark.upper()
+    if o is None and book.has(b):
+        bd = book.dates[b]
+        held = int(np.searchsorted(bd, t[:10], side="right"))  # the benchmark's sessions up to t
+        if int(np.searchsorted(bd, anchor[:10], side="right")) + int(horizon) + GRACE_SESSIONS < held:
+            return "unpriced", None
+    return "pending", None
+
+
 def bets(calls: list[dict]) -> tuple[list[dict], int]:
     """Group scored calls into independent bets. `calls`: [{"ref", "ticker", "direction", "entry", "exit",
     "excess"}], any order. In entry order (ties by ref), a call opens a bet when its entry is after the exit
@@ -172,9 +201,16 @@ def _plural(n: int, word: str) -> str:
     return f"{n} {word}{'' if n == 1 else 's'}"
 
 
+def too_unpriced(unpriced: int, closed: int) -> bool:
+    """True when more than UNPRICED_MAX_SHARE of the calls whose window has closed (``closed``, priced or
+    not) have no outcome. A rare delisting fits under it; prices fetched only for the winners do not."""
+    return unpriced > UNPRICED_MAX_SHARE * closed
+
+
 def gate_rows(raw: dict[str, dict], gate: dict) -> dict[str, dict]:
     """Add q (Benjamini-Hochberg across every source with at least one bet), proven, weight and why to rows
-    that hold ``tally``'s fields and the call counts."""
+    that hold ``tally``'s fields and the call counts. A source with too many unpriced calls
+    (``too_unpriced``) is not proven, whatever its bets say, until their tickers are ingested."""
     tested = [k for k, r in raw.items() if r["bets"] >= 1]
     q_of = dict(zip(tested, bh_adjust([raw[k]["p"] for k in tested])))
     out = {}
@@ -182,23 +218,36 @@ def gate_rows(raw: dict[str, dict], gate: dict) -> dict[str, dict]:
         q = q_of.get(k)
         n, hits = r["bets"], r["hits"]
         mse = r["mean_signed_excess"]
+        u = int(r.get("unpriced") or 0)
+        closed = r["calls"] - r["pending"] - r["unscorable"]  # every call is one of unscorable, pending, unpriced, scored
+        blocked = too_unpriced(u, closed)
         proven = bool(n >= gate["min_bets"] and r["p"] is not None and r["p"] < gate["p_lt"]
-                      and q is not None and q < gate["bh_q"] and mse is not None and mse > gate["mean_signed_excess_gt"])
+                      and q is not None and q < gate["bh_q"] and mse is not None and mse > gate["mean_signed_excess_gt"]
+                      and not blocked)
         weight = max(0.0, 2 * r["lower"] - 1) if proven else 0.0
+        unpriced = f"{u} with no price past {'its' if u == 1 else 'their'} exit"  # "3 with no price past their exit"
         if proven:
             why = f"proven: {n} bets, {r['hit_rate']:.0%} hit, weight {weight:.2f}"
+            rest = [f"{r['pending']} pending"] * bool(r["pending"]) + [unpriced] * bool(u)
+            why += f"; of its calls, {' and '.join(rest)}" if rest else ""
         elif n >= gate["min_bets"]:
             why = (f"{n} bets, {r['hit_rate']:.0%} hit, p {r['p']:.2f}, q {q:.2f} after "
                    f"{_plural(len(tested), 'source')}: not proven")
             if mse is not None and not mse > gate["mean_signed_excess_gt"]:
                 why += f" (mean signed excess {mse * 100:+.2f}%)"
+            if blocked:
+                why += (f"; {u} of {closed} calls past their exit have no price for their stock (at most "
+                        f"{UNPRICED_MAX_SHARE:.0%} may): ingest those tickers")
+            elif u:
+                why += f"; of its calls, {unpriced}"
         elif n == 0:
-            why = (f"0 bets from {_plural(r['calls'], 'call')}, {r['pending']} pending; needs {gate['min_bets']} bets"
+            rest = [f"{r['pending']} pending"] * bool(r["pending"] or not u) + [unpriced] * bool(u)
+            why = (f"0 bets from {_plural(r['calls'], 'call')}, {', '.join(rest)}; needs {gate['min_bets']} bets"
                    if r["calls"] else f"0 bets; needs {gate['min_bets']} bets")
         else:
-            why = (f"{_plural(n, 'bet')} ({_plural(hits, 'hit')}) from {_plural(r['calls'], 'call')}; "
-                   f"needs {gate['min_bets']} bets")
-        out[k] = {**r, "q": q, "proven": proven, "weight": float(weight), "why": why}
+            why = (f"{_plural(n, 'bet')} ({_plural(hits, 'hit')}) from {_plural(r['calls'], 'call')}"
+                   f"{', ' + unpriced if u else ''}; needs {gate['min_bets']} bets")
+        out[k] = {**r, "unpriced": u, "q": q, "proven": proven, "weight": float(weight), "why": why}
     return out
 
 
@@ -224,18 +273,19 @@ def track_record(bank: Bank, t: str | None = None, attrs=("claim", "judgment"), 
         "q": float | None,                                                          # BH across every source with >= 1 bet
         "lower": float | None,                                                      # Clopper-Pearson one-sided lower bound
         "mean_signed_excess": float | None, "up": int, "down": int,                 # direction mix of the calls
-        "calls": int, "dropped": int, "pending": int, "unscorable": int,
+        "calls": int, "dropped": int, "pending": int, "unpriced": int, "unscorable": int,
         "proven": bool, "weight": float, "why": str}
     Rules:
     - a call's anchor is max(known_at, retrieved_at): it is scored only on sessions after the bank held it;
     - only calls retrieved no later than t, on prices known at t (PriceBook asof=t), with horizon_days == horizon;
     - calls on unscorable symbols (decide.scorable) are skipped and counted in `unscorable`;
-    - a call whose outcome is None is `pending`;
+    - a call with no outcome is `unpriced` once SPY's book is GRACE_SESSIONS past its exit, else `pending`
+      (``scored_at``); either is scored with its real outcome once its stock's closes are in the bank;
     - bets() over the scored calls;
-    - proven = bets >= min_bets and p < p_lt and q < bh_q and mean_signed_excess > 0;
-      weight = max(0, 2*lower - 1) when proven, else 0;
+    - proven = bets >= min_bets and p < p_lt and q < bh_q and mean_signed_excess > 0, and at most
+      UNPRICED_MAX_SHARE of the calls past their exit are unpriced; weight = max(0, 2*lower - 1) when proven, else 0;
     - why is plain words, e.g. "3 bets (2 hits) from 11 calls; needs 30 bets",
-      "41 bets, 66% hit, p 0.02, q 0.31 after 12 sources: not proven", "proven: 52 bets, 79% hit, weight 0.36".
+      "41 bets, 66% hit, p 0.03, q 0.31 after 12 sources: not proven", "proven: 52 bets, 79% hit, weight 0.35".
     `gate` defaults to POLICY's source_gate."""
     from brain.decide import POLICY, scorable
     gate = gate or POLICY["source_gate"]
@@ -244,16 +294,17 @@ def track_record(bank: Bank, t: str | None = None, attrs=("claim", "judgment"), 
     book = PriceBook(bank, sorted({f.entity for f in calls if scorable(f.entity)[0]} | {benchmark}), asof=t)
     by: dict[str, dict] = {}
     for f in calls:
-        s = by.setdefault(source_key(f), {"calls": 0, "up": 0, "down": 0, "pending": 0, "unscorable": 0, "scored": []})
+        s = by.setdefault(source_key(f), {"calls": 0, "up": 0, "down": 0, "pending": 0, "unpriced": 0, "unscorable": 0,
+                                          "scored": []})
         d = int(np.sign(f.context["direction"]))
         s["calls"] += 1
         s["up" if d > 0 else "down"] += 1
         if not scorable(f.entity)[0]:
             s["unscorable"] += 1
             continue
-        o = outcome(book, f.entity, anchor(f), horizon, benchmark)
-        if o is None or o["exit"] > t[:10]:  # no exit after t
-            s["pending"] += 1
+        status, o = scored_at(book, f.entity, anchor(f), horizon, t, benchmark)
+        if o is None:
+            s[status] += 1
             continue
         s["scored"].append({"ref": f.ref, "ticker": f.entity, "direction": d, **o})
     raw = {}

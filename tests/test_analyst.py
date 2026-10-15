@@ -299,6 +299,12 @@ class AnalystLoopTest(AskCase):
                 out, sent, _ = self.run_loop(lambda n, b: calls_msg(tool_call(n)) if n == 1 else text_msg("Up [9de710d2]."),
                                              deadline=clock() - 1)
                 self.assertEqual((out["answer"], out["stop_reason"], len(sent)), ("Up [9de710d2].", "deadline", 2))
+                # Cut off at the length limit in that round: still "deadline", and the note says it was cut off.
+                # The judge reads that note (and the stopped one above) to treat either as no answer.
+                out, _, _ = self.run_loop(lambda n, b: calls_msg(tool_call(n)) if n == 1 else
+                                          completion(text_msg("Up [9de710d2]"), finish="length"), deadline=clock() - 1)
+                self.assertEqual(out["stop_reason"], "deadline")
+                self.assertTrue(out["answer"].endswith("*(answer cut off at the length limit)*"), out["answer"])
                 # Time left: the loop runs as before.
                 out, sent, seen = self.run_loop(lambda n, b: calls_msg(tool_call(n)) if n < 4 else text_msg("Done."),
                                                 deadline=clock() + 600)

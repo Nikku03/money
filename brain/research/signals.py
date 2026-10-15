@@ -268,18 +268,21 @@ def _save_cache(path: Path, key: dict, entries: dict) -> None:
 
 
 def cross_section(bank: Bank, tickers: list[str], names, cache_path=None, budget_s: float | None = None,
-                  first=()) -> dict:
+                  first=(), asof: str | None = None) -> dict:
     """Per-ticker signals ``names`` for every ticker on the latest rebalance day, as the backtest computes
     them there: each ticker through its own Bank on the journal (freed after it), only listed tickers
     valued, prices from a panel on the same calendar.
 
     ``cache_path`` keeps each ticker's values with the state of its journal shard, so a later call on the
     same rebalance day recomputes only tickers that gained something that day's view can see.
-    ``budget_s`` bounds the time spent computing; the tickers in ``first`` are always computed. Returns
+    ``budget_s`` bounds the time spent computing; the tickers in ``first`` are always computed. ``asof`` is
+    the time the prices are read at (default: the latest), as ``panel.build`` takes it: a decide run reads
+    at its T_RUN, so a close ingested this evening, stamped as known at the end of its day, marks the
+    month-end it closes. Returns
     ``{"rebalance_date", "values": {name: (N,) array, NaN = no value}, "listed": (N,) bool, "computed",
     "total", "complete"}``; with ``complete`` False the values are a partial cross-section."""
     names = [n for n in dict.fromkeys(names) if n in PER_TICKER]
-    base = build(bank, [])  # SPY's calendar: every panel built from this bank has these rebalance days
+    base = build(bank, [], asof=asof)  # SPY's calendar: every panel built from this bank has these rebalance days
     m = len(base.rebal) - 1
     if m < 0:
         raise SystemExit("not enough price history for a month-end ranking")
@@ -300,7 +303,7 @@ def cross_section(bank: Bank, tickers: list[str], names, cache_path=None, budget
              or not _unchanged_for(bank, t, entries[t].get("state") or [0, 0], cutoff)]
     pending = set(stale)
     start = time.monotonic()
-    now = bank.view()
+    now = bank.view(asof)
     for k in range(0, len(stale), CROSS_SECTION_CHUNK):
         chunk = stale[k:k + CROSS_SECTION_CHUNK]
         if budget_s is not None and time.monotonic() - start > budget_s:
@@ -312,7 +315,7 @@ def cross_section(bank: Bank, tickers: list[str], names, cache_path=None, budget
         for t in chunk:
             entries[t] = {"state": states[t], "listed": False, "values": dict.fromkeys(names)}
         if priced:
-            panel = build(bank, priced)
+            panel = build(bank, priced, asof=asof)
             i = int(panel.rebal[m])
             assert str(panel.dates[i]) == d, "one calendar for every panel on this bank"
             for j, t in enumerate(priced):

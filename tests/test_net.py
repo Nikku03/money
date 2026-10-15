@@ -9,14 +9,17 @@ from brain import net
 from tests.util import TempHome
 
 ROOT = Path(__file__).resolve().parent.parent
-# One process asking for SEC turns: prints the time of each turn it gets.
+# One process asking for SEC turns: prints the time of each turn it gets, as claimed under the lock (the
+# time read after wait_turn returns can lag it by a scheduling stall on a loaded machine, and two turns
+# would then look closer than they were).
 TURNS = """
-import sys, time
+import sys
 from brain import net
 hosts = sys.argv[1].split(",")
 for i in range(int(sys.argv[2])):
-    net.wait_turn(hosts[i % len(hosts)], float(sys.argv[3]))
-    print(repr(time.time()), flush=True)
+    host = hosts[i % len(hosts)]
+    net.wait_turn(host, float(sys.argv[3]))
+    print(repr(net._last[net.bucket(host)]), flush=True)
 """
 
 

@@ -28,8 +28,8 @@ from brain import brief, claims, config, markets, metrics, series
 from brain.bank import Bank, Fact, View
 from brain.metrics import PriceBook
 from brain.sources import fred, treasury
-from brain.terminal.commands import (FUNCTIONS, KEYS, RANGE_SHAPE, RANGES, TICKER, Command, CommandError, parse,
-                                     suggest)
+from brain.terminal.commands import (FUNCTIONS, KEYS, RANGE_SHAPE, RANGES, TICKER, Command, CommandError, dec_line,
+                                     parse, suggest)
 from brain.timeutil import days_between, today
 
 MAX_POINTS = 1500
@@ -416,13 +416,15 @@ def _cn(bank: Bank, cmd: Command) -> dict:
     view = _view(bank)
     headlines = _headlines(view, t, 50)
     cl = sorted(view.facts(t, "claim"), key=lambda f: f.known_at, reverse=True)[:50]
-    record = claims.score(bank)["by_source"] if cl else {}
+    record = claims.score(bank)["by_source"] if cl else {}  # every call, overlapping ones included
+    weighed = claims.track_record(bank, _now()) if cl else {}  # the record D1 weighs
     rows = []
     for f in cl:
         r = record.get(f.source.get("name"))
         rows.append({"time": f.known_at, "text": f.value, "url": f.source.get("url"), "source": f.source.get("name"),
                      "tier": f.tier, "direction": int(f.context.get("direction") or 0), "cite": cite(f),
-                     "record": {"n": r["n"], "hit_rate": r["hit_rate"]} if r else None})
+                     "record": {"n": r["n"], "hit_rate": r["hit_rate"]} if r else None,
+                     "gate_key": claims.source_key(f), "gate": _gate_row(weighed.get(claims.source_key(f)))})
     times = [h["time"] for h in headlines] + [c["time"] for c in rows]
     return _ok(cmd, _title(t, _name(view, t), "news"), max(times)[:10] if times else None, "news",
                {"headlines": headlines, "claims": rows})
@@ -459,11 +461,21 @@ def _find(bank: Bank, entity: str, prefix: str) -> list[Fact]:
     return bank.find(entity, prefix)
 
 
-def _withheld(bank: Bank, f: Fact) -> bool:
-    """A registration, flight or aircraft alert of a tail in aviation_optout.txt or found in LADD/PIA:
-    never shown, whether or not it has been withdrawn yet."""
-    from brain import watch
-    return watch.is_aircraft(f) and watch.untracked()(*watch.aircraft_of(bank, f))
+def _scrub(obj, words: set[str]):
+    """``obj`` with each whole-word mention of ``words`` (a withheld aircraft's registration and hex) in its
+    strings replaced by ``[withheld]``. Case is ignored: a model may write ``n2xc``."""
+    pat = re.compile(r"(?<![A-Za-z0-9])(?:" + "|".join(map(re.escape, sorted(words, key=len, reverse=True)))
+                     + r")(?![A-Za-z0-9])", re.I)
+
+    def go(x):
+        if isinstance(x, str):
+            return pat.sub("[withheld]", x)
+        if isinstance(x, dict):
+            return {k: go(v) for k, v in x.items()}
+        if isinstance(x, (list, tuple)):
+            return [go(v) for v in x]
+        return x
+    return go(obj)
 
 
 def _show(bank: Bank, cmd: Command) -> dict:
@@ -483,15 +495,36 @@ def _show(bank: Bank, cmd: Command) -> dict:
         raise UserError(f"{len(hits)} facts start with {prefix}; give more characters",
                         f"{hits[0].entity} SHOW {hits[0].id[:12]}")
     f = hits[0]
-    if _withheld(bank, f):
+    hidden = _withholder(bank)
+    if hidden(f):
         raise UserError(f"fact {prefix} is about an aircraft that is no longer tracked (opted out, or in the "
                         "FAA's LADD/PIA privacy programs), so it is not shown", f"{f.entity} DES")
-    inputs = []
+    # A fact made from such an aircraft fact (a decision citing a landing alert, a judgment citing a flight)
+    # is shown without it: the input is left out and counted, as DEC counts it; a judgment's reason that cites
+    # it goes with it; and the tail's registration and hex are taken out of the rest of the fact's text, where
+    # a model may have named them. Its bare ref stays in the fact's inputs: it names no tail, and SHOW of it
+    # is refused above.
+    from brain import watch
+    inputs, gone, tails = [], set(), set()
     for ref in f.inputs:
         g = bank.get(ref)
+        if g is not None and hidden(g):
+            gone.add(ref)
+            tails.update(str(x) for x in watch.aircraft_of(bank, g) if x)
+            continue
         inputs.append({"ref": ref, "attr": g.attr if g else None, "value": g.value if g else None,
                        "cite": ref.partition("/")[2][:8]})
-    data = {"fact": f.to_dict(), "downgraded": bank.is_downgraded(f.entity, f.id), "inputs": inputs}
+    fact = f.to_dict()
+    if gone:
+        ctx = dict(fact.get("context") or {})
+        if isinstance(ctx.get("reasons"), list):
+            ctx["reasons"] = [{**r, "text": "[withheld: it cites an aircraft that is no longer tracked]"}
+                              if isinstance(r, dict) and gone & set(map(str, r.get("cites") or [])) else r
+                              for r in ctx["reasons"]]
+        fact["context"] = ctx
+    if tails:
+        fact.update(value=_scrub(fact["value"], tails), context=_scrub(fact["context"], tails))
+    data = {"fact": fact, "downgraded": bank.is_downgraded(f.entity, f.id), "inputs": inputs, "withheld": len(gone)}
     return _ok(cmd, f"{f.entity} · fact {f.id[:8]} · {f.attr}", f.as_of, "fact", data)
 
 
@@ -708,16 +741,32 @@ def _res(bank: Bank, cmd: Command) -> dict:
 
 
 # ---------- CLM ----------
+CLM_WEIGHED = "The record D1 weighs"
+CLM_EVERY = "Every call, overlapping"
+
+
 def _clm(bank: Bank, cmd: Command) -> dict:
+    """Two records per source: the one D1 weighs (``claims.track_record``: independent bets, a one-sided p and
+    a false-discovery correction; claims and the model's judgments) and every claim counted on its own
+    (``claims.score``, overlapping calls included, a two-sided p), which no decision reads."""
+    from brain.decide import POLICY
     s = claims.score(bank)
-    rows = [{"source": src, "n": r["n"], "hits": r["hits"], "hit_rate": r["hit_rate"], "p_vs_coin": r["p_vs_coin"]}
-            for src, r in sorted(s["by_source"].items(), key=lambda kv: (-kv[1]["n"], kv[0]))]
-    cols = [_col("source", "Source"), _col("n", "Claims", "number", 0), _col("hits", "Hits", "number", 0),
-            _col("hit_rate", "Hit rate", "pct"), _col("p_vs_coin", "p vs coin flip", "number", 3)]
-    note = (("" if rows else "No directional claims with a completed horizon yet. ")
+    tr = claims.track_record(bank, _now())
+    rows = [{"source": k, "bets": r["bets"], "hits": r["hits"], "hit_rate": r["hit_rate"], "p": r["p"], "q": r["q"],
+             "proven": "yes" if r["proven"] else "no", "weight": r["weight"], "why": r["why"], "calls": r["calls"],
+             "_group": CLM_WEIGHED}
+            for k, r in sorted(tr.items(), key=lambda kv: (-kv[1]["weight"], -kv[1]["bets"], kv[0]))]
+    rows += [{"source": src, "calls": r["n"], "hits": r["hits"], "hit_rate": r["hit_rate"], "p": r["p_vs_coin"],
+              "_group": CLM_EVERY}
+             for src, r in sorted(s["by_source"].items(), key=lambda kv: (-kv[1]["n"], kv[0]))]
+    note = (("" if s["by_source"] else "No directional claims with a completed horizon yet. ")
             + f"{len(s['pending'])} claims pending. A hit means the stock beat (or lagged) SPY in the claimed "
-            "direction over the claim's horizon. Assume a coin flip until a source's record says otherwise.")
-    return _ok(cmd, "CLM — web claims scored by source", today(), "table", _table(cols, rows, note, []))
+            "direction over the claim's horizon. " + _gate_note(POLICY["source_gate"])
+            + " Every call, overlapping: each scored claim counted on its own, whatever its horizon, with a "
+            "two-sided p (brain score-claims); calls in one window rise and fall together, so this count overstates "
+            "the evidence and no decision reads it. Assume a coin flip until a source's record says otherwise.")
+    return _ok(cmd, "CLM — web claims scored by source", today(), "table",
+               _table(_gate_cols(), rows, note, [CLM_WEIGHED, CLM_EVERY]))
 
 
 # ---------- shared by the v2 functions ----------
@@ -1193,14 +1242,19 @@ def _wl(bank: Bank, cmd: Command, done: str = "") -> dict:
         return {"alert": a.value if a else None, "alert_at": a.known_at if a else None,
                 "_cites": {"alert": cite(a)} if a else {}}
 
+    from brain import decide
     rows = []
     book = PriceBook(bank, w["tickers"], asof=_now())
     for t in w["tickers"]:
         ps = brief.price_summary(view, book, t, _per_year(t)) if book.has(t) else None
+        a = alert(t, lambda f: f.context.get("rule") != "aircraft")
+        dec = decide.latest(bank, t)  # the latest paper decision; empty when none was recorded
+        if dec is not None:
+            a["_cites"] = {**a["_cites"], "decision": cite(dec)}
         rows.append({"item": t, "name": _name(view, t), "measure": "close", "last": ps["close"] if ps else None,
                      "chg_1d": ps["chg_1d"] if ps else None, "date": ps["date"] if ps else None,
-                     **alert(t, lambda f: f.context.get("rule") != "aircraft"), "_group": "Tickers", "_ticker": t,
-                     "_cite": cite(book.snapshot.get(t))})
+                     "decision": dec.value if dec is not None else None, **a, "_group": "Tickers", "_ticker": t,
+                     "_cmds": {"decision": dec_line(t)} if dec_line(t) else {}, "_cite": cite(book.snapshot.get(t))})
     for t in w["aircraft_of"]:
         planes, flights, _ = _aircraft(view, t)
         last = flights[0] if flights else None
@@ -1232,7 +1286,7 @@ def _wl(bank: Bank, cmd: Command, done: str = "") -> dict:
     shown = [f for f in unacked if not watch.is_info(f)]  # what the top bar counts and ALRT lists
     # what a narrow pane shows first: the item, its last value and move, the alert; then the details
     cols = [_col("item", "Item", "ticker"), _col("name", "Name"), _col("last", "Last", "number", 2),
-            _col("chg_1d", "1D", "pct"), _col("alert", "Latest alert", nowrap=True),
+            _col("chg_1d", "1D", "pct"), _col("decision", "Decision"), _col("alert", "Latest alert", nowrap=True),
             _col("alert_at", "Alert time (UTC)", "date"), _col("measure", "Measure"), _col("date", "As of", "date")]
     if rows:
         info = len(unacked) - len(shown)
@@ -1241,7 +1295,8 @@ def _wl(bank: Bank, cmd: Command, done: str = "") -> dict:
                 + ("" if _on_rule(w["rules"], "headlines") else
                    "; headlines are off (python -m brain watch rule headlines on adds each as an info alert)")
                 + ". INGEST WATCH collects what is new for every row and checks the rules; python -m brain watch run "
-                "repeats that every 15 minutes. ")
+                "repeats that every 15 minutes. Decision: the latest paper decision under policy D1 (T DEC shows it, "
+                "T DEC NEW decides afresh); a change raises a notice. ")
     else:
         note = "The watchlist is empty. WL ADD AAPL adds a ticker. "
     note += ("WL ADD T and WL DEL T edit the tickers; company aircraft, port areas and camera sites are added from "
@@ -1357,13 +1412,258 @@ def _alrt_ack(bank: Bank, cmd: Command) -> dict:
     return _alrt(bank, cmd, done)
 
 
+# ---------- DEC ----------
+WORD = {1: "up", -1: "down", 0: "none"}
+DEC_ATTRS = ("claim", "judgment", "alert")  # what a decision cites besides its price snapshot
+
+
+def _lean_text(ln: dict | None) -> str:
+    """The sources' lean in words, as `brain decide` prints it: always unproven, never evidence."""
+    ln = ln or {}
+    up, down, n = int(ln.get("up") or 0), int(ln.get("down") or 0), int(ln.get("sources") or 0)
+    word = WORD.get(int(ln.get("direction") or 0), "none")
+    if not n:
+        return "none (no source has a call in the window)"
+    if up and down:
+        return f"{word}, {up} up and {down} down of {n} sources"
+    if up or down:
+        return f"{word}, {max(up, down)} of {n} source{'s' if n != 1 else ''}"
+    return f"none, no source of {n} points a way"
+
+
+def _facts_by_ref(bank: Bank, refs: list[str]) -> dict[str, Fact]:
+    """The facts behind a decision's refs, read by attribute (claims, judgments, alerts) rather than one
+    lookup each: ``bank.get`` reads the whole shard for every ref. Refs not found that way are looked up."""
+    out: dict[str, Fact] = {}
+    by_entity: dict[str, set[str]] = {}
+    for r in refs:
+        e, _, fid = str(r).partition("/")
+        if e and fid:
+            by_entity.setdefault(e.upper(), set()).add(fid)
+    for e, ids in by_entity.items():
+        have = set(bank.attrs(e))
+        for a in DEC_ATTRS:
+            if a in have:
+                out.update({f.ref: f for f in bank.facts(e, a, include_downgraded=True) if f.id in ids})
+    for r in refs:
+        if r not in out and (g := bank.get(r)) is not None:
+            out[r] = g
+    return out
+
+
+def _ref_cites(refs, facts: dict[str, Fact], hidden) -> tuple[list[dict], int]:
+    """[{"entity", "cite"}] for the refs SHOW would show, and how many it withholds (an aircraft no longer
+    tracked: opted out, or in LADD/PIA)."""
+    shown, withheld = [], 0
+    for r in refs or []:
+        e, _, fid = str(r).partition("/")
+        f = facts.get(r)
+        if f is not None and hidden(f):
+            withheld += 1
+            continue
+        shown.append({"entity": e.upper(), "cite": fid[:8]})
+    return shown, withheld
+
+
+def _withholder(bank: Bank):
+    """A test ``(fact) -> bool``: a registration, flight or aircraft alert of a tail in aviation_optout.txt or
+    found in LADD/PIA, never shown, whether or not it has been withdrawn yet. The opt-out list is read once,
+    at the first aircraft fact."""
+    from brain import watch
+    out = None
+
+    def hidden(f: Fact) -> bool:
+        nonlocal out
+        if not watch.is_aircraft(f):
+            return False
+        out = out or watch.untracked()
+        return out(*watch.aircraft_of(bank, f))
+    return hidden
+
+
+def _outcome_cols() -> list[dict]:
+    return [_col("excess", "Excess vs SPY", "pct"), _col("hit", "Hit"), _col("status", "Scored")]
+
+
+def _outcome(row: dict | None) -> dict:
+    """A decision's outcome from ``decide.score``: its excess over SPY across 21 sessions, hit or miss for a
+    BUY or SELL, and whether it counts as its own bet (``scored``), falls inside an earlier one's window
+    (``overlapping``), has not closed (``pending``) or closed with no close for the stock (``unpriced``)."""
+    if row is None:
+        return {"excess": None, "hit": None, "status": "pending"}
+    hit = row.get("hit")
+    return {"excess": row.get("excess"), "hit": None if hit is None else "hit" if hit else "miss",
+            "status": row.get("stream_status") or "pending"}
+
+
+def _dec_one(bank: Bank, cmd: Command) -> dict:
+    from brain import decide
+    t = cmd.ticker
+    f = decide.latest(bank, t)
+    if f is None:
+        ok, why = decide.scorable(t)
+        if not ok:
+            raise UserError(f"no decisions for {t}: {why}", "DEC")
+        raise UserError(f"no decision recorded for {t} yet", dec_line(t, new=True) or "DEC")
+    d = decide.as_dict(f)
+    view = _view(bank)
+    refs = [r for i in d.get("items") or [] for r in i.get("refs") or []] + list(d.get("context_refs") or [])
+    facts = _facts_by_ref(bank, refs)
+    hidden = _withholder(bank)
+    items, withheld = [], 0
+    for i in d.get("items") or []:
+        cites, w = _ref_cites(i.get("refs"), facts, hidden)
+        withheld += w
+        items.append({"kind": i.get("kind"), "id": i.get("id"), "direction": int(i.get("direction") or 0),
+                      "weight": float(i.get("weight") or 0.0), "why": i.get("why") or "", "cites": cites,
+                      "record": i.get("record")})
+    whys = {c.get("ref"): c.get("why") for c in d.get("context_notes") or [] if isinstance(c, dict)}
+    context = []
+    for r in d.get("context_refs") or []:
+        cites, w = _ref_cites([r], facts, hidden)
+        withheld += w
+        if cites:
+            g = facts.get(r)
+            context.append({**cites[0], "attr": g.attr if g else None, "why": whys.get(r) or ""})
+    price = d.get("price")
+    if isinstance(price, dict) and price.get("ref"):
+        price = {"date": price.get("date"), "close": price.get("close"), "cite": str(price["ref"]).partition("/")[2][:8]}
+    judgment = d.get("judgment")
+    if isinstance(judgment, dict):
+        judgment = {"cite": str(judgment["ref"]).partition("/")[2][:8] if judgment.get("ref") else None,
+                    "error": judgment.get("error")}
+    ln = d.get("lean") or {}
+    data = {"ticker": t, "name": _name(view, t), "action": d["action"], "label": decide.LABEL.get(d["action"], d["action"]),
+            "direction": int(d.get("direction") or 0), "score": d.get("score"), "threshold": d.get("threshold"),
+            "signal_score": d.get("signal_score"), "source_term": d.get("source_term"),
+            "policy": d.get("policy"), "policy_sha": d.get("policy_sha"),
+            "policy_current": decide.KNOWN_POLICIES.get(d.get("policy")) == d.get("policy_sha"),
+            "horizon_days": d.get("horizon_days"), "as_of": d.get("as_of"), "known_at": d.get("known_at"),
+            "retrieved_at": f.retrieved_at, "cite": cite(f), "price": price, "items": items, "context": context, "withheld": withheld,
+            "lean": {"direction": int(ln.get("direction") or 0), "up": int(ln.get("up") or 0),
+                     "down": int(ln.get("down") or 0), "sources": int(ln.get("sources") or 0), "text": _lean_text(ln)},
+            "explanation": d.get("explanation") or "", "explained_by": d.get("explained_by") or "template",
+            "explain_error": d.get("explain_error"), "unverified_numbers": list(d.get("unverified_numbers") or []),
+            "judgment": judgment, "read": d.get("read"), "notes": list(d.get("notes") or []),
+            "history": _dec_history(bank, t, decide)}
+    return _ok(cmd, _title(t, data["name"], f"decision · {d['action']}"), d.get("as_of"), "decision", data)
+
+
+def _dec_history(bank: Bank, t: str, decide) -> dict:
+    """Every recorded decision on the stock, newest first, with its outcome from ``decide.score``."""
+    scored = {r["ref"]: r for r in decide.score(bank, _now())["rows"]}
+    rows = []
+    for f in decide.history(bank, t):
+        c = f.context
+        sha = c.get("policy_sha")
+        pid = c.get("policy") or f.source.get("policy")
+        rows.append({"as_of": f.as_of, "action": f.value, "score": c.get("score"),
+                     "lean": _lean_text(c.get("lean")), **_outcome(scored.get(f.ref)),
+                     "policy": pid if decide.KNOWN_POLICIES.get(pid) == sha else f"{pid}?{sha}", "_cite": cite(f)})
+    cols = [_col("as_of", "Date", "date"), _col("action", "Action"), _col("score", "Score", "signed", 2),
+            _col("lean", "Lean (not evidence)"), *_outcome_cols(), _col("policy", "Policy")]
+    note = (f"Scored against SPY over {decide.POLICY['horizon_days']} trading days from the first session after each "
+            "decision. A decision inside an earlier one's window is overlapping: it is not a bet of its own. "
+            "Pending: the window has not closed. Unpriced: it closed, but the bank has no close for the stock "
+            "then (ingest it); it is scored once the prices are in.")
+    return _table(cols, rows, note, [])
+
+
+def _dec_all(bank: Bank, cmd: Command) -> dict:
+    from brain import decide
+    sc = decide.score(bank, _now())
+    # every stock with a decision: score reads them all (decide.tickers_with_decisions), and asking twice costs
+    # a pass over every shard's index under the server's bank lock
+    tickers = sorted({r["ticker"] for r in sc["rows"]})
+    rows = []
+    for t in tickers:
+        f = decide.latest(bank, t)
+        if f is None:
+            continue
+        c = f.context
+        rows.append({"ticker": t, "action": f.value, "score": c.get("score"), "lean": _lean_text(c.get("lean")),
+                     "as_of": f.as_of, "n": len(decide.history(bank, t)), "_ticker": t,
+                     "_cmds": {"ticker": dec_line(t)} if dec_line(t) else {}, "_cite": cite(f)})
+    tr = claims.track_record(bank, _now())
+    gate = sc.get("gate") or decide.POLICY["source_gate"]
+    latest = _table([_col("ticker", "Stock", "ticker"), _col("action", "Action"), _col("score", "Score", "signed", 2),
+                     _col("lean", "Lean (not evidence)"), _col("as_of", "Date", "date"),
+                     _col("n", "Decisions", "number", 0)], rows,
+                    "" if rows else "No decisions recorded yet. T DEC NEW makes one (a background job, paper only).", [])
+    card = []
+    for key, pol in sc["policies"].items():
+        group = f"{key} · sha {pol['sha']}" + ("" if "?" not in key else " · not the code's: the policy was edited")
+        for stream, label in (("actions", "BUY/SELL actions"), ("lean", "Lean (not evidence)")):
+            r = pol[stream]
+            card.append({"stream": label, "bets": r["bets"], "hits": r["hits"], "hit_rate": r["hit_rate"], "p": r["p"],
+                         "lower": r["lower"], "mse": r["mean_signed_excess"], "dropped": r["dropped"],
+                         "proven": "yes" if r["proven"] else "no", "_group": group})
+        ne = pol["no_edge"]
+        card.append({"stream": "NO_EDGE (what the stocks did)", "bets": ne["bets"], "mse": ne["mean_excess"],
+                     "_group": group})
+    pending = "; ".join(f"{k}: {p['pending']} pending"
+                        + (f", {p['unpriced']} with no price past their exit" if p.get("unpriced") else "")
+                        for k, p in sc["policies"].items())
+    scorecard = _table(
+        [_col("stream", "Stream"), _col("bets", "Bets", "number", 0), _col("hits", "Hits", "number", 0),
+         _col("hit_rate", "Hit rate", "pct", 0), _col("p", "p vs coin", "number", 3),
+         _col("lower", "Lower bound", "number", 2), _col("mse", "Mean excess", "pct"),
+         _col("dropped", "Overlapping", "number", 0), _col("proven", "Proven")], card,
+        f"Each policy's decisions as independent bets against SPY over {decide.POLICY['horizon_days']} trading days "
+        f"({pending}). BUY/SELL and the lean are scored as hits (mean excess signed by the call); NO_EDGE shows what "
+        "the stocks did after it, its mean excess, never a hit rate. Proven needs "
+        f"{gate['min_bets']} bets, p < {gate['p_lt']} and a positive mean signed excess, with at most "
+        f"{claims.UNPRICED_MAX_SHARE:.0%} of the decisions past their exit lacking a price.")
+    src = [{"source": k, "bets": r["bets"], "hits": r["hits"], "hit_rate": r["hit_rate"], "p": r["p"], "q": r["q"],
+            "proven": "yes" if r["proven"] else "no", "weight": r["weight"], "why": r["why"], "calls": r["calls"]}
+           for k, r in sorted(tr.items(), key=lambda kv: (-kv[1]["weight"], -kv[1]["bets"], kv[0]))]
+    sources = _table(_gate_cols(), src, _gate_note(gate) if src else "No directional calls (claims or judgments) yet.", [])
+    note = ("Paper decisions under a declared policy; nothing here places orders or is financial advice. "
+            "T DEC shows one decision with its evidence; T DEC NEW decides afresh in a background job.")
+    asof = max((r["as_of"] for r in rows), default=None)
+    return _ok(cmd, "DEC — decisions, scorecard and source records", asof, "decisions",
+               {"latest": latest, "scorecard": scorecard, "sources": sources, "note": note,
+                "policy": decide.POLICY["id"], "policy_sha": decide.POLICY_SHA})
+
+
+def _gate_cols() -> list[dict]:
+    """The columns of a track_record row, the record D1 weighs."""
+    return [_col("source", "Source"), _col("bets", "Bets", "number", 0), _col("hits", "Hits", "number", 0),
+            _col("hit_rate", "Hit rate", "pct", 0), _col("p", "p vs coin", "number", 3), _col("q", "BH q", "number", 3),
+            _col("proven", "Proven"), _col("weight", "Weight", "number", 2), _col("why", "Why", nowrap=True),
+            _col("calls", "Calls", "number", 0)]
+
+
+def _gate_note(gate: dict) -> str:
+    return (f"The record D1 weighs (claims.track_record): a source's calls on the next 21 sessions, scored from the "
+            f"first session after the bank held each one and grouped into independent bets (calls in one window are "
+            f"one bet). Proven needs {gate['min_bets']} bets, a one-sided p < {gate['p_lt']} against a coin, "
+            f"Benjamini-Hochberg q < {gate['bh_q']} across every source and a positive mean signed excess, with at "
+            f"most {claims.UNPRICED_MAX_SHARE:.0%} of its calls past their exit lacking a price for their stock; its "
+            f"weight is max(0, 2L - 1) from the {1 - gate['alpha_lower']:.0%} lower bound L of the hit rate.")
+
+
+def _gate_row(r: dict | None) -> dict | None:
+    """The part of a track_record row a screen shows beside a claim."""
+    if not r:
+        return None
+    return {k: r.get(k) for k in ("bets", "hits", "hit_rate", "q", "proven", "weight", "why")}
+
+
+def _dec(bank: Bank, cmd: Command) -> dict:
+    if cmd.args:
+        raise UserError("DEC takes no arguments, or NEW", f"{cmd.ticker} DEC" if cmd.ticker else "DEC")
+    return _dec_one(bank, cmd) if cmd.ticker else _dec_all(bank, cmd)
+
+
 # ---------- writes ----------
-WRITES = {"WL": ("ADD", "DEL"), "ALRT": ("ACK",)}  # function -> first argument that changes state
+# function -> first argument that changes state; DEC NEW starts a job (the server runs it, never data.run)
+WRITES = {"WL": ("ADD", "DEL"), "ALRT": ("ACK",), "DEC": ("NEW",)}
 
 
 def is_write(cmd: Command) -> bool:
-    """Commands that change local state (the watchlist, acknowledged alerts). The server runs them only
-    for its own command line, never for the analyst's read-only tools."""
+    """Commands that change local state (the watchlist, acknowledged alerts) or start a decision job (DEC
+    NEW). The server runs them only for its own command line, never for the analyst's read-only tools."""
     return bool(cmd.args) and cmd.args[0] in WRITES.get(cmd.fn, ())
 
 
@@ -1387,7 +1687,8 @@ def _alrt_or_ack(bank: Bank, cmd: Command) -> dict:
 
 HANDLERS = {"HELP": _help, "DES": _des, "GP": _gp, "FA": _fa, "CF": _cf, "CN": _cn, "EV": _ev, "BRIEF": _brief,
             "INS": _ins, "ERN": _ern, "JET": _jet, "SHOW": _show, "WEI": _wei, "MOV": _mov, "CURVE": _curve,
-            "ECO": _eco, "RES": _res, "CLM": _clm, "SHIP": _ship, "CAM": _cam, "WL": _wl_or_edit, "ALRT": _alrt_or_ack}
+            "ECO": _eco, "RES": _res, "CLM": _clm, "SHIP": _ship, "CAM": _cam, "WL": _wl_or_edit, "ALRT": _alrt_or_ack,
+            "DEC": _dec}
 
 
 def run(bank: Bank, cmd: Command, writes: bool = False) -> dict:
@@ -1400,6 +1701,9 @@ def run(bank: Bank, cmd: Command, writes: bool = False) -> dict:
             return clean(_err(cmd, f"'{cmd.ticker}' is not a ticker", "HELP"))
     if cmd.fn in SERVER_ONLY:
         return clean(_err(cmd, SERVER_ONLY[cmd.fn], "HELP"))
+    if cmd.fn == "DEC" and is_write(cmd):  # a job, with or without writes: only the server starts one
+        return clean(_err(cmd, "DEC NEW starts a background decision job; it runs only from the terminal's own "
+                               "command line", f"{cmd.ticker} DEC" if cmd.ticker else "DEC"))
     if is_write(cmd) and not writes:
         return clean(_err(cmd, f"{cmd.fn} {cmd.args[0]} changes the {'watchlist' if cmd.fn == 'WL' else 'alerts'}; "
                                "it runs only from the terminal's own command line", cmd.fn))

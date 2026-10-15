@@ -173,6 +173,50 @@ class AssessTest(JudgeCase):
         self.assertEqual(res["fact"].inputs, (self.px.ref,))
         self.assertIn(f"{d8} (not returned by the tools)", res["error"])
 
+    def test_the_tools_read_the_bank_only_as_of_the_runs_time(self):
+        # A run that crosses midnight UTC: the data layer's view is the end of the current day, so after midnight
+        # it holds facts known after T_RUN, while the judgment is stamped as known at T_RUN.
+        nxt = (pd.Timestamp(today()) + pd.Timedelta(days=1)).strftime("%Y-%m-%d")
+        late = Fact(entity="AAPL", attr="claim", value="Late page: AAPL will fall", as_of=nxt,
+                    known_at=nxt + "T00:05:00Z", tier="opinion",
+                    source={"name": "example.com", "url": "https://example.com/l"},
+                    context={"direction": -1, "horizon_days": 21}, retrieved_at=nxt + "T00:05:00Z")
+        self.bank.add(late)
+        day = [today()]
+        with mock.patch("brain.terminal.data.today", side_effect=lambda: day[0]):
+            self.assertTrue(judge.reader(self.bank, self.t_run)("AAPL CN")["ok"])
+            day[0] = nxt
+            self.assertIn(late.id[:8], json.dumps(analyst.bank_reader(self.bank)("AAPL CN")))  # the unpinned view
+            res = judge.reader(self.bank, self.t_run)("AAPL CN")
+            self.assertFalse(res["ok"])
+            self.assertIn(f"reads the bank only as of {self.t_run}", res["error"])
+            self.assertNotIn(late.id[:8], json.dumps(res))
+
+            # The day is over before the judge starts: nothing is asked, nothing recorded, and the model is not down.
+            res, sent, _ = self.assess(lambda n, b: text_msg("x"), t_run=self.t_run)
+            self.assertEqual((res["ok"], res["down"], len(sent)), (False, None, 0))
+            self.assertIn("the UTC day changed during this run", res["error"])
+
+            # The day changes during the run: what was read before midnight stands; later reads are refused.
+            day[0] = today()
+
+            def reply(n, body):
+                if n == 1:
+                    return calls_msg(tool_call(1, "describe", {"ticker": "AAPL"}))
+                if n == 2:
+                    day[0] = nxt
+                    return calls_msg(tool_call(2, "news", {"ticker": "AAPL"}))
+                return text_msg(call_json("up", [price_cite(body), late.id[:8]]))
+            res, sent, _ = self.assess(reply, t_run=self.t_run)
+        self.assertIn(f"Today (UTC): {self.t_run[:10]}.", sent[0]["messages"][1]["content"])
+        news = tool_results(sent[2])[1]
+        self.assertFalse(news["ok"], news)
+        self.assertIn("only as of", news["error"])
+        self.assertNotIn(late.id[:8], json.dumps(sent[2]["messages"]))
+        self.assertTrue(res["ok"], res)
+        self.assertEqual((res["fact"].inputs, res["fact"].known_at), ((self.px.ref,), self.t_run))
+        self.assertIn(f"{late.id[:8]} (not returned by the tools)", res["error"])
+
     def test_an_invented_id_and_a_downgraded_fact_are_dropped(self):
         c = claims.note(self.bank, "AAPL", "Analyst says buy", "https://example.com/a", direction="up",
                         known_at="2026-01-05T10:00:00Z")
@@ -349,6 +393,25 @@ class AssessTest(JudgeCase):
         self.assertTrue(res["ok"], res)
         self.assertEqual(len(sent), 2)
 
+        # A deadline round that still calls tools, or is cut off at the length limit, is not an answer, even when
+        # its text holds a valid call (run_loop says "deadline" for both; its note says which). No repair follows.
+        def stopped(n, body):
+            if n == 1:
+                return calls_msg(tool_call(1))
+            return calls_msg(tool_call(2, "news", {"ticker": "AAPL"}), content=call_json("down", [price_cite(body)]))
+
+        def cut(n, body):
+            if n == 1:
+                return calls_msg(tool_call(1))
+            return completion(text_msg(call_json("down", [price_cite(body)]) + " Also, the"), finish="length")
+        for reply, why in ((stopped, "stopped while still calling tools"), (cut, "cut off at the length limit")):
+            with self.subTest(why=why):
+                before = len(self.judgments())
+                res, sent, _ = self.assess(reply, deadline=time.monotonic() - 1)
+                self.assertEqual((res["ok"], res["down"], len(sent)), (False, "the judge reached its time limit", 2))
+                self.assertIn(why, res["error"])
+                self.assertEqual(len(self.judgments()), before)
+
     def test_it_never_raises(self):
         def reply(n, body):
             return calls_msg(tool_call(1)) if n == 1 else text_msg(call_json("up", [price_cite(body)]))
@@ -372,11 +435,22 @@ class IdentityTest(unittest.TestCase):
         self.assertEqual(judge.judge_source(c), f"llm:qwen3-1.7b-q8_0@{judge.JUDGE_SHA}")
         self.assertEqual(judge.JUDGE_SHA, __import__("hashlib").sha256(
             json.dumps(judge.JUDGE, sort_keys=True).encode()).hexdigest()[:8])
-        self.assertEqual(set(judge.JUDGE), {"system", "tools", "temperature", "max_rounds", "horizon_days"})
+        self.assertEqual(set(judge.JUDGE), {"system", "user", "repairs", "last_round", "tools", "temperature",
+                                            "max_rounds", "repair_rounds", "max_calls_per_round", "horizon_days"})
+        # What run_loop tells the judge in its last round (the analyst's text, shared with ASK) and the repair's
+        # rounds shape its answers too: a change to either is a new source.
+        self.assertEqual((judge.JUDGE["last_round"], judge.JUDGE["repair_rounds"], judge.JUDGE["max_calls_per_round"]),
+                         (analyst.LAST_ROUND, judge.REPAIR_ROUNDS, analyst.MAX_CALLS_PER_ROUND))
+        self.assertEqual(judge.REPAIR_ROUNDS, 3)
+        # The tools as the model sees them: a changed description is a new source too.
+        self.assertEqual([t["name"] for t in judge.JUDGE["tools"]], judge.TOOL_NAMES)
+        describe = next(t for t in judge.JUDGE["tools"] if t["name"] == "describe")
+        self.assertEqual((describe["description"], describe["required"]),
+                         (judge.analyst._BANK_TOOLS[0][1], ["ticker"]))
         self.assertEqual((judge.JUDGE["temperature"], judge.JUDGE["max_rounds"], judge.JUDGE["horizon_days"]),
                          (0.2, 8, 21))
         # Frozen: a new prompt, tool set or temperature is a new source with no record. Change this on purpose.
-        self.assertEqual(judge.JUDGE_SHA, "597724eb")
+        self.assertEqual(judge.JUDGE_SHA, "d0f3c45d")
 
     def test_confidence_and_cites(self):
         self.assertEqual([judge.confidence(x) for x in (0.7, 1, 0, 75, "75%", "0.9", 0.3, 150, True, None, "high",
@@ -425,7 +499,7 @@ class ExplainTest(unittest.TestCase):
     def test_a_checked_explanation_is_kept(self):
         out, sent = self.explain("<think>NO_EDGE means... maybe buy?</think>" + GOOD)
         self.assertEqual(out, {"text": GOOD, "by": "llm:fake-model", "unverified_numbers": [], "error": None,
-                               "down": None})
+                               "down": None, "raw": GOOD})
         self.assertEqual(len(sent), 1)
         body = sent[0]
         self.assertNotIn("tools", body)
@@ -433,11 +507,22 @@ class ExplainTest(unittest.TestCase):
         for rule in ("At most 120 words", "State the action exactly as given", "Use only numbers that are in the JSON",
                      "Do not suggest any action other than the one given"):
             self.assertIn(rule, judge.EXPLAIN_SYSTEM)
-        sent_json = json.loads(body["messages"][1]["content"])
+        user = body["messages"][1]["content"]
+        self.assertTrue(user.startswith("The decision:\n") and user.endswith("Do not repeat the JSON."), user)
+        sent_json = json.loads(user.split("\n")[1])
         self.assertNotIn("lean", sent_json)  # an unproven lean invites softening NO_EDGE
         self.assertEqual(set(sent_json), {"ticker", "action", "score", "threshold", "horizon_days", "items", "price"})
         self.assertEqual(set(sent_json["items"][0]), {"id", "kind", "direction", "weight", "why"})
         self.assertEqual(sent_json["price"], {"date": "2026-10-14", "close": 247.31})
+        # A number rounded from one in the table passes: p 0.88 as 0.9, the close 247.31 as 247.3.
+        out, _ = self.explain(GOOD.replace("p 0.88", "p 0.9") + " The last close was 247.3.")
+        self.assertEqual((out["by"], out["error"]), ("llm:fake-model", None))
+        p = judge._explain_input(decision())
+        for text in (GOOD.replace("p 0.88", "p 0.880"),                     # a trailing zero adds no digit
+                     GOOD + " It closed at 247.31 on October 14, 2026 (the 2026-10-14 close).",  # dates are not numbers
+                     GOOD + " Calls are scored over a 21-day horizon; see the 10-K and 8-K.",
+                     GOOD + " Insiders sold shares, and insiders purchased some."):  # what insiders did, not advice
+            self.assertEqual(judge.check_explanation(text, "NO_EDGE", p), "", text)
 
     def test_it_falls_back_to_the_template(self):
         cases = [
@@ -448,7 +533,24 @@ class ExplainTest(unittest.TestCase):
             (GOOD.replace("-0.11%", "-0.12%"), "0.12%"),
             (GOOD.replace("50%", "45%"), "45%"),
             (GOOD + " The last close was 251.40.", "251.40"),
+            # A decimal must match to the digits written: no number in the table is 0.77 ("1 hit" is not it).
+            (GOOD.replace("p 0.88", "p 0.77"), "0.77"),
+            (GOOD.replace("p 0.88", "p 0.8"), "0.8"),  # 0.88 rounds to 0.9, not 0.8
             (GOOD + " Seven of 12 analysts agree.", "12"),
+            # ...and not looser for a decimal written in a string: "p 0.88" does not hold 0.884 or 0.879.
+            (GOOD.replace("p 0.88", "p 0.884"), "0.884"),
+            (GOOD.replace("p 0.88", "p 0.879"), "0.879"),
+            # The price's date (2026-10-14) holds no counts: its day and month are not integers of the decision.
+            (GOOD + " All 14 pieces of evidence weigh 0.", "hold: 14"),
+            (GOOD + " All 10 failed.", "hold: 10"),
+            # A number joined to a word is still a number: the horizon is 21 days, and no source has 7 hits.
+            (GOOD + " This holds over a 63-day horizon.", "hold: 63"),
+            (GOOD + " The web source has a 7-hit record.", "hold: 7"),
+            # Another action in the passive voice.
+            (GOOD + " It must be sold.", "says 'sold'"),
+            (GOOD + " It was bought.", "says 'bought'"),
+            # Qwen3-1.7B, asked for real, echoed the JSON it was given: every number and word in it checks out.
+            (json.dumps(judge._explain_input(decision())), "JSON or code, not plain words"),
         ]
         for text, why in cases:
             with self.subTest(why=why):
@@ -456,6 +558,7 @@ class ExplainTest(unittest.TestCase):
                 self.assertEqual(out["by"], "template")
                 self.assertEqual(out["text"], judge.template_explanation(decision()))
                 self.assertIn(why, out["error"])
+                self.assertEqual(out["raw"], text.strip())  # what the model wrote, for the record
         out, _ = self.explain(GOOD, finish="length")
         self.assertIn("cut off", out["error"])
         out, _ = self.explain("   ")
@@ -473,13 +576,35 @@ class ExplainTest(unittest.TestCase):
         self.assertEqual(out["by"], "llm:fake-model", out["error"])
         out, _ = self.explain(sell + " Or go long instead.", decision("SELL"))
         self.assertIn("go long", out["error"])
+        self.assertEqual(judge.check_explanation(buy + " Insiders sold shares.", "BUY",
+                                                 judge._explain_input(decision("BUY"))), "")
+        # The action named only in the threshold phrase is not stated; NO_EDGE's words, the action negated, or
+        # another trade in the passive voice are another action.
+        cases = [
+            ("BUY", "AAPL: the score is +1.00 and a BUY needs +0.50, but no evidence is proven, so this is NO_EDGE: "
+                    "do nothing.", "does not state the action BUY"),
+            ("BUY", "AAPL scored +1.00. Do not buy AAPL; wait and hold off until the evidence is proven.", "'not buy'"),
+            ("BUY", "AAPL is a BUY, though it has no edge.", "'no edge'"),
+            ("BUY", "AAPL is a BUY at +1.00; it should then be sold.", "'sold'"),
+            ("SELL", "AAPL scored -1.00; SELL needs -0.50. Even so there is no edge here, so do nothing.",
+             "does not state the action SELL"),
+            ("SELL", "AAPL is a SELL at -1.00. Don't sell; keep holding it.", "\"Don't sell\""),
+            ("SELL", "AAPL is a SELL at -1.00, but stay out for now.", "'stay out'"),
+            ("SELL", "AAPL is a SELL at -1.00; it could be bought on a dip.", "'bought'"),
+        ]
+        for action, text, why in cases:
+            with self.subTest(text=text):
+                out, _ = self.explain(text, decision(action))
+                self.assertEqual(out["by"], "template")
+                self.assertEqual(out["text"], judge.template_explanation(decision(action)))
+                self.assertIn(why, out["error"])
 
     def test_no_data_and_a_missing_model_get_the_template(self):
         d = decision("NO_DATA", items=[], notes=["latest close 2026-09-01: ingest AAPL"])
         out, sent = self.explain("anything", d)
         self.assertEqual((out["by"], out["error"], len(sent)), ("template", None, 0))
         self.assertIn("NO_DATA", out["text"])
-        self.assertIn("latest close 2026-09-01: ingest AAPL", out["text"])
+        self.assertIn("no decision. Latest close 2026-09-01: ingest AAPL.", out["text"])  # the reason, as a sentence
         out = judge.explain(decision(), client=judge.llm.Client(url=closed_port_url()))
         self.assertEqual(out["by"], "template")
         self.assertIn("could not reach the model server", out["error"])

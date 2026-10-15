@@ -793,9 +793,9 @@ _NUMBER = re.compile(r"""
 """, re.X | re.I)
 _SCALE = {"k": 1e3, "thousand": 1e3, "m": 1e6, "mn": 1e6, "mm": 1e6, "million": 1e6, "b": 1e9, "bn": 1e9,
           "billion": 1e9, "t": 1e12, "tn": 1e12, "trillion": 1e12}
-_SKIP_IN_ANSWER = re.compile(
-    r"https?://\S+|\[[0-9A-Fa-f,;\s]{4,200}\]|`[^`\n]*`"            # links, cited ids, commands
-    r"|\b\d{4}-\d{2}-\d{2}(?:[T ]\d{2}:\d{2}(?::\d{2})?Z?)?|\b\d{1,2}/\d{1,2}/\d{2,4}\b|\b\d{1,2}:\d{2}(?::\d{2})?\b")
+_DATES = r"\b\d{4}-\d{2}-\d{2}(?:[T ]\d{2}:\d{2}(?::\d{2})?Z?)?|\b\d{1,2}/\d{1,2}/\d{2,4}\b|\b\d{1,2}:\d{2}(?::\d{2})?\b"
+DATES = re.compile(_DATES)  # ISO and slash dates and clock times: not numbers to check (the judge's explain uses it)
+_SKIP_IN_ANSWER = re.compile(r"https?://\S+|\[[0-9A-Fa-f,;\s]{4,200}\]|`[^`\n]*`|" + _DATES)  # links, ids, commands
 _EXPONENT = re.compile(r"(?<![\w.])-?\d+(?:\.\d+)?[eE][-+]?\d{1,3}(?!\w)")
 _ANSWER_SCALES = (1.0, 1e3, 1e6, 1e9, 1e12)  # a bare number may be in a table's unit ("$B", "millions")
 

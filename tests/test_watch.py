@@ -736,3 +736,39 @@ class CliTest(WatchTest):
         self.assertEqual(self.cli("watch", "remove", "msft")[0], 0)
         self.assertEqual(self.cli("watch", "remove", "ticker", "site")[0], 0)
         self.assertEqual(watch.load()["tickers"], ["AAPL"])
+
+
+class AlertHelperTest(WatchTest):
+    """watch.alert: one alert written as check writes them, for alerts raised outside the rules."""
+
+    def test_writes_like_check_dedupes_by_key_records_the_entity_and_pushes(self):
+        self.bank.add(price_snapshot("X", DAYS[:6], [100.0] * 6))
+        snap = self.bank.facts("X", "series.price_daily")[0]
+        os.environ["BRAIN_NTFY_URL"] = "https://ntfy.example/topic"
+        with mock.patch("urllib.request.urlopen") as op:
+            f = watch.alert(self.bank, "x", "decision", "notice", "X decision NO_EDGE -> BUY (policy D1, paper)", [snap, snap],
+                            ["decision:X/abc"], at(DAYS[6], "23:59"), policy="D1")
+        self.assertEqual((f.entity, f.attr, f.tier, f.value, f.known_at, f.as_of),
+                         ("X", "alert", "derived", "X decision NO_EDGE -> BUY (policy D1, paper)", at(DAYS[6], "23:59"), DAYS[6]))
+        self.assertEqual(f.source, {"name": "brain.watch", "rule": "decision"})
+        self.assertEqual(f.context, {"rule": "decision", "severity": "notice", "keys": ["decision:X/abc"], "policy": "D1"})
+        self.assertEqual(f.inputs, (snap.ref,))
+        self.assertTrue(f.retrieved_at)
+        self.assertEqual(op.call_count, 1)
+        self.assertIn("X decision NO_EDGE -> BUY", op.call_args.args[0].data.decode())
+        self.assertIn("X", json.loads(watch.state_path().read_text())["entities"])
+        self.assertEqual([g.ref for g in watch.alerts(self.bank)], [f.ref])  # listed though X is not watched
+        self.assertIsNone(watch.alert(self.bank, "X", "decision", "notice", "again", [snap], ["decision:X/abc"],
+                                      at(DAYS[7])))
+        self.assertEqual(len(self.bank.facts("X", "alert")), 1)
+        self.assert_cited([f])
+        with self.assertRaises(ValueError):
+            watch.alert(self.bank, "X", "decision", "urgent", "m", [snap], ["k2"], at(DAYS[7]))
+
+    def test_a_malformed_state_file_is_an_error_before_anything_is_written(self):
+        self.bank.add(price_snapshot("X", DAYS[:6], [100.0] * 6))
+        snap = self.bank.facts("X", "series.price_daily")[0]
+        watch.state_path().write_text("[1, 2]")
+        with self.assertRaises(ValueError):
+            watch.alert(self.bank, "X", "decision", "notice", "m", [snap], ["k"], at(DAYS[6]))
+        self.assertEqual(self.bank.facts("X", "alert"), [])

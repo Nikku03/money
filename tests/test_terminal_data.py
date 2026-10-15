@@ -350,7 +350,9 @@ class SyntheticBankTest(unittest.TestCase):
         self.assertEqual(len(d["headlines"]), 8)
         c = d["claims"][0]
         self.assertEqual((c["direction"], c["tier"], c["source"]), (1, "opinion", "analyst.example.com"))
-        self.assertEqual(c["record"]["n"], 1)
+        self.assertEqual(c["record"]["n"], 1)  # every call, overlapping
+        self.assertEqual(c["gate_key"], "analyst.example.com via agent")  # the record D1 weighs
+        self.assertEqual((c["gate"]["proven"], c["gate"]["weight"]), (False, 0.0))
         self.assertEqual(self.run_ok("SPY CN")["data"], {"headlines": [], "claims": []})
 
     # ---------- EV, BRIEF, SHOW ----------
@@ -490,8 +492,12 @@ class SyntheticBankTest(unittest.TestCase):
 
     def test_clm(self):
         d = self.run_ok("CLM")["data"]
-        self.assertEqual(d["rows"][0]["source"], "analyst.example.com")
-        self.assertEqual(d["rows"][0]["n"], 1)
+        self.assertEqual(d["groups"], ["The record D1 weighs", "Every call, overlapping"])
+        weighed = [r for r in d["rows"] if r["_group"] == "The record D1 weighs"]
+        every = [r for r in d["rows"] if r["_group"] == "Every call, overlapping"]
+        self.assertEqual([r["source"] for r in weighed], ["analyst.example.com via agent"])  # noted by the agent
+        self.assertEqual((weighed[0]["bets"], weighed[0]["proven"], weighed[0]["weight"]), (0, "no", 0.0))
+        self.assertEqual([(r["source"], r["calls"]) for r in every], [("analyst.example.com", 1)])
         self.assertIn("pending", d["note"])
 
     def test_no_nan_anywhere(self):
@@ -1122,7 +1128,8 @@ class V2FunctionsTest(V2Base):
         cam = by[("Camera sites", "TFL.00001.00001")]
         self.assertEqual((cam["last"], cam["name"]), (21, "Depot · XCO"))
         self.assertEqual([c["key"] for c in d["columns"]],
-                         ["item", "name", "last", "chg_1d", "alert", "alert_at", "measure", "date"])
+                         ["item", "name", "last", "chg_1d", "decision", "alert", "alert_at", "measure", "date"])
+        self.assertIsNone(xco["decision"])  # no decision recorded: an empty cell
         self.assertIsNone(by[("Camera sites", "TFL.00001.00002")]["last"])
         self.assertIn("3 unacknowledged alerts (ALRT). Rules:", d["note"])
         self.assertTrue(next(c for c in d["columns"] if c["key"] == "alert")["nowrap"])

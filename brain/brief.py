@@ -22,7 +22,7 @@ from brain.bank import Bank, Fact
 from brain.metrics import M, PriceBook, annual
 from brain.sources.fred import DEFAULT as FRED_SERIES
 from brain.sources.sec import REVENUE
-from brain.timeutil import days_between, now_iso
+from brain.timeutil import days_between, now_iso, today
 
 ITEMS_8K = {"1.01": "material agreement", "1.02": "agreement ended", "1.03": "bankruptcy", "1.04": "mine safety",
             "1.05": "cybersecurity incident", "2.01": "acquisition/disposal", "2.02": "results", "2.03": "new debt",
@@ -372,12 +372,12 @@ def build(bank: Bank, ticker: str, t: str | None = None, evidence_budget_s: floa
     cl = sorted(view.facts(t_, "claim"), key=lambda f: f.known_at, reverse=True)[:10]
     if cl:
         arrow = {1: "↑", -1: "↓", 0: "·"}
-        L += ["## Claims noted from the web (tier opinion/reported; see `score-claims` for each source's record)", ""]
+        L += ["## Claims noted from the web (tier opinion/reported; `brain decide score` shows each source's record, the one D1 weighs)", ""]
         L += [f"- {f.known_at[:10]} {arrow.get(f.context.get('direction', 0), '·')} {safe_inline(f.value)} "
               f"({md_link(f.source.get('name', ''), f.source.get('url'))}) {cite(f)}" for f in cl]
         L.append("")
 
-    L += _signals_section(bank, t_, evidence_budget_s)
+    L += _signals_section(bank, t_, evidence_budget_s, t)
     L += _macro_section(view)
     L += ["## Caveats", "",
           "- Annual figures are the latest fiscal year in a 10-K; quarterly rows are for orientation.",
@@ -395,10 +395,16 @@ class NoEvidence(LookupError):
     """The repo or bank lacks what a signal reading needs: the research universe, or prices."""
 
 
-def evidence(bank: Bank, ticker: str, budget_s: float | None = EVIDENCE_BUDGET_S) -> dict:
+def evidence(bank: Bank, ticker: str, budget_s: float | None = EVIDENCE_BUDGET_S, asof: str | None = None) -> dict:
     """Where ``ticker`` ranks on each tested signal at the last month-end close, against the research
     universe, with that signal's TEST verdict from the ledger. One computation for the brief's
-    Signals section and the terminal's EV. Raises :class:`NoEvidence` when it cannot be computed.
+    Signals section, the terminal's EV and ``brain decide``. Raises :class:`NoEvidence` when it cannot be
+    computed.
+
+    ``asof`` is the time the prices are read at; None means the end of today (UTC), as a decide run's
+    T_RUN and the terminal's clock. A close fetched after the session is stamped as known at the end of
+    its day, so a ranking read at "now" would miss it until midnight: on the first evening of a month it
+    would still rank from the month-end before last.
 
     The first rows are H1-H4 against ``config.UNIVERSE``. Then, when the bank holds the broad universe
     (``universe/us_broad.json``), one row per current hypothesis declared on it (H3c, H6, H7b, H8b), ranked against it
@@ -413,10 +419,11 @@ def evidence(bank: Bank, ticker: str, budget_s: float | None = EVIDENCE_BUDGET_S
     from brain.research.hypotheses import HYPOTHESES
     from brain.research.panel import build as build_panel
     t_ = ticker.upper()
+    asof = asof or today() + "T23:59:59Z"
     uni = json.loads(config.UNIVERSE.read_text())
     tickers = list(uni["tickers"]) + ([t_] if t_ not in uni["tickers"] else [])
     try:
-        panel = build_panel(bank, tickers)
+        panel = build_panel(bank, tickers, asof=asof)
     except SystemExit as e:  # the panel's way of saying prices are missing
         raise NoEvidence(str(e)) from None
     if len(panel.rebal) == 0:
@@ -441,7 +448,7 @@ def evidence(bank: Bank, ticker: str, budget_s: float | None = EVIDENCE_BUDGET_S
             row.update(value=x, percentile=round(float(pctl) * 100), in_top_third=bool(pctl >= 2 / 3))
         rows.append(row)
     ctl = next(iter(verdict.values()))["controls"]["pass"] if verdict else None
-    broad = _broad_evidence(bank, t_, verdict, claims, budget_s)
+    broad = _broad_evidence(bank, t_, verdict, claims, budget_s, asof)
     rows += broad.pop("rows")
     n_pass = sum(r["verdict"] == "PASS" for r in rows)
     summary = f"{n_pass} of {len(rows)} signals passed their TEST gate."
@@ -467,9 +474,11 @@ def _broad_hypotheses() -> list[dict]:
     return [h for h in current(ledger.withdrawn()) if h.get("universe") == BROAD and h["signal"] in signals.PER_TICKER]
 
 
-def _broad_evidence(bank: Bank, t_: str, verdict: dict, claims: dict, budget_s: float | None) -> dict:
+def _broad_evidence(bank: Bank, t_: str, verdict: dict, claims: dict, budget_s: float | None,
+                    asof: str | None = None) -> dict:
     """Rows for the hypotheses on the broad universe, and how far their ranking got: status "complete",
-    "pending" (the budget ran out first; the next call goes on from the cache) or "unavailable"."""
+    "pending" (the budget ran out first; the next call goes on from the cache) or "unavailable".
+    ``asof`` is the time the prices are read at, as for the H1-H4 rows, so both rank from the same month-end."""
     from brain.research import harness, signals
     from brain.research import run as research_run
     from brain.research.hypotheses import BROAD, COMMON
@@ -491,7 +500,7 @@ def _broad_evidence(bank: Bank, t_: str, verdict: dict, claims: dict, budget_s: 
     every = tickers + ([t_] if t_ not in tickers else [])
     cache = config.home() / "cache" / "evidence" / f"{research_run.universe_sha(BROAD)}.json"
     try:
-        cs = signals.cross_section(bank, every, names, cache_path=cache, budget_s=budget_s, first=[t_])
+        cs = signals.cross_section(bank, every, names, cache_path=cache, budget_s=budget_s, first=[t_], asof=asof)
     except SystemExit as e:  # no SPY prices, or too little history
         return {**out, "status": "unavailable", "universe_size": len(tickers), "reason": str(e)}
     j = every.index(t_)
@@ -522,11 +531,11 @@ def _broad_evidence(bank: Bank, t_: str, verdict: dict, claims: dict, budget_s: 
             "coverage": {"ranked": ranked, "universe_size": len(tickers)}}
 
 
-def _signals_section(bank: Bank, t_: str, budget_s: float | None = EVIDENCE_BUDGET_S) -> list[str]:
+def _signals_section(bank: Bank, t_: str, budget_s: float | None = EVIDENCE_BUDGET_S, t: str | None = None) -> list[str]:
     if not config.UNIVERSE.exists() or markets.kind(t_):
         return []  # the signals rank stocks; an index, currency or coin has no place in that ranking
     try:
-        ev = evidence(bank, t_, budget_s)
+        ev = evidence(bank, t_, budget_s, asof=t)
     except (SystemExit, Exception) as e:  # noqa: BLE001 - a brief should still render
         return ["## Signals", "", f"Unavailable: {e}", ""]
     L = ["## Signals vs the research universe", "",

@@ -21,6 +21,12 @@ sets for the research universes (quarters already read are skipped, so after the
 first run it only picks up a newly published quarter). WATCH is one round of the
 watchlist loop: collect what is new for everything watched, then check the alert
 rules (``python -m brain watch run --once``).
+
+A decision job (``T DEC NEW``, target ``DEC T``) runs ``python -m brain decide T
+--ingest --read``: it refreshes T's data, lets the model read the web and make its
+call when one is reachable, and records a paper decision (docs/DECIDE.md). It has a
+slot of its own, one at a time: an INGEST never waits behind a decision that is
+reading pages, and two decisions never compete for one model.
 """
 from __future__ import annotations
 
@@ -38,13 +44,16 @@ from dataclasses import dataclass, field
 from typing import Callable
 
 from brain import config
+from brain.terminal.commands import dec_line
 from brain.timeutil import now_iso
 
 TICKER = re.compile(r"[A-Za-z0-9.^=\-]{1,15}")  # matched with fullmatch: no trailing-newline loophole
 KEYWORDS = {"MARKETS": ["markets"], "MACRO": ["macro"], "UNIVERSE": ["ingest-universe"],
             "INSIDERS": ["insiders"], "WATCH": ["watch", "run", "--once"]}
 TARGETS_TEXT = "a ticker, MARKETS, MACRO, UNIVERSE, INSIDERS or WATCH"
-MAX_RUNNING = 2
+DECIDE = "DEC "  # a decision job's target is "DEC <TICKER>": its own kind, slot and argument list
+MAX_RUNNING = 2  # ingest jobs at once
+MAX_DECIDE = 1   # decision jobs at once, in their own slot
 LOG_LINES = 200
 MAX_QUEUED = 50
 KEEP_JOBS = 100  # finished jobs beyond this are forgotten, oldest first
@@ -57,27 +66,54 @@ class JobError(ValueError):
         self.message, self.hint = message, hint
 
 
+def _ticker(t: str, what: str) -> str:
+    if not TICKER.fullmatch(t):
+        raise JobError(f"not a valid {what} target: {t[:40]!r}")
+    if t.startswith("-"):
+        raise JobError(f"not a valid {what} target: {t!r} (a ticker cannot start with '-')")
+    return t.upper()
+
+
 def validate(target) -> str:
-    """The canonical (upper-case) target, or JobError. Keywords are case-insensitive."""
+    """The canonical (upper-case) target, or JobError. Keywords are case-insensitive; ``DEC T`` is a
+    decision job on the ticker T (exactly one space, so it is never one token typed as a ticker)."""
     if not isinstance(target, str) or not target:
         raise JobError(f"ingest needs a target: {TARGETS_TEXT}")
+    if target[:len(DECIDE)].upper() == DECIDE:
+        return DECIDE + _ticker(target[len(DECIDE):], "decision")
     if target.upper() in KEYWORDS:
         return target.upper()
-    if not TICKER.fullmatch(target):
-        raise JobError(f"not a valid ingest target: {target[:40]!r}")
-    if target.startswith("-"):
-        raise JobError(f"not a valid ingest target: {target!r} (a ticker cannot start with '-')")
-    return target.upper()
+    return _ticker(target, "ingest")
+
+
+def decide_target(ticker: str) -> str:
+    """The target of a decision job on ``ticker``: ``DEC AAPL``."""
+    return validate(DECIDE + str(ticker))
+
+
+def kind_of(target: str) -> str:
+    """``decide`` for a decision job's target, ``ingest`` for everything else."""
+    return "decide" if target.startswith(DECIDE) else "ingest"
+
+
+def ticker_of(target: str) -> str | None:
+    """The ticker a job is about: T for ``T`` and ``DEC T``, None for the keywords."""
+    if kind_of(target) == "decide":
+        return target[len(DECIDE):]
+    return None if target in KEYWORDS else target
 
 
 def argv_for(target: str) -> list[str]:
     """The child's argument list for a validated target."""
+    if kind_of(target) == "decide":
+        return [sys.executable, "-m", "brain", "decide", ticker_of(target), "--ingest", "--read"]
     rest = KEYWORDS.get(target, ["ingest", target])
     return [sys.executable, "-m", "brain", *rest]
 
 
 def is_ticker(target: str) -> bool:
-    return target not in KEYWORDS
+    """An ingest job of one ticker (a decision job's target is ``DEC T``, not a ticker)."""
+    return kind_of(target) == "ingest" and target not in KEYWORDS
 
 
 @dataclass
@@ -85,6 +121,7 @@ class Job:
     id: str
     target: str
     argv: list[str]
+    kind: str = "ingest"  # ingest | decide
     status: str = "queued"  # queued | running | done | failed
     started: str | None = None
     finished: str | None = None
@@ -93,12 +130,14 @@ class Job:
     log_file: str | None = None  # the child's output while it runs; not part of the job record
 
     def to_dict(self) -> dict:
-        return {"id": self.id, "target": self.target, "status": self.status, "started": self.started,
-                "finished": self.finished, "returncode": self.returncode, "log": list(self.log)}
+        return {"id": self.id, "target": self.target, "kind": self.kind, "status": self.status,
+                "started": self.started, "finished": self.finished, "returncode": self.returncode,
+                "log": list(self.log)}
 
 
 class JobManager:
-    """At most ``max_running`` children at once; the rest wait in a FIFO queue.
+    """At most ``max_running`` ingest children and ``max_decide`` decision children at once, each kind in
+    its own slots; the rest wait in a FIFO queue per kind, so an ingest never waits behind a decision.
 
     ``argv_for`` maps a validated target to an argument list; tests inject a
     harmless one. ``on_finish(job_dict)`` runs after every job, done or failed
@@ -109,15 +148,18 @@ class JobManager:
     """
 
     def __init__(self, on_finish: Callable[[dict], None] | None = None, max_running: int = MAX_RUNNING,
-                 argv_for: Callable[[str], list[str]] = argv_for, cwd=config.ROOT, env: dict | None = None):
+                 argv_for: Callable[[str], list[str]] = argv_for, cwd=config.ROOT, env: dict | None = None,
+                 max_decide: int = MAX_DECIDE):
         self.on_finish = on_finish
         self.max_running = max_running
+        self.max_decide = max_decide
         self.argv_for = argv_for
         self.cwd = str(cwd)
         self.env = env
         self._jobs: dict[str, Job] = {}
-        self._queue: deque[Job] = deque()
-        self._workers = 0  # threads alive, including their on_finish call
+        self._queues: dict[str, deque[Job]] = {"ingest": deque(), "decide": deque()}
+        self._workers = {"ingest": 0, "decide": 0}  # threads alive per kind, including their on_finish call
+        self._finished = 0  # jobs that stopped being queued or running, since this manager started
         self._ids = itertools.count(1)
         self._cv = threading.Condition()
         self._closed = False
@@ -134,15 +176,19 @@ class JobManager:
         with self._cv:
             if self._closed:
                 raise JobError("the server is shutting down", hint="")
+            # one job per (kind, ticker): a target names both ("AAPL" ingests AAPL, "DEC AAPL" decides on it)
             active = {j.target: j for j in self._jobs.values() if j.status in ("queued", "running")}
             new = [t for t in dict.fromkeys(ts) if t not in active]
-            free = max(0, self.max_running - self._workers) if not self._queue else 0
-            if len(self._queue) + len(new) - free > MAX_QUEUED:
+            waiting = 0
+            for k, q in self._queues.items():
+                free = max(0, self._slots(k) - self._workers[k]) if not q else 0
+                waiting += max(0, len(q) + sum(kind_of(t) == k for t in new) - free)
+            if waiting > MAX_QUEUED:
                 raise JobError(f"{MAX_QUEUED} jobs are already queued; wait for some to finish", hint="JOBS")
             for t in new:
-                job = Job(id=f"j{next(self._ids)}", target=t, argv=list(self.argv_for(t)))
+                job = Job(id=f"j{next(self._ids)}", target=t, argv=list(self.argv_for(t)), kind=kind_of(t))
                 self._jobs[job.id] = active[t] = job
-                self._queue.append(job)
+                self._queues[job.kind].append(job)
             self._forget_old()
             self._pump()
             return [active[t].to_dict() for t in ts]
@@ -163,12 +209,23 @@ class JobManager:
 
     def queued(self) -> int:
         with self._cv:
-            return len(self._queue)
+            return sum(len(q) for q in self._queues.values())
+
+    def summary(self) -> dict:
+        """What /api/status reports, read at one moment: ``running`` and ``queued`` counts, ``active`` (the
+        targets queued or running, oldest first: ``["DEC AAPL", "MSFT"]``) and ``finished``, the jobs finished
+        since this manager started. ``finished`` only grows, so a page that sees it rise knows a job ended even
+        when a queued one started in its place and the running count stayed the same."""
+        with self._cv:
+            act = [j for j in self._jobs.values() if j.status in ("queued", "running")]
+            return {"running": sum(j.status == "running" for j in act), "queued": sum(j.status == "queued" for j in act),
+                    "active": [j.target for j in act], "finished": self._finished}
 
     def wait(self, timeout: float | None = None) -> bool:
         """Block until nothing is queued or running (on_finish included). False on timeout."""
         with self._cv:
-            return self._cv.wait_for(lambda: not self._queue and self._workers == 0, timeout)
+            return self._cv.wait_for(lambda: not any(self._queues.values()) and not any(self._workers.values()),
+                                     timeout)
 
     def shutdown(self) -> list[tuple[str, str | None]]:
         """Cancel queued jobs. Running children are left to finish (killing one mid-write could leave a
@@ -177,20 +234,26 @@ class JobManager:
         each job still running."""
         with self._cv:
             self._closed = True
-            while self._queue:
-                j = self._queue.popleft()
-                j.status, j.finished = "failed", now_iso()
-                j.log.append("cancelled: the server stopped before this job started")
+            for q in self._queues.values():
+                while q:
+                    j = q.popleft()
+                    j.status, j.finished = "failed", now_iso()
+                    j.log.append("cancelled: the server stopped before this job started")
+                    self._finished += 1
             self._cv.notify_all()
             return [(j.target, j.log_file) for j in self._jobs.values() if j.status == "running"]
 
     # ---------- internals (call with self._cv held) ----------
+    def _slots(self, kind: str) -> int:
+        return self.max_decide if kind == "decide" else self.max_running
+
     def _pump(self) -> None:
-        while self._queue and self._workers < self.max_running and not self._closed:
-            job = self._queue.popleft()
-            job.status, job.started = "running", now_iso()
-            self._workers += 1
-            threading.Thread(target=self._run, args=(job,), name=f"job-{job.id}", daemon=True).start()
+        for kind, q in self._queues.items():
+            while q and self._workers[kind] < self._slots(kind) and not self._closed:
+                job = q.popleft()
+                job.status, job.started = "running", now_iso()
+                self._workers[kind] += 1
+                threading.Thread(target=self._run, args=(job,), name=f"job-{job.id}", daemon=True).start()
 
     def _forget_old(self) -> None:
         done = [k for k, j in self._jobs.items() if j.status in ("done", "failed")]
@@ -218,7 +281,8 @@ class JobManager:
                 # Published only now, after on_finish swapped in the bank: a client polling /api/status
                 # refreshes its panes when a job stops counting as running, and must then see the facts.
                 job.status, job.returncode, job.finished = final["status"], final["returncode"], final["finished"]
-                self._workers -= 1
+                self._finished += 1
+                self._workers[job.kind] -= 1
                 self._pump()
                 self._cv.notify_all()
 
@@ -273,17 +337,21 @@ def table(jobs: list[dict]) -> dict:
     for j in jobs:
         row = {"id": j["id"], "target": j["target"], "status": j["status"], "started": j["started"],
                "finished": j["finished"], "last": j["log"][-1] if j["log"] else ""}
-        if is_ticker(j["target"]):
-            row["_ticker"] = j["target"]
+        t = ticker_of(j["target"])
+        if t:
+            row["_ticker"] = t
+        if kind_of(j["target"]) == "decide":
+            if dec_line(t):  # the decision it records; clicking never starts another job
+                row["_cmds"] = {"target": dec_line(t)}
         rows.append(row)
     running = sum(j["status"] == "running" for j in jobs)
     queued = sum(j["status"] == "queued" for j in jobs)
     if not jobs:
         note = ("No background jobs. Start one with INGEST AAPL, INGEST MARKETS, INGEST MACRO, INGEST UNIVERSE, "
-                "INGEST INSIDERS or INGEST WATCH.")
+                "INGEST INSIDERS or INGEST WATCH, or a paper decision with AAPL DEC NEW.")
     else:
-        note = (f"{running} running, {queued} queued (at most {MAX_RUNNING} run at once). "
-                f"New facts appear when a job finishes.")
+        note = (f"{running} running, {queued} queued (at most {MAX_RUNNING} ingest jobs and {MAX_DECIDE} decision "
+                f"at once, each in its own slots). New facts appear when a job finishes.")
         newest = jobs[0]
         if newest["log"]:
             tail = "\n".join(newest["log"][-10:])

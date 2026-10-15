@@ -258,6 +258,39 @@ class ScoutTest(TempHome):
         self.assertEqual(out["answer"], "Noted one claim.")
         self.assertTrue(any(line.startswith("noted [") for line in logs))
 
+    def test_a_deadline_ends_the_loop_and_the_output_keeps_its_shape(self):
+        # brain decide gives the scout 15 minutes. Past the deadline the next request is the last, as at
+        # max_rounds; run_loop's trace (results, convo) is not handed on.
+        def reply(n, body):
+            return {"role": "assistant", "content": None,
+                    "tool_calls": [call(n, "read_page", {"url": "https://news.example/acme"})]}
+        out, sent, _ = self.run_scout(reply, deadline=time.monotonic() - 1)
+        self.assertEqual(len(sent), 2)
+        self.assertEqual(out["stop_reason"], "deadline")
+        self.assertIn("stopped at the time limit", out["answer"])
+        self.assertNotIn("results", out)
+        self.assertNotIn("convo", out)
+        self.assertEqual([p["url"] for p in out["pages"]], ["https://news.example/acme"])
+
+    def test_the_noter_is_the_model_by_its_canonical_name(self):
+        # llama.cpp's server lists a model by its file path; the claim's noter is the model, not the path.
+        def reply(n, body):
+            if n == 1:
+                return {"role": "assistant", "content": None, "tool_calls": [
+                    call(1, "read_page", {"url": "https://news.example/acme"})]}
+            if n == 2:
+                return {"role": "assistant", "content": None, "tool_calls": [
+                    call(2, "note_claim", {"text": "Acme raised guidance", "url": "https://news.example/acme",
+                                           "direction": "up", "tier": "reported"})]}
+            return {"role": "assistant", "content": "Noted one claim."}
+        reader, _, _ = self.web()
+        with FakeOpenAI(reply) as srv:
+            out = scout.scout(self.bank, "acme", client=srv.client(model="/models/Qwen3-1.7B-Q8_0.gguf"),
+                              reader=reader, log=lambda m: None)
+        self.assertTrue(out["ok"], out)
+        (c,) = self.bank.facts("ACME", "claim")
+        self.assertEqual(c.context["noted_by"], "scout:qwen3-1.7b-q8_0")
+
     def test_claims_are_never_dated_before_the_page_that_makes_them(self):
         # A small model easily enters the date of the event a page describes; score-claims would then score
         # the claim on the very move it reports.

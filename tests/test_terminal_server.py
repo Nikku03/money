@@ -345,9 +345,11 @@ class ServerTest(TempHome):
     def test_status_shape(self):
         code, out = self.get_json("/api/status")
         self.assertEqual(code, 200)
-        for k in ("entities", "tickers", "universe", "jobs_running", "analyst", "time"):
+        for k in ("entities", "tickers", "universe", "jobs_running", "jobs_queued", "jobs_active", "jobs_finished",
+                  "analyst", "time"):
             self.assertIn(k, out)
         self.assertEqual((out["entities"], out["tickers"], out["jobs_running"]), (1, ["AAPL"], 0))
+        self.assertEqual((out["jobs_queued"], out["jobs_active"], out["jobs_finished"]), (0, [], 0))
         self.assertIsInstance(out["analyst"]["available"], bool)
         self.assertIsInstance(out["analyst"]["reason"], str)
         self.assertTrue(out["time"].endswith("Z"))
@@ -434,7 +436,7 @@ class ServerTest(TempHome):
             self.assertEqual(self.post_json("/api/ask", {"question": "x" * server.MAX_QUESTION})[0], 200)
 
     def test_read_only_refuses_ingest_and_ask(self):
-        for line in ("ASK why?", "INGEST AAPL"):
+        for line in ("ASK why?", "INGEST AAPL", "AAPL DEC NEW", "DEC NEW AAPL"):
             with self.subTest(line=line):
                 out = self.server.run_line(line, read_only=True)
                 self.assertFalse(out["ok"])
@@ -573,7 +575,8 @@ class ServerTest(TempHome):
         self.assertEqual(code, 200)
         self.assertTrue(out["ok"])
         job = out["job"]
-        self.assertEqual(set(job), {"id", "target", "status", "started", "finished", "returncode", "log"})
+        self.assertEqual(set(job), {"id", "target", "kind", "status", "started", "finished", "returncode", "log"})
+        self.assertEqual(job["kind"], "ingest")
         self.assertEqual(job["target"], "BRK.B")
         self.assertTrue(self.server.jobs.wait(20))
         code, out = self.get_json("/api/jobs")
@@ -650,12 +653,14 @@ class ServerTest(TempHome):
             return real_refresh()
         with mock.patch.object(bank, "refresh", slow_refresh):
             self.assertTrue(self.post_json("/api/ingest", {"target": "ZZTEST"})[1]["ok"])
-            while True:  # what the page does: poll until no job runs, then refresh its panes
+            while True:  # what the page does: poll until the finished count rises, then refresh its panes
                 status = self.get_json("/api/status")[1]
                 polls.append(status["jobs_running"])
-                if not status["jobs_running"]:
+                if status["jobs_finished"]:
                     break
+                self.assertEqual((status["jobs_running"], status["jobs_active"]), (1, ["ZZTEST"]))
                 time.sleep(0.02)
+            self.assertEqual((status["jobs_running"], status["jobs_active"], status["jobs_finished"]), (0, [], 1))
             with self.server.lock:
                 self.assertEqual(len(self.server.bank.facts("ZZTEST")), 1)
             self.assertIn("ZZTEST", status["tickers"])

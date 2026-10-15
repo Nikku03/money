@@ -28,7 +28,8 @@ import numpy as np
 
 from brain import brief, config, markets
 from brain.bank import Bank, Fact
-from brain.claims import anchor, bets, outcome, source_key, tally, track_record
+from brain.claims import (UNPRICED_MAX_SHARE, anchor, bets, scored_at, source_key, tally, too_unpriced,
+                          track_record)
 from brain.metrics import PriceBook
 from brain.research import ledger
 from brain.timeutil import days_between, now_iso, today
@@ -43,7 +44,9 @@ POLICY = {
     "signal_weight": 1.0,          # a PASS hypothesis that would hold the stock (section 3.2)
     "signal_rules": {"min_coverage": 0.5, "ranking": "last completed month-end before T_RUN"},
     "source_gate": {"min_bets": 30, "p_lt": 0.05, "bh_q": 0.10, "alpha_lower": 0.05,
-                    "mean_signed_excess_gt": 0.0},
+                    "mean_signed_excess_gt": 0.0,
+                    # claims.GRACE_SESSIONS and claims.UNPRICED_MAX_SHARE, named here so the sha covers them
+                    "grace_sessions": 5, "unpriced_max_share": 0.10},
     "source_weight": "max(0, 2*L - 1), L = one-sided 95% Clopper-Pearson lower bound of the bet hit rate",
     "source_combine": "only the proven source item with the largest weight counts; 0 when proven sources disagree",
 }
@@ -51,7 +54,6 @@ POLICY_SHA = hashlib.sha256(json.dumps(POLICY, sort_keys=True).encode()).hexdige
 # D1 is never edited (tests/test_decide.py freezes its sha). A change is D2, with its own sha.
 KNOWN_POLICIES = {POLICY["id"]: POLICY_SHA}
 
-ACTIONS = ("BUY", "SELL", "NO_EDGE", "NO_DATA")
 DIRECTION = {"BUY": 1, "SELL": -1, "NO_EDGE": 0, "NO_DATA": 0}
 SCOUT_SECONDS, JUDGE_SECONDS, EXPLAIN_SECONDS = 15 * 60, 10 * 60, 2 * 60   # wall-clock limits per step
 ALERT_CONTEXT_DAYS = 7
@@ -186,7 +188,9 @@ def signal_items(bank: Bank, ticker: str, t: str, book: PriceBook) -> list[dict]
     from brain.research.hypotheses import BROAD, COMMON, current
     T = ticker.upper()
     try:
-        ev = brief.evidence(bank, T, budget_s=None)  # the whole ranking: decide never runs in a request loop
+        # The whole ranking (decide never runs in a request loop), with prices read at T_RUN like every
+        # other read in the run: a close ingested this evening marks the month-end rule (c) expects.
+        ev = brief.evidence(bank, T, budget_s=None, asof=t)
     except brief.NoEvidence as e:
         return [item("signal", "evidence", why=f"no ranking: {e}")]
     except (Exception, SystemExit) as e:  # noqa: BLE001 - a ranking that cannot be computed weighs nothing
@@ -212,9 +216,10 @@ def signal_items(bank: Bank, ticker: str, t: str, book: PriceBook) -> list[dict]
                 reason = broad.get("reason") or f"the {BROAD} ranking is {broad.get('status') or 'unavailable'}"
             else:
                 reason = "not ranked"
-            why = reason if verdict == "PASS" else f"{_verdict_text(verdict, test.get('mean_net_excess'), test.get('perm_p'))}; {reason}"
-            out.append(item("signal", hid, why=why, record={"verdict": verdict, "universe": uni, "rebalance_date": None,
-                                                             "coverage": None, "held": None}))
+            if verdict != "PASS":
+                reason = f"{_verdict_text(verdict, test.get('mean_net_excess'), test.get('perm_p'))}; {reason}"
+            out.append(item("signal", hid, why=reason, record={"verdict": verdict, "universe": uni,
+                                                                "rebalance_date": None, "coverage": None, "held": None}))
             continue
         is_broad = bool(row.get("universe"))
         d = broad.get("rebalance_date") if is_broad else ev.get("rebalance_date")
@@ -230,15 +235,16 @@ def signal_items(bank: Bank, ticker: str, t: str, book: PriceBook) -> list[dict]
             why = f"PASS on {uni}, which does not list this stock"
         elif d is None or d != expected:
             why = f"ranking as of {d or 'no date'}: ingest SPY and the universe"
-        elif not cov or not cov.get("universe_size") or cov.get("ranked", 0) / cov["universe_size"] < rules["min_coverage"]:
+        elif not (cov or {}).get("universe_size") or cov.get("ranked", 0) / cov["universe_size"] < rules["min_coverage"]:
             why = f"ranking covers {(cov or {}).get('ranked', 0)} of {(cov or {}).get('universe_size', '?')} stocks"
         elif held is not True:
             why = "PASS, but its backtest would not hold this stock"
         else:
             out.append(item("signal", hid, 1, POLICY["signal_weight"], record=record,
                             why=(f"PASS on TEST, and its backtest would hold this stock on the {d} ranking. It was "
-                                 f"tested against the equal-weight universe from month-end, so D1's score against "
-                                 f"SPY over {POLICY['horizon_days']} days tests D1, not the hypothesis.")))
+                                 f"tested against the equal-weight universe from month-end, so {POLICY['id']}'s "
+                                 f"score against {POLICY['benchmark']} over {POLICY['horizon_days']} days tests "
+                                 f"{POLICY['id']}, not the hypothesis.")))
             continue
         out.append(item("signal", hid, why=why, record=record))
     return out
@@ -283,8 +289,10 @@ def source_items(bank: Bank, ticker: str, t: str, cal: np.ndarray) -> tuple[list
 
 
 def alert_context(bank: Bank, ticker: str, t: str) -> list[dict]:
-    """Alerts on the stock known in the 7 days to t, read through watch.alerts (which withholds opted-out
-    and LADD/PIA aircraft). Weight 0: alert rules are not tested."""
+    """Notice and high alerts on the stock known in the 7 days to t, read through watch.alerts (which
+    withholds opted-out and LADD/PIA aircraft). Weight 0: alert rules are not tested. Info alerts are left
+    out, as ALRT and the top bar leave them out: they are the headlines, one alert each, which would bury
+    the rest of the context and the decision's inputs."""
     from brain import watch
     lo = (date.fromisoformat(t[:10]) - timedelta(days=ALERT_CONTEXT_DAYS)).isoformat() + t[10:]
     try:
@@ -292,7 +300,7 @@ def alert_context(bank: Bank, ticker: str, t: str) -> list[dict]:
     except (Exception, SystemExit):  # noqa: BLE001 - context only
         return []
     return [{"ref": f.ref, "why": f"alert ({f.context.get('rule') or '?'}); alert rules are untested"}
-            for f in sorted(fs, key=lambda f: (f.known_at, f.id)) if lo < f.known_at <= t]
+            for f in sorted(fs, key=lambda f: (f.known_at, f.id)) if lo < f.known_at <= t and not watch.is_info(f)]
 
 
 def combine(items: list[dict]) -> tuple[float, dict, float]:
@@ -351,6 +359,13 @@ def _judge_module():
     """brain.judge (the model's steps), imported when first needed so the engine runs without it."""
     from brain import judge as judge_mod
     return judge_mod
+
+
+def _try_judge():
+    try:
+        return _judge_module(), None
+    except Exception as e:  # noqa: BLE001 - brain.judge missing or broken: the engine still decides
+        return None, f"brain.judge unavailable ({type(e).__name__}: {e})"
 
 
 def _model_down(res) -> str | None:
@@ -428,6 +443,19 @@ def tickers_with_decisions(bank: Bank) -> list[str]:
     return sorted(e for e in bank.entities() if "decision" in Bank(bank.root, use_index=bank.use_index).attrs(e))
 
 
+def _plural(n: int, word: str) -> str:
+    return f"{n} {word}{'' if n == 1 else 's'}"
+
+
+def _noted_after(bank: Bank, T: str, noted, t: str) -> int:
+    """How many of the scout's noted claims were retrieved after t (a read that ran past midnight UTC):
+    gather leaves them out, as it leaves out any call not retrieved by T_RUN."""
+    ids = {str(n.get("id")) for n in noted or [] if isinstance(n, dict) and n.get("id")}
+    if not ids:
+        return 0
+    return sum(1 for f in bank.facts(T, "claim") if f.id[:8] in ids and (f.retrieved_at or f.known_at) > t)
+
+
 def _accepts(fn, name: str) -> bool:
     try:
         return name in inspect.signature(fn).parameters
@@ -492,24 +520,30 @@ def _decide(bank: Bank, T: str, t: str, notes: list[str], state: dict, *, do_ing
         d["explanation"] = _template(_try_judge()[0], d)
         return d
 
-    judge_mod, judge_err = (None, None)
+    judge_mod, judge_err = _try_judge()  # its template explains every decision; the model is asked only below
     ready, ready_why = False, ""
     if do_read or do_judge or do_explain:
-        judge_mod, judge_err = _try_judge()
         if judge_mod is not None:
             try:
                 ready, ready_why = judge_mod.llm_ready()
             except Exception as e:  # noqa: BLE001
                 ready, ready_why = False, f"{type(e).__name__}: {e}"
 
-    def skip(step: str) -> str | None:
+    said: set[str] = set()  # a reason is given in full once per decision, then referred to
+
+    def skip(step: str) -> tuple[str, str] | None:
+        """(the note, the full reason) when a model step cannot run, else None."""
         if state.get("down"):
-            return f"{step} skipped: the model failed earlier in this run ({state['down']})"
-        if judge_mod is None:
-            return f"{step} skipped: {judge_err}"
-        if not ready:
-            return f"{step} skipped: no model reachable ({ready_why or 'brain.llm.available() says no'})"
-        return None
+            why = f"the model failed earlier in this run ({state['down']})"
+        elif judge_mod is None:
+            why = judge_err
+        elif not ready:
+            why = f"no model reachable ({ready_why or 'brain.llm.available() says no'})"
+        else:
+            return None
+        short = why.split(" (")[0] + " (as above)" if why in said and " (" in why else why
+        said.add(why)
+        return f"{step} skipped: {short}", why
 
     def mark_down(err: str | None) -> None:
         if err and not state.get("down"):
@@ -520,8 +554,8 @@ def _decide(bank: Bank, T: str, t: str, notes: list[str], state: dict, *, do_ing
     if do_read:
         s = skip("read")
         if s:
-            notes.append(s)
-            read = {"claims_noted": 0, "pages_read": 0, "error": s}
+            notes.append(s[0])
+            read = {"claims_noted": 0, "pages_read": 0, "error": s[1]}
         else:
             from brain import scout as scout_mod
             kw = {"max_pages": max_pages, "log": log, "client": client}
@@ -533,6 +567,10 @@ def _decide(bank: Bank, T: str, t: str, notes: list[str], state: dict, *, do_ing
                 read = {"claims_noted": len(out.get("notes") or []),
                         "pages_read": sum(1 for p in out.get("pages") or [] if p.get("ok")),
                         "error": None if out.get("ok") else str(out.get("error") or "the scout gave no answer")}
+                late = _noted_after(bank, T, out.get("notes"), t)
+                if late:
+                    notes.append(f"{_plural(late, 'claim')} the scout noted after {t} (the run crossed midnight UTC) "
+                                 f"{'is' if late == 1 else 'are'} not weighed here: they count from the next run")
                 if read["error"]:
                     notes.append(f"read: {read['error']}")
                     mark_down(_model_down(out))
@@ -546,8 +584,8 @@ def _decide(bank: Bank, T: str, t: str, notes: list[str], state: dict, *, do_ing
     if do_judge:
         s = skip("judgment")
         if s:
-            notes.append(s)
-            judgment = {"ref": None, "error": s}
+            notes.append(s[0])
+            judgment = {"ref": None, "error": s[1]}
         else:
             log(f"{T}: the model makes its call ({JUDGE_SECONDS // 60} min at most)")
             kw = {"client": client, "log": log, "deadline": time.monotonic() + JUDGE_SECONDS}
@@ -580,10 +618,15 @@ def _decide(bank: Bank, T: str, t: str, notes: list[str], state: dict, *, do_ing
         notes.insert(0, NO_WEIGHT_NOTE)
     jref = (judgment or {}).get("ref")
     if jref:
+        # Cited only when gather could weigh it: known and retrieved by T_RUN (section 3.2's rule for a call).
         jf = bank.get(jref)
-        if jf is None or jf.known_at > t:  # a judgment the view at T_RUN cannot see is not an input
-            notes.append(f"judgment {jref} is not visible at {t}; not cited")
-            judgment = {"ref": None, "error": f"not visible at {t}"}
+        if jf is None:
+            notes.append(f"judgment {jref} is not in the bank; not cited")
+            judgment = {"ref": None, "error": "not in the bank"}
+        elif jf.known_at > t or (jf.retrieved_at or jf.known_at) > t:
+            notes.append(f"judgment {jref} was written after {t} (the run crossed midnight UTC): it is recorded and "
+                         "scored as its source's call, but not weighed or cited in this decision")
+            judgment = {"ref": None, "error": f"written after {t}"}
     d = {"ok": True, "ticker": T, "action": action, "direction": DIRECTION[action], "score": g["score"],
          "threshold": POLICY["threshold"], "signal_score": g["signal_score"], "source_term": g["source_term"],
          "items": g["items"], "lean": g["lean"], "context_refs": g["context_refs"], "context_notes": g["context_notes"],
@@ -596,7 +639,7 @@ def _decide(bank: Bank, T: str, t: str, notes: list[str], state: dict, *, do_ing
     if do_explain:
         s = skip("explanation")
         if s:
-            notes.append(s.replace("explanation skipped", "explanation by template"))
+            notes.append(s[0].replace("explanation skipped", "explanation by template"))
         else:
             try:
                 res = judge_mod.explain(plain(d), client=client, deadline=time.monotonic() + EXPLAIN_SECONDS)
@@ -633,13 +676,6 @@ def _decide(bank: Bank, T: str, t: str, notes: list[str], state: dict, *, do_ing
     return out
 
 
-def _try_judge():
-    try:
-        return _judge_module(), None
-    except Exception as e:  # noqa: BLE001 - brain.judge missing or broken: the engine still decides
-        return None, f"brain.judge unavailable ({type(e).__name__}: {e})"
-
-
 _CONTEXT_KEYS = ("policy", "policy_sha", "horizon_days", "direction", "score", "threshold", "signal_score",
                  "source_term", "items", "lean", "context_refs", "context_notes", "price", "judgment", "read",
                  "explanation", "explained_by", "explain_error", "unverified_numbers", "notes")
@@ -658,27 +694,32 @@ def record(T: str, t: str, d: dict) -> Fact:
 
 
 # ---------- scoring decisions ----------
-def _stream(bs: list[dict], dropped: int, gate: dict) -> dict:
+def _stream(bs: list[dict], dropped: int, gate: dict, priced: int = 0, unpriced: int = 0) -> dict:
+    """One stream's bets and gate. ``priced`` and ``unpriced`` count its decisions whose window has closed,
+    with and without an outcome: as for a source, too many unpriced ones (claims.too_unpriced) bar proven."""
     tl = tally(bs, gate["alpha_lower"])
     proven = bool(tl["bets"] >= gate["min_bets"] and tl["p"] is not None and tl["p"] < gate["p_lt"]
-                  and tl["mean_signed_excess"] is not None and tl["mean_signed_excess"] > gate["mean_signed_excess_gt"])
+                  and tl["mean_signed_excess"] is not None and tl["mean_signed_excess"] > gate["mean_signed_excess_gt"]
+                  and not too_unpriced(unpriced, priced + unpriced))
     return {"bets": tl["bets"], "hits": tl["hits"], "hit_rate": tl["hit_rate"], "p": tl["p"], "lower": tl["lower"],
-            "mean_signed_excess": tl["mean_signed_excess"], "dropped": dropped, "proven": proven}
+            "mean_signed_excess": tl["mean_signed_excess"], "dropped": dropped, "unpriced": unpriced, "proven": proven}
 
 
 def score(bank: Bank, t: str | None = None) -> dict:
     """{"policies": {"D1": {"sha": str, "commits": [str, ...],
-         "actions": {"bets", "hits", "hit_rate", "p", "lower", "mean_signed_excess", "dropped", "proven"},
+         "actions": {"bets", "hits", "hit_rate", "p", "lower", "mean_signed_excess", "dropped", "unpriced", "proven"},
          "lean":    {... same keys ...},
          "no_edge": {"bets", "mean_excess"},            # what the stocks did after NO_EDGE (direction 0)
-         "pending": int}},
+         "pending": int, "unpriced": int}},
         "rows": [{"ref", "ticker", "as_of", "action", "lean", "entry", "exit", "excess", "hit",
-                  "stream_status": "scored" | "overlapping" | "pending"}],
+                  "stream_status": "scored" | "overlapping" | "pending" | "unpriced"}],
         "gate": POLICY["source_gate"]}
     Three streams per (policy, sha), each grouped into bets across tickers: BUY/SELL actions, non-zero
     leans, and NO_EDGE (direction 1, reported as the mean excess, never as a hit rate). A decision whose sha
     differs from the code's for its id is reported under "<id>?<sha>". Rows are newest first and also carry
-    the policy key."""
+    the policy key. A decision with no outcome is pending until SPY's book is a few sessions past its exit,
+    then unpriced (claims.scored_at): its stock's closes are missing. It is scored once they arrive, and a
+    stream with too many unpriced decisions is not proven, as for a source (each stream's "unpriced")."""
     t = t or run_time()
     gate = POLICY["source_gate"]
     decisions: list[Fact] = []
@@ -686,27 +727,33 @@ def score(bank: Bank, t: str | None = None) -> dict:
         b = Bank(bank.root, use_index=bank.use_index)
         decisions += [f for f in b.view(t).facts(e, "decision") if (f.retrieved_at or f.known_at) <= t]
     book = PriceBook(bank, sorted({f.entity for f in decisions} | {POLICY["benchmark"]}), asof=t)
-    groups: dict[str, dict] = {POLICY["id"]: {"sha": POLICY_SHA, "commits": [], "actions": [], "lean": [],
-                                              "no_edge": [], "pending": 0}}
+
+    def empty(sha: str) -> dict:
+        return {"sha": sha, "commits": [], "actions": [], "lean": [], "no_edge": [], "pending": 0, "unpriced": 0,
+                "unpriced_actions": 0, "unpriced_lean": 0}
+    groups: dict[str, dict] = {POLICY["id"]: empty(POLICY_SHA)}
     rows = []
-    for f in sorted(decisions, key=lambda f: (f.known_at, f.entity, f.id)):
+    # In the order they were made: one day's decisions share known_at (T_RUN), so retrieved_at orders them.
+    for f in sorted(decisions, key=lambda f: (f.known_at, f.retrieved_at or "", f.entity, f.id)):
         c = f.context
         pid, sha = str(c.get("policy") or f.source.get("policy") or "?"), str(c.get("policy_sha") or "?")
         key = pid if KNOWN_POLICIES.get(pid) == sha else f"{pid}?{sha}"
-        g = groups.setdefault(key, {"sha": sha, "commits": [], "actions": [], "lean": [], "no_edge": [], "pending": 0})
+        g = groups.setdefault(key, empty(sha))
         commit = (c.get("git") or {}).get("commit")
         if commit and commit not in g["commits"]:
             g["commits"].append(commit)
         horizon = int(c.get("horizon_days") or POLICY["horizon_days"])
-        o = outcome(book, f.entity, anchor(f), horizon, POLICY["benchmark"]) if scorable(f.entity)[0] else None
-        if o is not None and o["exit"] > t[:10]:
-            o = None
+        status, o = (scored_at(book, f.entity, anchor(f), horizon, t, POLICY["benchmark"]) if scorable(f.entity)[0]
+                     else ("pending", None))
         lean_d = int((c.get("lean") or {}).get("direction") or 0)
         act = DIRECTION.get(f.value, 0)
         row = {"ref": f.ref, "policy": key, "ticker": f.entity, "as_of": f.as_of, "action": f.value, "lean": lean_d,
-               "entry": None, "exit": None, "excess": None, "hit": None, "stream_status": "pending"}
+               "entry": None, "exit": None, "excess": None, "hit": None, "stream_status": status}
         if o is None:
-            g["pending"] += 1
+            g[status] += 1
+            if status == "unpriced":
+                g["unpriced_actions"] += bool(act)
+                g["unpriced_lean"] += bool(lean_d)
         else:
             call = {"ref": f.ref, "ticker": f.entity, "entry": o["entry"], "exit": o["exit"], "excess": o["excess"]}
             row.update(entry=o["entry"], exit=o["exit"], excess=o["excess"])
@@ -725,11 +772,12 @@ def score(bank: Bank, t: str | None = None) -> dict:
         l_bets, l_drop = bets(g["lean"])
         n_bets, _ = bets(g["no_edge"])
         kept.update(r for b in a_bets + n_bets for r in b["refs"])
-        policies[key] = {"sha": g["sha"], "commits": g["commits"], "actions": _stream(a_bets, a_drop, gate),
-                         "lean": _stream(l_bets, l_drop, gate),
+        policies[key] = {"sha": g["sha"], "commits": g["commits"],
+                         "actions": _stream(a_bets, a_drop, gate, len(g["actions"]), g["unpriced_actions"]),
+                         "lean": _stream(l_bets, l_drop, gate, len(g["lean"]), g["unpriced_lean"]),
                          "no_edge": {"bets": len(n_bets),
                                      "mean_excess": float(np.mean([b["value"] for b in n_bets])) if n_bets else None},
-                         "pending": g["pending"]}
+                         "pending": g["pending"], "unpriced": g["unpriced"]}
     for r in rows:
         if r["entry"] is not None:
             r["stream_status"] = "scored" if r["ref"] in kept else "overlapping"
@@ -783,8 +831,15 @@ def card(d: dict) -> str:
     L.append(f"Why: {d.get('explanation') or ''}")
     if by != "template":
         L.append(f"     (written by {by}; the decision is the table above)")
+    elif d.get("explain_error"):
+        L.append(f"     (written by the template: the model's explanation was not used, {d['explain_error']})")
     if d.get("unverified_numbers"):
         L.append(f"UNVERIFIED numbers in the explanation: {', '.join(d['unverified_numbers'])}")
+    rd = d.get("read")
+    if isinstance(rd, dict) and not rd.get("error"):
+        pages, noted = int(rd.get("pages_read") or 0), int(rd.get("claims_noted") or 0)
+        L.append(f"Read: {pages} page{'s' * (pages != 1)} read, {noted} claim{'s' * (noted != 1)} noted "
+                 f"(a claim weighs 0 until its source has a record).")
     if notes:
         L.append("Notes:")
         L += [f"- {n}" for n in notes]
@@ -799,22 +854,26 @@ def card(d: dict) -> str:
 
 
 def _stream_line(s: dict) -> str:
+    u = int(s.get("unpriced") or 0)
+    unpriced = f"; {u} with no price past {'its' if u == 1 else 'their'} exit (ingest their tickers)" if u else ""
     if not s["bets"]:
-        return "0 bets" + (f" ({s['dropped']} overlapping calls dropped)" if s["dropped"] else "")
+        return "0 bets" + (f" ({s['dropped']} overlapping calls dropped)" if s["dropped"] else "") + unpriced
     return (f"{s['bets']} bets, {s['hits']} hits ({s['hit_rate']:.0%}), p {s['p']:.2f}, lower bound {s['lower']:.2f}, "
             f"mean signed excess {_pct(s['mean_signed_excess'])}, {s['dropped']} dropped: "
-            + ("proven" if s["proven"] else "not proven"))
+            + ("proven" if s["proven"] else "not proven") + unpriced)
 
 
 def scorecard(sc: dict, tr: dict) -> str:
     gate = sc["gate"]
     L = [f"Decisions scored against {POLICY['benchmark']} over {POLICY['horizon_days']} trading days (paper only). "
-         f"Proven needs {gate['min_bets']} bets, p < {gate['p_lt']} and a positive mean signed excess.", ""]
+         f"Proven needs {gate['min_bets']} bets, p < {gate['p_lt']} and a positive mean signed excess, with at most "
+         f"{UNPRICED_MAX_SHARE:.0%} of the decisions past their exit lacking a price.", ""]
     for key, p in sc["policies"].items():
         n = sum(1 for r in sc["rows"] if r.get("policy") == key)
         flag = "" if "?" not in key else "  (this sha is not the code's: the policy was edited after these were made)"
+        u = int(p.get("unpriced") or 0)
         L.append(f"{key} (sha {p['sha']}; commits {', '.join(c[:8] for c in p['commits']) or '-'}): "
-                 f"{n} decisions, {p['pending']} pending{flag}")
+                 f"{n} decisions, {p['pending']} pending" + (f", {u} with no price past their exit" if u else "") + flag)
         L.append(f"  BUY/SELL actions     {_stream_line(p['actions'])}")
         L.append(f"  lean (not evidence)  {_stream_line(p['lean'])}")
         ne = p["no_edge"]

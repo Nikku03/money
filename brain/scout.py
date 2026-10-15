@@ -566,10 +566,13 @@ def _one_line(text: str) -> str:
 
 
 def scout(bank, ticker: str, question: str | None = None, max_pages: int = 8, log=print, client=None,
-          search: Callable[[str], list[dict]] | None = None, reader: PageReader | None = None) -> dict:
+          search: Callable[[str], list[dict]] | None = None, reader: PageReader | None = None,
+          deadline: float | None = None) -> dict:
     """Read the web about ``ticker`` and note claims. ``search`` defaults to SearXNG when BRAIN_SEARX_URL is
-    set (no web_search tool otherwise); ``client`` to ``brain.llm`` settings; ``reader`` to a PageReader."""
+    set (no web_search tool otherwise); ``client`` to ``brain.llm`` settings; ``reader`` to a PageReader.
+    ``deadline`` (``analyst.expired``'s clocks) ends the loop between rounds, as ``brain decide`` asks."""
     from brain.claims import note
+    from brain.judge import canonical_model
 
     ticker = str(ticker).strip().upper()
     client = client or llm.Client.from_env()
@@ -581,7 +584,9 @@ def scout(bank, ticker: str, question: str | None = None, max_pages: int = 8, lo
     searches: list[dict] = []
     budget = analyst.Budget(getattr(client, "ctx", llm.DEFAULT_CTX))
     tools = analyst._tools(analyst.bank_reader(bank), calls, budget.result_chars)
-    model_name = getattr(client, "model", "?")
+    # Claims are scored by who noted them: one name per model, whatever path or tag the server lists it under
+    # ("/models/Qwen3-1.7B-Q8_0.gguf" and "qwen3-1.7b-q8_0" are one noter), as the judge's source names it.
+    model_name = canonical_model(getattr(client, "model", "")) or "?"
 
     def j(x) -> str:
         return json.dumps(x, default=str)
@@ -674,7 +679,9 @@ def scout(bank, ticker: str, question: str | None = None, max_pages: int = 8, lo
             + ("" if search is not None else " Web search is not available in this run: read pages whose URLs the bank "
                                               "gives you (headline and filing links) instead."))
     out = analyst.run_loop(client, SYSTEM, [{"role": "user", "content": user}], tools,
-                           max_rounds=max(12, reader.max_pages + 8), budget=budget)
+                           max_rounds=max(12, reader.max_pages + 8), budget=budget, deadline=deadline)
+    out.pop("results", None)  # the tool results and the conversation stay here: the scout's shape is unchanged
+    out.pop("convo", None)
     out.update({"ticker": ticker, "question": ask, "notes": notes, "pages": reader.pages, "searches": searches,
                 "tool_calls": calls})
     return out
@@ -689,7 +696,7 @@ def _cmd_scout(a) -> int:
     else:
         print("\n" + out["answer"])
     print(f"\n{len(out['notes'])} claims noted, {sum(p['ok'] for p in out['pages'])} pages read "
-          f"({out.get('model')}, {out.get('seconds')} s). Run `brain score-claims` before trusting any of them.")
+          f"({out.get('model')}, {out.get('seconds')} s). They weigh nothing until their source has a record: `brain decide score`.")
     return 0 if out["ok"] else 1
 
 

@@ -1,6 +1,6 @@
 import unittest
 
-from brain.terminal.commands import FUNCTIONS, CommandError, complete, parse
+from brain.terminal.commands import FUNCTIONS, CommandError, complete, dec_line, parse
 
 
 class ParseTest(unittest.TestCase):
@@ -146,6 +146,35 @@ class ParseTest(unittest.TestCase):
                 parse(line)
             self.assertEqual(cm.exception.hint, hint)
 
+    def test_dec(self):
+        self.check("AAPL DEC", "DEC", "AAPL")
+        self.check("dec aapl", "DEC", "AAPL")
+        self.check("DEC", "DEC", None)  # every stock's latest decision and the scorecard
+        self.check("AAPL DEC NEW", "DEC", "AAPL", ["NEW"])
+        self.check("dec new aapl", "DEC", "AAPL", ["NEW"])  # NEW is DEC's keyword, never the ticker
+        self.check("DEC AAPL NEW", "DEC", "AAPL", ["NEW"])
+        self.check("AAPL US EQUITY DEC NEW <GO>", "DEC", "AAPL", ["NEW"])
+        self.check("NEW DEC", "DEC", "NEW")  # before the code it is a ticker, as any other word
+        self.check("CF DEC NEW", "DEC", "CF", ["NEW"])  # a ticker that is a code
+        self.check("GO DEC NEW", "DEC", "GO", ["NEW"])
+        self.check("DEC DES", "DES", "DEC")  # Diversified Energy: [TICKER] FUNCTION wins
+        self.check("DEC DEC NEW", "DEC", "DEC", ["NEW"])
+        self.check("INGEST DEC", "INGEST", "DEC")  # an ingest of the ticker DEC, never a decision
+        with self.assertRaises(CommandError) as cm:
+            parse("DEC NEW")
+        self.assertEqual((cm.exception.message, cm.exception.hint), ("DEC NEW needs a ticker, e.g. AAPL DEC NEW", "DEC"))
+        self.assertTrue(cm.exception.message.startswith("DEC NEW needs a ticker"))
+        for line, hint in (("AAPL DEC FOO", "AAPL DEC"), ("DEC NEW NEW", "DEC"), ("AAPL DEC NEW 5Y", "AAPL DEC")):
+            with self.assertRaises(CommandError, msg=line) as cm:
+                parse(line)
+            self.assertEqual((cm.exception.message, cm.exception.hint), ("DEC takes no arguments, or NEW", hint))
+        # the line a row or a hint offers for a ticker: None when the ticker would be read as the function
+        self.assertEqual((dec_line("AAPL"), dec_line("CF", new=True), dec_line("NEW")), ("AAPL DEC", "CF DEC NEW", "NEW DEC"))
+        for t in ("INGEST", "SHOW", "ASK", "HELP"):
+            self.assertEqual((dec_line(t), dec_line(t, new=True)), (None, None), t)
+        self.assertEqual(FUNCTIONS["DEC"]["scope"], "both")
+        self.assertEqual(FUNCTIONS["DEC"]["args"], "[NEW]")
+
     def test_every_function_parses(self):
         for code, spec in FUNCTIONS.items():
             line = f"AAPL {code} 1234abcd" if code == "SHOW" else f"AAPL {code}"
@@ -194,6 +223,18 @@ class CompleteTest(unittest.TestCase):
         self.assertEqual(texts("INGEST "), ["MARKETS", "MACRO", "UNIVERSE", "INSIDERS", "WATCH"])
         self.assertEqual(texts("INGEST I")[0], "INSIDERS")
         self.assertIn("INS", texts("AAPL I"))
+
+    def test_dec_completion(self):
+        self.assertEqual(self.texts("AAPL DEC "), ["NEW"])
+        self.assertEqual(complete("AAPL DEC N", self.TICKERS)[0],
+                         {"text": "NEW", "kind": "keyword", "desc": "decide afresh in a background job (paper only): T DEC NEW"})
+        self.assertEqual(self.texts("DEC AAPL "), ["NEW"])
+        self.assertEqual(self.texts("DEC "), ["NEW"])
+        self.assertEqual(self.texts("DEC A"), ["AAPL", "ABT", "AMD"])  # the ticker, before NEW
+        self.assertEqual(self.texts("AAPL DEC NEW "), [])  # nothing after NEW
+        self.assertEqual(self.texts("DEC NEW AAPL "), [])
+        self.assertIn("DEC", self.texts("AAPL D"))
+        self.assertIn("DEC", self.texts("d"))
 
     def test_limits(self):
         self.assertEqual(complete("", self.TICKERS), [])

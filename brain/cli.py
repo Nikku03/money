@@ -71,8 +71,12 @@ def _port(text: str) -> int:
 
 def cmd_note(a):
     from brain.claims import note
-    f = note(_bank(), a.ticker, a.text, a.source, tier=a.tier, direction=a.direction,
-             known_at=a.known_at, horizon_days=a.horizon)
+    try:
+        f = note(_bank(), a.ticker, a.text, a.source, tier=a.tier, direction=a.direction,
+                 known_at=a.known_at, horizon_days=a.horizon)
+    except ValueError as e:  # not an http(s) URL, or a publication time in the future
+        print(f"note: {e}", file=sys.stderr)
+        return 1
     print(f"stored {f.ref}")
 
 
@@ -216,7 +220,7 @@ def main(argv=None) -> int:
     s = sub.add_parser("check", help="verify bank invariants and journal replay")
     s.set_defaults(fn=cmd_check)
 
-    s = sub.add_parser("score-claims", help="hit rate of web claims per source vs SPY")
+    s = sub.add_parser("score-claims", help="every web claim per source vs SPY, overlapping ones included (decide score: the record D1 weighs)")
     s.set_defaults(fn=cmd_score_claims)
 
     s = sub.add_parser("universe", help="rebuild the research universe by its written rule")

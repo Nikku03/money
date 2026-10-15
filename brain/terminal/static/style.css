@@ -370,6 +370,26 @@ a:hover { text-decoration: underline; }
 .tier.reported { color: var(--text); }
 .tier.opinion { color: var(--magenta); }
 
+/* the record D1 weighs, beside a claim (CN) */
+.tbl th.gate, .tbl td.gate { white-space: normal; min-width: 24ch; }
+.gate-why { display: block; color: var(--dim); font-size: 11px; }
+
+/* ---------- decision (DEC) ---------- */
+.dec-top {
+  display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 12px;
+  padding: 8px 8px 4px; border-bottom: 1px solid var(--rule);
+}
+.dec-tk { color: var(--amber); font-weight: 700; font-size: 15px; }
+.dec-action { font-size: 15px; font-weight: 700; }
+.dec-meta { display: flex; flex-wrap: wrap; gap: 2px 14px; padding: 4px 8px 8px; color: var(--dim); border-bottom: 1px solid var(--rule-strong); }
+.dec-meta .v { font-weight: 700; }
+.dec-text { padding: 6px 8px; max-width: 110ch; white-space: pre-wrap; overflow-wrap: anywhere; }
+.dec-notes { margin: 4px 0 8px; padding-left: 26px; color: var(--dim); max-width: 120ch; }
+.dec .refs .cite { margin-right: 2px; }
+.dec .ask-warn { margin: 2px 8px 6px; }
+.dec-job { margin: 6px 8px 2px; padding: 3px 8px; border: 1px solid var(--amber-faint); border-left: 3px solid var(--amber);
+  max-width: 110ch; overflow-wrap: anywhere; }
+
 /* ---------- fact ---------- */
 .fact { padding-bottom: 8px; }
 .fact-head { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; padding: 8px 8px 6px; border-bottom: 1px solid var(--rule-strong); }

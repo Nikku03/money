@@ -12,7 +12,7 @@
   // ---------- constants ----------
   const $ = (sel, root = document) => root.querySelector(sel);
   const TOKEN = ($('meta[name="terminal-token"]') || {}).content || "";
-  const FUNCS = ["HELP", "DES", "GP", "FA", "CF", "CN", "EV", "BRIEF", "INS", "ERN", "JET", "SHOW", "WEI", "MOV",
+  const FUNCS = ["HELP", "DES", "GP", "FA", "CF", "CN", "EV", "BRIEF", "INS", "ERN", "JET", "DEC", "SHOW", "WEI", "MOV",
     "CURVE", "ECO", "RES", "CLM", "SHIP", "CAM", "WL", "ALRT", "ASK", "INGEST", "JOBS"];
   const SECURITY_FNS = new Set(["DES", "GP", "FA", "CF", "CN", "EV", "BRIEF", "INS", "ERN", "JET"]);
   const RANGES = ["1M", "3M", "6M", "YTD", "1Y", "2Y", "5Y", "10Y", "MAX"];
@@ -719,7 +719,7 @@
     const intro = h("div", "help-intro");
     intro.append(document.createTextNode("Type "), h("span", "kbd", "[TICKER] FUNCTION [ARGS]"),
       document.createTextNode(" then Enter. Function first, a bare ticker and US EQUITY <GO> also work. Try: "));
-    ["AAPL DES", "AAPL GP 5Y SPY MSFT", "AAPL FA", "AAPL INS", "AAPL ERN", "WEI", "CURVE", "RES", "WL", "ALRT", "ASK"]
+    ["AAPL DES", "AAPL GP 5Y SPY MSFT", "AAPL FA", "AAPL INS", "AAPL ERN", "AAPL DEC", "WEI", "CURVE", "RES", "WL", "ALRT", "ASK"]
       .forEach((ex, k) => intro.append(...(k ? [document.createTextNode(" · ")] : []), cmdLink(ex, p)));
     root.append(intro);
 
@@ -874,17 +874,20 @@
     const t = res.ticker;
     const root = h("div", "news");
     const claims = d.claims || [];
-    const cs = section("Claims noted from the web", "a direction is not evidence until its source's record beats a coin flip (CLM)");
+    const cs = section("Claims noted from the web", "a direction weighs in a decision only once its source's record D1 weighs is proven (CLM, DEC)");
     if (claims.length) {
       cs.append(gridTable(
-        [{ label: "Time (UTC)" }, { label: "Dir" }, { label: "Tier" }, { label: "Claim", cls: "grow" }, { label: "Source" }, { label: "Record", cls: "num" }, { label: "", cls: "src" }],
+        [{ label: "Time (UTC)" }, { label: "Dir" }, { label: "Tier" }, { label: "Claim", cls: "grow" }, { label: "Source" },
+          { label: "Every call, overlapping", cls: "num", title: "claims.score: every scored claim of the site counted on its own, overlapping ones included; no decision reads it" },
+          { label: "The record D1 weighs", cls: "gate", title: "claims.track_record: the source's independent bets, after a false-discovery correction; what gives it weight in a decision" },
+          { label: "", cls: "src" }],
         claims.map((c) => {
           const dir = c.direction > 0 ? { text: "▲ up", cls: "dir up" } : c.direction < 0 ? { text: "▼ down", cls: "dir down" } : { text: "–", cls: "dir flat" };
           const rec = c.record && isNum(c.record.n)
-            ? { text: `${c.record.n} · ${isNum(c.record.hit_rate) ? fmtPct(c.record.hit_rate, 0, false) : "—"}`, cls: "num", title: "claims scored · hit rate" }
+            ? { text: `${c.record.n} · ${isNum(c.record.hit_rate) ? fmtPct(c.record.hit_rate, 0, false) : "—"}`, cls: "num", title: "every call, overlapping: claims scored · hit rate" }
             : { text: "no record", cls: "num faint" };
           return { cells: [fmtTime(c.time), dir, { text: c.tier || "", cls: "tier " + (c.tier || "") },
-            { node: extLink(c.text || "", c.url), cls: "wrap" }, { text: c.source || "", cls: "dim" }, rec, citeEl(c.cite, t)] };
+            { node: extLink(c.text || "", c.url), cls: "wrap" }, { text: c.source || "", cls: "dim" }, rec, gateCell(c.gate, c.gate_key), citeEl(c.cite, t)] };
         })));
     } else {
       cs.append(h("div", "empty", "No claims noted from the web for this security."));
@@ -894,6 +897,19 @@
     else hs.append(h("div", "empty", "No headlines in the bank."));
     root.append(cs, hs);
     p.body.append(root);
+  }
+
+  /** A source's track_record row, the record D1 weighs: bets, hit rate, q, proven and weight, then its why. */
+  function gateCell(g, key) {
+    if (!g || typeof g !== "object" || !isNum(g.bets)) return { text: "no record", cls: "gate faint" };
+    const el = h("span");
+    const parts = [`${g.bets} bet${g.bets === 1 ? "" : "s"}`];
+    if (isNum(g.hit_rate)) parts.push(`${fmtPct(g.hit_rate, 0, false)} hit`);
+    if (isNum(g.q)) parts.push(`q ${fmtNum(g.q, 2)}`);
+    parts.push(g.proven ? `proven, weight ${fmtNum(isNum(g.weight) ? g.weight : 0, 2)}` : "not proven, weight 0");
+    el.append(h("span", g.proven ? "up" : "", parts.join(" · ")));
+    if (g.why) el.append(h("span", "gate-why", g.why));
+    return { node: el, cls: "gate", title: `${key ? key + ": " : ""}the record D1 weighs` };
   }
 
   /** EV: the H1-H4 rows against the research universe, then the hypotheses declared on the broad one
@@ -972,6 +988,163 @@
     p.body.append(root);
   }
 
+  // ---------- decisions (DEC) ----------
+  const ACTION_CLS = { BUY: "up", SELL: "down" };
+  const DIR_CELL = (v) => (v > 0 ? { text: "▲ up", cls: "dir up" } : v < 0 ? { text: "▼ down", cls: "dir down" } : { text: "–", cls: "dir flat" });
+  const MAX_SHOWN_REFS = 12;
+  const MAX_SHOWN_CONTEXT = 10;  // more (a week of headline alerts) fold under "N more"
+
+  /** The citations behind one evidence item: each opens SHOW, looked up in the entity it belongs to. */
+  function refCites(list) {
+    const el = h("span", "refs");
+    const cites = Array.isArray(list) ? list : [];
+    for (const c of cites.slice(0, MAX_SHOWN_REFS)) {
+      const ce = c && citeEl(c.cite, entityOk(c.entity) ? c.entity : null);
+      if (ce) el.append(ce, document.createTextNode(" "));
+    }
+    if (cites.length > MAX_SHOWN_REFS) el.append(h("span", "dim", `+${cites.length - MAX_SHOWN_REFS}`));
+    return el;
+  }
+
+  /** T DEC: one recorded paper decision, as `brain decide` prints its card. The header gives the action, the
+   * score against its threshold, the policy and the date; then every item D1 weighed (weight 0 included, each
+   * citing its claims and judgments), the context that weighs 0, the lean (unproven, never evidence), the
+   * explanation (model-written or a template: the table is the decision), the notes and the stock's history. */
+  function viewDecision(p, res) {
+    const d = res.data || {};
+    const t = d.ticker || res.ticker;
+    const root = h("div", "dec");
+    const top = h("div", "dec-top");
+    top.append(h("span", "dec-tk", t || ""), h("span", "dec-action " + (ACTION_CLS[d.action] || "flat"), d.label || d.action || ""));
+    const ce = citeEl(d.cite, t);
+    if (ce) top.append(ce);
+    top.append(h("span", "badge warn", "paper only · not financial advice"));
+    root.append(top);
+    // the server's word on the newest T DEC NEW when this is not its decision: still at work, or it recorded nothing
+    if (d.job_note) {
+      const jn = h("div", "dec-job", `${String(d.job_note)}. `);
+      jn.append(cmdLink("JOBS", p));
+      root.append(jn);
+    }
+
+    const meta = h("div", "dec-meta");
+    const thr = isNum(d.threshold) ? d.threshold : 0.5;
+    const sc = h("span");
+    sc.append(document.createTextNode("Score "), h("span", "v " + signOf(fmtSigned(d.score, 2)), fmtSigned(isNum(d.score) ? d.score : 0, 2)),
+      document.createTextNode(`; BUY needs +${fixed(thr, 2)}, SELL -${fixed(thr, 2)}`));
+    meta.append(sc, h("span", "", `policy ${d.policy || "?"} · sha ${String(d.policy_sha || "?").slice(0, 16)}`));
+    if (d.policy_current === false) meta.append(h("span", "badge bad", "not the code's policy: it was edited"));
+    meta.append(h("span", "", `as of ${d.as_of || "—"}`));
+    if (isNum(d.horizon_days)) meta.append(h("span", "", `scored after ${d.horizon_days} trading days vs SPY`));
+    const px = d.price && typeof d.price === "object" ? d.price : null;
+    if (px && isNum(px.close)) {
+      const pe = h("span");
+      pe.append(document.createTextNode(`close ${fmtNum(px.close, priceDigits(px.close))} on ${px.date || "?"} `));
+      const pc = citeEl(px.cite, t);
+      if (pc) pe.append(pc);
+      meta.append(pe);
+    }
+    root.append(meta);
+
+    const items = Array.isArray(d.items) ? d.items : [];
+    const ev = section("Evidence", "every item D1 considered; untested evidence weighs 0, and why is shown");
+    if (items.length) {
+      ev.append(gridTable([{ label: "Kind" }, { label: "Evidence" }, { label: "Dir" }, { label: "Weight", cls: "num" },
+        { label: "Why", cls: "grow" }, { label: "Cites" }],
+      items.map((i) => ({ cells: [{ text: i.kind || "", cls: "dim" }, { node: nameEl(i.id || "", "amber"), cls: "wrap" }, DIR_CELL(i.direction),
+        { text: isNum(i.weight) && i.weight ? fmtNum(i.weight, 2) : "0", cls: "num" + (i.weight > 0 ? " amber" : " dim") },
+        { text: i.why || "", cls: "wrap" }, { node: refCites(i.cites), cls: "wrap" }] }))));
+    } else {
+      ev.append(h("div", "empty", "No evidence items."));
+    }
+    const st = d.source_term && typeof d.source_term === "object" ? d.source_term : {};
+    const sum = `Signals ${fmtSigned(isNum(d.signal_score) ? d.signal_score : 0, 2)}`
+      + (st.id ? ` + source term ${st.direction > 0 ? "+" : "-"}${fmtNum(st.weight, 2)} (${st.id})` : " + source term 0")
+      + ` = score ${fmtSigned(isNum(d.score) ? d.score : 0, 2)}.`;
+    ev.append(h("div", "note", sum));
+    root.append(ev);
+
+    const ctx = Array.isArray(d.context) ? d.context : [];
+    if (ctx.length || d.withheld > 0) {
+      const cs = section("Context, weight 0", "stale or other-horizon calls, calls with no direction, recent alerts: shown, never weighed");
+      const ctxTable = (list) => gridTable([{ label: "Fact" }, { label: "What" }, { label: "Why weight 0", cls: "grow" }],
+        list.map((c) => ({ cells: [citeEl(c.cite, entityOk(c.entity) ? c.entity : t), { text: c.attr || "", cls: "dim" }, { text: c.why || "", cls: "wrap" }] })));
+      if (ctx.length) cs.append(ctxTable(ctx.slice(0, MAX_SHOWN_CONTEXT)));
+      if (ctx.length > MAX_SHOWN_CONTEXT) {
+        const more = h("details", "raw");
+        more.append(h("summary", "", `${ctx.length - MAX_SHOWN_CONTEXT} more`), ctxTable(ctx.slice(MAX_SHOWN_CONTEXT)));
+        cs.append(more);
+      }
+      if (d.withheld > 0) {
+        cs.append(h("div", "note", `${d.withheld} cited fact${d.withheld === 1 ? " is" : "s are"} not shown: about an aircraft that is no longer tracked (opted out, or in the FAA's LADD/PIA programs), as SHOW withholds it.`));
+      }
+      root.append(cs);
+    }
+
+    const ln = d.lean && typeof d.lean === "object" ? d.lean : {};
+    const ls = section("Lean", "unproven, not evidence");
+    ls.append(h("div", "dec-text", `${ln.text || "none"}. The sources' unweighted lean is recorded so it can be scored; it never moves the decision.`));
+    root.append(ls);
+
+    const by = String(d.explained_by || "template");
+    const xs = section("Explanation", by === "template" ? "written from the table by a template; the decision is the table"
+      : `model-written (${by}); the decision is the table`);
+    xs.append(h("div", "dec-text", d.explanation || "—"));
+    const nums = answerNumbers(d.unverified_numbers);
+    if (nums.length) xs.append(numbersWarning(nums, "this explanation", "the decision's own numbers", "The model may have made them up: the table above is the decision."));
+    if (d.explain_error) xs.append(h("div", "note", `The model's explanation was not used: ${d.explain_error}`));
+    root.append(xs);
+
+    // what the model steps left behind; why a step was skipped or failed is in the notes, as recorded
+    const steps = [];
+    const j = d.judgment && typeof d.judgment === "object" ? d.judgment : null;
+    if (j) {
+      const jc = citeEl(j.cite, t);
+      const v = h("span", jc ? "" : "dim", jc ? "recorded " : "not recorded");
+      if (jc) v.append(jc, h("span", "dim", " (a source like any other: it weighs nothing until its record is proven)"));
+      steps.push({ label: "The model's own call", value: v });
+    }
+    const rd = d.read && typeof d.read === "object" ? d.read : null;
+    if (rd) {
+      const pages = isNum(rd.pages_read) ? rd.pages_read : 0;
+      const noted = isNum(rd.claims_noted) ? rd.claims_noted : 0;
+      const counts = `${pages} page${pages === 1 ? "" : "s"} read, ${noted} claim${noted === 1 ? "" : "s"} noted`;
+      // a read that was skipped or failed says so, rather than only "0 pages read"
+      steps.push({ label: "Web reading", value: rd.error ? h("span", "dim", `${counts}: ${String(rd.error)}`) : counts });
+    }
+    const notes = Array.isArray(d.notes) ? d.notes : [];
+    if (steps.length || notes.length) {
+      const ns = section("Notes", "steps skipped and why, as recorded");
+      if (steps.length) ns.append(kvTable(steps));
+      if (notes.length) {
+        const ul = h("ul", "dec-notes");
+        for (const n of notes) ul.append(h("li", "", String(n)));
+        ns.append(ul);
+      }
+      root.append(ns);
+    }
+
+    const hs = section("History", `every decision on ${t || "this stock"}, newest first, with what the stock did after`);
+    hs.append(dataTable(d.history || {}, { pane: p, ticker: t }));
+    root.append(hs);
+    p.body.append(root);
+  }
+
+  /** DEC: every stock's latest decision, the scorecard per policy, and every source's track record. */
+  function viewDecisions(p, res) {
+    const d = res.data || {};
+    const root = h("div", "dec");
+    for (const [key, title, sub] of [["latest", "Latest decision per stock", "paper only · click a stock for its decision"],
+      ["scorecard", "Scorecard", "decisions scored against SPY as independent bets"],
+      ["sources", "Source track records", "the record D1 weighs"]]) {
+      const s = section(title, sub);
+      s.append(dataTable(d[key] || {}, { pane: p, ticker: res.ticker }));
+      root.append(s);
+    }
+    if (d.note) root.append(noteEl(d.note, { pane: p }));
+    p.body.append(root);
+  }
+
   function viewMarkdown(p, res) {
     p.body.append(renderMarkdown((res.data || {}).markdown, { pane: p, ticker: res.ticker }));
   }
@@ -1020,9 +1193,10 @@
     }
     root.append(kvTable(rows));
 
-    if ((d.inputs || []).length) {
+    const withheld = isNum(d.withheld) ? d.withheld : 0;
+    if ((d.inputs || []).length || withheld > 0) {
       const s = section("Inputs", "the facts this one was derived from");
-      s.append(gridTable([{ label: "Fact" }, { label: "Attribute", cls: "attr" }, { label: "Value", cls: "grow" }],
+      if ((d.inputs || []).length) s.append(gridTable([{ label: "Fact" }, { label: "Attribute", cls: "attr" }, { label: "Value", cls: "grow" }],
         d.inputs.map((x) => {
           const ent = String(x.ref || "").split("/")[0];
           let val = x.value;
@@ -1032,6 +1206,9 @@
           return { cells: [citeEl(x.cite, entityOk(ent) ? ent : t), { node: nameEl(x.attr || "", "mono-wrap"), cls: "amber" },
             sv === null ? null : { node: h("span", "mono-wrap", sv.length > 160 ? sv.slice(0, 159) + "…" : sv), title: sv }] };
         })));
+      if (withheld > 0) {
+        s.append(h("div", "note", `${withheld} input${withheld === 1 ? " is" : "s are"} not shown: about an aircraft that is no longer tracked (opted out, or in the FAA's LADD/PIA programs), as SHOW withholds it.`));
+      }
       root.append(s);
     }
     const raw = h("details", "raw");
@@ -1966,15 +2143,17 @@
     return out;
   }
 
-  /** A warning under an answer: numbers it states that its tool results do not hold (made up, or computed). */
-  function numbersWarning(nums) {
+  /** A warning under an answer (or a decision's explanation): numbers it states that what it was given does
+   * not hold (made up, or computed). */
+  function numbersWarning(nums, what = "this answer", where = "its tool results",
+    advice = "The model may have computed or made them up: check them against the cited facts.") {
     const box = h("div", "ask-warn");
     const n = nums.length;
     const shown = nums.slice(0, MAX_SHOWN_NUMBERS).join(", ") + (n > MAX_SHOWN_NUMBERS ? `, and ${n - MAX_SHOWN_NUMBERS} more` : "");
     box.append(h("span", "badge warn", "unverified"),
-      h("span", "", ` ${n} number${n === 1 ? "" : "s"} in this answer ${n === 1 ? "is" : "are"} in none of its tool results: `),
+      h("span", "", ` ${n} number${n === 1 ? "" : "s"} in ${what} ${n === 1 ? "is" : "are"} in none of ${where}: `),
       h("span", "nums", shown),
-      h("span", "", ". The model may have computed or made them up: check them against the cited facts."));
+      h("span", "", `. ${advice}`));
     return box;
   }
 
@@ -2036,7 +2215,7 @@
 
   const VIEWS = {
     help: viewHelp, des: viewDes, chart: viewChart, table: viewTable, news: viewNews, evidence: viewEvidence,
-    markdown: viewMarkdown, fact: viewFact, curve: viewCurve, ask: viewAsk,
+    markdown: viewMarkdown, fact: viewFact, curve: viewCurve, ask: viewAsk, decision: viewDecision, decisions: viewDecisions,
   };
 
   // ---------- panes ----------
@@ -2076,14 +2255,33 @@
     // a watchlist edit or an acknowledgement is done once: rerun as the list it showed
     if ((w[0] === "WL" || w[1] === "WL") && (w.includes("ADD") || w.includes("DEL"))) return "WL";
     if ((w[0] === "ALRT" || w[1] === "ALRT") && w.includes("ACK")) return "ALRT";
+    // a decision job is started once: `T DEC NEW` reruns as `T DEC`, the decision it recorded. What is left
+    // is read again, since dropping NEW can change which word is the function (`DEC NEW INGEST`).
+    if (w[0] === "DEC" || w[1] === "DEC") {
+      const read = withoutNew(line);
+      if (read !== String(line).trim()) return safeRerun(read);
+    }
     return String(line).trim();
+  }
+
+  /** `line` without the NEW words after its first DEC: `AAPL DEC NEW` -> `AAPL DEC`, `DEC NEW AAPL` -> `DEC AAPL`. */
+  function withoutNew(line) {
+    const toks = String(line).trim().split(/\s+/);
+    const d = toks.findIndex((x) => x.toUpperCase() === "DEC");
+    return toks.filter((x, k) => d < 0 || k <= d || x.toUpperCase() !== "NEW").join(" ");
   }
 
   const WRITES = { WL: ["ADD", "DEL"], ALRT: ["ACK"] };
 
+  /** A result that started a background job: INGEST, or T DEC NEW. */
+  function startedJob(res) {
+    return !!(res && res.ok && (res.fn === "INGEST" || (res.fn === "DEC" && (res.args || [])[0] === "NEW")));
+  }
+
   /** The line a pane reruns: the server's own reading wins once it has answered this line. */
   function rerunLine(line, res) {
     if (res && res.ok && res.fn === "INGEST") return "JOBS";
+    if (startedJob(res) && tickerOk(res.ticker)) return safeRerun(`${res.ticker} DEC`);  // a ticker named INGEST stays safe
     if (res && res.ok && WRITES[res.fn] && (res.args || []).length && WRITES[res.fn].includes(String(res.args[0]))) return res.fn;
     return safeRerun(line);
   }
@@ -2143,7 +2341,7 @@
       }
       if (!quiet && booted) reveal(this);  // the user sent this here: show it, even below the fold
       const res = await runCmd(line);
-      if (res && res.ok && res.fn === "INGEST") jobsStarted(res);  // even if a newer command owns the pane
+      if (startedJob(res)) jobsStarted(res);  // even if a newer command owns the pane
       if (seq !== this.seq) return;  // a newer command owns this pane
       this.setBusy(false);
       // HELP's codes and the analyst's example questions use the last company shown, not SPY or ^GSPC
@@ -2558,7 +2756,8 @@
     }
   }
 
-  let jobsRunning = 0;
+  let jobsRunning = 0;  // jobs this page knows to be queued or running
+  let jobsFinished = null;  // the server's count of finished jobs at the last poll (it only grows)
   let statusTimer = 0;
   let alertsSeen = null;  // the counts at the last status poll
 
@@ -2594,8 +2793,9 @@
     }, ms);
   }
 
-  /** This page just started jobs (an INGEST result). A job can finish within a second, between two polls,
-   * so count it now: the next poll that sees fewer running then refreshes JOBS and errored panes. */
+  /** This page just started jobs (an INGEST or DEC NEW result). A job can finish within a second, between two polls,
+   * so count it now (queued ones too): the next poll then refreshes JOBS and errored panes, even before the page has
+   * a finished count to compare. */
   function jobsStarted(res) {
     const rows = (res && res.data && Array.isArray(res.data.rows)) ? res.data.rows : [];
     const active = rows.filter((r) => r.status === "running" || r.status === "queued").length;
@@ -2617,6 +2817,12 @@
     bank.replaceChildren(document.createTextNode("BANK "), h("b", "", s.entities == null ? "–" : String(s.entities)),
       document.createTextNode(" · UNIV "), h("b", "", s.universe == null ? "–" : String(s.universe)));
     const running = Number(s.jobs_running) || 0;
+    const active = running + (Number(s.jobs_queued) || 0);  // counted as jobsStarted counts them
+    const targets = Array.isArray(s.jobs_active) ? s.jobs_active.map(String) : [];
+    const finished = isNum(s.jobs_finished) ? s.jobs_finished : null;
+    // A job ended when the server's finished count rose: the running count alone can stay the same (a queued
+    // decision starts as another ends) or drop with nothing finished (a queued one counted as running).
+    const ended = finished !== null && jobsFinished !== null ? finished > jobsFinished : active < jobsRunning;
     const jobs = $("#st-jobs");
     jobs.textContent = running ? `JOBS ${running} RUNNING` : "JOBS 0";
     jobs.className = "st st-btn" + (running ? " busy" : "");
@@ -2631,16 +2837,27 @@
       : `The analyst is unavailable: ${an.reason || "not configured"}. Click for how to start it.`;
     showAlerts(s.alerts);
 
-    if (running < jobsRunning) {
-      // a job finished: new facts may answer panes that were missing data (an INGEST pane reruns as JOBS)
+    if (ended) {
+      // a job finished: new facts may answer panes that were missing data (an INGEST pane reruns as JOBS);
+      // a decision job may have recorded a decision (a DEC NEW pane reruns as T DEC; WL shows the latest).
+      // A DEC NEW pane whose own decision is still queued or running keeps its job table until that job ends.
       for (const p of panes) {
-        if (!p.res || !p.res.ok || p.res.fn === "JOBS" || p.res.fn === "INGEST") p.reload(true);
+        if (decisionPending(p, targets)) continue;
+        if (!p.res || !p.res.ok || ["JOBS", "INGEST", "DEC", "WL"].includes(p.res.fn)) p.reload(true);
       }
       refreshTape();
-    } else if (running > 0) {
+    } else if (active > 0) {
       for (const p of panes) if (p.res && (p.res.fn === "JOBS" || p.res.fn === "INGEST")) p.reload(true);
     }
-    jobsRunning = running;
+    jobsRunning = active;
+    if (finished !== null) jobsFinished = finished;
+  }
+
+  /** A pane showing the job table of its own `T DEC NEW` while that decision job is queued or running
+   * (`targets`: the status poll's `jobs_active`). */
+  function decisionPending(p, targets) {
+    return startedJob(p.res) && p.res.fn === "DEC" && tickerOk(p.res.ticker)
+      && targets.includes(`DEC ${String(p.res.ticker).toUpperCase()}`);
   }
 
   // ---------- ticker tape ----------

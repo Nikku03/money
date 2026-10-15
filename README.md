@@ -11,6 +11,7 @@ An agent with web access reads the internet. This repo is what it remembers, and
  aisstream.io AIS (vessels per port area) ────┤     timestamped)──► research engine: declared hypotheses, matched nulls
  TfL / Caltrans cameras (vehicle counts) ─────┘                 ──► watchlist rules -> alerts
                                                                 ──► claim scoring: is this source ever right?
+                                                                ──► paper decisions (policy D1): weigh only tested evidence
 ```
 
 Design carried over from the cell project (`Nikku03/cell`, `HANDOFF_REASONING_ENGINE_AND_MEMORY_BANK.md`):
@@ -56,6 +57,22 @@ The controls passed on both universes: the harness finds a planted edge (oracle 
 H6 is the instructive one. On the TRAIN months (2011–2018) insider buying earned +0.11% a month with p = 0.008, the kind of result that gets written up. On the months it had never seen it earned nothing. That is why the split exists. Every hypothesis ever run counts in the false-discovery correction, so H5's q rose from 0.26 to 0.61 as H3b–H8b were added, withdrawn ones included; trying more variants costs something, as it should.
 
 What this means for making money: textbook signals, including the well-known event ones (insider buying, post-earnings drift, SUE), do not carry an edge you can detect after costs in these universes. Both universes are chosen by today's market value, so they are survivors; the equal-weight broad universe returned 20% a year over TEST against SPY's 18%, mostly for that reason. Any edge is more likely to come from information the market prices slowly, and each new idea goes through the same gate. The alternative data below (aircraft, ships, cameras) is collected so that ideas about it can be tested once enough history exists; none has been tested yet.
+
+## Decisions (paper only)
+
+```
+python -m brain decide AAPL                 # weigh the tested evidence on AAPL under policy D1; record a paper decision
+python -m brain decide AAPL --no-llm        # deterministic only: no web reading, no model call
+python -m brain decide score                # how past decisions did against SPY, and every source's track record
+```
+
+`brain decide` turns what the bank holds into one paper call per stock: BUY (expect it to beat SPY over the next 21 trading days), SELL (expect it to trail SPY), NO_EDGE (nothing tested points either way) or NO_DATA (the bank lacks recent prices; nothing is recorded). When a model is reachable it can first read public pages about the company (`--read`) and make its own call, which is stored as a `judgment` fact citing the facts it used. A fixed, declared policy (D1, [`docs/DECIDE.md`](docs/DECIDE.md)) then gives each piece of evidence a weight from its tested record, and the decision goes into the bank with every input cited. Twenty-one trading days later it is scored against what the stock did.
+
+**Today it says NO_EDGE for every stock.** That is the honest answer: every research hypothesis above failed its TEST gate, and no source (web site or model) has a scored record yet, so nothing carries weight. The card shows the sources' unweighted lean beside the decision, labelled as not evidence. The answer changes on its own when a hypothesis passes, or when a source earns weight.
+
+**How a source earns weight.** Every directional call, a web claim or the model's own judgment, is scored against SPY from the first session after the bank held it. Calls made in one 21-day window count as one bet, since they rise and fall together. A source needs 30 such bets, a one-sided p < 0.05 against a coin, a false-discovery correction across every source (Benjamini-Hochberg q < 0.10) and a positive mean excess. Its weight is then max(0, 2L − 1), where L is the 95% lower bound of its hit rate. At about one bet a month that takes two and a half years, and a source needs roughly 27 hits in 30 bets to move a decision on its own. The model is a source like any web site: its calls weigh nothing until its own record clears that gate, and a new model or prompt starts a new record.
+
+D1 is never edited: a change is D2, with its own hash, and scores are reported per policy. Decisions are paper only. Nothing here places orders or connects to a broker, and none of it is financial advice.
 
 ## What the brain collects
 
@@ -103,8 +120,9 @@ A keyboard-driven market terminal over the memory bank: type `AAPL GP 5Y SPY` an
 | `EV` | the brain's verdict: where a stock ranks on every tested signal (H1-H4 against the 60-stock universe, H3c, H6, H7b and H8b against the 741-stock one), and whether that signal passed its held-out test |
 | `BRIEF` `SHOW` | the cited one-page brief; any fact with its source |
 | `WEI` `MOV` `CURVE` `ECO` | world markets, universe movers, Treasury yield curve, macro |
-| `RES` `CLM` | research verdicts per universe; web-claim track records per source |
-| `ASK` | ask the analyst, an open-weight model on a server you run. It answers only from the bank, through read-only tools that run terminal commands, and cites fact ids. Its tools cover DES, GP, FA, CF, CN, EV, SHOW, RES, WEI, MOV, CURVE, ECO, CLM, INS, ERN, JET, SHIP, CAM, WL and ALRT (reading only). Under each answer the pane flags cited ids and numbers that none of its tool results hold |
+| `RES` `CLM` | research verdicts per universe; per source, the track record decisions weigh (independent bets) and the count of every call |
+| `DEC` | paper decisions under policy D1: `T DEC` the latest with its evidence weights, the unproven lean, the explanation and the history; `DEC` every stock's latest, the scorecard and every source's track record; `T DEC NEW` decides afresh in a background job |
+| `ASK` | ask the analyst, an open-weight model on a server you run. It answers only from the bank, through read-only tools that run terminal commands, and cites fact ids. Its tools cover DES, GP, FA, CF, CN, EV, SHOW, RES, WEI, MOV, CURVE, ECO, CLM, INS, ERN, JET, SHIP, CAM, WL, ALRT and DEC (reading only). Under each answer the pane flags cited ids and numbers that none of its tool results hold |
 | `INGEST` `JOBS` | collect data in the background: a ticker, `MARKETS`, `MACRO`, `UNIVERSE`, `INSIDERS`, `WATCH` |
 
 It listens on 127.0.0.1 only and requires a per-session token on every API call; a Host check blocks DNS rebinding, and the page's CSP allows no external requests.
@@ -127,7 +145,7 @@ Optional, each enabling one part. Nothing else needs a key.
 | `AISSTREAM_API_KEY` | `ships sample`, watched port areas | Free key from aisstream.io |
 | `TFL_APP_KEY` | TfL camera listing with a higher request allowance | Works without it |
 | `pip install opencv-python-headless websockets` (or `pip install -e ".[alt]"`) | Vehicle counting (OpenCV DNN) and the AIS WebSocket | The YOLOX model (35.9 MB) downloads once to `var/models/` from Hugging Face and is checked against a pinned sha256 |
-| `BRAIN_LLM_URL`, `BRAIN_LLM_MODEL`, `BRAIN_LLM_KEY` | The terminal's `ASK` and `brain scout` | Defaults: `http://127.0.0.1:11434/v1` (Ollama) and `qwen3:8b`. Any OpenAI-compatible server with tool calling works; standard-library HTTP, no vendor SDK |
+| `BRAIN_LLM_URL`, `BRAIN_LLM_MODEL`, `BRAIN_LLM_KEY` | The terminal's `ASK`, `brain scout`, and `brain decide`'s reading, judgment and explanation | Defaults: `http://127.0.0.1:11434/v1` (Ollama) and `qwen3:8b`. Any OpenAI-compatible server with tool calling works; standard-library HTTP, no vendor SDK |
 | `BRAIN_LLM_CTX`, `BRAIN_LLM_TIMEOUT` | Fit the analyst to the server | Context window in tokens (default 16384), seconds per request (default 300) |
 | `BRAIN_SEARX_URL` | `web_search` for the scout | A SearXNG instance with the JSON format enabled. Without it the scout cannot search: it reads pages the bank links to (headlines, filings) and URLs you put in the question, e.g. `brain scout AAPL "Read https://... and note the reported results"` |
 | `BRAIN_NTFY_URL` | Push alerts to a phone | e.g. `https://ntfy.sh/<your-topic>`; notice and high alerts only |
@@ -157,7 +175,8 @@ python -m brain ask AAPL us-gaap:NetIncomeLoss --at 2015-06-30   # what was know
 python -m brain note AAPL "Analyst X cuts to sell on China demand" \
     --source https://... --known-at 2026-10-09T13:00:00Z --direction down
 python -m brain scout AAPL                  # the model reads public pages and notes claims with sources
-python -m brain score-claims                # hit rate per source, vs a coin flip
+python -m brain score-claims                # every call per source vs a coin flip, overlapping ones included (decide score shows the record that gives weight)
+python -m brain decide AAPL                 # a paper decision under policy D1 (today: NO_EDGE; see Decisions)
 python -m brain check                       # invariants; exit 0 = OK (about 2.5 minutes on a 1.9 GB bank)
 ```
 
@@ -195,6 +214,7 @@ Everything runs offline in the unit tests (fixtures, a fake OpenAI-compatible se
 
 - **Worked:** SEC filings, XBRL and Form 4s (live and the bulk data sets, 423,076 trades); the 741-stock universe build; earnings tables and reactions (AAPL, NVDA, JPM, HRI spot-checked against reported figures); FAA registry links (Costco 5 aircraft, Caterpillar 2, Apple none); adsb.lol position reads; TfL and Caltrans camera listings and vehicle counts; the watchlist loop, alerts and the terminal's new functions; `brain check` on the full bank (0 errors).
 - **Only partly:** no company aircraft landed while it was being polled, so landing detection is tested on recorded position sequences, not on a live landing. adsb.lol answered one burst with HTTP 429; the poller now slows down and retries once. The analyst and scout were run against llama.cpp's server (llama-cpp-python) with Qwen3-1.7B on a CPU, not Ollama with qwen3:8b. Given a press-release URL, the scout read the page (robots.txt checked) and noted three claims with that URL and the page's publication date. The small model picked the right tools and reached the right verdict ("no hypothesis passed"), but it miscounted the hypotheses in one answer and misread a net income figure in another, and it took 3–15 minutes per question. Use the largest model your machine runs, and check every number with `SHOW`.
+- **Decisions (2026-10-15, on a copy of the bank):** `brain decide AAPL MSFT NVDA --no-llm` recorded three NO_EDGE decisions: every hypothesis FAIL, no source with a record. The first run took about 2 minutes while the broad ranking was computed; later ones take a second or two per stock. SPY, ^GSPC and a mistyped ticker gave NO_DATA and recorded nothing, and `brain check` found 0 errors with the decisions and a judgment in the bank. With Qwen3-1.7B on llama.cpp's server (CPU), the judge read the bank through one round of tool calls, then called AAPL up (confidence 0.6), citing 5 facts that all resolved. Its reasons were weak (it compared Apple's revenue with "SPY's"), and that is why a call weighs nothing until its source has a record. A second judgment cited dates instead of fact ids and was not recorded. One explanation passed the checks though loosely worded; another failed them and the template was used. With `--read --max-pages 2` and no search engine, the model tried two Apple pages (one answered 404, the other 403, which was left alone) and noted nothing. A decision with the model took 12 to 20 minutes. In the terminal, `AAPL DEC NEW` ran as a job, `AAPL DEC` then showed the new decision, and a page reload started no job.
 - **Not tested live:** aisstream.io (no key here; the WebSocket path is tested against recorded messages only), SearXNG search (no instance here), ntfy push.
 
 ## Layout
@@ -212,12 +232,14 @@ Everything runs offline in the unit tests (fixtures, a fake OpenAI-compatible se
 | `brain/llm.py` | Client for any OpenAI-compatible chat server (standard library only) |
 | `brain/scout.py` | The model reading the web: search, robots-respecting page reader, claims with sources |
 | `brain/net.py` | Polite HTTP: user agent, per-host pacing, SEC turns shared across processes, cache |
-| `brain/claims.py` | Store web claims; score them per source |
+| `brain/claims.py` | Store web claims; score them per source; the track record a decision weighs |
+| `brain/decide.py` | Policy D1: weigh the evidence, record a paper decision, score decisions later |
+| `brain/judge.py` | The model's steps in a decision: its own call (a judgment fact) and a checked explanation |
 | `brain/brief.py` | Cited one-page brief; writes derived facts back |
 | `brain/research/` | Monthly panel, signals, harness (portfolio, costs, nulls per select mode), ledger, hypotheses, runner |
 | `brain/terminal/` | The terminal: command grammar, data functions, local HTTP server and jobs, analyst, static frontend |
 | `brain/markets.py` | The world-markets symbol list and its collector |
-| `docs/TERMINAL.md`, `docs/EXPANSION.md` | Terminal spec; the v2 spec (insiders, earnings, universe, alternative data, alerts, open model) |
+| `docs/TERMINAL.md`, `docs/EXPANSION.md`, `docs/DECIDE.md` | Terminal spec; the v2 spec (insiders, earnings, universe, alternative data, alerts, open model); the decision contract (policy D1, judgments, scoring) |
 | `research/ledger.jsonl` | Every declaration and result, append-only (committed) |
 | `research/RESULTS.md` | Current verdicts, generated from the ledger (committed) |
 | `universe/us_large.json`, `universe/us_broad.json` | The research universes, their rules, and what each rule rejected (committed) |
@@ -239,7 +261,7 @@ Everything runs offline in the unit tests (fixtures, a fake OpenAI-compatible se
 | Transport for London JamCams | Camera listing and frames (London) | TfL Open Data: "Powered by TfL Open Data" |
 | Caltrans CWWP2 CCTV | Camera listing and frames (California) | Public data, no charge, Caltrans Conditions of Use |
 | YOLOX-S via the OpenCV model zoo (Hugging Face `opencv/object_detection_yolox`) | Vehicle counts | Apache-2.0 |
-| Qwen3 (default `qwen3:8b`) or any open-weight model you choose | Analyst and scout | Qwen3: Apache-2.0. Runs on your machine; nothing leaves it unless `BRAIN_LLM_URL` points elsewhere |
+| Qwen3 (default `qwen3:8b`) or any open-weight model you choose | Analyst, scout and the decision judge | Qwen3: Apache-2.0. Runs on your machine; nothing leaves it unless `BRAIN_LLM_URL` points elsewhere |
 | SearXNG (self-hosted) | Web search for the scout | AGPL-3.0 software; results link to their own sites, read under their robots.txt |
 | ntfy | Optional alert push | Apache-2.0 / GPL-2.0 software; ntfy.sh or self-hosted |
 

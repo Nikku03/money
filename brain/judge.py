@@ -5,7 +5,8 @@ The judge is a source like any web site. It reads the bank through the analyst's
 one call (up, down or none for the stock against SPY over the next 21 trading days) and cites the facts
 it relied on. The call is stored as a ``judgment`` fact and scored later like a claim; it weighs nothing
 in a decision until its record shows skill. Its identity is the model and a hash of everything that
-shapes its answers (prompt, tools, temperature, rounds), so a new prompt is a new source with no record.
+shapes its answers (prompts, tool descriptions, temperature, rounds), so a new prompt is a new source
+with no record.
 
 The judge does not see past decisions, judgments or alerts: the tools that show them are left out and
 SHOW refuses them, since a judge anchored on the engine's own output would be scored as if independent.
@@ -54,14 +55,22 @@ How to work:
 
 When you are done, reply with only a JSON object, no other text:
 {"direction": "up" | "down" | "none", "confidence": 0.5-1.0, "summary": "one line: your call and its main reason", "reasons": [{"text": "one line", "cites": ["<id>", ...]}]}
-direction is the stock against SPY over the next 21 trading days. Give at most 5 reasons. The cites are fact ids exactly as the tools printed them (the cite fields, such as "9de710d2"); cite only ids the tools returned."""
+direction is the stock against SPY over the next 21 trading days. Give at most 5 reasons. The cites are fact ids exactly as the tools printed them: the values of the cite, _cite and _cites fields, eight hexadecimal characters such as "9de710d2". A tool's name is not a fact id. Cite only ids the tools returned."""
 
-JUDGE = {"system": SYSTEM, "tools": TOOL_NAMES, "temperature": analyst.TEMPERATURE, "max_rounds": 8,
-         "horizon_days": HORIZON_DAYS}
-JUDGE_SHA = hashlib.sha256(json.dumps(JUDGE, sort_keys=True).encode()).hexdigest()[:8]
-
+USER = ("Security: {ticker}. Today (UTC): {today}.\n\nMake your call on {ticker} against {benchmark} over the next "
+        "{horizon} trading days. Call the tools first; then reply with only the JSON object.")
 REPAIR_JSON = "Reply with only the JSON object described."
 REPAIR_TOOLS = "Call the tools first; cite only ids they return."
+
+# Everything the model is shown that does not come from the bank, and the loop's limits: a change to any of it
+# (a tool's description included, or the analyst's last-round text, which run_loop sends the judge too) is a new
+# source with no record.
+JUDGE = {"system": SYSTEM, "user": USER, "repairs": [REPAIR_JSON, REPAIR_TOOLS], "last_round": analyst.LAST_ROUND,
+         "tools": [{"name": name, "description": desc, "params": {k: list(v) for k, v in params.items()},
+                    "required": list(req)} for name, desc, params, req, _ in analyst._BANK_TOOLS if name in TOOL_NAMES],
+         "temperature": analyst.TEMPERATURE, "max_rounds": 8, "repair_rounds": REPAIR_ROUNDS,
+         "max_calls_per_round": analyst.MAX_CALLS_PER_ROUND, "horizon_days": HORIZON_DAYS}
+JUDGE_SHA = hashlib.sha256(json.dumps(JUDGE, sort_keys=True).encode()).hexdigest()[:8]
 
 EXPLAIN_SYSTEM = """You explain a paper trading decision about one stock to a person who is not a specialist. You are given the decision as JSON: its action, its score against the threshold, and every piece of evidence with its direction, its weight and why it has that weight.
 
@@ -99,12 +108,17 @@ def llm_ready() -> tuple[bool, str]:
 
 
 # ---------- the judge's reader ----------
-def reader(bank):
+def reader(bank, t_run: str | None = None):
     """The analyst's read-only reader, which also refuses SHOW of a decision, judgment or alert, and the
-    functions that list them (DEC, WL, ALRT). Its view is the end of today, the run's T_RUN."""
+    functions that list them (DEC, WL, ALRT). Its view is the end of today, which is the run's T_RUN while
+    the run stays in the UTC day it started in. With ``t_run``, every read is refused once that day is over:
+    the view would then hold facts known after the run's time, and the judgment is stamped as known then."""
+    from brain.terminal import data
     read = analyst.bank_reader(bank)
 
     def run(line: str) -> dict:
+        if t_run is not None and data._now() > t_run:
+            return _refused({}, _day_over(t_run), "answer from the tool results you already have")
         res = read(line)
         fn = res.get("fn")
         if fn in ("DEC", "WL", "ALRT"):
@@ -117,14 +131,18 @@ def reader(bank):
     return run
 
 
-def _refused(res: dict, why: str) -> dict:
+def _refused(res: dict, why: str, hint: str = "describe, evidence, financials, earnings, insider_trades, news") -> dict:
     return {"ok": False, "fn": res.get("fn"), "ticker": res.get("ticker"), "args": res.get("args") or [],
-            "error": why, "hint": "describe, evidence, financials, earnings, insider_trades, news"}
+            "error": why, "hint": hint}
 
 
-def tools(bank, calls: list, budget: analyst.Budget) -> list[analyst.Tool]:
+def _day_over(t_run: str) -> str:
+    return f"the UTC day changed during this run; the judge reads the bank only as of {t_run}"
+
+
+def tools(bank, calls: list, budget: analyst.Budget, t_run: str | None = None) -> list[analyst.Tool]:
     """The analyst's bank tools without decision, watchlist and alerts, reading through ``reader``."""
-    return [t for t in analyst._tools(reader(bank), calls, budget.result_chars) if t.name in TOOL_NAMES]
+    return [t for t in analyst._tools(reader(bank, t_run), calls, budget.result_chars) if t.name in TOOL_NAMES]
 
 
 # ---------- parsing the answer ----------
@@ -305,18 +323,21 @@ def resolve(bank, ticker: str, reasons: list[dict], calls: list[dict], results: 
 
 
 # ---------- assess ----------
-def _user_message(ticker: str) -> str:
-    return (f"Security: {ticker}. Today (UTC): {today()}.\n\nMake your call on {ticker} against {BENCHMARK} over "
-            f"the next {HORIZON_DAYS} trading days. Call the tools first; then reply with only the JSON object.")
+def _user_message(ticker: str, t_run: str) -> str:
+    return USER.format(ticker=ticker, today=t_run[:10], benchmark=BENCHMARK, horizon=HORIZON_DAYS)
 
 
 def _failure(out: dict) -> str:
-    """Why run_loop's result cannot be parsed as a call, or "" when it can be tried."""
+    """Why run_loop's result cannot be parsed as a call, or "" when it can be tried. In the deadline round
+    run_loop's stop_reason is "deadline" whatever that request's finish was; the note it adds to the answer
+    (read here, before ``_NOTE`` strips it) says whether the model was still calling tools or was cut off."""
     if not out.get("ok"):
         return out.get("error") or "the model returned nothing"
-    if out.get("stop_reason") == "tool_calls":
+    stop = out.get("stop_reason")
+    note = _NOTE.search(out.get("answer") or "") if stop == "deadline" else None
+    if stop == "tool_calls" or (note and "stopped " in note.group()):
         return "the model stopped while still calling tools"
-    if out.get("stop_reason") == "length":
+    if stop == "length" or (note and "answer cut off" in note.group()):
         return "the answer was cut off at the length limit"
     return ""
 
@@ -334,9 +355,11 @@ def assess(bank, ticker: str, client=None, log=print, deadline: float | None = N
 
     {"ok", "fact", "ref", "direction", "error", "model", "source", "seconds", "tool_calls", "raw", "down"}.
     ``down`` is the server's error when the model could not be asked at all (None otherwise), so a run can
-    stop asking it. ``t_run`` is the run's time (default the end of today); the fact is known then.
-    One repair is asked when the answer is not the JSON object: a plain request without tools, or, when
-    the model answered before calling any tool, three more rounds with tools. Never raises."""
+    stop asking it. ``t_run`` is the run's time (default the end of today); the fact is known then, and the
+    tools read the bank only as of then: once the UTC day has moved past it, they are refused, and a judge
+    not yet started is not asked at all. A deadline round that still calls tools or is cut off at the length
+    limit is no answer. One repair is asked when the answer is not the JSON object: a plain request without
+    tools, or, when the model answered before calling any tool, three more rounds with tools. Never raises."""
     t0 = time.monotonic()
     ticker = str(ticker or "").strip().upper()
     res = {"ok": False, "fact": None, "ref": None, "direction": None, "error": None, "model": None, "source": None,
@@ -357,9 +380,13 @@ def assess(bank, ticker: str, client=None, log=print, deadline: float | None = N
 def _assess(bank, ticker: str, client, log, deadline, t_run: str, res: dict) -> None:
     res["model"], res["source"] = getattr(client, "model", None), judge_source(client)
     calls: list[dict] = res["tool_calls"]
+    from brain.terminal import data
+    if data._now() > t_run:  # the tools would read a later day's view; reader() refuses them too
+        res["error"] = _day_over(t_run)
+        return
     budget = analyst.Budget(getattr(client, "ctx", llm.DEFAULT_CTX))
-    tl = tools(bank, calls, budget)
-    user = _user_message(ticker)
+    tl = tools(bank, calls, budget, t_run)
+    user = _user_message(ticker, t_run)
     log(f"judge: {ticker} with {res['source']}")
     out = analyst.run_loop(client, SYSTEM, [{"role": "user", "content": user}], tl,
                            max_rounds=JUDGE["max_rounds"], budget=budget, deadline=deadline)
@@ -442,11 +469,33 @@ def _assess(bank, ticker: str, client, log, deadline, t_run: str, res: dict) -> 
 _THRESHOLD_PHRASE = re.compile(r"\b(?:buy|sell)\s+(?:needs|would\s+need)\b|\bbuy\s+or\s+sell\b", re.I)
 # Words that name things rather than suggest a trade: a horizon, "short of" a threshold, what insiders did.
 _NOT_A_TRADE = re.compile(r"\bshort[\s-]+term\b|\bshort\s+of\b|\b(?:falls?|fell|falling)\s+short\b|\bin\s+short\b"
-                          r"|\binsiders?['’]?[\s_-]+(?:buy(?:s|ing)?|sell(?:s|ing)?|purchases|sales)\b", re.I)
-_BUY_WORDS = r"\b(?:buy(?:s|ing)?|purchas(?:e|es|ed|ing)|go(?:es|ing)?\s+long)\b"
-_SELL_WORDS = r"\b(?:sell(?:s|ing)?|short(?:s|ed|ing)?|go(?:es|ing)?\s+short)\b"
+                          r"|\binsiders?['’]?[\s_-]+(?:buy(?:s|ing)?|bought|sell(?:s|ing)?|sold"
+                          r"|purchas(?:e|es|ed|ing)|sales)\b", re.I)
+_BUY = r"(?:buy(?:s|ing)?|bought|purchas(?:e|es|ed|ing)|go(?:es|ing)?\s+long)"
+_SELL = r"(?:sell(?:s|ing)?|sold|short(?:s|ed|ing)?|go(?:es|ing)?\s+short)"
+_BUY_WORDS, _SELL_WORDS = rf"\b{_BUY}\b", rf"\b{_SELL}\b"
+# For BUY and SELL, doing nothing is another action too, and so is the action itself negated ("do not buy").
+_NO_TRADE = r"\bno[\s_-]edge\b|\bdo\s+nothing\b|\bhold\s+off\b|\bstay\s+out\b"
+_NOT = (r"\b(?:not|never|no|cannot|avoid(?:s|ing)?|(?:don|doesn|didn|can|shouldn|won|isn|wasn)['’]?t)\s+"
+        r"(?:\w+\s+)?(?:to\s+)?")
 _ACTION_WORD = {"BUY": r"\bbuy\b", "SELL": r"\bsell\b", "NO_EDGE": r"\bno[\s_-]edge\b"}
-_CONTRARY = {"BUY": _SELL_WORDS, "SELL": _BUY_WORDS, "NO_EDGE": f"{_BUY_WORDS}|{_SELL_WORDS}"}
+_CONTRARY = {"BUY": f"{_SELL_WORDS}|{_NO_TRADE}|{_NOT}{_BUY}\\b",
+             "SELL": f"{_BUY_WORDS}|{_NO_TRADE}|{_NOT}{_SELL}\\b",
+             "NO_EDGE": f"{_BUY_WORDS}|{_SELL_WORDS}"}
+# Dates are not numbers, on either side: the price's date would otherwise allow its day and month as counts
+# ("All 14 items" on 2026-10-14). Month names are matched case-sensitively, so the verb "may" is not one.
+_MONTH = (r"(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sep(?:t(?:ember)?)?"
+          r"|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\.?")
+_WORD_DATE = re.compile(rf"\b{_MONTH}\s+\d{{1,2}}(?:st|nd|rd|th)?\b(?:,?\s+\d{{4}}\b)?"
+                        rf"|\b\d{{1,2}}(?:st|nd|rd|th)?\s+(?:of\s+)?{_MONTH}(?:,?\s+\d{{4}}\b)?|\b{_MONTH}\s+\d{{4}}\b")
+# A number joined to a lower-case word ("63-day", "7-hit") is a number; analyst._numbers skips it so that form
+# names (10-K, 8-K) are not counted. Lower case only, so those stay out.
+_HYPHEN_WORD = re.compile(r"(?<![\w.,/\\])(?<![A-Za-z]-)(\d+(?:\.\d+)?)-(?=[a-z])")
+
+
+def _plain_numbers(s: str) -> str:
+    """``s`` with its dates and times removed (ISO, slash and month-name ones) and "63-day" written as "63 day"."""
+    return _HYPHEN_WORD.sub(r"\1 ", _WORD_DATE.sub(" ", analyst.DATES.sub(" ", s)))
 
 
 def _explain_input(decision: dict) -> dict:
@@ -478,22 +527,28 @@ def _num(x, default: float = 0.0) -> float:
 
 
 def check_explanation(text: str, action: str, payload: dict) -> str:
-    """"" when ``text`` passes, else what is wrong: the action missing, another action suggested, or a
-    number that is not in ``payload`` (every integer must be one in it; a percentage must be one of its
-    numbers times 100, or a percentage written in it, to 0.01 and to the digits written; other numbers go
-    through check_numbers)."""
-    if not re.search(_ACTION_WORD[action], text, re.I):
-        return f"the explanation does not state the action {action}"
-    rest = text
+    """"" when ``text`` passes, else what is wrong: JSON instead of words, the action missing, another
+    action suggested, or a number that is not in ``payload`` (every integer must be one in it; a
+    percentage must be one of its numbers times 100, or a percentage written in it, to 0.01 and to the
+    digits written; a decimal must be one of its numbers, or a decimal written in it, to the digits
+    written, so "p 0.77" does not pass on "1 hit" and "p 0.884" does not pass on "p 0.88"; numbers with a
+    unit (K, M, B, x) go through check_numbers). The action counts only outside the threshold phrase ("a BUY
+    needs +0.50" does not state BUY). For BUY and SELL, NO_EDGE's words (no edge, do nothing, hold off, stay
+    out) and the action negated ("do not buy") are another action. Dates are not numbers on either side."""
+    if "{" in text or "}" in text:  # small models echo the JSON they were given
+        return "the explanation is JSON or code, not plain words"
+    named = text
     for i in payload.get("items") or []:  # an item's id is a name (H6-insider_buying), not advice
         if i.get("id"):
-            rest = rest.replace(str(i["id"]), " ")
-    rest = _NOT_A_TRADE.sub(" ", _THRESHOLD_PHRASE.sub(" ", rest))
+            named = named.replace(str(i["id"]), " ")
+    rest = _NOT_A_TRADE.sub(" ", _THRESHOLD_PHRASE.sub(" ", named))
+    if not re.search(_ACTION_WORD[action], rest, re.I):
+        return f"the explanation does not state the action {action}"
     m = re.search(_CONTRARY[action], rest, re.I)
     if m:
         return f"the explanation of {action} says {m.group()!r}"
     blob = json.dumps(payload, allow_nan=False, default=str)
-    numbers, ints, pcts = [], set(), []
+    numbers, ints, pcts, decs = [], set(), [], []
 
     def walk(x):
         if isinstance(x, bool) or x is None:
@@ -502,11 +557,13 @@ def check_explanation(text: str, action: str, payload: dict) -> str:
             if math.isfinite(x):
                 numbers.append(abs(float(x)))
         elif isinstance(x, str):
-            for _w, value, step, scale, unit, _cur in analyst._numbers(x):
+            for _w, value, step, scale, unit, _cur in analyst._numbers(_plain_numbers(x)):
                 if unit == "%":
                     pcts.append(value)
                 elif not unit and step == 1.0:
                     ints.add(int(value))
+                elif not unit:
+                    decs.append(value)
         elif isinstance(x, dict):
             for v in x.values():
                 walk(v)
@@ -516,7 +573,7 @@ def check_explanation(text: str, action: str, payload: dict) -> str:
     walk(payload)
     ints |= {int(v) for v in numbers if float(v).is_integer()}
     bad = []
-    body = analyst._SKIP_IN_ANSWER.sub(" ", text)
+    body = _plain_numbers(analyst._SKIP_IN_ANSWER.sub(" ", named))
     for written, value, step, scale, unit, _cur in analyst._numbers(body):
         if unit == "%":
             tol = min(0.01, step / 2) + 1e-9  # to 0.01, and no looser than the digits written: 0.12% is not 0.11%
@@ -525,11 +582,15 @@ def check_explanation(text: str, action: str, payload: dict) -> str:
         elif not unit and step == 1.0:
             if int(value) not in ints:
                 bad.append(written)
+        elif not unit:
+            tol = step / 2 + 1e-9  # to the digits written: 0.8 is not 0.77, 0.77 is not 1, 0.884 is not 0.88
+            if not any(abs(value - n) <= tol for n in numbers) and not any(abs(value - d) <= tol for d in decs):
+                bad.append(written)
     handled = set(bad)
     for written in analyst.check_numbers(body, [blob]):
         parsed = list(analyst._numbers(written))
-        if parsed and (parsed[0][4] == "%" or (not parsed[0][4] and parsed[0][2] == 1.0)):
-            continue  # an integer or a percentage: checked above
+        if parsed and parsed[0][4] in ("%", ""):
+            continue  # an integer, a decimal or a percentage: checked above
         if written not in handled:
             bad.append(written)
     if bad:
@@ -538,10 +599,11 @@ def check_explanation(text: str, action: str, payload: dict) -> str:
 
 
 def explain(decision: dict, client=None, deadline: float | None = None) -> dict:
-    """{"text", "by", "unverified_numbers", "error"}: the model's plain account of ``decision``, or the
-    template when the model is unavailable, too slow, or writes something the checks reject (``error``
-    says which). NO_DATA always gets the template. Never raises."""
-    out = {"text": "", "by": "template", "unverified_numbers": [], "error": None, "down": None}
+    """{"text", "by", "unverified_numbers", "error", "down", "raw"}: the model's plain account of
+    ``decision``, or the template when the model is unavailable, too slow, or writes something the checks
+    reject (``error`` says which; ``raw`` is what the model wrote). ``down`` is the server's error when the
+    model could not be asked. NO_DATA always gets the template. Never raises."""
+    out = {"text": "", "by": "template", "unverified_numbers": [], "error": None, "down": None, "raw": ""}
     try:
         action = str((decision or {}).get("action") or "")
         if action not in _ACTION_WORD:
@@ -557,7 +619,8 @@ def explain(decision: dict, client=None, deadline: float | None = None) -> dict:
             left = deadline - (time.time() if deadline >= 1e9 else time.monotonic())
             kw["timeout"] = max(EXPLAIN_MIN_SECONDS, left)
         msgs = [{"role": "system", "content": EXPLAIN_SYSTEM},
-                {"role": "user", "content": json.dumps(payload, allow_nan=False, default=str)}]
+                {"role": "user", "content": "The decision:\n" + json.dumps(payload, allow_nan=False, default=str)
+                                            + "\n\nExplain it in plain words. Do not repeat the JSON."}]
         try:
             resp = client.complete(msgs, tools=None, temperature=analyst.TEMPERATURE, max_tokens=EXPLAIN_MAX_TOKENS,
                                    **kw)
@@ -568,6 +631,7 @@ def explain(decision: dict, client=None, deadline: float | None = None) -> dict:
             return out
         choice = resp["choices"][0]
         text = analyst._clean(analyst._content(choice.get("message") or {}))
+        out["raw"] = text[:2000]
         why = ("the model returned an empty explanation" if not text else
                "the explanation was cut off at the length limit" if choice.get("finish_reason") == "length" else
                check_explanation(text, action, payload))
@@ -599,8 +663,8 @@ def template_explanation(decision: dict) -> str:
     action = str(d.get("action") or "NO_DATA")
     notes = [str(n) for n in d.get("notes") or [] if n]
     if action not in ("BUY", "SELL", "NO_EDGE"):
-        why = d.get("data_why") or (notes[0] if notes else "the bank lacks the prices to decide on")
-        return (f"{t}: {action}, no decision. {str(why).rstrip('.')}. Nothing is recorded, since there is "
+        why = str(d.get("data_why") or (notes[0] if notes else "the bank lacks the prices to decide on")).rstrip(".")
+        return (f"{t}: {action}, no decision. {why[:1].upper() + why[1:]}. Nothing is recorded, since there is "
                 f"nothing to score it against.")
     score, thr = _num(d.get("score")), _num(d.get("threshold"), 0.5)
     items = [i for i in d.get("items") or [] if isinstance(i, dict)]

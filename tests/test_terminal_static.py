@@ -11,7 +11,7 @@ from html.parser import HTMLParser
 from brain.terminal import commands, server
 
 STATIC = server.STATIC
-VIEWS = {"help", "des", "chart", "table", "news", "evidence", "markdown", "fact", "curve", "ask"}
+VIEWS = {"help", "des", "chart", "table", "news", "evidence", "markdown", "fact", "curve", "ask", "decision", "decisions"}
 
 
 class _Page(HTMLParser):
@@ -297,6 +297,7 @@ class AppBehaviourTest(unittest.TestCase):
             return
         self.assertNotEqual(c.fn, "INGEST", f"{why}: {line!r} starts a job")
         self.assertFalse(c.fn == "ASK" and c.args, f"{why}: {line!r} asks the model again")
+        self.assertFalse(c.fn == "DEC" and c.args, f"{why}: {line!r} starts a decision job")
 
     def test_rerun_lines_never_ingest_or_ask(self):
         # tickers that are also codes (CF, GP, FA) put the code first: `CF INGEST` ingests CF
@@ -350,6 +351,275 @@ class AppBehaviourTest(unittest.TestCase):
             self.assertSafe(line, "after the job")
         self.assertEqual(runs.count("CF INGEST"), 1, runs)
         self.assertEqual(out["saved"]["panes"][0], "JOBS")
+
+    def test_dec_new_reruns_as_the_decision_it_made(self):
+        lines = ["AAPL DEC NEW", "dec new aapl", "DEC AAPL NEW", "AAPL US EQUITY DEC NEW <GO>", "GO DEC NEW", "CF DEC NEW",
+                 "DEC DEC NEW", "DEC NEW DEC", "NEW DEC NEW", "DEC NEW INGEST", "DEC NEW ASK", "DEC INGEST", "DEC NEW",
+                 "AAPL DEC", "NEW DEC", "DEC", "DEC DES", "dec  new   aapl"]
+        res = {line: server_res(line) for line in lines}
+        out = run_app("""
+          const safeRerun = app("safeRerun"), rerunLine = app("rerunLine");
+          const o = {};
+          for (const line of input.lines) o[line] = [safeRerun(line), rerunLine(line, input.res[line]), rerunLine(line, null)];
+          return o;
+        """, lines=lines, res=res)
+        for line, reruns in out.items():
+            for again in reruns:
+                self.assertSafe(again, f"rerun of {line!r}")
+        for line in ("AAPL DEC NEW", "DEC AAPL NEW", "AAPL US EQUITY DEC NEW <GO>", "dec new aapl", "dec  new   aapl"):
+            for again in out[line]:
+                c = commands.parse(again)
+                self.assertEqual((c.fn, c.ticker, c.args), ("DEC", "AAPL", []), (line, again))
+        self.assertEqual(out["AAPL DEC NEW"], ["AAPL DEC"] * 3)
+        self.assertEqual(out["dec new aapl"][1], "AAPL DEC")  # the server's reading, once it answered
+        self.assertEqual(out["GO DEC NEW"], ["GO DEC"] * 3)  # the ticker GO is kept
+        self.assertEqual(out["CF DEC NEW"], ["CF DEC"] * 3)
+        self.assertEqual(out["NEW DEC NEW"][0], "NEW DEC")  # before the code, NEW was the ticker
+        self.assertEqual(out["DEC NEW INGEST"], ["JOBS"] * 3)  # dropping NEW must not make INGEST the function
+        self.assertEqual(out["DEC NEW"][0], "DEC")
+        for line in ("AAPL DEC", "NEW DEC", "DEC", "DEC DES"):
+            self.assertEqual(out[line], [line] * 3)
+
+    def test_dec_new_starts_polling_and_the_refresh_shows_the_decision(self):
+        rows = [{"id": "j1", "target": "DEC AAPL", "status": "running"}]
+        responses = {"AAPL DEC NEW": server_res("AAPL DEC NEW", data={"columns": [], "rows": rows}),
+                     "AAPL DEC": server_res("AAPL DEC", view="decision", data={"ticker": "AAPL", "action": "NO_EDGE"}),
+                     "DEC": server_res("DEC", view="decisions", data={}), "WL": server_res("WL"), "JOBS": server_res("JOBS")}
+        out = run_app("""
+          const Pane = app("Pane"), panes = app("panes");
+          for (let i = 0; i < 4; i += 1) panes.push(new Pane(i));
+          await panes[1].run("DEC");
+          await panes[2].run("WL");
+          await panes[0].run("AAPL DEC NEW");  // typed once: one job
+          await settle();
+          const polling = app("jobsRunning");
+          await app("refreshStatus")();  // the job ends: the decision panes refresh
+          await settle();
+          await app("refreshStatus")();
+          await settle();
+          panes[0].reload();  // the reload button
+          await settle();
+          const saved = JSON.parse(window.localStorage.getItem("money-terminal.layout.v1"));
+          return { runs: calls.filter((c) => c.path === "/api/run").map((c) => c.cmd), polling, saved: saved.panes,
+                   restored: app("loadLayout")().lines, shown: panes[0].res.view };
+        """, responses=responses)
+        runs = [r for r in out["runs"] if r != "WEI"]  # the ticker tape refreshes after a job
+        self.assertEqual(runs[:3], ["DEC", "WL", "AAPL DEC NEW"])
+        self.assertEqual(out["polling"], 1)  # a DEC NEW result counts as a running job, as INGEST does
+        self.assertEqual(runs.count("AAPL DEC NEW"), 1, runs)
+        for line in runs[3:] + out["saved"] + out["restored"]:
+            self.assertSafe(line, "after the job")
+        self.assertIn("AAPL DEC", runs[3:])  # the refresh after the job
+        self.assertEqual(runs[3:].count("DEC"), 1)  # the scorecard and the WL decision column refresh too
+        self.assertEqual(runs[3:].count("WL"), 1)
+        self.assertEqual(out["saved"][0], "AAPL DEC")
+        self.assertEqual(out["restored"][0], "AAPL DEC")
+        self.assertEqual(out["shown"], "decision")
+
+    def test_a_dec_new_pane_waits_for_its_own_job(self):
+        # an ingest of MSFT finishes while the decision on AAPL still runs: the DEC NEW pane keeps its job table
+        rows = [{"id": "j2", "target": "DEC AAPL", "status": "running"}, {"id": "j1", "target": "MSFT", "status": "running"}]
+        responses = {"AAPL DEC NEW": server_res("AAPL DEC NEW", data={"columns": [], "rows": rows}),
+                     "AAPL DEC": server_res("AAPL DEC", view="decision", data={"ticker": "AAPL", "action": "NO_EDGE"}),
+                     "JOBS": server_res("JOBS")}
+        for baseline in (True, False):  # with the finished count of an earlier poll, and before any poll
+            with self.subTest(baseline=baseline):
+                out = run_app("""
+                  const Pane = app("Pane"), panes = app("panes");
+                  for (let i = 0; i < 4; i += 1) panes.push(new Pane(i));
+                  const st = (running, active, finished) => ({ ok: true, jobs_running: running, jobs_queued: 0,
+                                                               jobs_active: active, jobs_finished: finished, analyst: {} });
+                  if (input.baseline) { input.status = st(0, [], 5); await app("refreshStatus")(); }
+                  await panes[0].run("AAPL DEC NEW");
+                  await panes[1].run("JOBS");
+                  await settle();
+                  const runs = () => calls.filter((c) => c.path === "/api/run").map((c) => c.cmd);
+                  input.status = st(1, ["DEC AAPL"], 6);   // only the MSFT ingest finished
+                  await app("refreshStatus")();
+                  await settle();
+                  const mid = runs(), midView = panes[0].res.fn + " " + (panes[0].res.args || []).join(" ");
+                  input.status = st(0, [], 7);             // now the decision is done too
+                  await app("refreshStatus")();
+                  await settle();
+                  return { mid, midView, runs: runs(), view: panes[0].res.view };
+                """, responses=responses, baseline=baseline)
+                mid = [r for r in out["mid"] if r != "WEI"]
+                self.assertEqual(mid.count("AAPL DEC"), 0, mid)  # not while DEC AAPL runs
+                self.assertEqual(out["midView"], "DEC NEW")
+                self.assertIn("JOBS", mid[2:])  # the JOBS pane refreshed after the ingest finished
+                runs = [r for r in out["runs"] if r != "WEI"]
+                self.assertEqual(runs.count("AAPL DEC"), 1, runs)  # once its own job is done
+                self.assertEqual(runs.count("AAPL DEC NEW"), 1, runs)
+                self.assertEqual(out["view"], "decision")
+
+    def test_a_queued_decision_is_not_taken_for_a_finished_one(self):
+        # one decision at a time: MSFT waits behind AAPL, and the running count stays 1 as one hands over to the other
+        a = [{"id": "j1", "target": "DEC AAPL", "status": "running"}]
+        m = [{"id": "j2", "target": "DEC MSFT", "status": "queued"}, *a]
+        responses = {"AAPL DEC NEW": server_res("AAPL DEC NEW", data={"columns": [], "rows": a}),
+                     "MSFT DEC NEW": server_res("MSFT DEC NEW", data={"columns": [], "rows": m}),
+                     "AAPL DEC": server_res("AAPL DEC", view="decision", data={"ticker": "AAPL", "action": "NO_EDGE"}),
+                     "MSFT DEC": server_res("MSFT DEC", view="decision", data={"ticker": "MSFT", "action": "NO_EDGE"})}
+        out = run_app("""
+          const Pane = app("Pane"), panes = app("panes");
+          for (let i = 0; i < 4; i += 1) panes.push(new Pane(i));
+          const st = (running, queued, active, finished) => ({ ok: true, jobs_running: running, jobs_queued: queued,
+                                                               jobs_active: active, jobs_finished: finished, analyst: {} });
+          const runs = () => calls.filter((c) => c.path === "/api/run").map((c) => c.cmd).filter((c) => c !== "WEI");
+          input.status = st(0, 0, [], 0);
+          await app("refreshStatus")();
+          await panes[0].run("AAPL DEC NEW");
+          await panes[1].run("MSFT DEC NEW");
+          await settle();
+          const steps = [];
+          for (const s of [st(1, 1, ["DEC AAPL", "DEC MSFT"], 0),   // nothing finished
+                           st(1, 0, ["DEC MSFT"], 1),               // AAPL's is done, MSFT's started
+                           st(0, 0, [], 2)]) {                      // MSFT's is done
+            input.status = s;
+            await app("refreshStatus")();
+            await settle();
+            steps.push({ runs: runs(), polling: app("jobsRunning"), lines: panes.slice(0, 2).map((p) => p.line) });
+          }
+          return steps;
+        """, responses=responses)
+        start = ["AAPL DEC NEW", "MSFT DEC NEW"]
+        self.assertEqual(out[0]["runs"], start)  # a queued job is not a finished one
+        self.assertEqual(out[0]["polling"], 2)  # queued counts as active: the fast poll goes on
+        self.assertEqual(out[1]["runs"], start + ["AAPL DEC"])  # AAPL's pane, and only it
+        self.assertEqual(out[2]["runs"], start + ["AAPL DEC", "AAPL DEC", "MSFT DEC"])  # a DEC pane refreshes; MSFT's now
+        self.assertEqual(out[2]["lines"], ["AAPL DEC", "MSFT DEC"])
+        self.assertEqual(out[2]["polling"], 0)
+
+    def test_dec_shows_the_servers_job_note(self):
+        d = {"ticker": "ZZZQ", "action": "NO_EDGE", "label": "NO_EDGE: do nothing", "score": 0.0, "threshold": 0.5,
+             "items": [], "context": [], "withheld": 0, "lean": {}, "notes": [], "history": {"columns": [], "rows": []},
+             "job_note": "the last ZZZQ DEC NEW (job j3, done) recorded nothing: no prices for ZZZQ: ingest ZZZQ"}
+        out = run_app("""
+          const p = new (app("Pane"))(0), q = new (app("Pane"))(1);
+          p.show({ ok: true, fn: "DEC", ticker: "ZZZQ", args: [], view: "decision", data: input.d });
+          q.show({ ok: true, fn: "DEC", ticker: "ZZZQ", args: [], view: "decision", data: { ...input.d, job_note: null } });
+          const notes = (x) => all(x.body).filter((e) => e.className === "dec-job").map((e) => e.textContent);
+          const shown = { p: notes(p), q: notes(q) };
+          const link = all(p.body).find((e) => e.className === "dec-job").childNodes.find((e) => e.className === "cmdlink");
+          link.listeners.click[0]({ stopPropagation() {} });  // runs JOBS in this pane
+          await settle();
+          return { ...shown, ran: calls.filter((c) => c.path === "/api/run").map((c) => c.cmd) };
+        """, d=d)
+        self.assertEqual(out["p"], [d["job_note"] + ". JOBS"])
+        self.assertEqual(out["q"], [])
+        self.assertEqual(out["ran"], ["JOBS"])
+
+    def test_show_says_when_inputs_are_withheld(self):
+        fact = {"id": "d0d0d0d0d0d0d0d0d0d0", "entity": "XCO", "attr": "decision", "value": "NO_EDGE", "as_of": "2026-10-15",
+                "known_at": "2026-10-15T23:59:59Z", "tier": "derived", "source": {"name": "brain.decide"}, "context": {},
+                "inputs": ["XCO/9de710d29de710d29de7", "XCO/58171cf4e8d0fa5042a5"]}
+        inputs = [{"ref": "XCO/9de710d29de710d29de7", "attr": "series.price_daily", "value": "abc", "cite": "9de710d2"}]
+        out = run_app("""
+          const Pane = app("Pane");
+          const p = new Pane(0), q = new Pane(1), r = new Pane(2);
+          const res = (data) => ({ ok: true, fn: "SHOW", ticker: "XCO", args: ["d0d0d0d0"], view: "fact", data });
+          p.show(res({ fact: input.fact, downgraded: false, inputs: input.inputs, withheld: 1 }));
+          q.show(res({ fact: input.fact, downgraded: false, inputs: [], withheld: 2 }));
+          r.show(res({ fact: input.fact, downgraded: false, inputs: input.inputs, withheld: 0 }));
+          const heads = (x) => all(x.body).filter((e) => e.className === "sec-h").map((e) => e.textContent);
+          return { p: p.body.textContent, q: q.body.textContent, r: r.body.textContent, qheads: heads(q) };
+        """, fact=fact, inputs=inputs)
+        self.assertIn("1 input is not shown: about an aircraft that is no longer tracked", out["p"])
+        self.assertIn("[9de710d2]", out["p"])
+        self.assertIn("2 inputs are not shown", out["q"])  # every input withheld: the section still says so
+        self.assertIn("Inputsthe facts this one was derived from", out["qheads"])
+        self.assertNotIn("not shown", out["r"])
+
+    def test_decision_view(self):
+        hist = {"columns": [{"key": "as_of", "label": "Date", "type": "date"}, {"key": "action", "label": "Action", "type": "text"},
+                            {"key": "status", "label": "Scored", "type": "text"}],
+                "rows": [{"as_of": "2026-10-15", "action": "NO_EDGE", "status": "pending", "_cite": "d0d0d0d0"},
+                         {"as_of": "2026-06-01", "action": "BUY", "status": "overlapping", "_cite": "d1d1d1d1"}],
+                "groups": [], "note": "Scored against SPY."}
+        d = {"ticker": "AAPL", "name": "Apple Inc.", "action": "NO_EDGE", "label": "NO_EDGE: do nothing", "direction": 0,
+             "score": 0.0, "threshold": 0.5, "signal_score": 0.0, "source_term": {"id": None, "direction": 0, "weight": 0.0},
+             "policy": "D1", "policy_sha": "bef26a9d157cbcf5", "policy_current": True, "horizon_days": 21,
+             "as_of": "2026-10-15", "cite": "d0d0d0d0", "price": {"date": "2026-10-14", "close": 247.1, "cite": "9de710d2"},
+             "items": [{"kind": "signal", "id": "H1-mom12_1", "direction": 0, "weight": 0.0, "why": "FAIL on TEST", "cites": [], "record": None},
+                       {"kind": "source", "id": "reuters.com via scout:qwen3:8b", "direction": 1, "weight": 0.0,
+                        "why": "2 bets (1 hit) from 3 calls; needs 30 bets",
+                        "cites": [{"entity": "AAPL", "cite": "c1c1c1c1"}, {"entity": "AAPL", "cite": "c2c2c2c2"}], "record": {}}],
+             "context": [{"entity": "AAPL", "cite": "e1e1e1e1", "attr": "alert", "why": "alert (price_move); alert rules are untested"}],
+             "withheld": 1, "lean": {"direction": 1, "up": 1, "down": 0, "sources": 1, "text": "up, 1 of 1 source"},
+             "explanation": "Do nothing: no tested evidence carries weight.", "explained_by": "llm:qwen3:8b@3f2a91c0",
+             "explain_error": None, "unverified_numbers": ["7%"], "judgment": {"cite": "f1f1f1f1", "error": None},
+             "read": {"claims_noted": 2, "pages_read": 5, "error": None},
+             "notes": ["No evidence carries weight yet: every hypothesis failed its TEST gate or was not run, and no source has a proven record."],
+             "history": hist}
+        out = run_app("""
+          const Pane = app("Pane");
+          const p = new Pane(0), q = new Pane(1), r = new Pane(2);
+          p.show({ ok: true, fn: "DEC", ticker: "AAPL", args: [], view: "decision", title: "AAPL — Apple Inc. · decision · NO_EDGE", data: input.d });
+          q.show({ ok: true, fn: "DEC", ticker: "MSFT", args: [], view: "decision", data: { ...input.d, ticker: "MSFT", explained_by: "template",
+            unverified_numbers: [], explain_error: "a contrary action word (buy)", withheld: 0, policy_current: false,
+            read: { claims_noted: 1, pages_read: 1, error: "no model reachable (nothing answered)" },
+            context: Array.from({ length: 12 }, (_, k) => ({ entity: "MSFT", cite: `e${k}e${k}e${k}e${k}`.slice(0, 8), attr: "alert", why: "alert (headline)" })) } });
+          r.show({ ok: true, fn: "DEC", ticker: null, args: [], view: "decisions", data: { latest: input.hist, scorecard: { columns: [], rows: [], note: "no bets yet" },
+            sources: input.hist, note: "Paper decisions. RES has the verdicts." } });
+          const cites = all(p.body).filter((e) => e.className === "cite").map((e) => e.textContent);
+          const cite = all(p.body).find((e) => e.className === "cite" && e.textContent === "[c2c2c2c2]");
+          cite.listeners.click[0]({ stopPropagation() {} });
+          await settle();
+          const heads = (x) => all(x.body).filter((e) => e.className === "sec-h").map((e) => e.textContent);
+          return { text: p.body.textContent, cites, heads: heads(p), warn: all(p.body).filter((e) => e.className === "ask-warn").map((e) => e.textContent),
+                   template: q.body.textContent, qheads: heads(q), qwarn: all(q.body).filter((e) => e.className === "ask-warn").length,
+                   folded: all(q.body).filter((e) => e.tagName === "SUMMARY").map((e) => e.textContent),
+                   qrows: all(q.body).filter((e) => e.tagName === "DETAILS").map((e) => all(e).filter((x) => x.tagName === "TR").length),
+                   overview: heads(r), facts: calls.filter((c) => c.path === "/api/fact").map((c) => c.url),
+                   rows: all(p.body).filter((e) => e.tagName === "TR").length, view: p.body.className };
+        """, d=d, hist=hist)
+        self.assertEqual(out["view"], "pane-body view-decision")
+        t = out["text"]
+        for words in ("NO_EDGE: do nothing", "paper only · not financial advice", "Score 0.00; BUY needs +0.50, SELL -0.50",
+                      "policy D1", "as of 2026-10-15", "FAIL on TEST", "2 bets (1 hit) from 3 calls; needs 30 bets",
+                      "up, 1 of 1 source", "Do nothing: no tested evidence carries weight.", "No evidence carries weight yet",
+                      "5 pages read, 2 claims noted", "1 cited fact is not shown", "Signals 0.00 + source term 0 = score 0.00."):
+            self.assertIn(words, t)
+        self.assertIn("Leanunproven, not evidence", out["heads"])
+        self.assertIn("Explanationmodel-written (llm:qwen3:8b@3f2a91c0); the decision is the table", out["heads"])
+        self.assertEqual(len(out["warn"]), 1)
+        self.assertIn("1 number in this explanation is in none of the decision's own numbers: 7%", out["warn"][0])
+        for c in ("[d0d0d0d0]", "[9de710d2]", "[c1c1c1c1]", "[c2c2c2c2]", "[e1e1e1e1]", "[f1f1f1f1]", "[d1d1d1d1]"):
+            self.assertIn(c, out["cites"])  # the decision, its price, each item's refs, the context, the judgment, history
+        self.assertEqual(out["facts"], ["AAPL"])
+        self.assertIn("Explanationwritten from the table by a template; the decision is the table", out["qheads"])
+        self.assertIn("The model's explanation was not used: a contrary action word (buy)", out["template"])
+        self.assertIn("1 page read, 1 claim noted: no model reachable (nothing answered)", out["template"])
+        self.assertIn("not the code's policy", out["template"])
+        self.assertEqual(out["qwarn"], 0)
+        self.assertEqual(out["folded"], ["2 more"])  # a week of headline alerts folds after the first 10
+        self.assertEqual(out["qrows"], [3])  # the header and the 2 rows under it
+        self.assertIn("recorded [f1f1f1f1]", t)
+        self.assertEqual(out["overview"], ["Latest decision per stockpaper only · click a stock for its decision",
+                                           "Scorecarddecisions scored against SPY as independent bets",
+                                           "Source track recordsthe record D1 weighs"])
+
+    def test_news_shows_the_record_d1_weighs_beside_every_call(self):
+        claims = [{"time": "2026-10-14T12:00:00Z", "text": "Analyst says buy", "url": "https://a.example/x", "source": "a.example",
+                   "tier": "opinion", "direction": 1, "cite": "c1c1c1c1", "record": {"n": 11, "hit_rate": 0.55},
+                   "gate_key": "a.example via agent",
+                   "gate": {"bets": 3, "hits": 2, "hit_rate": 0.6667, "q": 0.41, "proven": False, "weight": 0.0,
+                            "why": "3 bets (2 hits) from 11 calls; needs 30 bets"}},
+                  {"time": "2026-10-13T12:00:00Z", "text": "Old note", "url": "https://b.example/y", "source": "b.example",
+                   "tier": "reported", "direction": 0, "cite": "c2c2c2c2", "record": None, "gate_key": "b.example via agent", "gate": None}]
+        out = run_app("""
+          const Pane = app("Pane");
+          const p = new Pane(0);
+          p.show({ ok: true, fn: "CN", ticker: "AAPL", args: [], view: "news", data: { headlines: [], claims: input.claims } });
+          const ths = all(p.body).filter((e) => e.tagName === "TH").map((e) => e.textContent);
+          const gates = all(p.body).filter((e) => e.tagName === "TD" && /\\bgate\\b/.test(e.className)).map((e) => [e.textContent, e.title || ""]);
+          return { ths, gates };
+        """, claims=claims)
+        self.assertIn("Every call, overlapping", out["ths"])
+        self.assertIn("The record D1 weighs", out["ths"])
+        self.assertEqual(out["gates"][0][0], "3 bets · 67% hit · q 0.41 · not proven, weight 03 bets (2 hits) from 11 calls; needs 30 bets")
+        self.assertEqual(out["gates"][0][1], "a.example via agent: the record D1 weighs")
+        self.assertEqual(out["gates"][1][0], "no record")
 
     def test_reload_does_not_ask_the_question_again(self):
         def ask(line, question):  # the worst case: the server reads `GP ASK ...` as ASK with GP in focus
