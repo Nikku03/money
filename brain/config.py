@@ -24,6 +24,7 @@ def sec_user_agent() -> str:
 
 
 WEB_USER_AGENT = "Mozilla/5.0 (compatible; money-brain/0.1)"
-LEDGER = ROOT / "research" / "ledger.jsonl"
-RESULTS = ROOT / "research" / "RESULTS.md"
+# BRAIN_LEDGER / BRAIN_RESULTS point a trial run at scratch copies, so it never touches the committed record.
+LEDGER = Path(os.environ.get("BRAIN_LEDGER") or ROOT / "research" / "ledger.jsonl")
+RESULTS = Path(os.environ.get("BRAIN_RESULTS") or ROOT / "research" / "RESULTS.md")
 UNIVERSE = ROOT / "universe" / "us_large.json"
