@@ -58,6 +58,10 @@ FUNCTIONS: dict[str, dict] = {
             "desc": "paper decision under policy D1: evidence weights, the unproven lean, the explanation and the "
                     "history; DEC alone lists every stock's latest and the scorecard; T DEC NEW decides afresh "
                     "(background job)"},
+    "FCST": {"scope": "both", "args": "[NEW]",
+             "desc": "forecast (paper): the likely price range over the next 5 sessions drawn on the chart, the "
+                     "chance it beats SPY against a coin, the drivers, the F1 tests' record and live scoring; FCST "
+                     "alone lists every stock's latest; T FCST NEW forecasts afresh (background job)"},
     "SHOW": {"scope": "both", "args": "ID", "desc": "one fact by id prefix: full JSON and source link"},
     "WEI": {"scope": "global", "args": "", "desc": "world markets: equity indices, volatility, FX, commodities, crypto"},
     "MOV": {"scope": "global", "args": "", "desc": "research-universe movers: last session and 1 month"},
@@ -109,6 +113,9 @@ NOT_TICKERS = {"MACRO"}  # bank entities that hold macro series, not securities
 ALT_PREFIXES = ("AREA.", "CAM.")  # bank entities of port areas and traffic cameras, not securities
 WL_VERBS = ("ADD", "DEL")
 DEC_NEW = "NEW"  # T DEC NEW decides afresh in a background job; T DEC reads the latest recorded decision
+JOB_FNS = ("DEC", "FCST")  # T FCST NEW forecasts afresh the same way; T FCST reads the latest recorded forecast
+NEW_DESC = {"DEC": "decide afresh in a background job (paper only): T DEC NEW",
+            "FCST": "forecast afresh in a background job (paper only): T FCST NEW"}
 
 
 def _is_arg(fn: str, w: str) -> bool:
@@ -121,7 +128,7 @@ def _is_arg(fn: str, w: str) -> bool:
         return "/" in w or (bool(_FACT_ID.fullmatch(w)) and any(c.isdigit() for c in w))
     if fn == "INGEST":
         return w in INGEST_KEYWORDS
-    if fn == "DEC":
+    if fn in JOB_FNS:
         return w == DEC_NEW
     return False
 
@@ -192,22 +199,33 @@ def parse(line: str) -> Command:
                            "INGEST AAPL")
     if fn == "SHOW" and not args:
         raise CommandError("SHOW needs a fact id, e.g. AAPL SHOW 9de710d2", f"{ticker or 'AAPL'} DES")
-    if fn == "DEC" and args and args != [DEC_NEW]:
-        raise CommandError("DEC takes no arguments, or NEW", f"{ticker} DEC" if ticker else "DEC")
-    if fn == "DEC" and args and ticker is None:  # a decision is about one stock; the hint lists them, it starts nothing
-        raise CommandError("DEC NEW needs a ticker, e.g. AAPL DEC NEW", "DEC")
+    if fn in JOB_FNS and args and args != [DEC_NEW]:
+        raise CommandError(f"{fn} takes no arguments, or NEW", f"{ticker} {fn}" if ticker else fn)
+    if fn in JOB_FNS and args and ticker is None:  # about one stock; the hint lists them, it starts nothing
+        raise CommandError(f"{fn} NEW needs a ticker, e.g. AAPL {fn} NEW", fn)
     return Command(fn=fn, ticker=ticker, args=args, raw=raw)
 
 
-def dec_line(t: str, new: bool = False) -> str | None:
-    """``T DEC`` (``T DEC NEW``) for a row's command or a hint, or None when the line would not read back as
-    DEC on T: a ticker that is a verb or takes free text (INGEST, SHOW, ASK, HELP) comes first as the function."""
-    line = f"{t} DEC" + (f" {DEC_NEW}" if new else "")
+def job_line(fn: str, t: str, new: bool = False) -> str | None:
+    """``T DEC`` / ``T FCST`` (with ``NEW``: the job) for a row's command or a hint, or None when the line would
+    not read back as ``fn`` on T: a ticker that is a verb or takes free text (INGEST, SHOW, ASK, HELP) comes
+    first as the function."""
+    line = f"{t} {fn}" + (f" {DEC_NEW}" if new else "")
     try:
         c = parse(line)
     except CommandError:
         return None
-    return line if (c.fn, c.ticker, c.args) == ("DEC", t, [DEC_NEW] if new else []) else None
+    return line if (c.fn, c.ticker, c.args) == (fn, t, [DEC_NEW] if new else []) else None
+
+
+def dec_line(t: str, new: bool = False) -> str | None:
+    """``T DEC`` (``T DEC NEW``), or None when it would not read back as DEC on T (``job_line``)."""
+    return job_line("DEC", t, new)
+
+
+def fcst_line(t: str, new: bool = False) -> str | None:
+    """``T FCST`` (``T FCST NEW``), or None when it would not read back as FCST on T (``job_line``)."""
+    return job_line("FCST", t, new)
 
 
 def is_security(entity: str) -> bool:
@@ -265,7 +283,7 @@ def _arg_items(fn: str, rest: list[str], partial: str, tickers: list[str]) -> li
 def complete(prefix: str, tickers: list[str]) -> list[dict]:
     """Completions for the token being typed: function codes, tickers (bank securities plus the
     world-market symbols, which can be ingested on demand) and the keywords some functions take
-    (INGEST targets, SHIP areas, CAM ids, WL ADD/DEL, ALRT ACK/ALL, DEC NEW)."""
+    (INGEST targets, SHIP areas, CAM ids, WL ADD/DEL, ALRT ACK/ALL, DEC NEW, FCST NEW)."""
     text = prefix or ""
     if not text.strip():
         return []
@@ -290,8 +308,8 @@ def complete(prefix: str, tickers: list[str]) -> list[dict]:
                     for c in security_first if c.startswith(partial)]
         if fn == "INGEST" and not rest:
             out += _words(INGEST_KEYWORDS, partial, "background collection job")
-        if fn == "DEC" and DEC_NEW not in rest and len(rest) <= 1:  # `DEC AAPL NEW` reads like `AAPL DEC NEW`
-            out += _words((DEC_NEW,), partial, "decide afresh in a background job (paper only): T DEC NEW")
+        if fn in JOB_FNS and DEC_NEW not in rest and len(rest) <= 1:  # `DEC AAPL NEW` reads like `AAPL DEC NEW`
+            out += _words((DEC_NEW,), partial, NEW_DESC[fn])
         if partial and (not has_ticker or "GP" in fns):  # GP takes comparison tickers
             out += _ticker_items(partial, tickers)
     out.sort(key=lambda d: d["text"] != partial)  # an exact match first; otherwise order is kept

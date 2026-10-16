@@ -390,6 +390,21 @@ a:hover { text-decoration: underline; }
 .dec-job { margin: 6px 8px 2px; padding: 3px 8px; border: 1px solid var(--amber-faint); border-left: 3px solid var(--amber);
   max-width: 110ch; overflow-wrap: anywhere; }
 
+/* ---------- forecast (FCST) ---------- */
+.fc .chart-wrap.fc-chart { flex: none; height: 260px; min-height: 200px; border-bottom: 1px solid var(--rule); }
+.fc .legend { border-top: 0; border-bottom: 1px solid var(--rule); }
+.fc-chance { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; padding: 6px 8px; }
+.fc-chance .k { color: var(--dim); }
+.fc-p { font-size: 18px; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
+.fc-meter { position: relative; display: inline-block; width: 160px; height: 8px; background: #1a1a1a; }
+.fc-meter .fc-fill { position: absolute; top: 0; bottom: 0; background: var(--amber-dim); }
+.fc-meter .fc-fill.up { background: var(--up); }
+.fc-meter .fc-fill.down { background: var(--down); }
+.fc-meter .fc-coin { position: absolute; left: 50%; top: -3px; bottom: -3px; width: 1px; background: var(--text); }
+.fc-llm { padding: 2px 8px 6px; max-width: 110ch; overflow-wrap: anywhere; }
+.fc-record { margin: 4px 0 8px; padding-left: 26px; max-width: 120ch; overflow-wrap: anywhere; }
+.fc-h { padding: 4px 8px 0; color: var(--dim); }
+
 /* ---------- fact ---------- */
 .fact { padding-bottom: 8px; }
 .fact-head { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; padding: 8px 8px 6px; border-bottom: 1px solid var(--rule-strong); }

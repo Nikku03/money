@@ -29,7 +29,7 @@ from brain.bank import Bank, Fact, View
 from brain.metrics import PriceBook
 from brain.sources import fred, treasury
 from brain.terminal.commands import (FUNCTIONS, KEYS, RANGE_SHAPE, RANGES, TICKER, Command, CommandError, dec_line,
-                                     parse, suggest)
+                                     fcst_line, parse, suggest)
 from brain.timeutil import days_between, today
 
 MAX_POINTS = 1500
@@ -700,12 +700,17 @@ def _res(bank: Bank, cmd: Command) -> dict:
     from brain.research import run as research_run
     recs = ledger.read() if config.LEDGER.exists() else []
     declared = {r["id"]: r for r in recs if r["op"] == "declare"}
-    results = research_run.verdicts() if recs else []
+    every = research_run.verdicts() if recs else []
+    results = [r for r in every if r.get("kind") != "forecast"]
+    forecasts = [r for r in every if r.get("kind") == "forecast"]  # their numbers are in FCST: p is not a perm p
     rows = [{"id": r["id"], "universe": _universe_name(r.get("universe")),
              "claim": declared.get(r["id"], {}).get("spec", {}).get("claim", ""),
              "test_net": r["test"]["mean_net_excess"], "perm_p": r["test"]["perm_p"], "bh_q": r["bh_q"],
              "verdict": r["verdict"]} for r in results]
-    ran = {r["id"] for r in results}
+    rows += [{"id": r["id"], "universe": _universe_name(declared.get(r["id"], {}).get("spec", {}).get("universe")),
+              "claim": declared.get(r["id"], {}).get("spec", {}).get("claim", ""), "test_net": None, "perm_p": None,
+              "bh_q": r.get("bh_q"), "verdict": r["verdict"]} for r in forecasts]
+    ran = {r["id"] for r in every}
     rows += [{"id": hid, "universe": _universe_name(d["spec"].get("universe")), "claim": d["spec"].get("claim", ""),
               "test_net": None, "perm_p": None, "bh_q": None, "verdict": "not run"}
              for hid, d in declared.items() if hid not in ran]
@@ -734,8 +739,13 @@ def _res(bank: Bank, cmd: Command) -> dict:
                 "that persists from month to month the null is narrower and its p-value too small (the fixed-per-stock "
                 "rate, where a run recorded it, says by how much). Universe members were chosen by today's market "
                 "value, so any PASS is an upper bound.")
+    elif forecasts:
+        note = "No hypothesis has a result yet: declare, commit, then `python -m brain research run`."
     else:
         note = "No results in the ledger yet: declare, commit, then `python -m brain research run`."
+    if forecasts or any(d.get("kind") == "forecast" for d in declared.values()):
+        note += (" Forecast tests (F1...) share the correction when gated (F1b, F1c); F1a and F1d are descriptive "
+                 "(REPORT). Their numbers, with the date-level p or interval, are in T FCST and FCST.")
     asof = max((r["at"][:10] for r in recs if r["op"] == "result"), default=None)
     return _ok(cmd, "RES — research verdicts", asof, "table", _table(cols, rows, note, []))
 
@@ -805,7 +815,7 @@ def _research_line(signal: str) -> str:
     results = {}
     if config.LEDGER.exists():
         from brain.research import run as research_run
-        results = {r["id"]: r for r in research_run.verdicts()}
+        results = {r["id"]: r for r in research_run.verdicts() if not research_run.is_forecast(r)}
     hid = next((i for i in reversed(ids) if i in results), ids[-1])
     v = results.get(hid)
     if v is None:
@@ -1656,13 +1666,176 @@ def _dec(bank: Bank, cmd: Command) -> dict:
     return _dec_one(bank, cmd) if cmd.ticker else _dec_all(bank, cmd)
 
 
+# ---------- FCST ----------
+FCST_MONTHS = 3  # the chart: three months of closes before the newest forecast date, then its window
+
+
+def _live():
+    from brain.forecast import live
+    return live
+
+
+def _fc_outcome(row: dict | None) -> dict:
+    """A forecast's outcome from ``live.score``: scored (its close at the exit inside the bands or not, and
+    whether it beat SPY), overlapping, late, pending or unpriced."""
+    if row is None:
+        return {"status": "pending"}
+    return {k: row.get(k) for k in ("status", "exit", "close_exit", "excess", "in68", "in90", "beat")}
+
+
+def _fc_entry(f: Fact, llm: Fact | None, scored: dict, live) -> dict:
+    c = f.context
+    out = {k: c.get(k) for k in ("horizon", "date", "entry", "exit", "close", "close_date", "p_beat", "band",
+                                 "move68_pct", "move90_pct", "drivers", "model", "base_rate", "in_universe")}
+    out.update(forecaster=c.get("forecaster") or live.F1, date=f.as_of, cite=cite(f), known_at=f.known_at,
+               retrieved_at=f.retrieved_at, outcome=_fc_outcome(scored.get(f.ref)), llm=None)
+    if llm is not None:
+        lc, info = llm.context, llm.context.get("llm") or {}
+        out["llm"] = {"p_beat": lc.get("p_beat"), "ok": bool(info.get("ok")), "reason": info.get("reason") or "",
+                      "model": info.get("model"), "error": info.get("error"), "cite": cite(llm),
+                      "outcome": _fc_outcome(scored.get(llm.ref))}
+    return out
+
+
+def _share(x) -> str | None:
+    """A probability or a share as plain text (``51%``): not an excess, so neither signed nor coloured."""
+    return f"{x * 100:.0f}%" if isinstance(x, (int, float)) and math.isfinite(x) else None
+
+
+def _fc_live_table(sc: dict) -> dict:
+    rows = []
+    for name, g in (sc.get("groups") or {}).items():
+        m = g.get("metrics") or {}
+        rg, br = m.get("range") or {}, m.get("brier") or {}
+        rows.append({"stream": name, "forecasts": g["forecasts"], "scored": g["scored"], "dates": g["dates"],
+                     "pending": g["pending"], "overlapping": g["overlapping"], "late": g["late"],
+                     "cover68": _share((rg.get("cover68") or {}).get("mean")),
+                     "cover90": _share((rg.get("cover90") or {}).get("mean")),
+                     "skill": br.get("skill"), "within": br.get("within_skill"),
+                     "placement": _share((m.get("placement") or {}).get("mean")), "ic": (m.get("ic") or {}).get("mean")})
+    cols = [_col("stream", "Forecaster"), _col("forecasts", "Forecasts", "number", 0), _col("scored", "Scored", "number", 0),
+            _col("dates", "Dates", "number", 0), _col("pending", "Pending", "number", 0),
+            _col("overlapping", "Overlapping", "number", 0), _col("late", "Late", "number", 0),
+            _col("cover68", "68% held"), _col("cover90", "90% held"),
+            _col("skill", "Brier skill", "pct", 1), _col("within", "Within-date", "pct", 1),
+            _col("placement", "Placement"), _col("ic", "IC", "signed", 2)]
+    note = ("Live forecasts scored against SPY once their exit has passed: one per stock, forecaster, horizon and date; "
+            "a window opening inside an earlier counted one is overlapping, and one recorded after its window opened "
+            "is late; neither is scored. Coverage, Brier skill (against the training base rate, with its within-date "
+            "part), placement and IC (dates with 3 or more stocks) are per date, then averaged."
+            if rows else "No forecasts recorded yet. T FCST NEW makes one (a background job, paper only).")
+    return _table(cols, rows, note, [])
+
+
+def _fc_history(sc: dict, t: str) -> dict:
+    rows = [{"date": r["date"], "horizon": r["horizon"], "forecaster": r["forecaster"], "p_beat": r["p_beat"],
+             "chance": _share(r["p_beat"]), "band": f"{_price(r.get('q16'))}-{_price(r.get('q84'))}", "status": r["status"],
+             "excess": r.get("excess"), "in68": None if r.get("in68") is None else ("in" if r["in68"] else "out"),
+             "_cite": r["ref"].partition("/")[2][:8]}
+            for r in sc.get("rows") or [] if r["ticker"] == t]
+    cols = [_col("date", "Date", "date"), _col("horizon", "Sessions", "number", 0), _col("forecaster", "Forecaster"),
+            _col("chance", "Chance to beat SPY"), _col("band", "68% band"), _col("status", "Scored"),
+            _col("excess", "Excess vs SPY", "pct"), _col("in68", "Close in 68%")]
+    return _table(cols, rows, "", [])
+
+
+def _price(v) -> str:
+    return "–" if not isinstance(v, (int, float)) or not math.isfinite(v) else (
+        f"{v:,.0f}" if abs(v) >= 100 else f"{v:,.2f}" if abs(v) >= 1 else f"{v:.4f}")
+
+
+def _fcst_one(bank: Bank, cmd: Command) -> dict:
+    live = _live()
+    t, now = cmd.ticker, _now()
+    got = live.latest(bank, t, now)
+    if not got:
+        from brain import decide
+        ok, why = decide.scorable(t)
+        if not ok:
+            raise UserError(f"no forecasts for {t}: {why}", "FCST")
+        raise UserError(f"no forecast recorded for {t} yet", fcst_line(t, new=True) or "FCST")
+    view = _view(bank)
+    sc = live.score(bank, now)
+    scored = {r["ref"]: r for r in sc["rows"]}
+    fcs = []
+    for h in sorted({k[0] for k in got}):
+        f, g = got.get((h, live.F1)), got.get((h, live.F1_LLM))
+        if f is None:   # only the model's answer at this horizon: shown as it is
+            f, g = g, None
+        elif g is not None and g.as_of != f.as_of:
+            g = None    # the model's answer belongs to another date: in the history, not beside this one
+        e = _fc_entry(f, g, scored, live)
+        e["record"] = live.record_lines(h, llm=g is not None)["lines"]
+        fcs.append(e)
+    snap = view.latest(t, PRICE)
+    pts, future = [], []
+    if snap is not None:
+        df = _frame(snap, view)
+        first = min(e["date"] for e in fcs)
+        df = df[df["date"] >= _minus_months(first, FCST_MONTHS)]
+        pts = [{"date": str(r.date), "close": float(r.close)} for r in df.itertuples()]
+        last = pts[-1]["date"] if pts else first
+        ends = [(e["outcome"].get("exit") or e.get("exit")) for e in fcs]
+        end = max([x for x in ends if x] or [last])
+        day = np.datetime64(last, "D")
+        while len(future) < 400:
+            day = np.busday_offset(day, 1, roll="forward")
+            if str(day) > end:
+                break
+            future.append(str(day))
+    main = got.get((5, live.F1)) or got.get((21, live.F1))
+    p = (main.context.get("p_beat") if main is not None else fcs[0].get("p_beat"))
+    name = _name(view, t)
+    data = {"ticker": t, "name": name, "forecasts": fcs, "series": pts, "future": future, "cite": cite(snap),
+            "retrieved_at": got[(5, live.F1)].retrieved_at if (5, live.F1) in got else None,
+            "live": _fc_live_table(sc), "history": _fc_history(sc, t),
+            "note": ("Paper only, not financial advice. The bands are F1's range for the close at the exit; the cone on "
+                     "the chart joins the close on the forecast date to them, and only the exit's band is forecast. "
+                     "The chance to beat SPY carries no tested edge unless its declared test says PASS. "
+                     f"{t} FCST NEW forecasts afresh from the latest close (a background job).")}
+    what = f"forecast · {float(p) * 100:.0f}% to beat SPY" if isinstance(p, (int, float)) else "forecast"
+    return _ok(cmd, _title(t, name, what), max(e["date"] for e in fcs), "forecast", data)
+
+
+def _fcst_all(bank: Bank, cmd: Command) -> dict:
+    live = _live()
+    now = _now()
+    sc = live.score(bank, now)
+    newest: dict[str, dict] = {}
+    for r in sc["rows"]:  # F1's latest per stock; on one date the 5-session forecast, what T FCST NEW makes
+        g = newest.get(r["ticker"])
+        if r["forecaster"] == live.F1 and (g is None or (r["date"], r["horizon"] == 5) > (g["date"], g["horizon"] == 5)):
+            newest[r["ticker"]] = r
+    rows = [{"ticker": t, "date": r["date"], "horizon": r["horizon"], "p_beat": r["p_beat"], "chance": _share(r["p_beat"]),
+             "band": f"{_price(r.get('q16'))}-{_price(r.get('q84'))}", "status": r["status"], "_ticker": t,
+             "_cmds": {"ticker": fcst_line(t)} if fcst_line(t) else {}, "_cite": r["ref"].partition("/")[2][:8]}
+            for t, r in sorted(newest.items())]
+    latest = _table([_col("ticker", "Stock", "ticker"), _col("date", "Date", "date"),
+                     _col("horizon", "Sessions", "number", 0), _col("chance", "Chance to beat SPY"),
+                     _col("band", "68% band"), _col("status", "Scored")], rows,
+                    "" if rows else "No forecasts recorded yet. T FCST NEW makes one (a background job, paper only).", [])
+    record = [{"horizon": h, "lines": live.record_lines(h)["lines"]} for h in live.HORIZONS]
+    note = ("Paper forecasts: F1's likely range and chance to beat SPY, recorded and scored later; nothing here places "
+            "orders or is financial advice. T FCST shows one with its bands on the chart; T FCST NEW forecasts afresh.")
+    asof = max((r["date"] for r in rows), default=None)
+    return _ok(cmd, "FCST — forecasts, live scoring and the declared tests", asof, "forecasts",
+               {"latest": latest, "live": _fc_live_table(sc), "record": record, "note": note})
+
+
+def _fcst(bank: Bank, cmd: Command) -> dict:
+    if cmd.args:
+        raise UserError("FCST takes no arguments, or NEW", f"{cmd.ticker} FCST" if cmd.ticker else "FCST")
+    return _fcst_one(bank, cmd) if cmd.ticker else _fcst_all(bank, cmd)
+
+
 # ---------- writes ----------
-# function -> first argument that changes state; DEC NEW starts a job (the server runs it, never data.run)
-WRITES = {"WL": ("ADD", "DEL"), "ALRT": ("ACK",), "DEC": ("NEW",)}
+# function -> first argument that changes state; DEC NEW and FCST NEW start a job (the server runs it, never data.run)
+WRITES = {"WL": ("ADD", "DEL"), "ALRT": ("ACK",), "DEC": ("NEW",), "FCST": ("NEW",)}
+JOB_STARTS = {"DEC": "DEC NEW starts a background decision job", "FCST": "FCST NEW starts a background forecast job"}
 
 
 def is_write(cmd: Command) -> bool:
-    """Commands that change local state (the watchlist, acknowledged alerts) or start a decision job (DEC
+    """Commands that change local state (the watchlist, acknowledged alerts) or start a job (DEC NEW, FCST
     NEW). The server runs them only for its own command line, never for the analyst's read-only tools."""
     return bool(cmd.args) and cmd.args[0] in WRITES.get(cmd.fn, ())
 
@@ -1688,7 +1861,7 @@ def _alrt_or_ack(bank: Bank, cmd: Command) -> dict:
 HANDLERS = {"HELP": _help, "DES": _des, "GP": _gp, "FA": _fa, "CF": _cf, "CN": _cn, "EV": _ev, "BRIEF": _brief,
             "INS": _ins, "ERN": _ern, "JET": _jet, "SHOW": _show, "WEI": _wei, "MOV": _mov, "CURVE": _curve,
             "ECO": _eco, "RES": _res, "CLM": _clm, "SHIP": _ship, "CAM": _cam, "WL": _wl_or_edit, "ALRT": _alrt_or_ack,
-            "DEC": _dec}
+            "DEC": _dec, "FCST": _fcst}
 
 
 def run(bank: Bank, cmd: Command, writes: bool = False) -> dict:
@@ -1701,9 +1874,9 @@ def run(bank: Bank, cmd: Command, writes: bool = False) -> dict:
             return clean(_err(cmd, f"'{cmd.ticker}' is not a ticker", "HELP"))
     if cmd.fn in SERVER_ONLY:
         return clean(_err(cmd, SERVER_ONLY[cmd.fn], "HELP"))
-    if cmd.fn == "DEC" and is_write(cmd):  # a job, with or without writes: only the server starts one
-        return clean(_err(cmd, "DEC NEW starts a background decision job; it runs only from the terminal's own "
-                               "command line", f"{cmd.ticker} DEC" if cmd.ticker else "DEC"))
+    if cmd.fn in JOB_STARTS and is_write(cmd):  # a job, with or without writes: only the server starts one
+        return clean(_err(cmd, f"{JOB_STARTS[cmd.fn]}; it runs only from the terminal's own command line",
+                          f"{cmd.ticker} {cmd.fn}" if cmd.ticker else cmd.fn))
     if is_write(cmd) and not writes:
         return clean(_err(cmd, f"{cmd.fn} {cmd.args[0]} changes the {'watchlist' if cmd.fn == 'WL' else 'alerts'}; "
                                "it runs only from the terminal's own command line", cmd.fn))

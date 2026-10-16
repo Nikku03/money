@@ -59,7 +59,7 @@ class AnalystLoopTest(AskCase):
         first, second = sent
         self.assertEqual(first["model"], "fake-model")
         self.assertEqual(first["tool_choice"], "auto")
-        self.assertEqual(len(first["tools"]), 21)
+        self.assertEqual(len(first["tools"]), 22)
         self.assertEqual({t["type"] for t in first["tools"]}, {"function"})
         names = [t["function"]["name"] for t in first["tools"]]
         self.assertEqual(names[:3], ["describe", "price_history", "financials"])
@@ -81,9 +81,10 @@ class AnalystLoopTest(AskCase):
 
     def test_tool_schemas_are_openai_functions(self):
         specs = {t.name: t.spec() for t in analyst._tools(lambda c: {}, [])}
-        self.assertEqual(len(specs), 21)
-        self.assertEqual(list(specs)[-8:], ["insider_trades", "earnings", "aircraft", "ports", "cameras", "watchlist",
-                                            "alerts", "decision"])
+        self.assertEqual(len(specs), 22)
+        self.assertEqual(list(specs)[-9:], ["insider_trades", "earnings", "aircraft", "ports", "cameras", "watchlist",
+                                            "alerts", "decision", "forecast"])
+        self.assertEqual(specs["forecast"]["function"]["parameters"]["required"], ["ticker"])
         self.assertEqual(specs["decision"]["function"]["parameters"]["required"], ["ticker"])
         self.assertIn("latest recorded decision", specs["decision"]["function"]["description"])
         self.assertEqual(specs["ports"]["function"]["parameters"]["required"], [])

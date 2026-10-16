@@ -11,7 +11,8 @@ from html.parser import HTMLParser
 from brain.terminal import commands, server
 
 STATIC = server.STATIC
-VIEWS = {"help", "des", "chart", "table", "news", "evidence", "markdown", "fact", "curve", "ask", "decision", "decisions"}
+VIEWS = {"help", "des", "chart", "table", "news", "evidence", "markdown", "fact", "curve", "ask", "decision", "decisions",
+         "forecast", "forecasts"}
 
 
 class _Page(HTMLParser):
@@ -298,6 +299,7 @@ class AppBehaviourTest(unittest.TestCase):
         self.assertNotEqual(c.fn, "INGEST", f"{why}: {line!r} starts a job")
         self.assertFalse(c.fn == "ASK" and c.args, f"{why}: {line!r} asks the model again")
         self.assertFalse(c.fn == "DEC" and c.args, f"{why}: {line!r} starts a decision job")
+        self.assertFalse(c.fn == "FCST" and c.args, f"{why}: {line!r} starts a forecast job")
 
     def test_rerun_lines_never_ingest_or_ask(self):
         # tickers that are also codes (CF, GP, FA) put the code first: `CF INGEST` ingests CF
@@ -508,6 +510,180 @@ class AppBehaviourTest(unittest.TestCase):
         self.assertEqual(out["p"], [d["job_note"] + ". JOBS"])
         self.assertEqual(out["q"], [])
         self.assertEqual(out["ran"], ["JOBS"])
+
+    def test_fcst_new_reruns_as_the_forecast_it_made(self):
+        lines = ["AAPL FCST NEW", "fcst new aapl", "FCST AAPL NEW", "AAPL US EQUITY FCST NEW <GO>", "GO FCST NEW",
+                 "CF FCST NEW", "FCST FCST NEW", "FCST NEW FCST", "NEW FCST NEW", "FCST NEW INGEST", "FCST NEW ASK",
+                 "FCST NEW", "AAPL FCST", "FCST", "FCST DES", "DEC FCST NEW", "FCST DEC NEW", "fcst  new   aapl"]
+        res = {line: server_res(line) for line in lines}
+        out = run_app("""
+          const safeRerun = app("safeRerun"), rerunLine = app("rerunLine");
+          const o = {};
+          for (const line of input.lines) o[line] = [safeRerun(line), rerunLine(line, input.res[line]), rerunLine(line, null)];
+          return o;
+        """, lines=lines, res=res)
+        for line, reruns in out.items():
+            for again in reruns:
+                self.assertSafe(again, f"rerun of {line!r}")
+        for line in ("AAPL FCST NEW", "FCST AAPL NEW", "AAPL US EQUITY FCST NEW <GO>", "fcst new aapl", "fcst  new   aapl"):
+            for again in out[line]:
+                c = commands.parse(again)
+                self.assertEqual((c.fn, c.ticker, c.args), ("FCST", "AAPL", []), (line, again))
+        self.assertEqual(out["AAPL FCST NEW"], ["AAPL FCST"] * 3)
+        self.assertEqual(out["CF FCST NEW"], ["CF FCST"] * 3)
+        self.assertEqual(out["FCST NEW INGEST"], ["JOBS"] * 3)
+        self.assertEqual(out["DEC FCST NEW"], ["DEC FCST"] * 3)  # the ticker DEC's forecast
+        self.assertEqual(out["FCST DEC NEW"], ["FCST DEC"] * 3)  # the ticker FCST's decision
+        for line in ("AAPL FCST", "FCST", "FCST DES"):
+            self.assertEqual(out[line], [line] * 3)
+
+    def test_fcst_new_polls_waits_for_its_own_job_then_shows_the_forecast(self):
+        rows = [{"id": "j2", "target": "FCST AAPL", "status": "running"}, {"id": "j1", "target": "MSFT", "status": "running"}]
+        responses = {"AAPL FCST NEW": server_res("AAPL FCST NEW", data={"columns": [], "rows": rows}),
+                     "AAPL FCST": server_res("AAPL FCST", view="forecast", data={"ticker": "AAPL", "forecasts": []}),
+                     "FCST": server_res("FCST", view="forecasts", data={}), "JOBS": server_res("JOBS")}
+        out = run_app("""
+          const Pane = app("Pane"), panes = app("panes");
+          for (let i = 0; i < 4; i += 1) panes.push(new Pane(i));
+          const st = (running, active, finished) => ({ ok: true, jobs_running: running, jobs_queued: 0,
+                                                       jobs_active: active, jobs_finished: finished, analyst: {} });
+          input.status = st(0, [], 3);
+          await app("refreshStatus")();
+          await panes[1].run("FCST");
+          await panes[0].run("AAPL FCST NEW");  // typed once: one job
+          await settle();
+          const polling = app("jobsRunning");
+          const runs = () => calls.filter((c) => c.path === "/api/run").map((c) => c.cmd).filter((c) => c !== "WEI");
+          input.status = st(1, ["FCST AAPL"], 4);   // only the MSFT ingest finished
+          await app("refreshStatus")();
+          await settle();
+          const mid = runs(), midView = panes[0].res.fn + " " + (panes[0].res.args || []).join(" ");
+          input.status = st(0, [], 5);              // the forecast is done too
+          await app("refreshStatus")();
+          await settle();
+          panes[0].reload();
+          await settle();
+          const saved = JSON.parse(window.localStorage.getItem("money-terminal.layout.v1"));
+          return { polling, mid, midView, runs: runs(), view: panes[0].res.view, saved: saved.panes };
+        """, responses=responses)
+        self.assertEqual(out["polling"], 2)  # a FCST NEW result counts its jobs as running, as INGEST does
+        self.assertEqual(out["mid"].count("AAPL FCST"), 0, out["mid"])  # not while FCST AAPL runs
+        self.assertEqual(out["midView"], "FCST NEW")
+        self.assertEqual(out["runs"].count("AAPL FCST NEW"), 1, out["runs"])
+        self.assertIn("AAPL FCST", out["runs"])
+        self.assertGreaterEqual(out["runs"].count("FCST"), 2)  # the FCST pane refreshes when a job ends
+        for line in out["runs"][2:] + out["saved"]:
+            self.assertSafe(line, "after the job")
+        self.assertEqual((out["view"], out["saved"][0]), ("forecast", "AAPL FCST"))
+
+    FORECAST = {
+        "ticker": "AAPL", "name": "Apple Inc.", "cite": "a1b2c3d4", "retrieved_at": "2026-10-15T22:00:00Z",
+        "series": [{"date": "2026-10-13", "close": 100.0}, {"date": "2026-10-14", "close": 101.0},
+                   {"date": "2026-10-15", "close": 102.0}],
+        "future": ["2026-10-16", "2026-10-19", "2026-10-20", "2026-10-21", "2026-10-22"],
+        "forecasts": [
+            {"forecaster": "F1", "horizon": 5, "date": "2026-10-15", "entry": "2026-10-16", "exit": "2026-10-22",
+             "close": 102.0, "close_date": "2026-10-15", "p_beat": 0.55,
+             "band": {"q05": 92.0, "q16": 97.0, "q50": 102.5, "q84": 108.0, "q95": 112.0},
+             "move68_pct": [-4.9, 5.88], "move90_pct": [-9.8, 9.8],
+             "drivers": [{"name": "mom_12_1", "group": "P", "push": 0.08}, {"name": "abn_volume", "group": "B", "push": -0.04}],
+             "model": {"id": "F1", "sha": "abcdef1234567890", "trained_through": "2026-10-15", "rows": 150000},
+             "cite": "f0f0f0f0", "outcome": {"status": "pending"},
+             "llm": {"p_beat": 0.6, "ok": True, "reason": "Mild momentum.", "model": "qwen3:8b", "cite": "e1e1e1e1"},
+             "record": ["last 2 months (F1a): not run yet", "2019-2026 (F1b): not run yet"]},
+            {"forecaster": "F1", "horizon": 21, "date": "2026-10-14", "close": 101.0, "p_beat": 0.48,
+             "band": {"q05": 80.0, "q16": 90.0, "q50": 101.0, "q84": 112.0, "q95": 120.0}, "exit": "2026-11-13",
+             "outcome": {"status": "scored", "exit": "2026-10-20", "close_exit": 95.0, "in68": True}, "drivers": [],
+             "cite": "f1f1f1f1", "record": []}],
+        "live": {"columns": [{"key": "stream", "label": "Forecaster", "type": "text"}], "rows": [{"stream": "F1 h=5"}]},
+        "history": {"columns": [{"key": "date", "label": "Date", "type": "date"}], "rows": [{"date": "2026-10-15"}]},
+        "note": "Paper only, not financial advice.",
+        "job_note": "a new forecast on AAPL is running (job j3); AAPL FCST shows it when it is done"}
+
+    def test_forecast_chart_model(self):
+        out = run_app("""
+          const m = app("forecastModel")(input.d);
+          return { dates: m.dates, pts: m.lines[0].pts.length, kind: m.kind, ref: m.ref, extent: m.extent,
+                   cones: m.cones.map((c) => [c.horizon, c.color, c.i0, c.i1, c.realised, c.in68]),
+                   tip: m.tipRows(7), tipStart: m.tipRows(2) };
+        """, d=self.FORECAST)
+        self.assertEqual(out["dates"][:3], ["2026-10-13", "2026-10-14", "2026-10-15"])
+        self.assertEqual(len(out["dates"]), 8)  # three closes, then the window's sessions
+        self.assertEqual((out["pts"], out["kind"], out["ref"]), (3, "forecast", 102.0))
+        # the 5-session cone from the close on 10-15 to its exit; the 21-session one is scored: its real exit is used
+        self.assertEqual(out["cones"], [[5, "cyan", 2, 7, None, False], [21, "magenta", 1, 5, 95.0, True]])
+        self.assertEqual(out["extent"], [92.0, 112.0, None, 80.0, 120.0, 95.0])
+        self.assertEqual(out["tip"][0], ["5 sessions after 2026-10-15", "exit 2026-10-22", "t-cyan"])
+        self.assertEqual(out["tip"][1], ["68% band", "97.00 – 108", ""])
+        self.assertEqual(out["tipStart"][0], ["Close", "102.00", ""])
+
+    def test_the_bands_are_drawn_on_the_price_canvas(self):
+        out = run_app("""
+          const calls2 = [];
+          const ctx = new Proxy({}, { get: (o, k) => (k in o ? o[k] : k === "measureText" ? () => ({ width: 20 })
+                                        : k === "createLinearGradient" ? () => ({ addColorStop() {} })
+                                        : (...a) => calls2.push([k, ...a.map((x) => (typeof x === "number" ? Math.round(x) : x))])),
+                                      set: (o, k, v) => { o[k] = v; return true; } });
+          const canvas = () => { const c = document.createElement("canvas"); c.getContext = () => ctx; return c; };
+          const st = { wrap: { clientWidth: 800, clientHeight: 300 }, base: canvas(), over: canvas(),
+                       model: app("forecastModel")(input.d) };
+          app("drawPrice")(st);
+          return { fills: calls2.filter((c) => c[0] === "fill").length, texts: calls2.filter((c) => c[0] === "fillText").map((c) => c[1]),
+                   arcs: calls2.filter((c) => c[0] === "arc").length, lo: st.geo.lo, hi: st.geo.hi };
+        """, d=self.FORECAST)
+        self.assertGreaterEqual(out["fills"], 5)  # two cones per forecast, the close's area, the realised dot
+        for label in ("97.00", "108", "90.00", "112"):  # each 68% band's edges, labelled at its exit
+            self.assertIn(label, out["texts"])
+        self.assertEqual(out["arcs"], 1)  # the scored forecast's close at its exit
+        self.assertLessEqual(out["lo"], 80.0)  # the axis makes room for every band
+        self.assertGreaterEqual(out["hi"], 120.0)
+
+    def test_forecast_view(self):
+        out = run_app("""
+          const p = new (app("Pane"))(0);
+          p.show({ ok: true, fn: "FCST", ticker: "AAPL", args: [], view: "forecast", title: "AAPL — Apple Inc. · forecast", data: input.d });
+          const els = all(p.body);
+          const cls = (c) => els.filter((e) => e.className === c).map((e) => e.textContent);
+          const meter = els.find((e) => e.className === "fc-meter");
+          const fill = meter.childNodes.find((e) => String(e.className).startsWith("fc-fill"));
+          return { heads: cls("sec-h"), chance: cls("fc-chance"), llm: cls("fc-llm"), job: cls("dec-job"),
+                   record: cls("fc-record"), legend: cls("legend"), charts: els.filter((e) => String(e.className).includes("fc-chart")).length,
+                   fill: [fill.className, fill.style.left, fill.style.width], text: p.body.textContent };
+        """, d=self.FORECAST)
+        self.assertEqual(out["charts"], 1)
+        self.assertIn("Next 5 sessions after 2026-10-15F1 · model abcdef12, trained through 2026-10-15", out["heads"])
+        self.assertIn("Next 21 sessions after 2026-10-14", " ".join(out["heads"]))
+        self.assertIn("Live scoringevery recorded forecast, once its exit has passed", out["heads"])
+        self.assertTrue(any(h.startswith("History") for h in out["heads"]))
+        self.assertTrue(out["chance"][0].startswith("Chance it beats SPY55%a coin is 50%"), out["chance"])
+        self.assertEqual(out["fill"], ["fc-fill up", "50.0%", "5.0%"])  # from the coin to the forecast
+        self.assertEqual(out["llm"], ["The model (F1-llm, qwen3:8b): 60%. Mild momentum. [e1e1e1e1]"])
+        self.assertEqual(out["job"], [self.FORECAST["job_note"] + ". JOBS"])
+        self.assertEqual(out["record"][0], "last 2 months (F1a): not run yet2019-2026 (F1b): not run yet")
+        self.assertIn("5 sessions: 68% 97.00 – 108, 90% 92.00 – 112", out["legend"][0])
+        for text in ("paper only · not financial advice", "pending: the window has not closed", "mom_12_1",
+                     "closed at 95.00 on 2026-10-20: inside the 68% band", "(-4.9% .. +5.9%)"):
+            self.assertIn(text, out["text"])
+
+    def test_forecasts_view(self):
+        d = {"latest": {"columns": [{"key": "ticker", "label": "Stock", "type": "ticker"}],
+                        "rows": [{"ticker": "AAPL", "_ticker": "AAPL", "_cmds": {"ticker": "AAPL FCST"}}]},
+             "live": {"columns": [], "rows": [], "note": "No forecasts recorded yet."},
+             "record": [{"horizon": 5, "lines": ["last 2 months (F1a): not run yet"]}, {"horizon": 21, "lines": ["x"]}],
+             "note": "Paper forecasts."}
+        out = run_app("""
+          const p = new (app("Pane"))(0);
+          p.show({ ok: true, fn: "FCST", ticker: null, args: [], view: "forecasts", data: input.d });
+          const text = p.body.textContent;
+          const link = all(p.body).find((e) => e.className === "cmdlink");
+          link.listeners.click[0]({ stopPropagation() {} });
+          await settle();
+          return { text, ran: calls.filter((c) => c.path === "/api/run").map((c) => c.cmd) };
+        """, d=d)
+        for text in ("Latest forecast per stock", "Live scoring", "The declared tests", "5 sessions",
+                     "last 2 months (F1a): not run yet", "No forecasts recorded yet.", "Paper forecasts."):
+            self.assertIn(text, out["text"])
+        self.assertEqual(out["ran"], ["AAPL FCST"])  # a row's command reads the forecast; it starts no job
 
     def test_show_says_when_inputs_are_withheld(self):
         fact = {"id": "d0d0d0d0d0d0d0d0d0d0", "entity": "XCO", "attr": "decision", "value": "NO_EDGE", "as_of": "2026-10-15",

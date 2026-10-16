@@ -74,6 +74,20 @@ python -m brain decide score                # how past decisions did against SPY
 
 D1 is never edited: a change is D2, with its own hash, and scores are reported per policy. Decisions are paper only. Nothing here places orders or connects to a broker, and none of it is financial advice.
 
+## Forecasts (paper only)
+
+```
+python -m brain forecast AAPL               # a weather-style forecast for the next 5 sessions, recorded as a fact
+python -m brain forecast AAPL --horizon 21 --llm   # 21 sessions; also ask the local model for its own chance
+python -m brain forecast score              # how recorded forecasts did once their window closed
+```
+
+`brain forecast` is a weather report for one stock after SPY's latest close: the likely range of its price at the end of the next 5 (or 21) sessions, as a 68% band and a 90% band; the chance it beats SPY over that time, against a coin's 50%; the main drivers of that chance; and the record of such forecasts. The forecaster, F1, is a small model (a logistic regression and gradient-boosted trees, numpy only) that learns from 2011 on how about forty price, behavioural, fundamental and market-regime variables relate to what stocks did next. Every input is read as the bank stood after the close of the forecast day, and the range comes from each stock's own recent volatility. With `--llm` the local model reads a point-in-time snapshot of the stock, F1's numbers and a primer on how markets and people behave ([`docs/MARKET_PRIMER.md`](docs/MARKET_PRIMER.md)), and gives its own chance, recorded as a second fact.
+
+**How it is tested.** Four tests are declared in the research ledger before they run, with the code, the primer and the model pinned ([`docs/FORECAST.md`](docs/FORECAST.md)). F1b (weekly, 2019 to two months ago) and F1c (21 sessions, 2019 to now) are the verdicts: their chance to beat SPY must rank stocks by what they then did beyond what size alone explains, with a date-level p < 0.05, a false-discovery correction shared with every research hypothesis, and two controls. F1a (the last two months) and F1d (the local model against F1 on 12 stocks over those weeks) are descriptive retests, shown with their uncertainty and no verdict. The ranges are scored by how often the price ended inside the band, per date. The expectation, written down before any run: the range should be about right, and the chance close to a coin.
+
+**Where the record comes from.** The card's Record lines quote the declared runs' results from `research/ledger.jsonl` as they stand; until a test has run, the card says the forecast is untested. Development used only synthetic banks and real data from 2011-2018, so the held-out years are computed once, by the recorded runs. On the real bank `brain forecast TICKER` refuses until F1a, F1b and F1c have results, since a live model would otherwise train on those years first. Forecasts are paper only and not financial advice.
+
 ## What the brain collects
 
 | Area | What | Command |
@@ -122,7 +136,8 @@ A keyboard-driven market terminal over the memory bank: type `AAPL GP 5Y SPY` an
 | `WEI` `MOV` `CURVE` `ECO` | world markets, universe movers, Treasury yield curve, macro |
 | `RES` `CLM` | research verdicts per universe; per source, the track record decisions weigh (independent bets) and the count of every call |
 | `DEC` | paper decisions under policy D1: `T DEC` the latest with its evidence weights, the unproven lean, the explanation and the history; `DEC` every stock's latest, the scorecard and every source's track record; `T DEC NEW` decides afresh in a background job |
-| `ASK` | ask the analyst, an open-weight model on a server you run. It answers only from the bank, through read-only tools that run terminal commands, and cites fact ids. Its tools cover DES, GP, FA, CF, CN, EV, SHOW, RES, WEI, MOV, CURVE, ECO, CLM, INS, ERN, JET, SHIP, CAM, WL, ALRT and DEC (reading only). Under each answer the pane flags cited ids and numbers that none of its tool results hold |
+| `FCST` | paper forecasts: `T FCST` the latest bands drawn on a 3-month price chart, the chance to beat SPY against a coin, the drivers, the declared tests' lines and live scoring; `FCST` every stock's latest; `T FCST NEW` forecasts afresh in a background job |
+| `ASK` | ask the analyst, an open-weight model on a server you run. It answers only from the bank, through read-only tools that run terminal commands, and cites fact ids. Its tools cover DES, GP, FA, CF, CN, EV, SHOW, RES, WEI, MOV, CURVE, ECO, CLM, INS, ERN, JET, SHIP, CAM, WL, ALRT, DEC and FCST (reading only). Under each answer the pane flags cited ids and numbers that none of its tool results hold |
 | `INGEST` `JOBS` | collect data in the background: a ticker, `MARKETS`, `MACRO`, `UNIVERSE`, `INSIDERS`, `WATCH` |
 
 It listens on 127.0.0.1 only and requires a per-session token on every API call; a Host check blocks DNS rebinding, and the page's CSP allows no external requests.
@@ -177,6 +192,7 @@ python -m brain note AAPL "Analyst X cuts to sell on China demand" \
 python -m brain scout AAPL                  # the model reads public pages and notes claims with sources
 python -m brain score-claims                # every call per source vs a coin flip, overlapping ones included (decide score shows the record that gives weight)
 python -m brain decide AAPL                 # a paper decision under policy D1 (today: NO_EDGE; see Decisions)
+python -m brain forecast AAPL               # a paper forecast: price bands and the chance to beat SPY (see Forecasts)
 python -m brain check                       # invariants; exit 0 = OK (about 2.5 minutes on a 1.9 GB bank)
 ```
 
@@ -235,11 +251,12 @@ Everything runs offline in the unit tests (fixtures, a fake OpenAI-compatible se
 | `brain/claims.py` | Store web claims; score them per source; the track record a decision weighs |
 | `brain/decide.py` | Policy D1: weigh the evidence, record a paper decision, score decisions later |
 | `brain/judge.py` | The model's steps in a decision: its own call (a judgment fact) and a checked explanation |
+| `brain/forecast/` | Forecasts: point-in-time features and the label (`features.py`), the learner and the range (`learn.py`, `gbm.py`), walk-forward tests and their metrics (`evaluate.py`), the local model's snapshot and probability (`think.py`), the card, the fact and live scoring (`live.py`) |
 | `brain/brief.py` | Cited one-page brief; writes derived facts back |
-| `brain/research/` | Monthly panel, signals, harness (portfolio, costs, nulls per select mode), ledger, hypotheses, runner |
+| `brain/research/` | Monthly panel, signals, harness (portfolio, costs, nulls per select mode), ledger, hypotheses, runner; the declared forecast tests (`forecast_tests.py`) |
 | `brain/terminal/` | The terminal: command grammar, data functions, local HTTP server and jobs, analyst, static frontend |
 | `brain/markets.py` | The world-markets symbol list and its collector |
-| `docs/TERMINAL.md`, `docs/EXPANSION.md`, `docs/DECIDE.md` | Terminal spec; the v2 spec (insiders, earnings, universe, alternative data, alerts, open model); the decision contract (policy D1, judgments, scoring) |
+| `docs/TERMINAL.md`, `docs/EXPANSION.md`, `docs/DECIDE.md`, `docs/FORECAST.md`, `docs/MARKET_PRIMER.md` | Terminal spec; the v2 spec (insiders, earnings, universe, alternative data, alerts, open model); the decision contract (policy D1, judgments, scoring); the forecast contract (features, learner, declared tests F1a-F1d); the primer the local model reads |
 | `research/ledger.jsonl` | Every declaration and result, append-only (committed) |
 | `research/RESULTS.md` | Current verdicts, generated from the ledger (committed) |
 | `universe/us_large.json`, `universe/us_broad.json` | The research universes, their rules, and what each rule rejected (committed) |

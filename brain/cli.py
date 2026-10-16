@@ -11,7 +11,7 @@ from brain import config
 # Modules that register their own subcommands with ``add_cli(subparsers)``. A module that is not
 # there (or not finished) is skipped, so one part of the brain cannot take the whole CLI down.
 PLUGINS = ("brain.sources.insiders", "brain.sources.aviation", "brain.sources.shipping",
-           "brain.sources.cameras", "brain.watch", "brain.scout", "brain.decide")
+           "brain.sources.cameras", "brain.watch", "brain.scout", "brain.decide", "brain.forecast.live")
 
 
 def _bank():

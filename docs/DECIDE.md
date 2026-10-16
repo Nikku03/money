@@ -448,7 +448,7 @@ def template_explanation(decision: dict) -> str
 ### 4.1 `assess`
 **Source identity.**
 - `judge_source(client)` is `llm:<canonical model>@<JUDGE_SHA>`.
-- `JUDGE` holds everything the model is shown that does not come from the bank: the system prompt, the user message's template, the two repair texts, the last-round text `run_loop` sends (`analyst.LAST_ROUND`), and each tool's name, description and parameters. It also holds the loop's limits: rounds, the "tools first" repair's rounds and the tool calls run from one response. A change to any of them, a tool's description included, or to the temperature, is a new source with no record. A test freezes JUDGE_SHA (`d0f3c45d`). The reader's refusal texts are tool results, like the analyst's other error texts, and are not part of it.
+- `JUDGE` holds everything the model is shown that does not come from the bank: the system prompt, the user message's template, the two repair texts, the last-round text `run_loop` sends (`analyst.LAST_ROUND`), and each tool's name, description and parameters. It also holds the loop's limits: rounds, the "tools first" repair's rounds and the tool calls run from one response. A change to any of them, a tool's description included, or to the temperature, is a new source with no record. A test freezes JUDGE_SHA (`a74a865f`: since docs/FORECAST.md the system prompt also carries the market primer, `docs/MARKET_PRIMER.md`, so this judge is a new source, with no record, beside the earlier `d0f3c45d`). The reader's refusal texts are tool results, like the analyst's other error texts, and are not part of it.
 - Different weights under one tag are not caught, so `server_model` is recorded beside it.
 
 **Tools.**

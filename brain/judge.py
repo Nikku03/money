@@ -6,10 +6,11 @@ one call (up, down or none for the stock against SPY over the next 21 trading da
 it relied on. The call is stored as a ``judgment`` fact and scored later like a claim; it weighs nothing
 in a decision until its record shows skill. Its identity is the model and a hash of everything that
 shapes its answers (prompts, tool descriptions, temperature, rounds), so a new prompt is a new source
-with no record.
+with no record. Its system prompt carries the market primer (docs/MARKET_PRIMER.md, docs/FORECAST.md section 9),
+the general knowledge the forecaster's model reads too; a change to the primer is a new judge.
 
-The judge does not see past decisions, judgments or alerts: the tools that show them are left out and
-SHOW refuses them, since a judge anchored on the engine's own output would be scored as if independent.
+The judge does not see past decisions, judgments, alerts or forecasts: the tools that show them are left out
+and SHOW refuses them, since a judge anchored on the engine's own output would be scored as if independent.
 
 ``explain`` writes the decision in plain words from the decision's own evidence table. It cannot change
 the decision: a text that misses the action, suggests another one or states a number the table does not
@@ -24,7 +25,7 @@ import math
 import re
 import time
 
-from brain import llm
+from brain import config, llm
 from brain.bank import Fact
 from brain.terminal import analyst
 from brain.timeutil import now_iso, today
@@ -35,13 +36,19 @@ BENCHMARK = "SPY"
 MAX_REASONS = 5
 MAX_TEXT = 300               # characters of the judgment's value and of each reason
 REPAIR_ROUNDS = 3            # the "tools first" repair's own run_loop
-HIDDEN_TOOLS = ("decision", "watchlist", "alerts")       # they show past decisions and alerts
-HIDDEN_ATTRS = ("decision", "judgment", "alert")         # SHOW refuses these to the judge
+HIDDEN_TOOLS = ("decision", "watchlist", "alerts", "forecast")   # they show past decisions, alerts and forecasts
+HIDDEN_ATTRS = ("decision", "judgment", "alert", "forecast")     # SHOW refuses these to the judge
+HIDDEN_FNS = ("DEC", "WL", "ALRT", "FCST")                         # the terminal functions that list them
 TOOL_NAMES = [name for name, *_ in analyst._BANK_TOOLS if name not in HIDDEN_TOOLS]
 DIRECTION_WORDS = {"up": 1, "bullish": 1, "down": -1, "bearish": -1, "none": 0, "neutral": 0}
 LABEL = {1: "up", -1: "down", 0: "none"}
 
-SYSTEM = """You are the judge inside MONEY TERMINAL's decision loop. You make one call on one security, named in the user's message: will it beat SPY, trail SPY, or neither, over the next 21 trading days. Your call is stored and later scored against what the stock did; it carries weight in decisions only once your record of scored calls shows skill.
+# The market primer (docs/FORECAST.md section 9): general knowledge about markets and people, the same text the
+# forecaster's model reads. It is part of SYSTEM, so a change to it is a new judge with no record.
+PRIMER_PATH = config.ROOT / "docs" / "MARKET_PRIMER.md"
+PRIMER = PRIMER_PATH.read_text(encoding="utf-8").strip() if PRIMER_PATH.exists() else ""
+
+RULES = """You are the judge inside MONEY TERMINAL's decision loop. You make one call on one security, named in the user's message: will it beat SPY, trail SPY, or neither, over the next 21 trading days. Your call is stored and later scored against what the stock did; it carries weight in decisions only once your record of scored calls shows skill.
 
 What you can know: only what your tools return. They read a memory bank of public data: SEC filings and financials, prices, quarterly earnings and the stock's reaction to them, insider trades, headlines, claims noted from the web, macro series and the research ledger. Do not use outside knowledge of prices, earnings or news.
 
@@ -51,11 +58,17 @@ How to work:
 - "none" is the right answer when the facts do not point one way, which is most of the time.
 - Research verdicts are as the tools give them: a FAIL means the signal did not beat a shuffled one on unseen months.
 - Aircraft records are airport-to-airport trips of aircraft the company itself owns: never infer who flew or why.
-- Use only numbers that are in the tool results.
+- Use only numbers that are in the tool results."""
 
-When you are done, reply with only a JSON object, no other text:
+BACKGROUND = ("Background: the market primer below is general knowledge about markets and people. It holds no facts "
+              "about any security; its numbers are not tool results, so never cite them or state them as facts about "
+              "the security.")
+
+ANSWER = """When you are done, reply with only a JSON object, no other text:
 {"direction": "up" | "down" | "none", "confidence": 0.5-1.0, "summary": "one line: your call and its main reason", "reasons": [{"text": "one line", "cites": ["<id>", ...]}]}
 direction is the stock against SPY over the next 21 trading days. Give at most 5 reasons. The cites are fact ids exactly as the tools printed them: the values of the cite, _cite and _cites fields, eight hexadecimal characters such as "9de710d2". A tool's name is not a fact id. Cite only ids the tools returned."""
+
+SYSTEM = f"{RULES}\n\n{BACKGROUND}\n\n{PRIMER}\n\n{ANSWER}" if PRIMER else f"{RULES}\n\n{ANSWER}"
 
 USER = ("Security: {ticker}. Today (UTC): {today}.\n\nMake your call on {ticker} against {benchmark} over the next "
         "{horizon} trading days. Call the tools first; then reply with only the JSON object.")
@@ -63,8 +76,8 @@ REPAIR_JSON = "Reply with only the JSON object described."
 REPAIR_TOOLS = "Call the tools first; cite only ids they return."
 
 # Everything the model is shown that does not come from the bank, and the loop's limits: a change to any of it
-# (a tool's description included, or the analyst's last-round text, which run_loop sends the judge too) is a new
-# source with no record.
+# (the primer in SYSTEM, a tool's description, or the analyst's last-round text, which run_loop sends the judge
+# too) is a new source with no record.
 JUDGE = {"system": SYSTEM, "user": USER, "repairs": [REPAIR_JSON, REPAIR_TOOLS], "last_round": analyst.LAST_ROUND,
          "tools": [{"name": name, "description": desc, "params": {k: list(v) for k, v in params.items()},
                     "required": list(req)} for name, desc, params, req, _ in analyst._BANK_TOOLS if name in TOOL_NAMES],
@@ -109,8 +122,8 @@ def llm_ready() -> tuple[bool, str]:
 
 # ---------- the judge's reader ----------
 def reader(bank, t_run: str | None = None):
-    """The analyst's read-only reader, which also refuses SHOW of a decision, judgment or alert, and the
-    functions that list them (DEC, WL, ALRT). Its view is the end of today, which is the run's T_RUN while
+    """The analyst's read-only reader, which also refuses SHOW of a decision, judgment, alert or forecast, and
+    the functions that list them (DEC, WL, ALRT, FCST). Its view is the end of today, which is the run's T_RUN while
     the run stays in the UTC day it started in. With ``t_run``, every read is refused once that day is over:
     the view would then hold facts known after the run's time, and the judgment is stamped as known then."""
     from brain.terminal import data
@@ -121,12 +134,12 @@ def reader(bank, t_run: str | None = None):
             return _refused({}, _day_over(t_run), "answer from the tool results you already have")
         res = read(line)
         fn = res.get("fn")
-        if fn in ("DEC", "WL", "ALRT"):
-            return _refused(res, f"{fn} shows past decisions or alerts, which the judge does not read")
+        if fn in HIDDEN_FNS:
+            return _refused(res, f"{fn} shows past decisions, alerts or forecasts, which the judge does not read")
         fact = (res.get("data") or {}).get("fact") if res.get("ok") and fn == "SHOW" else None
         if isinstance(fact, dict) and fact.get("attr") in HIDDEN_ATTRS:
             return _refused(res, f"fact {str(fact.get('id'))[:8]} is a {fact['attr']}; the judge makes its own "
-                                 f"call and does not read past decisions, judgments or alerts")
+                                 f"call and does not read past decisions, judgments, alerts or forecasts")
         return res
     return run
 
@@ -141,7 +154,7 @@ def _day_over(t_run: str) -> str:
 
 
 def tools(bank, calls: list, budget: analyst.Budget, t_run: str | None = None) -> list[analyst.Tool]:
-    """The analyst's bank tools without decision, watchlist and alerts, reading through ``reader``."""
+    """The analyst's bank tools without decision, watchlist, alerts and forecast, reading through ``reader``."""
     return [t for t in analyst._tools(reader(bank, t_run), calls, budget.result_chars) if t.name in TOOL_NAMES]
 
 

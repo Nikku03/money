@@ -27,6 +27,7 @@ python -m brain check                              # bank invariants; exit 0 = O
 4. `python -m brain brief TICKER`: a cited one-page summary. Quote numbers from the brief, not from memory.
 5. `python -m brain decide TICKER`: a paper decision under policy D1 (`docs/DECIDE.md`), weighing only tested evidence and citing every input. Quote its action, score and each item's weight and why as the card prints them. `--no-llm` skips the model; `--read` lets it read the web first. `python -m brain decide score` shows how past decisions and every source's calls did.
 6. For a person at a screen, `python -m brain terminal` serves the same bank as a keyboard-driven terminal (`docs/TERMINAL.md`). Its `ASK` analyst follows the same rules as you: bank-only facts, cited ids, verdicts quoted as recorded.
+7. `python -m brain forecast TICKER [--horizon 5|21] [--llm]`: a paper forecast (68% and 90% price bands, the chance to beat SPY, the drivers), recorded as a fact (`docs/FORECAST.md`). Quote the bands, the chance and the Record lines as the card prints them: the chance has no tested edge unless its declared test (F1b, F1c) says PASS. On the real bank it refuses until F1a-F1c have recorded results.
 
 ## Turning an idea into a tested claim
 

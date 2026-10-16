@@ -173,6 +173,33 @@ class AssessTest(JudgeCase):
         self.assertEqual(res["fact"].inputs, (self.px.ref,))
         self.assertIn(f"{d8} (not returned by the tools)", res["error"])
 
+    def test_the_judge_does_not_read_forecasts(self):
+        # F1's forecasts are the engine's own output too: a judge anchored on them would not be an independent source.
+        self.assertIn("forecast", judge.HIDDEN_TOOLS)
+        self.assertNotIn("forecast", judge.TOOL_NAMES)
+        self.assertNotIn("forecast", [t["name"] for t in judge.JUDGE["tools"]])
+        fc = Fact(entity="AAPL", attr="forecast", value="p_beat 0.51; 68% 331-353", as_of=today(), known_at=self.t_run,
+                  tier="derived", source={"name": "brain.forecast"}, context={"p_beat": 0.51}, inputs=(self.px.ref,))
+        self.bank.add(fc)
+        read = judge.reader(self.bank)
+        res = read(f"AAPL SHOW {fc.id[:8]}")
+        self.assertFalse(res["ok"], res)
+        self.assertIn("is a forecast", res["error"])
+        self.assertTrue(analyst.bank_reader(self.bank)(f"AAPL SHOW {fc.id[:8]}")["ok"])  # the analyst sees it
+        # FCST is refused whatever the data layer returns for it.
+        shown = {"ok": True, "fn": "FCST", "ticker": "AAPL", "args": [], "data": {"p_beat": 0.51}}
+        with mock.patch.object(judge.analyst, "bank_reader", return_value=lambda line: dict(shown)):
+            for line in ("AAPL FCST", "FCST"):
+                res = judge.reader(self.bank)(line)
+                self.assertFalse(res["ok"], res)
+                self.assertIn("FCST shows past decisions, alerts or forecasts, which the judge does not read",
+                              res["error"])
+        refs, _, dropped = judge.resolve(self.bank, "AAPL", [{"text": "x", "cites": [fc.id[:8]]}],
+                                         [{"input": f"AAPL SHOW {fc.id[:8]}"}], [json.dumps({"_cite": fc.id[:8]})],
+                                         self.t_run)[0:3]
+        self.assertEqual(refs, [{"text": "x", "cites": []}])
+        self.assertEqual(dropped, {fc.id[:8]: "a forecast, not evidence for the judge"})
+
     def test_the_tools_read_the_bank_only_as_of_the_runs_time(self):
         # A run that crosses midnight UTC: the data layer's view is the end of the current day, so after midnight
         # it holds facts known after T_RUN, while the judgment is stamped as known at T_RUN.
@@ -449,8 +476,26 @@ class IdentityTest(unittest.TestCase):
                          (judge.analyst._BANK_TOOLS[0][1], ["ticker"]))
         self.assertEqual((judge.JUDGE["temperature"], judge.JUDGE["max_rounds"], judge.JUDGE["horizon_days"]),
                          (0.2, 8, 21))
-        # Frozen: a new prompt, tool set or temperature is a new source with no record. Change this on purpose.
-        self.assertEqual(judge.JUDGE_SHA, "d0f3c45d")
+        # Frozen: a new prompt (the market primer in it included), tool set or temperature is a new source with no
+        # record. Change this on purpose. d0f3c45d was the judge before the primer (docs/FORECAST.md section 9).
+        self.assertEqual(judge.JUDGE_SHA, "a74a865f")
+
+    def test_the_judge_carries_the_market_primer(self):
+        text = (judge.config.ROOT / "docs" / "MARKET_PRIMER.md").read_text(encoding="utf-8").strip()
+        self.assertEqual(judge.PRIMER_PATH, judge.config.ROOT / "docs" / "MARKET_PRIMER.md")
+        self.assertEqual(judge.PRIMER, text)
+        self.assertGreater(len(text), 2000)
+        self.assertIn(text, judge.SYSTEM)
+        self.assertIn(text, judge.JUDGE["system"])
+        # The rules first, then the primer as background, and the answer's format last.
+        self.assertEqual(judge.SYSTEM, f"{judge.RULES}\n\n{judge.BACKGROUND}\n\n{text}\n\n{judge.ANSWER}")
+        self.assertTrue(judge.SYSTEM.startswith("You are the judge inside MONEY TERMINAL's decision loop."))
+        self.assertTrue(judge.SYSTEM.endswith("Cite only ids the tools returned."))
+        self.assertIn("never cite them", judge.BACKGROUND)
+        # Without the primer the prompt would be the old judge's, whose sha a test froze before the primer.
+        old = f"{judge.RULES}\n\n{judge.ANSWER}"
+        self.assertEqual(__import__("hashlib").sha256(json.dumps({**judge.JUDGE, "system": old}, sort_keys=True)
+                                                       .encode()).hexdigest()[:8], "d0f3c45d")
 
     def test_confidence_and_cites(self):
         self.assertEqual([judge.confidence(x) for x in (0.7, 1, 0, 75, "75%", "0.9", 0.3, 150, True, None, "high",

@@ -9,6 +9,7 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -158,18 +159,52 @@ def _run_universe(bank: Bank, name: str, hyps: list[dict], n_random: int, asof: 
     return out
 
 
-def verdicts() -> list[dict]:
-    """Verdicts for every hypothesis with a result. The false-discovery correction runs over all of
-    them, withdrawn ones included: a withdrawn hypothesis was still tried, and dropping it would
-    make every other q-value look better than it is."""
-    res = ledger.latest_results()
-    gone = ledger.withdrawn()
-    q_of = dict(zip(res, bh_adjust([r["test"]["perm_p"] for r in res.values()])))
+FORECAST_BH_Q = 0.10   # docs/FORECAST.md, section 8: the same q as the hypotheses' gate
+
+
+def is_forecast(r: dict) -> bool:
+    return r.get("kind") == "forecast"
+
+
+def is_gated_forecast(r: dict) -> bool:
+    """A forecast result with a declared gate (F1b, F1c); descriptive ones (F1a, F1d) are not."""
+    return is_forecast(r) and (r.get("gate_type") == "ic" or (r.get("gate_type") is None and "p" in r))
+
+
+def _bh_p(r: dict) -> float:
+    if is_forecast(r):
+        p = r.get("p")
+        return float(p) if isinstance(p, (int, float)) and math.isfinite(p) else 1.0  # no p counts as 1
+    return r["test"]["perm_p"]
+
+
+def _forecast_verdict(r: dict, q: float) -> str:
+    if not is_gated_forecast(r):
+        return "REPORT"
+    if not (r.get("controls") or {}).get("pass"):
+        return "FAIL (controls)"
+    g = r.get("gate") or {}
+    return "PASS" if g.get("pass") and q < FORECAST_BH_Q else "FAIL"
+
+
+def verdicts(path=None) -> list[dict]:
+    """Verdicts for every hypothesis and forecast test with a result. The false-discovery correction runs
+    over every hypothesis and every gated forecast test (``p`` for a forecast, ``perm_p`` for a hypothesis),
+    withdrawn ones included: a withdrawn test was still tried, and dropping it would make every other q-value
+    look better than it is. Descriptive forecast tests (F1a, F1d) get the verdict REPORT and stay outside it.
+    A forecast row carries ``kind: "forecast"``."""
+    res = ledger.latest_results(path)
+    gone = ledger.withdrawn(path)
+    tested = {k: r for k, r in res.items() if not is_forecast(r) or is_gated_forecast(r)}
+    q_of = dict(zip(tested, bh_adjust([_bh_p(r) for r in tested.values()])))
     rows = []
     for k, r in res.items():
         if k in gone:
             continue
-        q = q_of[k]
+        q = q_of.get(k, float("nan"))
+        if is_forecast(r):
+            rows.append({**r, "bh_q": q, "verdict": _forecast_verdict(r, q)})
+            continue
         te = r["test"]
         if not r["controls"]["pass"]:
             v = "NO VERDICT (controls failed)"
@@ -182,6 +217,11 @@ def verdicts() -> list[dict]:
         if k in res:
             rows.append({**res[k], "bh_q": float("nan"), "verdict": f"WITHDRAWN: {reason}"})
     return rows
+
+
+def forecast_verdicts(path=None) -> list[dict]:
+    """The forecast rows of ``verdicts``."""
+    return [r for r in verdicts(path) if is_forecast(r)]
 
 
 def _pct(x, digits=2):
@@ -213,10 +253,25 @@ def _persistent_line(ctl: dict) -> str:
             f"this is by how much. Reported, not part of the declared gate.")
 
 
-def report() -> str:
-    rows = verdicts()
-    if not rows:
+def report(ledger_path=None, results_path=None) -> str:
+    """Write RESULTS.md (``results_path``, default config.RESULTS) from the ledger (default config.LEDGER):
+    the hypotheses, then the forecasts. Returns the text."""
+    every = verdicts(ledger_path)
+    if not every:
         return ""
+    rows = [r for r in every if not is_forecast(r)]
+    forecasts = [r for r in every if is_forecast(r)]
+    led = Path(ledger_path or config.LEDGER)
+    try:
+        led_name = led.resolve().relative_to(config.ROOT.resolve()).as_posix()
+    except ValueError:
+        led_name = str(led)
+    if not rows:
+        text = "\n".join(["# Research results", "",
+                          f"Generated {now_iso()} from `{led_name}`. Every number below is copied from the ledger.",
+                          "", *_forecast_section(forecasts)]) + "\n"
+        Path(results_path or config.RESULTS).write_text(text)
+        return text
     by_uni: dict[str, list[dict]] = {}
     for r in rows:
         by_uni.setdefault(_universe_of(r), []).append(r)
@@ -224,7 +279,7 @@ def report() -> str:
     lines = [
         "# Research results",
         "",
-        f"Generated {now_iso()} from `research/ledger.jsonl`. Every number below is copied from the ledger.",
+        f"Generated {now_iso()} from `{led_name}`. Every number below is copied from the ledger.",
         "",
         f"TRAIN {SPLIT['first_rebalance']}..{SPLIT['train_end']}, TEST from {SPLIT['test_start']}. Monthly, "
         f"equal weight against the equal-weight universe, {COMMON['cost_bps']} bps per unit turnover. Holdings: "
@@ -236,7 +291,8 @@ def report() -> str:
         *[_universe_line(name, rs) for name, rs in by_uni.items()],
         "",
         "Gate (declared before running): TEST mean net excess > 0, permutation p < 0.05, and Benjamini–Hochberg "
-        "q < 0.10 across every hypothesis in the ledger.",
+        "q < 0.10 across every hypothesis in the ledger"
+        + (" and every gated forecast test (see Forecasts)." if any(is_gated_forecast(r) for r in forecasts) else "."),
         "",
         "| Hypothesis | Universe | Select | TEST net excess / mo | Annualised | Info ratio | Months won | Perm p | BH q | TRAIN net excess / mo | TRAIN p | TEST coverage | Verdict |",
         "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
@@ -291,8 +347,9 @@ def report() -> str:
         "survivor and a past winner. Comparing against the same universe cancels the level, not the tilt: "
         "survivorship still flatters momentum and growth, and hurts value. A PASS here is an upper bound.",
         "",
-        *(["## Ledger notes", ""] + [f"- {n['at'][:10]}: {n['text']}" for n in ledger.read() if n["op"] == "note"] + [""]
-          if any(n["op"] == "note" for n in ledger.read()) else []),
+        *(["## Ledger notes", ""] + [f"- {n['at'][:10]}: {n['text']}" for n in ledger.read(ledger_path)
+                                     if n["op"] == "note"] + [""]
+          if any(n["op"] == "note" for n in ledger.read(ledger_path)) else []),
         "## Reading this",
         "",
         "- FAIL means the claim did not beat a shuffled signal on unseen months after costs. It does not mean the "
@@ -301,6 +358,144 @@ def report() -> str:
         "- Few TEST months give little power: an edge of a few tenths of a percent a month can hide in this noise.",
         "- Not financial advice. Nothing here places orders.",
     ]
+    if forecasts:
+        lines += ["", *_forecast_section(forecasts)]
     text = "\n".join(lines) + "\n"
-    config.RESULTS.write_text(text)
+    Path(results_path or config.RESULTS).write_text(text)
     return text
+
+
+# ---------- the Forecasts section (docs/FORECAST.md, section 8) ----------
+def _n(x, fmt="+.3f") -> str:
+    return "–" if x is None or (isinstance(x, float) and (math.isnan(x) or math.isinf(x))) else format(x, fmt)
+
+
+def _iv(d: dict | None, fmt="+.3f") -> str:
+    d = d or {}
+    if d.get("lo90") is None or d.get("hi90") is None:
+        return "–"
+    return f"{_n(d['lo90'], fmt)}..{_n(d['hi90'], fmt)}"
+
+
+def _cover(d: dict | None) -> str:
+    d = d or {}
+    return f"{_n(d.get('mean'), '.1%')} ({_n(d.get('lo90'), '.1%')}-{_n(d.get('hi90'), '.1%')})"
+
+
+def _fmetrics(r: dict) -> dict:
+    """The metrics a row shows: F1d's are the local model's own, on its 12 stocks."""
+    m = r.get("metrics") or {}
+    return m.get("llm", m) if r["id"].startswith("F1d") or "llm" in m else m
+
+
+def _forecast_row(r: dict) -> str:
+    m = _fmetrics(r)
+    sn = m.get("ic_size_neutral") or {}
+    pl = r.get("plan") or {}
+    if is_gated_forecast(r):
+        sig = f"p {_n(r.get('p'), '.4f')}"
+    else:
+        sig = f"90% {_iv(sn)}"
+    if r["id"].startswith("F1d"):
+        c = (r.get("metrics") or {}).get("comparison") or {}
+        sig += f"; Brier F1 - model {_n(c.get('mean'), '+.4f')} (p {_n(c.get('p'), '.3f')})"
+    q = f"{r['bh_q']:.3f}" if isinstance(r.get("bh_q"), float) and math.isfinite(r["bh_q"]) else "–"
+    b = m.get("brier") or {}
+    base = m.get("baselines") or {}
+    rg = m.get("range") or {}
+    h = ((r.get("model") or [{}])[0].get("range") or {}).get("h", "")
+    dates = f"{pl.get('first', '?')}..{pl.get('last', '?')} ({r.get('n_dates')})"
+    name = r["id"] + (" (trial)" if r.get("trial") else "")
+    return (f"| {name} | {h} | {dates} | {r.get('n_samples')} | {_n((m.get('ic') or {}).get('mean'))} | "
+            f"{_n(sn.get('mean'))} | {sig} | {q} | {_n(((base.get('size') or {}).get('ic') or {}).get('mean'))} | "
+            f"{_n(((base.get('momentum') or {}).get('ic') or {}).get('mean'))} | "
+            f"{_n((m.get('spread') or {}).get('mean'), '+.2%')} | {_n(b.get('skill'), '+.2%')} "
+            f"({_n(b.get('within_skill'), '+.2%')}) | {_n((m.get('placement') or {}).get('mean'), '.1%')} | "
+            f"{_cover(rg.get('cover68'))} | {_cover(rg.get('cover90'))} | **{r['verdict'].split(':')[0]}** |")
+
+
+def _forecast_words(r: dict) -> str:
+    """A plain-words line on what the range and the chance showed."""
+    m = _fmetrics(r)
+    rg = m.get("range") or {}
+    c68, c90 = rg.get("cover68") or {}, rg.get("cover90") or {}
+    pb, pn = rg.get("pinball"), rg.get("pinball_naive")
+    pl = r.get("plan") or {}
+    sn = m.get("ic_size_neutral") or {}
+    if pb is not None and pn:
+        vs = f"its pinball loss was {abs(1 - pb / pn):.0%} {'below' if pb < pn else 'above'} a naive normal band's"
+    else:
+        vs = "no pinball comparison"
+    rng = (f"the 68% band held {_n(c68.get('mean'), '.1%')} of the time per date (date-level 90% interval "
+           f"{_n(c68.get('lo90'), '.1%')} to {_n(c68.get('hi90'), '.1%')}) and the 90% band {_n(c90.get('mean'), '.1%')} "
+           f"({_n(c90.get('lo90'), '.1%')} to {_n(c90.get('hi90'), '.1%')}), against 68% and 90% aimed for; {vs}")
+    if is_gated_forecast(r):
+        ctl = r.get("controls") or {}
+        chance = (f"the chance to beat SPY ranked stocks beyond size with mean IC {_n(sn.get('mean'))} "
+                  f"(date-level p {_n(r.get('p'), '.4f')}, q {_n(r.get('bh_q'), '.3f')}): {r['verdict']}. "
+                  f"Controls {'passed' if ctl.get('pass') else 'FAILED'}: the oracle reached p "
+                  f"{_n(ctl.get('oracle_p'), '.5f')} (smallest possible {_n(ctl.get('min_p'), '.5f')}) and "
+                  f"{_n(ctl.get('placebo_reject_rate'), '.1%')} of {ctl.get('placebo_draws')} coin-flipped placebos "
+                  f"passed (1%-10% expected). Within-date permutation p {_n(sn.get('within_date_perm_p'), '.4f')} "
+                  "(a diagnostic: too narrow, since stocks move together)")
+    elif r["id"].startswith("F1d"):
+        full = r.get("metrics") or {}
+        c = full.get("comparison") or {}
+        chance = (f"the local model's Brier score against F1's on the same stocks: F1 minus model "
+                  f"{_n(c.get('mean'), '+.4f')} per date (90% interval {_iv(c, '+.4f')}, exact sign-flip p "
+                  f"{_n(c.get('p'), '.3f')}); {full.get('llm_failed')} of {full.get('llm_asked')} answers failed and "
+                  f"count as F1's; {c.get('label') or ''}")
+    else:
+        chance = (f"the chance to beat SPY had mean size-neutral IC {_n(sn.get('mean'))} (90% interval {_iv(sn)}); "
+                  f"{m.get('label') or ''}")
+    when = f"{pl.get('first', '?')} to {pl.get('last', '?')}, {r.get('n_dates')} dates"
+    return f"- {r['id']}{' (trial)' if r.get('trial') else ''} ({when}): {rng}. Then {chance}."
+
+
+def _forecast_section(rows: list[dict]) -> list[str]:
+    live = [r for r in rows if not r["verdict"].startswith("WITHDRAWN")]
+    gone = [r for r in rows if r["verdict"].startswith("WITHDRAWN")]
+    lines = [
+        "## Forecasts",
+        "",
+        "F1 forecasts each stock's chance to beat SPY over the next h sessions, and the likely range of its price "
+        "(docs/FORECAST.md). Every metric is computed per forecast date across the stocks forecast that date, then "
+        "over dates. Stocks move together within a week, so every interval and p-value is date-level.",
+        "",
+        "Gate (F1b, F1c; declared before running): mean size-neutral IC > 0 with a one-sided date-level sign-flip "
+        "p < 0.05, Benjamini–Hochberg q < 0.10 across every hypothesis and gated forecast test in the ledger, and "
+        "both controls passing. F1a and F1d are descriptive retests (REPORT): their 90% intervals are shown, they "
+        "get no verdict and stay out of the correction.",
+        "",
+        "| Test | h | Dates | Samples | IC | Size-neutral IC | p or 90% interval | BH q | Size IC | Momentum IC | "
+        "Spread | Brier skill (within-date) | Placement | 68% band held | 90% band held | Verdict |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+        *[_forecast_row(r) for r in rows],
+        "",
+        "IC: Spearman correlation of the chance to beat SPY with what each stock then did beyond SPY. Size-neutral IC: "
+        "the same after the forecast's rank is cleared of its fit on market value, since the universe holds today's "
+        "survivors and small-then predicts rose-later. Size IC and Momentum IC: the same samples ranked by size "
+        "alone (smaller first) and by 12-1 momentum alone. Spread: top fifth minus bottom fifth by forecast, mean "
+        "excess per date (F1d: halves of 12). Brier skill: against the training base rate as a constant; the "
+        "within-date part is the only one that speaks to ranking. Placement: share placed on the right side of "
+        "the date's median. Bands: share of stocks whose close at the exit fell inside, per date (interval).",
+        "",
+        "### What the range and the chance showed",
+        "",
+        *[_forecast_words(r) for r in live],
+        "",
+        "### Calibration",
+        "",
+    ]
+    for r in live:
+        cal = _fmetrics(r).get("calibration") or []
+        if not cal:
+            continue
+        lines += [f"{r['id']}{' (trial)' if r.get('trial') else ''}:", "",
+                  "| Forecast range | Mean forecast | Beat SPY | n |", "| --- | --- | --- | --- |",
+                  *[f"| {c['lo']:.3f}-{c['hi']:.3f} | {c['mean_p']:.3f} | {c['freq']:.3f} | {c['n']} |" for c in cal], ""]
+    if gone:
+        lines += ["Withdrawn (still counted in the correction when gated):", "",
+                  *[f"- {r['id']}: {r['verdict'].split(':', 1)[1].strip()}" for r in gone], ""]
+    lines += ["Forecasts are paper only. Nothing here places orders, and none of it is financial advice."]
+    return lines

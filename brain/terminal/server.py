@@ -19,9 +19,9 @@ processes (``jobs.py``); when one finishes, a fresh Bank is swapped in. Journals
 are append-only, so the fresh Bank re-reads only the shards that changed.
 
 Two commands change local state: WL ADD/DEL (the watchlist) and ALRT ACK (which
-alerts were seen). A third, T DEC NEW, starts a decision job (``jobs.py``). They run
-only from the page's own command line, under the same token as everything else; the
-analyst's read-only reader is refused them.
+alerts were seen). Two more start a job (``jobs.py``): T DEC NEW a decision and T FCST
+NEW a forecast. They run only from the page's own command line, under the same token as
+everything else; the analyst's read-only reader is refused them.
 """
 from __future__ import annotations
 
@@ -160,11 +160,15 @@ def warm(bank: Bank, names: list[str] | None = None) -> int:
     return len(names)
 
 
+REASON_PREFIXES = ("Nothing decided: ", "brain forecast: ")  # how brain decide and brain forecast say why
+
+
 def _job_reason(job: dict) -> str:
-    """Why a decision job recorded nothing, from its log: the reason on the card's ``Nothing decided: ...``
-    line (``no prices for T: ingest T``), else the log's last line."""
+    """Why a decision or forecast job recorded nothing, from its log: the reason on the decision card's
+    ``Nothing decided: ...`` line (``no prices for T: ingest T``) or on ``brain forecast: ...``, else the log's
+    last line."""
     lines = [str(x).strip() for x in job.get("log") or [] if str(x).strip()]
-    why = next((x[len("Nothing decided: "):].rstrip(".") for x in reversed(lines) if x.startswith("Nothing decided: ")),
+    why = next((x[len(p):].rstrip(".") for x in reversed(lines) for p in REASON_PREFIXES if x.startswith(p)),
                lines[-1] if lines else f"no output (exit code {job.get('returncode')})")
     return why if len(why) <= 300 else why[:299] + "…"
 
@@ -314,8 +318,8 @@ class TerminalServer(ThreadingHTTPServer):
     # ---------- commands ----------
     def run_line(self, line: str, read_only: bool = False) -> dict:
         """One terminal command. ``read_only`` (the analyst's tools) refuses INGEST and ASK, the commands
-        that change the watchlist or acknowledge alerts, and DEC NEW, which starts a job. ``T DEC`` says when
-        the newest decision job on T is still at work or recorded nothing (``with_job_note``)."""
+        that change the watchlist or acknowledge alerts, and DEC NEW and FCST NEW, which start a job. ``T DEC``
+        and ``T FCST`` say when the newest such job on T is still at work or recorded nothing (``with_job_note``)."""
         line = (line or "").strip()
         if not line:
             return {"ok": False, "fn": None, "ticker": None, "args": [], "error": "empty command", "hint": "HELP"}
@@ -333,10 +337,14 @@ class TerminalServer(ThreadingHTTPServer):
             return self.ingest_command(cmd)
         if cmd.fn == "DEC" and data.is_write(cmd):
             return self.decide_command(cmd)
+        if cmd.fn == "FCST" and data.is_write(cmd):
+            return self.forecast_command(cmd)
         if cmd.fn == "ASK":
             return self.ask_view(cmd)
         # read before the bank: a job reads done only once its facts are in, so a done job's decision is seen
-        job = self.decide_job(cmd.ticker) if cmd.fn == "DEC" and cmd.ticker and not cmd.args else None
+        job = None
+        if cmd.fn in ("DEC", "FCST") and cmd.ticker and not cmd.args:
+            job = self.decide_job(cmd.ticker) if cmd.fn == "DEC" else self.forecast_job(cmd.ticker)
         with self.lock:
             if data.is_write(cmd):
                 return data.run(self.bank, cmd, writes=True)
@@ -351,23 +359,34 @@ class TerminalServer(ThreadingHTTPServer):
             return None
         return next((j for j in self.jobs.list_jobs() if j["target"] == target), None)
 
+    def forecast_job(self, ticker: str) -> dict | None:
+        """The newest forecast job on ``ticker`` (queued, running or finished), or None."""
+        try:
+            target = jobs.forecast_target(ticker)
+        except jobs.JobError:
+            return None
+        return next((j for j in self.jobs.list_jobs() if j["target"] == target), None)
+
     def with_job_note(self, res: dict, job: dict) -> dict:
-        """``T DEC`` says when the newest ``T DEC NEW`` is not what it shows: the job is still queued or running,
-        or it ended without recording a decision (NO_DATA, or the engine failed). A job recorded the decision
-        shown when that decision was retrieved after the job started. On an error (no decision yet) the note
-        joins the error and the hint is JOBS, so the pane does not offer the same job again; on a decision it
-        is ``data.job_note``."""
+        """``T DEC`` (``T FCST``) says when the newest ``T DEC NEW`` (``T FCST NEW``) is not what it shows: the job
+        is still queued or running, or it ended without recording a decision (NO_DATA, or the engine failed) or
+        a forecast. A job recorded what is shown when it was retrieved after the job started. On an error
+        (nothing recorded yet) the note joins the error and the hint is JOBS, so the pane does not offer the
+        same job again; on a decision or forecast it is ``data.job_note``."""
         t = res.get("ticker")
+        fn = res.get("fn") or "DEC"
         d = res.get("data") if res.get("ok") else None
-        if not t or (res.get("ok") and not (isinstance(d, dict) and d.get("action"))):
+        shows = "action" if fn == "DEC" else "forecasts"
+        if not t or (res.get("ok") and not (isinstance(d, dict) and d.get(shows))):
             return res
         shown = (d or {}).get("retrieved_at")
         if shown and job.get("started") and str(shown) >= str(job["started"]):
             return res  # this job recorded it
+        what = "decision" if fn == "DEC" else "forecast"
         if job["status"] in ("queued", "running"):
-            note = f"a new decision on {t} is {job['status']} (job {job['id']}); {t} DEC shows it when it is done"
+            note = f"a new {what} on {t} is {job['status']} (job {job['id']}); {t} {fn} shows it when it is done"
         else:
-            note = f"the last {t} DEC NEW (job {job['id']}, {job['status']}) recorded nothing: {_job_reason(job)}"
+            note = f"the last {t} {fn} NEW (job {job['id']}, {job['status']}) recorded nothing: {_job_reason(job)}"
         if res.get("ok"):
             return {**res, "data": {**d, "job_note": note}}
         return {**res, "error": f"{res.get('error')}; {note}", "hint": "JOBS"}
@@ -419,6 +438,25 @@ class TerminalServer(ThreadingHTTPServer):
                  "when it is done")
         return self.jobs_view(cmd, title=title)
 
+    def forecast_command(self, cmd) -> dict:
+        """T FCST NEW: F1's forecast on SPY's latest session, made in a background job (``brain forecast T``),
+        never inside a request: a stale model is retrained first, which takes minutes. Answers with the JOBS
+        table; the pane shows ``T FCST`` once the job is done."""
+        err = {"ok": False, "fn": cmd.fn, "ticker": cmd.ticker, "args": list(cmd.args)}
+        if not cmd.ticker:
+            return {**err, "error": "FCST NEW needs a ticker, e.g. AAPL FCST NEW", "hint": "FCST"}
+        from brain import decide
+        ok, why = decide.scorable(cmd.ticker)
+        if not ok:  # a forecast is a stock against SPY: the job would only print why not
+            return {**err, "error": f"no forecast for {cmd.ticker}: {why}", "hint": f"{cmd.ticker} DES"}
+        try:
+            job = self.jobs.submit(jobs.forecast_target(cmd.ticker))
+        except jobs.JobError as e:
+            return {**err, "error": e.message, "hint": e.hint}
+        title = (f"FCST NEW {cmd.ticker}: job {job['id']} {job['status']}; {cmd.ticker} FCST shows the forecast "
+                 "when it is done")
+        return self.jobs_view(cmd, title=title)
+
 
 def make_server(host: str = "127.0.0.1", port: int = 8765, bank: Bank | None = None) -> tuple[ThreadingHTTPServer, str]:
     """(server, token). Port 0 picks a free port. Call ``serve_forever`` to run it."""
@@ -449,8 +487,8 @@ def serve(host: str = "127.0.0.1", port: int = 8765, open_browser: bool = True) 
     print(f"{len(server.tickers())} entities in {time.monotonic() - t0:.1f}s", flush=True)
     if not server.loopback:
         print(f"WARNING: listening on {host or 'all interfaces'}, not loopback. The terminal has no user "
-              f"accounts: anyone who can reach this port can open it, read the bank, start ingest and decision "
-              f"jobs and read their logs, change the watchlist, acknowledge alerts, and ask the analyst (ASK), "
+              f"accounts: anyone who can reach this port can open it, read the bank, start ingest, decision and "
+              f"forecast jobs and read their logs, change the watchlist, acknowledge alerts, and ask the analyst (ASK), "
               f"which runs the model server set by BRAIN_LLM_URL.", file=sys.stderr)
     print(f"MONEY TERMINAL on {url}  (Ctrl+C to stop)", flush=True)
     if open_browser:
@@ -467,7 +505,7 @@ def serve(host: str = "127.0.0.1", port: int = 8765, open_browser: bool = True) 
         server.server_close()
         for target, log in left:
             if log:
-                what = target if jobs.kind_of(target) == "decide" else f"INGEST {target}"
+                what = target if jobs.kind_of(target) in ("decide", "forecast") else f"INGEST {target}"
                 print(f"{what} is still running and will finish on its own; its output: {log}", file=sys.stderr)
 
 
@@ -732,6 +770,9 @@ class Handler(BaseHTTPRequestHandler):
         target = body.get("target")
         if isinstance(target, str) and jobs.kind_of(target.upper()) == "decide":  # a decision is T DEC NEW
             return self._json(400, {"ok": False, "error": "not an ingest target: decisions start with T DEC NEW",
+                                    "hint": "JOBS"})
+        if isinstance(target, str) and jobs.kind_of(target.upper()) == "forecast":  # a forecast is T FCST NEW
+            return self._json(400, {"ok": False, "error": "not an ingest target: forecasts start with T FCST NEW",
                                     "hint": "JOBS"})
         try:
             job = self.server.jobs.submit(target)

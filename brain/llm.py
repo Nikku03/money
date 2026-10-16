@@ -180,14 +180,17 @@ class Client:
                        f"`ollama pull {self.model}`, or set BRAIN_LLM_MODEL to one it lists")
 
     def complete(self, messages: list[dict], tools: list[dict] | None = None, temperature: float = 0.2,
-                 timeout: float | None = None, max_tokens: int | None = None) -> dict:
-        """The whole chat-completions response (``model``, ``choices``, ``usage``)."""
+                 timeout: float | None = None, max_tokens: int | None = None, seed: int | None = None) -> dict:
+        """The whole chat-completions response (``model``, ``choices``, ``usage``). ``seed`` is sent when given
+        (Ollama, llama.cpp and vLLM read it; a server that does not simply ignores it)."""
         body: dict = {"model": self.model, "messages": messages, "temperature": temperature, "stream": False}
         if tools:
             # Explicit: llama-cpp-python's function-calling handlers show the model no tools without it.
             body["tools"], body["tool_choice"] = tools, "auto"
         if max_tokens:
             body["max_tokens"] = int(max_tokens)
+        if seed is not None:
+            body["seed"] = int(seed)
         key = self._key()
         with _in_flight_lock:
             _in_flight[key] = _in_flight.get(key, 0) + 1

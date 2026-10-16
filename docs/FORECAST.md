@@ -50,6 +50,7 @@ Each group edits only its files and codes against this contract for the others. 
 - Development uses synthetic banks, or real data in the TRAIN years (2011-2018) only.
 - Trial mode (section 8) enforces this.
 - The held-out years are computed once, by the recorded runs.
+- Live forecasts enforce it too: on the real bank (MONEY_HOME unset or `var/`) `brain forecast TICKER` refuses until the committed ledger holds a non-trial result for each of F1a, F1b and F1c (section 10).
 
 ---
 
@@ -79,9 +80,9 @@ def outcome(book, ticker, d, h) -> dict | None:   # claims.outcome(book, ticker,
 - A stock is listed at `d` when it has a close dated within 4 days of `d` and at least 252 bars up to `d`.
 - The universe is chosen by today's market value, so it holds survivors: "small then" predicts "rose later". Section 7 measures and removes the size effect before any gate.
 
-**Forecast grid.**
-- Every `h`-th SPY session counted back from an anchor session `A`: `d_k = A - k*h` sessions.
-- The windows `(d_k, d_k + h]`, with entry and exit as above, never overlap.
+**Forecast grid** (`evaluate.grid`).
+- Every `h`-th SPY session counted back from an anchor session `A`: `d_k` is the session `k*h + 1` sessions before `A` (k = 1, 2, ...).
+- The entry is the session after `d_k` and the exit `h` sessions after the entry, so `d_1`'s exit is `A` itself and each window starts at the close where the next one ends. The windows never overlap.
 
 **Training samples.** The same grid, back to 2011-01-01. A model trained at cutoff `C` uses only samples whose stored `exit <= C`.
 
@@ -91,15 +92,16 @@ def outcome(book, ticker, d, h) -> dict | None:   # claims.outcome(book, ticker,
 
 ```python
 FEATURES_VERSION = 1
-FEATURES: list[tuple[str, str, str]]          # (name, group P|B|F|R, plain-words description): exactly the list below
+FEATURES: list[tuple[str, str, str]]          # (name, group P|B|F|R, plain-words description): the 40 below plus 9 indicators
 def prices(bank, tickers, prices_asof) -> Prices          # dates, adj, close, high, low, volume (T, N); spy (T,); vix series
 def outcome(book, ticker, d, h) -> dict | None
 def stock_features(px, i) -> dict[str, np.ndarray]       # at calendar index i (= d); (N,), NaN when undefined
 def fundamental_features(bank, tickers, month_ends, book) -> dict[str, np.ndarray]   # (M, N) at view(T(month_end))
 def event_features(bank, tickers, d, book) -> dict[str, np.ndarray]                  # insider and earnings at view(T(d))
 def regime_features(px, i) -> dict[str, float]
-def feature_set(bank, tickers, grid, prices_asof, h) -> FeatureSet
+def feature_set(bank, tickers, grid, prices_asof, h, *, cache=True, workers=None, log=None, px=None) -> FeatureSet
     # X (S, F), y, excess, exit, date and ticker per sample; names, groups; dropped counts
+    # also raw (float32, before transforms), r_total, close, entry, pending (listed rows whose window is open), key
 ```
 
 **P: price patterns** (bars dated `<= d`):
@@ -127,23 +129,24 @@ def feature_set(bank, tickers, grid, prices_asof, h) -> FeatureSet
 
 **F: fundamentals.**
 - Computed at each month-end view (`view(T(month_end))`, month-ends on SPY's calendar), with market values from the run's book at that date.
+- A forecast on `d` uses the last SPY session before the first day of `d`'s month (`features.month_end_index`), so knowing which month-end applies never needs a bar after `d`. A forecast on a month's last session therefore uses the month-end before it.
 - Carried forward to later forecast dates until the next month-end; never carried back.
 - The features:
   - `earnings_yield_ttm` (`metrics.earnings_yield_ttm`);
   - `log_mktcap` (`metrics.market_cap_any`);
   - `sales_growth` (`metrics.revenue_growth`);
-  - `gross_profitability` (`metrics.ratio` of gross profit to assets, latest fiscal year);
+  - `gross_profitability` (`metrics.ratio` of gross profit to assets, latest fiscal year; when the bank has no current `GrossProfit`, revenue minus cost of revenue, `CostOfRevenue` else `CostOfGoodsAndServicesSold`, over assets);
   - `asset_growth` (`metrics.asset_growth`);
   - `accruals` (net income minus operating cash flow, over assets);
-  - `leverage` (liabilities over assets);
+  - `leverage` (liabilities over assets; when the bank has no current `Liabilities`, 1 minus `StockholdersEquity` over assets);
   - `sue` (`metrics.sue`; **month-end only**).
 - An implementer uses the bank's existing concept lists and `metrics` helpers. A concept with no helper is computed with `metrics.annual`, and the concept names are listed in `features.py`.
-- Each is NaN when the bank lacks it, with a `has_<name>` indicator.
+- Each is NaN when the bank lacks it, with a `has_<name>` indicator (group F). `has_earnings_recent` (group B) is the indicator for `earnings_car_3d`. Indicators stay 0/1 and are not ranked.
 
 **R: regime** (the same for every stock at `d`): `vix`, `vix_chg_21`, `spy_r_21`, `spy_r_252`, `spy_above_200`, `mkt_vol_21`. The Treasury curve is not used: the bank holds it only from 2025.
 
 **Transforms** (per date):
-- P, B and F are ranked across listed stocks into [-0.5, 0.5]. NaN becomes 0, and the indicators carry the gap.
+- P, B and F are ranked across listed stocks into [-0.5, 0.5], ties sharing their mean rank. NaN becomes 0, and the indicators carry the gap.
 - R features are z-scored by the mean and standard deviation of their own values on earlier grid dates only, with at least 52 earlier dates (else 0).
 
 **Cache** (`<home>/cache/forecast/`). The key holds:
@@ -151,7 +154,8 @@ def feature_set(bank, tickers, grid, prices_asof, h) -> FeatureSet
 - the sha of `features.py`;
 - the universe sha, grid, h and `prices_asof`;
 - the price-snapshot ids;
-- every ticker's journal shard state (size and inode, as `signals._shard_state`).
+- every ticker's journal shard state (size and inode, as `signals._shard_state`);
+- the sha of the modules the features read (`features.deps_sha`: metrics, events, claims, sources/insiders, research/signals, series).
 
 A backfill or a code change recomputes. The key goes into each result.
 
@@ -187,10 +191,10 @@ def to_json(model) -> dict; def from_json(d) -> Model         # plain JSON, no p
 ```python
 RANGE = {"ewma_lambda": 0.94, "lookback": 252, "quantiles": [0.05, 0.16, 0.5, 0.84, 0.95]}
 def sigma(px, i) -> np.ndarray                 # (N,) EWMA daily log-return volatility at d
-def fit_range(fs, cutoff) -> dict              # quantiles of z = log(1 + r_total) / (sigma_d * sqrt(h)), samples with exit <= cutoff
+def fit_range(fs, cutoff, px) -> dict          # quantiles of z = log(1 + r) / (sigma_d * sqrt(h)), samples with exit <= cutoff
 def band(close_d, sigma_d, h, q) -> dict       # prices close_d * exp(q * sigma_d * sqrt(h)) for each quantile
 ```
-`r_total` is the stock's own return over the outcome window. The 68% band is `[q16, q84]`, the 90% band `[q05, q95]`. Bands are on total return, so they swing with the whole market.
+`r` is the stock's own total return from the close of `d` to the close at the exit (`learn.range_inputs`, from the run's price panel), the same move the band is quoted for (section 6). It is one session longer than `FeatureSet.r_total` (entry to exit), which the range does not use. The 68% band is `[q16, q84]`, the 90% band `[q05, q95]`. Bands are on total return, so they swing with the whole market.
 
 ---
 
@@ -228,14 +232,14 @@ FORECAST_TESTS = [
 ```
 **Common spec fields** (`brain forecast declare` fills them in and writes them into the spec, so the spec sha covers them):
 - `"kind": "forecast"`, plus `universe`, `universe_sha`, `LEARN`, `RANGE`, `FEATURES` (names and `FEATURES_VERSION`).
-- `"anchor"`, `"prices_asof"` and `"code_sha"`: the sha of every file under `brain/forecast/`, plus `brain/research/forecast_tests.py` and `docs/MARKET_PRIMER.md`.
+- `"anchor"`, `"prices_asof"` and `"code_sha"`: the sha of every file under `brain/forecast/`, plus the modules the features read (`brain/metrics.py`, `brain/events.py`, `brain/claims.py`, `brain/sources/insiders.py`, `brain/research/signals.py`, `brain/series.py`), `brain/research/forecast_tests.py` and `docs/MARKET_PRIMER.md`.
 - `"gate"` details.
 - **For F1d:** `"llm"`: `{"model", "digest", "cutoff", "temperature": 0, "seed": 7, "primer_sha", "prompt_sha", "snapshot_version"}`.
   - `digest` is the server's weights digest: Ollama `/api/show`, or the sha256 of a local GGUF file when the server reports a path.
   - `cutoff` is the model's stated training-data cutoff, passed as `--llm-cutoff` at declare. Declare refuses unless it is earlier than F1a's first forecast date.
 
 **Anchor `A`.** The last SPY session for which every universe stock that was listed 5 sessions earlier has a bar dated exactly `A` in the run's book. It is pinned at declare with `prices_asof = now`.
-- F1a's 8 weeks are the 8 grid dates before `A`, so their exits run up to `A`.
+- F1a's 8 weeks are the 8 grid dates before `A`, so their exits run up to `A` (`d_1`'s exit is `A`).
 - F1b ends at F1a's first date, so they share no week.
 - F1c's grid is counted back from `A`.
 
@@ -272,7 +276,7 @@ Otherwise the result is FAIL (controls).
 
 ## 8. Ledger, pinning, trials
 
-**Declare.** `brain forecast declare --llm-cutoff YYYY-MM` refuses unless the working tree is clean for `brain/` and `docs/MARKET_PRIMER.md`. It then appends, per undeclared test:
+**Declare.** `brain forecast declare --llm-cutoff YYYY-MM` refuses unless the working tree is clean for `brain/` and `docs/MARKET_PRIMER.md`. Without `--llm-cutoff` it declares F1a-F1c and leaves F1d undeclared, saying so. A later declare reuses the anchor and `prices_asof` of the tests already declared, so the family keeps one anchor. It then appends, per undeclared test:
 ```python
 {"op": "declare", "kind": "forecast", "id", "spec_sha", "spec", "at", **ledger.git_state()}
 ```
@@ -301,8 +305,10 @@ F1d's result also stores every raw model reply. After the run, RESULTS.md is reg
 - a plain-words line on what the range and the chance showed.
 
 **Trials.** With `--trial`, a non-default `BRAIN_LEDGER`, or a MONEY_HOME other than the default:
-- every anchor is replaced by the last session of 2018 (TRAIN), and F1b, F1c and F1d run on TRAIN windows only;
-- the ledger written is the trial one.
+- every anchor is replaced by the last session of 2018 (TRAIN), and F1b, F1c and F1d run on TRAIN windows only: F1b's and F1c's windows start at 2015-01-01 (`evaluate.TRIAL_START`) instead of 2019-01-01;
+- a run refuses if any grid's last exit would fall after 2018-12-31;
+- the ledger written is the trial one: `BRAIN_LEDGER` and `BRAIN_RESULTS` when they point elsewhere, else `<MONEY_HOME>/trial/`; never the committed files;
+- a trial is plumbing, not evidence: it may run on an uncommitted tree (the clean-tree and HEAD-lineage refusals become warnings), while the code sha, spec sha, one-result and F1d identity checks still apply.
 
 The held-out windows are computed only by the recorded runs.
 
@@ -331,14 +337,15 @@ SNAPSHOT_VERSION = 1
 def snapshot(bank, book, ticker, d, forecast) -> str
     # at T(d) only; the ticker symbol, no name, since the bank's identity facts are newer than the windows:
     # - returns over 1w/1m/3m/12m, 52w high/low distance and volatility, from the book sliced to <= d;
-    # - the latest fiscal year's key figures and the last 4 quarters' EPS and SUE, from the latest month-end view <= d;
+    # - the latest fiscal year's key figures and the last 4 quarters' EPS and SUE, from F1's month-end view
+    #   (the last session before d's month, features.month_end_index);
     # - the last earnings release known at T(d) and its 3-day reaction if closed;
     # - insider buys and sells in 90 days (counts, USD);
     # - F1's forecast (p_beat, the 68% band, the top drivers).
     # No headlines: the bank holds none before 2026-10-09, so the tested input and the served input stay the same.
 def llm_identity(client) -> dict      # {"model", "digest"}: Ollama /api/show; a GGUF path's sha256 for llama.cpp
 def llm_forecast(bank, book, ticker, d, forecast, client=None, deadline=None) -> dict
-    # {"ok", "p_beat", "reason", "raw", "model", "seconds", "error"}; never raises
+    # {"ok", "p_beat", "reason", "raw", "model", "seconds", "error", "down"}; never raises
 ```
 **`llm_forecast`.**
 - One request, no tools, `temperature 0`, seed 7, `max_tokens 300`.
@@ -417,3 +424,54 @@ Record: last 2 months (F1a): IC +0.01 (90% interval -0.10..+0.12), inconclusive.
   - The digest refusal.
   - The judge carries the primer.
 - **Product.** The card, the forecast fact passing `check.run`, live scoring, the terminal view and job, reruns, and the analyst tool.
+
+---
+
+## 12. As built (integration notes)
+
+Where the code settled a point this contract left open, or chose differently, it is listed here. Sections 1-11 above already say what the code does where it changed them (the grid, the range's move, the month-end rule, the fallbacks, `code_sha`, trials).
+
+**Features** (`features.py`).
+- `FEATURES` has 49 entries: the 40 named in section 3 plus 9 indicators (`has_earnings_recent`, and `has_<name>` for each F feature). `FEATURES_VERSION` is 1.
+- `ma_50`, `ma_200` use the adjusted close; `dist_52w_*` the split-adjusted close; `range_21` split-adjusted high, low and close. Dollar volume is split-adjusted close times volume.
+- `rsi_14` is Wilder's over the last 250 changes, seeded by the mean of the first 14. `vix_chg_21` is in points; `spy_above_200` is 0/1; `mkt_vol_21` is the sd of SPY's daily log returns.
+- `beta_252` and `idio_vol_63` use simple returns; `vol_*` and `skew_63` log returns (biased Fisher-Pearson skew). A window statistic needs 80% of its values.
+- Closes are forward-filled up to 3 sessions on SPY's calendar; high, low and volume are not. The calendar starts 2007-01-01. "Within 63 sessions" counts SPY sessions from the release's reaction day.
+- Insider and earnings features read each ticker's facts once, through the view at the last grid date, then keep those known by `T(d)` for each date: the same set as `view(T(d))`, tested equal on every grid date.
+- `prices()` drops SPY and ^VIX from the universe and reads the one book in chunks of 64 tickers at the same `asof`. `feature_set` takes `cache`, `workers` (forked processes; `$BRAIN_FORECAST_WORKERS`, else up to 4), `log`, and `px` (a panel already built for the same tickers and `asof`; `evaluate.prepare` builds it once and passes it).
+- The cache is an uncompressed npz (no pickle) of about 224 MB for the weekly 2011-2018 universe.
+- R z-scores need 52 earlier grid dates. On the monthly grid every R feature is 0 until about 2015, and `vix` (bank history from 2015) until about 2019; on the weekly grid R is 0 through 2011 and `vix` until about 2016. The learner barely sees the regime in TRAIN: this is a known weakness, kept as declared.
+
+**Learner** (`learn.py`, `gbm.py`).
+- Logistic: Newton's method with step halving, minimising summed log loss plus `l2/2 * |w|^2`, intercept unpenalised; `iters` is the maximum.
+- GBM: no leaf L2, a hessian floor of 1e-6, NaN treated as 0.
+- Platt scaling is a two-parameter logistic on the blend's log-odds, fitted on the latest 20% of exits (the fewest latest exit dates holding at least 20% of rows) with both models fitted on the rest; the final models are refitted on all rows and keep that map.
+- The stratified draw gives each date the same share (largest remainders, earlier dates first on ties), keys seeded 7.
+- `forecast(model, rng, ticker=, d=, h=, close=, sigma_d=, x_row=, entry=, exit=)` returns section 6's dict.
+
+**Evaluate and the ledger** (`evaluate.py`, `forecast_tests.py`, `research/run.py`).
+- Placebo: `size-neutral-IC(1 - p) = -size-neutral-IC(p)` on every date, so each draw flips the per-date series by its coins and runs the gate's own test. The oracle must reach `min_p` (1/2^K exact, else 1/20001). Within-date permutation diagnostic: 1,000 draws seeded 7.
+- Placement counts "above" when a forecast is above the date's median forecast; stocks exactly at either median are not counted. The spread uses n//5 stocks per tail (n//2 for F1d). Brier climatology is each model's own training base rate. Pinball loss is in log-return units over the 5 quantiles, against a normal band from the 252-session sd of daily log returns. Calibration bins are equal-count.
+- Specs also hold `gate_details`, `window` (first, last, last_exit, n_dates, start: from the calendar only) and `trial`. Results also hold `gate_type`, `gate`, `anchor`, `trial`, `plan`, `seconds` and, for F1d, every reply. `metrics.per_date` keeps 10 per-date series at 6 decimals, so a gated result line is 50-100 KB. NaN is written as null.
+- `run.verdicts(path)` returns forecast rows too (`kind: "forecast"`; verdict PASS, FAIL, "FAIL (controls)", REPORT or WITHDRAWN); `run.forecast_verdicts`, `run.is_forecast` and `run.is_gated_forecast` go with it. Readers keyed by hypothesis (brief, decide, the terminal's EV lines) leave forecast rows out; RES lists them with their verdict and q. RESULTS.md gains `## Forecasts` after the hypotheses.
+- `prompt_sha` is `think.prompt_sha()` (sha of `think.PROMPT` in canonical JSON); `primer_sha` is `think.primer_sha()` (sha of the primer's bytes). The model's identity is `{"model": judge.canonical_model(the id the server lists), "digest": "sha256:..."}`: the GGUF file's sha256 when the server lists a path (llama.cpp), else the weights blob Ollama's `/api/show` names. F1d's test also compares `snapshot_version`.
+
+**Thinking** (`think.py`, `judge.py`).
+- The snapshot shows SPY's return beside the stock's over each window, a typical h-session move (daily volatility times sqrt(h)), and F1's drivers with their plain-words descriptions. It shows only ratios, never price levels: the book's closes are on today's split basis, and a level would tell of later splits.
+- Seed 7 goes in the request body through `llm.Client.complete(..., seed=7)`; a stand-in client is asked without it.
+- `PROMPT` (hashed by `prompt_sha`) holds the system and user templates, the repair text, the Qwen3 `/no_think` rule, temperature 0, seed 7, `max_tokens` 300, the clip, one repair and the default horizon. The system template has a `{primer}` slot: the primer is pinned by `primer_sha`.
+- The judge's system prompt is its rules, one line saying the primer's numbers are background and never cited, the primer, then the answer format (JUDGE_SHA `a74a865f`). The judge does not read forecasts: the `forecast` tool, the attribute and FCST are hidden from it, as DECIDE.md keeps the engine's own outputs from it.
+- The primer adds about 11.4k characters to the judge's prompt; keep the judge's server at a 16k context (`BRAIN_LLM_CTX`). The forecaster's own prompt is about 3.9k tokens and fits 8k.
+
+**Live** (`live.py`, CLI, terminal).
+- The live grid is `evaluate.grid(cal, d, h)` (F1a's grid with `A = d`), plus `d` itself so the feature set's pending rows give the cross-section at `d`. With a cached model, one date is computed (`feature_set([d])`) and the R columns are z-scored over the same grid's earlier dates; a test checks both routes give the same inputs. Live retrains do not use the feature cache: the grid moves every session.
+- The model cache key is the sha of `brain/forecast/*.py`, `features.deps_sha`, `FEATURES_VERSION` and names, `LEARN`, `RANGE`, `h` and the universe, not the date. A cached model is retrained when the newest realised exit has moved more than 5 sessions, when it was trained after `d`, when its file is unreadable, or with `--refit`.
+- The fact's `known_at` is the later of `T(d)` and its latest input's `known_at`. Inputs also cite ^VIX's snapshot. Its context is section 6's dict plus `forecaster`, `made_at` (each run is its own fact), `close_date`, `sigma`, `naive_sd`, `base_rate`, `range_q`, the training window, `model_key`, `prices_asof` and `in_universe`. `entry` and `exit` are the expected weekdays; scoring reads the real calendar.
+- `--llm`: a failed or unusable answer is still recorded as an F1-llm fact, carrying F1's `p_beat` with `llm_failed: true` and the error, as F1d counts it.
+- Live scoring counts one forecast per (stock, forecaster, horizon, date), the latest recorded. A window that opens inside an earlier counted one is "overlapping" and a forecast recorded after its entry session's close (20:00 UTC) is "late"; neither is scored. Metrics come from `evaluate.score` without size, so there is no size-neutral IC live; IC needs dates with 3 or more stocks.
+- Refusals: SPY and market symbols; a stock not listed at `d` (with the reason); SPY's latest close more than 7 days old; a horizon other than 5 or 21. A ticker outside `us_broad` is still forecast, ranked with the universe, and the card says the model never trained on it.
+- The card says "size-neutral IC" (the gated statistic) where section 10's example says "IC", names the range line's test ("Range (F1a): 68% band held 66% of the time (interval 58%-74%)"), and adds the model's answer with `--llm`, the model's sha and training window, an "untested" line until a test has a result, and a closing line: the chance has no tested edge unless the record says PASS.
+- The CLI adds `--refit` and `--json`. `brain forecast declare|test` are the declared tests' commands (`forecast_tests.add_cli` on the same parser); `--trial` and `--llm-cutoff` go only with them.
+- `FCST` alone lists each stock's latest forecast, live scoring and the declared tests' lines.
+
+**Expected wall-clock time of the recorded runs** (4 CPUs, from the TRAIN-year trials; see the integration report): weekly features over about 820 grid dates about 8 minutes, F1b's 15 fits about 5-6 minutes, F1a under a minute, monthly features about 3-4 minutes, F1c about 4 minutes: about 20-25 minutes for F1a-F1c with about 4-5 GB of memory at peak. F1d adds 96 local-model requests on F1a's model, about 35 seconds each with Qwen3-1.7B on 4 CPU threads (about an hour); an 8B model is several times slower.

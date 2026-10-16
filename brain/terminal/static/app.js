@@ -12,11 +12,12 @@
   // ---------- constants ----------
   const $ = (sel, root = document) => root.querySelector(sel);
   const TOKEN = ($('meta[name="terminal-token"]') || {}).content || "";
-  const FUNCS = ["HELP", "DES", "GP", "FA", "CF", "CN", "EV", "BRIEF", "INS", "ERN", "JET", "DEC", "SHOW", "WEI", "MOV",
+  const FUNCS = ["HELP", "DES", "GP", "FA", "CF", "CN", "EV", "BRIEF", "INS", "ERN", "JET", "DEC", "FCST", "SHOW", "WEI", "MOV",
     "CURVE", "ECO", "RES", "CLM", "SHIP", "CAM", "WL", "ALRT", "ASK", "INGEST", "JOBS"];
   const SECURITY_FNS = new Set(["DES", "GP", "FA", "CF", "CN", "EV", "BRIEF", "INS", "ERN", "JET"]);
   const RANGES = ["1M", "3M", "6M", "YTD", "1Y", "2Y", "5Y", "10Y", "MAX"];
   const DEFAULT_LAYOUT = ["WEI", "MOV", "SPY GP 1Y", "ASK"];
+  const JOB_FNS = new Set(["DEC", "FCST"]);  // T DEC NEW and T FCST NEW start a background job
   const N_PANES = 4;
   const TICKER_RE = /^[A-Za-z0-9.^=-]{1,15}$/;
   const ALT_ENTITY_RE = /^(?:AREA|CAM)\.[A-Za-z0-9._-]{1,100}$/;  // port areas and cameras: facts, not securities
@@ -1145,6 +1146,281 @@
     p.body.append(root);
   }
 
+  // ---------- forecast (FCST) ----------
+  const HORIZON_COLOR = { 5: "cyan", 21: "magenta" };
+
+  /** The index of date `d` on the chart's dates, else of the last one before it (0 when before them all). */
+  function dateIndex(dates, d) {
+    let lo = 0;
+    let hi = dates.length - 1;
+    let at = 0;
+    while (lo <= hi) {
+      const mid = (lo + hi) >> 1;
+      if (dates[mid] <= d) {
+        at = mid;
+        lo = mid + 1;
+      } else {
+        hi = mid - 1;
+      }
+    }
+    return at;
+  }
+
+  function pctText(p, d = 0) {
+    return isNum(p) ? `${fixed(p * 100, d)}%` : "—";
+  }
+
+  function priceText(v) {
+    return isNum(v) ? fmtNum(v, Math.abs(v) >= 100 ? 0 : Math.abs(v) >= 1 ? 2 : 4) : "—";
+  }
+
+  /** FCST's chart: three months of closes, then each forecast's window, its 68% and 90% bands at the exit joined
+   * to the close on its date (a cone: only the exit's band is forecast), and the close at the exit once scored. */
+  function forecastModel(d) {
+    const S0 = (Array.isArray(d.series) ? d.series : []).map((x) => ({ date: String(x.date), close: x.close }));
+    const last = S0.length ? S0[S0.length - 1].date : "";
+    const future = (Array.isArray(d.future) ? d.future : []).map(String).filter((x) => x > last);
+    const dates = S0.map((x) => x.date).concat(future);
+    const S = dates.map((x, i) => ({ date: x, close: i < S0.length ? S0[i].close : null }));
+    const pts = S0.map((x, i) => [i, x.close]).filter(([, v]) => isNum(v));
+    const fell = pts.length > 1 && pts[pts.length - 1][1] < pts[0][1];
+    const line = { label: d.ticker || "", color: fell ? "down" : "up", pts, values: new Map(pts), width: 1.5, fill: true };
+    const cones = [];
+    for (const f of Array.isArray(d.forecasts) ? d.forecasts : []) {
+      const b = f && f.band && typeof f.band === "object" ? f.band : {};
+      if (!dates.length || ![b.q05, b.q16, b.q50, b.q84, b.q95, f.close].every(isNum)) continue;
+      const out = f.outcome && typeof f.outcome === "object" ? f.outcome : {};
+      const exit = String(out.exit || f.exit || "");
+      cones.push({ horizon: f.horizon, color: HORIZON_COLOR[f.horizon] || "amber", date: String(f.date), exit,
+        i0: dateIndex(dates, String(f.date)), i1: dateIndex(dates, exit), close: f.close,
+        q05: b.q05, q16: b.q16, q50: b.q50, q84: b.q84, q95: b.q95,
+        realised: out.status === "scored" && isNum(out.close_exit) ? out.close_exit : null, in68: out.in68 === true });
+    }
+    return {
+      S, dates, lines: [line], rebased: false, vols: null, kind: "forecast", cones,
+      extent: cones.flatMap((c) => [c.q05, c.q95, c.realised]), ref: cones.length ? cones[0].close : null,
+      underlay: drawCones, tipRows: (i) => forecastTipRows(S, cones, i),
+    };
+  }
+
+  /** The bands on the price canvas: the 90% cone faint, the 68% cone stronger, the band itself at the exit
+   * (thin 90%, thick 68%) with its 68% edges labelled, the middle dashed, and the close at the exit as a dot
+   * (green inside the 68% band, red outside). */
+  function drawCones(ctx, g, m) {
+    const font = fontFamily();
+    for (const c of m.cones) {
+      const x0 = g.xAt(c.i0);
+      const x1 = g.xAt(c.i1);
+      const y0 = g.yAt(c.close);
+      const col = css(c.color);
+      const cone = (a, b, alpha) => {
+        ctx.beginPath();
+        ctx.moveTo(x0, y0);
+        ctx.lineTo(x1, g.yAt(a));
+        ctx.lineTo(x1, g.yAt(b));
+        ctx.closePath();
+        ctx.fillStyle = rgba(col, alpha);
+        ctx.fill();
+      };
+      cone(c.q95, c.q05, 0.1);
+      cone(c.q84, c.q16, 0.22);
+      ctx.strokeStyle = col;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(crisp(x1), g.yAt(c.q95));
+      ctx.lineTo(crisp(x1), g.yAt(c.q05));
+      ctx.stroke();
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(x1, g.yAt(c.q84));
+      ctx.lineTo(x1, g.yAt(c.q16));
+      ctx.stroke();
+      ctx.save();
+      ctx.setLineDash([3, 3]);
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(x0, y0);
+      ctx.lineTo(x1, g.yAt(c.q50));
+      ctx.stroke();
+      ctx.restore();
+      ctx.font = `11px ${font}`;
+      ctx.fillStyle = col;
+      ctx.textBaseline = "middle";
+      ctx.textAlign = "right";
+      for (const q of [c.q16, c.q84]) ctx.fillText(priceText(q), x1 - 5, g.yAt(q));
+      if (isNum(c.realised)) {
+        ctx.beginPath();
+        ctx.arc(x1, g.yAt(c.realised), 3.5, 0, Math.PI * 2);
+        ctx.fillStyle = css(c.in68 ? "up" : "down");
+        ctx.fill();
+        ctx.strokeStyle = "#000";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+    }
+  }
+
+  function forecastTipRows(S, cones, i) {
+    const rows = [];
+    const s = S[i] || {};
+    if (isNum(s.close)) rows.push(["Close", fmtNum(s.close, priceDigits(s.close)), ""]);
+    for (const c of cones) {
+      if (i < c.i0 || i > c.i1) continue;
+      rows.push([`${c.horizon} sessions after ${c.date}`, i === c.i1 ? `exit ${c.exit}` : `to ${c.exit}`, "t-" + c.color]);
+      rows.push(["68% band", `${priceText(c.q16)} – ${priceText(c.q84)}`, ""]);
+      rows.push(["90% band", `${priceText(c.q05)} – ${priceText(c.q95)}`, "dim"]);
+      if (isNum(c.realised)) rows.push(["Close at exit", priceText(c.realised), c.in68 ? "up" : "down"]);
+    }
+    if (!rows.length) rows.push(["Close", "—", ""]);
+    return rows;
+  }
+
+  /** The chance against the coin: a bar from 50% to the forecast, green above, red below; the coin marked. */
+  function chanceMeter(p) {
+    const m = h("span", "fc-meter");
+    if (isNum(p)) {
+      const lo = Math.min(p, 0.5);
+      const hi = Math.max(p, 0.5);
+      const fill = h("span", "fc-fill " + (p > 0.5 ? "up" : p < 0.5 ? "down" : "flat"));
+      fill.style.left = `${(lo * 100).toFixed(1)}%`;
+      fill.style.width = `${((hi - lo) * 100).toFixed(1)}%`;
+      m.append(fill);
+    }
+    m.append(h("span", "fc-coin"));
+    m.title = `${pctText(p)} against a coin's 50%`;
+    return m;
+  }
+
+  function forecastBlock(f, t, p) {
+    const mod = f.model && typeof f.model === "object" ? f.model : {};
+    const s = section(`Next ${f.horizon} sessions after ${f.date}`,
+      `${f.forecaster || "F1"} · model ${String(mod.sha || "?").slice(0, 8)}, trained through ${mod.trained_through || "?"}`);
+    const row = h("div", "fc-chance");
+    row.append(h("span", "k", "Chance it beats SPY"), h("span", "fc-p", pctText(f.p_beat)), chanceMeter(f.p_beat),
+      h("span", "dim", "a coin is 50%"));
+    const ce = citeEl(f.cite, t);
+    if (ce) row.append(ce);
+    s.append(row);
+    const llm = f.llm && typeof f.llm === "object" ? f.llm : null;
+    if (llm) {
+      const who = `The model (F1-llm${llm.model ? ", " + String(llm.model) : ""})`;
+      const el = h("div", "fc-llm", llm.ok ? `${who}: ${pctText(llm.p_beat)}. ${llm.reason || ""}`
+        : `${who} gave no usable answer (${llm.error || "?"}); recorded as F1's ${pctText(llm.p_beat)}, flagged, as the declared test F1d counts it.`);
+      const lc = citeEl(llm.cite, t);
+      if (lc) el.append(document.createTextNode(" "), lc);
+      s.append(el);
+    }
+    const b = f.band && typeof f.band === "object" ? f.band : {};
+    const m68 = Array.isArray(f.move68_pct) ? f.move68_pct : [];
+    const m90 = Array.isArray(f.move90_pct) ? f.move90_pct : [];
+    const mv = (a) => (isNum(a[0]) && isNum(a[1]) ? `(${fmtSigned(a[0], 1)}% .. ${fmtSigned(a[1], 1)}%)` : "");
+    const out = f.outcome && typeof f.outcome === "object" ? f.outcome : {};
+    let outcome = { pending: "pending: the window has not closed", overlapping: "closed, inside an earlier forecast's window: not scored",
+      late: "closed, recorded after its window opened: not scored", unpriced: "closed, but the bank has no close for the stock then" }[out.status] || null;
+    if (out.status === "scored") {
+      outcome = `closed at ${priceText(out.close_exit)} on ${out.exit}: ${out.in68 ? "inside" : "outside"} the 68% band, `
+        + `${out.in90 ? "inside" : "outside"} the 90%; ${fmtPct(out.excess, 2)} against SPY (${out.beat ? "beat it" : "trailed it"})`;
+    }
+    s.append(kvTable([
+      { label: "Close", value: `${priceText(f.close)} on ${f.close_date || f.date}` },
+      { label: "68% band", value: `${priceText(b.q16)} – ${priceText(b.q84)}  ${mv(m68)}`, cls: "t-" + (HORIZON_COLOR[f.horizon] || "amber") },
+      { label: "90% band", value: `${priceText(b.q05)} – ${priceText(b.q95)}  ${mv(m90)}` },
+      { label: "Window", value: `${f.entry || "?"} to ${f.exit || "?"} (expected sessions)` },
+      { label: "Outcome", value: outcome || "—" },
+    ]));
+    const dr = Array.isArray(f.drivers) ? f.drivers : [];
+    if (dr.length) {
+      const top = Math.max(...dr.map((x) => (isNum(x.push) ? Math.abs(x.push) : 0)), 1e-9);
+      s.append(gridTable([{ label: "Driver" }, { label: "Group" }, { label: "Push (log-odds)", cls: "num" }, { label: "" }],
+        dr.map((x) => {
+          const bar = h("span", "bar");
+          const fill = h("span", "fill" + (x.push > 0 ? " top" : ""));
+          fill.style.width = `${Math.round((Math.abs(x.push || 0) / top) * 100)}%`;
+          bar.append(fill);
+          const pt = fmtSigned(x.push, 2);
+          return { cells: [{ text: String(x.name || ""), cls: "amber" }, { text: String(x.group || ""), cls: "dim" },
+            { text: pt, cls: "num " + signOf(pt) }, bar] };
+        })));
+    }
+    const rec = Array.isArray(f.record) ? f.record : [];
+    if (rec.length) {
+      const ul = h("ul", "fc-record");
+      for (const ln of rec) ul.append(h("li", "", String(ln)));
+      s.append(h("div", "sec-h", "Record"), ul);
+    }
+    return s;
+  }
+
+  /** T FCST: the latest forecasts with their bands on a three-month price chart, the chance against the coin,
+   * the drivers, the declared tests' record and live scoring. */
+  function viewForecast(p, res) {
+    const d = res.data || {};
+    const t = d.ticker || res.ticker;
+    const fcs = Array.isArray(d.forecasts) ? d.forecasts : [];
+    const root = h("div", "dec fc");
+    const top = h("div", "dec-top");
+    top.append(h("span", "dec-tk", t || ""));
+    if (d.name) top.append(h("span", "dim", String(d.name)));
+    top.append(h("span", "badge warn", "paper only · not financial advice"));
+    root.append(top);
+    if (d.job_note) {
+      const jn = h("div", "dec-job", `${String(d.job_note)}. `);
+      jn.append(cmdLink("JOBS", p));
+      root.append(jn);
+    }
+    const model = forecastModel(d);
+    if (model.dates.length) {
+      const frame = chartFrame(p, "fc-chart");
+      frame.model = model;
+      frame.draw = drawPrice;
+      frame.hover = hoverPrice;
+      frame.over.setAttribute("aria-label", `${t}: three months of closes and the forecast bands`);
+      root.append(frame.wrap);
+      const lg = h("div", "legend");
+      for (const c of model.cones) {
+        const it = h("span", "li");
+        it.append(h("span", "sw c-" + c.color), h("span", "t-" + c.color,
+          `${c.horizon} sessions: 68% ${priceText(c.q16)} – ${priceText(c.q84)}, 90% ${priceText(c.q05)} – ${priceText(c.q95)}`));
+        lg.append(it);
+      }
+      lg.append(h("span", "dim", "cone: the close on the forecast date joined to the bands at the exit; dot: the close at the exit"));
+      const pc = citeEl(d.cite, t);
+      if (pc) lg.append(pc);
+      root.append(lg);
+    }
+    for (const f of fcs) root.append(forecastBlock(f, t, p));
+    const ls = section("Live scoring", "every recorded forecast, once its exit has passed");
+    ls.append(dataTable(d.live || {}, { pane: p, ticker: t }));
+    root.append(ls);
+    const hs = section("History", `every forecast on ${t || "this stock"}, newest first`);
+    hs.append(dataTable(d.history || {}, { pane: p, ticker: t }));
+    root.append(hs);
+    if (d.note) root.append(noteEl(d.note, { pane: p }));
+    p.body.append(root);
+  }
+
+  /** FCST: every stock's latest forecast, live scoring, and what the declared tests found. */
+  function viewForecasts(p, res) {
+    const d = res.data || {};
+    const root = h("div", "dec fc");
+    for (const [key, title, sub] of [["latest", "Latest forecast per stock", "paper only · click a stock for its forecast"],
+      ["live", "Live scoring", "every recorded forecast, once its exit has passed"]]) {
+      const s = section(title, sub);
+      s.append(dataTable(d[key] || {}, { pane: p, ticker: res.ticker }));
+      root.append(s);
+    }
+    const rs = section("The declared tests", "quoted from the research ledger as it stands");
+    for (const r of Array.isArray(d.record) ? d.record : []) {
+      rs.append(h("div", "fc-h", `${r.horizon} sessions`));
+      const ul = h("ul", "fc-record");
+      for (const ln of Array.isArray(r.lines) ? r.lines : []) ul.append(h("li", "", String(ln)));
+      rs.append(ul);
+    }
+    root.append(rs);
+    if (d.note) root.append(noteEl(d.note, { pane: p }));
+    p.body.append(root);
+  }
+
   function viewMarkdown(p, res) {
     p.body.append(renderMarkdown((res.data || {}).markdown, { pane: p, ticker: res.ticker }));
   }
@@ -1421,6 +1697,11 @@
       if (v < lo) lo = v;
       if (v > hi) hi = v;
     }
+    for (const v of m.extent || []) {  // what an underlay draws (FCST's bands) must fit too
+      if (!isNum(v)) continue;
+      if (v < lo) lo = v;
+      if (v > hi) hi = v;
+    }
     if (m.rebased) {
       lo = Math.min(lo, 100);
       hi = Math.max(hi, 100);
@@ -1524,6 +1805,8 @@
       ctx.lineTo(plot.x + plot.w, crisp(vy - gap / 2));
       ctx.stroke();
     }
+
+    if (m.underlay) m.underlay(ctx, st.geo, m);  // FCST: the forecast bands, under the price line
 
     // lines (comparisons first, main on top)
     for (const l of m.lines.slice().reverse()) {
@@ -2216,6 +2499,7 @@
   const VIEWS = {
     help: viewHelp, des: viewDes, chart: viewChart, table: viewTable, news: viewNews, evidence: viewEvidence,
     markdown: viewMarkdown, fact: viewFact, curve: viewCurve, ask: viewAsk, decision: viewDecision, decisions: viewDecisions,
+    forecast: viewForecast, forecasts: viewForecasts,
   };
 
   // ---------- panes ----------
@@ -2255,33 +2539,34 @@
     // a watchlist edit or an acknowledgement is done once: rerun as the list it showed
     if ((w[0] === "WL" || w[1] === "WL") && (w.includes("ADD") || w.includes("DEL"))) return "WL";
     if ((w[0] === "ALRT" || w[1] === "ALRT") && w.includes("ACK")) return "ALRT";
-    // a decision job is started once: `T DEC NEW` reruns as `T DEC`, the decision it recorded. What is left
-    // is read again, since dropping NEW can change which word is the function (`DEC NEW INGEST`).
-    if (w[0] === "DEC" || w[1] === "DEC") {
+    // a decision or forecast job is started once: `T DEC NEW` reruns as `T DEC`, the decision it recorded, and
+    // `T FCST NEW` as `T FCST`. What is left is read again, since dropping NEW can change which word is the
+    // function (`DEC NEW INGEST`).
+    if (JOB_FNS.has(w[0]) || JOB_FNS.has(w[1])) {
       const read = withoutNew(line);
       if (read !== String(line).trim()) return safeRerun(read);
     }
     return String(line).trim();
   }
 
-  /** `line` without the NEW words after its first DEC: `AAPL DEC NEW` -> `AAPL DEC`, `DEC NEW AAPL` -> `DEC AAPL`. */
+  /** `line` without the NEW words after its first DEC or FCST: `AAPL DEC NEW` -> `AAPL DEC`, `FCST NEW AAPL` -> `FCST AAPL`. */
   function withoutNew(line) {
     const toks = String(line).trim().split(/\s+/);
-    const d = toks.findIndex((x) => x.toUpperCase() === "DEC");
+    const d = toks.findIndex((x) => JOB_FNS.has(x.toUpperCase()));
     return toks.filter((x, k) => d < 0 || k <= d || x.toUpperCase() !== "NEW").join(" ");
   }
 
   const WRITES = { WL: ["ADD", "DEL"], ALRT: ["ACK"] };
 
-  /** A result that started a background job: INGEST, or T DEC NEW. */
+  /** A result that started a background job: INGEST, T DEC NEW or T FCST NEW. */
   function startedJob(res) {
-    return !!(res && res.ok && (res.fn === "INGEST" || (res.fn === "DEC" && (res.args || [])[0] === "NEW")));
+    return !!(res && res.ok && (res.fn === "INGEST" || (JOB_FNS.has(res.fn) && (res.args || [])[0] === "NEW")));
   }
 
   /** The line a pane reruns: the server's own reading wins once it has answered this line. */
   function rerunLine(line, res) {
     if (res && res.ok && res.fn === "INGEST") return "JOBS";
-    if (startedJob(res) && tickerOk(res.ticker)) return safeRerun(`${res.ticker} DEC`);  // a ticker named INGEST stays safe
+    if (startedJob(res) && tickerOk(res.ticker)) return safeRerun(`${res.ticker} ${res.fn}`);  // a ticker named INGEST stays safe
     if (res && res.ok && WRITES[res.fn] && (res.args || []).length && WRITES[res.fn].includes(String(res.args[0]))) return res.fn;
     return safeRerun(line);
   }
@@ -2839,11 +3124,12 @@
 
     if (ended) {
       // a job finished: new facts may answer panes that were missing data (an INGEST pane reruns as JOBS);
-      // a decision job may have recorded a decision (a DEC NEW pane reruns as T DEC; WL shows the latest).
+      // a decision job may have recorded a decision (a DEC NEW pane reruns as T DEC; WL shows the latest), and a
+      // forecast job a forecast (a FCST NEW pane reruns as T FCST).
       // A DEC NEW pane whose own decision is still queued or running keeps its job table until that job ends.
       for (const p of panes) {
         if (decisionPending(p, targets)) continue;
-        if (!p.res || !p.res.ok || ["JOBS", "INGEST", "DEC", "WL"].includes(p.res.fn)) p.reload(true);
+        if (!p.res || !p.res.ok || ["JOBS", "INGEST", "DEC", "FCST", "WL"].includes(p.res.fn)) p.reload(true);
       }
       refreshTape();
     } else if (active > 0) {
@@ -2853,11 +3139,11 @@
     if (finished !== null) jobsFinished = finished;
   }
 
-  /** A pane showing the job table of its own `T DEC NEW` while that decision job is queued or running
-   * (`targets`: the status poll's `jobs_active`). */
+  /** A pane showing the job table of its own `T DEC NEW` (`T FCST NEW`) while that job is queued or running
+   * (`targets`: the status poll's `jobs_active`, where the job's target is `DEC T` or `FCST T`). */
   function decisionPending(p, targets) {
-    return startedJob(p.res) && p.res.fn === "DEC" && tickerOk(p.res.ticker)
-      && targets.includes(`DEC ${String(p.res.ticker).toUpperCase()}`);
+    return startedJob(p.res) && JOB_FNS.has(p.res.fn) && tickerOk(p.res.ticker)
+      && targets.includes(`${p.res.fn} ${String(p.res.ticker).toUpperCase()}`);
   }
 
   // ---------- ticker tape ----------

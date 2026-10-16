@@ -27,6 +27,11 @@ A decision job (``T DEC NEW``, target ``DEC T``) runs ``python -m brain decide T
 call when one is reachable, and records a paper decision (docs/DECIDE.md). It has a
 slot of its own, one at a time: an INGEST never waits behind a decision that is
 reading pages, and two decisions never compete for one model.
+
+A forecast job (``T FCST NEW``, target ``FCST T``) runs ``python -m brain forecast T``:
+F1's forecast on SPY's latest session, recorded as a ``forecast`` fact
+(docs/FORECAST.md section 10). It follows the decision job's rules in a slot of its
+own: one at a time, one per ticker, and a rerun of the pane never starts another.
 """
 from __future__ import annotations
 
@@ -44,7 +49,7 @@ from dataclasses import dataclass, field
 from typing import Callable
 
 from brain import config
-from brain.terminal.commands import dec_line
+from brain.terminal.commands import dec_line, fcst_line
 from brain.timeutil import now_iso
 
 TICKER = re.compile(r"[A-Za-z0-9.^=\-]{1,15}")  # matched with fullmatch: no trailing-newline loophole
@@ -52,8 +57,11 @@ KEYWORDS = {"MARKETS": ["markets"], "MACRO": ["macro"], "UNIVERSE": ["ingest-uni
             "INSIDERS": ["insiders"], "WATCH": ["watch", "run", "--once"]}
 TARGETS_TEXT = "a ticker, MARKETS, MACRO, UNIVERSE, INSIDERS or WATCH"
 DECIDE = "DEC "  # a decision job's target is "DEC <TICKER>": its own kind, slot and argument list
+FORECAST = "FCST "  # a forecast job's target is "FCST <TICKER>": its own kind, slot and argument list
+PREFIXES = {DECIDE: "decide", FORECAST: "forecast"}
 MAX_RUNNING = 2  # ingest jobs at once
 MAX_DECIDE = 1   # decision jobs at once, in their own slot
+MAX_FORECAST = 1  # forecast jobs at once, in their own slot
 LOG_LINES = 200
 MAX_QUEUED = 50
 KEEP_JOBS = 100  # finished jobs beyond this are forgotten, oldest first
@@ -76,11 +84,14 @@ def _ticker(t: str, what: str) -> str:
 
 def validate(target) -> str:
     """The canonical (upper-case) target, or JobError. Keywords are case-insensitive; ``DEC T`` is a
-    decision job on the ticker T (exactly one space, so it is never one token typed as a ticker)."""
+    decision job on the ticker T and ``FCST T`` a forecast job (exactly one space, so neither is ever one token
+    typed as a ticker)."""
     if not isinstance(target, str) or not target:
         raise JobError(f"ingest needs a target: {TARGETS_TEXT}")
     if target[:len(DECIDE)].upper() == DECIDE:
         return DECIDE + _ticker(target[len(DECIDE):], "decision")
+    if target[:len(FORECAST)].upper() == FORECAST:
+        return FORECAST + _ticker(target[len(FORECAST):], "forecast")
     if target.upper() in KEYWORDS:
         return target.upper()
     return _ticker(target, "ingest")
@@ -91,15 +102,24 @@ def decide_target(ticker: str) -> str:
     return validate(DECIDE + str(ticker))
 
 
+def forecast_target(ticker: str) -> str:
+    """The target of a forecast job on ``ticker``: ``FCST AAPL``."""
+    return validate(FORECAST + str(ticker))
+
+
 def kind_of(target: str) -> str:
-    """``decide`` for a decision job's target, ``ingest`` for everything else."""
-    return "decide" if target.startswith(DECIDE) else "ingest"
+    """``decide`` for a decision job's target, ``forecast`` for a forecast job's, ``ingest`` for everything else."""
+    for prefix, kind in PREFIXES.items():
+        if target.startswith(prefix):
+            return kind
+    return "ingest"
 
 
 def ticker_of(target: str) -> str | None:
-    """The ticker a job is about: T for ``T`` and ``DEC T``, None for the keywords."""
-    if kind_of(target) == "decide":
-        return target[len(DECIDE):]
+    """The ticker a job is about: T for ``T``, ``DEC T`` and ``FCST T``, None for the keywords."""
+    for prefix in PREFIXES:
+        if target.startswith(prefix):
+            return target[len(prefix):]
     return None if target in KEYWORDS else target
 
 
@@ -107,12 +127,15 @@ def argv_for(target: str) -> list[str]:
     """The child's argument list for a validated target."""
     if kind_of(target) == "decide":
         return [sys.executable, "-m", "brain", "decide", ticker_of(target), "--ingest", "--read"]
+    if kind_of(target) == "forecast":
+        return [sys.executable, "-m", "brain", "forecast", ticker_of(target)]
     rest = KEYWORDS.get(target, ["ingest", target])
     return [sys.executable, "-m", "brain", *rest]
 
 
 def is_ticker(target: str) -> bool:
-    """An ingest job of one ticker (a decision job's target is ``DEC T``, not a ticker)."""
+    """An ingest job of one ticker (a decision job's target is ``DEC T`` and a forecast job's ``FCST T``, not a
+    ticker)."""
     return kind_of(target) == "ingest" and target not in KEYWORDS
 
 
@@ -121,7 +144,7 @@ class Job:
     id: str
     target: str
     argv: list[str]
-    kind: str = "ingest"  # ingest | decide
+    kind: str = "ingest"  # ingest | decide | forecast
     status: str = "queued"  # queued | running | done | failed
     started: str | None = None
     finished: str | None = None
@@ -136,8 +159,9 @@ class Job:
 
 
 class JobManager:
-    """At most ``max_running`` ingest children and ``max_decide`` decision children at once, each kind in
-    its own slots; the rest wait in a FIFO queue per kind, so an ingest never waits behind a decision.
+    """At most ``max_running`` ingest children, ``max_decide`` decision children and ``max_forecast`` forecast
+    children at once, each kind in its own slots; the rest wait in a FIFO queue per kind, so an ingest never
+    waits behind a decision or a forecast.
 
     ``argv_for`` maps a validated target to an argument list; tests inject a
     harmless one. ``on_finish(job_dict)`` runs after every job, done or failed
@@ -149,16 +173,17 @@ class JobManager:
 
     def __init__(self, on_finish: Callable[[dict], None] | None = None, max_running: int = MAX_RUNNING,
                  argv_for: Callable[[str], list[str]] = argv_for, cwd=config.ROOT, env: dict | None = None,
-                 max_decide: int = MAX_DECIDE):
+                 max_decide: int = MAX_DECIDE, max_forecast: int = MAX_FORECAST):
         self.on_finish = on_finish
         self.max_running = max_running
         self.max_decide = max_decide
+        self.max_forecast = max_forecast
         self.argv_for = argv_for
         self.cwd = str(cwd)
         self.env = env
         self._jobs: dict[str, Job] = {}
-        self._queues: dict[str, deque[Job]] = {"ingest": deque(), "decide": deque()}
-        self._workers = {"ingest": 0, "decide": 0}  # threads alive per kind, including their on_finish call
+        self._queues: dict[str, deque[Job]] = {"ingest": deque(), "decide": deque(), "forecast": deque()}
+        self._workers = {"ingest": 0, "decide": 0, "forecast": 0}  # threads alive per kind, with their on_finish
         self._finished = 0  # jobs that stopped being queued or running, since this manager started
         self._ids = itertools.count(1)
         self._cv = threading.Condition()
@@ -176,7 +201,8 @@ class JobManager:
         with self._cv:
             if self._closed:
                 raise JobError("the server is shutting down", hint="")
-            # one job per (kind, ticker): a target names both ("AAPL" ingests AAPL, "DEC AAPL" decides on it)
+            # one job per (kind, ticker): a target names both ("AAPL" ingests AAPL, "DEC AAPL" decides on it,
+            # "FCST AAPL" forecasts it)
             active = {j.target: j for j in self._jobs.values() if j.status in ("queued", "running")}
             new = [t for t in dict.fromkeys(ts) if t not in active]
             waiting = 0
@@ -213,7 +239,7 @@ class JobManager:
 
     def summary(self) -> dict:
         """What /api/status reports, read at one moment: ``running`` and ``queued`` counts, ``active`` (the
-        targets queued or running, oldest first: ``["DEC AAPL", "MSFT"]``) and ``finished``, the jobs finished
+        targets queued or running, oldest first: ``["DEC AAPL", "FCST AAPL", "MSFT"]``) and ``finished``, the jobs finished
         since this manager started. ``finished`` only grows, so a page that sees it rise knows a job ended even
         when a queued one started in its place and the running count stayed the same."""
         with self._cv:
@@ -245,7 +271,7 @@ class JobManager:
 
     # ---------- internals (call with self._cv held) ----------
     def _slots(self, kind: str) -> int:
-        return self.max_decide if kind == "decide" else self.max_running
+        return {"decide": self.max_decide, "forecast": self.max_forecast}.get(kind, self.max_running)
 
     def _pump(self) -> None:
         for kind, q in self._queues.items():
@@ -343,15 +369,18 @@ def table(jobs: list[dict]) -> dict:
         if kind_of(j["target"]) == "decide":
             if dec_line(t):  # the decision it records; clicking never starts another job
                 row["_cmds"] = {"target": dec_line(t)}
+        elif kind_of(j["target"]) == "forecast":
+            if fcst_line(t):  # the forecast it records; clicking never starts another job
+                row["_cmds"] = {"target": fcst_line(t)}
         rows.append(row)
     running = sum(j["status"] == "running" for j in jobs)
     queued = sum(j["status"] == "queued" for j in jobs)
     if not jobs:
         note = ("No background jobs. Start one with INGEST AAPL, INGEST MARKETS, INGEST MACRO, INGEST UNIVERSE, "
-                "INGEST INSIDERS or INGEST WATCH, or a paper decision with AAPL DEC NEW.")
+                "INGEST INSIDERS or INGEST WATCH, a paper decision with AAPL DEC NEW, or a forecast with AAPL FCST NEW.")
     else:
-        note = (f"{running} running, {queued} queued (at most {MAX_RUNNING} ingest jobs and {MAX_DECIDE} decision "
-                f"at once, each in its own slots). New facts appear when a job finishes.")
+        note = (f"{running} running, {queued} queued (at most {MAX_RUNNING} ingest jobs, {MAX_FORECAST} forecast and "
+                f"{MAX_DECIDE} decision at once, each in its own slots). New facts appear when a job finishes.")
         newest = jobs[0]
         if newest["log"]:
             tail = "\n".join(newest["log"][-10:])
