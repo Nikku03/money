@@ -222,9 +222,11 @@ class ForecastHome(TempHome):
         super().setUp()
         home = Path(self._tmp.name)
         self.ledger = home / "ledger.jsonl"
+        # made-up prices with recent dates: a synthetic bank opts out of the development data rule (GuardTest)
         self.patches = [mock.patch.object(config, "LEDGER", self.ledger),
                         mock.patch.object(config, "RESULTS", home / "RESULTS.md"),
-                        mock.patch.object(live, "universe_tickers", lambda: list(UNI))]
+                        mock.patch.object(live, "universe_tickers", lambda: list(UNI)),
+                        mock.patch.dict(os.environ, {live.SYNTHETIC_ENV: "1"})]
         if self.STUB:
             self.stub = Stub()
             self.patches += [mock.patch.object(live, "_features", lambda: self.stub),
@@ -451,7 +453,17 @@ class ForecastTest(ForecastHome):
         self.assertIn(f1.ref, f2.inputs)
         self.assertEqual(f2.context["band"], f1.context["band"])
         self.assertTrue(f2.value.startswith("p_beat 0.61; 68% "))
-        self.assertIn("The model's chance (F1-llm, qwen3:8b): 61%. Momentum is mild.", live.card(r))
+        text = live.card(r)
+        self.assertIn("The model's chance (F1-llm, qwen3:8b): 61%. Momentum is mild.", text)
+        # the model's own record beside its chance: F1d's line and its live score, as the terminal's FCST shows them
+        self.assertIn("        the model on F1a's weeks (F1d): not run yet.", text)
+        self.assertIn("        The model's live forecasts (F1-llm) scored: 0.", text)
+        self.assertIn("F1d-llm-w5-recent", r["record"]["tests"])
+        self.assertEqual(r["live_llm"]["scored"], 0)
+        self.assertEqual(r["record"], live.record_lines(5, llm=True))
+        [plain_] = self.forecast("CCC")
+        self.assertNotIn("F1d", live.card(plain_))                 # without --llm the card is F1's alone
+        self.assertNotIn("F1-llm", live.card(plain_))
         self.assertEqual(check_run(Bank())[0], [])
 
     def test_a_failed_llm_answer_counts_as_f1s_and_is_flagged(self):
@@ -469,27 +481,93 @@ class ForecastTest(ForecastHome):
         self.assertEqual((g["forecasts"], g["llm_failed"]), (1, 1))  # one per stock, date and horizon: the latest
 
 
+def result(i, trial=False):
+    return {"op": "result", "kind": "forecast", "id": i, "trial": trial}
+
+
 class GuardTest(ForecastHome):
-    def test_the_real_bank_waits_for_the_declared_tests(self):
-        led = Path(self._tmp.name) / "committed.jsonl"
-        real = Path(self._tmp.name) / "var"
-        result = lambda i, trial=False: {"op": "result", "kind": "forecast", "id": i, "trial": trial}  # noqa: E731
-        with mock.patch.object(live, "REAL_HOME", real), mock.patch.object(live, "COMMITTED_LEDGER", led), \
-                mock.patch.dict(os.environ, {"MONEY_HOME": str(real)}):
-            self.assertIn("development data rule", live.held_out_guard())
-            with self.assertRaises(live.ForecastError) as cm:
-                live.run(self.bank, ["AAA"], universe=UNI)
-            self.assertIn("F1a-w5-recent, F1b-w5-test, F1c-m21-test have no recorded result", cm.exception.message)
-            with self.assertRaises(live.ForecastError):
-                live.model(self.bank, 5, tickers=UNI)  # the model alone too
-            self.assertEqual(self.stub.fits, [])  # refused before anything was read or trained
-            led.write_text("".join(json.dumps(result(i, trial=True)) + "\n" for i in live.GUARD_TESTS))
-            self.assertIsNotNone(live.held_out_guard())  # trial results do not count
-            led.write_text("".join(json.dumps(result(i)) + "\n" for i in live.GUARD_TESTS[:2]))
-            self.assertIn("F1c-m21-test has no recorded result", live.held_out_guard())
-            led.write_text("".join(json.dumps(result(i)) + "\n" for i in live.GUARD_TESTS))
-            self.assertIsNone(live.held_out_guard())
-        self.assertIsNone(live.held_out_guard())  # any other MONEY_HOME: a synthetic bank
+    """The development data rule, decided by the bank's own prices, not by where the bank lives."""
+
+    def setUp(self):
+        super().setUp()
+        os.environ.pop(live.SYNTHETIC_ENV, None)      # ForecastHome's opt-in; restored with its other patches
+        self.committed: list[dict] = []
+        p = mock.patch.object(live, "committed_ledger", lambda: list(self.committed))
+        p.start()
+        self.addCleanup(p.stop)
+        add_prices(self.bank)                          # SPY's prices run to yesterday: the held-out years
+
+    def test_a_bank_with_prices_past_2018_waits_for_the_committed_results(self):
+        # a temporary MONEY_HOME: a copy of the real bank anywhere is refused just the same
+        self.assertIn("development data rule", live.held_out_guard(self.bank))
+        with self.assertRaises(live.ForecastError) as cm:
+            live.run(self.bank, ["AAA"], universe=UNI)
+        self.assertIn("F1a-w5-recent, F1b-w5-test, F1c-m21-test have no recorded result", cm.exception.message)
+        self.assertIn(f"run to {DAYS[-1]}", cm.exception.message)
+        with self.assertRaises(live.ForecastError):
+            live.model(self.bank, 5, tickers=UNI)  # the model alone too
+        self.assertEqual(self.stub.fits, [])  # refused before anything was trained
+        self.assertEqual(self.bank.facts("AAA", "forecast"), [])
+        self.committed = [result(i, trial=True) for i in live.GUARD_TESTS]
+        self.assertIsNotNone(live.held_out_guard(self.bank))  # trial results do not count
+        self.committed = [result(i) for i in live.GUARD_TESTS[:2]]
+        self.assertIn("F1c-m21-test has no recorded result", live.held_out_guard(self.bank))
+        self.committed = [result(i) for i in live.GUARD_TESTS]
+        self.assertIsNone(live.held_out_guard(self.bank))
+        # --llm waits for F1d as well: its result, or its withdrawal (dropped)
+        self.assertIn("F1d-llm-w5-recent", live.held_out_guard(self.bank, llm=True))
+        with self.assertRaises(live.ForecastError) as cm:
+            live.run(self.bank, ["AAA"], universe=UNI, llm=True)
+        self.assertIn("without --llm", cm.exception.message)
+        self.assertEqual(self.stub.fits, [])
+        self.committed.append({"op": "withdraw", "id": live.LLM_TEST, "reason": "dropped"})
+        self.assertIsNone(live.held_out_guard(self.bank, llm=True))
+        self.committed[-1] = result(live.LLM_TEST)
+        self.assertIsNone(live.held_out_guard(self.bank, llm=True))
+        self.committed[-1] = result(live.LLM_TEST, trial=True)
+        self.assertIsNotNone(live.held_out_guard(self.bank, llm=True))
+
+    def test_train_years_alone_need_no_results(self):
+        b = Bank(Path(self._tmp.name) / "train")
+        add_prices(b, days=pd.bdate_range(end="2018-12-31", periods=600).strftime("%Y-%m-%d").tolist())
+        self.assertIsNone(live.held_out_guard(b))
+        self.assertIsNone(live.held_out_guard(b, llm=True))
+        self.assertIsNone(live.held_out_guard(Bank(Path(self._tmp.name) / "empty")))  # no SPY: run() says why
+
+    def test_the_synthetic_opt_in_never_covers_real_prices(self):
+        with mock.patch.dict(os.environ, {live.SYNTHETIC_ENV: "1"}):
+            self.assertIsNone(live.held_out_guard(self.bank))            # made-up prices in a temporary home
+            self.assertIsNone(live.held_out_guard(self.bank, llm=True))
+            with mock.patch.object(live, "REAL_HOME", Path(self._tmp.name)):   # this home, as if it were var/
+                self.assertIn("development data rule", live.held_out_guard(self.bank))   # never the real home
+            from brain.sources import prices
+            b = Bank(Path(self._tmp.name) / "copy")                        # a copy of the real bank elsewhere
+            spy = snap("SPY", DAYS, np.linspace(100, 120, len(DAYS)))
+            b.add(Fact(**{**{k: getattr(spy, k) for k in ("entity", "attr", "value", "as_of", "known_at", "tier",
+                                                          "context")},
+                          "source": {"name": prices.SOURCE_NAME, "url": "https://finance.yahoo.com/quote/SPY/history"}}))
+            self.assertIn("development data rule", live.held_out_guard(b))
+
+
+class CommittedLedgerTest(TempHome):
+    def test_only_lines_committed_at_head_count(self):
+        import subprocess
+        repo = Path(self._tmp.name) / "repo"
+        (repo / "research").mkdir(parents=True)
+        led = repo / "research" / "ledger.jsonl"
+        led.write_text(json.dumps(result("F1a-w5-recent")) + "\n")
+
+        def git(*a):
+            subprocess.run(["git", "-C", str(repo), *a], check=True, capture_output=True)
+        git("init", "-q")
+        git("add", "research/ledger.jsonl")
+        git("-c", "user.name=t", "-c", "user.email=t@example.test", "commit", "-q", "-m", "ledger")
+        with led.open("a") as fh:                                         # results not committed yet: not counted
+            fh.write(json.dumps(result("F1b-w5-test")) + "\n" + json.dumps(result("F1c-m21-test")) + "\n")
+        with mock.patch.object(config, "ROOT", repo):
+            self.assertEqual([r["id"] for r in live.committed_ledger()], ["F1a-w5-recent"])
+        with mock.patch.object(config, "ROOT", Path(self._tmp.name) / "not-a-repo"):
+            self.assertEqual(live.committed_ledger(), [])                 # git cannot say: nothing counts
 
 
 # ---------- live scoring ----------

@@ -183,12 +183,10 @@ class SnapshotTest(Market):
                       "against SPY ", s)
         self.assertIn(f"Insider trades (Forms 4 and 5) filed in the 90 days to {D}: 2 open-market buys (350.00K USD), "
                       f"1 sale (1.20M USD).", s)
-        self.assertIn("F1, the learner: chance to beat SPY over the next 5 sessions 0.523; 68% range of the stock's "
-                      "own move over that time -3.1% .. +3.4%.", s)
-        self.assertIn("- dist_52w_high +0.081: close over its 252-session high, minus 1 (anchoring)", s)
-        self.assertIn("- mom_12_1 -0.041: return from 252 to 21 sessions ago", s)
-        # Never: the company's name, a headline, a price level (today's basis or as traded), F1's band in prices.
-        for gone in (NAME, "Example Widgets", HEADLINE, f"{x[i]:.2f}", f"{x[i] / 2:.2f}", "7777.77", "7891.23", "7333"):
+        # Never: the company's name, a headline, a price level (today's basis or as traded), or anything of F1's
+        # forecast: shown it, small models copied F1's number, so the model is asked for its own view.
+        for gone in (NAME, "Example Widgets", HEADLINE, f"{x[i]:.2f}", f"{x[i] / 2:.2f}", "7777.77", "7891.23", "7333",
+                     "F1", "0.523", "-3.1%", "dist_52w_high", "mom_12_1"):
             self.assertNotIn(gone, s)
 
     def test_month_end_view_and_open_windows(self):
@@ -202,20 +200,16 @@ class SnapshotTest(Market):
         s = think.snapshot(b, self.book, "XCO", "2017-04-28", FC)
         self.assertIn("Last earnings release: an 8-K (item 2.02) filed 2017-04-27, 1 day before; its 3-day reaction "
                       "window had not closed.", s)
-        # No forecast, a 21-session forecast, a stock with no prices: still a snapshot.
-        self.assertIn("F1's forecast: none given.", think.snapshot(b, self.book, "XCO", D, None))
+        # No forecast (the 5-session default), a 21-session forecast, a stock with no prices: still a snapshot.
+        self.assertIn("a typical 5-session move", think.snapshot(b, self.book, "XCO", D, None))
         s21 = think.snapshot(b, self.book, "XCO", D, {**FC, "horizon": 21})
-        self.assertIn("over the next 21 sessions", s21)
         self.assertIn("a typical 21-session move", s21)
         self.assertIn("Prices: none in the bank up to this date.", think.snapshot(b, self.book, "NOPE", D, FC))
         self.assertIn("filed in the 90 days to 2016-06-15: 0 open-market buys, 0 sales.",
                       think.snapshot(b, self.book, "XCO", "2016-06-15", FC))
-        # Driver descriptions are F1's plain words without the code names they cite.
-        self.assertEqual(think.DESCRIPTIONS["log_mktcap"], "log of market value")
-        self.assertFalse([d for d in think.DESCRIPTIONS.values() if re.search(r"\b(?:metrics|events|signals)\.", d)])
 
     def test_snapshot_version_and_messages(self):
-        self.assertEqual(think.SNAPSHOT_VERSION, 1)
+        self.assertEqual(think.SNAPSHOT_VERSION, 2)
         system, user = think.messages(self.bank, self.book, "XCO", D, FC, "llama3.1:8b")
         self.assertEqual(system["role"], "system")
         self.assertTrue(system["content"].startswith(judge.PRIMER))
@@ -284,13 +278,13 @@ class PrimerTest(unittest.TestCase):
         self.assertEqual(think.primer_sha(), hashlib.sha256((ROOT / "docs" / "MARKET_PRIMER.md").read_bytes()).hexdigest()[:16])
         self.assertEqual(think.prompt_sha(), forecast_tests._sha(think.PROMPT))
         self.assertEqual(forecast_tests.llm_pins(think), {"primer_sha": think.primer_sha(), "prompt_sha": think.prompt_sha(),
-                                                          "snapshot_version": 1})
+                                                          "snapshot_version": 2})
         for k in ("system", "user", "repair", "qwen3", "no_think", "temperature", "seed", "max_tokens"):
             self.assertIn(k, think.PROMPT)
         self.assertEqual((think.PROMPT["temperature"], think.PROMPT["seed"], think.PROMPT["max_tokens"]), (0, 7, 300))
         self.assertIn("{primer}", think.PROMPT["system"])  # the primer is pinned by its own sha
         # Frozen: a new prompt is a new F1d test. Change this on purpose.
-        self.assertEqual(think.prompt_sha(), "31bcc54bd98d2d33")
+        self.assertEqual(think.prompt_sha(), "9cf7aa3ed50e27bb")
 
 
 class ParseTest(unittest.TestCase):
@@ -369,6 +363,27 @@ class LLMForecastTest(Market):
                 self.assertEqual(sent[0]["messages"][1]["content"].endswith(" /no_think"), suffix)
                 self.assertEqual(sent[0]["messages"][1]["content"].count("/no_think"), int(suffix))
                 self.assertEqual(think.is_qwen3(model), suffix)
+
+    def test_no_think_follows_the_served_model_not_the_name_asked_for(self):
+        # llama.cpp serves its one GGUF whatever model name a request carries, and F1d's identity pins that
+        # file: the family that decides /no_think is the served model's, never BRAIN_LLM_MODEL's text.
+        for served, asked, suffix in (("/models/Qwen3-1.7B-Q8_0.gguf", "local-llama", True),
+                                      ("/models/Llama-3.1-8B-Q8_0.gguf", "qwen3:8b", False),
+                                      ("qwen3:8b", "qwen3:8b", True)):
+            with self.subTest(served=served, asked=asked):
+                with FakeOpenAI(lambda n, b: text_msg(GOOD), models=(served,)) as srv:
+                    res = think.llm_forecast(self.bank, self.book, "XCO", D, FC, client=srv.client(model=asked))
+                self.assertTrue(res["ok"], res)
+                self.assertEqual(srv.requests[0]["messages"][1]["content"].endswith(" /no_think"), suffix)
+                self.assertEqual(think.is_qwen3(served), suffix)
+        # a declared test passes its pinned decision, and that is what is sent
+        with FakeOpenAI(lambda n, b: text_msg(GOOD), models=("qwen3:8b",)) as srv:
+            think.llm_forecast(self.bank, self.book, "XCO", D, FC, client=srv.client(model="qwen3:8b"), no_think=False)
+        self.assertFalse(srv.requests[0]["messages"][1]["content"].endswith(" /no_think"))
+        # a server whose model list cannot be read: the client's own name decides
+        with FakeOpenAI(lambda n, b: text_msg(GOOD), models=("qwen3:8b",), model_status=500) as srv:
+            think.llm_forecast(self.bank, self.book, "XCO", D, FC, client=srv.client(model="qwen3:8b"))
+        self.assertTrue(srv.requests[0]["messages"][1]["content"].endswith(" /no_think"))
 
     def test_one_repair_then_the_answer(self):
         res, sent = self.ask(lambda n, b: text_msg("About even, maybe 0.52." if n == 1 else GOOD))
@@ -471,8 +486,9 @@ class IdentityTest(unittest.TestCase):
                 ident = think.llm_identity(srv.client(model="anything"))
                 self.assertEqual((ident["model"], ident["digest"], ident["why"]), ("qwen3-tiny-q8_0", want, None))
                 self.assertIn(str(p.resolve()), ident["via"])
+                # /no_think is pinned by the served file's family, whatever name the client asks for
                 self.assertEqual(forecast_tests.llm_identity(srv.client(model="anything"), think=think),
-                                 {"model": "qwen3-tiny-q8_0", "digest": want})
+                                 {"model": "qwen3-tiny-q8_0", "digest": want, "no_think": True})
             p.write_bytes(b"GGUF other weights")  # new weights, same path: a new digest
             with FakeOpenAI(models=(str(p),)) as srv:
                 self.assertNotEqual(think.llm_identity(srv.client())["digest"], want)

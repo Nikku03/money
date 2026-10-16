@@ -38,11 +38,12 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from brain import claims, config, events, metrics, series
+from brain import bank as bank_module
+from brain import claims, config, events, metrics, series, timeutil
 from brain.bank import Bank, View, canon
 from brain.metrics import PriceBook
 from brain.research import signals
-from brain.sources import insiders
+from brain.sources import insiders, sec
 from brain.timeutil import days_between, norm_known_at, now_iso
 
 FEATURES_VERSION = 1
@@ -130,9 +131,11 @@ FUND_NAMES = [n for n, _, _ in FUND_FEATURES]
 EVENT_NAMES = [n for n, _, _ in EVENT_FEATURES]
 REGIME_NAMES = [n for n, _, _ in REGIME_FEATURES]
 
-# Modules whose code computes a feature or the label; their shas enter the cache key with features.py's.
+# Modules whose code computes a feature or the label; their shas enter the cache key with features.py's. The
+# bank's View decides what is visible at T(d) for every feature, label and price read; timeutil normalises the
+# times it compares; sources/sec holds the revenue concepts metrics reads.
 _SOURCE = Path(__file__)
-_DEPS = (metrics, events, claims, insiders, signals, series)
+_DEPS = (metrics, events, claims, insiders, signals, series, bank_module, timeutil, sec)
 
 
 def T(d: str) -> str:
@@ -157,6 +160,7 @@ class Prices:
     vix: np.ndarray          # (T,) ^VIX close from rows dated <= the session (filled up to 3 sessions); NaN before 2015
     book: PriceBook
     asof: str
+    retrieved_by: str | None = None   # pinned: only snapshots fetched by then (a declared test's prices_asof)
     _pos: dict = field(default_factory=dict, repr=False)
 
     def index(self, d: str) -> int:
@@ -183,13 +187,17 @@ def _universe(tickers) -> list[str]:
     return out
 
 
-def prices(bank: Bank, tickers, prices_asof: str | None, start: str = PRICE_START) -> Prices:
+def prices(bank: Bank, tickers, prices_asof: str | None, start: str = PRICE_START, *,
+           retrieved_by: str | None = None) -> Prices:
     """One book at ``prices_asof`` (its latest snapshot per ticker) and the same snapshots' CSVs, on SPY's
     calendar from ``start``. SPY and ^VIX are context, never universe stocks: they are left out of
-    ``tickers`` here. Raises SystemExit when SPY has no snapshot at ``prices_asof``."""
+    ``tickers`` here. ``retrieved_by``: read only the snapshots fetched by then (``PriceBook``), so a declared
+    test reads the book as it stood at its pinned ``prices_asof``. Raises SystemExit when SPY has no snapshot
+    at ``prices_asof``."""
     tk = _universe(tickers)
     asof = norm_known_at(prices_asof) if prices_asof else now_iso()
-    book = PriceBook(bank, [BENCH, VIX], asof)
+    rb = norm_known_at(retrieved_by) if retrieved_by else None
+    book = PriceBook(bank, [BENCH, VIX], asof, retrieved_by=rb)
     if not book.has(BENCH):
         raise SystemExit(f"no {BENCH} price snapshot known at {asof}; run: python -m brain ingest {BENCH}")
     cal_all = book.dates[BENCH]
@@ -205,7 +213,7 @@ def prices(bank: Bank, tickers, prices_asof: str | None, start: str = PRICE_STAR
         if j % PRICE_CHUNK == 0:
             # The book is read in chunks at the same asof, so each chunk's CSVs are still in series' cache
             # when their high, low and volume are read just after.
-            part = PriceBook(bank, tk[j:j + PRICE_CHUNK], asof)
+            part = PriceBook(bank, tk[j:j + PRICE_CHUNK], asof, retrieved_by=rb)
             for name, d in vars(part).items():
                 if isinstance(d, dict):
                     getattr(book, name).update(d)
@@ -233,7 +241,7 @@ def prices(bank: Bank, tickers, prices_asof: str | None, start: str = PRICE_STAR
         vix[vpos[vm]] = np.asarray(vdf["close"], dtype=float)[vm]
         vix = pd.Series(vix).ffill(limit=FILL_SESSIONS).to_numpy()
     spy = np.asarray(book.adj[BENCH], dtype=float)[keep]
-    return Prices(tk, cal, adj, close, high, low, vol, bars, age, spy, vix, book, asof)
+    return Prices(tk, cal, adj, close, high, low, vol, bars, age, spy, vix, book, asof, retrieved_by=rb)
 
 
 # ---------- the label ----------
@@ -665,26 +673,39 @@ def deps_sha() -> str:
     return _sha_bytes(*(Path(m.__file__).read_bytes() for m in _DEPS))
 
 
-def cache_key(bank: Bank, tickers, grid, prices_asof: str, h: int) -> dict:
+def snapshot_ids(bank: Bank, tickers, prices_asof: str, retrieved_by: str | None = None) -> list[list]:
+    """[ticker, id of the price snapshot a book at ``prices_asof`` reads, or None] for each universe stock,
+    then SPY and ^VIX; ``retrieved_by`` as in ``prices``."""
+    v = bank.view(norm_known_at(prices_asof))
+    keep = metrics.fetched_by(retrieved_by) if retrieved_by else None
+    out = []
+    for t in [*_universe(tickers), BENCH, VIX]:
+        f = v.latest(t, "series.price_daily", keep)
+        out.append([t, f.id if f is not None else None])
+    return out
+
+
+def snapshots_sha(bank: Bank, tickers, prices_asof: str, retrieved_by: str | None = None) -> str:
+    """The sha of ``snapshot_ids``: the cache key's ``snapshots_sha``, and what a declared test pins."""
+    return _sha_bytes(canon(snapshot_ids(bank, tickers, prices_asof, retrieved_by)).encode())
+
+
+def cache_key(bank: Bank, tickers, grid, prices_asof: str, h: int, retrieved_by: str | None = None) -> dict:
     """What a cached feature set depends on: FEATURES_VERSION, the code, the tickers, the grid, h,
-    prices_asof, the price snapshots read and every ticker's journal shard (inode and size,
-    ``signals._shard_state``). Long parts are kept as shas; ``sha`` names the whole."""
+    prices_asof, the price snapshots read (``retrieved_by`` as in ``prices``) and every ticker's journal shard
+    (inode and size, ``signals._shard_state``). Long parts are kept as shas; ``sha`` names the whole."""
     tk = _universe(tickers)
     gr = sorted({str(d)[:10] for d in grid})
     asof = norm_known_at(prices_asof)
     every = [*tk, BENCH, VIX]
     shards = [[t, *signals._shard_state(bank, t)] for t in every]  # before reading anything
-    v = bank.view(asof)
-    snaps = []
-    for t in every:
-        f = v.latest(t, "series.price_daily")
-        snaps.append([t, f.id if f is not None else None])
+    snaps = snapshot_ids(bank, tk, asof, retrieved_by)
     key = {"features_version": FEATURES_VERSION, "features_sha": code_sha(), "deps_sha": deps_sha(),
            "names_sha": _sha_bytes(canon(FEATURES).encode()),
            "universe_sha": _sha_bytes(",".join(tk).encode()), "n_tickers": len(tk),
            "grid_sha": _sha_bytes(",".join(gr).encode()), "n_grid": len(gr),
            "grid_first": gr[0] if gr else None, "grid_last": gr[-1] if gr else None,
-           "h": int(h), "prices_asof": asof,
+           "h": int(h), "prices_asof": asof, **({"retrieved_by": norm_known_at(retrieved_by)} if retrieved_by else {}),
            "snapshots_sha": _sha_bytes(canon(snaps).encode()), "shards_sha": _sha_bytes(canon(shards).encode())}
     key["sha"] = hashlib.sha256(canon(key).encode()).hexdigest()[:24]
     return key
@@ -768,24 +789,27 @@ def _each_ticker(bank: Bank, book: PriceBook, tasks: list, workers: int, log) ->
 
 
 def feature_set(bank: Bank, tickers, grid, prices_asof: str, h: int, *, cache: bool = True,
-                workers: int | None = None, log=None, px: Prices | None = None) -> FeatureSet:
+                workers: int | None = None, log=None, px: Prices | None = None,
+                retrieved_by: str | None = None) -> FeatureSet:
     """Features and outcomes on every grid date (SPY sessions; pass the whole grid, since R z-scores use the
     earlier grid dates). Rows are listed stocks with an outcome; listed rows whose window has not closed in
     the book go to ``pending`` (for a live forecast); the rest are counted in ``dropped``. Reads and writes
     the cache under ``<home>/cache/forecast/`` unless ``cache`` is False. ``workers`` (default
     $BRAIN_FORECAST_WORKERS, else up to 4) read tickers' journals in parallel. ``px``: the run's
-    ``prices(bank, tickers, prices_asof)`` when the caller has built it already (it is not built twice)."""
+    ``prices(bank, tickers, prices_asof)`` when the caller has built it already (it is not built twice; its
+    ``retrieved_by`` pin is then the run's). ``retrieved_by``: as in ``prices``, when ``px`` is not given."""
     t0 = time.monotonic()
     tk = _universe(tickers)
     asof = norm_known_at(prices_asof) if prices_asof else now_iso()
+    rb = px.retrieved_by if px is not None else (norm_known_at(retrieved_by) if retrieved_by else None)
     gr = sorted({str(d)[:10] for d in grid})
-    key = cache_key(bank, tk, gr, asof, h)
+    key = cache_key(bank, tk, gr, asof, h, retrieved_by=rb)
     if cache:
         hit = _load(key)
         if hit is not None:
             return hit
     if px is None:
-        px = prices(bank, tk, asof)
+        px = prices(bank, tk, asof, retrieved_by=rb)
     elif px.asof != asof or px.tickers != tk:
         raise ValueError("px was built for other tickers or another prices_asof")
     N, F = len(tk), len(FEATURES)

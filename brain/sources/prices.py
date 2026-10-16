@@ -52,6 +52,7 @@ def parse_chart(data: dict, now: float | None = None) -> tuple[pd.DataFrame, lis
 
 
 TTL = 6 * 3600  # how long a fetched chart body is reused; the watch loop passes a shorter one
+SOURCE_NAME = "Yahoo Finance chart API (unofficial)"   # every snapshot this module writes names it
 
 
 def fetch_daily(symbol: str, start: str = "2000-01-01", ttl: float = TTL):
@@ -73,7 +74,7 @@ def ingest(symbol: str, start: str = "2000-01-01", ttl: float = TTL) -> list[Fac
     loop re-reads every 15 minutes so a close can alert soon after the session ends)."""
     df, splits, meta, r = fetch_daily(symbol, start, ttl)
     sha = series.store(df)
-    src = {"name": "Yahoo Finance chart API (unofficial)", "url": f"https://finance.yahoo.com/quote/{symbol.upper()}/history"}
+    src = {"name": SOURCE_NAME, "url": f"https://finance.yahoo.com/quote/{symbol.upper()}/history"}
     out = [Fact(entity=symbol, attr="series.price_daily", value=sha, as_of=df["date"].iloc[-1],
                 known_at=df["date"].iloc[-1], tier="market", source=src,
                 context={"rows": len(df), "first": df["date"].iloc[0], "last": df["date"].iloc[-1],

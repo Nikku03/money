@@ -2,6 +2,7 @@
 and 11: Evaluate, Ledger). features.py and think.py are stubbed: these tests code against the contract."""
 import argparse
 import contextlib
+import dataclasses
 import itertools
 import json
 import unittest
@@ -92,7 +93,11 @@ class StubThink:
     SNAPSHOT_VERSION = 1
 
     def __init__(self, digest="sha256:aaa", fail_every=4):
-        self.digest, self.fail_every, self.asked = digest, fail_every, []
+        self.digest, self.fail_every, self.asked, self.no_think = digest, fail_every, [], []
+
+    @staticmethod
+    def is_qwen3(model):
+        return str(model).startswith("qwen3")
 
     def llm_identity(self, client):
         return {"model": "qwen3:8b", "digest": self.digest}
@@ -100,8 +105,9 @@ class StubThink:
     def primer_sha(self):
         return "primer0"
 
-    def llm_forecast(self, bank, book, ticker, d, forecast, client=None, deadline=None):
+    def llm_forecast(self, bank, book, ticker, d, forecast, client=None, deadline=None, no_think=None):
         self.asked.append((d, ticker, forecast["p_beat"]))
+        self.no_think.append(no_think)
         if len(self.asked) % self.fail_every == 0:
             return {"ok": False, "p_beat": None, "reason": None, "raw": "not json", "model": "qwen3:8b",
                     "seconds": 0.1, "error": "no JSON object"}
@@ -202,8 +208,9 @@ def samples(K=60, n=50, seed=0, signal=0.0, h=5):
     info = rng.normal(size=S)
     excess = 0.01 * (signal * info + rng.normal(size=S))
     sig = np.full(S, 0.02)
-    u = market + rng.normal(size=S) * sig * np.sqrt(h)
-    zq = np.tile([evaluate.NORMAL_Q[k] for k in evaluate.QKEYS], (S, 1))
+    u = market + rng.normal(size=S) * sig * np.sqrt(h + 1)  # from the close of d to the exit: h + 1 daily returns
+    # the band as fit_range learns it on that move: normal quantiles, quoted with sqrt(h)
+    zq = np.tile([evaluate.NORMAL_Q[k] * np.sqrt((h + 1) / h) for k in evaluate.QKEYS], (S, 1))
     p = 0.5 + 0.05 * np.tanh(info + rng.normal(size=S))
     return {"date": dates, "ticker": np.tile([f"T{j}" for j in range(n)], K), "p": p, "y": (excess > 0).astype(float),
             "excess": excess, "size": size, "mom": rng.normal(size=S), "clim": np.full(S, 0.5), "u": u, "sig": sig,
@@ -229,6 +236,17 @@ class ScoreAndControlsTest(unittest.TestCase):
         self.assertEqual(ctl10["oracle_p"], 1 / 1024)
         self.assertTrue(ctl10["oracle_ok"])
 
+    def test_the_placebo_checks_the_test_and_cannot_see_a_leak(self):
+        # A random sign pattern gives p < 0.05 about 5% of the time for any series: the placebo passes for pure
+        # noise and for a look-ahead leak alike (every date +0.3). It checks the test's arithmetic only.
+        rng = np.random.default_rng(5)
+        for series in (rng.normal(0, 0.18, 192), np.full(192, 0.3) + rng.normal(0, 0.01, 192)):
+            _, ctl = evaluate.gate_and_controls({"ic_size_neutral": {"mean": float(series.mean()), "p": 0.5},
+                                                 "_sn": list(series), "_oracle": list(np.abs(series) + 1)})
+            self.assertTrue(ctl["placebo_ok"])
+            self.assertAlmostEqual(ctl["placebo_reject_rate"], 0.05, delta=0.035)
+        self.assertIn("not of the forecaster", ft.GATE_DETAILS["ic"]["controls"]["placebo"])
+
     def test_a_planted_signal_passes_the_gate(self):
         S = samples(K=40, signal=0.5)
         S["p"] = 0.5 + 0.05 * np.tanh(S["excess"] * 50 + np.random.default_rng(1).normal(size=len(S["p"])))
@@ -238,6 +256,24 @@ class ScoreAndControlsTest(unittest.TestCase):
         self.assertTrue(ctl["pass"])
         self.assertLess(m["ic_size_neutral"]["within_date_perm_p"], 0.01)
         self.assertGreater(m["ic_size_neutral"]["mean"], 0.2)
+
+    def test_the_naive_band_spans_the_h_plus_1_returns_it_is_scored_on(self):
+        # u runs from the close of d to the close of the exit: h + 1 daily returns. With iid normal returns of a
+        # known sd, F1's learned band (normal quantiles over h + 1 returns, quoted with sqrt(h)) and the naive
+        # normal band of the same sd are the same band, so neither beats the other.
+        h, K, n, sd = 5, 40, 300, 0.02
+        rng = np.random.default_rng(11)
+        S = K * n
+        u = rng.normal(0, sd, (S, h + 1)).sum(axis=1)
+        zq = np.tile([evaluate.NORMAL_Q[k] * np.sqrt((h + 1) / h) for k in evaluate.QKEYS], (S, 1))
+        dates = np.repeat(pd.bdate_range("2015-01-02", periods=K, freq="W-FRI").strftime("%Y-%m-%d").to_numpy(), n)
+        excess = rng.normal(size=S)
+        Sx = {"date": dates, "p": np.full(S, 0.5), "y": (excess > 0).astype(float), "excess": excess,
+              "size": rng.normal(size=S), "mom": rng.normal(size=S), "clim": np.full(S, 0.5), "u": u,
+              "sig": np.full(S, sd), "naive": np.full(S, sd), "zq": zq}
+        rg = evaluate.score(Sx, h, gated=False)["range"]
+        self.assertAlmostEqual(rg["pinball_skill"], 0.0, places=9)
+        self.assertAlmostEqual(rg["cover68"]["mean"], 0.68, delta=0.01)
 
     def test_range_coverage_is_per_date_with_a_date_level_interval(self):
         m = evaluate.score(samples(K=80), 5, gated=False)
@@ -323,6 +359,48 @@ class AnchorTest(TempHome):
         self.assertEqual(evaluate.find_anchor(book, ["AAA", "BBB", "NEW"]), days[-3])
 
 
+def later(t, seconds=60):
+    """A retrieval time ``seconds`` after ``t``: a fetch made after the declaration."""
+    return (pd.Timestamp(t) + pd.Timedelta(seconds=seconds)).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+class PinnedPricesTest(TempHome):
+    """A price snapshot's known_at is its last bar's date, not its fetch time: a book pinned at prices_asof
+    (``retrieved_by``) reads only the snapshots fetched by then."""
+
+    def fetched(self, t, days, close, at):
+        return dataclasses.replace(price_snapshot(t, days, close), retrieved_at=at)
+
+    def test_a_pinned_book_never_reads_a_later_fetch(self):
+        from brain.forecast import features
+        from brain.metrics import PriceBook
+        days = pd.bdate_range("2017-01-02", "2018-12-14").strftime("%Y-%m-%d").tolist()
+        line = list(np.linspace(100, 110, len(days)))
+        self.bank.add_many([self.fetched("SPY", days, line, "2018-12-14T22:00:00Z"),
+                            self.fetched("AAA", days, list(np.linspace(10, 12, len(days))), "2018-12-14T22:00:00Z")])
+        asof = "2018-12-17T15:00:00Z"                                   # the declaration: prices_asof = now
+        at_declare = PriceBook(self.bank, ["SPY"], asof, retrieved_by=asof)
+        key0 = features.cache_key(self.bank, ["AAA", "HALT"], days[-30:], asof, 5, retrieved_by=asof)
+        # later that day a re-fetch with the same last bar and revised adjusted closes; a stock first fetched a week on
+        self.bank.add_many([self.fetched("SPY", days, [x * 0.99 for x in line], "2018-12-17T17:00:00Z"),
+                            self.fetched("HALT", days[:-10], [5.0] * (len(days) - 10), "2018-12-24T12:00:00Z")])
+        self.assertAlmostEqual(PriceBook(self.bank, ["SPY"], asof).adj["SPY"][-1], 108.9)   # unpinned: reads it
+        book = PriceBook(self.bank, ["SPY", "HALT"], asof, retrieved_by=asof)
+        self.assertEqual(book.snapshot["SPY"].id, at_declare.snapshot["SPY"].id)
+        self.assertAlmostEqual(book.adj["SPY"][-1], 110.0)
+        self.assertFalse(book.has("HALT"))
+        px = features.prices(self.bank, ["AAA", "HALT"], asof, retrieved_by=asof)
+        self.assertEqual(px.retrieved_by, asof)
+        self.assertEqual(px.snapshots()["SPY"], at_declare.snapshot["SPY"].id)
+        self.assertNotIn("HALT", px.snapshots())
+        key1 = features.cache_key(self.bank, ["AAA", "HALT"], days[-30:], asof, 5, retrieved_by=asof)
+        self.assertEqual(key1["snapshots_sha"], key0["snapshots_sha"])
+        self.assertEqual(key1["snapshots_sha"],
+                         features.snapshots_sha(self.bank, ["AAA", "HALT"], asof, retrieved_by=asof))
+        self.assertNotEqual(features.cache_key(self.bank, ["AAA", "HALT"], days[-30:], asof, 5)["snapshots_sha"],
+                            key0["snapshots_sha"])                      # unpinned, the re-fetch is read
+
+
 # ---------- the ledger: declare, test, refusals, trials, verdicts ----------
 class Pipeline(TempHome):
     def setUp(self):
@@ -352,7 +430,7 @@ class Pipeline(TempHome):
         st.enter_context(mock.patch.object(config, "LEDGER", self.home / "ledger.jsonl"))
         st.enter_context(mock.patch.object(config, "RESULTS", self.home / "RESULTS.md"))
         st.enter_context(mock.patch.object(ft, "tree_dirty", lambda: list(dirty)))
-        st.enter_context(mock.patch.object(ft, "lineage_problem", lambda commit: lineage))
+        st.enter_context(mock.patch.object(ft, "lineage_problem", lambda commit, llm=False: lineage))
         return st
 
     def declare(self, **kw):
@@ -403,6 +481,7 @@ class Pipeline(TempHome):
         self.assertEqual(len(c["per_date"]), 8)
         self.assertEqual({t for _, t, _ in self.think.asked}, set(F1D))
         self.assertEqual(len(self.think.asked), 8 * 12)
+        self.assertEqual(set(self.think.no_think), {True})      # the declaration's pinned /no_think decision, each time
 
     def test_declare_pins_anchor_prices_code_and_model(self):
         with self.real_mode():
@@ -413,26 +492,42 @@ class Pipeline(TempHome):
             self.assertEqual(len({s["prices_asof"] for s in sp.values()}), 1)
             for s in sp.values():
                 self.assertEqual(s["kind"], "forecast")
-                self.assertEqual(s["code_sha"], ft.code_sha())
+                # F1d's code_sha also covers its LLM files
+                self.assertEqual(s["code_sha"], ft.code_sha(llm=s["forecaster"] == "F1-llm"))
                 self.assertEqual(s["LEARN"], json.loads(json.dumps(SMALL)))
                 self.assertEqual(s["FEATURES"]["names"], list(StubFeatures.NAMES))
                 self.assertEqual(s["universe"], "universe/us_broad.json")
                 self.assertEqual(s["universe_sha"], run.universe_sha("universe/us_broad.json"))
-            self.assertEqual(sp["F1d-llm-w5-recent"]["llm"], {"model": "qwen3:8b", "digest": "sha256:aaa", "cutoff": "2010-01",
+            self.assertEqual(sp["F1d-llm-w5-recent"]["llm"], {"model": "qwen3:8b", "digest": "sha256:aaa",
+                                                              "no_think": True, "cutoff": "2010-01",
                                                               "temperature": 0, "seed": 7, "primer_sha": "primer0",
                                                               "prompt_sha": ft._sha(StubThink.PROMPT),
                                                               "snapshot_version": 1})
             self.assertEqual(sp["F1b-w5-test"]["window"]["last_exit"],
                              self.px.dates[int(np.searchsorted(self.px.dates, sp["F1a-w5-recent"]["window"]["first"])) + 1])
             self.assertEqual(self.declare(llm_cutoff="2010-01"), [])     # already declared: nothing new
-            # new prices since: the declared anchor and prices_asof stay as pinned
+            # new prices since, fetched after the declaration (more sessions and revised closes): the declared
+            # anchor, prices_asof and the book the run reads stay as pinned
+            asof = sp["F1a-w5-recent"]["prices_asof"]
+            pinned = list(ft.calendar(self.bank, asof))
             days = pd.bdate_range("2009-01-01", "2019-09-30").strftime("%Y-%m-%d").tolist()
-            self.bank.add(price_snapshot("SPY", days, list(np.linspace(90, 130, len(days)))))
+            self.bank.add(dataclasses.replace(price_snapshot("SPY", days, list(np.linspace(90, 130, len(days)))),
+                                              retrieved_at=later(asof)))
             self.assertEqual(ft.declared("F1b-w5-test", config.LEDGER)["spec"]["anchor"], self.px.dates[-1])
+            self.assertEqual(list(ft.calendar(self.bank, asof)), pinned)          # the later fetch is not read
+            self.assertEqual(pinned, list(self.px.dates))
             out = self.run_tests(["F1a-w5-recent"])
             self.assertEqual(out[0]["anchor"], self.px.dates[-1])
-            self.assertEqual(out[0]["prices_asof"], sp["F1a-w5-recent"]["prices_asof"])
+            self.assertEqual(out[0]["prices_asof"], asof)
             self.assertEqual(out[0]["plan"]["last_exit"], self.px.dates[-1])
+            # a snapshot the pin cannot place in time (no retrieval time, known before prices_asof) changes the book
+            # the run would read: refused, not run on other prices than the declaration's
+            j = self.px.tickers.index("S00")
+            self.bank.add(price_snapshot("S00", list(self.px.dates), list(self.px.adj[:, j] * 1.01)))
+            with self.assertRaises(ft.Refused) as cm:
+                self.run_tests(["F1b-w5-test"])
+            self.assertIn("price snapshots", str(cm.exception))
+            self.assertEqual(sp["F1b-w5-test"]["snapshots_sha"], sp["F1a-w5-recent"]["snapshots_sha"])
 
     def test_declare_refusals(self):
         with self.real_mode(dirty=["?? brain/forecast/new.py"]):
@@ -462,7 +557,7 @@ class Pipeline(TempHome):
             self.declare(llm_cutoff="2010-01")
             with self.assertRaises(ft.Refused):
                 self.run_tests(["F9-nothing"])
-            with mock.patch.object(ft, "code_sha", lambda: "0" * 16):
+            with mock.patch.object(ft, "code_sha", lambda llm=False: "0" * 16):
                 with self.assertRaises(ft.Refused) as cm:
                     self.run_tests(["F1a-w5-recent"])
                 self.assertIn("code has changed", str(cm.exception))
@@ -497,6 +592,47 @@ class Pipeline(TempHome):
             self.assertIn("descendant", str(cm.exception))
         self.assertEqual(sum(r["op"] == "result" for r in ledger.read(self.home / "ledger.jsonl")), 1)
 
+    def test_no_declaration_after_an_overlapping_result(self):
+        with self.real_mode():
+            self.assertEqual([r["id"] for r in self.declare()], ["F1a-w5-recent", "F1b-w5-test", "F1c-m21-test"])
+            self.assertTrue(any("once any of them has a result" in m for m in self.log))
+            self.run_tests(["F1a-w5-recent"])
+            before = config.LEDGER.read_bytes()
+            # F1d would pin a model, primer and prompt chosen with F1a's numbers on the same 8 weeks in view
+            self.think.digest = "sha256:chosen-after-seeing-F1a"
+            with self.assertRaises(ft.Refused) as cm:
+                self.declare(llm_cutoff="2010-01")
+            self.assertIn("F1d-llm-w5-recent", str(cm.exception))
+            self.assertIn("overlaps F1a-w5-recent", str(cm.exception))
+            self.assertIn("brain research withdraw F1d-llm-w5-recent", str(cm.exception))
+            self.assertEqual(config.LEDGER.read_bytes(), before)               # refused before writing anything
+            # recorded as dropped: never declared, and the declare says so
+            ledger.withdraw("F1d-llm-w5-recent", "dropped: not declared before F1a's result", config.LEDGER)
+            self.log.clear()
+            self.assertEqual(self.declare(llm_cutoff="2010-01"), [])
+            self.assertTrue(any("withdrawn (dropped) before it was declared" in m for m in self.log))
+            self.assertIsNone(ft.declared("F1d-llm-w5-recent", config.LEDGER))
+            # a withdrawn declared test is not run either
+            ledger.withdraw("F1c-m21-test", "a mistake", config.LEDGER)
+            with self.assertRaises(ft.Refused) as cm:
+                self.run_tests(["F1c-m21-test"])
+            self.assertIn("withdrawn (a mistake)", str(cm.exception))
+
+    def test_a_withdrawn_result_does_not_block_and_a_trial_only_warns(self):
+        with self.real_mode():
+            self.declare(ids=["F1a-w5-recent"])
+            self.run_tests(["F1a-w5-recent"])
+            with self.assertRaises(ft.Refused):                                # F1b's last window ends at F1a's entry
+                self.declare(ids=["F1b-w5-test"])
+            ledger.withdraw("F1a-w5-recent", "a mistake in the code", config.LEDGER)   # recorded, with its reason
+            self.assertEqual([r["id"] for r in self.declare(ids=["F1b-w5-test"])], ["F1b-w5-test"])
+        # a trial (TRAIN years) declares late with a warning: plumbing, not evidence
+        self.declare()
+        self.run_tests(["F1a-w5-recent"])
+        self.log.clear()
+        self.assertEqual([r["id"] for r in self.declare(llm_cutoff="2010-01")], ["F1d-llm-w5-recent"])
+        self.assertTrue(any(m.startswith("trial: F1d-llm-w5-recent: its window") for m in self.log))
+
     def test_gated_results_carry_p_controls_and_enter_the_report(self):
         with self.real_mode():
             self.declare()
@@ -518,6 +654,9 @@ class Pipeline(TempHome):
         self.assertIn("**REPORT** |", text)
         self.assertIn("### Calibration", text)
         self.assertIn("the 68% band held", text)
+        # the placebo checks the sign-flip test, not the forecaster: RESULTS.md says so and claims nothing more
+        self.assertIn("a check of the sign-flip test itself, not of the forecaster", text)
+        self.assertIn("a check of the test itself", ft.summary(b))
 
     def test_cli_registers_declare_and_test(self):
         sub = argparse.ArgumentParser().add_subparsers(dest="cmd")
@@ -537,6 +676,47 @@ class Pipeline(TempHome):
             self.assertEqual(ft.cmd(argparse.Namespace(words=["score"])), 2)   # not this module's word
         self.assertIn("nothing new to declare", out.getvalue())
         self.assertIn("trial: TRAIN years only", err.getvalue())
+
+
+class CodeShaTest(unittest.TestCase):
+    """What ``code_sha`` and the HEAD-lineage check cover: a change to any of it after the declare is refused."""
+    F1_MODULES = ("brain/bank.py", "brain/timeutil.py", "brain/sources/sec.py", "brain/research/run.py",
+                  "brain/metrics.py", "brain/research/forecast_tests.py", "docs/MARKET_PRIMER.md", "brain/forecast")
+    LLM_MODULES = ("brain/judge.py", "brain/llm.py", "brain/terminal/analyst.py")
+
+    def test_the_point_in_time_view_and_the_models_helpers_are_pinned(self):
+        f1, f1d = ft._code_paths(), ft._code_paths(llm=True)
+        for p in self.F1_MODULES:
+            self.assertIn(p, f1)
+            self.assertIn(p, f1d)
+        for p in self.LLM_MODULES:                                     # F1d's alone: F1's tests do not wait on them
+            self.assertNotIn(p, f1)
+            self.assertIn(p, f1d)
+        self.assertNotEqual(ft.code_sha(), ft.code_sha(llm=True))
+
+    def edited(self, rel):
+        target, real = (config.ROOT / rel).resolve(), Path.read_bytes
+
+        def read(p):
+            b = real(p)
+            return b + b"\n# edited after the declare\n" if Path(p).resolve() == target else b
+        return mock.patch.object(Path, "read_bytes", read)
+
+    def test_an_edit_to_the_view_changes_the_shas_and_the_feature_cache_key(self):
+        from brain.forecast import features
+        before = (ft.code_sha(), ft.code_sha(llm=True), features.deps_sha())
+        for rel in ("brain/bank.py", "brain/timeutil.py", "brain/sources/sec.py"):
+            with self.subTest(rel=rel), self.edited(rel):
+                after = (ft.code_sha(), ft.code_sha(llm=True), features.deps_sha())
+                for a, b in zip(before, after):
+                    self.assertNotEqual(a, b)
+        with self.edited("brain/research/run.py"):                    # the verdicts: the tests' code, not a feature
+            self.assertNotEqual(ft.code_sha(), before[0])
+            self.assertEqual(features.deps_sha(), before[2])
+        for rel in self.LLM_MODULES:
+            with self.subTest(rel=rel), self.edited(rel):
+                self.assertEqual(ft.code_sha(), before[0])
+                self.assertNotEqual(ft.code_sha(llm=True), before[1])
 
 
 def frec(i, p=None, gate=True, ctl=True, gated=True):

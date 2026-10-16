@@ -3,15 +3,19 @@ sections 7 and 8).
 
 ``brain forecast declare`` writes each test's full spec into the research ledger: the test as written below,
 the universe and its sha, LEARN, RANGE, the feature names, the anchor and ``prices_asof`` (pinned now), the
-gate's details and ``code_sha`` (every file under ``brain/forecast/``, the modules the features read, this
-file and the market primer). For F1d it also pins the local model: its name, its weights' digest, its stated
-training cutoff, the primer's and the prompt's shas. It refuses unless the working tree is clean for
-``brain/`` and the primer.
+price snapshots a book pinned there reads (``snapshots_sha``), the gate's details and ``code_sha`` (every
+file under ``brain/forecast/``, the modules the features read, the bank's View and the time helpers, this
+file, research/run.py and the market primer; F1d's also the judge, the model client and the analyst's reply
+reader). For F1d it also pins the local model: its name, its weights' digest, its /no_think decision, its
+stated training cutoff, the primer's and the prompt's shas. It refuses unless the working tree is clean for
+``brain/`` and the primer, and it refuses a test whose window overlaps one that already has a result: F1d is
+declared with F1a-F1c, or recorded as dropped with ``research withdraw``.
 
-``brain forecast test ID...`` refuses unless the test is declared with this very spec, the code is the
-declared code (clean tree, HEAD the declare commit or a descendant that leaves it unchanged), F1d's model
-is the declared one, and no result exists yet for that id and spec. A rerun needs ``research withdraw``
-and a new id.
+``brain forecast test ID...`` refuses unless the test is declared with this very spec and not withdrawn, the
+code is the declared code (clean tree, HEAD the declare commit or a descendant that leaves it unchanged), the
+price snapshots are the declared ones, F1d's model is the declared one, and no result exists yet for that id
+and spec. A rerun needs ``research withdraw`` and a new id. Every price the run reads comes from a book
+pinned at ``prices_asof``: a snapshot fetched after it is never read.
 
 **Trials.** With ``--trial``, a ledger other than ``research/ledger.jsonl`` (BRAIN_LEDGER) or a MONEY_HOME
 other than ``var/``, everything runs on TRAIN years only: every anchor becomes the last session of 2018, the
@@ -51,8 +55,8 @@ FORECAST_TESTS = [
     {"id": "F1d-llm-w5-recent", "forecaster": "F1-llm", "horizon": 5, "periods": 8, "gate": "report",
      "tickers": ["AAPL", "NVDA", "MSFT", "AMZN", "GOOGL", "JPM", "CVX", "JNJ", "PG", "WMT", "KO", "CAT"],
      "retrain": "F1a's model",
-     "claim": "Retest on F1a's 8 weeks and these 12 stocks: does the local model's probability, given F1's forecast, a "
-              "point-in-time snapshot and the market primer, have a lower Brier score than F1 alone? Descriptive."},
+     "claim": "Retest on F1a's 8 weeks and these 12 stocks: does the local model's own probability, from a point-in-time "
+              "snapshot and the market primer without F1's forecast, have a lower Brier score than F1? Descriptive."},
 ]
 BY_ID = {t["id"]: t for t in FORECAST_TESTS}
 RECENT = "F1a-w5-recent"          # its first date ends F1b's window, and its model is F1d's
@@ -73,7 +77,9 @@ GATE_DETAILS = {
            "bh_over": "every hypothesis and gated forecast test with a result in the ledger, withdrawn ones included",
            "controls": {"oracle": "p_beat = the realised excess rank; must reach the test's minimum attainable p",
                         "placebo": "F1's p_beat with each date's sign flipped by a fair coin; the test must reject "
-                                   "in 1%-10% of the draws", "placebo_draws": evaluate.PLACEBO},
+                                   "in 1%-10% of the draws. A check of the sign-flip test itself, not of the "
+                                   "forecaster: coin-flipped signs pass about 5% of the time for any series, a "
+                                   "look-ahead leak included", "placebo_draws": evaluate.PLACEBO},
            "diagnostic": {"within_date_permutation": evaluate.PERMUTATION,
                           "note": "reported only: it ignores how stocks move together"},
            "trial_start": evaluate.TRIAL_START},
@@ -125,33 +131,49 @@ def paths(trial: bool) -> tuple[Path, Path]:
 # ---------- pinning ----------
 def dep_files() -> list[Path]:
     """The modules outside brain/forecast/ that compute a feature or the label (``features._DEPS``: metrics,
-    events, claims, sources/insiders, research/signals, series). A change to one changes F1's numbers."""
+    events, claims, sources/insiders, research/signals, series, the bank's point-in-time View, timeutil and
+    sources/sec's concept lists). A change to one changes F1's numbers."""
     from brain.forecast import features  # the real module, even when a test stands in for it elsewhere
     return [Path(m.__file__).resolve() for m in features._DEPS]
 
 
-def code_files() -> list[Path]:
-    """Every file under brain/forecast/ (bytecode caches aside), the modules the features read, this file and
-    the primer."""
+def llm_files() -> list[Path]:
+    """What F1d's answers also run through: the judge (the primer's loading, ``clean``, ``canonical_model``), the
+    model client and the analyst's reply reader (``_content``, ``expired``)."""
+    from brain import judge, llm
+    from brain.terminal import analyst
+    return [Path(m.__file__).resolve() for m in (judge, llm, analyst)]
+
+
+def code_files(llm: bool = False) -> list[Path]:
+    """Every file under brain/forecast/ (bytecode caches aside), the modules the features read, this file, the
+    verdicts and universe readers (research/run.py) and the primer; with ``llm`` (F1d) also ``llm_files``."""
+    from brain.research import run
     out = [p for p in sorted(CODE_DIR.rglob("*")) if p.is_file() and "__pycache__" not in p.parts
            and p.suffix not in (".pyc", ".pyo")]
-    return [*out, *dep_files(), Path(__file__).resolve(), PRIMER]
+    out = [*out, *dep_files(), Path(__file__).resolve(), Path(run.__file__).resolve(), PRIMER]
+    return [*out, *llm_files()] if llm else out
 
 
-def code_sha() -> str:
-    """sha256[:16] over each code file's path (from the repo root) and bytes; a missing primer counts as missing."""
+def code_sha(llm: bool = False) -> str:
+    """sha256[:16] over each code file's path (from the repo root) and bytes; a missing primer counts as missing.
+    ``llm``: F1d's, which also covers ``llm_files``."""
     h = hashlib.sha256()
-    for p in code_files():
+    for p in code_files(llm):
         rel = p.resolve().relative_to(config.ROOT.resolve()).as_posix() if p.resolve().is_relative_to(config.ROOT.resolve()) else p.name
         h.update(rel.encode() + b"\0")
         h.update(hashlib.sha256(p.read_bytes()).digest() if p.exists() else b"missing")
     return h.hexdigest()[:16]
 
 
-def _code_paths() -> list[str]:
+def _code_paths(llm: bool = False) -> list[str]:
     root = config.ROOT.resolve()
-    return sorted({p.resolve().relative_to(root).as_posix() for p in code_files() if p.resolve().is_relative_to(root)}
+    return sorted({p.resolve().relative_to(root).as_posix() for p in code_files(llm) if p.resolve().is_relative_to(root)}
                   | {"brain/forecast"})
+
+
+def _is_llm(test_id: str) -> bool:
+    return BY_ID.get(test_id, {}).get("forecaster") == "F1-llm"
 
 
 def _git(*args) -> subprocess.CompletedProcess:
@@ -170,14 +192,15 @@ def tree_dirty() -> list[str]:
     return [line for line in r.stdout.splitlines() if line.strip()]
 
 
-def lineage_problem(commit: str | None) -> str | None:
-    """None when HEAD is ``commit`` or a descendant that leaves every code file unchanged; else why not."""
+def lineage_problem(commit: str | None, llm: bool = False) -> str | None:
+    """None when HEAD is ``commit`` or a descendant that leaves every code file unchanged (``llm``: F1d's
+    files too); else why not."""
     if not commit:
         return "the declaration has no commit (git was not available at declare)"
     try:
         if _git("merge-base", "--is-ancestor", commit, "HEAD").returncode != 0:
             return f"HEAD is not the declare commit {commit[:12]} or a descendant of it"
-        d = _git("diff", "--name-only", commit, "HEAD", "--", *_code_paths())
+        d = _git("diff", "--name-only", commit, "HEAD", "--", *_code_paths(llm))
     except OSError as e:
         return f"git: {e}"
     if d.returncode != 0:
@@ -224,7 +247,9 @@ def _client(client=None):
 
 
 def llm_identity(client=None, think=None) -> dict:
-    """{"model", "digest"} of the live local model; Refused when it cannot be read."""
+    """{"model", "digest", "no_think"} of the live local model; Refused when it cannot be read. ``no_think``
+    is whether the requests end each user turn with /no_think, decided by the served model (a Qwen3), not
+    by the name the client asks for: llama.cpp serves its one file whatever name a request carries."""
     think = think or _think()
     try:
         ident = think.llm_identity(_client(client)) or {}
@@ -232,7 +257,9 @@ def llm_identity(client=None, think=None) -> dict:
         raise Refused(f"F1d: cannot read the local model's identity ({type(e).__name__}: {e})") from None
     if not ident.get("model") or not ident.get("digest"):
         raise Refused(f"F1d: the local model's name and weights digest are needed; the server gave {ident!r}")
-    return {"model": str(ident["model"]), "digest": str(ident["digest"])}
+    family = getattr(think, "is_qwen3", None)
+    return {"model": str(ident["model"]), "digest": str(ident["digest"]),
+            "no_think": bool(family(ident["model"])) if callable(family) else None}
 
 
 # ---------- the spec ----------
@@ -242,9 +269,9 @@ def universe_tickers() -> list[str]:
 
 
 def calendar(bank, prices_asof: str):
-    """SPY's sessions in the book at ``prices_asof``."""
+    """SPY's sessions in the book pinned at ``prices_asof`` (snapshots fetched by then)."""
     from brain.metrics import PriceBook
-    book = PriceBook(bank, [BENCH], prices_asof)
+    book = PriceBook(bank, [BENCH], prices_asof, retrieved_by=prices_asof)
     if not book.has(BENCH):
         raise Refused(f"no {BENCH} price snapshot known at {prices_asof}")
     return book.dates[BENCH]
@@ -255,7 +282,16 @@ def _features_pin() -> dict:
     return {"version": features.FEATURES_VERSION, "names": [n for n, _, _ in features.FEATURES]}
 
 
-def fill(test: dict, *, anchor: str, prices_asof: str, code: str, window: dict, trial: bool, llm: dict | None = None) -> dict:
+def snapshots_pin(bank, prices_asof: str) -> str:
+    """The sha of the price snapshot ids the run reads at ``prices_asof`` (every universe stock, SPY, ^VIX;
+    only snapshots fetched by then): ``features.snapshots_sha``, the same value as the result's
+    ``cache_key.snapshots_sha``."""
+    from brain.forecast import features  # the real reader, even when a test stands in for the engine
+    return features.snapshots_sha(bank, universe_tickers(), prices_asof, retrieved_by=prices_asof)
+
+
+def fill(test: dict, *, anchor: str, prices_asof: str, code: str, window: dict, trial: bool, llm: dict | None = None,
+         snapshots: str | None = None) -> dict:
     """The full declared spec of ``test``: what the spec sha covers."""
     from brain.research import run
     gate = dict(GATE_DETAILS[test["gate"]])
@@ -263,7 +299,8 @@ def fill(test: dict, *, anchor: str, prices_asof: str, code: str, window: dict, 
         gate["detects_mean_ic"] = DETECTS[test["id"]]
     spec = {**test, "kind": "forecast", "universe": UNIVERSE, "universe_sha": run.universe_sha(UNIVERSE),
             "LEARN": learn.LEARN, "RANGE": learn.RANGE, "FEATURES": _features_pin(), "anchor": anchor,
-            "prices_asof": prices_asof, "code_sha": code, "gate_details": gate, "window": window, "trial": bool(trial)}
+            "prices_asof": prices_asof, "snapshots_sha": snapshots, "code_sha": code, "gate_details": gate,
+            "window": window, "trial": bool(trial)}
     if test["forecaster"] == "F1-llm":
         spec["llm"] = llm
     return json.loads(json.dumps(spec))   # tuples become lists: the sha is the stored spec's
@@ -295,9 +332,33 @@ def _say(log, msg):
 
 
 # ---------- declare ----------
+def _span(r: dict) -> tuple[str, str] | None:
+    """(first forecast date, last exit) of a recorded result: the sessions its numbers were computed on."""
+    pl = r.get("plan") or {}
+    first, last = pl.get("first"), pl.get("last_exit") or pl.get("last")
+    return (str(first), str(last)) if first and last else None
+
+
+def _overlapping(t: dict, w: dict, led) -> list[str]:
+    """The tests with a recorded result (not withdrawn) whose window overlaps ``t``'s window ``w``."""
+    gone = ledger.withdrawn(led)
+    out = []
+    for r in _forecast_records(led):
+        span = _span(r) if r["op"] == "result" and r["id"] not in gone else None
+        if span and w.get("first") and w.get("last_exit") and w["first"] <= span[1] and span[0] <= w["last_exit"]:
+            out.append(f"{r['id']} ({span[0]}..{span[1]}, recorded {str(r.get('at', ''))[:10]})")
+    return sorted(set(out))
+
+
 def declare(bank, *, llm_cutoff: str | None = None, trial: bool = False, ids=None, client=None, think=None,
             log=print) -> list[dict]:
-    """Append a declaration for each forecast test not yet declared in the ledger (all, or ``ids``)."""
+    """Append a declaration for each forecast test not yet declared in the ledger (all, or ``ids``).
+
+    A test whose window overlaps one that already has a result (not withdrawn) is refused: what it pins (for
+    F1d the model, the primer and the prompt) could then be chosen with that result in view. So F1d is
+    declared with F1a-F1c, before any of them runs, or recorded as dropped with ``brain research withdraw
+    F1d-llm-w5-recent --reason "..."``: a test withdrawn before it was declared is never declared. In a
+    trial (TRAIN years, not evidence) the overlap is a warning."""
     trial = is_trial(trial)
     led, _ = paths(trial)
     dirty = tree_dirty()
@@ -311,6 +372,11 @@ def declare(bank, *, llm_cutoff: str | None = None, trial: bool = False, ids=Non
         if i not in BY_ID:
             raise Refused(f"no forecast test {i!r}; declared tests: {', '.join(BY_ID)}")
     todo = [t for t in FORECAST_TESTS if t["id"] not in known and (not ids or t["id"] in ids)]
+    gone = ledger.withdrawn(led)
+    for t in todo:
+        if t["id"] in gone:
+            _say(log, f"{t['id']} not declared: it was withdrawn (dropped) before it was declared ({gone[t['id']]})")
+    todo = [t for t in todo if t["id"] not in gone]
     if not todo:
         return []
     first = known.get(RECENT) or next(iter(known.values()), None)
@@ -324,31 +390,44 @@ def declare(bank, *, llm_cutoff: str | None = None, trial: bool = False, ids=Non
             anchor = evaluate.trial_anchor(cal)
         else:
             from brain.metrics import PriceBook
-            anchor = evaluate.find_anchor(PriceBook(bank, [*universe_tickers(), BENCH], asof), universe_tickers(), BENCH)
+            anchor = evaluate.find_anchor(PriceBook(bank, [*universe_tickers(), BENCH], asof, retrieved_by=asof),
+                                          universe_tickers(), BENCH)
     if trial and anchor > evaluate.TRIAL_LAST:
         raise Refused(f"trial ledger {led} holds a declaration anchored at {anchor}, after {evaluate.TRIAL_LAST}")
+    if not llm_cutoff and any(t["forecaster"] == "F1-llm" for t in todo):
+        todo = [t for t in todo if t["forecaster"] != "F1-llm"]
+        _say(log, "F1d not declared: it needs --llm-cutoff YYYY-MM (the local model's stated training-data cutoff). "
+                  "Declare it now, with F1a-F1c, or drop it (`brain research withdraw F1d-llm-w5-recent --reason ...`): "
+                  "once any of them has a result it can no longer be declared")
+    windows = {t["id"]: window(t, cal, anchor, trial) for t in todo}
+    for t in todo:
+        seen = _overlapping(t, windows[t["id"]], led)
+        if seen:
+            msg = (f"{t['id']}: its window {windows[t['id']]['first']}..{windows[t['id']]['last_exit']} overlaps "
+                   f"{'; '.join(seen)}, which already has a result, so what it pins could be chosen with that result "
+                   "in view. A test is declared before any overlapping one runs; record a test that missed that as "
+                   f"dropped: brain research withdraw {t['id']} --reason \"...\"")
+            if not trial:
+                raise Refused(f"declare refused. {msg}")
+            _say(log, f"trial: {msg}; declared anyway (a trial is not evidence)")
     llm = None
     if any(t["forecaster"] == "F1-llm" for t in todo):
-        if not llm_cutoff:
-            todo = [t for t in todo if t["forecaster"] != "F1-llm"]
-            _say(log, "F1d not declared: it needs --llm-cutoff YYYY-MM (the local model's stated training-data cutoff)")
-        else:
-            if not re.fullmatch(r"\d{4}-(0[1-9]|1[0-2])", llm_cutoff):
-                raise Refused(f"--llm-cutoff is YYYY-MM, not {llm_cutoff!r}")
-            d8 = window(BY_ID[RECENT], cal, anchor, trial)["first"]
-            if not llm_cutoff < d8[:7]:
-                msg = (f"F1d: the model's training cutoff {llm_cutoff} is not earlier than F1a's first forecast "
-                       f"date {d8}, so it may have read about the weeks it would forecast")
-                if not trial:
-                    raise Refused(f"declare refused. {msg}.")
-                _say(log, f"trial: {msg}; declared anyway (a trial is not evidence)")
-            think = think or _think()
-            llm = {**llm_identity(client, think), "cutoff": llm_cutoff, **LLM_FIXED, **llm_pins(think)}
-    code = code_sha()
+        if not re.fullmatch(r"\d{4}-(0[1-9]|1[0-2])", llm_cutoff):
+            raise Refused(f"--llm-cutoff is YYYY-MM, not {llm_cutoff!r}")
+        d8 = window(BY_ID[RECENT], cal, anchor, trial)["first"]
+        if not llm_cutoff < d8[:7]:
+            msg = (f"F1d: the model's training cutoff {llm_cutoff} is not earlier than F1a's first forecast "
+                   f"date {d8}, so it may have read about the weeks it would forecast")
+            if not trial:
+                raise Refused(f"declare refused. {msg}.")
+            _say(log, f"trial: {msg}; declared anyway (a trial is not evidence)")
+        think = think or _think()
+        llm = {**llm_identity(client, think), "cutoff": llm_cutoff, **LLM_FIXED, **llm_pins(think)}
+    snaps = snapshots_pin(bank, asof)
     out = []
     for t in todo:
-        spec = fill(t, anchor=anchor, prices_asof=asof, code=code, window=window(t, cal, anchor, trial), trial=trial,
-                    llm=llm)
+        spec = fill(t, anchor=anchor, prices_asof=asof, code=code_sha(llm=_is_llm(t["id"])), window=windows[t["id"]],
+                    trial=trial, llm=llm, snapshots=snaps)
         rec = {"op": "declare", "kind": "forecast", "id": t["id"], "spec_sha": spec_sha(spec), "spec": spec,
                "at": now_iso(), **ledger.git_state()}
         ledger.append(rec, led)
@@ -364,8 +443,12 @@ def check(test_id: str, *, trial: bool, led, bank, client=None, think=None, cal_
     d = declared(test_id, led)
     if d is None:
         raise Refused(f"{test_id} is not declared in {led}. Run `brain forecast declare`, commit, then test.")
+    gone = ledger.withdrawn(led)
+    if test_id in gone:
+        raise Refused(f"{test_id} was withdrawn ({gone[test_id]}): a withdrawn test is not run. Declare a new id.")
     sp = d["spec"]
-    code = code_sha()
+    llm = _is_llm(test_id)
+    code = code_sha(llm)
     if code != sp.get("code_sha"):
         raise Refused(f"{test_id}: the code has changed since it was declared (code_sha {code}, declared "
                       f"{sp.get('code_sha')}). A changed forecaster is a new test: declare a new id.")
@@ -373,9 +456,17 @@ def check(test_id: str, *, trial: bool, led, bank, client=None, think=None, cal_
     if sp["prices_asof"] not in cal_cache:
         cal_cache[sp["prices_asof"]] = calendar(bank, sp["prices_asof"])
     cal = cal_cache[sp["prices_asof"]]
+    pin = ("snapshots", sp["prices_asof"])
+    if pin not in cal_cache:
+        cal_cache[pin] = snapshots_pin(bank, sp["prices_asof"])
+    if cal_cache[pin] != sp.get("snapshots_sha"):
+        raise Refused(f"{test_id}: the price snapshots a book pinned at {sp['prices_asof']} reads are not the ones "
+                      f"its declaration pinned (snapshots_sha {cal_cache[pin]}, declared {sp.get('snapshots_sha')}): "
+                      "a snapshot was downgraded, or one with no retrieval time was added. The run would read other "
+                      "prices than the declaration's: declare a new id.")
     now = fill(BY_ID[test_id], anchor=sp["anchor"], prices_asof=sp["prices_asof"], code=code,
                window=window(BY_ID[test_id], cal, sp["anchor"], bool(sp.get("trial"))), trial=bool(sp.get("trial")),
-               llm=sp.get("llm"))
+               llm=sp.get("llm"), snapshots=cal_cache[pin])
     if spec_sha(now) != d["spec_sha"] or spec_sha(sp) != d["spec_sha"]:
         changed = sorted(k for k in set(now) | set(sp) if now.get(k) != sp.get(k))
         raise Refused(f"{test_id}: its spec no longer matches the declaration (changed: {', '.join(changed) or 'sha'}). "
@@ -385,10 +476,10 @@ def check(test_id: str, *, trial: bool, led, bank, client=None, think=None, cal_
         if dirty:
             raise Refused(f"{test_id}: the working tree is not clean for brain/ and docs/MARKET_PRIMER.md "
                           f"({'; '.join(dirty[:5])})")
-        why = lineage_problem(d.get("commit"))
+        why = lineage_problem(d.get("commit"), llm=llm)
         if why:
             raise Refused(f"{test_id}: {why}")
-    if BY_ID[test_id]["forecaster"] == "F1-llm":
+    if llm:
         think = think or _think()
         want = sp.get("llm") or {}
         ident = llm_identity(client, think)
@@ -435,8 +526,9 @@ def _run_all(bank, decls, cals, tickers, cache, out, *, trial, led, client, thin
                   f"{sp['prices_asof']}")
         kw = {"anchor": anchor, "prices_asof": sp["prices_asof"], "tickers": tickers, "cal": cal, "trial": trial,
               "log": log, "cache": cache}
-        if t["forecaster"] == "F1-llm":
-            body = evaluate.run_llm(bank, t, client=_client(client), think=think, **kw)
+        if t["forecaster"] == "F1-llm":   # the /no_think decision its declaration pinned
+            body = evaluate.run_llm(bank, t, client=_client(client), think=think,
+                                    no_think=(sp.get("llm") or {}).get("no_think"), **kw)
         else:
             body = evaluate.run(bank, t, recent_periods=int(BY_ID[RECENT]["periods"]), detects=DETECTS.get(test_id), **kw)
         rec = {"op": "result", "kind": "forecast", "id": test_id, "spec_sha": d["spec_sha"], "at": now_iso(),
@@ -490,7 +582,8 @@ def summary(rec: dict) -> str:
     if rec.get("gate_type") == "ic":
         c = rec["controls"]
         return (head + f" (p {_f(rec.get('p'), '.4f')}); controls {'pass' if c['pass'] else 'FAIL'} (oracle p "
-                f"{_f(c['oracle_p'], '.5f')}, placebo {_f(c['placebo_reject_rate'], '.1%')})" + tail)
+                f"{_f(c['oracle_p'], '.5f')}, placebo {_f(c['placebo_reject_rate'], '.1%')}, a check of the test "
+                "itself)" + tail)
     return head + f" (90% {_f(sn['lo90'])}..{_f(sn['hi90'])}), {m.get('label')}" + tail
 
 

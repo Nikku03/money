@@ -14,7 +14,7 @@ There are two forecasters.
   - fundamentals;
   - behavioural signals (how people over- and under-react);
   - the market regime.
-- **F1-llm, "thinking".** The local open-weight model reads a point-in-time snapshot of the stock, F1's numbers and a primer on how markets and people work (`docs/MARKET_PRIMER.md`). It then gives its own probability.
+- **F1-llm, "thinking".** The local open-weight model reads a point-in-time snapshot of the stock and a primer on how markets and people work (`docs/MARKET_PRIMER.md`). It then gives its own probability. It is not shown F1's forecast: shown it, the small models tried here copied F1's number every time.
 
 Everything is tested before it is believed. The tests in section 7 are declared in the research ledger, with their code, primer and model pinned, and committed **before** they run. Forecasts are paper only: nothing here trades.
 
@@ -50,7 +50,8 @@ Each group edits only its files and codes against this contract for the others. 
 - Development uses synthetic banks, or real data in the TRAIN years (2011-2018) only.
 - Trial mode (section 8) enforces this.
 - The held-out years are computed once, by the recorded runs.
-- Live forecasts enforce it too: on the real bank (MONEY_HOME unset or `var/`) `brain forecast TICKER` refuses until the committed ledger holds a non-trial result for each of F1a, F1b and F1c (section 10).
+- Live forecasts enforce it too, by the bank's own prices rather than its path. When SPY's prices in the bank run past 2018-12-31 (the real bank, or a copy of it under any MONEY_HOME), `brain forecast TICKER` refuses until the committed ledger (HEAD's `research/ledger.jsonl`; uncommitted lines and trial results do not count) holds a result for each of F1a, F1b and F1c. With `--llm` it also waits until F1d has a result or is withdrawn (section 10).
+- A synthetic test bank with recent dates opts out with `BRAIN_FORECAST_SYNTHETIC=1`. The opt-in never applies to the real home, or to a bank whose SPY snapshot came from the price source (`sources/prices.SOURCE_NAME`).
 
 ---
 
@@ -60,6 +61,7 @@ Each group edits only its files and codes against this contract for the others. 
 
 **Prices.**
 - All prices come from **one `PriceBook` per run, built at the run's pinned `prices_asof`**, plus the same snapshots' daily CSVs for high, low and volume (`series.load`).
+- The book is pinned to the snapshots fetched by `prices_asof` (`PriceBook(..., retrieved_by=prices_asof)`). A snapshot's `known_at` is its last bar's date, not its fetch time, so otherwise a re-fetch after the declaration (same last bar, revised adjusted closes) or a stock first fetched later would be read.
 - Every array is sliced to bars dated `<= d` for features.
 - The bank's price snapshots were all fetched recently, so a book at `asof = T(d)` would have no prices for past `d`.
 - ^VIX comes from rows dated `<= d` in its latest snapshot (history from 2015).
@@ -153,9 +155,9 @@ def feature_set(bank, tickers, grid, prices_asof, h, *, cache=True, workers=None
 - `FEATURES_VERSION`;
 - the sha of `features.py`;
 - the universe sha, grid, h and `prices_asof`;
-- the price-snapshot ids;
+- the price-snapshot ids (`features.snapshots_sha`), with the declared tests' `retrieved_by` pin when there is one;
 - every ticker's journal shard state (size and inode, as `signals._shard_state`);
-- the sha of the modules the features read (`features.deps_sha`: metrics, events, claims, sources/insiders, research/signals, series).
+- the sha of the modules the features read (`features.deps_sha`: metrics, events, claims, sources/insiders, research/signals, series, bank (the point-in-time `View`), timeutil and sources/sec (the revenue concepts `metrics` reads)).
 
 A backfill or a code change recomputes. The key goes into each result.
 
@@ -226,16 +228,18 @@ FORECAST_TESTS = [
   {"id": "F1d-llm-w5-recent", "forecaster": "F1-llm", "horizon": 5, "periods": 8, "gate": "report",
    "tickers": ["AAPL", "NVDA", "MSFT", "AMZN", "GOOGL", "JPM", "CVX", "JNJ", "PG", "WMT", "KO", "CAT"],
    "retrain": "F1a's model",
-   "claim": "Retest on F1a's 8 weeks and these 12 stocks: does the local model's probability, given F1's forecast, a "
-            "point-in-time snapshot and the market primer, have a lower Brier score than F1 alone? Descriptive."},
+   "claim": "Retest on F1a's 8 weeks and these 12 stocks: does the local model's own probability, from a point-in-time "
+            "snapshot and the market primer without F1's forecast, have a lower Brier score than F1? Descriptive."},
 ]
 ```
 **Common spec fields** (`brain forecast declare` fills them in and writes them into the spec, so the spec sha covers them):
 - `"kind": "forecast"`, plus `universe`, `universe_sha`, `LEARN`, `RANGE`, `FEATURES` (names and `FEATURES_VERSION`).
-- `"anchor"`, `"prices_asof"` and `"code_sha"`: the sha of every file under `brain/forecast/`, plus the modules the features read (`brain/metrics.py`, `brain/events.py`, `brain/claims.py`, `brain/sources/insiders.py`, `brain/research/signals.py`, `brain/series.py`), `brain/research/forecast_tests.py` and `docs/MARKET_PRIMER.md`.
+- `"anchor"`, `"prices_asof"` and `"snapshots_sha"`: the sha of the price-snapshot ids a book pinned at `prices_asof` reads (every universe stock, SPY, ^VIX), the same value as the result's `cache_key.snapshots_sha`.
+- `"code_sha"`: the sha of every file under `brain/forecast/`, plus the modules the features read (`brain/metrics.py`, `brain/events.py`, `brain/claims.py`, `brain/sources/insiders.py`, `brain/research/signals.py`, `brain/series.py`, `brain/bank.py`, `brain/timeutil.py`, `brain/sources/sec.py`), `brain/research/forecast_tests.py`, `brain/research/run.py` (the universe reader and the verdicts) and `docs/MARKET_PRIMER.md`. F1d's `code_sha` also covers what its answers run through: `brain/judge.py`, `brain/llm.py` and `brain/terminal/analyst.py`.
 - `"gate"` details.
-- **For F1d:** `"llm"`: `{"model", "digest", "cutoff", "temperature": 0, "seed": 7, "primer_sha", "prompt_sha", "snapshot_version"}`.
+- **For F1d:** `"llm"`: `{"model", "digest", "no_think", "cutoff", "temperature": 0, "seed": 7, "primer_sha", "prompt_sha", "snapshot_version"}`.
   - `digest` is the server's weights digest: Ollama `/api/show`, or the sha256 of a local GGUF file when the server reports a path.
+  - `no_think` is whether the user turns end with `/no_think`: true when the served model (not the name the client asks for) is a Qwen3. The run sends exactly that.
   - `cutoff` is the model's stated training-data cutoff, passed as `--llm-cutoff` at declare. Declare refuses unless it is earlier than F1a's first forecast date.
 
 **Anchor `A`.** The last SPY session for which every universe stock that was listed 5 sessions earlier has a bar dated exactly `A` in the run's book. It is pinned at declare with `prices_asof = now`.
@@ -263,6 +267,7 @@ FORECAST_TESTS = [
 **Controls** (per gated run):
 - **Oracle.** `p_beat` = the realised excess rank. It must reach the test's minimum attainable p.
 - **Placebo.** F1's own `p_beat` with its sign flipped by a fair coin on each date, 200 draws. The gate's test must reject in 1%-10% of draws.
+  - This checks the sign-flip test itself, not the forecaster. Coin-flipped signs pass about 5% of the time for any series, so a look-ahead leak would pass it too. The features' leak tests (section 11) are what look for a leak.
 
 Otherwise the result is FAIL (controls).
 
@@ -276,15 +281,22 @@ Otherwise the result is FAIL (controls).
 
 ## 8. Ledger, pinning, trials
 
-**Declare.** `brain forecast declare --llm-cutoff YYYY-MM` refuses unless the working tree is clean for `brain/` and `docs/MARKET_PRIMER.md`. Without `--llm-cutoff` it declares F1a-F1c and leaves F1d undeclared, saying so. A later declare reuses the anchor and `prices_asof` of the tests already declared, so the family keeps one anchor. It then appends, per undeclared test:
+**Declare.** `brain forecast declare --llm-cutoff YYYY-MM` refuses unless the working tree is clean for `brain/` and `docs/MARKET_PRIMER.md`. Without `--llm-cutoff` it declares F1a-F1c and leaves F1d undeclared, saying so. A later declare reuses the anchor and `prices_asof` of the tests already declared, so the family keeps one anchor.
+- **No declaration after an overlapping result.** A test whose window (first forecast date to last exit) overlaps that of a test with a recorded result is refused, since what it pins (for F1d the model, the primer and the prompt) could then be chosen with that result in view.
+  - So F1d is declared with F1a-F1c, before any of them runs, or recorded as dropped: `brain research withdraw F1d-llm-w5-recent --reason "..."`. A test withdrawn before it was declared is never declared.
+  - A withdrawn result does not block (the mistake and its reason are on record, and the withdrawn test still counts in BH).
+  - In a trial the overlap is a warning.
+
+It then appends, per undeclared test:
 ```python
 {"op": "declare", "kind": "forecast", "id", "spec_sha", "spec", "at", **ledger.git_state()}
 ```
 **Run.** `brain forecast test ID...` refuses unless:
-- the test is declared and its spec sha matches;
+- the test is declared, not withdrawn, and its spec sha matches;
 - the current `code_sha` equals the declared one, and the tree is clean;
-- HEAD is the declare commit or a descendant that leaves those files unchanged;
-- for F1d, the live model's name and digest and the primer and prompt shas equal the spec's;
+- the price snapshots a book pinned at `prices_asof` reads are the declared ones (`snapshots_sha`: only a downgrade, or a snapshot with no retrieval time added since, can change them);
+- HEAD is the declare commit or a descendant that leaves those files unchanged (F1d's files too, for F1d);
+- for F1d, the live model's name, digest and `/no_think` decision and the primer and prompt shas equal the spec's;
 - no result exists yet for that `(id, spec_sha)`. A rerun needs `research withdraw` and a new id.
 
 It then appends:
@@ -333,15 +345,15 @@ The held-out windows are computed only by the recorded runs.
 The primer cites no market event, price, result or publication dated after 2026-06-30. A test checks that it contains no date in or after the declared windows.
 
 ```python
-SNAPSHOT_VERSION = 1
+SNAPSHOT_VERSION = 2          # 2: F1's forecast is no longer shown (it was copied)
 def snapshot(bank, book, ticker, d, forecast) -> str
     # at T(d) only; the ticker symbol, no name, since the bank's identity facts are newer than the windows:
     # - returns over 1w/1m/3m/12m, 52w high/low distance and volatility, from the book sliced to <= d;
     # - the latest fiscal year's key figures and the last 4 quarters' EPS and SUE, from F1's month-end view
     #   (the last session before d's month, features.month_end_index);
     # - the last earnings release known at T(d) and its 3-day reaction if closed;
-    # - insider buys and sells in 90 days (counts, USD);
-    # - F1's forecast (p_beat, the 68% band, the top drivers).
+    # - insider buys and sells in 90 days (counts, USD).
+    # Not F1's forecast: in trials on 2017-2018 data a 1.7B model shown it repeated F1's number 9 times in 9.
     # No headlines: the bank holds none before 2026-10-09, so the tested input and the served input stay the same.
 def llm_identity(client) -> dict      # {"model", "digest"}: Ollama /api/show; a GGUF path's sha256 for llama.cpp
 def llm_forecast(bank, book, ticker, d, forecast, client=None, deadline=None) -> dict
@@ -350,7 +362,7 @@ def llm_forecast(bank, book, ticker, d, forecast, client=None, deadline=None) ->
 **`llm_forecast`.**
 - One request, no tools, `temperature 0`, seed 7, `max_tokens 300`.
 - **System message:** the primer, plus the instructions "Give the probability that this stock beats SPY over the next 5 sessions after the snapshot; reply with only a JSON object {"p_beat": 0.0-1.0, "reason": "one or two sentences"}; never use knowledge of events after the snapshot date".
-- For the Qwen3 family, the user message ends with `/no_think`, its documented switch.
+- For the Qwen3 family, the user message ends with `/no_think`, its documented switch. The family is the served model's (the id the server lists, `think.served_model`), never the name the client asks for: llama.cpp serves its one GGUF whatever name a request carries. F1d pins the decision (`llm.no_think`) and passes it to every request.
 - `PROMPT` holds the system template, the user template and that rule. `prompt_sha` hashes it.
 - **Parsing** follows `judge.assess`'s robust order with one repair. `p_beat` is clipped to [0.01, 0.99].
 - **On failure** the sample takes F1's `p_beat`, and `llm_failed` is counted.
@@ -376,7 +388,7 @@ Record: last 2 months (F1a): IC +0.01 (90% interval -0.10..+0.12), inconclusive.
 - It records a `forecast` fact: entity the ticker, attr `forecast`, tier `derived`, value `"p_beat 0.51; 68% 331-353"`, known_at `T(d)`.
   - **Context:** section 6's dict.
   - **Inputs:** the ticker's and SPY's price snapshot refs, plus the fundamental facts read.
-- `--llm` adds the model's probability, recorded as a second fact with `context.forecaster "F1-llm"`.
+- `--llm` adds the model's probability, recorded as a second fact with `context.forecaster "F1-llm"`. The card then also quotes the model's own record: F1d's line ("the model on F1a's weeks (F1d): ...") and the model's live score ("The model's live forecasts (F1-llm) scored: ..."), as `T FCST` does. At 21 sessions it says the model's chance has no declared test.
 
 **`brain forecast score`** scores live forecasts once their exit has passed:
 - band coverage per date;
@@ -408,22 +420,24 @@ Record: last 2 months (F1a): IC +0.01 (90% interval -0.10..+0.12), inconclusive.
 - **Evaluate.**
   - The date-level sign-flip p against exact values.
   - Size neutralisation removes a pure-size forecast's IC.
-  - The oracle reaches the minimum p; the placebo rejects about 5%.
+  - The oracle reaches the minimum p; the placebo rejects about 5%, for noise and a leak alike (it checks the test).
+  - The naive band is scored on the same h + 1 returns as the move.
   - Brier decomposition.
   - Non-overlapping grids; F1a and F1b share no week.
   - Anchors pinned.
 - **Ledger.**
-  - Refusals: undeclared, spec changed, code sha changed, dirty tree, a second result, an F1d model mismatch.
+  - Refusals: undeclared, withdrawn, spec changed, code sha changed (bank.py, timeutil, sec, run.py; F1d's LLM files for F1d), price snapshots changed, dirty tree, a second result, an F1d model mismatch, a declaration after an overlapping result.
+  - A book pinned at `prices_asof` never reads a snapshot fetched later.
   - BH includes gated forecasts and excludes descriptive ones.
   - Trials shift anchors to 2018 and never write the real ledger.
 - **Think.**
   - The snapshot is point-in-time.
   - The primer has no date in the windows.
   - Parse and fallback.
-  - `/no_think` for Qwen3.
+  - `/no_think` for Qwen3, decided by the served model, and the pinned decision passed to every F1d request.
   - The digest refusal.
   - The judge carries the primer.
-- **Product.** The card, the forecast fact passing `check.run`, live scoring, the terminal view and job, reruns, and the analyst tool.
+- **Product.** The card (with `--llm`, F1d's line and the model's live score), the forecast fact passing `check.run`, live scoring, the terminal view and job, reruns, and the analyst tool. The development data rule by the bank's prices: a bank past 2018 waits for the committed results, `--llm` for F1d too; TRAIN-only banks never wait; the synthetic opt-in never covers the real home or Yahoo prices; only HEAD's ledger counts.
 
 ---
 
@@ -451,7 +465,7 @@ Where the code settled a point this contract left open, or chose differently, it
 
 **Evaluate and the ledger** (`evaluate.py`, `forecast_tests.py`, `research/run.py`).
 - Placebo: `size-neutral-IC(1 - p) = -size-neutral-IC(p)` on every date, so each draw flips the per-date series by its coins and runs the gate's own test. The oracle must reach `min_p` (1/2^K exact, else 1/20001). Within-date permutation diagnostic: 1,000 draws seeded 7.
-- Placement counts "above" when a forecast is above the date's median forecast; stocks exactly at either median are not counted. The spread uses n//5 stocks per tail (n//2 for F1d). Brier climatology is each model's own training base rate. Pinball loss is in log-return units over the 5 quantiles, against a normal band from the 252-session sd of daily log returns. Calibration bins are equal-count.
+- Placement counts "above" when a forecast is above the date's median forecast; stocks exactly at either median are not counted. The spread uses n//5 stocks per tail (n//2 for F1d). Brier climatology is each model's own training base rate. Pinball loss is in log-return units over the 5 quantiles, against a normal band from the 252-session sd of daily log returns scaled by sqrt(h + 1): the scored move runs from the close of `d` to the exit, h + 1 daily returns. (F1's band is quoted with sqrt(h), but its quantiles were learned on that same move.) Calibration bins are equal-count.
 - Specs also hold `gate_details`, `window` (first, last, last_exit, n_dates, start: from the calendar only) and `trial`. Results also hold `gate_type`, `gate`, `anchor`, `trial`, `plan`, `seconds` and, for F1d, every reply. `metrics.per_date` keeps 10 per-date series at 6 decimals, so a gated result line is 50-100 KB. NaN is written as null.
 - `run.verdicts(path)` returns forecast rows too (`kind: "forecast"`; verdict PASS, FAIL, "FAIL (controls)", REPORT or WITHDRAWN); `run.forecast_verdicts`, `run.is_forecast` and `run.is_gated_forecast` go with it. Readers keyed by hypothesis (brief, decide, the terminal's EV lines) leave forecast rows out; RES lists them with their verdict and q. RESULTS.md gains `## Forecasts` after the hypotheses.
 - `prompt_sha` is `think.prompt_sha()` (sha of `think.PROMPT` in canonical JSON); `primer_sha` is `think.primer_sha()` (sha of the primer's bytes). The model's identity is `{"model": judge.canonical_model(the id the server lists), "digest": "sha256:..."}`: the GGUF file's sha256 when the server lists a path (llama.cpp), else the weights blob Ollama's `/api/show` names. F1d's test also compares `snapshot_version`.
@@ -469,9 +483,11 @@ Where the code settled a point this contract left open, or chose differently, it
 - The fact's `known_at` is the later of `T(d)` and its latest input's `known_at`. Inputs also cite ^VIX's snapshot. Its context is section 6's dict plus `forecaster`, `made_at` (each run is its own fact), `close_date`, `sigma`, `naive_sd`, `base_rate`, `range_q`, the training window, `model_key`, `prices_asof` and `in_universe`. `entry` and `exit` are the expected weekdays; scoring reads the real calendar.
 - `--llm`: a failed or unusable answer is still recorded as an F1-llm fact, carrying F1's `p_beat` with `llm_failed: true` and the error, as F1d counts it.
 - Live scoring counts one forecast per (stock, forecaster, horizon, date), the latest recorded. A window that opens inside an earlier counted one is "overlapping" and a forecast recorded after its entry session's close (20:00 UTC) is "late"; neither is scored. Metrics come from `evaluate.score` without size, so there is no size-neutral IC live; IC needs dates with 3 or more stocks.
-- Refusals: SPY and market symbols; a stock not listed at `d` (with the reason); SPY's latest close more than 7 days old; a horizon other than 5 or 21. A ticker outside `us_broad` is still forecast, ranked with the universe, and the card says the model never trained on it.
-- The card says "size-neutral IC" (the gated statistic) where section 10's example says "IC", names the range line's test ("Range (F1a): 68% band held 66% of the time (interval 58%-74%)"), and adds the model's answer with `--llm`, the model's sha and training window, an "untested" line until a test has a result, and a closing line: the chance has no tested edge unless the record says PASS.
+- Refusals: the development data rule (`live.held_out_guard`, section 1); SPY and market symbols; a stock not listed at `d` (with the reason); SPY's latest close more than 7 days old; a horizon other than 5 or 21. A ticker outside `us_broad` is still forecast, ranked with the universe, and the card says the model never trained on it.
+- The card says "size-neutral IC" (the gated statistic) where section 10's example says "IC", names the range line's test ("Range (F1a): 68% band held 66% of the time (interval 58%-74%)"), and adds, with `--llm`, the model's answer, F1d's line and the model's live score; the model's sha and training window, an "untested" line until a test has a result, and a closing line: the chance has no tested edge unless the record says PASS.
 - The CLI adds `--refit` and `--json`. `brain forecast declare|test` are the declared tests' commands (`forecast_tests.add_cli` on the same parser); `--trial` and `--llm-cutoff` go only with them.
 - `FCST` alone lists each stock's latest forecast, live scoring and the declared tests' lines.
 
-**Expected wall-clock time of the recorded runs** (4 CPUs, from the TRAIN-year trials; see the integration report): weekly features over about 820 grid dates about 8 minutes, F1b's 15 fits about 5-6 minutes, F1a under a minute, monthly features about 3-4 minutes, F1c about 4 minutes: about 20-25 minutes for F1a-F1c with about 4-5 GB of memory at peak. F1d adds 96 local-model requests on F1a's model, about 35 seconds each with Qwen3-1.7B on 4 CPU threads (about an hour); an 8B model is several times slower.
+**Measured on TRAIN-year trials** (4 CPUs, 741 stocks, anchor 2018-12-31, warm page cache): one price panel 16 s; the weekly feature set (402 grid dates, 297,882 samples, 4 workers) 109 s; one fit 19-20 s at 150,000 rows; F1a 146 s, F1b (192 dates, 8 fits) 157 s, the monthly feature set (95 dates) 79 s, F1c (47 dates, 8 fits) 138 s; 442 s for all three, 2.6 GB peak in the largest process and 4.4 GB used on the machine. A one-date cross-section (what a cached live model computes) takes 15 s of prices and 23 s of features. With Qwen3-1.7B (Q8_0) on llama.cpp with 4 CPU threads, an F1d request took 133 s the first time (3,945 prompt tokens) and about 40 s after (the primer's prefix cached).
+
+**Expected wall-clock time of the recorded runs** (anchor about 2026-10-15): the weekly feature set over about 820 grid dates 4-8 minutes, F1a 20 s, F1b's 16 fits about 5-6 minutes, the monthly feature set over about 190 dates about 3 minutes, F1c's 16 fits about 3-4 minutes: about 17-25 minutes for F1a-F1c, with an estimated 5-6 GB used at peak. F1d adds 96 requests on F1a's model: about 65 minutes with Qwen3-1.7B on 4 CPU threads; an 8B model is several times slower. A live retrain on the real bank is one weekly feature set plus a fit (5-9 minutes), about once a week per horizon; a forecast from a cached model takes under a minute.

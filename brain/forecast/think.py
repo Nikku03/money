@@ -1,9 +1,10 @@
 """The local model's own forecast: the market primer, a point-in-time snapshot and one probability
 (docs/FORECAST.md, section 9).
 
-F1-llm reads three things: ``docs/MARKET_PRIMER.md`` (general knowledge about markets and people, in its
-system message), a snapshot of one stock after the close of a session d (``snapshot``), and F1's forecast for
-it. It answers with the chance that the stock beats SPY over the next h sessions. What shapes that answer and
+F1-llm reads two things: ``docs/MARKET_PRIMER.md`` (general knowledge about markets and people, in its
+system message) and a snapshot of one stock after the close of a session d (``snapshot``). It answers with the
+chance that the stock beats SPY over the next h sessions. It is not shown F1's forecast: shown it, the small
+models tried here copied F1's number every time, so their answer said nothing of their own. What shapes that answer and
 does not come from the bank is pinned: the prompt by ``prompt_sha``, the primer by ``primer_sha``, the
 snapshot's layout by ``SNAPSHOT_VERSION`` and the weights by ``llm_identity``'s digest. A declared test names
 exactly what was asked, and a change to any of them is a new test.
@@ -40,7 +41,7 @@ from brain.sources.sec import REVENUE
 from brain.terminal import analyst
 from brain.timeutil import days_between
 
-SNAPSHOT_VERSION = 1
+SNAPSHOT_VERSION = 2          # 2: F1's forecast is no longer shown
 HORIZON = 5                  # sessions, when the forecast does not say
 TEMPERATURE = 0
 SEED = 7
@@ -58,14 +59,12 @@ BENCH = "SPY"
 PRIMER_PATH = judge.PRIMER_PATH
 GROSS_PROFIT, ASSETS, LIABILITIES = features.GROSS_PROFIT, features.ASSETS, features.LIABILITIES
 OPERATING_CASH_FLOW = features.OPERATING_CASH_FLOW
-# F1's feature descriptions in plain words, without the code names they cite ("(metrics.market_cap_any)").
-DESCRIPTIONS = {n: re.sub(r"\s*\((?:[a-z_]+\.)+[a-z_]+[^)]*\)", "", desc) for n, _, desc in features.FEATURES}
 
 SYSTEM = """{primer}
 
 ---
 
-Your task. The user gives you a snapshot of one stock after the close of one trading day: only facts public by then, from a memory bank of public data, and the forecast of F1, a learned model. Give the probability that this stock beats SPY over the next {horizon} sessions after the snapshot (its total return minus SPY's, counted from the close of the first session after the snapshot date).
+Your task. The user gives you a snapshot of one stock after the close of one trading day: only facts public by then, from a memory bank of public data. Give the probability that this stock beats SPY over the next {horizon} sessions after the snapshot (its total return minus SPY's, counted from the close of the first session after the snapshot date).
 Reply with only a JSON object, no other text: {{"p_beat": 0.0-1.0, "reason": "one or two sentences"}}
 Never use knowledge of events after the snapshot date."""
 USER = ("{snapshot}\n\nGive the probability that {ticker} beats SPY over the next {horizon} sessions after {date}. "
@@ -248,31 +247,11 @@ def _horizon(forecast) -> int:
     return h if h > 0 else HORIZON
 
 
-def _forecast_lines(forecast) -> list[str]:
-    fc = forecast if isinstance(forecast, dict) else {}
-    p = fc.get("p_beat")
-    if not (isinstance(p, (int, float)) and math.isfinite(p)):
-        return ["F1's forecast: none given."]
-    h = _horizon(fc)
-    lo, hi = (list(fc.get("move68_pct") or []) + [None, None])[:2]
-    band = (f"{lo:+.1f}% .. {hi:+.1f}%" if all(isinstance(x, (int, float)) and math.isfinite(x) for x in (lo, hi))
-            else "n/a")
-    out = [(f"F1, the learner: chance to beat SPY over the next {h} sessions {p:.3f}; 68% range of the stock's own "
-            f"move over that time {band}.")]
-    drv = [x for x in fc.get("drivers") or [] if isinstance(x, dict) and x.get("name")]
-    if drv:
-        out.append("F1's main drivers (push in log-odds; + is toward beating SPY):")
-        for x in drv:
-            push = x.get("push")
-            desc = DESCRIPTIONS.get(str(x["name"]), "")
-            out.append(f"- {x['name']} {_num(push, 3, sign=True)}" + (f": {desc}" if desc else ""))
-    return out
-
-
 def snapshot(bank, book, ticker: str, d: str, forecast) -> str:
     """The stock as of the close of session ``d``, in plain lines: the ticker (no name), price ratios from the
-    book up to d, fundamentals from the month-end view F1 uses, the latest earnings release and the insider
-    trades known at T(d), and F1's forecast. No headlines. SNAPSHOT_VERSION names this layout."""
+    book up to d, fundamentals from the month-end view F1 uses, and the latest earnings release and the insider
+    trades known at T(d). Neither headlines nor F1's forecast; ``forecast`` gives only the horizon.
+    SNAPSHOT_VERSION names this layout."""
     t, d = str(ticker).strip().upper(), str(d)[:10]
     view = bank.view(features.T(d))
     lines = [f"Snapshot of {t} after the close of {d}. Only facts public by then; no company name and no headlines.",
@@ -280,7 +259,6 @@ def snapshot(bank, book, ticker: str, d: str, forecast) -> str:
     lines += _price_lines(book, view, t, _horizon(forecast))
     lines += [""] + _fundamental_lines(bank, book, t, d)
     lines += [""] + _event_lines(bank, book, t, d)
-    lines += [""] + _forecast_lines(forecast)
     return "\n".join(lines)
 
 
@@ -290,17 +268,36 @@ def is_qwen3(model) -> bool:
     return re.match(r"qwen-?3(?![0-9.])", judge.canonical_model(str(model or ""))) is not None
 
 
-def _turn(text: str, model) -> str:
-    return f"{text.rstrip()} {NO_THINK}" if is_qwen3(model) else text
+def served_model(client) -> str:
+    """The id the server lists for the client's model (``_served``; llama.cpp lists the one GGUF it serves,
+    whatever model name a request carries), else the client's own model name when the list cannot be read."""
+    want = str(getattr(client, "model", "") or "")
+    try:
+        ids = [str(i) for i in client.models()]
+    except Exception:  # noqa: BLE001 - no list to read: the name asked for is all there is to go on
+        return want
+    return _served(client, ids) or want
 
 
-def messages(bank, book, ticker: str, d: str, forecast, model="") -> list[dict]:
-    """The system message (primer and task) and the user message (snapshot and question), as sent."""
+def uses_no_think(client) -> bool:
+    """Whether requests to ``client`` end each user turn with /no_think: the model the server serves (the
+    one F1d's identity pins) is a Qwen3, whatever BRAIN_LLM_MODEL says."""
+    return is_qwen3(served_model(client))
+
+
+def _turn(text: str, no_think: bool) -> str:
+    return f"{text.rstrip()} {NO_THINK}" if no_think else text
+
+
+def messages(bank, book, ticker: str, d: str, forecast, model="", no_think: bool | None = None) -> list[dict]:
+    """The system message (primer and task) and the user message (snapshot and question), as sent. The user
+    message ends with /no_think when ``no_think`` says so (default: when ``model`` is a Qwen3)."""
     t, d = str(ticker).strip().upper(), str(d)[:10]
     h = _horizon(forecast)
+    nt = is_qwen3(model) if no_think is None else bool(no_think)
     user = USER.format(snapshot=snapshot(bank, book, t, d, forecast), ticker=t, horizon=h, date=d)
     return [{"role": "system", "content": SYSTEM.format(primer=primer(), horizon=h)},
-            {"role": "user", "content": _turn(user, model)}]
+            {"role": "user", "content": _turn(user, nt)}]
 
 
 def _left(deadline) -> float | None:
@@ -375,30 +372,34 @@ def parse(text: str) -> tuple[dict | None, str]:
 
 
 # ---------- the forecast ----------
-def llm_forecast(bank, book, ticker: str, d: str, forecast, client=None, deadline=None) -> dict:
+def llm_forecast(bank, book, ticker: str, d: str, forecast, client=None, deadline=None,
+                 no_think: bool | None = None) -> dict:
     """The local model's chance that ``ticker`` beats SPY over the forecast's horizon after session ``d``.
 
     {"ok", "p_beat", "reason", "raw", "model", "seconds", "error", "down"}. One request without tools
     (temperature 0, seed 7, 300 tokens); when its answer is not the JSON object, one repair. ``p_beat`` is
     None unless ``ok``: the caller then uses F1's probability and counts the failure. ``raw`` is the reply as
     the server sent it (both replies after a repair); ``down`` is the server's error when it could not be
-    asked at all. ``deadline`` is a time.time() or time.monotonic() value (analyst.expired). Never raises."""
+    asked at all. ``deadline`` is a time.time() or time.monotonic() value (analyst.expired). ``no_think``:
+    whether the user turns end with /no_think; by default, when the served model is a Qwen3
+    (``uses_no_think``). F1d passes the decision its declaration pinned. Never raises."""
     t0 = time.monotonic()
     out = {"ok": False, "p_beat": None, "reason": None, "raw": "", "model": None, "seconds": 0.0, "error": None,
            "down": None}
     try:
         _ask(bank, book, str(ticker or "").strip().upper(), str(d)[:10], forecast, client or llm.Client.from_env(),
-             deadline, out)
+             deadline, out, no_think)
     except Exception as e:  # noqa: BLE001 - a failed answer is F1's answer, counted; the run goes on
         out.update(ok=False, p_beat=None, reason=None, error=judge._one_line(f"{type(e).__name__}: {e}", 400))
     out["seconds"] = round(time.monotonic() - t0, 2)
     return out
 
 
-def _ask(bank, book, ticker: str, d: str, forecast, client, deadline, out: dict) -> None:
+def _ask(bank, book, ticker: str, d: str, forecast, client, deadline, out: dict, no_think: bool | None = None) -> None:
     model = getattr(client, "model", "")
     out["model"] = model or None
-    msgs = messages(bank, book, ticker, d, forecast, model)
+    nt = uses_no_think(client) if no_think is None else bool(no_think)
+    msgs = messages(bank, book, ticker, d, forecast, model, no_think=nt)
     raws: list[str] = []
     why = ""
     while len(raws) < 2:  # the request, and one repair when its answer is not the JSON object
@@ -421,7 +422,7 @@ def _ask(bank, book, ticker: str, d: str, forecast, client, deadline, out: dict)
             return
         if finish == "length":
             why = f"the answer was cut off at the length limit ({why})"
-        msgs = msgs + [{"role": "assistant", "content": text or ""}, {"role": "user", "content": _turn(REPAIR, model)}]
+        msgs = msgs + [{"role": "assistant", "content": text or ""}, {"role": "user", "content": _turn(REPAIR, nt)}]
     out["error"] = f"the answer was not the JSON object asked for, even after one repair: {why}"
 
 

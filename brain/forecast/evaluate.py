@@ -5,7 +5,8 @@ A run, in order:
 1. **Grid.** Forecast dates counted back from the anchor A in steps of h sessions, so that the latest date's
    window ends at A and each window starts where the next one ends (``grid``).
 2. **Features.** One feature set over the whole grid since 2011 (``features.feature_set``), and one price
-   panel for the range (``features.prices``), both at the run's pinned ``prices_asof``.
+   panel for the range (``features.prices``), both at the run's pinned ``prices_asof``: the price snapshots
+   in the bank at that time, never one fetched later.
 3. **Walk forward.** At each retrain date the model is fitted on the samples whose stored exit is on or
    before that date (``learn.fit``, ``learn.fit_range``) and forecasts every date up to the next retrain.
 4. **Metrics.** Each one is computed per date across the stocks forecast that date, then over dates.
@@ -15,7 +16,9 @@ A run, in order:
 The gate (F1b, F1c) is a one-sided sign-flip test on the series of per-date size-neutral ICs. Two controls
 check that test on the run's own data: the oracle (a forecast that knew the outcome) must reach its smallest
 possible p, and the placebo (F1's own forecasts with each date's sign flipped by a coin) must pass about as
-often as the 5% level says.
+often as the 5% level says. Both check the test, not the forecaster: coin-flipped signs pass about 5% of the
+time for any series, so the placebo would pass a look-ahead leak too. Leaks are what the features' leak tests
+look for.
 """
 from __future__ import annotations
 
@@ -299,12 +302,17 @@ def score(S: dict, h: int, *, gated: bool, halves: bool = False, cal_groups: int
           perm: dict = PERMUTATION) -> dict:
     """Every metric of section 7 for the forecasts ``S`` (arrays per sample: date, p, y, excess, size, mom,
     clim, u, sig, naive, zq). ``gated`` adds the sign-flip p, the within-date permutation diagnostic and
-    the date series the controls need; otherwise each mean gets its date-level 90% interval and a label."""
+    the date series the controls need; otherwise each mean gets its date-level 90% interval and a label.
+
+    ``u`` is the log move from the close of d to the close of the exit, h + 1 daily returns. F1's band is
+    ``zq * sig * sqrt(h)`` (its quantiles were learned on that same move); the naive normal band it is compared
+    with is ``NORMAL_Q * naive * sqrt(h + 1)``, the normal band of the same h + 1 returns."""
     per = {k: [] for k in ("date", "n", "ic", "sn_ic", "size_ic", "size_sn_ic", "mom_ic", "mom_sn_ic", "spread",
                            "placement", "cover68", "cover90", "width68", "width90", "pinball", "pinball_naive",
                            "brier_gain", "within_gain")}
     parts, vecs, oracle = [], [], []
-    sqh = math.sqrt(int(h))
+    sqh = math.sqrt(int(h))          # F1's band is quoted with sqrt(h); its quantiles were learned on u itself
+    sq_moves = math.sqrt(int(h) + 1)  # u runs from the close of d to the exit: h + 1 daily returns
     n_range = 0
     has_size = np.isfinite(S["size"]).any()
     has_mom = np.isfinite(S["mom"]).any()
@@ -349,7 +357,7 @@ def score(S: dict, h: int, *, gated: bool, halves: bool = False, cal_groups: int
             per["width68"].append(float(np.mean(np.exp(lq["q84"]) - np.exp(lq["q16"]))))
             per["width90"].append(float(np.mean(np.exp(lq["q95"]) - np.exp(lq["q05"]))))
             per["pinball"].append(float(pinball(uu, lq).mean()))
-            naive = {k: NORMAL_Q[k] * nv[ok] * sqh for k in QKEYS}
+            naive = {k: NORMAL_Q[k] * nv[ok] * sq_moves for k in QKEYS}   # a normal band over the same h + 1 returns
             per["pinball_naive"].append(float(pinball(uu, naive).mean()))
         else:
             for k in ("cover68", "cover90", "width68", "width90", "pinball", "pinball_naive"):
@@ -423,7 +431,8 @@ def gate_and_controls(m: dict, placebo: dict = PLACEBO) -> tuple[dict, dict]:
     - oracle: p_beat = the realised excess rank. Its test must reach the smallest p the test can give.
     - placebo: F1's own forecasts with each date's sign flipped by a fair coin, ``draws`` times. 1 - p
       reverses every rank, so a flipped date's size-neutral IC is exactly minus its own; the gate's test
-      must reject (p < 0.05) in 1%-10% of draws."""
+      must reject (p < 0.05) in 1%-10% of draws. It checks the test's arithmetic, not the forecaster: a
+      random sign pattern rejects about 5% of the time for any series, a look-ahead leak included."""
     sn = np.asarray(m.pop("_sn", []), dtype=float)
     snm = m["ic_size_neutral"]
     gate = {"mean_size_neutral_ic": snm["mean"], "p": snm.get("p"), "k": len(sn),
@@ -493,8 +502,10 @@ def trailing_sd(fs, px, n: int = 252) -> np.ndarray:
 
 def prepare(bank, tickers, cal, anchor: str, h: int, prices_asof: str, *, trial: bool = False, log=print,
             cache: dict | None = None) -> Data:
-    """The feature set over the whole grid since 2011 and the price panel, at ``prices_asof``. In a trial the
-    grid's last exit must be on or before 2018-12-31, so nothing later is ever computed."""
+    """The feature set over the whole grid since 2011 and the price panel, at ``prices_asof`` and pinned there:
+    only the price snapshots fetched by ``prices_asof`` are read (``features.prices``' ``retrieved_by``), so a
+    snapshot fetched after the declaration never enters the run. In a trial the grid's last exit must be on or
+    before 2018-12-31, so nothing later is ever computed."""
     g = grid(cal, anchor, h)
     if not g:
         raise ValueError(f"no grid dates before the anchor {anchor}")
@@ -508,7 +519,7 @@ def prepare(bank, tickers, cal, anchor: str, h: int, prices_asof: str, *, trial:
     pkey = ("prices", str(prices_asof))
     px = cache.get(pkey) if cache is not None else None
     if px is None:  # one price panel per prices_asof: the features and the range read the same one
-        px = F.prices(bank, tickers, prices_asof)
+        px = F.prices(bank, tickers, prices_asof, retrieved_by=prices_asof)
         if cache is not None:
             cache[pkey] = px
     t1 = time.monotonic()
@@ -621,9 +632,10 @@ def brier_difference(S: dict, p_other: np.ndarray) -> dict:
 
 
 def run_llm(bank, test: dict, *, anchor: str, prices_asof: str, tickers, cal, trial: bool = False, client=None,
-            log=print, cache: dict | None = None, think=None) -> dict:
+            log=print, cache: dict | None = None, think=None, no_think: bool | None = None) -> dict:
     """F1d: F1a's model on F1a's dates for the test's stocks, and the local model's probability for each,
-    given F1's forecast and a point-in-time snapshot. A failed answer counts as F1's and is counted."""
+    from a point-in-time snapshot and the primer, without F1's forecast. A failed answer counts as F1's and is counted.
+    ``no_think`` is the declaration's pinned /no_think decision (None: think decides from the served model)."""
     from brain.metrics import PriceBook
     think = think or _think()
     t0 = time.monotonic()
@@ -635,7 +647,7 @@ def run_llm(bank, test: dict, *, anchor: str, prices_asof: str, tickers, cal, tr
     model = learn.fit(fs, pl["retrain"][0])
     rng = learn.fit_range(fs, pl["retrain"][0], r_total=data.r, sig=data.sig, h=data.h)
     want = [str(t).upper() for t in test["tickers"]]
-    book = PriceBook(bank, [*want, "SPY"], prices_asof)
+    book = PriceBook(bank, [*want, "SPY"], prices_asof, retrieved_by=prices_asof)   # pinned as the features' book
     zq = np.array([rng["q"][k] for k in QKEYS])
     acc = _empty_samples()
     p_llm, replies, failed, missing = [], [], 0, []
@@ -650,7 +662,8 @@ def run_llm(bank, test: dict, *, anchor: str, prices_asof: str, tickers, cal, tr
                 continue
             fc = learn.forecast(model, rng, ticker=t, d=d, h=data.h, close=float(fs.close[r]), sigma_d=float(data.sig[r]),
                                 x_row=fs.X[r], entry=str(fs.entry[r]), exit=str(fs.exit[r]))
-            res = think.llm_forecast(bank, book, t, d, fc, client=client)
+            res = think.llm_forecast(bank, book, t, d, fc, client=client,
+                                     **({} if no_think is None else {"no_think": bool(no_think)}))
             ok = bool(res.get("ok")) and isinstance(res.get("p_beat"), (int, float)) and math.isfinite(res["p_beat"])
             if not ok:
                 failed += 1

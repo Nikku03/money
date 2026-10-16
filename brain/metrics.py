@@ -20,7 +20,7 @@ import numpy as np
 from brain import series
 from brain.bank import Bank, Fact, View
 from brain.sources.sec import REVENUE
-from brain.timeutil import days_between
+from brain.timeutil import days_between, norm_known_at
 
 STALE_DAYS = 550  # an annual figure older than this is not "current"
 
@@ -33,15 +33,32 @@ class M:
     note: str = ""
 
 
-class PriceBook:
-    """Latest price snapshot per ticker. Reads go through a View's date."""
+def fetched_by(t: str):
+    """A View filter: facts fetched (``retrieved_at``) by time ``t``; one with no retrieval time counts by its
+    known_at, which the View has already checked."""
+    cut = norm_known_at(t)
 
-    def __init__(self, bank: Bank, tickers, asof: str | None = None):
+    def keep(f: Fact) -> bool:
+        return f.retrieved_at is None or norm_known_at(f.retrieved_at) <= cut
+    return keep
+
+
+class PriceBook:
+    """Latest price snapshot per ticker. Reads go through a View's date.
+
+    A snapshot's known_at is its last bar's date, not when it was fetched, so a book at ``asof`` also reads a
+    snapshot fetched later whose last bar is on or before ``asof`` (a re-fetch with revised adjusted closes, a
+    stock first fetched later). ``retrieved_by`` leaves those out: the book reads the snapshots that were in
+    the bank at that time, as a declared forecast test pins them at its ``prices_asof``."""
+
+    def __init__(self, bank: Bank, tickers, asof: str | None = None, retrieved_by: str | None = None):
         v = bank.view(asof)
+        keep = fetched_by(retrieved_by) if retrieved_by else None
+        self.retrieved_by = norm_known_at(retrieved_by) if retrieved_by else None
         self.dates, self.close, self.adj, self.splits, self.snapshot = {}, {}, {}, {}, {}
         for t in tickers:
             t = t.upper()
-            f = v.latest(t, "series.price_daily")
+            f = v.latest(t, "series.price_daily", keep)
             if f is None:
                 continue
             df = series.load(f.value)

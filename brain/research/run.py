@@ -434,10 +434,12 @@ def _forecast_words(r: dict) -> str:
         chance = (f"the chance to beat SPY ranked stocks beyond size with mean IC {_n(sn.get('mean'))} "
                   f"(date-level p {_n(r.get('p'), '.4f')}, q {_n(r.get('bh_q'), '.3f')}): {r['verdict']}. "
                   f"Controls {'passed' if ctl.get('pass') else 'FAILED'}: the oracle reached p "
-                  f"{_n(ctl.get('oracle_p'), '.5f')} (smallest possible {_n(ctl.get('min_p'), '.5f')}) and "
-                  f"{_n(ctl.get('placebo_reject_rate'), '.1%')} of {ctl.get('placebo_draws')} coin-flipped placebos "
-                  f"passed (1%-10% expected). Within-date permutation p {_n(sn.get('within_date_perm_p'), '.4f')} "
-                  "(a diagnostic: too narrow, since stocks move together)")
+                  f"{_n(ctl.get('oracle_p'), '.5f')} (smallest possible {_n(ctl.get('min_p'), '.5f')}), so the test "
+                  f"can reject, and {_n(ctl.get('placebo_reject_rate'), '.1%')} of {ctl.get('placebo_draws')} "
+                  "coin-flipped placebos passed (1%-10% expected): a check of the sign-flip test itself, not of the "
+                  "forecaster, since coin-flipped signs pass about 5% of the time for any series, a look-ahead leak "
+                  "included (the features' leak tests are what check for one). Within-date permutation p "
+                  f"{_n(sn.get('within_date_perm_p'), '.4f')} (a diagnostic: too narrow, since stocks move together)")
     elif r["id"].startswith("F1d"):
         full = r.get("metrics") or {}
         c = full.get("comparison") or {}

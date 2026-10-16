@@ -25,9 +25,13 @@ score against climatology with its within-date part, placement and IC, per date.
 windows count (forecasts on one date share a window), and a forecast recorded after its window opened is
 late and not scored.
 
-The development data rule (docs/FORECAST.md, section 1): until every declared F1 test has a recorded result
-in the committed ledger, a live forecast on the real bank (MONEY_HOME unset or ``var/``) is refused, since it
-would train on and forecast the held-out years. Any other MONEY_HOME (a synthetic bank) is never refused.
+The development data rule (docs/FORECAST.md, section 1) is decided by the bank's own prices, not by where the
+bank lives: when SPY's prices run past 2018-12-31, a live forecast would train on and forecast the held-out
+years, so it is refused until the committed ledger (HEAD's ``research/ledger.jsonl``) holds a recorded result
+of every declared F1 test, and ``--llm`` also until F1d has one or is withdrawn. A copy of the real bank under
+another MONEY_HOME is refused the same. A synthetic test bank with recent dates opts out with
+BRAIN_FORECAST_SYNTHETIC=1, which never covers the real home or a bank whose SPY prices came from the price
+source (``held_out_guard``).
 
 Paper only: nothing here trades, and none of it is financial advice.
 """
@@ -40,6 +44,7 @@ import json
 import math
 import os
 import re
+import subprocess
 import sys
 import time
 from dataclasses import dataclass, field
@@ -64,7 +69,9 @@ MODEL_VERSION = 1
 F1, F1_LLM = "F1", "F1-llm"
 GUARD_TESTS = ("F1a-w5-recent", "F1b-w5-test", "F1c-m21-test")   # the declared tests F1 is judged by
 REAL_HOME = config.ROOT / "var"
-COMMITTED_LEDGER = config.ROOT / "research" / "ledger.jsonl"
+COMMITTED_LEDGER = "research/ledger.jsonl"   # read as committed at HEAD: uncommitted lines do not count
+LAST_TRAIN = "2018-12-31"                    # the TRAIN years end here; later prices are the held-out years
+SYNTHETIC_ENV = "BRAIN_FORECAST_SYNTHETIC"   # "1": a synthetic test bank with recent dates (never real prices)
 RECENT_TEST = {5: "F1a-w5-recent"}                                  # descriptive retests, per horizon
 GATED_TEST = {5: "F1b-w5-test", 21: "F1c-m21-test"}                 # gated tests, per horizon
 LLM_TEST = "F1d-llm-w5-recent"
@@ -183,33 +190,71 @@ def calendar(bank: Bank, t: str | None = None) -> np.ndarray:
     return np.asarray(book.dates[BENCH]).astype(str)
 
 
-def held_out_guard() -> str | None:
-    """Why a live forecast is refused, or None.
-
-    On the real bank (MONEY_HOME unset or ``var/``) the committed ledger must first hold a recorded result
-    of every declared F1 test (F1a, F1b, F1c; trial results do not count): until then nothing may compute a
-    forecast or a feature-based number for a date after 2018-12-31, and a live model trains on and forecasts
-    exactly those years (docs/FORECAST.md, section 1). A synthetic bank is never refused."""
-    home = Path(os.environ.get("MONEY_HOME") or REAL_HOME)
-    if not _same(home, REAL_HOME):
-        return None
-    done = set()
+def committed_ledger() -> list[dict]:
+    """The research ledger's records as committed at HEAD (``git show HEAD:research/ledger.jsonl``): lines
+    appended since the last commit do not count. [] when git cannot say."""
     try:
-        for line in Path(COMMITTED_LEDGER).read_text().splitlines():
-            if not line.strip():
-                continue
-            r = json.loads(line)
-            if r.get("op") == "result" and r.get("kind") == "forecast" and not r.get("trial"):
-                done.add(r.get("id"))
-    except (OSError, ValueError):
-        pass
-    missing = [i for i in GUARD_TESTS if i not in done]
-    if not missing:
+        r = subprocess.run(["git", "show", f"HEAD:{COMMITTED_LEDGER}"], cwd=config.ROOT, capture_output=True,
+                           text=True, check=False)
+    except OSError:
+        return []
+    out = []
+    for line in r.stdout.splitlines() if r.returncode == 0 else []:
+        try:
+            rec = json.loads(line) if line.strip() else None
+        except ValueError:
+            continue
+        if isinstance(rec, dict):
+            out.append(rec)
+    return out
+
+
+def _synthetic(spy: Fact) -> bool:
+    """The opt-in for a synthetic test bank with recent dates: BRAIN_FORECAST_SYNTHETIC=1, never for the real
+    home and never when SPY's snapshot came from the price source (a copy of the real bank)."""
+    from brain.sources import prices
+    home = Path(os.environ.get("MONEY_HOME") or REAL_HOME)
+    return (os.environ.get(SYNTHETIC_ENV) == "1" and not _same(home, REAL_HOME)
+            and (spy.source or {}).get("name") != prices.SOURCE_NAME)
+
+
+def held_out_guard(bank: Bank | None = None, llm: bool = False) -> str | None:
+    """Why a live forecast on ``bank`` (default: the home's) is refused, or None.
+
+    Decided by the data: when SPY's prices in the bank run past 2018-12-31, a live model would train on and
+    forecast the held-out years, and until the declared runs nothing may compute a forecast or a feature-based
+    number for those dates (docs/FORECAST.md, section 1). So the committed ledger (``committed_ledger``) must
+    first hold a recorded result of F1a, F1b and F1c (trial results do not count), and with ``llm`` also F1d's
+    result or its withdrawal: the model's answers on these dates could otherwise shape its primer or prompt
+    before F1d is pinned. A bank whose prices end in the TRAIN years is never refused; nor is a synthetic test
+    bank that opts out (``_synthetic``)."""
+    from brain.metrics import PriceBook
+    bank = bank if bank is not None else Bank()
+    book = PriceBook(bank, [BENCH], run_time())
+    if not book.has(BENCH) or not len(book.dates[BENCH]):
+        return None   # nothing can be forecast; the caller says why
+    last = str(book.dates[BENCH][-1])
+    if last <= LAST_TRAIN or _synthetic(book.snapshot[BENCH]):
         return None
-    return (f"live forecasts on the real bank wait for the declared tests: {', '.join(missing)} "
-            f"{'has' if len(missing) == 1 else 'have'} no recorded result in research/ledger.jsonl yet, and a live "
-            "model would train on and forecast the held-out years first (docs/FORECAST.md, section 1: the "
-            "development data rule). Run `brain forecast declare`, commit, then `brain forecast test` for each.")
+    done, gone = set(), set()
+    for r in committed_ledger():
+        if r.get("op") == "result" and r.get("kind") == "forecast" and not r.get("trial"):
+            done.add(r.get("id"))
+        elif r.get("op") == "withdraw":
+            gone.add(r.get("id"))
+    missing = [i for i in GUARD_TESTS if i not in done]
+    if missing:
+        return (f"live forecasts wait for the declared tests: the bank's SPY prices run to {last}, past "
+                f"{LAST_TRAIN}, and {', '.join(missing)} {'has' if len(missing) == 1 else 'have'} no recorded result "
+                f"in the committed {COMMITTED_LEDGER} yet, so a live model would train on and forecast the held-out "
+                "years first (docs/FORECAST.md, section 1: the development data rule). Run `brain forecast "
+                "declare`, commit, then `brain forecast test` for each and commit the results.")
+    if llm and LLM_TEST not in done and LLM_TEST not in gone:
+        return (f"--llm waits for {LLM_TEST}: it has no recorded result in the committed {COMMITTED_LEDGER} and "
+                f"is not withdrawn, and the model's answers on dates after {LAST_TRAIN} could shape its primer or "
+                "prompt before F1d is pinned (docs/FORECAST.md, section 1). Declare and run F1d, or drop it "
+                f"(`brain research withdraw {LLM_TEST} --reason ...`), or forecast without --llm.")
+    return None
 
 
 def check_ticker(t: str) -> str:
@@ -303,8 +348,9 @@ def model(bank: Bank, h: int = 5, *, tickers=None, cal=None, d: str | None = Non
     """F1 for live forecasts on d (default: SPY's latest session), trained by F1a's rule: every realised
     sample of the grid counted back from d since 2011-01-01, cutoff d, the same draw, calibration and range
     fit. Read from ``<home>/models/forecast/<key>.json`` while fresh; otherwise (or with ``refit``) trained
-    and written there. Refused on the real bank until the declared tests have run (``held_out_guard``)."""
-    why = held_out_guard()
+    and written there. Refused on a bank with prices past 2018 until the declared tests have run
+    (``held_out_guard``)."""
+    why = held_out_guard(bank)
     if why:
         raise ForecastError(why)
     F, L, E = _features(), _learn(), _evaluate()
@@ -504,10 +550,12 @@ def llm_answer(bank: Bank, px, t: str, d: str, fc: dict, client=None) -> dict:
 def run(bank: Bank, tickers, *, h: int = 5, llm: bool = False, client=None, universe=None, refit: bool = False,
         log=None, record: bool = True) -> list[dict]:
     """Forecast each ticker on SPY's latest session and record each forecast as a fact (both facts with
-    ``llm``). One result per ticker: {"ok", "ticker", "forecast", "ref", "llm", "record", "live", "notes"} or
-    {"ok": False, "ticker", "error", "hint"}. Raises ForecastError when nothing can be forecast at all (the
-    development data rule, no SPY prices, stale prices)."""
-    why = held_out_guard()
+    ``llm``). One result per ticker: {"ok", "ticker", "forecast", "ref", "llm", "record", "live", "live_llm",
+    "notes"} or {"ok": False, "ticker", "error", "hint"}. With ``llm`` the record also quotes F1d and
+    ``live_llm`` is the model's own live score, so the model's chance never stands without its record. Raises
+    ForecastError when nothing can be forecast at all (the development data rule, no SPY prices, stale
+    prices)."""
+    why = held_out_guard(bank, llm=llm)
     if why:
         raise ForecastError(why)
     if int(h) not in HORIZONS:
@@ -532,7 +580,8 @@ def run(bank: Bank, tickers, *, h: int = 5, llm: bool = False, client=None, univ
         live = model(bank, h, tickers=uni, cal=cal, refit=refit, log=log)
         extra_t = [t for t in want if t not in set(uni)]
         cross = cross_section(bank, live, uni + extra_t, d, h, cal)
-        rec, lv = record_lines(h), live_summary(bank, h)
+        rec, lv = record_lines(h, llm=llm), live_summary(bank, h)
+        lv_llm = live_summary(bank, h, F1_LLM) if llm else None   # the model's own record, beside its chance
         for t in want:
             try:
                 fc, extra = forecast_one(bank, live, cross, t, d, h)
@@ -544,7 +593,7 @@ def run(bank: Bank, tickers, *, h: int = 5, llm: bool = False, client=None, univ
             notes = [] if extra["in_universe"] else [f"{t} is not in {UNIVERSE}: the model never trained on it, "
                                                      "and its features are ranked against the universe's"]
             res = {"ok": True, "ticker": t, "forecast": fc, "extra": extra, "ref": fact.ref, "known_at": fact.known_at,
-                   "llm": None, "llm_ref": None, "record": rec, "live": lv, "notes": notes,
+                   "llm": None, "llm_ref": None, "record": rec, "live": lv, "live_llm": lv_llm, "notes": notes,
                    "model": {**live.model.card(), "retrained": live.retrained, "path": str(live.path)}}
             if record:
                 bank.add(fact)
@@ -622,7 +671,8 @@ def _range_line(r: dict | None) -> str | None:
 
 def record_lines(h: int, llm: bool = False) -> dict:
     """What the declared tests say about forecasts at horizon h, quoted from the ledger as it stands:
-    {"lines": [str], "tests": {id: verdict or None}, "error"}. Until a test has a result its line says so."""
+    {"lines": [str], "tests": {id: verdict or None}, "error"}. Until a test has a result its line says so.
+    ``llm`` adds the model's own test (F1d, 5 sessions only), for a card that shows the model's chance."""
     try:
         rows = _verdict_rows()
     except Exception as e:  # noqa: BLE001 - the card still prints; the record says it could not be read
@@ -635,14 +685,17 @@ def record_lines(h: int, llm: bool = False) -> dict:
     if gated:
         lines.append(_test_line(rows.get(gated), gated, "2019-2026"))
         tests[gated] = (rows.get(gated) or {}).get("verdict")
+    f1_tested = any(tests.values())
     if llm and h == 5:
         lines.append(_test_line(rows.get(LLM_TEST), LLM_TEST, "the model on F1a's weeks"))
         tests[LLM_TEST] = (rows.get(LLM_TEST) or {}).get("verdict")
+    elif llm:
+        lines.append(f"the model's chance at {h} sessions has no declared test")
     rl = _range_line(rows.get(recent)) if recent else None
     rl = rl or (_range_line(rows.get(gated)) if gated else None)
     if rl:
         lines.append(rl)
-    if not any(tests.values()):
+    if not f1_tested:
         lines.append("no declared test of F1 at this horizon has a result yet: this forecast is untested")
     return {"lines": lines, "tests": tests, "error": None}
 
@@ -792,21 +845,23 @@ def _metrics(cs: list[dict], h: int) -> dict | None:
 
 
 def live_summary(bank: Bank, h: int, forecaster: str = F1) -> dict:
-    """The live record of one forecaster at horizon h: {"scored", "pending", ..., "line"}."""
+    """The live record of one forecaster at horizon h: {"scored", "pending", ..., "line"}. The model's line
+    (F1-llm) says whose record it is: "The model's live forecasts (F1-llm) scored: ..."."""
+    who = "Live forecasts" if forecaster == F1 else f"The model's live forecasts ({forecaster})"
     try:
         g = score(bank)["groups"].get(f"{forecaster} h={h}")
     except Exception as e:  # noqa: BLE001 - the card prints without it and says so
-        return {"scored": None, "line": f"live scoring unavailable ({type(e).__name__}: {e})"}
+        return {"scored": None, "line": f"{who}: live scoring unavailable ({type(e).__name__}: {e})"}
     if not g:
-        return {"scored": 0, "line": "Live forecasts scored: 0."}
+        return {"scored": 0, "line": f"{who} scored: 0."}
     return {**{k: g[k] for k in ("forecasts", "scored", "dates", "pending", "overlapping", "late", "unpriced")},
-            "line": _live_line(g)}
+            "line": _live_line(g, who)}
 
 
-def _live_line(g: dict) -> str:
+def _live_line(g: dict, who: str = "Live forecasts") -> str:
     m = g.get("metrics") or {}
-    head = f"Live forecasts scored: {g['scored']}" + (f" on {g['dates']} date{'s' if g['dates'] != 1 else ''}"
-                                                       if g["scored"] else "")
+    head = f"{who} scored: {g['scored']}" + (f" on {g['dates']} date{'s' if g['dates'] != 1 else ''}"
+                                              if g["scored"] else "")
     if not m:
         return head + f" ({g['pending']} pending)." if g.get("pending") else head + "."
     c68 = ((m.get("range") or {}).get("cover68") or {})
@@ -847,6 +902,8 @@ def card(res: dict) -> str:
     rec = (res.get("record") or {}).get("lines") or []
     live = (res.get("live") or {}).get("line") or "Live forecasts scored: 0."
     body = [ln + "." if not ln.endswith(".") else ln for ln in rec] + [live]
+    if ans:   # the model's chance is shown: so is its own live record
+        body.append((res.get("live_llm") or {}).get("line") or f"The model's live forecasts ({F1_LLM}) scored: 0.")
     lines.append("Record: " + body[0])
     lines += ["        " + ln for ln in body[1:]]
     mod = res.get("model") or {}
