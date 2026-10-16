@@ -30,7 +30,7 @@ def _strip_volatile(rec: dict) -> dict:
 class DeclaredSpecsTest(TempHome):
     def test_h1_h5_specs_are_unchanged_and_new_ones_are_well_formed(self):
         recorded = {r["id"]: r["spec_sha"] for r in ledger.read(config.ROOT / "research" / "ledger.jsonl")
-                    if r["op"] == "declare"}
+                    if r["op"] == "declare" and r.get("kind") != "forecast"}  # forecast pins are checked at run time
         by_id = {h["id"]: h for h in hypotheses.HYPOTHESES}
         for hid in recorded:  # a declared spec is never edited: adding H3b..H8b (and select modes) moves no hash
             self.assertEqual(ledger.spec_sha(by_id[hid]), recorded[hid], hid)

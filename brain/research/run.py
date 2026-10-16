@@ -377,9 +377,14 @@ def _iv(d: dict | None, fmt="+.3f") -> str:
     return f"{_n(d['lo90'], fmt)}..{_n(d['hi90'], fmt)}"
 
 
+def _share(x):
+    """A coverage bound shown as a share: the normal interval can run past 0% or 100%, a share cannot."""
+    return None if x is None else min(1.0, max(0.0, x))
+
+
 def _cover(d: dict | None) -> str:
     d = d or {}
-    return f"{_n(d.get('mean'), '.1%')} ({_n(d.get('lo90'), '.1%')}-{_n(d.get('hi90'), '.1%')})"
+    return f"{_n(d.get('mean'), '.1%')} ({_n(_share(d.get('lo90')), '.1%')}-{_n(_share(d.get('hi90')), '.1%')})"
 
 
 def _fmetrics(r: dict) -> dict:
@@ -427,8 +432,9 @@ def _forecast_words(r: dict) -> str:
     else:
         vs = "no pinball comparison"
     rng = (f"the 68% band held {_n(c68.get('mean'), '.1%')} of the time per date (date-level 90% interval "
-           f"{_n(c68.get('lo90'), '.1%')} to {_n(c68.get('hi90'), '.1%')}) and the 90% band {_n(c90.get('mean'), '.1%')} "
-           f"({_n(c90.get('lo90'), '.1%')} to {_n(c90.get('hi90'), '.1%')}), against 68% and 90% aimed for; {vs}")
+           f"{_n(_share(c68.get('lo90')), '.1%')} to {_n(_share(c68.get('hi90')), '.1%')}) and the 90% band "
+           f"{_n(c90.get('mean'), '.1%')} ({_n(_share(c90.get('lo90')), '.1%')} to {_n(_share(c90.get('hi90')), '.1%')}), "
+           f"against 68% and 90% aimed for; {vs}")
     if is_gated_forecast(r):
         ctl = r.get("controls") or {}
         chance = (f"the chance to beat SPY ranked stocks beyond size with mean IC {_n(sn.get('mean'))} "

@@ -1,6 +1,6 @@
 # Research results
 
-Generated 2026-10-14T00:02:41Z from `research/ledger.jsonl`. Every number below is copied from the ledger.
+Generated 2026-10-16T21:43:45Z from `research/ledger.jsonl`. Every number below is copied from the ledger.
 
 TRAIN 2011-01-31..2018-12-31, TEST from 2019-01-01. Monthly, equal weight against the equal-weight universe, 10 bps per unit turnover. Holdings: the top third by signal unless the hypothesis names another selection (Select column; see `brain/research/harness.py`).
 
@@ -9,19 +9,19 @@ Universes (each has its own panel and controls):
 - `universe/us_large.json`: 60 US stocks (top SEC filers by market value with 10-K XBRL and prices since 2010). Hypotheses: H1-mom12_1, H2-rev1, H3-earnings_yield, H4-low_asset_growth, H5-ridge.
 - `universe/us_broad.json`: 741 US stocks (SEC ranks 1-1500 with 10-K XBRL and prices since 2010). Hypotheses: H6-insider_buying, H3c-earnings_yield_ttm, H7b-earnings_reaction, H8b-sue, H3b-earnings_yield_ttm, H7-earnings_reaction, H8-sue.
 
-Gate (declared before running): TEST mean net excess > 0, permutation p < 0.05, and Benjamini–Hochberg q < 0.10 across every hypothesis in the ledger.
+Gate (declared before running): TEST mean net excess > 0, permutation p < 0.05, and Benjamini–Hochberg q < 0.10 across every hypothesis in the ledger and every gated forecast test (see Forecasts).
 
 | Hypothesis | Universe | Select | TEST net excess / mo | Annualised | Info ratio | Months won | Perm p | BH q | TRAIN net excess / mo | TRAIN p | TEST coverage | Verdict |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| H1-mom12_1 | us_large | top_frac | +0.11% | +1.3% | 0.12 | 42/92 | 0.1758 | 0.837 | +0.22% | 0.0148 | 100% | **FAIL** |
-| H2-rev1 | us_large | top_frac | -0.01% | -0.1% | -0.01 | 49/92 | 0.2142 | 0.837 | +0.05% | 0.0722 | 100% | **FAIL** |
+| H1-mom12_1 | us_large | top_frac | +0.11% | +1.3% | 0.12 | 42/92 | 0.1758 | 0.600 | +0.22% | 0.0148 | 100% | **FAIL** |
+| H2-rev1 | us_large | top_frac | -0.01% | -0.1% | -0.01 | 49/92 | 0.2142 | 0.600 | +0.05% | 0.0722 | 100% | **FAIL** |
 | H3-earnings_yield | us_large | top_frac | -0.23% | -2.7% | -0.31 | 46/92 | 0.8710 | 0.885 | -0.10% | 0.8714 | 85% | **FAIL** |
 | H4-low_asset_growth | us_large | top_frac | -0.11% | -1.3% | -0.22 | 48/92 | 0.7363 | 0.885 | -0.09% | 0.7251 | 97% | **FAIL** |
-| H5-ridge | us_large | top_frac | +0.19% | +2.3% | 0.27 | 48/92 | 0.0510 | 0.612 | +0.14% | 0.0546 | 100% | **FAIL** |
-| H6-insider_buying | us_broad | positive | +0.00% | +0.0% | 0.01 | 48/92 | 0.2789 | 0.837 | +0.11% | 0.0080 | 100% | **FAIL** |
+| H5-ridge | us_large | top_frac | +0.19% | +2.3% | 0.27 | 48/92 | 0.0510 | 0.600 | +0.14% | 0.0546 | 100% | **FAIL** |
+| H6-insider_buying | us_broad | positive | +0.00% | +0.0% | 0.01 | 48/92 | 0.2789 | 0.651 | +0.11% | 0.0080 | 100% | **FAIL** |
 | H3c-earnings_yield_ttm | us_broad | top_frac | -0.11% | -1.3% | -0.25 | 48/92 | 0.8846 | 0.885 | -0.11% | 0.9282 | 94% | **FAIL** |
-| H7b-earnings_reaction | us_broad | top_frac_vs_all | -0.24% | -2.8% | -0.55 | 36/92 | 0.5845 | 0.885 | -0.07% | 0.1838 | 36% | **FAIL** |
-| H8b-sue | us_broad | top_frac | -0.05% | -0.6% | -0.20 | 48/92 | 0.4867 | 0.885 | -0.03% | 0.1058 | 92% | **FAIL** |
+| H7b-earnings_reaction | us_broad | top_frac_vs_all | -0.24% | -2.8% | -0.55 | 36/92 | 0.5845 | 0.844 | -0.07% | 0.1838 | 36% | **FAIL** |
+| H8b-sue | us_broad | top_frac | -0.05% | -0.6% | -0.20 | 48/92 | 0.4867 | 0.844 | -0.03% | 0.1058 | 92% | **FAIL** |
 | H3b-earnings_yield_ttm | us_broad | top_frac | -0.11% | -1.3% | -0.25 | 48/92 | 0.8784 | – | -0.11% | 0.9342 | 94% | **WITHDRAWN** |
 | H7-earnings_reaction | us_broad | top_frac_vs_all | -0.24% | -2.9% | -0.56 | 34/92 | 0.6027 | – | -0.07% | 0.1704 | 35% | **WITHDRAWN** |
 | H8-sue | us_broad | top_frac | -0.06% | -0.7% | -0.23 | 48/92 | 0.5071 | – | -0.04% | 0.1378 | 92% | **WITHDRAWN** |
@@ -72,3 +72,84 @@ The gap is mostly selection: each universe is chosen by today's market value, so
 - `universe/us_broad.json`: 92 TEST months and 741 stocks.
 - Few TEST months give little power: an edge of a few tenths of a percent a month can hide in this noise.
 - Not financial advice. Nothing here places orders.
+
+## Forecasts
+
+F1 forecasts each stock's chance to beat SPY over the next h sessions, and the likely range of its price (docs/FORECAST.md). Every metric is computed per forecast date across the stocks forecast that date, then over dates. Stocks move together within a week, so every interval and p-value is date-level.
+
+Gate (F1b, F1c; declared before running): mean size-neutral IC > 0 with a one-sided date-level sign-flip p < 0.05, Benjamini–Hochberg q < 0.10 across every hypothesis and gated forecast test in the ledger, and both controls passing. F1a and F1d are descriptive retests (REPORT): their 90% intervals are shown, they get no verdict and stay out of the correction.
+
+| Test | h | Dates | Samples | IC | Size-neutral IC | p or 90% interval | BH q | Size IC | Momentum IC | Spread | Brier skill (within-date) | Placement | 68% band held | 90% band held | Verdict |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| F1a-w5-recent | 5 | 2026-08-18..2026-10-07 (8) | 5928 | +0.040 | +0.042 | 90% -0.099..+0.183 | – | -0.046 | +0.014 | +0.52% | +0.99% (+0.13%) | 50.9% | 69.0% (62.8%-75.2%) | 91.9% (88.1%-95.7%) | **REPORT** |
+| F1b-w5-test | 5 | 2019-01-03..2026-08-11 (383) | 283803 | +0.010 | +0.011 | p 0.0870 | 0.600 | +0.009 | +0.008 | -0.06% | -0.08% (+0.00%) | 50.4% | 67.8% (66.5%-69.1%) | 89.9% (89.0%-90.7%) | **FAIL** |
+| F1c-m21-test | 21 | 2019-01-07..2026-09-15 (93) | 68913 | +0.008 | +0.014 | p 0.2096 | 0.600 | +0.020 | -0.001 | +0.23% | -0.42% (-0.01%) | 50.2% | 69.3% (67.0%-71.5%) | 90.9% (89.4%-92.4%) | **FAIL** |
+| F1d-llm-w5-recent | 5 | 2026-08-18..2026-10-07 (8) | 96 | -0.003 | -0.011 | 90% -0.169..+0.147; Brier F1 - model +0.0097 (p 0.352) | – | +0.017 | -0.145 | -0.17% | +0.19% (+0.20%) | 37.5% | 76.0% (67.3%-84.8%) | 92.7% (82.5%-100.0%) | **REPORT** |
+
+IC: Spearman correlation of the chance to beat SPY with what each stock then did beyond SPY. Size-neutral IC: the same after the forecast's rank is cleared of its fit on market value, since the universe holds today's survivors and small-then predicts rose-later. Size IC and Momentum IC: the same samples ranked by size alone (smaller first) and by 12-1 momentum alone. Spread: top fifth minus bottom fifth by forecast, mean excess per date (F1d: halves of 12). Brier skill: against the training base rate as a constant; the within-date part is the only one that speaks to ranking. Placement: share placed on the right side of the date's median. Bands: share of stocks whose close at the exit fell inside, per date (interval).
+
+### What the range and the chance showed
+
+- F1a-w5-recent (2026-08-18 to 2026-10-07, 8 dates): the 68% band held 69.0% of the time per date (date-level 90% interval 62.8% to 75.2%) and the 90% band 91.9% (88.1% to 95.7%), against 68% and 90% aimed for; its pinball loss was 1% above a naive normal band's. Then the chance to beat SPY had mean size-neutral IC +0.042 (90% interval -0.099..+0.183); retest (descriptive): inconclusive; it can detect mean IC >= 0.15 at 80% power.
+- F1b-w5-test (2019-01-03 to 2026-08-11, 383 dates): the 68% band held 67.8% of the time per date (date-level 90% interval 66.5% to 69.1%) and the 90% band 89.9% (89.0% to 90.7%), against 68% and 90% aimed for; its pinball loss was 2% below a naive normal band's. Then the chance to beat SPY ranked stocks beyond size with mean IC +0.011 (date-level p 0.0870, q 0.600): FAIL. Controls passed: the oracle reached p 0.00005 (smallest possible 0.00005), so the test can reject, and 3.0% of 200 coin-flipped placebos passed (1%-10% expected): a check of the sign-flip test itself, not of the forecaster, since coin-flipped signs pass about 5% of the time for any series, a look-ahead leak included (the features' leak tests are what check for one). Within-date permutation p 0.0010 (a diagnostic: too narrow, since stocks move together).
+- F1c-m21-test (2019-01-07 to 2026-09-15, 93 dates): the 68% band held 69.3% of the time per date (date-level 90% interval 67.0% to 71.5%) and the 90% band 90.9% (89.4% to 92.4%), against 68% and 90% aimed for; its pinball loss was 1% below a naive normal band's. Then the chance to beat SPY ranked stocks beyond size with mean IC +0.014 (date-level p 0.2096, q 0.600): FAIL. Controls passed: the oracle reached p 0.00005 (smallest possible 0.00005), so the test can reject, and 5.0% of 200 coin-flipped placebos passed (1%-10% expected): a check of the sign-flip test itself, not of the forecaster, since coin-flipped signs pass about 5% of the time for any series, a look-ahead leak included (the features' leak tests are what check for one). Within-date permutation p 0.0010 (a diagnostic: too narrow, since stocks move together).
+- F1d-llm-w5-recent (2026-08-18 to 2026-10-07, 8 dates): the 68% band held 76.0% of the time per date (date-level 90% interval 67.3% to 84.8%) and the 90% band 92.7% (82.5% to 100.0%), against 68% and 90% aimed for; its pinball loss was 2% above a naive normal band's. Then the local model's Brier score against F1's on the same stocks: F1 minus model +0.0097 per date (90% interval -0.0245..+0.0440, exact sign-flip p 0.352); 0 of 96 answers failed and count as F1's; retest (descriptive): LLM vs F1 inconclusive.
+
+### Calibration
+
+F1a-w5-recent:
+
+| Forecast range | Mean forecast | Beat SPY | n |
+| --- | --- | --- | --- |
+| 0.454-0.474 | 0.470 | 0.243 | 593 |
+| 0.474-0.479 | 0.477 | 0.352 | 593 |
+| 0.479-0.483 | 0.481 | 0.405 | 593 |
+| 0.483-0.485 | 0.484 | 0.411 | 593 |
+| 0.485-0.488 | 0.487 | 0.403 | 593 |
+| 0.488-0.490 | 0.489 | 0.445 | 593 |
+| 0.490-0.492 | 0.491 | 0.487 | 593 |
+| 0.492-0.495 | 0.494 | 0.514 | 593 |
+| 0.495-0.499 | 0.497 | 0.483 | 592 |
+| 0.499-0.527 | 0.503 | 0.486 | 592 |
+
+F1b-w5-test:
+
+| Forecast range | Mean forecast | Beat SPY | n |
+| --- | --- | --- | --- |
+| 0.403-0.476 | 0.467 | 0.479 | 28381 |
+| 0.476-0.479 | 0.479 | 0.514 | 28381 |
+| 0.479-0.482 | 0.481 | 0.509 | 28381 |
+| 0.482-0.486 | 0.484 | 0.479 | 28380 |
+| 0.486-0.489 | 0.487 | 0.476 | 28380 |
+| 0.489-0.493 | 0.491 | 0.494 | 28380 |
+| 0.493-0.497 | 0.495 | 0.494 | 28380 |
+| 0.497-0.502 | 0.499 | 0.496 | 28380 |
+| 0.502-0.508 | 0.505 | 0.505 | 28380 |
+| 0.508-0.597 | 0.521 | 0.472 | 28380 |
+
+F1c-m21-test:
+
+| Forecast range | Mean forecast | Beat SPY | n |
+| --- | --- | --- | --- |
+| 0.387-0.460 | 0.444 | 0.491 | 6892 |
+| 0.460-0.469 | 0.465 | 0.488 | 6892 |
+| 0.469-0.476 | 0.473 | 0.515 | 6892 |
+| 0.476-0.481 | 0.479 | 0.506 | 6891 |
+| 0.481-0.484 | 0.482 | 0.489 | 6891 |
+| 0.484-0.487 | 0.486 | 0.496 | 6891 |
+| 0.487-0.490 | 0.488 | 0.447 | 6891 |
+| 0.490-0.497 | 0.493 | 0.498 | 6891 |
+| 0.497-0.502 | 0.500 | 0.478 | 6891 |
+| 0.502-0.592 | 0.536 | 0.434 | 6891 |
+
+F1d-llm-w5-recent:
+
+| Forecast range | Mean forecast | Beat SPY | n |
+| --- | --- | --- | --- |
+| 0.450-0.500 | 0.487 | 0.500 | 20 |
+| 0.500-0.500 | 0.500 | 0.526 | 19 |
+| 0.500-0.500 | 0.500 | 0.474 | 19 |
+| 0.500-0.500 | 0.500 | 0.316 | 19 |
+| 0.500-0.500 | 0.500 | 0.737 | 19 |
+
+Forecasts are paper only. Nothing here places orders, and none of it is financial advice.
