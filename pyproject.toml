@@ -13,3 +13,6 @@ brain = "brain.cli:main"
 
 [tool.setuptools.packages.find]
 include = ["brain*"]
+
+[tool.ruff]
+extend-exclude = ["brain/chain/engine"]   # copied unchanged from Nikku03/cell (PROVENANCE.md)

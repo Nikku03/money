@@ -88,6 +88,10 @@ python -m brain forecast score              # how recorded forecasts did once th
 
 **Where the record comes from.** The card's Record lines quote the declared runs' results from `research/ledger.jsonl` as they stand; until a test has run, the card says the forecast is untested. Development used only synthetic banks and real data from 2011-2018, so the held-out years are computed once, by the recorded runs. On the real bank, or any copy of it, `brain forecast TICKER` refuses until F1a, F1b and F1c have results in the committed ledger, since a live model would otherwise train on those years first; `--llm` also waits for F1d's result or its withdrawal. Forecasts are paper only and not financial advice.
 
+## The chain engine
+
+`python -m brain chain follow oil_price_up` follows cause→effect links (`knowledge/links.json`) step by step with the bump-node dendritic network and its snap, copied from Nikku03/cell (`brain/chain/engine`). It trains in about 20 seconds and was exact on fresh tables up to 16 steps. Each chain is shown beside an exact lookup. The links are textbook knowledge and untested, and a chain says something about a stock only once its links have been measured on the bank's history.
+
 ## What the brain collects
 
 | Area | What | Command |

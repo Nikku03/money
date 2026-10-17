@@ -1,0 +1,21 @@
+{
+ "about": "Cause -> effect links between market states. Textbook knowledge, every link untested until the evidence engine measures it on the bank's history. sign: +1 the effect moves with the cause as named, -1 against it.",
+ "links": [
+  {"cause": "strait_disruption", "effect": "oil_price_up", "sign": 1, "weight": 1.0, "source": "standard energy economics: supply shock raises price", "status": "untested"},
+  {"cause": "oil_price_up", "effect": "airline_fuel_costs_up", "sign": 1, "weight": 1.0, "source": "jet fuel is a major airline cost (airline annual reports)", "status": "untested"},
+  {"cause": "oil_price_up", "effect": "oil_producer_profits_up", "sign": 1, "weight": 0.9, "source": "producer revenue rises with price", "status": "untested"},
+  {"cause": "airline_fuel_costs_up", "effect": "airline_profits_down", "sign": 1, "weight": 1.0, "source": "costs up, margins down", "status": "untested"},
+  {"cause": "airline_profits_down", "effect": "airline_stocks_down", "sign": 1, "weight": 1.0, "source": "earnings drive price", "status": "untested"},
+  {"cause": "oil_producer_profits_up", "effect": "oil_producer_stocks_up", "sign": 1, "weight": 1.0, "source": "earnings drive price", "status": "untested"},
+  {"cause": "inflation_up", "effect": "interest_rates_up", "sign": 1, "weight": 1.0, "source": "central bank reaction function (Taylor rule)", "status": "untested"},
+  {"cause": "interest_rates_up", "effect": "mortgage_rates_up", "sign": 1, "weight": 1.0, "source": "mortgage rates track long rates", "status": "untested"},
+  {"cause": "interest_rates_up", "effect": "bank_margins_up", "sign": 1, "weight": 0.8, "source": "net interest margin widens (bank filings)", "status": "untested"},
+  {"cause": "interest_rates_up", "effect": "growth_valuations_down", "sign": 1, "weight": 0.9, "source": "higher discount rate lowers long-duration value", "status": "untested"},
+  {"cause": "mortgage_rates_up", "effect": "housing_demand_down", "sign": 1, "weight": 1.0, "source": "affordability falls", "status": "untested"},
+  {"cause": "housing_demand_down", "effect": "homebuilder_stocks_down", "sign": 1, "weight": 1.0, "source": "orders fall", "status": "untested"},
+  {"cause": "bank_margins_up", "effect": "bank_stocks_up", "sign": 1, "weight": 1.0, "source": "earnings drive price", "status": "untested"},
+  {"cause": "growth_valuations_down", "effect": "tech_stocks_down", "sign": 1, "weight": 1.0, "source": "tech is long-duration equity", "status": "untested"},
+  {"cause": "dollar_up", "effect": "exporter_revenue_down", "sign": 1, "weight": 1.0, "source": "foreign sales worth fewer dollars", "status": "untested"},
+  {"cause": "exporter_revenue_down", "effect": "exporter_stocks_down", "sign": 1, "weight": 1.0, "source": "earnings drive price", "status": "untested"}
+ ]
+}
