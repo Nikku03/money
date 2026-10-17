@@ -1,7 +1,10 @@
 """Collect everything public the brain knows how to read about a ticker."""
 from __future__ import annotations
 
+import urllib.error
+
 from brain.bank import Bank, Fact
+from brain.net import FetchError
 from brain.sources import news, prices, sec
 
 PARTS = ("sec", "filings", "prices", "news")
@@ -28,7 +31,14 @@ def ingest(bank: Bank, ticker: str, parts=PARTS, all_concepts: bool = False, log
             log(f"  {t}: {e}; skipping SEC")
             has_sec = False
         if has_sec and "sec" in parts:
-            counts["sec_facts"] = bank.add_many(sec.facts_for(t, all_concepts))
+            try:
+                counts["sec_facts"] = bank.add_many(sec.facts_for(t, all_concepts))
+            except FetchError as e:
+                # A fund (SPY) has a CIK but files no XBRL statements; its filings and prices still count.
+                if not (isinstance(e.__cause__, urllib.error.HTTPError) and e.__cause__.code == 404):
+                    raise
+                log(f"  {t}: no XBRL financial statements at the SEC (a fund?); skipping them")
+                counts["sec_facts"] = 0
         if has_sec and "filings" in parts:
             fil, ident = sec.filings_for(t)
             counts["filings"] = bank.add_many(fil)
