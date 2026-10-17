@@ -90,7 +90,12 @@ python -m brain forecast score              # how recorded forecasts did once th
 
 ## The chain engine
 
-`python -m brain chain follow oil_price_up` follows cause→effect links (`knowledge/links.json`) step by step with the bump-node dendritic network and its snap, copied from Nikku03/cell (`brain/chain/engine`). It trains in about 20 seconds and was exact on fresh tables up to 16 steps. Each chain is shown beside an exact lookup. The links are textbook knowledge and untested, and a chain says something about a stock only once its links have been measured on the bank's history.
+`python -m brain chain follow oil_price_up` follows cause→effect links (`knowledge/links.json`) step by step with the bump-node dendritic network and its snap, copied from Nikku03/cell (`brain/chain/engine`). It trains in about 20 seconds and was exact on fresh tables up to 16 steps. Each chain is shown beside an exact lookup. The links are textbook knowledge, so a chain says something about a stock only once its links have been measured on the bank's history.
+
+`python -m brain chain measure`, then `declare`, commit, `test`, commit, measures each chain the bank can see end to end (`docs/LINKS.md`):
+- It covers oil → airline and oil producer stocks, and the 10-year yield → bank, tech and homebuilder stocks.
+- Each pair is tested twice: does the basket move with the cause that month, and does it move the next month? The next-month test is the one that matters for acting on a link.
+- `brain chain links` shows each link's test, or what would measure it. `brain chain follow` shows the results beside each chain.
 
 ## What the brain collects
 

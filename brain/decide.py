@@ -167,7 +167,7 @@ def _verdict_text(verdict: str, net, p) -> str:
 def _verdicts() -> dict[str, dict]:
     from brain.research import run as research_run
     try:
-        return ({r["id"]: r for r in research_run.verdicts() if not research_run.is_forecast(r)}
+        return ({r["id"]: r for r in research_run.verdicts() if research_run.is_hypothesis(r)}
                 if config.LEDGER.exists() else {})
     except (OSError, ValueError, KeyError, TypeError):
         return {}

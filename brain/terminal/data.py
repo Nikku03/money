@@ -701,17 +701,19 @@ def _res(bank: Bank, cmd: Command) -> dict:
     recs = ledger.read() if config.LEDGER.exists() else []
     declared = {r["id"]: r for r in recs if r["op"] == "declare"}
     every = research_run.verdicts() if recs else []
-    results = [r for r in every if r.get("kind") != "forecast"]
-    forecasts = [r for r in every if r.get("kind") == "forecast"]  # their numbers are in FCST: p is not a perm p
+    results = [r for r in every if r.get("kind") is None]
+    forecasts = [r for r in every if r.get("kind") in ("forecast", "link")]  # FCST and RESULTS.md: p is not a perm p
     rows = [{"id": r["id"], "universe": _universe_name(r.get("universe")),
              "claim": declared.get(r["id"], {}).get("spec", {}).get("claim", ""),
              "test_net": r["test"]["mean_net_excess"], "perm_p": r["test"]["perm_p"], "bh_q": r["bh_q"],
              "verdict": r["verdict"]} for r in results]
-    rows += [{"id": r["id"], "universe": _universe_name(declared.get(r["id"], {}).get("spec", {}).get("universe")),
+    rows += [{"id": r["id"], "universe": "links" if r.get("kind") == "link" else
+              _universe_name(declared.get(r["id"], {}).get("spec", {}).get("universe")),
               "claim": declared.get(r["id"], {}).get("spec", {}).get("claim", ""), "test_net": None, "perm_p": None,
               "bh_q": r.get("bh_q"), "verdict": r["verdict"]} for r in forecasts]
     ran = {r["id"] for r in every}
-    rows += [{"id": hid, "universe": _universe_name(d["spec"].get("universe")), "claim": d["spec"].get("claim", ""),
+    rows += [{"id": hid, "universe": "links" if d.get("kind") == "link" else _universe_name(d["spec"].get("universe")),
+              "claim": d["spec"].get("claim", ""),
               "test_net": None, "perm_p": None, "bh_q": None, "verdict": "not run"}
              for hid, d in declared.items() if hid not in ran]
     cols = [_col("id", "Hypothesis"), _col("universe", "Universe"), _col("claim", "Claim"),
@@ -815,7 +817,7 @@ def _research_line(signal: str) -> str:
     results = {}
     if config.LEDGER.exists():
         from brain.research import run as research_run
-        results = {r["id"]: r for r in research_run.verdicts() if not research_run.is_forecast(r)}
+        results = {r["id"]: r for r in research_run.verdicts() if research_run.is_hypothesis(r)}
     hid = next((i for i in reversed(ids) if i in results), ids[-1])
     v = results.get(hid)
     if v is None:

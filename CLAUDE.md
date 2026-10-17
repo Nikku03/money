@@ -39,6 +39,8 @@ python -m brain check                              # bank invariants; exit 0 = O
 
 Every hypothesis ever run counts in the false-discovery correction, so trying twenty variants costs something. That is the point.
 
+The chain engine's cause → effect links (`knowledge/links.json`) are tested the same way (`docs/LINKS.md`): `python -m brain chain measure`, `python -m brain chain declare`, commit, `python -m brain chain test`, commit the ledger and `research/RESULTS.md`. A new link or basket is a new test id; a declared one is never edited.
+
 ## Decisions
 
 - The model's own call (a `judgment` fact, made by `brain decide`) is a source like any web page. It carries weight only through its scored record (`brain decide score`, terminal `CLM` and `DEC`), never because it reads well. The same holds for the claims you note.

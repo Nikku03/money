@@ -429,7 +429,7 @@ def evidence(bank: Bank, ticker: str, budget_s: float | None = EVIDENCE_BUDGET_S
     if len(panel.rebal) == 0:
         raise NoEvidence("not enough price history for a month-end ranking")
     vals = signals.compute_last(bank, panel, list(SIGNAL_TO_HYP))
-    verdict = ({r["id"]: r for r in research_run.verdicts() if not research_run.is_forecast(r)}
+    verdict = ({r["id"]: r for r in research_run.verdicts() if research_run.is_hypothesis(r)}
                if config.LEDGER.exists() else {})  # hypotheses only: forecast tests have no TEST months
     claims = {h["id"]: h["claim"] for h in HYPOTHESES}
     j = tickers.index(t_)

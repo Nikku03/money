@@ -13,7 +13,7 @@ from brain.sources import prices
 GROUPS = ("Americas", "Europe", "Asia-Pacific", "Volatility", "FX", "Commodities", "Crypto")
 KIND = {"Americas": "index", "Europe": "index", "Asia-Pacific": "index", "Volatility": "volatility",
         "FX": "fx", "Commodities": "commodity", "Crypto": "crypto"}
-START = "2015-01-01"
+START = "2000-01-01"   # the link tests (brain/chain/linktest.py) read oil and the dollar from 2010
 
 _LIST = {
     "Americas": [("^GSPC", "S&P 500"), ("^DJI", "Dow Jones Industrial Average"), ("^IXIC", "Nasdaq Composite"),

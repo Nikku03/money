@@ -166,13 +166,28 @@ def is_forecast(r: dict) -> bool:
     return r.get("kind") == "forecast"
 
 
+def is_link(r: dict) -> bool:
+    """A test of the chain engine's links (brain/chain/linktest.py)."""
+    return r.get("kind") == "link"
+
+
+def is_hypothesis(r: dict) -> bool:
+    """A hypothesis result (brain/research/hypotheses.py): no ``kind``."""
+    return r.get("kind") is None
+
+
+def is_gated_link(r: dict) -> bool:
+    """A next-month link test; the same-month ones are descriptive."""
+    return is_link(r) and r.get("gate_type") == "slope"
+
+
 def is_gated_forecast(r: dict) -> bool:
     """A forecast result with a declared gate (F1b, F1c); descriptive ones (F1a, F1d) are not."""
     return is_forecast(r) and (r.get("gate_type") == "ic" or (r.get("gate_type") is None and "p" in r))
 
 
 def _bh_p(r: dict) -> float:
-    if is_forecast(r):
+    if is_forecast(r) or is_link(r):
         p = r.get("p")
         return float(p) if isinstance(p, (int, float)) and math.isfinite(p) else 1.0  # no p counts as 1
     return r["test"]["perm_p"]
@@ -187,15 +202,25 @@ def _forecast_verdict(r: dict, q: float) -> str:
     return "PASS" if g.get("pass") and q < FORECAST_BH_Q else "FAIL"
 
 
+def _link_verdict(r: dict, q: float) -> str:
+    if not is_gated_link(r):
+        return "REPORT"
+    if not (r.get("controls") or {}).get("pass"):
+        return "FAIL (controls)"
+    return "PASS" if (r.get("gate") or {}).get("pass") and q < FORECAST_BH_Q else "FAIL"
+
+
 def verdicts(path=None) -> list[dict]:
-    """Verdicts for every hypothesis and forecast test with a result. The false-discovery correction runs
-    over every hypothesis and every gated forecast test (``p`` for a forecast, ``perm_p`` for a hypothesis),
-    withdrawn ones included: a withdrawn test was still tried, and dropping it would make every other q-value
-    look better than it is. Descriptive forecast tests (F1a, F1d) get the verdict REPORT and stay outside it.
-    A forecast row carries ``kind: "forecast"``."""
+    """Verdicts for every hypothesis, forecast test and link test with a result. The false-discovery
+    correction runs over every hypothesis, every gated forecast test and every gated link test (``p`` for a
+    forecast or a link, ``perm_p`` for a hypothesis), withdrawn ones included: a withdrawn test was still tried,
+    and dropping it would make every other q-value look better than it is. Descriptive tests (F1a, F1d, the
+    same-month link tests) get the verdict REPORT and stay outside it. A forecast row carries ``kind:
+    "forecast"``, a link row ``kind: "link"``."""
     res = ledger.latest_results(path)
     gone = ledger.withdrawn(path)
-    tested = {k: r for k, r in res.items() if not is_forecast(r) or is_gated_forecast(r)}
+    tested = {k: r for k, r in res.items()
+              if is_hypothesis(r) or is_gated_forecast(r) or is_gated_link(r)}
     q_of = dict(zip(tested, bh_adjust([_bh_p(r) for r in tested.values()])))
     rows = []
     for k, r in res.items():
@@ -204,6 +229,9 @@ def verdicts(path=None) -> list[dict]:
         q = q_of.get(k, float("nan"))
         if is_forecast(r):
             rows.append({**r, "bh_q": q, "verdict": _forecast_verdict(r, q)})
+            continue
+        if is_link(r):
+            rows.append({**r, "bh_q": q, "verdict": _link_verdict(r, q)})
             continue
         te = r["test"]
         if not r["controls"]["pass"]:
@@ -259,8 +287,9 @@ def report(ledger_path=None, results_path=None) -> str:
     every = verdicts(ledger_path)
     if not every:
         return ""
-    rows = [r for r in every if not is_forecast(r)]
+    rows = [r for r in every if is_hypothesis(r)]
     forecasts = [r for r in every if is_forecast(r)]
+    links = [r for r in every if is_link(r)]
     led = Path(ledger_path or config.LEDGER)
     try:
         led_name = led.resolve().relative_to(config.ROOT.resolve()).as_posix()
@@ -269,7 +298,7 @@ def report(ledger_path=None, results_path=None) -> str:
     if not rows:
         text = "\n".join(["# Research results", "",
                           f"Generated {now_iso()} from `{led_name}`. Every number below is copied from the ledger.",
-                          "", *_forecast_section(forecasts)]) + "\n"
+                          "", *_forecast_section(forecasts), *_link_section(links, ledger_path)]) + "\n"
         Path(results_path or config.RESULTS).write_text(text)
         return text
     by_uni: dict[str, list[dict]] = {}
@@ -292,7 +321,8 @@ def report(ledger_path=None, results_path=None) -> str:
         "",
         "Gate (declared before running): TEST mean net excess > 0, permutation p < 0.05, and Benjamini–Hochberg "
         "q < 0.10 across every hypothesis in the ledger"
-        + (" and every gated forecast test (see Forecasts)." if any(is_gated_forecast(r) for r in forecasts) else "."),
+        + (" and every gated forecast test (see Forecasts)" if any(is_gated_forecast(r) for r in forecasts) else "")
+        + (" and every gated link test (see Links)" if any(is_gated_link(r) for r in links) else "") + ".",
         "",
         "| Hypothesis | Universe | Select | TEST net excess / mo | Annualised | Info ratio | Months won | Perm p | BH q | TRAIN net excess / mo | TRAIN p | TEST coverage | Verdict |",
         "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
@@ -360,6 +390,8 @@ def report(ledger_path=None, results_path=None) -> str:
     ]
     if forecasts:
         lines += ["", *_forecast_section(forecasts)]
+    if links:
+        lines += ["", *_link_section(links, ledger_path)]
     text = "\n".join(lines) + "\n"
     Path(results_path or config.RESULTS).write_text(text)
     return text
@@ -506,4 +538,65 @@ def _forecast_section(rows: list[dict]) -> list[str]:
         lines += ["Withdrawn (still counted in the correction when gated):", "",
                   *[f"- {r['id']}: {r['verdict'].split(':', 1)[1].strip()}" for r in gone], ""]
     lines += ["Forecasts are paper only. Nothing here places orders, and none of it is financial advice."]
+    return lines
+
+
+# ---------- the Links section (docs/LINKS.md) ----------
+def _pp(x, digits=2) -> str:
+    return f"{x * 100:+.{digits}f}%" if isinstance(x, (int, float)) and math.isfinite(x) else "–"
+
+
+def _link_section(rows: list[dict], ledger_path=None) -> list[str]:
+    """The link tests' table and plain words, from the ledger's results and declared specs."""
+    if not rows:
+        return []
+    specs = {r["id"]: r["spec"] for r in ledger.read(ledger_path) if r["op"] == "declare" and is_link(r)}
+    lines = [
+        "## Links",
+        "",
+        "Tests of the chain engine's cause → effect links (`knowledge/links.json`, `docs/LINKS.md`). Each one "
+        "measures a chain end to end where the bank can see both ends: the cause's monthly change, and a fixed "
+        "basket's equal-weight total return minus SPY's, on month-end closes. **Same month** is descriptive "
+        "(REPORT): how far the basket moves with the cause. **Next month** is gated, declared before running: "
+        "the slope points the way the links say, one-sided permutation p < 0.05, controls pass, and "
+        "Benjamini–Hochberg q < 0.10 across every gated test in the ledger. TEST from 2019; TRAIN 2011–2018 is "
+        "shown beside it.",
+        "",
+        "| Test | Cause → effect | Timing | TEST months | Effect per move (TEST) | 90% interval | p | BH q | "
+        "TRAIN effect | Verdict |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+    ]
+    words = []
+    for r in rows:
+        s = specs.get(r["id"], {})
+        te, tr = r["metrics"]["test"], r["metrics"]["train"]
+        cm, em = s.get("cause_measure", {}), s.get("effect_measure", {})
+        pair = f"{s.get('cause', '?')} → {s.get('effect', '?')}"
+        timing = "same month" if s.get("lag") == "same" else "next month"
+        lo, hi = te["interval90"]
+        q = f"{r['bh_q']:.3f}" if isinstance(r.get("bh_q"), float) and math.isfinite(r["bh_q"]) else "–"
+        verdict = r["verdict"].split(":")[0]
+        lines.append(f"| {r['id']} | {pair} | {timing} | {te['n']} ({te['months'][0]}..{te['months'][1]}) | "
+                     f"{_pp(te['per_move'])} per {cm.get('move_label', 'move')} | {_pp(lo)}..{_pp(hi)} | "
+                     f"{te['p']:.4f} | {q} | {_pp(tr['per_move'])} | **{verdict}** |")
+        way = "beat" if te["per_move"] > 0 else "trailed"
+        same = s.get("lag") == "same"
+        words.append(f"- **{r['id']}**: {'in' if same else 'after'} a month with {cm.get('move_words', 'the cause up')}, "
+                     f"the {em.get('label', 'basket')} {way} SPY by {abs(te['per_move']) * 100:.2f}% "
+                     f"{'that month' if same else 'the next month'} on average (90% interval {_pp(lo)} to {_pp(hi)}; "
+                     f"TRAIN {_pp(tr['per_move'])}). The links say {'up' if s.get('sign', 0) > 0 else 'down'}. {verdict}.")
+    ctl = [r["controls"] for r in rows]
+    lines += ["", *words, "",
+              f"Controls on each test's TEST months: random causes reached p < 0.05 in "
+              f"{min(c['random_fpr'] for c in ctl) * 100:.1f}%–{max(c['random_fpr'] for c in ctl) * 100:.1f}% of "
+              f"{ctl[0]['n_random']} draws (about 5% expected); a cause equal to the effect reached p ≤ "
+              f"{max(c['oracle_p'] for c in ctl):.4f}. "
+              f"{'All passed.' if all(c['pass'] for c in ctl) else 'Some FAILED: those verdicts are void.'}",
+              "",
+              "Reading this: the baskets are chosen today, so companies that failed or merged are missing "
+              "(survivorship). Oil is the front-month future, so its monthly change includes roll effects. A "
+              "same-month move says the link is priced as it happens; only a next-month PASS would say it can "
+              "be acted on. Links the bank cannot measure stay untested: `python -m brain chain links` lists "
+              "what each would need.",
+              ""]
     return lines

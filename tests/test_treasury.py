@@ -52,7 +52,7 @@ class IngestTest(TempHome):
     def test_two_years_concatenated_and_stored(self):
         with mock.patch.object(treasury, "fetch", self.fake_fetch), \
              mock.patch.object(treasury, "today", lambda: "2017-01-04"):
-            facts = treasury.ingest()
+            facts = treasury.ingest(years=2)
         self.assertEqual(len(facts), 1)
         f = facts[0]
         self.assertEqual((f.entity, f.attr, f.tier), ("MACRO", "series.treasury.par_curve", "reported"))

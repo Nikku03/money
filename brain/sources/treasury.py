@@ -56,9 +56,14 @@ def parse_csv(body: bytes) -> pd.DataFrame:
     return out.sort_values("date").drop_duplicates("date", keep="last").reset_index(drop=True)
 
 
-def ingest(years: int = 2) -> list[Fact]:
-    """The current and previous calendar years (``years`` in all), as one snapshot fact."""
+FIRST_YEAR = 2010   # the link tests (brain/chain/linktest.py) read the 10-year yield from 2010
+
+
+def ingest(years: int | None = None) -> list[Fact]:
+    """Every calendar year from FIRST_YEAR (or the last ``years``) to this one, as one snapshot fact. Past
+    years are cached for 30 days, so a daily run fetches the current year."""
     this = int(today()[:4])
+    years = this - FIRST_YEAR + 1 if years is None else years
     frames, fetched = [], []
     for y in range(this - years + 1, this + 1):
         r = fetch(URL.format(year=y), ttl=6 * 3600 if y == this else 30 * 86400)

@@ -8,8 +8,9 @@ fading synaptic memory (``biomemory``, unused here). The engine was built for on
 Here the table comes from ``knowledge/links.json``. Every path the links allow from a starting state is
 written as such a table (each node on the path points to the next; every other node points to itself, so a
 chain stops), and the engine follows it. A plain lookup gives the same chain exactly, so each answer is shown
-beside it and the two are compared. The links themselves are textbook knowledge and untested: what a chain
-says about a stock counts only once the evidence engine has measured those links on the bank's history.
+beside it and the two are compared. The links themselves are textbook knowledge: what a chain says about a
+stock counts only once its links are measured on the bank's history. ``linktest`` does that where the bank
+can see both ends of a chain (docs/LINKS.md), and ``follow`` shows those results beside each chain.
 """
 from __future__ import annotations
 
@@ -139,10 +140,14 @@ def load(path=None, seed: int = 10):
     return net
 
 
-def follow(net, links, start: str, hops: int = 4) -> list[dict]:
-    """Each chain from ``start``: the engine's nodes step by step, the exact lookup, whether they agree, and
-    the direction the chain implies for its last state (the product of the link signs)."""
+def follow(net, links, start: str, hops: int = 4, results: dict | None = None) -> list[dict]:
+    """Each chain from ``start``: the engine's nodes step by step, the exact lookup, whether they agree, the
+    direction the chain implies for its last state (the product of the link signs), and the link tests that
+    measured part of it (``results``: verdict rows by id, from ``linktest.status``). A chain is "tested" when
+    every link on it is marked tested or lies on a link test with a result."""
+    from brain.chain import linktest
     out = []
+    results = results or {}
     names = sorted({ln["cause"] for ln in links} | {ln["effect"] for ln in links})
     for chain in paths(links, start, min(hops, M - 1)):
         nodes, succ = table(chain, names)
@@ -151,17 +156,57 @@ def follow(net, links, start: str, hops: int = 4) -> list[dict]:
         got = [nodes[int(i[0])] for i in net.items]
         want = [ln["effect"] for ln in chain]
         sign = int(np.prod([ln.get("sign", 1) for ln in chain]))
-        out.append({"engine": got, "exact": want, "agree": got == want, "sign": sign,
-                    "status": "untested" if any(ln.get("status") != "tested" for ln in chain) else "tested"})
+        tests, covered = [], set()
+        for p in linktest.covering(chain, links):
+            for lag in ("same", "next"):
+                r = results.get(linktest.test_id(p, lag))
+                if r is not None:
+                    tests.append(r)
+                    covered |= {(s["cause"], s["effect"]) for s in p["path"]}
+        tested = all(ln.get("status") == "tested" or (ln["cause"], ln["effect"]) in covered for ln in chain)
+        out.append({"engine": got, "exact": want, "agree": got == want, "sign": sign, "tests": tests,
+                    "status": "tested" if tested else "untested"})
     return out
 
 
 # ---------- CLI ----------
+def _test_line(r: dict) -> str:
+    te = r["metrics"]["test"]
+    return f"{r['id']}: {te['per_move'] * 100:+.2f}% vs SPY per move (p {te['p']:.4f}), {r['verdict']}"
+
+
 def _cmd(a) -> int:
+    from brain.chain import linktest
     links = load_links()
+    words = list(a.words or [])
+    if a.action in ("measure", "declare", "test"):
+        from brain.bank import Bank
+        bank = Bank()
+        if a.action == "measure":
+            out = linktest.collect(bank)
+            print(f"{len(out['added'])} series collected" + (f"; failed: {', '.join(out['failed'])}" if out["failed"] else ""))
+            return 1 if out["failed"] else 0
+        trial = linktest.is_trial(a.trial)
+        if a.action == "declare":
+            new = linktest.declare(bank, trial=trial, ids=words or None)
+            print(f"{len(new)} declared" + ("" if trial or not new else "; commit the ledger before `brain chain test`"))
+            return 0
+        linktest.test(bank, words or None, trial=trial)
+        return 0
+    results = linktest.status() if a.action in ("links", "follow") else {}
     if a.action == "links":
+        pairs = linktest.pairs(links)
         for ln in links:
-            print(f"{ln['cause']:<26} -> {ln['effect']:<26} {'+' if ln.get('sign', 1) > 0 else '-'}  {ln['status']}  ({ln['source']})")
+            on = [p for p in pairs if any((s["cause"], s["effect"]) == (ln["cause"], ln["effect"]) for s in p["path"])]
+            if on:
+                ids = [linktest.test_id(p, lag) for p in on for lag in ("same", "next")]
+                done = [results[i]["verdict"] for i in ids if i in results]
+                how = f"measured by {', '.join(ids)}" + (f": {', '.join(done)}" if done else ": not run yet")
+            else:
+                need = (linktest.needs(ln["effect"]) if ln["effect"] in linktest.NEEDS
+                        else linktest.needs(ln["cause"]) or linktest.needs(ln["effect"]))
+                how = f"not measurable yet: needs {need}"
+            print(f"{ln['cause']:<26} -> {ln['effect']:<26} {'+' if ln.get('sign', 1) > 0 else '-'}  {how}")
         return 0
     if a.action == "train":
         net = train(a.steps)
@@ -173,24 +218,31 @@ def _cmd(a) -> int:
         print("no trained engine yet: python -m brain chain train")
         return 1
     net = load()
-    rows = follow(net, links, a.start, a.hops)
+    start = words[0] if words else "oil_price_up"
+    rows = follow(net, links, start, a.hops, results)
     if not rows:
-        print(f"no links lead out of {a.start!r} (python -m brain chain links)")
+        print(f"no links lead out of {start!r} (python -m brain chain links)")
         return 1
     for r in rows:
-        path = " -> ".join([a.start] + r["engine"])
+        path = " -> ".join([start] + r["engine"])
         print(f"{'agrees' if r['agree'] else 'DIFFERS from lookup'}: {path}   ({r['status']})")
         if not r["agree"]:
-            print(f"   lookup: {' -> '.join([a.start] + r['exact'])}")
-    print("The links are textbook knowledge; a chain says something about a stock only once its links are tested.")
+            print(f"   lookup: {' -> '.join([start] + r['exact'])}")
+        for t in r["tests"]:
+            print("   " + _test_line(t))
+    print("The links are textbook knowledge: a chain says something about a stock only where its links are tested "
+          "(RESULTS.md, Links), and only a next-month PASS would say it can be acted on.")
     return 0
 
 
 def add_cli(sub) -> None:
     s = sub.add_parser("chain", help="follow cause -> effect links with the chain engine (snap network from "
-                                     "Nikku03/cell): train | links | follow START")
-    s.add_argument("action", choices=["train", "links", "follow"])
-    s.add_argument("start", nargs="?", default="oil_price_up")
+                                     "Nikku03/cell), and test the links: train | links | follow START | "
+                                     "measure | declare | test [ID...]")
+    s.add_argument("action", choices=["train", "links", "follow", "measure", "declare", "test"])
+    s.add_argument("words", nargs="*", metavar="START | ID", help="follow: the starting state (default "
+                   "oil_price_up); declare/test: link test ids (default: all)")
     s.add_argument("--hops", type=int, default=4)
     s.add_argument("--steps", type=int, default=3000)
+    s.add_argument("--trial", action="store_true", help="declare/test on TRAIN years only, in the trial ledger")
     s.set_defaults(fn=_cmd)
