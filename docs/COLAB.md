@@ -98,6 +98,8 @@ BRAIN_SEARX_URL=...                     # optional: a SearXNG instance for web s
 
 ## 5. The notebook, cell by cell
 
+The notebook is `colab/money_brain.ipynb`. In Colab: File → Open notebook → GitHub, paste the repo URL, and pick this branch (a private repo needs Colab's GitHub access). Its sections follow these steps.
+
 1. **Check the GPU:** `nvidia-smi`; choose the model row from section 4.
 2. **Mount Drive** and set `MONEY_HOME`.
 3. **Get the code:** `git clone -b claude/upbeat-turing-z9jk2b https://github.com/nikku03/money`. A private repo needs a GitHub token. Then `pip install -e .`.

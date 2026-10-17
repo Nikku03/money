@@ -31,6 +31,7 @@ import importlib
 import io
 import ipaddress
 import json
+import os
 import re
 import secrets
 import socket
@@ -275,9 +276,16 @@ class TerminalServer(ThreadingHTTPServer):
 
     def host_allowed(self, value: str) -> bool:
         m = HOST_HEADER.fullmatch(value.strip().lower())
-        if not m or int(m.group(2) or 80) != self.server_port:
+        if not m:
             return False
         name = m.group(1).strip("[]")
+        # A reverse proxy named by its owner (Colab's port proxy): that exact host name, on the proxy's port.
+        # Requests still need the session token; nothing else changes when the variable is unset.
+        proxy = os.environ.get("BRAIN_TERMINAL_PROXY_HOST", "").strip().lower()
+        if proxy and name == proxy:
+            return True
+        if int(m.group(2) or 80) != self.server_port:
+            return False
         # The loopback names, in any spelling of their address, and the address we bound (the URL we print).
         if name in LOOPBACK_NAMES or any(_same_ip(name, n) for n in ("127.0.0.1", "::1", self.host)):
             return True

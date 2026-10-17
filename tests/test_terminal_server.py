@@ -140,6 +140,15 @@ class ServerTest(TempHome):
             with self.subTest(host=host):
                 self.assertEqual(self.req("/api/status", host=host)[0], 200)
 
+    def test_a_named_proxy_host_is_allowed_and_still_needs_the_token(self):
+        proxy = "8765-abc-colab.googleusercontent.example"
+        self.assertEqual(self.req("/api/status", host=proxy)[0], 403)
+        with unittest.mock.patch.dict(os.environ, {"BRAIN_TERMINAL_PROXY_HOST": proxy}):
+            self.assertEqual(self.req("/api/status", host=proxy)[0], 200)
+            self.assertEqual(self.req("/api/status", host=f"{proxy}:443")[0], 200)
+            self.assertEqual(self.req("/api/status", host=proxy, token=False)[0], 401)
+            self.assertEqual(self.req("/api/status", host="other.googleusercontent.example")[0], 403)
+
     def test_page_injects_token_and_sets_security_headers(self):
         code, headers, body = self.req("/", token=False, headers={"Origin": "https://evil.example"})
         self.assertEqual(code, 200)
