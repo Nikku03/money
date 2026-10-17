@@ -436,6 +436,13 @@ class ForecastTest(ForecastHome):
         self.assertFalse(r["extra"]["in_universe"])
         self.assertIn("not in universe/us_broad.json", live.card(r))
 
+    def test_a_model_trained_on_a_small_bank_says_so(self):
+        [r] = live.run(self.bank, ["AAA"], universe=UNI + [f"ZZ{i}" for i in range(6)])
+        self.assertTrue(r["ok"], r)
+        self.assertIn("learned from only 5 of the universe's 11 stocks", live.card(r))
+        [r] = self.forecast("AAA")
+        self.assertNotIn("learned from only", live.card(r))
+
     def test_llm_answer_recorded_as_a_second_fact(self):
         seen = []
 

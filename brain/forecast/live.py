@@ -389,13 +389,14 @@ def model(bank: Bank, h: int = 5, *, tickers=None, cal=None, d: str | None = Non
     samples = int(np.sum(np.asarray(fs.exit).astype(str) <= d)) if len(fs.exit) else 0
     meta = {"trained_through": d, "newest_exit": str(newest), "grid_first": grid[0], "grid_last": grid[-1],
             "n_grid": len(grid), "prices_asof": asof, "samples": samples, "rows": int(m.rows),
+            "stocks": int(np.isfinite(px.adj).any(axis=0).sum()),   # universe stocks with prices in the bank
             "dropped": plain(dict(getattr(fs, "dropped", {}) or {})), "trained_at": now_iso(),
             "seconds": {"prices": round(t1 - t0, 1), "features": round(t2 - t1, 1), "fit": round(t3 - t2, 1)}}
     live = Live(model=m, range=plain(rng), key=key, meta=meta, path=path, retrained=True, fs=fs, px=px)
     _save_model(live)
     if log:
         log(f"  trained in {t3 - t0:.0f}s (prices {t1 - t0:.0f}s, features {t2 - t1:.0f}s, fit {t3 - t2:.0f}s): "
-            f"{m.rows} rows of {samples} realised samples -> {path}")
+            f"{m.rows} rows of {samples} realised samples from {meta['stocks']} of {len(tk)} stocks -> {path}")
     return live
 
 
@@ -592,6 +593,10 @@ def run(bank: Bank, tickers, *, h: int = 5, llm: bool = False, client=None, univ
             fact = fact_for(fc, extra, inputs)
             notes = [] if extra["in_universe"] else [f"{t} is not in {UNIVERSE}: the model never trained on it, "
                                                      "and its features are ranked against the universe's"]
+            stocks, n = live.meta.get("stocks"), live.key.get("n_tickers")
+            if stocks is not None and n and stocks < n / 2:
+                notes.append(f"the model learned from only {stocks} of the universe's {n} stocks (a small bank): it is "
+                             "not the tested F1, so its numbers only show the pipeline working")
             res = {"ok": True, "ticker": t, "forecast": fc, "extra": extra, "ref": fact.ref, "known_at": fact.known_at,
                    "llm": None, "llm_ref": None, "record": rec, "live": lv, "live_llm": lv_llm, "notes": notes,
                    "model": {**live.model.card(), "retrained": live.retrained, "path": str(live.path)}}
