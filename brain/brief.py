@@ -495,7 +495,7 @@ def _broad_evidence(bank: Bank, t_: str, verdict: dict, claims: dict, budget_s: 
     held_here = sum(bank.shard(t).exists() for t in tickers)
     if held_here < BROAD_MIN_SHARE * len(tickers):
         return {**out, "status": "unavailable", "universe_size": len(tickers),
-                "reason": f"the bank holds {held_here} of its {len(tickers)} stocks "
+                "reason": f"only {held_here} of its {len(tickers)} stocks are in the bank, too few to rank "
                           f"(`python -m brain ingest-universe --broad` adds them)"}
     names = list(dict.fromkeys(h["signal"] for h in hyps))
     every = tickers + ([t_] if t_ not in tickers else [])

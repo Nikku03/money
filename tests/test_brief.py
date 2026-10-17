@@ -250,6 +250,6 @@ class BroadEvidenceTest(TempHome):
         ev = brief.evidence(self.bank, "L1", budget_s=None)
         self.assertEqual([r["hypothesis"] for r in ev["signals"]], H1_H4)
         self.assertEqual(ev["broad"]["status"], "unavailable")
-        self.assertIn("the bank holds 11 of its 31 stocks", ev["broad"]["reason"])
+        self.assertIn("only 11 of its 31 stocks are in the bank, too few to rank", ev["broad"]["reason"])
         md = brief.build(self.bank, "L1")
-        self.assertIn("Not ranked against `universe/us_broad.json`: the bank holds 11 of its 31 stocks", md)
+        self.assertIn("Not ranked against `universe/us_broad.json`: only 11 of its 31 stocks are in the bank, too few to rank", md)
