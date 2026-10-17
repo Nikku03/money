@@ -6,18 +6,23 @@ basket's equal-weight total return minus SPY's. A chain whose middle steps the b
 profits, mortgage rates) is tested end to end: oil -> airline stocks covers the three links between them.
 Links the bank cannot reach at either end stay untested, and ``needs`` says what would measure them.
 
-Each pair is tested twice, on month-end closes:
+Each pair is tested twice, on SPY's calendar:
 
-- **same month** (descriptive, REPORT): does the effect move with the cause in the same month, and by how much?
-- **next month** (gated): does this month's change in the cause predict next month's effect? This is the
-  tradeable question: a link the market prices at once shows up in the same month and not in the next.
+- **same month** (descriptive, REPORT): does the effect move with the cause in the same month (month-end close
+  to month-end close), and by how much?
+- **next month** (gated): does this month's change in the cause predict next month's effect, measured from the
+  close of the next month's first session to its last? This is the tradeable question, on the research
+  harness's rule (signal at the month-end close, fill at the next session's close): a link the market prices at
+  once shows up in the same month and not in the next.
 
 The rules are the research ledger's. A test is declared (its full spec, the code's sha and the git commit)
 before it runs, and a declared spec is frozen: a change is a new id. TRAIN is 2011-2018 and TEST runs from
-2019 to the last complete month at declare; the verdict reads TEST only. The p-value is one-sided, in the
-direction the links imply, from shuffling the cause's months. A next-month test passes when its slope points
-that way, p < 0.05, its controls pass, and its Benjamini-Hochberg q < 0.10 across every gated test in the
-ledger (``research/run.py``). Results are written to the ledger and RESULTS.md whatever they say.
+2019 to the last complete month at declare; the verdict reads TEST only. Every series is read as the bank
+held it at declare (``data_asof``), and the result names each snapshot it read. The p-value is one-sided, in
+the direction the links imply, from shuffling the cause's months; the controls check that null against the
+cause's own autocorrelation (circular shifts of the real series). A next-month test passes when its slope
+points that way, p < 0.05, its controls pass, and its Benjamini-Hochberg q < 0.10 across every gated test in
+the ledger (``research/run.py``). Results are written to the ledger and RESULTS.md whatever they say.
 """
 from __future__ import annotations
 
@@ -31,13 +36,14 @@ import numpy as np
 from brain import config
 from brain.bank import Bank, canon
 from brain.research import ledger
-from brain.research.forecast_tests import (  # noqa: F401 - is_trial: the CLI's trial rule
+from brain.research.forecast_tests import (
     Refused,
     is_trial,
     paths,
 )
 from brain.timeutil import now_iso
 
+VERSION = 1         # in every id: a change to the design or the code after declare is a new version
 BENCH = "SPY"
 SPLIT = {"train": ["2011-01", "2018-12"], "test_start": "2019-01"}
 TRIAL_SPLIT = {"train": ["2011-01", "2014-12"], "test": ["2015-01", "2018-12"]}   # TRAIN years only
@@ -45,10 +51,12 @@ N_PERM = 5000
 N_BOOT = 2000
 SEED = 11
 ALPHA = 0.05
-CONTROLS = {"n_random": 200, "n_perm": 500, "fpr_max": 0.10, "oracle_p_max": 0.01}
-MIN_SHARE = 0.8     # a window needs this share of its months measured, or the test is refused
-MIN_MEMBERS = 2     # basket members with both month-end closes, or that month is not measured
-STALE_DAYS = 7      # a series' last value may be this many days before the month's last session
+CONTROLS = {"shift_min": 3, "n_perm": 500, "fpr_max": 0.10, "oracle_p_max": 0.01}
+BH = {"bh_q": 0.10, "bh_over": "every hypothesis, every gated forecast test and every gated link test with a "
+                               "result in the ledger, withdrawn ones included"}
+MIN_SHARE = 0.8     # a window needs this share of its months measured, and both its ends, or it is refused
+MIN_MEMBERS = 2     # basket members with prices on both sessions, or that month is not measured
+STALE_DAYS = {"cause": 7, "stocks": 0}   # how old a value may be at a session: stocks and SPY must trade on it
 CLEAN = ("brain", "knowledge")
 LINKS = config.ROOT / "knowledge" / "links.json"
 HERE = Path(__file__).resolve()
@@ -124,22 +132,29 @@ def pairs(links: list[dict]) -> list[dict]:
 
 
 def test_id(pair: dict, lag: str) -> str:
-    return f"L-{SHORT[pair['cause']]}-{SHORT[pair['effect']]}-{lag}"
+    return f"L{VERSION}-{SHORT[pair['cause']]}-{SHORT[pair['effect']]}-{lag}"
 
 
 def tests(links: list[dict] | None = None) -> list[dict]:
-    """The link tests the links allow, same month then next month for each pair."""
+    """The link tests the links allow, same month then next month for each pair. Two paths between the same
+    pair would share an id: that is refused, so the second gets a name of its own first."""
     from brain import chain
     links = chain.load_links() if links is None else links
-    return [{"id": test_id(p, lag), "lag": lag, **p} for p in pairs(links) for lag in ("same", "next")]
+    out = [{"id": test_id(p, lag), "lag": lag, **p} for p in pairs(links) for lag in ("same", "next")]
+    ids = [t["id"] for t in out]
+    if len(set(ids)) != len(ids):
+        raise Refused(f"two paths give the same link test id: {sorted({i for i in ids if ids.count(i) > 1})}")
+    return out
 
 
 def code_files() -> list[Path]:
-    """What a link test's numbers run through: this file, the verdicts (research/run.py), the price book and
-    the series store. A change to one after declare makes ``test`` refuse."""
-    from brain import metrics, series
-    from brain.research import run
-    return [HERE, Path(run.__file__).resolve(), Path(metrics.__file__).resolve(), Path(series.__file__).resolve()]
+    """What a link test's numbers run through: this file, the verdicts and their correction (research/run.py,
+    research/stats.py), the trial rules (research/forecast_tests.py), the bank's point-in-time view, the price
+    book, the series store and the Treasury reader. A change to one after declare makes ``test`` refuse."""
+    from brain import bank, metrics, series
+    from brain.research import forecast_tests, run, stats
+    from brain.sources import treasury
+    return [HERE, *(Path(m.__file__).resolve() for m in (run, stats, forecast_tests, bank, metrics, series, treasury))]
 
 
 def code_sha() -> str:
@@ -157,21 +172,28 @@ def _code_paths() -> list[str]:
 
 def claim(t: dict) -> str:
     c, e = NODES[t["cause"]], NODES[t["effect"]]
-    when = "that month" if t["lag"] == "same" else "the next month"
-    way = "beats" if t["sign"] > 0 else "trails"
-    return (f"When the {c['label'].split(',')[0]} rises in a month, the {e['label']} basket {way} SPY {when}: the "
-            f"slope of its excess return on the cause's monthly change is {'>' if t['sign'] > 0 else '<'} 0.")
+    when = "the same month" if t["lag"] == "same" else "the next month"
+    way = "higher" if t["sign"] > 0 else "lower"
+    return (f"The more the {c['label'].split(',')[0]} rises in a month, the {way} the {e['label']} basket's return "
+            f"over SPY in {when}: the slope of that excess return on the cause's monthly change is "
+            f"{'>' if t['sign'] > 0 else '<'} 0.")
 
 
-def spec(t: dict, anchor: str, trial: bool) -> dict:
+VARYING = ("test", "code_sha", "data_asof", "trial")   # what a later declare may differ in without a new id
+
+
+def spec(t: dict, anchor: str, trial: bool, data_asof: str | None = None) -> dict:
     split = ({"train": TRIAL_SPLIT["train"], "test": TRIAL_SPLIT["test"]} if trial
              else {"train": SPLIT["train"], "test": [SPLIT["test_start"], anchor]})
-    return {"kind": "link", "id": t["id"], "cause": t["cause"], "effect": t["effect"], "path": t["path"],
-            "sign": t["sign"], "lag": t["lag"], "cause_measure": NODES[t["cause"]], "effect_measure": NODES[t["effect"]],
-            "bench": BENCH, "gate": "slope" if t["lag"] == "next" else "report", **split,
-            "n_perm": N_PERM, "n_boot": N_BOOT, "seed": SEED, "alpha": ALPHA, "controls": CONTROLS,
+    return {"kind": "link", "version": VERSION, "id": t["id"], "cause": t["cause"], "effect": t["effect"],
+            "path": t["path"], "sign": t["sign"], "lag": t["lag"], "cause_measure": NODES[t["cause"]],
+            "effect_measure": NODES[t["effect"]], "bench": BENCH, "gate": "slope" if t["lag"] == "next" else "report",
+            "timing": ("month-end close to month-end close" if t["lag"] == "same" else
+                       "cause: month-end close to month-end close; effect: the next month's first-session close "
+                       "to its last-session close"),
+            **split, "n_perm": N_PERM, "n_boot": N_BOOT, "seed": SEED, "alpha": ALPHA, **BH, "controls": CONTROLS,
             "min_share": MIN_SHARE, "min_members": MIN_MEMBERS, "stale_days": STALE_DAYS,
-            "claim": claim(t), "code_sha": code_sha(), "trial": bool(trial)}
+            "claim": claim(t), "code_sha": code_sha(), "data_asof": data_asof or now_iso(), "trial": bool(trial)}
 
 
 def spec_sha(s: dict) -> str:
@@ -187,23 +209,33 @@ def month_ends(cal) -> dict[str, str]:
     return out
 
 
+def month_starts(cal) -> dict[str, str]:
+    """Each month's first session on ``cal``."""
+    out = {}
+    for d in np.asarray(cal).astype(str):
+        out.setdefault(d[:7], d)
+    return out
+
+
 def _days(a: str, b: str) -> int:
     return int((np.datetime64(b) - np.datetime64(a)) / np.timedelta64(1, "D"))
 
 
-def sample(dates, values, ends: dict[str, str]) -> dict[str, float]:
-    """The series' last value on or before each month's last session, if it is at most STALE_DAYS older."""
+def sample(dates, values, at: dict[str, str], stale: int = STALE_DAYS["cause"]) -> dict[str, float]:
+    """The series' last value on or before each month's session in ``at``, if it is at most ``stale`` days older
+    (0: it must be that session's own)."""
     dates = np.asarray(dates).astype(str)
     values = np.asarray(values, dtype=float)
     out = {}
-    for m, d in ends.items():
+    for m, d in at.items():
         i = int(np.searchsorted(dates, d, side="right")) - 1
-        if i >= 0 and math.isfinite(values[i]) and _days(dates[i], d) <= STALE_DAYS:
+        if i >= 0 and math.isfinite(values[i]) and _days(dates[i], d) <= stale:
             out[m] = float(values[i])
     return out
 
 
 def _change(lv: dict[str, float], months: list[str], kind: str) -> np.ndarray:
+    """Month i's change from month i-1's value to month i's."""
     out = np.full(len(months), np.nan)
     for i in range(1, len(months)):
         a, b = lv.get(months[i - 1]), lv.get(months[i])
@@ -216,49 +248,77 @@ def _change(lv: dict[str, float], months: list[str], kind: str) -> np.ndarray:
     return out
 
 
+def _within(first: dict[str, float], last: dict[str, float], months: list[str]) -> np.ndarray:
+    """Month i's return from its first session's close to its last's."""
+    out = np.full(len(months), np.nan)
+    for i, m in enumerate(months):
+        a, b = first.get(m), last.get(m)
+        if a is not None and b is not None and a > 0 and b > 0:
+            out[i] = b / a - 1
+    return out
+
+
+def _excess(rets: np.ndarray, bench: np.ndarray, min_members: int) -> tuple[np.ndarray, np.ndarray]:
+    n = np.isfinite(rets).sum(0)
+    total = np.where(np.isfinite(rets), rets, 0.0).sum(0)
+    return np.where(n >= min_members, total / np.maximum(n, 1), np.nan) - bench, n
+
+
 def monthly(bank: Bank, s: dict) -> dict:
-    """Month by month on SPY's calendar: the cause's change (``x``), the basket's equal-weight total return
-    minus SPY's (``y``) and how many members it averaged (``members``)."""
+    """Month by month on SPY's calendar, from the series as the bank held them at ``s['data_asof']``: the
+    cause's change (``x``), the basket's equal-weight total return minus SPY's over the same month (``y``) and
+    from the month's first-session close to its last (``y_next``, what the next-month test reads), how many
+    members each averaged, and the snapshots read (``inputs``)."""
     from brain import series
-    from brain.metrics import PriceBook
+    from brain.metrics import PriceBook, fetched_by
     from brain.sources import treasury
-    cm, em = s["cause_measure"], s["effect_measure"]
+    cm, em, asof = s["cause_measure"], s["effect_measure"], s.get("data_asof")
     syms = [*em["tickers"], s["bench"]] + ([cm["symbol"]] if cm["measure"] == "price" else [])
-    book = PriceBook(bank, syms)
+    book = PriceBook(bank, syms, retrieved_by=asof)
     if not book.has(s["bench"]):
         raise Refused(f"no {s['bench']} prices in the bank: python -m brain chain measure")
-    ends = month_ends(book.dates[s["bench"]])
+    cal = book.dates[s["bench"]]
+    ends, starts = month_ends(cal), month_starts(cal)
     months = sorted(ends)
+    inputs = {t: {"fact": book.snapshot[t].ref, "series": book.snapshot[t].value, "last": str(book.dates[t][-1])}
+              for t in syms if book.has(t)}
     if cm["measure"] == "price":
         if not book.has(cm["symbol"]):
             raise Refused(f"no {cm['symbol']} prices in the bank: python -m brain chain measure")
-        lv = sample(book.dates[cm["symbol"]], book.close[cm["symbol"]], ends)
+        lv = sample(book.dates[cm["symbol"]], book.close[cm["symbol"]], ends, s["stale_days"]["cause"])
     else:
-        f = bank.view().latest("MACRO", treasury.ATTR)
+        f = bank.view().latest("MACRO", treasury.ATTR, fetched_by(asof) if asof else None)
         if f is None:
             raise Refused("no Treasury yield curve in the bank: python -m brain chain measure")
         df = series.load(f.value)
-        lv = sample(df["date"], df[cm["tenor"]], ends)
+        inputs["treasury"] = {"fact": f.ref, "series": f.value, "last": str(df["date"].iloc[-1])}
+        lv = sample(df["date"], df[cm["tenor"]], ends, s["stale_days"]["cause"])
     x = _change(lv, months, cm["measure"])
-    bench = _change(sample(book.dates[s["bench"]], book.adj[s["bench"]], ends), months, "price")
-    rets = np.array([_change(sample(book.dates[t], book.adj[t], ends), months, "price") if book.has(t)
-                     else np.full(len(months), np.nan) for t in em["tickers"]])
-    n = np.isfinite(rets).sum(0)
-    total = np.where(np.isfinite(rets), rets, 0.0).sum(0)
-    basket = np.where(n >= s["min_members"], total / np.maximum(n, 1), np.nan)
-    return {"months": months, "x": x, "y": basket - bench, "members": n}
+    st = s["stale_days"]["stocks"]
+
+    def px(t):
+        return book.dates[t], book.adj[t]
+    month = {t: _change(sample(*px(t), ends, st), months, "price") for t in syms if book.has(t)}
+    inner = {t: _within(sample(*px(t), starts, st), sample(*px(t), ends, st), months) for t in syms if book.has(t)}
+    none = np.full(len(months), np.nan)
+    y, n = _excess(np.array([month.get(t, none) for t in em["tickers"]]), month[s["bench"]], s["min_members"])
+    y_next, n_next = _excess(np.array([inner.get(t, none) for t in em["tickers"]]), inner[s["bench"]], s["min_members"])
+    return {"months": months, "x": x, "y": y, "y_next": y_next, "members": n, "members_next": n_next, "inputs": inputs}
 
 
 def window_pairs(mo: dict, lag: str, first: str, last: str) -> dict:
-    """(cause month, effect month) pairs whose effect month is in [first, last]: the same month, or the next."""
-    months, x, y = mo["months"], mo["x"], mo["y"]
+    """(cause month, effect month) pairs whose effect month is in [first, last]: the same month (``y``), or the
+    next (``y_next``, from that month's first-session close)."""
+    months, x = mo["months"], mo["x"]
     k = 0 if lag == "same" else 1
+    y, members = (mo["y"], mo["members"]) if lag == "same" else (mo["y_next"], mo["members_next"])
     keep = [i for i in range(len(months) - k) if first <= months[i + k] <= last]
     xs = np.array([x[i] for i in keep])
     ys = np.array([y[i + k] for i in keep])
     ok = np.isfinite(xs) & np.isfinite(ys)
     return {"x": xs[ok], "y": ys[ok], "months": [months[i + k] for i, o in zip(keep, ok) if o], "in_window": len(keep),
-            "members": float(np.mean([mo["members"][i + k] for i, o in zip(keep, ok) if o])) if ok.any() else 0.0}
+            "missing": [months[i + k] for i, o in zip(keep, ok) if not o],
+            "members": float(np.mean([members[i + k] for i, o in zip(keep, ok) if o])) if ok.any() else 0.0}
 
 
 # ---------- the statistics ----------
@@ -300,13 +360,17 @@ def measure(x: np.ndarray, y: np.ndarray, s: dict, rng) -> dict:
 
 
 def controls(x: np.ndarray, y: np.ndarray, sign: int, rng, c: dict = CONTROLS) -> dict:
-    """Random causes (white noise) should reach p < 0.05 about 5% of the time; a cause that is the effect
-    itself should reach it every time. Either failing voids the verdict."""
-    hits = sum(perm_p(rng.standard_normal(len(y)), y, sign, c["n_perm"], rng) < ALPHA for _ in range(c["n_random"]))
-    fpr = hits / c["n_random"]
+    """Circular shifts of the real cause by ``shift_min`` months or more keep its autocorrelation, fat tails and
+    jumps but break any link to the effect: if more than ``fpr_max`` of them reach p < 0.05, the shuffle null
+    is too narrow for these series and the verdict is void. A cause equal to the effect must reach p <
+    ``oracle_p_max``, or the test cannot see a real link."""
+    k0 = c["shift_min"]
+    shifts = list(range(k0, len(x) - k0 + 1))
+    hits = sum(perm_p(np.roll(x, k), y, sign, c["n_perm"], rng) < ALPHA for k in shifts)
+    fpr = hits / len(shifts) if shifts else float("nan")
     oracle = perm_p(sign * y, y, sign, c["n_perm"], rng)
-    return {"random_fpr": fpr, "oracle_p": oracle, "n_random": c["n_random"],
-            "pass": bool(fpr <= c["fpr_max"] and oracle < c["oracle_p_max"])}
+    return {"shift_fpr": fpr, "n_shifts": len(shifts), "oracle_p": oracle,
+            "pass": bool(shifts and fpr <= c["fpr_max"] and oracle < c["oracle_p_max"])}
 
 
 def evaluate(mo: dict, s: dict) -> dict:
@@ -316,18 +380,20 @@ def evaluate(mo: dict, s: dict) -> dict:
     for name in ("train", "test"):
         first, last = s[name]
         w = window_pairs(mo, s["lag"], first, last)
-        if w["in_window"] == 0 or len(w["x"]) < s["min_share"] * w["in_window"]:
+        if (w["in_window"] == 0 or len(w["x"]) < s["min_share"] * w["in_window"]
+                or w["months"][0] != first or w["months"][-1] != last):
             raise Refused(f"{s['id']}: {len(w['x'])} of {w['in_window']} {name.upper()} months are measured "
-                          f"(at least {s['min_share']:.0%} needed): python -m brain chain measure")
+                          f"(at least {s['min_share']:.0%} needed, and both {first} and {last}): "
+                          f"python -m brain chain measure, then declare again under a new version")
         out[name] = {**measure(w["x"], w["y"], s, rng), "months": [w["months"][0], w["months"][-1]],
-                     "in_window": w["in_window"], "members_mean": round(w["members"], 2)}
+                     "in_window": w["in_window"], "missing": w["missing"], "members_mean": round(w["members"], 2)}
         if name == "test":
             ctl = controls(w["x"], w["y"], s["sign"], rng, s["controls"])
     te = out["test"]
     sign_ok = bool(math.isfinite(te["slope"]) and s["sign"] * te["slope"] > 0)
     gate = {"sign_ok": sign_ok, "p_ok": bool(te["p"] < s["alpha"])}
     gate["pass"] = bool(s["gate"] == "slope" and sign_ok and gate["p_ok"] and ctl["pass"])
-    return {"metrics": out, "controls": ctl, "gate": gate, "p": te["p"]}
+    return {"metrics": out, "controls": ctl, "gate": gate, "p": te["p"], "inputs": mo.get("inputs", {})}
 
 
 # ---------- declare and test ----------
@@ -369,18 +435,45 @@ def anchor_month(bank: Bank) -> str:
     return f"{y:04d}-{m:02d}"
 
 
+def _frozen(s: dict) -> dict:
+    return {k: v for k, v in s.items() if k not in VARYING}
+
+
+def committed_declarations() -> set[tuple[str, str]]:
+    """(id, spec_sha) of the link declarations in HEAD's research/ledger.jsonl."""
+    import json
+    r = _git("show", "HEAD:research/ledger.jsonl")
+    out = set()
+    for line in r.stdout.splitlines() if r.returncode == 0 else []:
+        try:
+            rec = json.loads(line)
+        except ValueError:
+            continue
+        if isinstance(rec, dict) and rec.get("op") == "declare" and rec.get("kind") == "link":
+            out.add((rec.get("id"), rec.get("spec_sha")))
+    return out
+
+
 def declare(bank: Bank, *, trial: bool = False, ids=None, log=print) -> list[dict]:
-    """Write each link test's spec to the ledger before it runs. An id already declared keeps its spec."""
+    """Write each link test's spec to the ledger before it runs. An id already declared keeps its spec; one
+    whose design has changed since is refused (a change is a new VERSION)."""
+    trial = is_trial(trial)
     led, _ = paths(trial)
     if not trial and (dirty := tree_dirty()):
         raise Refused("commit brain/ and knowledge/ first; a declaration pins the committed code: " + "; ".join(dirty))
     anchor = TRIAL_SPLIT["test"][1] if trial else anchor_month(bank)
-    have = {r["id"] for r in _records(led) if r["op"] == "declare"}
+    asof = now_iso()
+    have = {r["id"]: r["spec"] for r in _records(led) if r["op"] == "declare"}
     new = []
     for t in tests():
-        if (ids and t["id"] not in ids) or t["id"] in have:
+        if ids and t["id"] not in ids:
             continue
-        s = spec(t, anchor, trial)
+        s = spec(t, anchor, trial, asof)
+        if t["id"] in have:
+            if _frozen(have[t["id"]]) != _frozen(s):
+                raise Refused(f"{t['id']} was declared with a different design; declared specs are frozen: raise "
+                              f"VERSION in brain/chain/linktest.py for new ids")
+            continue
         rec = {"op": "declare", "kind": "link", "id": t["id"], "spec_sha": spec_sha(s), "spec": s, "at": now_iso(),
                **ledger.git_state()}
         ledger.append(rec, led)
@@ -391,8 +484,10 @@ def declare(bank: Bank, *, trial: bool = False, ids=None, log=print) -> list[dic
 
 
 def test(bank: Bank, ids=None, *, trial: bool = False, log=print) -> list[dict]:
-    """Run declared link tests (default: every declared one without a result) and rewrite RESULTS.md."""
+    """Run declared link tests (default: every declared one without a result) and rewrite RESULTS.md. A trial
+    runs trial declarations only (TRAIN years); a real run, real declarations committed at HEAD only."""
     from brain.research import run
+    trial = is_trial(trial)
     led, res = paths(trial)
     recs = _records(led)
     decls = {r["id"]: r for r in recs if r["op"] == "declare"}
@@ -415,8 +510,16 @@ def test(bank: Bank, ids=None, *, trial: bool = False, log=print) -> list[dict]:
             raise Refused(f"{i} already has a result; a rerun needs research withdraw and a new id")
         if not trial and (why := lineage_problem(d.get("commit"))):
             raise Refused(f"{i}: {why}")
+        if spec_sha(d["spec"]) != d["spec_sha"]:
+            raise Refused(f"{i}: its declared spec does not match its spec_sha")
+        if trial and (not d["spec"].get("trial") or d["spec"]["test"][1] > TRIAL_SPLIT["test"][1]):
+            raise Refused(f"{i} is not a trial declaration: a trial reads TRAIN years only")
+        if not trial and d["spec"].get("trial"):
+            raise Refused(f"{i} is a trial declaration")
         if not trial and d["spec"]["code_sha"] != code_sha():
             raise Refused(f"{i}: the code is not the declared code ({d['spec']['code_sha']} declared, {code_sha()} now)")
+        if not trial and (i, d["spec_sha"]) not in committed_declarations():
+            raise Refused(f"{i}: commit the ledger with its declaration before running it")
     done_now = {i: evaluate(monthly(bank, decls[i]["spec"]), decls[i]["spec"]) for i in want}  # all, or none written
     out = []
     for i, r in done_now.items():
@@ -436,7 +539,7 @@ def test(bank: Bank, ids=None, *, trial: bool = False, log=print) -> list[dict]:
 def summary(rec: dict, s: dict) -> str:
     te = rec["metrics"]["test"]
     lo, hi = te["interval90"]
-    return (f"{rec['id']}: {te['per_move'] * 100:+.2f}% vs SPY per {s['cause_measure']['move_label']} "
+    return (f"{rec['id']}: {te['per_move'] * 100:+.2f} points of excess return per {s['cause_measure']['move_label']} "
             f"(90% {lo * 100:+.2f}..{hi * 100:+.2f}), p {te['p']:.4f}, {te['n']} months"
             + ("" if s["gate"] == "report" else f", gate {'met' if rec['gate']['pass'] else 'not met'} before BH"))
 

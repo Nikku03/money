@@ -33,24 +33,34 @@ The other links stay untested until the bank holds what would measure them. `pyt
 
 ## Two tests per pair
 
-Each pair is tested on month-end closes, on SPY's calendar:
+Each pair is tested on SPY's calendar:
 
-1. **Same month** (descriptive, REPORT). Does the basket move with the cause in the same month, and by how much? The answer is given per typical move: per +10% oil, per +0.25 point on the 10-year yield, per +2% on the dollar.
-2. **Next month** (gated). Does this month's change in the cause predict next month's basket return? This is the question that matters for acting on a link. A link the market prices at once shows up in the same month and not in the next.
+1. **Same month** (descriptive, REPORT). Does the basket's excess return move with the cause in the same month (month-end close to month-end close), and by how much? The answer is the slope times a typical move: percentage points of excess return per +10% oil, per +0.25 point on the 10-year yield, per +2% on the dollar. It is not the average excess return.
+2. **Next month** (gated). Does this month's change in the cause (to its month-end close) predict the basket's excess return over the next month, from the close of that month's first session to its last? Starting a session later is the research harness's rule (signal at the month-end close, fill at the next session's close). It keeps a cause that closes after the stock market (oil, the dollar) from leaking into the effect. This is the question that matters for acting on a link. A link the market prices at once shows up in the same month and not in the next.
+
+Stocks and SPY must have a price on the exact session; a cause may be up to 7 days old at the month's last session.
 
 ## The rules
 
 These are the research ledger's rules (`CLAUDE.md`).
 
-- **Declared before running.** `python -m brain chain declare` writes each test's full spec to `research/ledger.jsonl`. The spec includes the path of links, the measures, the baskets, the windows, the statistics and the code's sha. Commit before running.
-- **Frozen.** A declared spec never changes. A change is a new id.
+- **Declared before running.** `python -m brain chain declare` writes each test's full spec to `research/ledger.jsonl`. The spec includes:
+  - the path of links, the measures and the baskets;
+  - the windows and the statistics;
+  - the false-discovery rule;
+  - the code's sha;
+  - `data_asof`: the time the series are read as of.
+
+  Commit the ledger before running: `test` refuses a declaration that isn't in HEAD's ledger.
+- **Frozen.** A declared spec never changes. Ids carry a version (`L1-oil-airlines-next`). A change to the design or the code after declare is a new `VERSION` in `brain/chain/linktest.py`, so new ids. `declare` refuses an existing id whose design has changed.
+- **Pinned data.** `test` reads every series as the bank held it at `data_asof`. The result names each snapshot it read (`inputs`), so it can be reproduced.
 - **Windows.** TRAIN is 2011–2018. TEST runs from 2019 to the last complete month at declare. The verdict reads TEST only; TRAIN is shown beside it.
 - **The statistic.**
   - The slope of the basket's excess return on the cause's change.
   - Its p-value is one-sided, in the direction the links imply, from 5,000 shuffles of the cause's months.
   - Its 90% interval comes from resampling months.
 - **Controls, on each test's TEST months.**
-  - 200 random causes must reach p < 0.05 at most 10% of the time.
+  - The real cause, shifted round by 3 months or more, must reach p < 0.05 in at most 10% of the shifts. A shift keeps the cause's own autocorrelation, fat tails and jumps but breaks any link. Too many hits means the shuffle null is too narrow for these series.
   - A cause equal to the effect must reach p < 0.01.
   - If either fails, the verdict is void.
 - **The gate for a next-month test.** PASS when all four hold:
@@ -64,8 +74,9 @@ These are the research ledger's rules (`CLAUDE.md`).
   - the working tree has changes under `brain/` or `knowledge/`;
   - the code differs from the declared code;
   - a test already has a result;
-  - a window has fewer than 80% of its months measured. Run `python -m brain chain measure` to collect the data first.
-- **Trial runs.** `--trial` (or any home other than `var/`) writes to `<home>/trial/` and reads TRAIN years only (2011–2014 against 2015–2018). Trials never touch the committed record or the TEST months.
+  - a window has fewer than 80% of its months measured, or misses its first or last month. Run `python -m brain chain measure` to collect the data first;
+  - the declaration isn't committed, or its spec no longer matches its sha.
+- **Trial runs.** `--trial` (or any home or ledger other than the committed ones) writes to `<home>/trial/` and reads TRAIN years only (2011–2014 against 2015–2018). A trial refuses a declaration that isn't a trial one, so it never computes TEST months, even from a copy of the real ledger.
 
 ## Reading the results
 

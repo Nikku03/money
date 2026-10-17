@@ -737,7 +737,7 @@ def _res(bank: Bank, cmd: Command) -> dict:
                          f"{ctx['universe_ew_ann_return_test'] * 100:+.1f}% a year against SPY's "
                          f"{ctx['spy_ann_return_test'] * 100:+.1f}%.")
         note = (" ".join(parts) + " Gate: TEST net excess > 0, permutation p < 0.05, BH q < 0.10 (over every "
-                "hypothesis with a result). The random-signal control redraws its signals every month; for a signal "
+                "hypothesis, gated forecast test and gated link test with a result). The random-signal control redraws its signals every month; for a signal "
                 "that persists from month to month the null is narrower and its p-value too small (the fixed-per-stock "
                 "rate, where a run recorded it, says by how much). Universe members were chosen by today's market "
                 "value, so any PASS is an upper bound.")
@@ -745,9 +745,12 @@ def _res(bank: Bank, cmd: Command) -> dict:
         note = "No hypothesis has a result yet: declare, commit, then `python -m brain research run`."
     else:
         note = "No results in the ledger yet: declare, commit, then `python -m brain research run`."
-    if forecasts or any(d.get("kind") == "forecast" for d in declared.values()):
+    if any(r.get("kind") == "forecast" for r in forecasts) or any(d.get("kind") == "forecast" for d in declared.values()):
         note += (" Forecast tests (F1...) share the correction when gated (F1b, F1c); F1a and F1d are descriptive "
                  "(REPORT). Their numbers, with the date-level p or interval, are in T FCST and FCST.")
+    if any(r.get("kind") == "link" for r in forecasts) or any(d.get("kind") == "link" for d in declared.values()):
+        note += (" Link tests (L1-...) measure the chain engine's links: the next-month ones share the correction, "
+                 "the same-month ones are descriptive (REPORT). Their numbers are in research/RESULTS.md (Links).")
     asof = max((r["at"][:10] for r in recs if r["op"] == "result"), default=None)
     return _ok(cmd, "RES — research verdicts", asof, "table", _table(cols, rows, note, []))
 

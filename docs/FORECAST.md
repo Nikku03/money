@@ -261,7 +261,7 @@ FORECAST_TESTS = [
 
 **Gate** (`"ic"`: F1b and F1c):
 - The mean size-neutral IC is > 0, with **date-level** p < 0.05: a one-sided sign-flip test on the series `IC_1..IC_K`, exact for K <= 16, else 20,000 Monte Carlo draws seeded 7.
-- BH q < 0.10 across every hypothesis and gated forecast test in the ledger, withdrawn ones included.
+- BH q < 0.10 across every hypothesis and gated forecast test in the ledger, withdrawn ones included. Since 2026-10-17 the family also counts every gated link test (`docs/LINKS.md`); a ledger note records the change.
 - The within-date permutation p is reported as a diagnostic only. It ignores how stocks move together and is several times too narrow.
 
 **Controls** (per gated run):
@@ -307,7 +307,7 @@ It then appends:
 F1d's result also stores every raw model reply. After the run, RESULTS.md is regenerated.
 
 **verdicts.**
-- `research.run.verdicts()` puts every gated forecast result and every hypothesis result into one BH pass: `p` for forecasts, `perm_p` for hypotheses; withdrawn included.
+- `research.run.verdicts()` puts every gated forecast result, every hypothesis result and (since 2026-10-17) every gated link result into one BH pass: `p` for forecasts and links, `perm_p` for hypotheses; withdrawn included.
 - A gated test passes on its gate, q < 0.10 and its controls.
 - Descriptive results get the verdict `REPORT`, outside BH.
 

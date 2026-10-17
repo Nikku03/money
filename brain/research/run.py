@@ -556,13 +556,15 @@ def _link_section(rows: list[dict], ledger_path=None) -> list[str]:
         "",
         "Tests of the chain engine's cause → effect links (`knowledge/links.json`, `docs/LINKS.md`). Each one "
         "measures a chain end to end where the bank can see both ends: the cause's monthly change, and a fixed "
-        "basket's equal-weight total return minus SPY's, on month-end closes. **Same month** is descriptive "
-        "(REPORT): how far the basket moves with the cause. **Next month** is gated, declared before running: "
-        "the slope points the way the links say, one-sided permutation p < 0.05, controls pass, and "
-        "Benjamini–Hochberg q < 0.10 across every gated test in the ledger. TEST from 2019; TRAIN 2011–2018 is "
-        "shown beside it.",
+        "basket's equal-weight total return minus SPY's. **Same month** is descriptive (REPORT): how far the "
+        "basket's excess return moves with the cause, month-end to month-end. **Next month** is gated, declared "
+        "before running: the basket's excess return over the next month, from its first session's close to its "
+        "last, against this month's change in the cause. It passes when the slope points the way the links say, "
+        "one-sided permutation p < 0.05, the controls pass, and Benjamini–Hochberg q < 0.10 across every gated "
+        "test in the ledger. TEST from 2019; TRAIN 2011–2018 is shown beside it. The effect is the slope times a "
+        "typical move: percentage points of excess return per move, not the average excess return.",
         "",
-        "| Test | Cause → effect | Timing | TEST months | Effect per move (TEST) | 90% interval | p | BH q | "
+        "| Test | Cause → effect | Timing | TEST months | Effect per move, points (TEST) | 90% interval | p | BH q | "
         "TRAIN effect | Verdict |",
         "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
     ]
@@ -579,17 +581,18 @@ def _link_section(rows: list[dict], ledger_path=None) -> list[str]:
         lines.append(f"| {r['id']} | {pair} | {timing} | {te['n']} ({te['months'][0]}..{te['months'][1]}) | "
                      f"{_pp(te['per_move'])} per {cm.get('move_label', 'move')} | {_pp(lo)}..{_pp(hi)} | "
                      f"{te['p']:.4f} | {q} | {_pp(tr['per_move'])} | **{verdict}** |")
-        way = "beat" if te["per_move"] > 0 else "trailed"
+        way = "higher" if te["per_move"] > 0 else "lower"
         same = s.get("lag") == "same"
-        words.append(f"- **{r['id']}**: {'in' if same else 'after'} a month with {cm.get('move_words', 'the cause up')}, "
-                     f"the {em.get('label', 'basket')} {way} SPY by {abs(te['per_move']) * 100:.2f}% "
-                     f"{'that month' if same else 'the next month'} on average (90% interval {_pp(lo)} to {_pp(hi)}; "
-                     f"TRAIN {_pp(tr['per_move'])}). The links say {'up' if s.get('sign', 0) > 0 else 'down'}. {verdict}.")
+        words.append(f"- **{r['id']}**: for each month with {cm.get('move_words', 'the cause up')}, the "
+                     f"{em.get('label', 'basket')}' return over SPY {'that month' if same else 'the next month'} was "
+                     f"{abs(te['per_move']) * 100:.2f} points {way} (90% interval {_pp(lo)} to {_pp(hi)}; TRAIN "
+                     f"{_pp(tr['per_move'])}). The links say {'higher' if s.get('sign', 0) > 0 else 'lower'}. {verdict}.")
     ctl = [r["controls"] for r in rows]
     lines += ["", *words, "",
-              f"Controls on each test's TEST months: random causes reached p < 0.05 in "
-              f"{min(c['random_fpr'] for c in ctl) * 100:.1f}%–{max(c['random_fpr'] for c in ctl) * 100:.1f}% of "
-              f"{ctl[0]['n_random']} draws (about 5% expected); a cause equal to the effect reached p ≤ "
+              f"Controls on each test's TEST months: the real cause, shifted round by 3 months or more (which keeps "
+              f"its autocorrelation and breaks any link), reached p < 0.05 in "
+              f"{min(c['shift_fpr'] for c in ctl) * 100:.1f}%–{max(c['shift_fpr'] for c in ctl) * 100:.1f}% of "
+              f"{ctl[0]['n_shifts']} shifts (at most 10% allowed); a cause equal to the effect reached p ≤ "
               f"{max(c['oracle_p'] for c in ctl):.4f}. "
               f"{'All passed.' if all(c['pass'] for c in ctl) else 'Some FAILED: those verdicts are void.'}",
               "",
