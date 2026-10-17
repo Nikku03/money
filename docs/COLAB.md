@@ -105,7 +105,7 @@ The notebook is `colab/money_brain.ipynb`. In Colab: File → Open notebook → 
 3. **Get the code:** `git clone -b claude/upbeat-turing-z9jk2b https://github.com/nikku03/money`. A private repo needs a GitHub token. Then `pip install -e .`.
 4. **Install vLLM, then start the model server** in the background; wait for `/v1/models`.
 5. **Set the environment** (section 4), then run `python -m unittest discover -s tests -t .` and `brain check`.
-6. **Data:** restore the bank from Drive, then build or refresh it. `BANK = "small"` (the default, about 20–25 minutes the first time) collects 18 stocks, SPY, world markets, the Treasury curve and recent insider trades: enough to test the model. `BANK = "full"` collects the 741-stock universe the research tests need (1–2 hours plus the insider history; a CPU runtime is enough).
+6. **Data:** restore the bank from Drive, then build or refresh it. `BANK = "small"` (the default, about 12 minutes the first time) collects 65 stocks, SPY, world markets, the Treasury curve and recent insider trades: enough to test the model. `BANK = "full"` collects the 741-stock universe the research tests need (1–2 hours plus the insider history; a CPU runtime is enough).
 7. **Read and decide:** `brain scout TICKER`, `brain decide --watchlist`, `brain forecast TICKER --llm`.
 8. **Ask:** the terminal's ASK pane (`brain terminal`, through the port proxy): questions answered from the bank only, with citations.
 9. **Score:** `brain decide score`, `brain forecast score`.
