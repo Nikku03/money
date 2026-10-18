@@ -193,6 +193,20 @@ def _cmd(a) -> int:
             return 0
         linktest.test(bank, words or None, trial=trial)
         return 0
+    if a.action == "distill":
+        from brain import llm
+        from brain.chain import distill
+        client = llm.Client.from_env()
+        ok, why = client.available()
+        if not ok:
+            print(f"no model: {why}")
+            return 1
+        print(f"asking {client.model} for the links between {len(distill.states(links))} states, one state at a time")
+        table = distill.ask(client, links)
+        net = load() if model_path().exists() else train(log=None)
+        print()
+        print(distill.report(table, distill.compare(table["links"], links, linktest.status(), net)))
+        return 0
     results = linktest.status() if a.action in ("links", "follow") else {}
     if a.action == "links":
         pairs = linktest.pairs(links)
@@ -238,8 +252,8 @@ def _cmd(a) -> int:
 def add_cli(sub) -> None:
     s = sub.add_parser("chain", help="follow cause -> effect links with the chain engine (snap network from "
                                      "Nikku03/cell), and test the links: train | links | follow START | "
-                                     "measure | declare | test [ID...]")
-    s.add_argument("action", choices=["train", "links", "follow", "measure", "declare", "test"])
+                                     "measure | declare | test [ID...] | distill")
+    s.add_argument("action", choices=["train", "links", "follow", "measure", "declare", "test", "distill"])
     s.add_argument("words", nargs="*", metavar="START | ID", help="follow: the starting state (default "
                    "oil_price_up); declare/test: link test ids (default: all)")
     s.add_argument("--hops", type=int, default=4)

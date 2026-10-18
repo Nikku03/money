@@ -85,3 +85,19 @@ These are the research ledger's rules (`CLAUDE.md`).
 - **Same-month moves can't be traded on.** A strong same-month move with no next-month effect means the market prices the link as it happens. It tells you the link is real, not that it can be traded.
 - **A FAIL is not the opposite.** It says the bank's history does not show the effect at this power. Eight years of TEST months is about 90 data points.
 - **Results carry no weight in D1.** `brain chain follow` shows them beside each chain, but no link test feeds a decision. Policy D1 is frozen (`docs/DECIDE.md`).
+
+## Links from a model
+
+`python -m brain chain distill` asks whether the chain engine's knowledge can come from a language model alone.
+
+- **What the model gets.** Only the names of the 19 states in `knowledge/links.json`: no links, no data.
+- **What it's asked.** For each state, what it directly causes within about a month, and in which direction. The settings are temperature 0, seed 7, and `/no_think` for Qwen3.
+- **Where its answers go.** They become its own link table, `<home>/knowledge/links.<model>.json`.
+
+The report then answers three questions:
+
+1. **Recall.** How many of the textbook links did the model write on its own, with the right sign, and what did it add?
+2. **Reasoning.** Can the chain engine follow chains through the model's table? Each chain is checked against an exact lookup.
+3. **Reality.** For each cause → basket pair the model's table implies and the bank can measure, its direction is set beside the recorded link tests above. Nothing new is measured: a pair the tests haven't covered stays untested until it is declared.
+
+The model's table is its opinion, like a claim from a web page. It weighs nothing anywhere. On Colab, run it with the 32B model to compare models.
