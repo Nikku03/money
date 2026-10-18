@@ -97,6 +97,12 @@ python -m brain forecast score              # how recorded forecasts did once th
 - Each pair is tested twice: does the basket move with the cause that month, and does it move the next month? The next-month test is the one that matters for acting on a link.
 - `brain chain links` shows each link's test, or what would measure it. `brain chain follow` shows the results beside each chain.
 
+## Looking inside a neural network
+
+`python -m brain neuro look | declare | test | card` hands the bank and the evidence engine a neural network ([`docs/NEURO.md`](docs/NEURO.md)). Probes read the weights and intervene (projecting, ablating, patching). What they find is stored as cited facts, claims about the mechanism are declared before they run, and new networks are built from the facts alone. Ten claims, each tested on ten networks from fresh seeds with planted and negative controls, all passed ([`research/NEURO.md`](research/NEURO.md)):
+- **Modular addition.** The engine recovered the mechanism the literature describes: each neuron is one cosine, and its output phase is the sum of its input phases. Networks written from those facts alone were right on every pair, including for a modulus nothing was trained on. A network that only memorised already held the general algorithm underneath.
+- **The chain engine's own network.** Each step is a lookup of the written-down pointer's row in the table; its continuous memory carries nothing. Rebuilt without that memory, it was exact at 64 steps on 10 of 10 seeds.
+
 ## What the brain collects
 
 | Area | What | Command |
