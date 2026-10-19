@@ -67,17 +67,19 @@ class EventTest(TempHome):
 
     def test_declared_trial_finds_what_was_planted(self):
         new = eventtest.declare(self.bank, trial=True, log=None)
-        self.assertEqual([r["id"] for r in new], ["E1-guidance_raised-reaction", "E1-guidance_raised-drift",
-                                                  "E1-guidance_cut-reaction", "E1-guidance_cut-drift"])
+        self.assertEqual([r["id"] for r in new], ["E1-guidance_raised-reaction", "E1-guidance_raised-drift"])
         out = {r["id"]: r for r in eventtest.test(self.bank, trial=True, log=None)}
         led, res = eventtest.paths(True)
         rows = {r["id"]: r for r in run.verdicts(led) if run.is_event(r)}
-        up, down = out["E1-guidance_raised-drift"]["metrics"]["test"], out["E1-guidance_cut-drift"]["metrics"]["test"]
+        up = out["E1-guidance_raised-drift"]["metrics"]["test"]
         self.assertAlmostEqual(up["diff"], 0.03, delta=0.01)
-        self.assertAlmostEqual(down["diff"], -0.03, delta=0.01)
         self.assertAlmostEqual(out["E1-guidance_raised-reaction"]["metrics"]["test"]["diff"], 0.02, delta=0.01)
-        self.assertEqual((rows["E1-guidance_raised-drift"]["verdict"], rows["E1-guidance_cut-drift"]["verdict"]),
-                         ("PASS", "PASS"))
+        self.assertEqual(rows["E1-guidance_raised-drift"]["verdict"], "PASS")
+        cut = eventtest.spec({"id": "E1-guidance_cut-drift", "event": "guidance_cut", "window": "drift", "sign": -1},
+                             "2018-12", True, "2019-05-01T00:00:00Z")   # the same machinery, the other way
+        r = eventtest.evaluate(eventtest.releases(self.bank, cut), cut)
+        self.assertAlmostEqual(r["metrics"]["test"]["diff"], -0.03, delta=0.01)
+        self.assertTrue(r["gate"]["pass"])
         self.assertEqual(rows["E1-guidance_raised-reaction"]["verdict"], "REPORT")
         self.assertTrue(all(r["controls"]["pass"] for r in out.values()))
         self.assertIn("## Events", res.read_text())

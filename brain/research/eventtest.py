@@ -38,7 +38,10 @@ VERSION = 1
 UNIVERSE = "universe/us_large.json"
 BENCH = "SPY"
 ATTR = "release.earnings"
-EVENTS = {"guidance_raised": 1, "guidance_cut": -1}   # the direction each implies
+# The event kinds tested, and the direction each implies. guidance_cut (-1) is left out of version 1: the rules find
+# 10 cuts among the 60 stocks' releases since 2011, 4 of them in TEST, too few to say anything; it waits for the
+# 741-stock universe.
+EVENTS = {"guidance_raised": 1}
 EXCLUSIVE = ("guidance_raised", "guidance_cut")       # a release tagged with both is neither
 WINDOWS = {"reaction": {"key": "car_3d", "days": "-1..+1", "gate": "report"},
            "drift": {"key": "drift_20d", "days": "+2..+21", "gate": "diff"}}

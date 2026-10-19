@@ -1,6 +1,8 @@
 # Event tests: does a kind of corporate event move the stock?
 
-The first event tests ask about guidance: when a company **raises** or **cuts** its guidance in an earnings press release, does the stock move?
+The first event tests ask about guidance: when a company **raises** its guidance in an earnings press release, does the stock move?
+
+**Cuts aren't tested yet.** Among the 60 stocks' releases since 2011 the rules find only 10 guidance cuts, 4 of them in TEST, too few to say anything. The mirror test waits for the 741-stock universe.
 
 ## The events
 
@@ -10,7 +12,8 @@ The first event tests ask about guidance: when a company **raises** or **cuts** 
   - Its `known_at` is the filing's acceptance time, so a test sees the release only once it was public.
 - **How they are tagged.** Fixed rules (`brain/web/events.py`) tag the opening text, with no model.
   - **guidance_raised:** "raises full-year 2026 revenue and EPS outlook", "increases fiscal 2025 guidance".
-  - **guidance_cut:** "lowers full-year outlook", "cuts guidance", "profit warning".
+  - **guidance_cut:** "lowers full-year outlook", "cuts guidance", "profit warning". Verbs only: "lower than forecast" and "the lower end of our guidance" are not cuts.
+  - Guidance for spending, costs or taxes doesn't count either way: a lower capex outlook isn't bad news.
   - A phrase can't reach across a clause break or past words that say guidance didn't move: "reaffirms", "maintains", "unchanged". "Raises dividend; reaffirms guidance" is not a raise.
   - A release tagged both ways ("raises revenue guidance, lowers EPS outlook") counts as neither.
   - The rules are applied at test time to the stored text, so the declared code fixes them.
