@@ -1,7 +1,8 @@
 """Earnings press releases from SEC filings: each release's opening text, point-in-time (docs/EVENTS.md).
 
 For each earnings 8-K (item 2.02) in the bank, the filing's folder listing names its documents; the press release
-is exhibit 99.1. Its opening is read (an HTTP range request: the headline, the dateline and the highlights come
+is exhibit 99.1. When no file name says so ("q2fy18pr.htm"), the filing's index page, which states each document's
+type (EX-99.1), is read too. Its opening is read (an HTTP range request: the headline, the dateline and the highlights come
 first) and kept as a ``release.earnings`` fact: the title, the opening text and the event tags fixed rules find
 in it (``brain.web.events``). Its known_at is the filing's own acceptance time, so a test reads a release only
 from the moment it was public. The opening text is kept, so the rules can be re-applied without fetching again.
@@ -33,6 +34,12 @@ _EX99 = re.compile(r"(ex|exhibit|dex)[-_ ]?99", re.IGNORECASE)
 _DOC = re.compile(r"\.(htm|html|txt)$", re.IGNORECASE)
 _WRAPPER = re.compile(r"<(TYPE|SEQUENCE|FILENAME|DESCRIPTION)>[^\n<]*", re.IGNORECASE)   # EDGAR's SGML lines
 _FOLDER = re.compile(r"/Archives/edgar/data/(\d+)/(\d{18})/")
+_ROW = re.compile(r"<tr[^>]*>(.*?)</tr>", re.IGNORECASE | re.DOTALL)
+_CELL = re.compile(r"<td[^>]*>(.*?)</td>", re.IGNORECASE | re.DOTALL)
+_HREF = re.compile(r'href="(?:[^"]*/)?([^/"]+)"', re.IGNORECASE)
+# 2: the index page's document types are read when no file name names the exhibit. A release kept by reader 1
+# with no text is read again, and the old fact downgraded as superseded.
+READER = 2
 
 
 def exhibit_name(names: list[str]) -> str | None:
@@ -43,6 +50,27 @@ def exhibit_name(names: list[str]) -> str | None:
         if hit:
             return min(hit, key=len)
     return None
+
+
+def typed_exhibit(index_html: str) -> str | None:
+    """The press release by the document types a filing's index page states: EX-99.1, else the first EX-99."""
+    docs = []
+    for row in _ROW.findall(index_html):
+        cells = _CELL.findall(row)
+        if len(cells) < 4 or not (m := _HREF.search(cells[2])) or not _DOC.search(m.group(1)):
+            continue
+        docs.append((m.group(1), re.sub(r"<[^>]+>|\s|&nbsp;", "", cells[3]).upper()))
+    for want in (lambda t: t in ("EX-99.1", "EX-99.01"), lambda t: t.startswith("EX-99")):
+        hit = [n for n, t in docs if want(t)]
+        if hit:
+            return hit[0]
+    return None
+
+
+def settled(f: Fact) -> bool:
+    """Whether a release fact needs no second read: read at this OPENING_CHARS, and with text or by this reader."""
+    c = f.context or {}
+    return c.get("opening_chars") == OPENING_CHARS and bool(c.get("opening") or c.get("reader", 1) >= READER)
 
 
 def _get(url: str, max_bytes: int | None = None, retries: int = 4) -> bytes:
@@ -77,13 +105,16 @@ def opening(html: str) -> tuple[str, str]:
 
 
 def read_release(filing: Fact, fetched_at: str | None = None) -> Fact:
-    """The release fact for one earnings filing (two SEC requests: the folder listing, then the release)."""
+    """The release fact for one earnings filing (two SEC requests: the folder listing, then the release; three when
+    only the filing's index page names the exhibit)."""
     m = _FOLDER.search(filing.source.get("url", ""))
     if not m:
         raise ValueError(f"{filing.ref}: no EDGAR folder in its URL")
     folder = f"https://www.sec.gov/Archives/edgar/data/{m.group(1)}/{m.group(2)}/"
     names = [i["name"] for i in json.loads(_get(folder + "index.json"))["directory"]["item"]]
-    name = exhibit_name(names)
+    name, found_by = exhibit_name(names), "name"
+    if not name and (idx := next((n for n in names if n.lower().endswith("-index.html")), None)):
+        name, found_by = typed_exhibit(_get(folder + idx).decode("utf-8", "replace")), "index"
     title, text, url = "(no exhibit 99 in the filing)", "", folder
     if name:
         url = folder + name
@@ -92,7 +123,7 @@ def read_release(filing: Fact, fetched_at: str | None = None) -> Fact:
     return Fact(entity=filing.entity, attr=ATTR, value=title or "(untitled)", as_of=filing.as_of,
                 known_at=filing.known_at, tier="filed", source={"name": "SEC EDGAR 8-K exhibit 99", "url": url},
                 context={"accn": filing.context.get("accn"), "filing": filing.ref, "exhibit": name,
-                         "opening_chars": OPENING_CHARS,
+                         "exhibit_by": found_by if name else None, "reader": READER, "opening_chars": OPENING_CHARS,
                          "events": tags.tag(text), "opening": text},
                 retrieved_at=fetched_at or now_iso())
 
@@ -104,7 +135,7 @@ def pending(view, ticker: str, since: str = SINCE) -> tuple[list[Fact], int]:
     """The earnings filings of ``ticker`` since ``since`` whose release the bank does not hold yet (read at this
     OPENING_CHARS), and how many earnings filings there are since then in all."""
     t = ticker.upper()
-    have = {f.context.get("accn") for f in view.facts(t, ATTR) if f.context.get("opening_chars") == OPENING_CHARS}
+    have = {f.context.get("accn") for f in view.facts(t, ATTR) if settled(f)}
     every = [f for f in earnings.distinct(earnings.earnings_events(view, t)) if f.known_at >= since]
     return [f for f in every if f.context.get("accn") not in have], len(every)
 
@@ -127,6 +158,14 @@ def collect(bank: Bank, tickers, since: str = SINCE, log=print, workers: int = W
         out = [r for r, _ in done if r is not None]
         failed += [w for _, w in done if w is not None]
         kept += bank.add_many(out)
+        stale: dict = {}
+        for f in view.facts(t, ATTR):
+            if not settled(f):
+                stale.setdefault(f.context.get("accn"), []).append(f.id)
+        for r in out:   # one live fact per release: the one it supersedes is downgraded, never deleted
+            for fid in stale.get(r.context.get("accn"), []):
+                bank.downgrade(t, fid, f"superseded by {r.id}: read again (reader {READER}: the filing index's "
+                                       f"document types name the exhibit)")
         if log:
             log(f"{t}: {len(out)} releases read, {sum(bool(x.context['events']) for x in out)} with event tags")
     return {"kept": kept, "failed": failed}
