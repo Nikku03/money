@@ -103,7 +103,7 @@ python -m brain forecast score              # how recorded forecasts did once th
 - **Reaction:** the 3 days around the release.
 - **Drift:** the following month.
 
-Each is measured against the same month's other earnings releases.
+Each is measured against the same month's other earnings releases. Version 1 tests the 60 large caps. Version 2 tests small and micro caps (SEC rows 1501–3000 and 3001–4500, `brain universe --band small|micro`), in either direction, with the cost of trading such stocks stated beside each result.
 
 ## The web gateway
 

@@ -97,7 +97,7 @@ def read_release(filing: Fact, fetched_at: str | None = None) -> Fact:
                 retrieved_at=fetched_at or now_iso())
 
 
-WORKERS = 4   # requests in flight at once; the shared SEC bucket still spaces them under 10 a second
+WORKERS = 6   # requests in flight at once; the shared SEC bucket still spaces them under 10 a second
 
 
 def collect(bank: Bank, tickers, since: str = SINCE, log=print, workers: int = WORKERS) -> dict:
@@ -127,8 +127,8 @@ def collect(bank: Bank, tickers, since: str = SINCE, log=print, workers: int = W
 
 def _cmd(a) -> int:
     from brain import universe
-    tickers = [w.upper() for w in a.tickers] or json.loads(
-        (universe.BROAD if a.broad else config.UNIVERSE).read_text())["tickers"]
+    path = universe.BANDS[a.band][2] if a.band else universe.BROAD if a.broad else config.UNIVERSE
+    tickers = [w.upper() for w in a.tickers] or json.loads(path.read_text())["tickers"]
     out = collect(Bank(), tickers, a.since)
     print(f"{out['kept']} new release facts; {len(out['failed'])} filings failed")
     for f in out["failed"][:10]:
@@ -140,5 +140,6 @@ def add_cli(sub) -> None:
     s = sub.add_parser("releases", help="earnings press releases (SEC 8-K exhibit 99): opening text and event tags")
     s.add_argument("tickers", nargs="*", help="default: the research universe (universe/us_large.json)")
     s.add_argument("--broad", action="store_true", help="the broad universe (universe/us_broad.json)")
+    s.add_argument("--band", choices=["small", "micro"], help="universe/us_small.json or us_micro.json")
     s.add_argument("--since", default=SINCE, help=f"first filing date (default {SINCE})")
     s.set_defaults(fn=_cmd)

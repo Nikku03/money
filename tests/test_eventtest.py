@@ -58,11 +58,15 @@ class EventTest(TempHome):
         self.uni = os.path.join(os.environ["MONEY_HOME"], "uni.json")
         with open(self.uni, "w") as fh:
             json.dump({"tickers": TICKERS}, fh)
-        self.patch = mock.patch.object(eventtest, "UNIVERSE", self.uni)
-        self.patch.start()
+        self.patches = [mock.patch.object(eventtest, "UNIVERSE", self.uni),
+                        mock.patch.object(eventtest, "SUITES", [{"version": 1, "tag": None, "universe": None,
+                                                                 "events": {"guidance_raised": 1}}])]
+        for p in self.patches:
+            p.start()
 
     def tearDown(self):
-        self.patch.stop()
+        for p in self.patches:
+            p.stop()
         super().tearDown()
 
     def test_declared_trial_finds_what_was_planted(self):
@@ -100,6 +104,22 @@ class EventTest(TempHome):
         r = eventtest.evaluate(rels, s)
         self.assertGreater(r["metrics"]["test"]["p"], 0.05)
         self.assertFalse(r["gate"]["pass"])
+
+    def test_two_sided_finds_either_way_and_version_two_ids(self):
+        t = {"id": "E2-small-guidance_raised-drift", "event": "guidance_raised", "window": "drift", "sign": 0,
+             "version": 2, "suite": "small", "universe": self.uni, "cost_round_trip": 0.01}
+        s = eventtest.spec(t, "2018-12", True, "2019-05-01T00:00:00Z")
+        self.assertEqual((s["two_sided"], s["cost_round_trip"], s["version"]), (True, 0.01, 2))
+        r = eventtest.evaluate(eventtest.releases(self.bank, s), s)
+        self.assertTrue(r["gate"]["pass"])                          # +3% planted: found without saying which way
+        down = {**s, "event": "guidance_cut"}
+        r = eventtest.evaluate(eventtest.releases(self.bank, down), down)
+        self.assertLess(r["metrics"]["test"]["diff"], 0)
+        self.assertTrue(r["gate"]["pass"])
+        self.assertEqual(eventtest.test_id("guidance_cut", "drift", 2, "micro"), "E2-micro-guidance_cut-drift")
+        one = eventtest.spec({"id": "E1-guidance_raised-drift", "event": "guidance_raised", "window": "drift",
+                              "sign": 1}, "2018-12", True, "2019-05-01T00:00:00Z")
+        self.assertNotIn("two_sided", one)                          # version 1 specs are unchanged
 
     def test_refusals(self):
         with self.assertRaises(Refused):

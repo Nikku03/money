@@ -2,7 +2,9 @@
 
 The first event tests ask about guidance: when a company **raises** its guidance in an earnings press release, does the stock move?
 
-**Cuts aren't tested yet.** Among the 60 stocks' releases since 2011 the rules find only 10 guidance cuts, 4 of them in TEST, too few to say anything. The mirror test waits for the 741-stock universe.
+**Version 1 (E1) didn't test cuts.** Among the 60 stocks' releases since 2011 the rules find only 10 guidance cuts, 4 of them in TEST, too few to say anything.
+
+**Version 2 (E2) asks the same of small and micro caps,** raises and cuts both: see [Small and micro caps](#version-2-small-and-micro-caps).
 
 ## The events
 
@@ -17,7 +19,7 @@ The first event tests ask about guidance: when a company **raises** its guidance
   - A phrase can't reach across a clause break or past words that say guidance didn't move: "reaffirms", "maintains", "unchanged". "Raises dividend; reaffirms guidance" is not a raise.
   - A release tagged both ways ("raises revenue guidance, lowers EPS outlook") counts as neither.
   - The rules are applied at test time to the stored text, so the declared code fixes them.
-- **Universe.** The 60 stocks of `universe/us_large.json`, from December 2010 on. The 741-stock universe is a later, separate test (a new id): reading its 47,000 releases takes hours at the SEC's pace.
+- **Universe.** Version 1: the 60 stocks of `universe/us_large.json`, from December 2010 on. Version 2: the small and micro caps below.
 
 ## The tests
 
@@ -47,6 +49,22 @@ Each event kind is tested in two windows. Day 0 is the first close at or after t
   - The data is read as the bank held it at declare.
   - Results are written to the ledger and the Events section of `research/RESULTS.md` whatever they say (`python -m brain events test`, then commit).
   - `--trial` reads TRAIN years only, in the trial ledger.
+
+## Version 2: small and micro caps
+
+E1 found a raise lifting a large cap by about 1.4 points on days -1..+1 against the month's other releases, then the stock giving back about 2 points over the next month: the other way from the drift E1 declared. Small and micro caps are where a slow reaction is most often claimed, so version 2 asks there.
+
+- **Universes.** By the same rule as the broad universe, on lower rows of SEC's `company_tickers.json` (roughly by market value): SEC XBRL from 10-Ks, and Yahoo daily prices since 2010.
+  - **small:** rows 1501–3000, `python -m brain universe --band small` → `universe/us_small.json`.
+  - **micro:** rows 3001–4500, `python -m brain universe --band micro` → `universe/us_micro.json`.
+- **Releases.** `python -m brain releases --band small`, then `--band micro`. That's tens of thousands of releases at under 10 SEC requests a second, so it takes hours. Re-running it resumes: releases already held are skipped.
+- **Tests.** `E2-small-…` and `E2-micro-…`, for guidance_raised and guidance_cut, each in the reaction and drift windows.
+  - **Either way.** The drift p is two-sided. E1's drift pointed the other way, so a direction declared in advance would only be a guess.
+  - **Cost.** A round trip in such stocks costs about 1% (small) and 2% (micro) in spread and impact. RESULTS.md states it beside each result: a drift smaller than that couldn't be acted on, whatever its p.
+  - Everything else is as above: the same rules, windows, controls, TRAIN/TEST split, and the one false-discovery correction across the ledger.
+- **Bias.**
+  - **Survivorship.** Each universe is chosen by today's market value, and every member has been listed since 2010. Companies that failed or were bought out are missing, and small caps fail more often.
+  - **Reported events only.** A small company that never issues guidance never appears.
 
 ## Not tested: analyst downgrades
 

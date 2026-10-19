@@ -24,6 +24,9 @@ from brain.timeutil import now_iso
 
 PRICE_START_BY = "2010-01-04"
 BROAD = config.ROOT / "universe" / "us_broad.json"
+SMALL = config.ROOT / "universe" / "us_small.json"   # SEC ranks 1501-3000
+MICRO = config.ROOT / "universe" / "us_micro.json"   # SEC ranks 3001-4500
+BANDS = {"small": (1501, 3000, SMALL), "micro": (3001, 4500, MICRO)}
 BROAD_RULE_SHORT = "SEC ranks 1-1500 with 10-K XBRL and prices since 2010"
 
 
@@ -46,10 +49,12 @@ def rule_text(n: int) -> str:
             f"start on or before {PRICE_START_BY}; the first {n} kept.")
 
 
-def broad_rule_text(max_rank: int) -> str:
-    return (f"SEC company_tickers.json in file order (roughly descending market value); the first {max_rank} "
-            f"rows; first ticker per CIK; kept if SEC XBRL has us-gaap NetIncomeLoss and Assets from 10-K filings "
-            f"and Yahoo daily prices start on or before {PRICE_START_BY}; every CIK that qualifies is kept.")
+def broad_rule_text(max_rank: int, min_rank: int = 1) -> str:
+    rows = f"the first {max_rank} rows" if min_rank == 1 else f"rows {min_rank}-{max_rank}"
+    return (f"SEC company_tickers.json in file order (roughly descending market value); {rows}; first ticker per "
+            f"CIK{' (a CIK already listed above the band is not listed again)' if min_rank > 1 else ''}; kept if SEC "
+            f"XBRL has us-gaap NetIncomeLoss and Assets from 10-K filings and Yahoo daily prices start on or before "
+            f"{PRICE_START_BY}; every CIK that qualifies is kept.")
 
 
 def qualify(t: str) -> tuple[list, list]:
@@ -130,10 +135,11 @@ def _qualify_patiently(t: str, waits=(30, 120, 300), log=print, sleep=time.sleep
             sleep(w)
 
 
-def build_broad(bank: Bank, max_rank: int = 1500, log=print, path: Path | None = None) -> dict:
-    """Every CIK among the first ``max_rank`` rows of SEC's ticker list that meets the rule, with
+def build_broad(bank: Bank, max_rank: int = 1500, log=print, path: Path | None = None, min_rank: int = 1) -> dict:
+    """Every CIK among rows ``min_rank``..``max_rank`` of SEC's ticker list that meets the rule, with
     its SEC facts, every filing page and its prices ingested. Each ticker is written through its
-    own Bank on the same journal, so memory stays at one company's facts however long the list."""
+    own Bank on the same journal, so memory stays at one company's facts however long the list.
+    ``min_rank`` > 1 builds a band below the broad universe (the small and micro caps)."""
     rows = sec.ticker_table()
     listing_sha = _listing_sha(rows)
     seen, kept, rejected = set(), [], []
@@ -142,6 +148,8 @@ def build_broad(bank: Bank, max_rank: int = 1500, log=print, path: Path | None =
         if row["cik"] in seen:
             continue
         seen.add(row["cik"])
+        if rank < min_rank:
+            continue   # above the band: its CIK is marked seen, so a second ticker of it inside the band is skipped
         t = row["ticker"]
         try:
             facts, px = _qualify_patiently(t, log=log)
@@ -162,8 +170,9 @@ def build_broad(bank: Bank, max_rank: int = 1500, log=print, path: Path | None =
             f"{time.time() - t0:.0f}s) filings added: {nf}")
     bank.add_many(prices.ingest("SPY"))
     out = {
-        "built_at": now_iso(), "rule": broad_rule_text(max_rank),
-        "rule_short": BROAD_RULE_SHORT if max_rank == 1500 else f"SEC ranks 1-{max_rank} with 10-K XBRL and prices since 2010",
+        "built_at": now_iso(), "rule": broad_rule_text(max_rank, min_rank),
+        "rule_short": (BROAD_RULE_SHORT if (min_rank, max_rank) == (1, 1500)
+                       else f"SEC ranks {min_rank}-{max_rank} with 10-K XBRL and prices since 2010"),
         "sec_listing_sha": listing_sha, "n": len(kept), "tickers": kept, "rejected": rejected,
         "reference": "SPY (calendar and context only; not in the universe)",
         "bias": "survivorship: chosen by 2026 market value, all members listed since 2010",

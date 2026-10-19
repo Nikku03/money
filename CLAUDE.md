@@ -42,7 +42,7 @@ Every hypothesis ever run counts in the false-discovery correction, so trying tw
 
 The chain engine's cause → effect links (`knowledge/links.json`) are tested the same way (`docs/LINKS.md`): `python -m brain chain measure`, `python -m brain chain declare`, commit, `python -m brain chain test`, commit the ledger and `research/RESULTS.md`. A new link or basket is a new test id; a declared one is never edited.
 
-Corporate events are tested the same way (`docs/EVENTS.md`): `python -m brain releases` reads each earnings release's opening from SEC EDGAR, fixed rules tag its events, then `python -m brain events declare`, commit, `python -m brain events test`, commit.
+Corporate events are tested the same way (`docs/EVENTS.md`): `python -m brain releases` reads each earnings release's opening from SEC EDGAR, fixed rules tag its events, then `python -m brain events declare`, commit, `python -m brain events test`, commit. Small and micro caps: `python -m brain universe --band small|micro`, then `python -m brain releases --band small|micro` (hours; resumes if re-run).
 
 ## Decisions
 

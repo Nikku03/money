@@ -11,8 +11,9 @@ out of both. Each test asks, of one event kind and one window:
 The comparison is with the other earnings releases of the same month in the same universe: each month, the
 tagged releases' mean minus the untagged releases' mean. That keeps an earnings-season move, which every release
 shares, from passing for the event's own. The test statistic is the mean of those monthly differences (calendar
-time: a month with many releases counts once), with a one-sided sign-flip p in the direction the event implies.
-The move against SPY alone is shown beside it.
+time: a month with many releases counts once), with a one-sided sign-flip p in the direction the event implies
+(version 1, the 60 large caps) or a two-sided one (version 2, the small and micro caps). The move against SPY alone
+is shown beside it, and for version 2 the cost of a round trip in such stocks.
 
 The rules are the research ledger's (CLAUDE.md): declared before running, frozen (a change is a new VERSION), TRAIN
 2011-2018 and TEST from 2019, the verdict on TEST only, controls, and Benjamini-Hochberg q < 0.10 across every gated
@@ -39,9 +40,19 @@ UNIVERSE = "universe/us_large.json"
 BENCH = "SPY"
 ATTR = "release.earnings"
 # The event kinds tested, and the direction each implies. guidance_cut (-1) is left out of version 1: the rules find
-# 10 cuts among the 60 stocks' releases since 2011, 4 of them in TEST, too few to say anything; it waits for the
-# 741-stock universe.
+# 10 cuts among the 60 stocks' releases since 2011, 4 of them in TEST, too few to say anything.
 EVENTS = {"guidance_raised": 1}
+# Version 2: the small and micro caps (universe/us_small.json, us_micro.json; SEC ranks 1501-3000 and 3001-4500).
+# Version 1 found the large caps' drift after a raise pointing the other way from the one declared, so version 2 asks
+# either way (sign 0: a two-sided p). A round trip in these stocks costs far more than in the large caps; the cost
+# is stated beside each result, since a drift smaller than it could not be acted on.
+SUITES = [
+    {"version": 1, "tag": None, "universe": None, "events": EVENTS},   # None: UNIVERSE (the 60 stocks)
+    {"version": 2, "tag": "small", "universe": "universe/us_small.json", "events": {"guidance_raised": 0, "guidance_cut": 0},
+     "cost_round_trip": 0.01},
+    {"version": 2, "tag": "micro", "universe": "universe/us_micro.json", "events": {"guidance_raised": 0, "guidance_cut": 0},
+     "cost_round_trip": 0.02},
+]
 EXCLUSIVE = ("guidance_raised", "guidance_cut")       # a release tagged with both is neither
 WINDOWS = {"reaction": {"key": "car_3d", "days": "-1..+1", "gate": "report"},
            "drift": {"key": "drift_20d", "days": "+2..+21", "gate": "diff"}}
@@ -60,12 +71,29 @@ CLEAN = ("brain", "knowledge")
 HERE = Path(__file__).resolve()
 
 
-def test_id(event: str, window: str) -> str:
-    return f"E{VERSION}-{event}-{window}"
+def test_id(event: str, window: str, version: int = VERSION, tag: str | None = None) -> str:
+    return f"E{version}-{tag + '-' if tag else ''}{event}-{window}"
 
 
-def tests() -> list[dict]:
-    return [{"id": test_id(e, w), "event": e, "window": w, "sign": s} for e, s in EVENTS.items() for w in WINDOWS]
+def tests(suites=None) -> list[dict]:
+    """Every declared-able test: each suite's events in each window. A suite whose universe file is missing is left
+    out (build it first: python -m brain universe --band small|micro)."""
+    out = []
+    for su in suites or SUITES:
+        uni = su["universe"] or UNIVERSE
+        if not run_universe_exists(uni):
+            continue
+        for e, s in su["events"].items():
+            for w in WINDOWS:
+                out.append({"id": test_id(e, w, su["version"], su["tag"]), "event": e, "window": w, "sign": s,
+                            "version": su["version"], "suite": su["tag"], "universe": uni,
+                            "cost_round_trip": su.get("cost_round_trip")})
+    return out
+
+
+def run_universe_exists(name: str) -> bool:
+    from brain.research import run
+    return run.universe_path(name).exists()
 
 
 def code_files() -> list[Path]:
@@ -88,6 +116,10 @@ def code_sha() -> str:
 
 def claim(t: dict) -> str:
     w = WINDOWS[t["window"]]
+    if not t["sign"]:
+        return (f"Earnings releases whose opening the rules tag {t['event']} differ from the month's other earnings "
+                f"releases over days {w['days']}, either way (excess return over SPY; mean of monthly differences "
+                f"!= 0, two-sided).")
     way = "beat" if t["sign"] > 0 else "trail"
     return (f"Earnings releases whose opening the rules tag {t['event']} {way} the month's other earnings releases "
             f"over days {w['days']} (excess return over SPY; mean of monthly differences "
@@ -100,9 +132,12 @@ VARYING = ("test", "code_sha", "data_asof", "trial")
 def spec(t: dict, anchor: str, trial: bool, data_asof: str) -> dict:
     split = (dict(TRIAL_SPLIT) if trial else {"train": SPLIT["train"], "test": [SPLIT["test_start"], anchor]})
     w = WINDOWS[t["window"]]
-    return {"kind": "event", "version": VERSION, "id": t["id"], "event": t["event"], "exclusive": list(EXCLUSIVE),
-            "sign": t["sign"], "window": t["window"], "days": w["days"], "reaction_key": w["key"], "gate": w["gate"],
-            "universe": UNIVERSE, "attr": ATTR, "bench": BENCH, **split, "n_flip": N_FLIP, "n_boot": N_BOOT,
+    v2 = {"suite": t["suite"], "two_sided": not t["sign"], "cost_round_trip": t["cost_round_trip"]} \
+        if t.get("version", VERSION) >= 2 else {}   # version 1's specs stay exactly as declared
+    return {"kind": "event", "version": t.get("version", VERSION), "id": t["id"], "event": t["event"],
+            "exclusive": list(EXCLUSIVE), "sign": t["sign"], "window": t["window"], "days": w["days"],
+            "reaction_key": w["key"], "gate": w["gate"], **v2,
+            "universe": t.get("universe") or UNIVERSE, "attr": ATTR, "bench": BENCH, **split, "n_flip": N_FLIP, "n_boot": N_BOOT,
             "seed": SEED, "alpha": ALPHA, "min_others": MIN_OTHERS, "min_months": MIN_MONTHS, "controls": CONTROLS,
             **BH, "claim": claim(t),
             "code_sha": code_sha(), "data_asof": data_asof, "trial": bool(trial)}
@@ -158,13 +193,16 @@ def monthly(rels: list[dict], s: dict, first: str, last: str) -> dict:
 
 # ---------- the statistics ----------
 def flip_p(d: np.ndarray, sign: int, n: int, rng) -> float:
-    """One-sided sign-flip p of mean(d) in ``sign``'s direction (Monte Carlo, with the observed one counted)."""
+    """Sign-flip p of mean(d) (Monte Carlo, with the observed one counted): one-sided in ``sign``'s direction, or
+    two-sided when ``sign`` is 0."""
     if len(d) == 0:
         return 1.0
-    obs = sign * float(d.mean())
     flips = rng.choice((-1.0, 1.0), size=(n, len(d)))
-    null = sign * (flips * d).mean(1)
-    return float((1 + np.sum(null >= obs - 1e-15)) / (n + 1))
+    null = (flips * d).mean(1)
+    if not sign:
+        return float((1 + np.sum(np.abs(null) >= abs(float(d.mean())) - 1e-15)) / (n + 1))
+    obs = sign * float(d.mean())
+    return float((1 + np.sum(sign * null >= obs - 1e-15)) / (n + 1))
 
 
 def boot_interval(d: np.ndarray, n: int, rng) -> list[float]:
@@ -207,8 +245,8 @@ def controls(mo: dict, s: dict, rng) -> dict:
         g = mo["groups"][m]
         allx = np.sort(np.array(g["tagged"] + g["others"]))
         k = len(g["tagged"])
-        top = allx[-k:] if s["sign"] > 0 else allx[:k]
-        rest = allx[:-k] if s["sign"] > 0 else allx[k:]
+        top = allx[-k:] if s["sign"] >= 0 else allx[:k]
+        rest = allx[:-k] if s["sign"] >= 0 else allx[k:]
         oracle.append(top.mean() - rest.mean())
     o = flip_p(np.array(oracle), s["sign"], c["n_flip"], rng)
     fpr = hits / c["n_placebo"]
@@ -228,7 +266,8 @@ def evaluate(rels: list[dict], s: dict) -> dict:
             ctl = controls(mo, s, rng)
     te = out["test"]
     thin = te["months"] < s.get("min_months", MIN_MONTHS)   # recorded, not refused: a declared test always gets a result
-    sign_ok = bool(math.isfinite(te["diff"]) and s["sign"] * te["diff"] > 0)
+    # Two-sided (sign 0): either direction counts, and the result says which.
+    sign_ok = bool(math.isfinite(te["diff"]) and (s["sign"] * te["diff"] > 0 or not s["sign"]))
     gate = {"sign_ok": sign_ok, "p_ok": bool(te["p"] < s["alpha"]), "enough": not thin}
     gate["pass"] = bool(s["gate"] == "diff" and sign_ok and gate["p_ok"] and ctl["pass"] and not thin)
     return {"metrics": out, "controls": ctl, "gate": gate, "p": te["p"], "thin": thin}
@@ -317,7 +356,7 @@ def test(bank: Bank, ids=None, *, trial: bool = False, log=print) -> list[dict]:
     decls = {r["id"]: r for r in recs if r["op"] == "declare"}
     done = {r["id"] for r in recs if r["op"] == "result"}
     gone = ledger.withdrawn(led)
-    want = list(ids) if ids else [i for i in decls if i not in done and i not in gone]
+    want = list(ids) if ids else [i for i in decls if i not in done and i not in gone]   # E1 already has its results
     if not want:
         if log:
             log("nothing to test")
@@ -343,11 +382,11 @@ def test(bank: Bank, ids=None, *, trial: bool = False, log=print) -> list[dict]:
                 raise Refused(f"{i}: the code is not the declared code")
             if (i, d["spec_sha"]) not in committed_declarations():
                 raise Refused(f"{i}: commit the ledger with its declaration before running it")
-    cache: dict[str, list] = {}
+    cache: dict[tuple, list] = {}
     results = {}
     for i in want:   # every result computed before any is written
         s = decls[i]["spec"]
-        key = s["reaction_key"]
+        key = (s["universe"], s["reaction_key"], s.get("data_asof"))
         cache.setdefault(key, releases(bank, s))
         results[i] = evaluate(cache[key], s)
     out = []

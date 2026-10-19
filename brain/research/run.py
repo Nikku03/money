@@ -654,10 +654,14 @@ def _event_section(rows: list[dict], ledger_path=None) -> list[str]:
         lines.append(f"| {r['id']} | {s.get('event', '?')} | {s.get('days', '?')} | {te['events']} ({te['months']}) | "
                      f"{_pp(te['diff'])} | {_pp(lo)}..{_pp(hi)} | {te['p']:.4f} | {q} | {_pp(te['vs_spy'])} | "
                      f"{_pp(tr['diff'])} | **{verdict}** |")
+        implies = ("Tested either way" if not s.get("sign") else
+                   f"The event implies {'up' if s.get('sign', 0) > 0 else 'down'}")
+        cost = (f" A round trip in these stocks costs about {s['cost_round_trip'] * 100:.0f}%."
+                if s.get("cost_round_trip") else "")
         words.append(f"- **{r['id']}**: over days {s.get('days', '?')}, releases tagged {s.get('event', '?')} did "
                      f"{_pp(te['diff'])} against the month's other releases (90% interval {_pp(lo)} to {_pp(hi)}) and "
-                     f"{_pp(te['vs_spy'])} against SPY, over {te['events']} releases in {te['months']} months. The "
-                     f"event implies {'up' if s.get('sign', 0) > 0 else 'down'}. {verdict}.")
+                     f"{_pp(te['vs_spy'])} against SPY, over {te['events']} releases in {te['months']} months. "
+                     f"{implies}.{cost} {verdict}.")
     ctl = [r["controls"] for r in rows if r["controls"].get("n_placebo")]
     if not ctl:
         ctl = [{"placebo_fpr": float("nan"), "n_placebo": 0, "oracle_p": float("nan"), "pass": False}]

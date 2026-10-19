@@ -135,7 +135,12 @@ def cmd_score_claims(a):
 
 
 def cmd_universe(a):
-    from brain.universe import BROAD, build, build_broad
+    from brain.universe import BANDS, BROAD, build, build_broad
+    if a.band:
+        lo, hi, path = BANDS[a.band]
+        out = build_broad(_bank(), hi, log=lambda m: print(m, flush=True), path=path, min_rank=lo)
+        print(f"{out['n']} tickers kept, {len(out['rejected'])} rejected -> {path}")
+        return
     if a.broad:
         out = build_broad(_bank(), a.max_rank, log=lambda m: print(m, flush=True))
         print(f"{out['n']} tickers kept, {len(out['rejected'])} rejected -> {BROAD}")
@@ -229,6 +234,8 @@ def main(argv=None) -> int:
     s.add_argument("--broad", action="store_true",
                    help="build universe/us_broad.json: every qualifying CIK in SEC's first --max-rank rows")
     s.add_argument("--max-rank", type=int, default=1500)
+    s.add_argument("--band", choices=["small", "micro"],
+                   help="build universe/us_small.json (SEC ranks 1501-3000) or us_micro.json (3001-4500)")
     s.set_defaults(fn=cmd_universe)
 
     s = sub.add_parser("research", help="declare / run / report / withdraw hypotheses")

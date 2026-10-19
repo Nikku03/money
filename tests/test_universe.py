@@ -130,6 +130,19 @@ class BuildBroadTest(TempHome):
         self.assertEqual(b.facts("FOR", "filing"), [])
         self.assertEqual(len(logs), 5)
 
+    def test_a_band_skips_the_ranks_above_it_and_their_ciks(self):
+        self.pages = []
+        out_path = Path(self._tmp.name) / "us_small.json"
+        with mock.patch.object(sec, "ticker_table", return_value=self.rows), \
+             mock.patch.object(sec, "facts_for", side_effect=self._facts), \
+             mock.patch.object(universe.prices, "ingest", side_effect=self._px), \
+             mock.patch.object(sec, "filings_for", side_effect=self._filings):
+            out = universe.build_broad(self.bank, max_rank=6, log=lambda m: None, path=out_path, min_rank=2)
+        self.assertEqual(out["tickers"], ["BBB"])   # AAA is rank 1, above the band; AAB is its CIK again
+        self.assertIn("rows 2-6", out["rule"])
+        self.assertEqual(out["rule_short"], "SEC ranks 2-6 with 10-K XBRL and prices since 2010")
+        self.assertEqual(universe.BANDS["small"][:2], (1501, 3000))
+
     def test_default_rule_text_and_path(self):
         self.assertIn("first 1500 rows", universe.broad_rule_text(1500))
         self.assertEqual(universe.BROAD.name, "us_broad.json")
