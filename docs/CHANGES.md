@@ -49,6 +49,8 @@ This was found by looking at the comparisons by year and form, before H10 was de
 
 It is declared in `brain/research/hypotheses.py`, committed before it runs, and counts in the false-discovery correction.
 
+**Result (2026-10-19): FAIL.** On the 92 TEST months (2019 to 2026), the quiet third earned 0.16% a month less than all 60 after costs (permutation p 0.75; TRAIN 2011 to 2018: 0.27% a month less, p 0.91). The controls passed. On these large caps, a report that changed less than usual did not mark a stock that went on to beat the others. The score still shows what changed; it carries no weight as a signal.
+
 Reading it:
 - **Few stocks.** 60 stocks give little power: an edge of a few tenths of a percent a month can hide in the noise.
 - **Survivorship.** The universe is today's survivors, so a firm whose reports changed because it was failing is missing. That works against finding the effect.

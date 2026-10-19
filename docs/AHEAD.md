@@ -34,4 +34,4 @@ For each company with an event, `ahead` lists its listed customers, suppliers, p
 
 ## What this is not
 
-It's a map of where to look, not a forecast. No row has been tested as a trading signal. The quiet-change score is being tested as H10. Planned insider sales and the ripple are not tested yet, and each would be a declared hypothesis of its own before anything relies on it.
+It's a map of where to look, not a forecast. The quiet-change score was tested as H10 on the 60 large caps and failed (`docs/CHANGES.md`): it shows what changed, not which way the stock goes. Planned insider sales and the ripple are not tested yet, and each would be a declared hypothesis of its own before anything relies on it.
