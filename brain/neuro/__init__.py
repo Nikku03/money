@@ -36,6 +36,20 @@ def _cmd(a) -> int:
         claims.test(a.words or None, trial=a.trial)
         print(claims.report(claims.paths(a.trial)[0]))
         return 0
+    if a.action in ("lm-declare", "lm-test", "lm-card"):
+        from brain.neuro import lm, lmclaims
+        if a.action == "lm-declare":
+            new = lmclaims.declare(trial=a.trial)
+            print(f"{len(new)} declared" + ("" if a.trial or not new else "; commit research/neuro_ledger.jsonl, "
+                                            "then python -m brain neuro lm-test"))
+        elif a.action == "lm-test":
+            lmclaims.test(trial=a.trial)
+            print(lmclaims.report(claims.paths(a.trial)[0]))
+        else:
+            b = lm.bank()
+            for e in a.words or [e for e in b.entities() if e.startswith("LM-")]:
+                print(lm.card(b, e), "\n")
+        return 0
     if a.action == "card":
         bank = memory.neuro_bank()
         ents = a.words or [e for e in bank.entities() if e.startswith("NN-")]
@@ -47,8 +61,9 @@ def _cmd(a) -> int:
 
 def add_cli(sub) -> None:
     s = sub.add_parser("neuro", help="look inside a neural network: probe it, record what is found, test claims "
-                                     "about its mechanism, rebuild it from the facts: look | declare | test | card")
-    s.add_argument("action", choices=["look", "declare", "test", "card"])
+                                     "about its mechanism, rebuild it from the facts: look | declare | test | card; "
+                                     "a language model (Pythia, needs torch): lm-declare | lm-test | lm-card")
+    s.add_argument("action", choices=["look", "declare", "test", "card", "lm-declare", "lm-test", "lm-card"])
     s.add_argument("words", nargs="*", help="claim ids for test, entities (NN-...) for card")
     s.add_argument("--trial", action="store_true", help="dev seeds and a scratch ledger: exercise the code, "
                                                         "never the record")

@@ -91,3 +91,50 @@ The thresholds were set by looking at the dev networks (modular addition seed 0,
 - Two small networks with clean tasks. Modular addition was chosen because its answer is known; most networks' mechanisms are not this tidy, and nothing here shows the probes would find one in a large model.
 - The probes are written for these architectures (a Fourier basis for a cyclic task, ablation and patching for a pointer). Pointing the engine at a new network means writing probes for it, then declaring claims about it.
 - The rebuild's template (a quadratic network whose neurons are cosines) is code. The facts supply the frequencies, the phases and the law, and the controls check that they matter: a rebuild with the wrong law fails, and one from a network without the mechanism is refused. But the engine did not invent the template.
+
+## A billion-parameter language model (N2)
+
+```
+pip install -e .[lm]                 # torch and transformers; weights download to <home>/hf
+python -m brain neuro lm-declare     # pins each model's Hugging Face commit and the code's sha
+git commit ...
+python -m brain neuro lm-test        # Pythia-1B, Pythia-1.4B and their untrained step0 checkpoints, on CPU
+python -m brain neuro lm-card
+```
+
+The same questions, asked of EleutherAI's Pythia-1B (1.01 billion parameters) and Pythia-1.4B (1.41 billion), open weights under Apache-2.0 (`brain/neuro/lm.py`, `brain/neuro/lmclaims.py`).
+
+**The behaviour.** Both models continue `"23, 24, 25,"` with `" 26"`. Numbers up to 530 are single tokens in their tokenizer, so a model cannot copy digits: it must know which number follows the token 25. Two-digit addition was the first choice, but the dev model got 3% of sums right, and a claim about how a model adds means nothing if it cannot add.
+
+**The known answer.** Language models hold a number as a helix: its value plus waves of period 2, 5, 10 and 100 (Zhou et al. 2024, [arXiv:2406.03445](https://arxiv.org/abs/2406.03445); Kantamneni & Tegmark 2025, [arXiv:2502.00873](https://arxiv.org/abs/2502.00873), whose subjects included Pythia-6.9B).
+
+**Where to look.** Everything reads or edits the model's state at the token of the last number, at one layer per model. The layer is chosen before any claim is measured: it is the layer where pasting in the state that another prompt had at its number works best. That choice uses a pairing of prompts (k → k + 61) that no claim uses.
+
+**Looked at only on Pythia-410M** (`--trial` runs it):
+
+| On the dev model, layer 8 | Helix | 4 other periods | Untrained step0 |
+| --- | --- | --- | --- |
+| R² on numbers held out of the fit | 0.40 | about 0.06 | −0.12 |
+| Number read back exactly from the helix part | 0.97 | 0.00–0.07 | 0.01 |
+| Logit gap toward m + 1 recovered by shifting only the helix part | 0.64 | 0.23 | – |
+| Model then writes exactly m + 1 | 0.03 | 0.00 | – |
+
+The real state of another prompt's number, pasted in at layer 8, redirects the count on 99% of prompts. After layer 13 the number has moved on to the next token, and pasting at the number token does nothing.
+
+**The claims, for each of the two models:**
+- `helix-fit`: the helix predicts held-out numbers' states (R² ≥ 0.2).
+- `helix-read`: the number decodes exactly from the helix part (≥ 90%).
+- `locate`: the number is read from that token at that layer (pasting redirects ≥ 90%).
+- `helix-steer`: moving only the helix part recovers at least half the logit gap, more than other periods.
+- `helix-write`: that move alone makes the model write exactly m + 1 (≥ 50%).
+
+`helix-write` is expected to fail. On the dev model the helix moved the model off its answer, but almost never onto the new one. It is declared so the negative is on the record.
+
+Controls:
+- For `helix-fit` and `helix-read`: planted helix states (positive) and the untrained checkpoint (negative).
+- For `locate`: the same paste at the last layer (negative).
+- For `helix-steer` and `helix-write`: a helix fitted to shuffled numbers (negative).
+
+The false-discovery correction is shared with the N1 claims.
+
+**What it would and would not show.** If `helix-read` passes and `helix-write` fails, the bank's description of how a billion-parameter model holds a number is enough to read the number out of it exactly. It is not enough to write one in: the model also uses directions the helix leaves out. That is a description of one representation at one layer for one task. It says nothing about how the rest of the model works.

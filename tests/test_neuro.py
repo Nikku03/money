@@ -112,3 +112,33 @@ class ClaimsTest(TempHome):
         net = S.planted_modadd(5)
         for cid in ("one-frequency", "same-frequency", "phase-sum", "faithful", "rebuild", "transfer"):
             self.assertTrue(claims.measure(cid, net, bank, 0)["pass"], cid)
+
+
+class LanguageModelProbeTest(TempHome):
+    """The parts of brain.neuro.lm that need no model (torch is optional)."""
+
+    def test_planted_helix_is_fitted_read_and_beats_other_periods(self):
+        from brain.neuro import lm, lmclaims
+        P = lm.planted_states(256, seed=1)
+        self.assertGreater(lm.helix_fit(P), 0.2)
+        self.assertGreaterEqual(lm.helix_read(P), 0.9)
+        self.assertLess(lm.helix_fit(P, labels=np.random.default_rng(0).permutation(100)), 0.0)
+        self.assertLess(max(lm.helix_read(P, T) for T in lm.random_periods(5, 0)), 0.5)
+        self.assertTrue(lmclaims.judge(lmclaims.CLAIMS[0], {
+            "model": "x", "layer": 3, "counting_acc": 1.0, "helix-fit": {"stat": 0.3, "p_shuffle": 0.01, "p_random": 0.01},
+            "planted": lmclaims.planted_control(64), "untrained": {"helix-fit": -0.1, "helix-read": 0.0}})["controls"]["pass"])
+
+    def test_noise_has_no_helix(self):
+        from brain.neuro import lm
+        noise = np.random.default_rng(2).normal(size=(100, 256))
+        self.assertLess(lm.helix_fit(noise), 0.0)
+        self.assertLess(lm.helix_read(noise), 0.1)
+
+    def test_basis_and_pairing(self):
+        from brain.neuro import lm
+        B = lm.basis([0, 1, 2])
+        self.assertEqual(B.shape, (3, 8))       # n, cos for period 2, cos and sin for 5, 10 and 100
+        self.assertTrue(np.allclose(B[:, 1], [1, -1, 1]))
+        t = lm.targets()
+        self.assertEqual(sorted(t), list(range(100)))
+        self.assertTrue(all(t != np.arange(100)))
