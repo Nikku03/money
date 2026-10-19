@@ -702,17 +702,18 @@ def _res(bank: Bank, cmd: Command) -> dict:
     declared = {r["id"]: r for r in recs if r["op"] == "declare"}
     every = research_run.verdicts() if recs else []
     results = [r for r in every if r.get("kind") is None]
-    forecasts = [r for r in every if r.get("kind") in ("forecast", "link")]  # FCST and RESULTS.md: p is not a perm p
+    forecasts = [r for r in every if r.get("kind") in ("forecast", "link", "event")]  # FCST and RESULTS.md: p is not a perm p
     rows = [{"id": r["id"], "universe": _universe_name(r.get("universe")),
              "claim": declared.get(r["id"], {}).get("spec", {}).get("claim", ""),
              "test_net": r["test"]["mean_net_excess"], "perm_p": r["test"]["perm_p"], "bh_q": r["bh_q"],
              "verdict": r["verdict"]} for r in results]
-    rows += [{"id": r["id"], "universe": "links" if r.get("kind") == "link" else
+    rows += [{"id": r["id"], "universe": {"link": "links", "event": "events"}.get(r.get("kind")) or
               _universe_name(declared.get(r["id"], {}).get("spec", {}).get("universe")),
               "claim": declared.get(r["id"], {}).get("spec", {}).get("claim", ""), "test_net": None, "perm_p": None,
               "bh_q": r.get("bh_q"), "verdict": r["verdict"]} for r in forecasts]
     ran = {r["id"] for r in every}
-    rows += [{"id": hid, "universe": "links" if d.get("kind") == "link" else _universe_name(d["spec"].get("universe")),
+    rows += [{"id": hid, "universe": {"link": "links", "event": "events"}.get(d.get("kind")) or
+              _universe_name(d["spec"].get("universe")),
               "claim": d["spec"].get("claim", ""),
               "test_net": None, "perm_p": None, "bh_q": None, "verdict": "not run"}
              for hid, d in declared.items() if hid not in ran]
@@ -737,7 +738,7 @@ def _res(bank: Bank, cmd: Command) -> dict:
                          f"{ctx['universe_ew_ann_return_test'] * 100:+.1f}% a year against SPY's "
                          f"{ctx['spy_ann_return_test'] * 100:+.1f}%.")
         note = (" ".join(parts) + " Gate: TEST net excess > 0, permutation p < 0.05, BH q < 0.10 (over every "
-                "hypothesis, gated forecast test and gated link test with a result). The random-signal control redraws its signals every month; for a signal "
+                "hypothesis and every gated forecast, link and event test with a result). The random-signal control redraws its signals every month; for a signal "
                 "that persists from month to month the null is narrower and its p-value too small (the fixed-per-stock "
                 "rate, where a run recorded it, says by how much). Universe members were chosen by today's market "
                 "value, so any PASS is an upper bound.")

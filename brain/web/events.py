@@ -9,10 +9,15 @@ from __future__ import annotations
 import re
 
 _W = r"(?:its |the |full[- ]year |annual |quarterly |fiscal |\w+ )?"
+# Up to five words between a verb and "guidance", as press releases write it ("Raises Full-Year 2026 Revenue and EPS
+# Outlook"), but never across a clause break or past a word that says the guidance did not move ("Raises Dividend;
+# Reaffirms Guidance").
+_GAP = r"(?:(?!(?:re)?affirm|reiterat|maintain|confirm|narrow|dividend|unchanged)[\w$%&/'’()-]+,?\s+){0,5}"
 RULES: dict[str, str] = {
-    "guidance_raised": rf"\b(raises?|raised|lifts?|lifted|boosts?|ups|hikes?) {_W}(guidance|outlook|forecast)",
-    "guidance_cut": rf"\b(cuts?|lowers?|lowered|slashes|slashed|reduces?|trims?|trimmed) {_W}(guidance|outlook|forecast)"
-                    r"|\bprofit warning\b",
+    "guidance_raised": rf"\b(raises?|raised|raising|increases?|increased|increasing|lifts?|lifted|boosts?|boosted|ups|"
+                       rf"upped|hikes?|hiked) {_GAP}(guidance|outlook|forecast)",
+    "guidance_cut": rf"\b(cuts?|cutting|lowers?|lowered|lowering|slashes|slashed|reduces?|reduced|reducing|trims?|"
+                    rf"trimmed) {_GAP}(guidance|outlook|forecast)|\bprofit warning\b",
     "earnings_beat": r"\b(beats?|tops?|topped|surpass(es|ed)?|exceeds?|exceeded) (wall street |analysts'? |the )?"
                      r"(estimates?|expectations|forecasts?|consensus)",
     "earnings_miss": r"\b(miss(es|ed)?|falls? short of|fell short of|lags?) (wall street |analysts'? |the )?"

@@ -1,0 +1,52 @@
+# Event tests: does a kind of corporate event move the stock?
+
+The first event tests ask about guidance: when a company **raises** or **cuts** its guidance in an earnings press release, does the stock move?
+
+## The events
+
+- **Where they come from.** Every earnings 8-K (item 2.02) in the bank has its press release as exhibit 99.1. `python -m brain releases` reads each release's opening from SEC EDGAR: the headline, the dateline and the highlights.
+  - The SEC's rules apply: our `SEC_USER_AGENT`, and under 10 requests a second through the shared SEC bucket.
+  - Each release is kept as a `release.earnings` fact: its title, its opening text, and the exhibit's URL.
+  - Its `known_at` is the filing's acceptance time, so a test sees the release only once it was public.
+- **How they are tagged.** Fixed rules (`brain/web/events.py`) tag the opening text, with no model.
+  - **guidance_raised:** "raises full-year 2026 revenue and EPS outlook", "increases fiscal 2025 guidance".
+  - **guidance_cut:** "lowers full-year outlook", "cuts guidance", "profit warning".
+  - A phrase can't reach across a clause break or past words that say guidance didn't move: "reaffirms", "maintains", "unchanged". "Raises dividend; reaffirms guidance" is not a raise.
+  - A release tagged both ways ("raises revenue guidance, lowers EPS outlook") counts as neither.
+  - The rules are applied at test time to the stored text, so the declared code fixes them.
+- **Universe.** The 60 stocks of `universe/us_large.json`, from December 2010 on. The 741-stock universe is a later, separate test (a new id): reading its 47,000 releases takes hours at the SEC's pace.
+
+## The tests
+
+Each event kind is tested in two windows. Day 0 is the first close at or after the filing became public (`brain/events.py`).
+
+| Window | Days | Gate | Asks |
+|---|---|---|---|
+| reaction | -1..+1 | REPORT | Does the event move the stock when it comes out? |
+| drift | +2..+21 | gated | Does it keep moving afterwards, when an investor could still act on it? |
+
+- **The comparison.** Each month, the tagged releases' mean excess return over SPY minus the mean of the month's other earnings releases.
+  - Every release moves in an earnings season. Only the gap says whether the event matters.
+  - The move against SPY alone is shown beside it.
+- **The statistic.** The mean of the monthly differences: a month counts once, however many releases it has. Its p-value is a one-sided sign flip, 20,000 draws, in the direction the event implies: up for a raise, down for a cut.
+- **Controls, on each test's TEST months.**
+  - **Placebo:** untagged releases drawn at random in place of the tagged ones must reach p < 0.05 in at most 10% of 200 draws.
+  - **Oracle:** the month's best (or worst) releases in their place must reach p < 0.01.
+  - If either fails, the verdict is void.
+- **Gate (drift).** PASS when all four hold:
+  - the difference points the way the event implies;
+  - p < 0.05;
+  - the controls pass;
+  - Benjamini–Hochberg q < 0.10 across every gated test in the ledger: hypotheses, forecasts, links and these.
+- **The usual rules.**
+  - Declared before running (`python -m brain events declare`, then commit), and frozen: a change is a new `VERSION`.
+  - TRAIN 2011–2018, TEST from 2019 to two months before the latest prices, so every drift window has closed.
+  - The data is read as the bank held it at declare.
+  - Results are written to the ledger and the Events section of `research/RESULTS.md` whatever they say (`python -m brain events test`, then commit).
+  - `--trial` reads TRAIN years only, in the trial ledger.
+
+## Not tested: analyst downgrades
+
+Rating changes are not filed anywhere public, and the free histories of them sit behind access tokens meant to stop automated reading, which the repo's rules forbid getting around.
+
+The web gateway (`docs/WEB.md`) tags downgrades and upgrades in headlines as they are published, so a record builds from now on. Once it has a few hundred tagged headlines, a downgrade test can be declared on that record.

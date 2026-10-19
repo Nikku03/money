@@ -181,13 +181,23 @@ def is_gated_link(r: dict) -> bool:
     return is_link(r) and r.get("gate_type") == "slope"
 
 
+def is_event(r: dict) -> bool:
+    """A test of a corporate event kind (brain/research/eventtest.py)."""
+    return r.get("kind") == "event"
+
+
+def is_gated_event(r: dict) -> bool:
+    """A drift event test; the reaction ones are descriptive."""
+    return is_event(r) and r.get("gate_type") == "diff"
+
+
 def is_gated_forecast(r: dict) -> bool:
     """A forecast result with a declared gate (F1b, F1c); descriptive ones (F1a, F1d) are not."""
     return is_forecast(r) and (r.get("gate_type") == "ic" or (r.get("gate_type") is None and "p" in r))
 
 
 def _bh_p(r: dict) -> float:
-    if is_forecast(r) or is_link(r):
+    if is_forecast(r) or is_link(r) or is_event(r):
         p = r.get("p")
         return float(p) if isinstance(p, (int, float)) and math.isfinite(p) else 1.0  # no p counts as 1
     return r["test"]["perm_p"]
@@ -203,8 +213,11 @@ def _forecast_verdict(r: dict, q: float) -> str:
 
 
 def _link_verdict(r: dict, q: float) -> str:
-    if not is_gated_link(r):
+    """A link or event test's verdict: REPORT when descriptive, else its gate, its controls and q."""
+    if not (is_gated_link(r) or is_gated_event(r)):
         return "REPORT"
+    if r.get("thin"):
+        return "FAIL (too few events)"
     if not (r.get("controls") or {}).get("pass"):
         return "FAIL (controls)"
     return "PASS" if (r.get("gate") or {}).get("pass") and q < FORECAST_BH_Q else "FAIL"
@@ -220,7 +233,7 @@ def verdicts(path=None) -> list[dict]:
     res = ledger.latest_results(path)
     gone = ledger.withdrawn(path)
     tested = {k: r for k, r in res.items()
-              if is_hypothesis(r) or is_gated_forecast(r) or is_gated_link(r)}
+              if is_hypothesis(r) or is_gated_forecast(r) or is_gated_link(r) or is_gated_event(r)}
     q_of = dict(zip(tested, bh_adjust([_bh_p(r) for r in tested.values()])))
     rows = []
     for k, r in res.items():
@@ -230,7 +243,7 @@ def verdicts(path=None) -> list[dict]:
         if is_forecast(r):
             rows.append({**r, "bh_q": q, "verdict": _forecast_verdict(r, q)})
             continue
-        if is_link(r):
+        if is_link(r) or is_event(r):
             rows.append({**r, "bh_q": q, "verdict": _link_verdict(r, q)})
             continue
         te = r["test"]
@@ -290,6 +303,7 @@ def report(ledger_path=None, results_path=None) -> str:
     rows = [r for r in every if is_hypothesis(r)]
     forecasts = [r for r in every if is_forecast(r)]
     links = [r for r in every if is_link(r)]
+    evts = [r for r in every if is_event(r)]
     led = Path(ledger_path or config.LEDGER)
     try:
         led_name = led.resolve().relative_to(config.ROOT.resolve()).as_posix()
@@ -298,7 +312,8 @@ def report(ledger_path=None, results_path=None) -> str:
     if not rows:
         text = "\n".join(["# Research results", "",
                           f"Generated {now_iso()} from `{led_name}`. Every number below is copied from the ledger.",
-                          "", *_forecast_section(forecasts), *_link_section(links, ledger_path)]) + "\n"
+                          "", *_forecast_section(forecasts), *_link_section(links, ledger_path),
+                          *_event_section(evts, ledger_path)]) + "\n"
         Path(results_path or config.RESULTS).write_text(text)
         return text
     by_uni: dict[str, list[dict]] = {}
@@ -322,7 +337,8 @@ def report(ledger_path=None, results_path=None) -> str:
         "Gate (declared before running): TEST mean net excess > 0, permutation p < 0.05, and Benjamini–Hochberg "
         "q < 0.10 across every hypothesis in the ledger"
         + (" and every gated forecast test (see Forecasts)" if any(is_gated_forecast(r) for r in forecasts) else "")
-        + (" and every gated link test (see Links)" if any(is_gated_link(r) for r in links) else "") + ".",
+        + (" and every gated link test (see Links)" if any(is_gated_link(r) for r in links) else "")
+        + (" and every gated event test (see Events)" if any(is_gated_event(r) for r in evts) else "") + ".",
         "",
         "| Hypothesis | Universe | Select | TEST net excess / mo | Annualised | Info ratio | Months won | Perm p | BH q | TRAIN net excess / mo | TRAIN p | TEST coverage | Verdict |",
         "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
@@ -392,6 +408,8 @@ def report(ledger_path=None, results_path=None) -> str:
         lines += ["", *_forecast_section(forecasts)]
     if links:
         lines += ["", *_link_section(links, ledger_path)]
+    if evts:
+        lines += ["", *_event_section(evts, ledger_path)]
     text = "\n".join(lines) + "\n"
     Path(results_path or config.RESULTS).write_text(text)
     return text
@@ -601,5 +619,57 @@ def _link_section(rows: list[dict], ledger_path=None) -> list[str]:
               "same-month move says the link is priced as it happens; only a next-month PASS would say it can "
               "be acted on. Links the bank cannot measure stay untested: `python -m brain chain links` lists "
               "what each would need.",
+              ""]
+    return lines
+
+
+# ---------- the Events section (docs/EVENTS.md) ----------
+def _event_section(rows: list[dict], ledger_path=None) -> list[str]:
+    """The event tests' table and plain words, from the ledger's results and declared specs."""
+    if not rows:
+        return []
+    specs = {r["id"]: r["spec"] for r in ledger.read(ledger_path) if r["op"] == "declare" and is_event(r)}
+    lines = [
+        "## Events",
+        "",
+        "Tests of corporate events named in earnings press releases (SEC 8-K exhibit 99; `docs/EVENTS.md`). Fixed "
+        "rules tag each release's opening text (`brain/web/events.py`). Each month, the tagged releases' mean excess "
+        "return over SPY is compared with the month's other earnings releases; the statistic is the mean of those "
+        "monthly differences, with a one-sided sign-flip p. **Reaction** (days -1..+1) is descriptive: does the event "
+        "move the stock? **Drift** (days +2..+21) is gated, declared before running: it passes when the difference "
+        "points the way the event implies, p < 0.05, the controls pass, and Benjamini–Hochberg q < 0.10 across every "
+        "gated test in the ledger. TEST from 2019; TRAIN 2011–2018 is shown beside it.",
+        "",
+        "| Test | Event | Days | TEST events (months) | vs other releases | 90% interval | p | BH q | vs SPY | "
+        "TRAIN vs others | Verdict |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+    ]
+    words = []
+    for r in rows:
+        s = specs.get(r["id"], {})
+        te, tr = r["metrics"]["test"], r["metrics"]["train"]
+        lo, hi = te["interval90"]
+        q = f"{r['bh_q']:.3f}" if isinstance(r.get("bh_q"), float) and math.isfinite(r["bh_q"]) else "–"
+        verdict = r["verdict"].split(":")[0]
+        lines.append(f"| {r['id']} | {s.get('event', '?')} | {s.get('days', '?')} | {te['events']} ({te['months']}) | "
+                     f"{_pp(te['diff'])} | {_pp(lo)}..{_pp(hi)} | {te['p']:.4f} | {q} | {_pp(te['vs_spy'])} | "
+                     f"{_pp(tr['diff'])} | **{verdict}** |")
+        words.append(f"- **{r['id']}**: over days {s.get('days', '?')}, releases tagged {s.get('event', '?')} did "
+                     f"{_pp(te['diff'])} against the month's other releases (90% interval {_pp(lo)} to {_pp(hi)}) and "
+                     f"{_pp(te['vs_spy'])} against SPY, over {te['events']} releases in {te['months']} months. The "
+                     f"event implies {'up' if s.get('sign', 0) > 0 else 'down'}. {verdict}.")
+    ctl = [r["controls"] for r in rows if r["controls"].get("n_placebo")]
+    if not ctl:
+        ctl = [{"placebo_fpr": float("nan"), "n_placebo": 0, "oracle_p": float("nan"), "pass": False}]
+    lines += ["", *words, "",
+              f"Controls on each test's TEST months: untagged releases drawn at random in place of the tagged ones reached "
+              f"p < 0.05 in {min(c['placebo_fpr'] for c in ctl) * 100:.1f}%–{max(c['placebo_fpr'] for c in ctl) * 100:.1f}% "
+              f"of {ctl[0]['n_placebo']} draws (at most 10% allowed); the month's best or worst releases in their place "
+              f"reached p ≤ {max(c['oracle_p'] for c in ctl):.4f}. "
+              f"{'All passed.' if all(c['pass'] for c in ctl) else 'Some FAILED: those verdicts are void.'}",
+              "",
+              "Reading this: a tag says only that the release's opening uses the words (\"raises full-year guidance\"); "
+              "the rules miss other phrasings and sometimes tag a passing mention. The universe is chosen today "
+              "(survivorship). A reaction with no drift means the market prices the event at once.",
               ""]
     return lines

@@ -42,6 +42,8 @@ Every hypothesis ever run counts in the false-discovery correction, so trying tw
 
 The chain engine's cause → effect links (`knowledge/links.json`) are tested the same way (`docs/LINKS.md`): `python -m brain chain measure`, `python -m brain chain declare`, commit, `python -m brain chain test`, commit the ledger and `research/RESULTS.md`. A new link or basket is a new test id; a declared one is never edited.
 
+Corporate events are tested the same way (`docs/EVENTS.md`): `python -m brain releases` reads each earnings release's opening from SEC EDGAR, fixed rules tag its events, then `python -m brain events declare`, commit, `python -m brain events test`, commit.
+
 ## Decisions
 
 - The model's own call (a `judgment` fact, made by `brain decide`) is a source like any web page. It carries weight only through its scored record (`brain decide score`, terminal `CLM` and `DEC`), never because it reads well. The same holds for the claims you note.

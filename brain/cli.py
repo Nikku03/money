@@ -12,7 +12,7 @@ from brain import config
 # there (or not finished) is skipped, so one part of the brain cannot take the whole CLI down.
 PLUGINS = ("brain.sources.insiders", "brain.sources.aviation", "brain.sources.shipping",
            "brain.sources.cameras", "brain.watch", "brain.scout", "brain.decide", "brain.forecast.live", "brain.chain",
-           "brain.web")
+           "brain.web", "brain.sources.releases", "brain.research.eventtest")
 
 
 def _bank():

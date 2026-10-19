@@ -97,6 +97,14 @@ python -m brain forecast score              # how recorded forecasts did once th
 - Each pair is tested twice: does the basket move with the cause that month, and does it move the next month? The next-month test is the one that matters for acting on a link.
 - `brain chain links` shows each link's test, or what would measure it. `brain chain follow` shows the results beside each chain.
 
+## Event tests
+
+`python -m brain releases` reads each earnings press release's opening from SEC EDGAR. Fixed rules tag the events it names, such as guidance raised or guidance cut. `python -m brain events declare`, commit, `python -m brain events test`, commit, then tests whether those events move the stock (`docs/EVENTS.md`):
+- **Reaction:** the 3 days around the release.
+- **Drift:** the following month.
+
+Each is measured against the same month's other earnings releases.
+
 ## The web gateway
 
 `python -m brain web run` lets the reasoning engine read the web without a language model (`docs/WEB.md`):
