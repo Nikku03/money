@@ -1,0 +1,62 @@
+{
+ "ticker": "LIN",
+ "accn": "0001628280-26-011430",
+ "relations": [
+  {
+   "passage": 10,
+   "name": "L'Air Liquide S.A.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Competitors in the industrial gases industry include global and regional companies such as L'Air Liquide S.A., Air Products and Chemicals, Inc., Messer Group GmbH, Mitsubishi Chemical Holdings Corporation (through Taiyo Nippon Sanso Corporation)"
+  },
+  {
+   "passage": 10,
+   "name": "Air Products and Chemicals, Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Competitors in the industrial gases industry include global and regional companies such as L'Air Liquide S.A., Air Products and Chemicals, Inc., Messer Group GmbH, Mitsubishi Chemical Holdings Corporation (through Taiyo Nippon Sanso Corporation)"
+  },
+  {
+   "passage": 10,
+   "name": "Messer Group GmbH",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Competitors in the industrial gases industry include global and regional companies such as L'Air Liquide S.A., Air Products and Chemicals, Inc., Messer Group GmbH, Mitsubishi Chemical Holdings Corporation (through Taiyo Nippon Sanso Corporation)"
+  },
+  {
+   "passage": 10,
+   "name": "Mitsubishi Chemical Holdings Corporation",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Competitors in the industrial gases industry include global and regional companies such as L'Air Liquide S.A., Air Products and Chemicals, Inc., Messer Group GmbH, Mitsubishi Chemical Holdings Corporation (through Taiyo Nippon Sanso Corporation)"
+  },
+  {
+   "passage": 10,
+   "name": "Taiyo Nippon Sanso Corporation",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Competitors in the industrial gases industry include global and regional companies such as L'Air Liquide S.A., Air Products and Chemicals, Inc., Messer Group GmbH, Mitsubishi Chemical Holdings Corporation (through Taiyo Nippon Sanso Corporation)"
+  },
+  {
+   "passage": 45,
+   "name": "RusChemAlliance",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "RusChemAlliance is owned 50 % by PJSC Gazprom. The injunction was requested by RCA to secure payment of a possible award under an arbitration proceeding RCA intended to file against Linde Engineering for alleged breach of contract under the agreement to build a gas processing plant in Russia entered into in July 2021."
+  },
+  {
+   "passage": 47,
+   "name": "OJSC NIPIgazpererabotka",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "OJSC NIPIgazpererabotka (\"Nipigas\") for the construction of a gas processing plant and other components located in the Amur Region, Russia (\"Amur GPP\"). Subsequently, in December 2015, Nipigas and Linde Engineering, executed a subcontract for engineering, procurement, and site services"
+  },
+  {
+   "passage": 47,
+   "name": "Gazprom Pererabotka Blagoveshchensk LLC",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "Gazprom Pererabotka Blagoveshchensk LLC (\"Gazprom\"), a 100% subsidiary of PJSC Gazprom, entered into an engineering, procurement and construction contract with OJSC NIPIgazpererabotka (\"Nipigas\") for the construction of a gas processing plant and other components located in the Amur Region, Russia (\"Amur GPP\"). Subsequently, in December 2015, Nipigas and Linde Engineering, executed a subcontract for engineering, procurement, and site services (\"EPSS Contract\") for licensed production units for the Amur GPP project. Additionally, Linde also entered into (i) a license agreement with Gazprom in 2017 for the operation of the plants"
+  }
+ ]
+}

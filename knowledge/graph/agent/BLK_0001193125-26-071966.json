@@ -1,0 +1,27 @@
+{
+ "ticker": "BLK",
+ "accn": "0001193125-26-071966",
+ "relations": [
+  {
+   "passage": 41,
+   "name": "Microsoft",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "BlackRock has a number of key strategic partnerships, including with Microsoft."
+  },
+  {
+   "passage": 41,
+   "name": "Microsoft",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "the Aladdin infrastructure and environment for BlackRock and its external Aladdin clients are hosted on Microsoft Azure and Amazon Web Services."
+  },
+  {
+   "passage": 41,
+   "name": "Amazon Web Services",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "the Aladdin infrastructure and environment for BlackRock and its external Aladdin clients are hosted on Microsoft Azure and Amazon Web Services."
+  }
+ ]
+}

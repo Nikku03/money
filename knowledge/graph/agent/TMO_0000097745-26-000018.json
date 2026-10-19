@@ -1,0 +1,20 @@
+{
+ "ticker": "TMO",
+ "accn": "0000097745-26-000018",
+ "relations": [
+  {
+   "passage": 25,
+   "name": "Federal Express",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "We ship a significant portion of our products to our customers through independent package delivery companies, such as Federal Express in the U.S. and DHL in Europe."
+  },
+  {
+   "passage": 25,
+   "name": "DHL",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "We ship a significant portion of our products to our customers through independent package delivery companies, such as Federal Express in the U.S. and DHL in Europe."
+  }
+ ]
+}

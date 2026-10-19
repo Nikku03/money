@@ -1,0 +1,34 @@
+{
+ "ticker": "VZ",
+ "accn": "0000732712-26-000007",
+ "relations": [
+  {
+   "passage": 13,
+   "name": "AT&T Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "we compete against other national wireless service providers, including AT&T Inc. and T-Mobile US, Inc., as well as various regional wireless service providers"
+  },
+  {
+   "passage": 13,
+   "name": "T-Mobile US, Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "we compete against other national wireless service providers, including AT&T Inc. and T-Mobile US, Inc., as well as various regional wireless service providers"
+  },
+  {
+   "passage": 13,
+   "name": "Comcast Corporation",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Resellers include cable companies, such as Comcast Corporation and Charter Communications, Inc., and others."
+  },
+  {
+   "passage": 13,
+   "name": "Charter Communications, Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Resellers include cable companies, such as Comcast Corporation and Charter Communications, Inc., and others."
+  }
+ ]
+}

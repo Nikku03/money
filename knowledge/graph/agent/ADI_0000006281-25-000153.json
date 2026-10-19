@@ -1,0 +1,13 @@
+{
+ "ticker": "ADI",
+ "accn": "0000006281-25-000153",
+ "relations": [
+  {
+   "passage": 21,
+   "name": "Taiwan Semiconductor Manufacturing Company",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "We currently source more than half of our wafer requirements annually from third-party wafer fabrication foundries, such as Taiwan Semiconductor Manufacturing Company (TSMC) and others, and the remainder is sourced internally."
+  }
+ ]
+}

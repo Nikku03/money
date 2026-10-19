@@ -1,0 +1,83 @@
+{
+ "ticker": "LRCX",
+ "accn": "0000707549-26-000037",
+ "relations": [
+  {
+   "passage": 13,
+   "name": "Micron Technology, Inc.",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "Our most significant customers during the fiscal years ending June 28, 2026, June 29, 2025, and June 30, 2024 included Micron Technology, Inc., Samsung Electronics Company, Ltd., SK hynix Inc., and Taiwan Semiconductor Manufacturing Company."
+  },
+  {
+   "passage": 13,
+   "name": "Samsung Electronics Company, Ltd.",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "Our most significant customers during the fiscal years ending June 28, 2026, June 29, 2025, and June 30, 2024 included Micron Technology, Inc., Samsung Electronics Company, Ltd., SK hynix Inc., and Taiwan Semiconductor Manufacturing Company."
+  },
+  {
+   "passage": 13,
+   "name": "SK hynix Inc.",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "Our most significant customers during the fiscal years ending June 28, 2026, June 29, 2025, and June 30, 2024 included Micron Technology, Inc., Samsung Electronics Company, Ltd., SK hynix Inc., and Taiwan Semiconductor Manufacturing Company."
+  },
+  {
+   "passage": 13,
+   "name": "Taiwan Semiconductor Manufacturing Company",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "Our most significant customers during the fiscal years ending June 28, 2026, June 29, 2025, and June 30, 2024 included Micron Technology, Inc., Samsung Electronics Company, Ltd., SK hynix Inc., and Taiwan Semiconductor Manufacturing Company."
+  },
+  {
+   "passage": 18,
+   "name": "Applied Materials, Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Our primary competitor in the dielectric and metals deposition market is Applied Materials, Inc."
+  },
+  {
+   "passage": 18,
+   "name": "ASM International",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "For ALD and PECVD, we also compete against ASM International and Wonik IPS."
+  },
+  {
+   "passage": 18,
+   "name": "Wonik IPS",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "For ALD and PECVD, we also compete against ASM International and Wonik IPS."
+  },
+  {
+   "passage": 18,
+   "name": "Hitachi, Ltd.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "In the etch market, our primary competitors are Applied Materials, Inc.; Hitachi, Ltd.; and Tokyo Electron, Ltd."
+  },
+  {
+   "passage": 18,
+   "name": "Tokyo Electron, Ltd.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "In the etch market, our primary competitors are Applied Materials, Inc.; Hitachi, Ltd.; and Tokyo Electron, Ltd."
+  },
+  {
+   "passage": 18,
+   "name": "Screen Holding Co., Ltd.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "our primary competitors in the wet clean market are Screen Holding Co., Ltd.; Semes Co., Ltd.; and Tokyo Electron, Ltd."
+  },
+  {
+   "passage": 18,
+   "name": "Semes Co., Ltd.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "our primary competitors in the wet clean market are Screen Holding Co., Ltd.; Semes Co., Ltd.; and Tokyo Electron, Ltd."
+  }
+ ]
+}

@@ -1,0 +1,13 @@
+{
+ "ticker": "BAC",
+ "accn": "0000070858-26-000157",
+ "relations": [
+  {
+   "passage": 15,
+   "name": "Freddie Mac",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "During 2025, we sold approximately $2.3 billion of loans to GSEs, primarily Freddie Mac (FHLMC)."
+  }
+ ]
+}

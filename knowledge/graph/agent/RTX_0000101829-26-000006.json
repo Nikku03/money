@@ -1,0 +1,34 @@
+{
+ "ticker": "RTX",
+ "accn": "0000101829-26-000006",
+ "relations": [
+  {
+   "passage": 4,
+   "name": "Airbus",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "Pratt & Whitney's largest commercial customer by sales is Airbus, with sales, prior to discounts and incentives, of 29%, 31%, and 48% of total Pratt & Whitney segment sales in 2025, 2024, and 2023, respectively."
+  },
+  {
+   "passage": 53,
+   "name": "GE Aviation",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "the Engine Alliance (EA), a joint venture with GE Aviation, which provides aftermarket support, spare parts, and service for the GP7000 engine for the Airbus A380 aircraft"
+  },
+  {
+   "passage": 54,
+   "name": "MTU Aero Engines AG",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "Pratt & Whitney holds a 61 % program share interest in the International Aero Engines AG (IAE) collaboration with MTU Aero Engines AG (MTU) and Japanese Aero Engines Corporation (JAEC), and a 49.5 % ownership interest in IAE."
+  },
+  {
+   "passage": 54,
+   "name": "Japanese Aero Engines Corporation",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "Pratt & Whitney holds a 61 % program share interest in the International Aero Engines AG (IAE) collaboration with MTU Aero Engines AG (MTU) and Japanese Aero Engines Corporation (JAEC), and a 49.5 % ownership interest in IAE."
+  }
+ ]
+}

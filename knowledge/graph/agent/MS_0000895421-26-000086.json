@@ -1,0 +1,13 @@
+{
+ "ticker": "MS",
+ "accn": "0000895421-26-000086",
+ "relations": [
+  {
+   "passage": 52,
+   "name": "Mitsubishi UFJ Financial Group, Inc.",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "The Firm and Mitsubishi UFJ Financial Group, Inc. (\"MUFG\") formed a joint venture in Japan comprising their respective investment banking and securities businesses"
+  }
+ ]
+}

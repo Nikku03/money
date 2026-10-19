@@ -9,7 +9,18 @@ TABLE = [{"ticker": "AAPL", "cik": 320193, "title": "Apple Inc."},
          {"ticker": "GOOGL", "cik": 1652044, "title": "Alphabet Inc."},
          {"ticker": "GOOG", "cik": 1652044, "title": "Alphabet Inc."},
          {"ticker": "AMD", "cik": 2488, "title": "ADVANCED MICRO DEVICES INC"},
-         {"ticker": "CHIP", "cik": 1, "title": "Chipco Corp /DE/"}]
+         {"ticker": "CHIP", "cik": 1, "title": "Chipco Corp /DE/"},
+         {"ticker": "AMZN", "cik": 1018724, "title": "AMAZON COM INC"},
+         {"ticker": "LOW", "cik": 60667, "title": "LOWES COMPANIES INC"},
+         {"ticker": "MDLZ", "cik": 1103982, "title": "Mondelez International, Inc."},
+         {"ticker": "MUFG", "cik": 67088, "title": "MITSUBISHI UFJ FINANCIAL GROUP INC"},
+         {"ticker": "MBSHY", "cik": 2, "title": "Mitsubishi Gas Chemical Company, Inc./ADR"},
+         {"ticker": "DTM", "cik": 3, "title": "DT Midstream, Inc."},
+         {"ticker": "LEGN", "cik": 4, "title": "Legend Biotech Corp"},
+         {"ticker": "PM", "cik": 1413329, "title": "Philip Morris International Inc."},
+         {"ticker": "BANC", "cik": 5, "title": "BANC OF CALIFORNIA, INC."},
+         {"ticker": "JTGEY", "cik": 6, "title": "Citibank,N.A./ADR"},
+         {"ticker": "KXIAY", "cik": 7, "title": "Kioxia Holdings Corporation/ADR"}]
 
 DOC_2015 = """<html><head><title>x</title></head><body>
 <p>Item 1. Business. We design graphics processors for gaming, data centers and automobiles around the world.</p>
@@ -100,7 +111,24 @@ class TextTest(TempHome):
         self.assertEqual(r.resolve("Alphabet"), "GOOGL")
         self.assertEqual(r.resolve("Chipco Corporation"), "CHIP")
         self.assertIsNone(r.resolve("TSMC"))
-        self.assertEqual(graph.node("Intel Corporation", r), "?intel")
+        self.assertIsNone(r.resolve("Intel Corporation"))
+
+    def test_resolver_rules(self):
+        r = graph.Resolver(TABLE)
+        self.assertEqual(r.match("Lowe's Companies, Inc."), ("LOW", "exact"))
+        self.assertEqual(r.match("Mondelēz International"), ("MDLZ", "exact"))
+        self.assertEqual(r.match("Amazon"), ("AMZN", "prefix"))
+        self.assertEqual(r.match("Amazon Web Services"), (None, ""))     # 'amazon' is a prefix, not a title
+        self.assertEqual(r.match("Legend Biotech USA Inc."), ("LEGN", "shortened"))
+        # Ambiguous or too short to be a prefix: no match.
+        self.assertEqual(r.match("Mitsubishi"), (None, ""))
+        self.assertEqual(r.match("DT"), (None, ""))
+        self.assertEqual(r.match("Mitsubishi Chemical"), (None, ""))
+        # A shortened name must match exactly; an ADR matches its company, never its depositary bank.
+        self.assertEqual(r.match("Philip Morris USA Inc."), (None, ""))
+        self.assertEqual(r.match("Banc of America Leasing & Capital LLC"), (None, ""))
+        self.assertEqual(r.match("Citibank, N.A."), (None, ""))
+        self.assertEqual(r.match("Kioxia Holdings Corporation"), ("KXIAY", "exact"))
 
 
 class CheckTest(TempHome):
@@ -145,13 +173,13 @@ class ExtractTest(TempHome):
         self.client = FakeClient({"2015": ANSWER_2015, "2016": ANSWER_2016})
 
     def run_extract(self, **kw):
-        return graph.extract(self.bank, "nvda", self.client, self.resolver, fetch_doc=DOCS.__getitem__, log=None, **kw)
+        return graph.extract(self.bank, "nvda", self.client, fetch_doc=DOCS.__getitem__, log=None, **kw)
 
     def test_facts_carry_the_filing_time_and_cite_it(self):
         out = self.run_extract()
         self.assertEqual(out, {"filings": 2, "relations": 5, "failed": []})
         rels = self.bank.facts("NVDA", "relation.customer")
-        self.assertEqual([(f.value, f.context["share_pct"]) for f in rels], [("AAPL", 14.0)])
+        self.assertEqual([(f.value, f.context["share_pct"]) for f in rels], [("apple", 14.0)])
         f = rels[0]
         self.assertEqual((f.known_at, f.as_of, f.tier, f.inputs), (self.f15.known_at, self.f15.as_of, "derived",
                                                                    (self.f15.ref,)))
@@ -179,37 +207,55 @@ class ExtractTest(TempHome):
 
     def test_a_failed_fetch_is_reported_and_the_rest_read(self):
         docs = {k: v for k, v in DOCS.items() if "2016" in k}
-        out = graph.extract(self.bank, "NVDA", self.client, self.resolver, fetch_doc=docs.__getitem__, log=None)
+        out = graph.extract(self.bank, "NVDA", self.client, fetch_doc=docs.__getitem__, log=None)
         self.assertEqual((out["filings"], len(out["failed"])), (1, 1))
 
     def test_the_graph_sees_only_what_was_filed_by_t(self):
         self.run_extract()
-        self.assertEqual(graph.graph_at(self.bank, ["NVDA"], "2015-03-12T15:59:59Z"), [])
-        g15 = graph.graph_at(self.bank, ["NVDA"], "2015-06-30")
+        self.assertEqual(graph.graph_at(self.bank, ["NVDA"], "2015-03-12T15:59:59Z", self.resolver), [])
+        g15 = graph.graph_at(self.bank, ["NVDA"], "2015-06-30", self.resolver)
         self.assertEqual(sorted((e.dst, e.relation) for e in g15),
                          [("AAPL", "customer"), ("AMD", "competitor"), ("TSM", "supplier")])
         # The 2016 10-K replaces the 2015 one: Apple and TSMC are no longer named.
-        g16 = graph.graph_at(self.bank, ["NVDA"], "2016-06-30")
+        g16 = graph.graph_at(self.bank, ["NVDA"], "2016-06-30", self.resolver)
         self.assertEqual(sorted((e.dst, e.relation) for e in g16), [("?intel", "competitor"), ("AMD", "competitor")])
         # A 10-K that is too old speaks for nobody.
-        self.assertEqual(graph.graph_at(self.bank, ["NVDA"], "2018-06-30"), [])
+        self.assertEqual(graph.graph_at(self.bank, ["NVDA"], "2018-06-30", self.resolver), [])
 
     def test_later_facts_change_nothing_at_an_earlier_time(self):
         """The leak test: whatever is added known after t, the graph at t is the same."""
         self.bank.add(self.f15)
-        graph.extract(self.bank, "NVDA", self.client, self.resolver, fetch_doc=DOCS.__getitem__, log=None,
+        graph.extract(self.bank, "NVDA", self.client, fetch_doc=DOCS.__getitem__, log=None,
                       max_filings=0)
-        self.bank.add_many(graph.read_filing(self.f15, self.client, self.resolver, "NVIDIA", DOCS.__getitem__))
-        before = graph.graph_at(self.bank, ["NVDA"], "2015-12-31")
-        self.bank.add_many(graph.read_filing(self.f16, self.client, self.resolver, "NVIDIA", DOCS.__getitem__))
+        self.bank.add_many(graph.read_filing(self.f15, self.client, "NVIDIA", DOCS.__getitem__))
+        before = graph.graph_at(self.bank, ["NVDA"], "2015-12-31", self.resolver)
+        self.bank.add_many(graph.read_filing(self.f16, self.client, "NVIDIA", DOCS.__getitem__))
         self.bank.add(Fact(entity="NVDA", attr="relation.customer", value="GOOGL", as_of="2015-01-25",
                            known_at="2017-01-01", tier="derived", source={"name": "x", "url": "https://x.test"},
                            context={"accn": "0001-15-000001", "extractor": "agent"}))
-        self.assertEqual(graph.graph_at(self.bank, ["NVDA"], "2015-12-31"), before)
+        self.assertEqual(graph.graph_at(self.bank, ["NVDA"], "2015-12-31", self.resolver), before)
+
+    def test_names_resolve_when_the_graph_is_read(self):
+        self.run_extract()
+        bare = graph.graph_at(self.bank, ["NVDA"], "2015-06-30")
+        self.assertEqual(sorted(e.dst for e in bare), ["?advanced micro devices", "?apple",
+                                                       "?taiwan semiconductor manufacturing"])
+        self.assertEqual({e.match for e in bare}, {""})
+        # A second name for the same company in the same 10-K adds no edge; a name for the filer itself adds none.
+        table = TABLE + [{"ticker": "NVDA", "cik": 1045810, "title": "NVIDIA CORP"}]
+        for name in ("Apple", "NVIDIA Corporation"):
+            self.bank.add(Fact(entity="NVDA", attr="relation.customer", value=graph.norm_name(name),
+                               as_of=self.f15.as_of, known_at=self.f15.known_at, tier="derived",
+                               source=self.f15.source, inputs=(self.f15.ref,),
+                               context={"accn": "0001-15-000001", "name": name, "share_pct": None,
+                                        "extractor": "agent"}))
+        g = graph.graph_at(self.bank, ["NVDA"], "2015-06-30", graph.Resolver(table))
+        self.assertEqual(sorted((e.dst, e.relation, e.share_pct) for e in g),
+                         [("AAPL", "customer", 14.0), ("AMD", "competitor", None), ("TSM", "supplier", None)])
 
     def test_neighbours_turn_edges_round(self):
         self.run_extract()
-        edges = graph.graph_at(self.bank, ["NVDA"], "2015-06-30")
+        edges = graph.graph_at(self.bank, ["NVDA"], "2015-06-30", self.resolver)
         roles = {(o, r) for o, r, _ in graph.neighbours(edges, "AAPL")}
         self.assertEqual(roles, {("NVDA", "supplier")})
         self.assertEqual({(o, r) for o, r, _ in graph.neighbours(edges, "TSM")}, {("NVDA", "customer")})
@@ -217,16 +263,16 @@ class ExtractTest(TempHome):
     def test_an_agent_is_held_to_the_same_rule(self):
         with self.assertRaisesRegex(ValueError, "quote not in the passage"):
             graph.add_by_agent(self.bank, "NVDA", "0001-15-000001", "Samsung", "supplier", "Samsung makes our memory",
-                               resolver=self.resolver, fetch_doc=DOCS.__getitem__)
+                               fetch_doc=DOCS.__getitem__)
         with self.assertRaisesRegex(ValueError, "no 10-K"):
             graph.add_by_agent(self.bank, "NVDA", "9999", "Apple Inc.", "customer", "Apple Inc.",
                                fetch_doc=DOCS.__getitem__)
         f = graph.add_by_agent(self.bank, "NVDA", "0001-15-000001", "Apple Inc.", "customer",
                                "Sales to Apple Inc. accounted for 14% of our net revenue", "14",
-                               resolver=self.resolver, fetch_doc=DOCS.__getitem__)
-        self.assertEqual((f.value, f.context["share_pct"], f.context["extractor"]), ("AAPL", 14.0, "agent"))
+                               fetch_doc=DOCS.__getitem__)
+        self.assertEqual((f.value, f.context["share_pct"], f.context["extractor"]), ("apple", 14.0, "agent"))
         # With no model scan of that 10-K, the agent's reading alone puts it in the graph.
-        g = graph.graph_at(self.bank, ["NVDA"], "2015-06-30")
+        g = graph.graph_at(self.bank, ["NVDA"], "2015-06-30", self.resolver)
         self.assertEqual([(e.dst, e.relation) for e in g], [("AAPL", "customer")])
 
 
@@ -246,25 +292,26 @@ class AgentPacketTest(TempHome):
 
     def test_answer_is_held_to_the_model_rules(self):
         answer = dict(ANSWER_2015, ticker="nvda", accn="0001-15-000001")
-        facts = graph.record_answer(self.bank, json.dumps(answer), self.resolver, fetch_doc=DOCS.__getitem__)
-        self.assertEqual(sorted(f.value for f in facts[:-1]), ["AAPL", "AMD", "TSM"])
+        facts = graph.record_answer(self.bank, json.dumps(answer), fetch_doc=DOCS.__getitem__)
+        self.assertEqual(sorted(f.value for f in facts[:-1]),
+                         ["advanced micro devices", "apple", "taiwan semiconductor manufacturing"])
         self.assertEqual({f.context["extractor"] for f in facts}, {"agent"})
         scan = facts[-1]
         self.assertEqual((scan.attr, scan.value), ("relation.scan", 3))
         self.assertEqual(scan.context["rejected"], {"no company name": 1, "no such passage": 1,
                                                     "quote not in the passage": 1})
-        self.assertEqual(len(graph.graph_at(self.bank, ["NVDA"], "2015-06-30")), 3)
+        self.assertEqual(len(graph.graph_at(self.bank, ["NVDA"], "2015-06-30", self.resolver)), 3)
         with self.assertRaisesRegex(ValueError, "already read"):
-            graph.record_answer(self.bank, answer, self.resolver, fetch_doc=DOCS.__getitem__)
+            graph.record_answer(self.bank, answer, fetch_doc=DOCS.__getitem__)
 
     def test_answer_for_an_unknown_filing_is_refused(self):
         for bad in ({"ticker": "NVDA", "accn": "nope", "relations": []}, {"relations": []}, []):
             with self.assertRaises(ValueError):
-                graph.record_answer(self.bank, bad, self.resolver, fetch_doc=DOCS.__getitem__)
+                graph.record_answer(self.bank, bad, fetch_doc=DOCS.__getitem__)
 
     def test_a_read_with_nothing_named_still_counts_as_read(self):
         facts = graph.record_answer(self.bank, {"ticker": "NVDA", "accn": "0001-15-000001", "relations": []},
-                                    self.resolver, fetch_doc=DOCS.__getitem__)
+                                    fetch_doc=DOCS.__getitem__)
         self.assertEqual([(f.attr, f.value) for f in facts], [("relation.scan", 0)])
         self.assertIsNotNone(graph.latest_scan(self.bank.view("2015-06-30"), "NVDA"))
-        self.assertEqual(graph.graph_at(self.bank, ["NVDA"], "2015-06-30"), [])
+        self.assertEqual(graph.graph_at(self.bank, ["NVDA"], "2015-06-30", self.resolver), [])

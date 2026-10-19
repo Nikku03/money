@@ -1,0 +1,244 @@
+{
+ "ticker": "BRK-B",
+ "accn": "0001193125-26-083899",
+ "relations": [
+  {
+   "passage": 1,
+   "name": "State Farm",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "GEICO competes for private passenger automobile insurance customers in the preferred, standard and non-standard risk markets with other companies that sell directly to the customer and with companies that use agency sales forces, including State Farm, Progressive, Allstate and USAA."
+  },
+  {
+   "passage": 1,
+   "name": "Progressive",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "GEICO competes for private passenger automobile insurance customers in the preferred, standard and non-standard risk markets with other companies that sell directly to the customer and with companies that use agency sales forces, including State Farm, Progressive, Allstate and USAA."
+  },
+  {
+   "passage": 1,
+   "name": "Allstate",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "GEICO competes for private passenger automobile insurance customers in the preferred, standard and non-standard risk markets with other companies that sell directly to the customer and with companies that use agency sales forces, including State Farm, Progressive, Allstate and USAA."
+  },
+  {
+   "passage": 1,
+   "name": "USAA",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "GEICO competes for private passenger automobile insurance customers in the preferred, standard and non-standard risk markets with other companies that sell directly to the customer and with companies that use agency sales forces, including State Farm, Progressive, Allstate and USAA."
+  },
+  {
+   "passage": 4,
+   "name": "Union Pacific Railroad Company",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "BNSF Railway's primary rail competitor in the Western region of the U.S. is Union Pacific Railroad Company."
+  },
+  {
+   "passage": 10,
+   "name": "Boeing",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "PCC has several significant customers, including aerospace original equipment manufacturers (\"OEMs\") (Boeing and Airbus) and aircraft engine manufacturer suppliers (GE Aerospace, Rolls Royce and Pratt & Whitney)."
+  },
+  {
+   "passage": 10,
+   "name": "Airbus",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "PCC has several significant customers, including aerospace original equipment manufacturers (\"OEMs\") (Boeing and Airbus) and aircraft engine manufacturer suppliers (GE Aerospace, Rolls Royce and Pratt & Whitney)."
+  },
+  {
+   "passage": 10,
+   "name": "GE Aerospace",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "PCC has several significant customers, including aerospace original equipment manufacturers (\"OEMs\") (Boeing and Airbus) and aircraft engine manufacturer suppliers (GE Aerospace, Rolls Royce and Pratt & Whitney)."
+  },
+  {
+   "passage": 10,
+   "name": "Rolls Royce",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "PCC has several significant customers, including aerospace original equipment manufacturers (\"OEMs\") (Boeing and Airbus) and aircraft engine manufacturer suppliers (GE Aerospace, Rolls Royce and Pratt & Whitney)."
+  },
+  {
+   "passage": 10,
+   "name": "Pratt & Whitney",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "PCC has several significant customers, including aerospace original equipment manufacturers (\"OEMs\") (Boeing and Airbus) and aircraft engine manufacturer suppliers (GE Aerospace, Rolls Royce and Pratt & Whitney)."
+  },
+  {
+   "passage": 13,
+   "name": "Infineum International Ltd.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Lubrizol Additives' principal competitors are Infineum International Ltd., Chevron Oronite Company and Afton Chemical Corporation."
+  },
+  {
+   "passage": 13,
+   "name": "Chevron Oronite Company",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Lubrizol Additives' principal competitors are Infineum International Ltd., Chevron Oronite Company and Afton Chemical Corporation."
+  },
+  {
+   "passage": 13,
+   "name": "Afton Chemical Corporation",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Lubrizol Additives' principal competitors are Infineum International Ltd., Chevron Oronite Company and Afton Chemical Corporation."
+  },
+  {
+   "passage": 18,
+   "name": "Sandvik",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "The segment includes hundreds of participants who range from small, private manufacturers of specialized products for niche applications and markets to larger, global multinational businesses (such as Sandvik and Kennametal, Inc.) with a wide assortment of products and extensive distribution networks."
+  },
+  {
+   "passage": 18,
+   "name": "Kennametal, Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "The segment includes hundreds of participants who range from small, private manufacturers of specialized products for niche applications and markets to larger, global multinational businesses (such as Sandvik and Kennametal, Inc.) with a wide assortment of products and extensive distribution networks."
+  },
+  {
+   "passage": 18,
+   "name": "Kyocera",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other manufacturing companies such as Kyocera, Mitsubishi, Sumitomo, Ceratizit, OSG, Guhring, Mapal and YG-1 also play a significant role in the cutting tool market."
+  },
+  {
+   "passage": 18,
+   "name": "Mitsubishi",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other manufacturing companies such as Kyocera, Mitsubishi, Sumitomo, Ceratizit, OSG, Guhring, Mapal and YG-1 also play a significant role in the cutting tool market."
+  },
+  {
+   "passage": 18,
+   "name": "Sumitomo",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other manufacturing companies such as Kyocera, Mitsubishi, Sumitomo, Ceratizit, OSG, Guhring, Mapal and YG-1 also play a significant role in the cutting tool market."
+  },
+  {
+   "passage": 18,
+   "name": "Ceratizit",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other manufacturing companies such as Kyocera, Mitsubishi, Sumitomo, Ceratizit, OSG, Guhring, Mapal and YG-1 also play a significant role in the cutting tool market."
+  },
+  {
+   "passage": 18,
+   "name": "OSG",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other manufacturing companies such as Kyocera, Mitsubishi, Sumitomo, Ceratizit, OSG, Guhring, Mapal and YG-1 also play a significant role in the cutting tool market."
+  },
+  {
+   "passage": 18,
+   "name": "Guhring",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other manufacturing companies such as Kyocera, Mitsubishi, Sumitomo, Ceratizit, OSG, Guhring, Mapal and YG-1 also play a significant role in the cutting tool market."
+  },
+  {
+   "passage": 18,
+   "name": "Mapal",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other manufacturing companies such as Kyocera, Mitsubishi, Sumitomo, Ceratizit, OSG, Guhring, Mapal and YG-1 also play a significant role in the cutting tool market."
+  },
+  {
+   "passage": 18,
+   "name": "YG-1",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other manufacturing companies such as Kyocera, Mitsubishi, Sumitomo, Ceratizit, OSG, Guhring, Mapal and YG-1 also play a significant role in the cutting tool market."
+  },
+  {
+   "passage": 34,
+   "name": "Ace Hardware",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "Benjamin Moore coatings are available through more than 8,000 independently owned and operated paint, decorating and hardware retailers, including approximately 4,000 Ace Hardware (\"Ace\") stores, throughout the U.S. and Canada, as well as 66 other countries."
+  },
+  {
+   "passage": 35,
+   "name": "Sherwin-Williams Company",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Competitors include other premium paint and decorating stores, mass merchandisers, home centers, independent hardware stores, hardware chains and manufacturer-operated direct outlets, such as Sherwin-Williams Company, The Pittsburgh Paints Company, The Home Depot, Inc., Lowe's Companies, Inc and Farrow & Ball."
+  },
+  {
+   "passage": 35,
+   "name": "The Pittsburgh Paints Company",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Competitors include other premium paint and decorating stores, mass merchandisers, home centers, independent hardware stores, hardware chains and manufacturer-operated direct outlets, such as Sherwin-Williams Company, The Pittsburgh Paints Company, The Home Depot, Inc., Lowe's Companies, Inc and Farrow & Ball."
+  },
+  {
+   "passage": 35,
+   "name": "The Home Depot, Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Competitors include other premium paint and decorating stores, mass merchandisers, home centers, independent hardware stores, hardware chains and manufacturer-operated direct outlets, such as Sherwin-Williams Company, The Pittsburgh Paints Company, The Home Depot, Inc., Lowe's Companies, Inc and Farrow & Ball."
+  },
+  {
+   "passage": 35,
+   "name": "Lowe's Companies, Inc",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Competitors include other premium paint and decorating stores, mass merchandisers, home centers, independent hardware stores, hardware chains and manufacturer-operated direct outlets, such as Sherwin-Williams Company, The Pittsburgh Paints Company, The Home Depot, Inc., Lowe's Companies, Inc and Farrow & Ball."
+  },
+  {
+   "passage": 35,
+   "name": "Farrow & Ball",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Competitors include other premium paint and decorating stores, mass merchandisers, home centers, independent hardware stores, hardware chains and manufacturer-operated direct outlets, such as Sherwin-Williams Company, The Pittsburgh Paints Company, The Home Depot, Inc., Lowe's Companies, Inc and Farrow & Ball."
+  },
+  {
+   "passage": 50,
+   "name": "Walmart",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "McLane's major customers during 2025 included Walmart (approximately 17.2% of revenues); 7-Eleven (approximately 13.3% of revenues); and Yum! Brands (approximately 13.3% of revenues)."
+  },
+  {
+   "passage": 50,
+   "name": "7-Eleven",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "McLane's major customers during 2025 included Walmart (approximately 17.2% of revenues); 7-Eleven (approximately 13.3% of revenues); and Yum! Brands (approximately 13.3% of revenues)."
+  },
+  {
+   "passage": 50,
+   "name": "Yum! Brands",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "McLane's major customers during 2025 included Walmart (approximately 17.2% of revenues); 7-Eleven (approximately 13.3% of revenues); and Yum! Brands (approximately 13.3% of revenues)."
+  },
+  {
+   "passage": 53,
+   "name": "Love's Travel Stops",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "The travel center industry is concentrated among a few large operators, including Love's Travel Stops and TravelCenters of America, although there are numerous independent operators that operate one to ten travel centers."
+  },
+  {
+   "passage": 53,
+   "name": "TravelCenters of America",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "The travel center industry is concentrated among a few large operators, including Love's Travel Stops and TravelCenters of America, although there are numerous independent operators that operate one to ten travel centers."
+  }
+ ]
+}

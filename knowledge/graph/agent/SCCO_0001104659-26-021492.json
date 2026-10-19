@@ -1,0 +1,69 @@
+{
+ "ticker": "SCCO",
+ "accn": "0001104659-26-021492",
+ "relations": [
+  {
+   "passage": 7,
+   "name": "Valero Peru",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "In Peru, we obtain fuel primarily from Valero Peru, a local subsidiary of Valero Energy Corporation, a U.S. producer of fuel and power."
+  },
+  {
+   "passage": 7,
+   "name": "Valero Energy Corporation",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "In Peru, we obtain fuel primarily from Valero Peru, a local subsidiary of Valero Energy Corporation, a U.S. producer of fuel and power."
+  },
+  {
+   "passage": 8,
+   "name": "Electroperu S.A.",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "In June 2014, we entered into a power purchase agreement for 120 megawatts (\"MW\") with the state owned company Electroperu S.A., which began supplying energy to our Peruvian operations for a twenty-year period that started on April 17, 2017."
+  },
+  {
+   "passage": 8,
+   "name": "Kallpa Generacion S.A.",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "In July 2014, we entered into a power purchase agreement for 120MW with a private power generator Kallpa Generacion S.A. (\"Kallpa\"), which began supplying energy to our Peruvian operations for a ten-year"
+  },
+  {
+   "passage": 11,
+   "name": "PEMEX",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "Several contracts with PEMEX and the United States provide us with the option of using a monthly or daily fixed prices for our natural gas purchases."
+  },
+  {
+   "passage": 12,
+   "name": "Mexico Generadora de Energia S. de R. L.",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "We purchase most of our electricity from Mexico Generadora de Energia S. de R. L. (\"MGE\"), a subsidiary of Grupo Mexico which has two power plants designed to supply power to La Caridad and Buenavista units."
+  },
+  {
+   "passage": 13,
+   "name": "Comision Federal de Electricidad",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "We also purchase electricity from the Comision Federal de Electricidad (the Federal Electricity Commission or the \"CFE\"), the state's electrical power producer."
+  },
+  {
+   "passage": 14,
+   "name": "Eolica el Retiro, S.A.P.I de C.V.",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "Some IMMSA mining operations also purchase electricity from Eolica el Retiro, S.A.P.I de C.V. (\"Eolica\"), a windfarm energy producer that is an indirect subsidiary of Grupo Mexico."
+  },
+  {
+   "passage": 16,
+   "name": "Parque Eolico de Fenicias, S. de R.L. de C.V.",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "On February 20, 2020, the Company signed a power purchase agreement with Parque Eolico de Fenicias, S. de R.L. de C.V., and indirect subsidiary of Grupo Mexico, to supply 611,400 MWh of power per year to some of the Company´s Mexican operations for 20 years."
+  }
+ ]
+}

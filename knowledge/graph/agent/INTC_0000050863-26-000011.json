@@ -1,0 +1,153 @@
+{
+ "ticker": "INTC",
+ "accn": "0000050863-26-000011",
+ "relations": [
+  {
+   "passage": 4,
+   "name": "NVIDIA",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "We also announced a strategic partnership with NVIDIA to co-develop custom client and data center products combining our x86 CPU technologies with NVIDIA's AI and accelerated computing capabilities."
+  },
+  {
+   "passage": 33,
+   "name": "NVIDIA",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Our competitors include companies offering platform products, such as AMD and Qualcomm; accelerator products such as GPUs, including those offered by NVIDIA and AMD"
+  },
+  {
+   "passage": 12,
+   "name": "AMD",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "CCG's primary competitor is AMD, which like us designs processors based on the x86 architecture."
+  },
+  {
+   "passage": 12,
+   "name": "Apple",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "We also face significant competition from companies that design processors based on the ARM architecture, such as Apple with its M series products, Qualcomm with its Snapdragon products and MediaTek with its Kompanio products."
+  },
+  {
+   "passage": 12,
+   "name": "Qualcomm",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "We also face significant competition from companies that design processors based on the ARM architecture, such as Apple with its M series products, Qualcomm with its Snapdragon products and MediaTek with its Kompanio products."
+  },
+  {
+   "passage": 12,
+   "name": "MediaTek",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "We also face significant competition from companies that design processors based on the ARM architecture, such as Apple with its M series products, Qualcomm with its Snapdragon products and MediaTek with its Kompanio products."
+  },
+  {
+   "passage": 13,
+   "name": "Amazon",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "companies developing their own custom silicon, including many hyperscalers such as Amazon, Google, Meta and Microsoft"
+  },
+  {
+   "passage": 13,
+   "name": "Google",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "companies developing their own custom silicon, including many hyperscalers such as Amazon, Google, Meta and Microsoft"
+  },
+  {
+   "passage": 13,
+   "name": "Meta",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "companies developing their own custom silicon, including many hyperscalers such as Amazon, Google, Meta and Microsoft"
+  },
+  {
+   "passage": 13,
+   "name": "Microsoft",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "companies developing their own custom silicon, including many hyperscalers such as Amazon, Google, Meta and Microsoft"
+  },
+  {
+   "passage": 13,
+   "name": "Broadcom",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "We also compete with Broadcom in the custom ASICs development market."
+  },
+  {
+   "passage": 16,
+   "name": "TSMC",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Our primary competitor in leading-edge semiconductor process technology is TSMC, which holds a leading position in manufacturing at scale for the most advanced nodes."
+  },
+  {
+   "passage": 16,
+   "name": "Samsung",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "We also compete directly with Samsung in this market."
+  },
+  {
+   "passage": 16,
+   "name": "GlobalFoundries",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other Intel Foundry competitors include GlobalFoundries, UMC and SMIC, which primarily focus on mature process technologies."
+  },
+  {
+   "passage": 16,
+   "name": "UMC",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other Intel Foundry competitors include GlobalFoundries, UMC and SMIC, which primarily focus on mature process technologies."
+  },
+  {
+   "passage": 16,
+   "name": "SMIC",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other Intel Foundry competitors include GlobalFoundries, UMC and SMIC, which primarily focus on mature process technologies."
+  },
+  {
+   "passage": 20,
+   "name": "UMC",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "we announced a strategic collaboration with UMC"
+  },
+  {
+   "passage": 18,
+   "name": "TSMC",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "We expect to continue to use TSMC and other third-party foundry suppliers for various key tiles in a number of current and future products."
+  },
+  {
+   "passage": 51,
+   "name": "ASML Holding N.V.",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "ASML Holding N.V. (ASML) is currently the sole supplier of EUV lithography tools"
+  },
+  {
+   "passage": 45,
+   "name": "Brookfield",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "our 2022 joint investment with Brookfield in the manufacturing expansion of our Arizona campus"
+  },
+  {
+   "passage": 45,
+   "name": "Apollo",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "our 2024 joint investment with Apollo related to Fab 34 in Ireland"
+  }
+ ]
+}

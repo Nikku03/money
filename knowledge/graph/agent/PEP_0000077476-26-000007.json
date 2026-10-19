@@ -1,0 +1,167 @@
+{
+ "ticker": "PEP",
+ "accn": "0000077476-26-000007",
+ "relations": [
+  {
+   "passage": 4,
+   "name": "Unilever",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "makes, markets, distributes and sells ready-to-drink tea and coffee products through joint ventures with Unilever (under the Lipton brand name) and Starbucks, respectively."
+  },
+  {
+   "passage": 4,
+   "name": "Starbucks",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "makes, markets, distributes and sells ready-to-drink tea and coffee products through joint ventures with Unilever (under the Lipton brand name) and Starbucks, respectively."
+  },
+  {
+   "passage": 4,
+   "name": "Keurig Dr Pepper Inc.",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "Further, PBNA manufactures and distributes certain brands licensed from Keurig Dr Pepper Inc., including Crush, Dr Pepper and Schweppes, and certain juice brands licensed from Dole Food Company, Inc. and Ocean Spray Cranberries, Inc."
+  },
+  {
+   "passage": 4,
+   "name": "Dole Food Company, Inc.",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "Further, PBNA manufactures and distributes certain brands licensed from Keurig Dr Pepper Inc., including Crush, Dr Pepper and Schweppes, and certain juice brands licensed from Dole Food Company, Inc. and Ocean Spray Cranberries, Inc."
+  },
+  {
+   "passage": 4,
+   "name": "Ocean Spray Cranberries, Inc.",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "Further, PBNA manufactures and distributes certain brands licensed from Keurig Dr Pepper Inc., including Crush, Dr Pepper and Schweppes, and certain juice brands licensed from Dole Food Company, Inc. and Ocean Spray Cranberries, Inc."
+  },
+  {
+   "passage": 4,
+   "name": "Celsius Holdings, Inc.",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "PBNA also distributes, in certain channels, brands owned by Celsius Holdings, Inc. (Celsius), including Celsius, Alani Nu and Rockstar."
+  },
+  {
+   "passage": 5,
+   "name": "Tropicana Beverages Group",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "PBNA acts as the exclusive distributor for small-format and foodservice customers with chilled direct-store-delivery (DSD) for the portfolio of brands owned by Tropicana Beverages Group (TBG)."
+  },
+  {
+   "passage": 12,
+   "name": "Walmart Inc.",
+   "relation": "customer",
+   "share_pct": 14,
+   "quote": "In 2025, sales to Walmart Inc. (Walmart) and its affiliates, including Sam's Club (Sam's), represented approximately 14% of our consolidated net revenue"
+  },
+  {
+   "passage": 12,
+   "name": "Sam's Club",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "In 2025, sales to Walmart Inc. (Walmart) and its affiliates, including Sam's Club (Sam's), represented approximately 14% of our consolidated net revenue"
+  },
+  {
+   "passage": 13,
+   "name": "The Coca-Cola Company",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "In many countries in which our products are sold, including the United States, The Coca-Cola Company is our primary beverage competitor."
+  },
+  {
+   "passage": 13,
+   "name": "The Campbell's Company",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other beverage and convenient food competitors include, but are not limited to, The Campbell's Company, Conagra Brands, Inc., Hormel Foods Corporation, Keurig Dr Pepper Inc., The Kraft Heinz Company, Link Snacks, Inc., Mars, Incorporated, Mondelēz International, Inc., Monster Beverage Corporation, Nestlé S.A., Primo Brands Corporation, Red Bull GmbH and Utz Brands, Inc."
+  },
+  {
+   "passage": 13,
+   "name": "Conagra Brands, Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other beverage and convenient food competitors include, but are not limited to, The Campbell's Company, Conagra Brands, Inc., Hormel Foods Corporation, Keurig Dr Pepper Inc., The Kraft Heinz Company, Link Snacks, Inc., Mars, Incorporated, Mondelēz International, Inc., Monster Beverage Corporation, Nestlé S.A., Primo Brands Corporation, Red Bull GmbH and Utz Brands, Inc."
+  },
+  {
+   "passage": 13,
+   "name": "Hormel Foods Corporation",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other beverage and convenient food competitors include, but are not limited to, The Campbell's Company, Conagra Brands, Inc., Hormel Foods Corporation, Keurig Dr Pepper Inc., The Kraft Heinz Company, Link Snacks, Inc., Mars, Incorporated, Mondelēz International, Inc., Monster Beverage Corporation, Nestlé S.A., Primo Brands Corporation, Red Bull GmbH and Utz Brands, Inc."
+  },
+  {
+   "passage": 13,
+   "name": "Keurig Dr Pepper Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other beverage and convenient food competitors include, but are not limited to, The Campbell's Company, Conagra Brands, Inc., Hormel Foods Corporation, Keurig Dr Pepper Inc., The Kraft Heinz Company, Link Snacks, Inc., Mars, Incorporated, Mondelēz International, Inc., Monster Beverage Corporation, Nestlé S.A., Primo Brands Corporation, Red Bull GmbH and Utz Brands, Inc."
+  },
+  {
+   "passage": 13,
+   "name": "The Kraft Heinz Company",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other beverage and convenient food competitors include, but are not limited to, The Campbell's Company, Conagra Brands, Inc., Hormel Foods Corporation, Keurig Dr Pepper Inc., The Kraft Heinz Company, Link Snacks, Inc., Mars, Incorporated, Mondelēz International, Inc., Monster Beverage Corporation, Nestlé S.A., Primo Brands Corporation, Red Bull GmbH and Utz Brands, Inc."
+  },
+  {
+   "passage": 13,
+   "name": "Link Snacks, Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other beverage and convenient food competitors include, but are not limited to, The Campbell's Company, Conagra Brands, Inc., Hormel Foods Corporation, Keurig Dr Pepper Inc., The Kraft Heinz Company, Link Snacks, Inc., Mars, Incorporated, Mondelēz International, Inc., Monster Beverage Corporation, Nestlé S.A., Primo Brands Corporation, Red Bull GmbH and Utz Brands, Inc."
+  },
+  {
+   "passage": 13,
+   "name": "Mars, Incorporated",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other beverage and convenient food competitors include, but are not limited to, The Campbell's Company, Conagra Brands, Inc., Hormel Foods Corporation, Keurig Dr Pepper Inc., The Kraft Heinz Company, Link Snacks, Inc., Mars, Incorporated, Mondelēz International, Inc., Monster Beverage Corporation, Nestlé S.A., Primo Brands Corporation, Red Bull GmbH and Utz Brands, Inc."
+  },
+  {
+   "passage": 13,
+   "name": "Mondelēz International, Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other beverage and convenient food competitors include, but are not limited to, The Campbell's Company, Conagra Brands, Inc., Hormel Foods Corporation, Keurig Dr Pepper Inc., The Kraft Heinz Company, Link Snacks, Inc., Mars, Incorporated, Mondelēz International, Inc., Monster Beverage Corporation, Nestlé S.A., Primo Brands Corporation, Red Bull GmbH and Utz Brands, Inc."
+  },
+  {
+   "passage": 13,
+   "name": "Monster Beverage Corporation",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other beverage and convenient food competitors include, but are not limited to, The Campbell's Company, Conagra Brands, Inc., Hormel Foods Corporation, Keurig Dr Pepper Inc., The Kraft Heinz Company, Link Snacks, Inc., Mars, Incorporated, Mondelēz International, Inc., Monster Beverage Corporation, Nestlé S.A., Primo Brands Corporation, Red Bull GmbH and Utz Brands, Inc."
+  },
+  {
+   "passage": 13,
+   "name": "Nestlé S.A.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other beverage and convenient food competitors include, but are not limited to, The Campbell's Company, Conagra Brands, Inc., Hormel Foods Corporation, Keurig Dr Pepper Inc., The Kraft Heinz Company, Link Snacks, Inc., Mars, Incorporated, Mondelēz International, Inc., Monster Beverage Corporation, Nestlé S.A., Primo Brands Corporation, Red Bull GmbH and Utz Brands, Inc."
+  },
+  {
+   "passage": 13,
+   "name": "Primo Brands Corporation",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other beverage and convenient food competitors include, but are not limited to, The Campbell's Company, Conagra Brands, Inc., Hormel Foods Corporation, Keurig Dr Pepper Inc., The Kraft Heinz Company, Link Snacks, Inc., Mars, Incorporated, Mondelēz International, Inc., Monster Beverage Corporation, Nestlé S.A., Primo Brands Corporation, Red Bull GmbH and Utz Brands, Inc."
+  },
+  {
+   "passage": 13,
+   "name": "Red Bull GmbH",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other beverage and convenient food competitors include, but are not limited to, The Campbell's Company, Conagra Brands, Inc., Hormel Foods Corporation, Keurig Dr Pepper Inc., The Kraft Heinz Company, Link Snacks, Inc., Mars, Incorporated, Mondelēz International, Inc., Monster Beverage Corporation, Nestlé S.A., Primo Brands Corporation, Red Bull GmbH and Utz Brands, Inc."
+  },
+  {
+   "passage": 13,
+   "name": "Utz Brands, Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other beverage and convenient food competitors include, but are not limited to, The Campbell's Company, Conagra Brands, Inc., Hormel Foods Corporation, Keurig Dr Pepper Inc., The Kraft Heinz Company, Link Snacks, Inc., Mars, Incorporated, Mondelēz International, Inc., Monster Beverage Corporation, Nestlé S.A., Primo Brands Corporation, Red Bull GmbH and Utz Brands, Inc."
+  }
+ ]
+}

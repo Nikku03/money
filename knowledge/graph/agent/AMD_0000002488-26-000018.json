@@ -1,0 +1,160 @@
+{
+ "ticker": "AMD",
+ "accn": "0000002488-26-000018",
+ "relations": [
+  {
+   "passage": 12,
+   "name": "Intel Corporation",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "For example, Intel Corporation (Intel) uses its microprocessor market position to price its products aggressively and target our customers and channel partners with special incentives."
+  },
+  {
+   "passage": 12,
+   "name": "Nvidia Corporation",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Similarly, Nvidia Corporation (Nvidia) leverages its market position in data center GPU, financial resources, and proprietary software ecosystem to promote its systems and influences customers who do business with us."
+  },
+  {
+   "passage": 9,
+   "name": "Altera",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "We expect continued competition from our primary FPGA competitors such as Altera, Lattice Semiconductor Corporation and Microsemi Corporation, and from ASSP vendors such as Broadcom Corporation, Marvell Technology Group, Ltd., Analog Devices, Texas Instruments Incorporated, NXP Semiconductors N.V., Qualcomm Incorporated and NVIDIA."
+  },
+  {
+   "passage": 9,
+   "name": "Lattice Semiconductor Corporation",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "We expect continued competition from our primary FPGA competitors such as Altera, Lattice Semiconductor Corporation and Microsemi Corporation, and from ASSP vendors such as Broadcom Corporation, Marvell Technology Group, Ltd., Analog Devices, Texas Instruments Incorporated, NXP Semiconductors N.V., Qualcomm Incorporated and NVIDIA."
+  },
+  {
+   "passage": 9,
+   "name": "Microsemi Corporation",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "We expect continued competition from our primary FPGA competitors such as Altera, Lattice Semiconductor Corporation and Microsemi Corporation, and from ASSP vendors such as Broadcom Corporation, Marvell Technology Group, Ltd., Analog Devices, Texas Instruments Incorporated, NXP Semiconductors N.V., Qualcomm Incorporated and NVIDIA."
+  },
+  {
+   "passage": 9,
+   "name": "Broadcom Corporation",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "We expect continued competition from our primary FPGA competitors such as Altera, Lattice Semiconductor Corporation and Microsemi Corporation, and from ASSP vendors such as Broadcom Corporation, Marvell Technology Group, Ltd., Analog Devices, Texas Instruments Incorporated, NXP Semiconductors N.V., Qualcomm Incorporated and NVIDIA."
+  },
+  {
+   "passage": 9,
+   "name": "Marvell Technology Group, Ltd.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "We expect continued competition from our primary FPGA competitors such as Altera, Lattice Semiconductor Corporation and Microsemi Corporation, and from ASSP vendors such as Broadcom Corporation, Marvell Technology Group, Ltd., Analog Devices, Texas Instruments Incorporated, NXP Semiconductors N.V., Qualcomm Incorporated and NVIDIA."
+  },
+  {
+   "passage": 9,
+   "name": "Analog Devices",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "We expect continued competition from our primary FPGA competitors such as Altera, Lattice Semiconductor Corporation and Microsemi Corporation, and from ASSP vendors such as Broadcom Corporation, Marvell Technology Group, Ltd., Analog Devices, Texas Instruments Incorporated, NXP Semiconductors N.V., Qualcomm Incorporated and NVIDIA."
+  },
+  {
+   "passage": 9,
+   "name": "Texas Instruments Incorporated",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "We expect continued competition from our primary FPGA competitors such as Altera, Lattice Semiconductor Corporation and Microsemi Corporation, and from ASSP vendors such as Broadcom Corporation, Marvell Technology Group, Ltd., Analog Devices, Texas Instruments Incorporated, NXP Semiconductors N.V., Qualcomm Incorporated and NVIDIA."
+  },
+  {
+   "passage": 9,
+   "name": "NXP Semiconductors N.V.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "We expect continued competition from our primary FPGA competitors such as Altera, Lattice Semiconductor Corporation and Microsemi Corporation, and from ASSP vendors such as Broadcom Corporation, Marvell Technology Group, Ltd., Analog Devices, Texas Instruments Incorporated, NXP Semiconductors N.V., Qualcomm Incorporated and NVIDIA."
+  },
+  {
+   "passage": 9,
+   "name": "Qualcomm Incorporated",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "We expect continued competition from our primary FPGA competitors such as Altera, Lattice Semiconductor Corporation and Microsemi Corporation, and from ASSP vendors such as Broadcom Corporation, Marvell Technology Group, Ltd., Analog Devices, Texas Instruments Incorporated, NXP Semiconductors N.V., Qualcomm Incorporated and NVIDIA."
+  },
+  {
+   "passage": 10,
+   "name": "Tongfu Microelectronics Co., Ltd.",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "We are party to two ATMP joint ventures (collectively, the ATMP JVs) with Tongfu Microelectronics Co., Ltd."
+  },
+  {
+   "passage": 10,
+   "name": "Siliconware Precision Industries Ltd.",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "The ATMP JVs, Siliconware Precision Industries Ltd. (SPIL) and King Yuan Electronics Company (KYEC) provide ATMP services for our products."
+  },
+  {
+   "passage": 10,
+   "name": "King Yuan Electronics Company",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "The ATMP JVs, Siliconware Precision Industries Ltd. (SPIL) and King Yuan Electronics Company (KYEC) provide ATMP services for our products."
+  },
+  {
+   "passage": 15,
+   "name": "Sony",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "The success of our semi-custom SoC products in our Client and Gaming segment is dependent on securing customers for our semi-custom design pipeline and consumer market conditions, including the success of game console systems and next generation consoles for Sony and Microsoft."
+  },
+  {
+   "passage": 15,
+   "name": "Microsoft",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "The success of our semi-custom SoC products in our Client and Gaming segment is dependent on securing customers for our semi-custom design pipeline and consumer market conditions, including the success of game console systems and next generation consoles for Sony and Microsoft."
+  },
+  {
+   "passage": 17,
+   "name": "Taiwan Semiconductor Manufacturing Company Limited",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "We rely on Taiwan Semiconductor Manufacturing Company Limited (TSMC) for the production of all wafers for microprocessor and GPU products at 7 nanometer (nm) or smaller nodes, and we rely primarily on GLOBALFOUNDRIES Inc. (GF) for wafers for microprocessor and GPU products manufactured at process nodes larger than 7 nm."
+  },
+  {
+   "passage": 17,
+   "name": "GLOBALFOUNDRIES Inc.",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "We rely on Taiwan Semiconductor Manufacturing Company Limited (TSMC) for the production of all wafers for microprocessor and GPU products at 7 nanometer (nm) or smaller nodes, and we rely primarily on GLOBALFOUNDRIES Inc. (GF) for wafers for microprocessor and GPU products manufactured at process nodes larger than 7 nm."
+  },
+  {
+   "passage": 17,
+   "name": "United Microelectronics Corporation",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "We also utilize TSMC, United Microelectronics Corporation (UMC) and Samsung Electronics Co., Ltd. for our integrated circuits (IC) in the form of programmable logic devices."
+  },
+  {
+   "passage": 17,
+   "name": "Samsung Electronics Co., Ltd.",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "We also utilize TSMC, United Microelectronics Corporation (UMC) and Samsung Electronics Co., Ltd. for our integrated circuits (IC) in the form of programmable logic devices."
+  },
+  {
+   "passage": 39,
+   "name": "Higon Information Technology Co., Ltd.",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "We have equity interests in two joint ventures (collectively, the THATIC JV) with Higon Information Technology Co., Ltd. (THATIC), a third-party Chinese entity."
+  },
+  {
+   "passage": 49,
+   "name": "Sanmina",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "Sanmina will also be our preferred partner for manufacturing capabilities in building complex AI solutions."
+  }
+ ]
+}

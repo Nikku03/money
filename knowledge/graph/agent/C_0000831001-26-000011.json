@@ -1,0 +1,13 @@
+{
+ "ticker": "C",
+ "accn": "0000831001-26-000011",
+ "relations": [
+  {
+   "passage": 50,
+   "name": "American Airlines",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "Includes additional guarantees entered into as part of the extension and amendment of the American Airlines co-branded credit card partnership agreement, executed in December 2024."
+  }
+ ]
+}

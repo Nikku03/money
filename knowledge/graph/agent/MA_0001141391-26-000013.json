@@ -1,0 +1,41 @@
+{
+ "ticker": "MA",
+ "accn": "0001141391-26-000013",
+ "relations": [
+  {
+   "passage": 12,
+   "name": "Visa",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "We compete worldwide with payments networks such as Visa, American Express, JCB, China UnionPay and Discover, among others."
+  },
+  {
+   "passage": 12,
+   "name": "American Express",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "We compete worldwide with payments networks such as Visa, American Express, JCB, China UnionPay and Discover, among others."
+  },
+  {
+   "passage": 12,
+   "name": "JCB",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "We compete worldwide with payments networks such as Visa, American Express, JCB, China UnionPay and Discover, among others."
+  },
+  {
+   "passage": 12,
+   "name": "China UnionPay",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "We compete worldwide with payments networks such as Visa, American Express, JCB, China UnionPay and Discover, among others."
+  },
+  {
+   "passage": 12,
+   "name": "Discover",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "We compete worldwide with payments networks such as Visa, American Express, JCB, China UnionPay and Discover, among others."
+  }
+ ]
+}

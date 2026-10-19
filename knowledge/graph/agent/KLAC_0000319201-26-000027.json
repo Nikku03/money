@@ -1,0 +1,41 @@
+{
+ "ticker": "KLAC",
+ "accn": "0000319201-26-000027",
+ "relations": [
+  {
+   "passage": 11,
+   "name": "Applied Materials, Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "we have many competitors, including companies such as Applied Materials, Inc., ASML Holding N.V., Hitachi High-Tech Corporation, Lasertec, Inc. and Onto Innovation, Inc."
+  },
+  {
+   "passage": 11,
+   "name": "ASML Holding N.V.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "we have many competitors, including companies such as Applied Materials, Inc., ASML Holding N.V., Hitachi High-Tech Corporation, Lasertec, Inc. and Onto Innovation, Inc."
+  },
+  {
+   "passage": 11,
+   "name": "Hitachi High-Tech Corporation",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "we have many competitors, including companies such as Applied Materials, Inc., ASML Holding N.V., Hitachi High-Tech Corporation, Lasertec, Inc. and Onto Innovation, Inc."
+  },
+  {
+   "passage": 11,
+   "name": "Lasertec, Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "we have many competitors, including companies such as Applied Materials, Inc., ASML Holding N.V., Hitachi High-Tech Corporation, Lasertec, Inc. and Onto Innovation, Inc."
+  },
+  {
+   "passage": 11,
+   "name": "Onto Innovation, Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "we have many competitors, including companies such as Applied Materials, Inc., ASML Holding N.V., Hitachi High-Tech Corporation, Lasertec, Inc. and Onto Innovation, Inc."
+  }
+ ]
+}

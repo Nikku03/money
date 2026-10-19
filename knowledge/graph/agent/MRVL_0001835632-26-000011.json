@@ -1,0 +1,188 @@
+{
+ "ticker": "MRVL",
+ "accn": "0001835632-26-000011",
+ "relations": [
+  {
+   "passage": 4,
+   "name": "Advanced Micro Devices, Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Companies that compete directly with our businesses include, but are not limited to, Advanced Micro Devices, Inc. (\"AMD\"), Alchip Technologies (\"Alchip\"), Astera Labs, Inc., Ayar Labs, Inc. (\"Ayar Labs\"), Broadcom Inc. (\"Broadcom\"), Cisco Systems, Inc. (\"Cisco\"), Credo Technology Group Holding Ltd, Intel Corporation, Global Unichip Corporation (\"GUC\"), Lightmatter, Inc. (\"Lightmatter\"), MACOM Technology Solutions Holdings, Inc., MediaTek Inc., Microchip Technology Inc., Montage Technology, Nvidia Corporation, NXP Semiconductors N.V., Phison Electronics Corporation, Qualcomm Incorporated (\"Qualcomm\"), Rambus, Inc., Ranovus Inc. (\"Ranovus\"), Realtek Semiconductor Corporation, Semtech Corporation, Silicon Motion Technology Corporation, and Socionext Inc."
+  },
+  {
+   "passage": 4,
+   "name": "Alchip Technologies",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Companies that compete directly with our businesses include, but are not limited to, Advanced Micro Devices, Inc. (\"AMD\"), Alchip Technologies (\"Alchip\"), Astera Labs, Inc., Ayar Labs, Inc. (\"Ayar Labs\"), Broadcom Inc. (\"Broadcom\"), Cisco Systems, Inc. (\"Cisco\"), Credo Technology Group Holding Ltd, Intel Corporation, Global Unichip Corporation (\"GUC\"), Lightmatter, Inc. (\"Lightmatter\"), MACOM Technology Solutions Holdings, Inc., MediaTek Inc., Microchip Technology Inc., Montage Technology, Nvidia Corporation, NXP Semiconductors N.V., Phison Electronics Corporation, Qualcomm Incorporated (\"Qualcomm\"), Rambus, Inc., Ranovus Inc. (\"Ranovus\"), Realtek Semiconductor Corporation, Semtech Corporation, Silicon Motion Technology Corporation, and Socionext Inc."
+  },
+  {
+   "passage": 4,
+   "name": "Astera Labs, Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Companies that compete directly with our businesses include, but are not limited to, Advanced Micro Devices, Inc. (\"AMD\"), Alchip Technologies (\"Alchip\"), Astera Labs, Inc., Ayar Labs, Inc. (\"Ayar Labs\"), Broadcom Inc. (\"Broadcom\"), Cisco Systems, Inc. (\"Cisco\"), Credo Technology Group Holding Ltd, Intel Corporation, Global Unichip Corporation (\"GUC\"), Lightmatter, Inc. (\"Lightmatter\"), MACOM Technology Solutions Holdings, Inc., MediaTek Inc., Microchip Technology Inc., Montage Technology, Nvidia Corporation, NXP Semiconductors N.V., Phison Electronics Corporation, Qualcomm Incorporated (\"Qualcomm\"), Rambus, Inc., Ranovus Inc. (\"Ranovus\"), Realtek Semiconductor Corporation, Semtech Corporation, Silicon Motion Technology Corporation, and Socionext Inc."
+  },
+  {
+   "passage": 4,
+   "name": "Ayar Labs, Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Companies that compete directly with our businesses include, but are not limited to, Advanced Micro Devices, Inc. (\"AMD\"), Alchip Technologies (\"Alchip\"), Astera Labs, Inc., Ayar Labs, Inc. (\"Ayar Labs\"), Broadcom Inc. (\"Broadcom\"), Cisco Systems, Inc. (\"Cisco\"), Credo Technology Group Holding Ltd, Intel Corporation, Global Unichip Corporation (\"GUC\"), Lightmatter, Inc. (\"Lightmatter\"), MACOM Technology Solutions Holdings, Inc., MediaTek Inc., Microchip Technology Inc., Montage Technology, Nvidia Corporation, NXP Semiconductors N.V., Phison Electronics Corporation, Qualcomm Incorporated (\"Qualcomm\"), Rambus, Inc., Ranovus Inc. (\"Ranovus\"), Realtek Semiconductor Corporation, Semtech Corporation, Silicon Motion Technology Corporation, and Socionext Inc."
+  },
+  {
+   "passage": 4,
+   "name": "Broadcom Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Companies that compete directly with our businesses include, but are not limited to, Advanced Micro Devices, Inc. (\"AMD\"), Alchip Technologies (\"Alchip\"), Astera Labs, Inc., Ayar Labs, Inc. (\"Ayar Labs\"), Broadcom Inc. (\"Broadcom\"), Cisco Systems, Inc. (\"Cisco\"), Credo Technology Group Holding Ltd, Intel Corporation, Global Unichip Corporation (\"GUC\"), Lightmatter, Inc. (\"Lightmatter\"), MACOM Technology Solutions Holdings, Inc., MediaTek Inc., Microchip Technology Inc., Montage Technology, Nvidia Corporation, NXP Semiconductors N.V., Phison Electronics Corporation, Qualcomm Incorporated (\"Qualcomm\"), Rambus, Inc., Ranovus Inc. (\"Ranovus\"), Realtek Semiconductor Corporation, Semtech Corporation, Silicon Motion Technology Corporation, and Socionext Inc."
+  },
+  {
+   "passage": 4,
+   "name": "Cisco Systems, Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Companies that compete directly with our businesses include, but are not limited to, Advanced Micro Devices, Inc. (\"AMD\"), Alchip Technologies (\"Alchip\"), Astera Labs, Inc., Ayar Labs, Inc. (\"Ayar Labs\"), Broadcom Inc. (\"Broadcom\"), Cisco Systems, Inc. (\"Cisco\"), Credo Technology Group Holding Ltd, Intel Corporation, Global Unichip Corporation (\"GUC\"), Lightmatter, Inc. (\"Lightmatter\"), MACOM Technology Solutions Holdings, Inc., MediaTek Inc., Microchip Technology Inc., Montage Technology, Nvidia Corporation, NXP Semiconductors N.V., Phison Electronics Corporation, Qualcomm Incorporated (\"Qualcomm\"), Rambus, Inc., Ranovus Inc. (\"Ranovus\"), Realtek Semiconductor Corporation, Semtech Corporation, Silicon Motion Technology Corporation, and Socionext Inc."
+  },
+  {
+   "passage": 4,
+   "name": "Credo Technology Group Holding Ltd",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Companies that compete directly with our businesses include, but are not limited to, Advanced Micro Devices, Inc. (\"AMD\"), Alchip Technologies (\"Alchip\"), Astera Labs, Inc., Ayar Labs, Inc. (\"Ayar Labs\"), Broadcom Inc. (\"Broadcom\"), Cisco Systems, Inc. (\"Cisco\"), Credo Technology Group Holding Ltd, Intel Corporation, Global Unichip Corporation (\"GUC\"), Lightmatter, Inc. (\"Lightmatter\"), MACOM Technology Solutions Holdings, Inc., MediaTek Inc., Microchip Technology Inc., Montage Technology, Nvidia Corporation, NXP Semiconductors N.V., Phison Electronics Corporation, Qualcomm Incorporated (\"Qualcomm\"), Rambus, Inc., Ranovus Inc. (\"Ranovus\"), Realtek Semiconductor Corporation, Semtech Corporation, Silicon Motion Technology Corporation, and Socionext Inc."
+  },
+  {
+   "passage": 4,
+   "name": "Intel Corporation",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Companies that compete directly with our businesses include, but are not limited to, Advanced Micro Devices, Inc. (\"AMD\"), Alchip Technologies (\"Alchip\"), Astera Labs, Inc., Ayar Labs, Inc. (\"Ayar Labs\"), Broadcom Inc. (\"Broadcom\"), Cisco Systems, Inc. (\"Cisco\"), Credo Technology Group Holding Ltd, Intel Corporation, Global Unichip Corporation (\"GUC\"), Lightmatter, Inc. (\"Lightmatter\"), MACOM Technology Solutions Holdings, Inc., MediaTek Inc., Microchip Technology Inc., Montage Technology, Nvidia Corporation, NXP Semiconductors N.V., Phison Electronics Corporation, Qualcomm Incorporated (\"Qualcomm\"), Rambus, Inc., Ranovus Inc. (\"Ranovus\"), Realtek Semiconductor Corporation, Semtech Corporation, Silicon Motion Technology Corporation, and Socionext Inc."
+  },
+  {
+   "passage": 4,
+   "name": "Global Unichip Corporation",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Companies that compete directly with our businesses include, but are not limited to, Advanced Micro Devices, Inc. (\"AMD\"), Alchip Technologies (\"Alchip\"), Astera Labs, Inc., Ayar Labs, Inc. (\"Ayar Labs\"), Broadcom Inc. (\"Broadcom\"), Cisco Systems, Inc. (\"Cisco\"), Credo Technology Group Holding Ltd, Intel Corporation, Global Unichip Corporation (\"GUC\"), Lightmatter, Inc. (\"Lightmatter\"), MACOM Technology Solutions Holdings, Inc., MediaTek Inc., Microchip Technology Inc., Montage Technology, Nvidia Corporation, NXP Semiconductors N.V., Phison Electronics Corporation, Qualcomm Incorporated (\"Qualcomm\"), Rambus, Inc., Ranovus Inc. (\"Ranovus\"), Realtek Semiconductor Corporation, Semtech Corporation, Silicon Motion Technology Corporation, and Socionext Inc."
+  },
+  {
+   "passage": 4,
+   "name": "Lightmatter, Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Companies that compete directly with our businesses include, but are not limited to, Advanced Micro Devices, Inc. (\"AMD\"), Alchip Technologies (\"Alchip\"), Astera Labs, Inc., Ayar Labs, Inc. (\"Ayar Labs\"), Broadcom Inc. (\"Broadcom\"), Cisco Systems, Inc. (\"Cisco\"), Credo Technology Group Holding Ltd, Intel Corporation, Global Unichip Corporation (\"GUC\"), Lightmatter, Inc. (\"Lightmatter\"), MACOM Technology Solutions Holdings, Inc., MediaTek Inc., Microchip Technology Inc., Montage Technology, Nvidia Corporation, NXP Semiconductors N.V., Phison Electronics Corporation, Qualcomm Incorporated (\"Qualcomm\"), Rambus, Inc., Ranovus Inc. (\"Ranovus\"), Realtek Semiconductor Corporation, Semtech Corporation, Silicon Motion Technology Corporation, and Socionext Inc."
+  },
+  {
+   "passage": 4,
+   "name": "MACOM Technology Solutions Holdings, Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Companies that compete directly with our businesses include, but are not limited to, Advanced Micro Devices, Inc. (\"AMD\"), Alchip Technologies (\"Alchip\"), Astera Labs, Inc., Ayar Labs, Inc. (\"Ayar Labs\"), Broadcom Inc. (\"Broadcom\"), Cisco Systems, Inc. (\"Cisco\"), Credo Technology Group Holding Ltd, Intel Corporation, Global Unichip Corporation (\"GUC\"), Lightmatter, Inc. (\"Lightmatter\"), MACOM Technology Solutions Holdings, Inc., MediaTek Inc., Microchip Technology Inc., Montage Technology, Nvidia Corporation, NXP Semiconductors N.V., Phison Electronics Corporation, Qualcomm Incorporated (\"Qualcomm\"), Rambus, Inc., Ranovus Inc. (\"Ranovus\"), Realtek Semiconductor Corporation, Semtech Corporation, Silicon Motion Technology Corporation, and Socionext Inc."
+  },
+  {
+   "passage": 4,
+   "name": "MediaTek Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Companies that compete directly with our businesses include, but are not limited to, Advanced Micro Devices, Inc. (\"AMD\"), Alchip Technologies (\"Alchip\"), Astera Labs, Inc., Ayar Labs, Inc. (\"Ayar Labs\"), Broadcom Inc. (\"Broadcom\"), Cisco Systems, Inc. (\"Cisco\"), Credo Technology Group Holding Ltd, Intel Corporation, Global Unichip Corporation (\"GUC\"), Lightmatter, Inc. (\"Lightmatter\"), MACOM Technology Solutions Holdings, Inc., MediaTek Inc., Microchip Technology Inc., Montage Technology, Nvidia Corporation, NXP Semiconductors N.V., Phison Electronics Corporation, Qualcomm Incorporated (\"Qualcomm\"), Rambus, Inc., Ranovus Inc. (\"Ranovus\"), Realtek Semiconductor Corporation, Semtech Corporation, Silicon Motion Technology Corporation, and Socionext Inc."
+  },
+  {
+   "passage": 4,
+   "name": "Microchip Technology Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Companies that compete directly with our businesses include, but are not limited to, Advanced Micro Devices, Inc. (\"AMD\"), Alchip Technologies (\"Alchip\"), Astera Labs, Inc., Ayar Labs, Inc. (\"Ayar Labs\"), Broadcom Inc. (\"Broadcom\"), Cisco Systems, Inc. (\"Cisco\"), Credo Technology Group Holding Ltd, Intel Corporation, Global Unichip Corporation (\"GUC\"), Lightmatter, Inc. (\"Lightmatter\"), MACOM Technology Solutions Holdings, Inc., MediaTek Inc., Microchip Technology Inc., Montage Technology, Nvidia Corporation, NXP Semiconductors N.V., Phison Electronics Corporation, Qualcomm Incorporated (\"Qualcomm\"), Rambus, Inc., Ranovus Inc. (\"Ranovus\"), Realtek Semiconductor Corporation, Semtech Corporation, Silicon Motion Technology Corporation, and Socionext Inc."
+  },
+  {
+   "passage": 4,
+   "name": "Montage Technology",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Companies that compete directly with our businesses include, but are not limited to, Advanced Micro Devices, Inc. (\"AMD\"), Alchip Technologies (\"Alchip\"), Astera Labs, Inc., Ayar Labs, Inc. (\"Ayar Labs\"), Broadcom Inc. (\"Broadcom\"), Cisco Systems, Inc. (\"Cisco\"), Credo Technology Group Holding Ltd, Intel Corporation, Global Unichip Corporation (\"GUC\"), Lightmatter, Inc. (\"Lightmatter\"), MACOM Technology Solutions Holdings, Inc., MediaTek Inc., Microchip Technology Inc., Montage Technology, Nvidia Corporation, NXP Semiconductors N.V., Phison Electronics Corporation, Qualcomm Incorporated (\"Qualcomm\"), Rambus, Inc., Ranovus Inc. (\"Ranovus\"), Realtek Semiconductor Corporation, Semtech Corporation, Silicon Motion Technology Corporation, and Socionext Inc."
+  },
+  {
+   "passage": 4,
+   "name": "Nvidia Corporation",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Companies that compete directly with our businesses include, but are not limited to, Advanced Micro Devices, Inc. (\"AMD\"), Alchip Technologies (\"Alchip\"), Astera Labs, Inc., Ayar Labs, Inc. (\"Ayar Labs\"), Broadcom Inc. (\"Broadcom\"), Cisco Systems, Inc. (\"Cisco\"), Credo Technology Group Holding Ltd, Intel Corporation, Global Unichip Corporation (\"GUC\"), Lightmatter, Inc. (\"Lightmatter\"), MACOM Technology Solutions Holdings, Inc., MediaTek Inc., Microchip Technology Inc., Montage Technology, Nvidia Corporation, NXP Semiconductors N.V., Phison Electronics Corporation, Qualcomm Incorporated (\"Qualcomm\"), Rambus, Inc., Ranovus Inc. (\"Ranovus\"), Realtek Semiconductor Corporation, Semtech Corporation, Silicon Motion Technology Corporation, and Socionext Inc."
+  },
+  {
+   "passage": 4,
+   "name": "NXP Semiconductors N.V.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Companies that compete directly with our businesses include, but are not limited to, Advanced Micro Devices, Inc. (\"AMD\"), Alchip Technologies (\"Alchip\"), Astera Labs, Inc., Ayar Labs, Inc. (\"Ayar Labs\"), Broadcom Inc. (\"Broadcom\"), Cisco Systems, Inc. (\"Cisco\"), Credo Technology Group Holding Ltd, Intel Corporation, Global Unichip Corporation (\"GUC\"), Lightmatter, Inc. (\"Lightmatter\"), MACOM Technology Solutions Holdings, Inc., MediaTek Inc., Microchip Technology Inc., Montage Technology, Nvidia Corporation, NXP Semiconductors N.V., Phison Electronics Corporation, Qualcomm Incorporated (\"Qualcomm\"), Rambus, Inc., Ranovus Inc. (\"Ranovus\"), Realtek Semiconductor Corporation, Semtech Corporation, Silicon Motion Technology Corporation, and Socionext Inc."
+  },
+  {
+   "passage": 4,
+   "name": "Phison Electronics Corporation",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Companies that compete directly with our businesses include, but are not limited to, Advanced Micro Devices, Inc. (\"AMD\"), Alchip Technologies (\"Alchip\"), Astera Labs, Inc., Ayar Labs, Inc. (\"Ayar Labs\"), Broadcom Inc. (\"Broadcom\"), Cisco Systems, Inc. (\"Cisco\"), Credo Technology Group Holding Ltd, Intel Corporation, Global Unichip Corporation (\"GUC\"), Lightmatter, Inc. (\"Lightmatter\"), MACOM Technology Solutions Holdings, Inc., MediaTek Inc., Microchip Technology Inc., Montage Technology, Nvidia Corporation, NXP Semiconductors N.V., Phison Electronics Corporation, Qualcomm Incorporated (\"Qualcomm\"), Rambus, Inc., Ranovus Inc. (\"Ranovus\"), Realtek Semiconductor Corporation, Semtech Corporation, Silicon Motion Technology Corporation, and Socionext Inc."
+  },
+  {
+   "passage": 4,
+   "name": "Qualcomm Incorporated",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Companies that compete directly with our businesses include, but are not limited to, Advanced Micro Devices, Inc. (\"AMD\"), Alchip Technologies (\"Alchip\"), Astera Labs, Inc., Ayar Labs, Inc. (\"Ayar Labs\"), Broadcom Inc. (\"Broadcom\"), Cisco Systems, Inc. (\"Cisco\"), Credo Technology Group Holding Ltd, Intel Corporation, Global Unichip Corporation (\"GUC\"), Lightmatter, Inc. (\"Lightmatter\"), MACOM Technology Solutions Holdings, Inc., MediaTek Inc., Microchip Technology Inc., Montage Technology, Nvidia Corporation, NXP Semiconductors N.V., Phison Electronics Corporation, Qualcomm Incorporated (\"Qualcomm\"), Rambus, Inc., Ranovus Inc. (\"Ranovus\"), Realtek Semiconductor Corporation, Semtech Corporation, Silicon Motion Technology Corporation, and Socionext Inc."
+  },
+  {
+   "passage": 4,
+   "name": "Rambus, Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Companies that compete directly with our businesses include, but are not limited to, Advanced Micro Devices, Inc. (\"AMD\"), Alchip Technologies (\"Alchip\"), Astera Labs, Inc., Ayar Labs, Inc. (\"Ayar Labs\"), Broadcom Inc. (\"Broadcom\"), Cisco Systems, Inc. (\"Cisco\"), Credo Technology Group Holding Ltd, Intel Corporation, Global Unichip Corporation (\"GUC\"), Lightmatter, Inc. (\"Lightmatter\"), MACOM Technology Solutions Holdings, Inc., MediaTek Inc., Microchip Technology Inc., Montage Technology, Nvidia Corporation, NXP Semiconductors N.V., Phison Electronics Corporation, Qualcomm Incorporated (\"Qualcomm\"), Rambus, Inc., Ranovus Inc. (\"Ranovus\"), Realtek Semiconductor Corporation, Semtech Corporation, Silicon Motion Technology Corporation, and Socionext Inc."
+  },
+  {
+   "passage": 4,
+   "name": "Ranovus Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Companies that compete directly with our businesses include, but are not limited to, Advanced Micro Devices, Inc. (\"AMD\"), Alchip Technologies (\"Alchip\"), Astera Labs, Inc., Ayar Labs, Inc. (\"Ayar Labs\"), Broadcom Inc. (\"Broadcom\"), Cisco Systems, Inc. (\"Cisco\"), Credo Technology Group Holding Ltd, Intel Corporation, Global Unichip Corporation (\"GUC\"), Lightmatter, Inc. (\"Lightmatter\"), MACOM Technology Solutions Holdings, Inc., MediaTek Inc., Microchip Technology Inc., Montage Technology, Nvidia Corporation, NXP Semiconductors N.V., Phison Electronics Corporation, Qualcomm Incorporated (\"Qualcomm\"), Rambus, Inc., Ranovus Inc. (\"Ranovus\"), Realtek Semiconductor Corporation, Semtech Corporation, Silicon Motion Technology Corporation, and Socionext Inc."
+  },
+  {
+   "passage": 4,
+   "name": "Realtek Semiconductor Corporation",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Companies that compete directly with our businesses include, but are not limited to, Advanced Micro Devices, Inc. (\"AMD\"), Alchip Technologies (\"Alchip\"), Astera Labs, Inc., Ayar Labs, Inc. (\"Ayar Labs\"), Broadcom Inc. (\"Broadcom\"), Cisco Systems, Inc. (\"Cisco\"), Credo Technology Group Holding Ltd, Intel Corporation, Global Unichip Corporation (\"GUC\"), Lightmatter, Inc. (\"Lightmatter\"), MACOM Technology Solutions Holdings, Inc., MediaTek Inc., Microchip Technology Inc., Montage Technology, Nvidia Corporation, NXP Semiconductors N.V., Phison Electronics Corporation, Qualcomm Incorporated (\"Qualcomm\"), Rambus, Inc., Ranovus Inc. (\"Ranovus\"), Realtek Semiconductor Corporation, Semtech Corporation, Silicon Motion Technology Corporation, and Socionext Inc."
+  },
+  {
+   "passage": 4,
+   "name": "Semtech Corporation",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Companies that compete directly with our businesses include, but are not limited to, Advanced Micro Devices, Inc. (\"AMD\"), Alchip Technologies (\"Alchip\"), Astera Labs, Inc., Ayar Labs, Inc. (\"Ayar Labs\"), Broadcom Inc. (\"Broadcom\"), Cisco Systems, Inc. (\"Cisco\"), Credo Technology Group Holding Ltd, Intel Corporation, Global Unichip Corporation (\"GUC\"), Lightmatter, Inc. (\"Lightmatter\"), MACOM Technology Solutions Holdings, Inc., MediaTek Inc., Microchip Technology Inc., Montage Technology, Nvidia Corporation, NXP Semiconductors N.V., Phison Electronics Corporation, Qualcomm Incorporated (\"Qualcomm\"), Rambus, Inc., Ranovus Inc. (\"Ranovus\"), Realtek Semiconductor Corporation, Semtech Corporation, Silicon Motion Technology Corporation, and Socionext Inc."
+  },
+  {
+   "passage": 4,
+   "name": "Silicon Motion Technology Corporation",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Companies that compete directly with our businesses include, but are not limited to, Advanced Micro Devices, Inc. (\"AMD\"), Alchip Technologies (\"Alchip\"), Astera Labs, Inc., Ayar Labs, Inc. (\"Ayar Labs\"), Broadcom Inc. (\"Broadcom\"), Cisco Systems, Inc. (\"Cisco\"), Credo Technology Group Holding Ltd, Intel Corporation, Global Unichip Corporation (\"GUC\"), Lightmatter, Inc. (\"Lightmatter\"), MACOM Technology Solutions Holdings, Inc., MediaTek Inc., Microchip Technology Inc., Montage Technology, Nvidia Corporation, NXP Semiconductors N.V., Phison Electronics Corporation, Qualcomm Incorporated (\"Qualcomm\"), Rambus, Inc., Ranovus Inc. (\"Ranovus\"), Realtek Semiconductor Corporation, Semtech Corporation, Silicon Motion Technology Corporation, and Socionext Inc."
+  },
+  {
+   "passage": 4,
+   "name": "Socionext Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Companies that compete directly with our businesses include, but are not limited to, Advanced Micro Devices, Inc. (\"AMD\"), Alchip Technologies (\"Alchip\"), Astera Labs, Inc., Ayar Labs, Inc. (\"Ayar Labs\"), Broadcom Inc. (\"Broadcom\"), Cisco Systems, Inc. (\"Cisco\"), Credo Technology Group Holding Ltd, Intel Corporation, Global Unichip Corporation (\"GUC\"), Lightmatter, Inc. (\"Lightmatter\"), MACOM Technology Solutions Holdings, Inc., MediaTek Inc., Microchip Technology Inc., Montage Technology, Nvidia Corporation, NXP Semiconductors N.V., Phison Electronics Corporation, Qualcomm Incorporated (\"Qualcomm\"), Rambus, Inc., Ranovus Inc. (\"Ranovus\"), Realtek Semiconductor Corporation, Semtech Corporation, Silicon Motion Technology Corporation, and Socionext Inc."
+  },
+  {
+   "passage": 10,
+   "name": "Cisco",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "there has been a trend toward customer consolidation in the semiconductor industry through business combinations, including mergers, asset acquisitions and strategic partnerships (for example, Cisco acquired Acacia Communications in 2021)"
+  },
+  {
+   "passage": 10,
+   "name": "Acacia Communications",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "there has been a trend toward customer consolidation in the semiconductor industry through business combinations, including mergers, asset acquisitions and strategic partnerships (for example, Cisco acquired Acacia Communications in 2021)"
+  }
+ ]
+}

@@ -1,0 +1,118 @@
+{
+ "ticker": "MRK",
+ "accn": "0000310158-26-000063",
+ "relations": [
+  {
+   "passage": 4,
+   "name": "Sanofi Pasteur MSD",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "subject to a collaboration agreement with Sanofi Pasteur MSD, co-promotes a hexavalent vaccine that includes a hepatitis B component"
+  },
+  {
+   "passage": 12,
+   "name": "Kelun-Biotech",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "Sacituzumab tirumotecan is being developed as part of a collaboration with Kelun-Biotech."
+  },
+  {
+   "passage": 12,
+   "name": "Blackstone Life Sciences",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "A portion of sacituzumab tirumotecan 2026 development costs will be funded by Blackstone Life Sciences."
+  },
+  {
+   "passage": 13,
+   "name": "Ridgeback Biotherapeutics LP",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "Merck is developing Lagevrio in collaboration with Ridgeback Biotherapeutics LP."
+  },
+  {
+   "passage": 34,
+   "name": "AstraZeneca",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "Koselugo is part of a collaboration with AstraZeneca."
+  },
+  {
+   "passage": 36,
+   "name": "Bayer AG",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "Adempas and Verquvo are part of a worldwide collaboration with Bayer AG (Bayer) to market and develop soluble guanylate cyclase (sGC) modulators"
+  },
+  {
+   "passage": 37,
+   "name": "LaNova",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "upfront and milestone payments for collaboration and licensing agreements (including charges related to the transactions with LaNova, Hengrui Pharma, Falk, and Hansoh noted above)"
+  },
+  {
+   "passage": 37,
+   "name": "Hengrui Pharma",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "upfront and milestone payments for collaboration and licensing agreements (including charges related to the transactions with LaNova, Hengrui Pharma, Falk, and Hansoh noted above)"
+  },
+  {
+   "passage": 37,
+   "name": "Falk",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "upfront and milestone payments for collaboration and licensing agreements (including charges related to the transactions with LaNova, Hengrui Pharma, Falk, and Hansoh noted above)"
+  },
+  {
+   "passage": 37,
+   "name": "Hansoh",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "upfront and milestone payments for collaboration and licensing agreements (including charges related to the transactions with LaNova, Hengrui Pharma, Falk, and Hansoh noted above)"
+  },
+  {
+   "passage": 46,
+   "name": "Orion Corporation",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "Merck and Orion Corporation (Orion) announced the mutual exercise of an option to convert the companies' ongoing co-development and co-commercialization agreement for opevesostat"
+  },
+  {
+   "passage": 46,
+   "name": "Orion",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "Orion retained responsibility for the manufacture of clinical and commercial supply for Merck."
+  },
+  {
+   "passage": 49,
+   "name": "Eisai Co., Ltd.",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "Merck and Eisai Co., Ltd. (Eisai) announced a strategic collaboration for the worldwide co-development and co-commercialization of Lenvima (lenvatinib)"
+  },
+  {
+   "passage": 51,
+   "name": "Moderna, Inc.",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "pursuant to the terms of an existing collaboration and license agreement with Moderna, Inc. (Moderna)"
+  },
+  {
+   "passage": 52,
+   "name": "Bristol-Myers Squibb Company",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "Reblozyl (luspatercept-aamt) is a first-in-class erythroid maturation recombinant fusion protein that is being commercialized through a global collaboration with Bristol-Myers Squibb Company (BMS)."
+  },
+  {
+   "passage": 56,
+   "name": "Alteogen",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "Keytruda Qlex $ 886 million, related to a license agreement with Alteogen"
+  }
+ ]
+}

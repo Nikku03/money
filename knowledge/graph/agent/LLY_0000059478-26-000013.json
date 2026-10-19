@@ -1,0 +1,48 @@
+{
+ "ticker": "LLY",
+ "accn": "0000059478-26-000013",
+ "relations": [
+  {
+   "passage": 3,
+   "name": "Innovent Biologics, Inc.",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "In collaboration with Innovent Biologics, Inc., for the treatment of relapsed or refractory classic Hodgkin's lymphoma"
+  },
+  {
+   "passage": 4,
+   "name": "McKesson Corporation",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "three wholesale distributors in the U.S.-McKesson Corporation, Cencora, Inc., and Cardinal Health, Inc.-each accounted for a significant percentage of our consolidated revenue"
+  },
+  {
+   "passage": 4,
+   "name": "Cencora, Inc.",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "three wholesale distributors in the U.S.-McKesson Corporation, Cencora, Inc., and Cardinal Health, Inc.-each accounted for a significant percentage of our consolidated revenue"
+  },
+  {
+   "passage": 4,
+   "name": "Cardinal Health, Inc.",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "three wholesale distributors in the U.S.-McKesson Corporation, Cencora, Inc., and Cardinal Health, Inc.-each accounted for a significant percentage of our consolidated revenue"
+  },
+  {
+   "passage": 11,
+   "name": "Boehringer Ingelheim",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "Jardiance is part of our Boehringer Ingelheim collaboration."
+  },
+  {
+   "passage": 57,
+   "name": "Almirall, S.A.",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "We have a license agreement with Almirall, S.A. (Almirall), under which Almirall licensed the rights to develop and commercialize Ebglyss"
+  }
+ ]
+}

@@ -1,0 +1,419 @@
+{
+ "ticker": "CAT",
+ "accn": "0000018230-26-000008",
+ "relations": [
+  {
+   "passage": 7,
+   "name": "CASE",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Examples of global competitors include CASE (part of CNH Industrial N.V.), Deere Construction & Forestry (part of Deere & Company), Doosan Bobcat (Part of Doosan Group), Hitachi Construction Machinery Co., Ltd., Hyundai Construction Equipment Co., Ltd., Hyundai Doosan Infracore Co., Ltd. (both part of Hyundai Heavy Industries Group), J.C. Bamford Excavators Ltd., Kobelco Construction Machinery (part of Kobe Steel, Ltd), Komatsu Ltd., Kubota Farm & Industrial Machinery (part of Kubota Corporation), Sany Heavy Industry Co., Ltd., and Volvo Construction Equipment (part of the Volvo Group)."
+  },
+  {
+   "passage": 7,
+   "name": "CNH Industrial N.V.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Examples of global competitors include CASE (part of CNH Industrial N.V.), Deere Construction & Forestry (part of Deere & Company), Doosan Bobcat (Part of Doosan Group), Hitachi Construction Machinery Co., Ltd., Hyundai Construction Equipment Co., Ltd., Hyundai Doosan Infracore Co., Ltd. (both part of Hyundai Heavy Industries Group), J.C. Bamford Excavators Ltd., Kobelco Construction Machinery (part of Kobe Steel, Ltd), Komatsu Ltd., Kubota Farm & Industrial Machinery (part of Kubota Corporation), Sany Heavy Industry Co., Ltd., and Volvo Construction Equipment (part of the Volvo Group)."
+  },
+  {
+   "passage": 7,
+   "name": "Deere Construction & Forestry",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Examples of global competitors include CASE (part of CNH Industrial N.V.), Deere Construction & Forestry (part of Deere & Company), Doosan Bobcat (Part of Doosan Group), Hitachi Construction Machinery Co., Ltd., Hyundai Construction Equipment Co., Ltd., Hyundai Doosan Infracore Co., Ltd. (both part of Hyundai Heavy Industries Group), J.C. Bamford Excavators Ltd., Kobelco Construction Machinery (part of Kobe Steel, Ltd), Komatsu Ltd., Kubota Farm & Industrial Machinery (part of Kubota Corporation), Sany Heavy Industry Co., Ltd., and Volvo Construction Equipment (part of the Volvo Group)."
+  },
+  {
+   "passage": 7,
+   "name": "Deere & Company",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Examples of global competitors include CASE (part of CNH Industrial N.V.), Deere Construction & Forestry (part of Deere & Company), Doosan Bobcat (Part of Doosan Group), Hitachi Construction Machinery Co., Ltd., Hyundai Construction Equipment Co., Ltd., Hyundai Doosan Infracore Co., Ltd. (both part of Hyundai Heavy Industries Group), J.C. Bamford Excavators Ltd., Kobelco Construction Machinery (part of Kobe Steel, Ltd), Komatsu Ltd., Kubota Farm & Industrial Machinery (part of Kubota Corporation), Sany Heavy Industry Co., Ltd., and Volvo Construction Equipment (part of the Volvo Group)."
+  },
+  {
+   "passage": 7,
+   "name": "Doosan Bobcat",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Examples of global competitors include CASE (part of CNH Industrial N.V.), Deere Construction & Forestry (part of Deere & Company), Doosan Bobcat (Part of Doosan Group), Hitachi Construction Machinery Co., Ltd., Hyundai Construction Equipment Co., Ltd., Hyundai Doosan Infracore Co., Ltd. (both part of Hyundai Heavy Industries Group), J.C. Bamford Excavators Ltd., Kobelco Construction Machinery (part of Kobe Steel, Ltd), Komatsu Ltd., Kubota Farm & Industrial Machinery (part of Kubota Corporation), Sany Heavy Industry Co., Ltd., and Volvo Construction Equipment (part of the Volvo Group)."
+  },
+  {
+   "passage": 7,
+   "name": "Doosan Group",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Examples of global competitors include CASE (part of CNH Industrial N.V.), Deere Construction & Forestry (part of Deere & Company), Doosan Bobcat (Part of Doosan Group), Hitachi Construction Machinery Co., Ltd., Hyundai Construction Equipment Co., Ltd., Hyundai Doosan Infracore Co., Ltd. (both part of Hyundai Heavy Industries Group), J.C. Bamford Excavators Ltd., Kobelco Construction Machinery (part of Kobe Steel, Ltd), Komatsu Ltd., Kubota Farm & Industrial Machinery (part of Kubota Corporation), Sany Heavy Industry Co., Ltd., and Volvo Construction Equipment (part of the Volvo Group)."
+  },
+  {
+   "passage": 7,
+   "name": "Hitachi Construction Machinery Co., Ltd.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Examples of global competitors include CASE (part of CNH Industrial N.V.), Deere Construction & Forestry (part of Deere & Company), Doosan Bobcat (Part of Doosan Group), Hitachi Construction Machinery Co., Ltd., Hyundai Construction Equipment Co., Ltd., Hyundai Doosan Infracore Co., Ltd. (both part of Hyundai Heavy Industries Group), J.C. Bamford Excavators Ltd., Kobelco Construction Machinery (part of Kobe Steel, Ltd), Komatsu Ltd., Kubota Farm & Industrial Machinery (part of Kubota Corporation), Sany Heavy Industry Co., Ltd., and Volvo Construction Equipment (part of the Volvo Group)."
+  },
+  {
+   "passage": 7,
+   "name": "Hyundai Construction Equipment Co., Ltd.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Examples of global competitors include CASE (part of CNH Industrial N.V.), Deere Construction & Forestry (part of Deere & Company), Doosan Bobcat (Part of Doosan Group), Hitachi Construction Machinery Co., Ltd., Hyundai Construction Equipment Co., Ltd., Hyundai Doosan Infracore Co., Ltd. (both part of Hyundai Heavy Industries Group), J.C. Bamford Excavators Ltd., Kobelco Construction Machinery (part of Kobe Steel, Ltd), Komatsu Ltd., Kubota Farm & Industrial Machinery (part of Kubota Corporation), Sany Heavy Industry Co., Ltd., and Volvo Construction Equipment (part of the Volvo Group)."
+  },
+  {
+   "passage": 7,
+   "name": "Hyundai Doosan Infracore Co., Ltd.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Examples of global competitors include CASE (part of CNH Industrial N.V.), Deere Construction & Forestry (part of Deere & Company), Doosan Bobcat (Part of Doosan Group), Hitachi Construction Machinery Co., Ltd., Hyundai Construction Equipment Co., Ltd., Hyundai Doosan Infracore Co., Ltd. (both part of Hyundai Heavy Industries Group), J.C. Bamford Excavators Ltd., Kobelco Construction Machinery (part of Kobe Steel, Ltd), Komatsu Ltd., Kubota Farm & Industrial Machinery (part of Kubota Corporation), Sany Heavy Industry Co., Ltd., and Volvo Construction Equipment (part of the Volvo Group)."
+  },
+  {
+   "passage": 7,
+   "name": "Hyundai Heavy Industries Group",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Examples of global competitors include CASE (part of CNH Industrial N.V.), Deere Construction & Forestry (part of Deere & Company), Doosan Bobcat (Part of Doosan Group), Hitachi Construction Machinery Co., Ltd., Hyundai Construction Equipment Co., Ltd., Hyundai Doosan Infracore Co., Ltd. (both part of Hyundai Heavy Industries Group), J.C. Bamford Excavators Ltd., Kobelco Construction Machinery (part of Kobe Steel, Ltd), Komatsu Ltd., Kubota Farm & Industrial Machinery (part of Kubota Corporation), Sany Heavy Industry Co., Ltd., and Volvo Construction Equipment (part of the Volvo Group)."
+  },
+  {
+   "passage": 7,
+   "name": "J.C. Bamford Excavators Ltd.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Examples of global competitors include CASE (part of CNH Industrial N.V.), Deere Construction & Forestry (part of Deere & Company), Doosan Bobcat (Part of Doosan Group), Hitachi Construction Machinery Co., Ltd., Hyundai Construction Equipment Co., Ltd., Hyundai Doosan Infracore Co., Ltd. (both part of Hyundai Heavy Industries Group), J.C. Bamford Excavators Ltd., Kobelco Construction Machinery (part of Kobe Steel, Ltd), Komatsu Ltd., Kubota Farm & Industrial Machinery (part of Kubota Corporation), Sany Heavy Industry Co., Ltd., and Volvo Construction Equipment (part of the Volvo Group)."
+  },
+  {
+   "passage": 7,
+   "name": "Kobelco Construction Machinery",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Examples of global competitors include CASE (part of CNH Industrial N.V.), Deere Construction & Forestry (part of Deere & Company), Doosan Bobcat (Part of Doosan Group), Hitachi Construction Machinery Co., Ltd., Hyundai Construction Equipment Co., Ltd., Hyundai Doosan Infracore Co., Ltd. (both part of Hyundai Heavy Industries Group), J.C. Bamford Excavators Ltd., Kobelco Construction Machinery (part of Kobe Steel, Ltd), Komatsu Ltd., Kubota Farm & Industrial Machinery (part of Kubota Corporation), Sany Heavy Industry Co., Ltd., and Volvo Construction Equipment (part of the Volvo Group)."
+  },
+  {
+   "passage": 7,
+   "name": "Kobe Steel, Ltd",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Examples of global competitors include CASE (part of CNH Industrial N.V.), Deere Construction & Forestry (part of Deere & Company), Doosan Bobcat (Part of Doosan Group), Hitachi Construction Machinery Co., Ltd., Hyundai Construction Equipment Co., Ltd., Hyundai Doosan Infracore Co., Ltd. (both part of Hyundai Heavy Industries Group), J.C. Bamford Excavators Ltd., Kobelco Construction Machinery (part of Kobe Steel, Ltd), Komatsu Ltd., Kubota Farm & Industrial Machinery (part of Kubota Corporation), Sany Heavy Industry Co., Ltd., and Volvo Construction Equipment (part of the Volvo Group)."
+  },
+  {
+   "passage": 7,
+   "name": "Komatsu Ltd.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Examples of global competitors include CASE (part of CNH Industrial N.V.), Deere Construction & Forestry (part of Deere & Company), Doosan Bobcat (Part of Doosan Group), Hitachi Construction Machinery Co., Ltd., Hyundai Construction Equipment Co., Ltd., Hyundai Doosan Infracore Co., Ltd. (both part of Hyundai Heavy Industries Group), J.C. Bamford Excavators Ltd., Kobelco Construction Machinery (part of Kobe Steel, Ltd), Komatsu Ltd., Kubota Farm & Industrial Machinery (part of Kubota Corporation), Sany Heavy Industry Co., Ltd., and Volvo Construction Equipment (part of the Volvo Group)."
+  },
+  {
+   "passage": 7,
+   "name": "Kubota Farm & Industrial Machinery",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Examples of global competitors include CASE (part of CNH Industrial N.V.), Deere Construction & Forestry (part of Deere & Company), Doosan Bobcat (Part of Doosan Group), Hitachi Construction Machinery Co., Ltd., Hyundai Construction Equipment Co., Ltd., Hyundai Doosan Infracore Co., Ltd. (both part of Hyundai Heavy Industries Group), J.C. Bamford Excavators Ltd., Kobelco Construction Machinery (part of Kobe Steel, Ltd), Komatsu Ltd., Kubota Farm & Industrial Machinery (part of Kubota Corporation), Sany Heavy Industry Co., Ltd., and Volvo Construction Equipment (part of the Volvo Group)."
+  },
+  {
+   "passage": 7,
+   "name": "Kubota Corporation",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Examples of global competitors include CASE (part of CNH Industrial N.V.), Deere Construction & Forestry (part of Deere & Company), Doosan Bobcat (Part of Doosan Group), Hitachi Construction Machinery Co., Ltd., Hyundai Construction Equipment Co., Ltd., Hyundai Doosan Infracore Co., Ltd. (both part of Hyundai Heavy Industries Group), J.C. Bamford Excavators Ltd., Kobelco Construction Machinery (part of Kobe Steel, Ltd), Komatsu Ltd., Kubota Farm & Industrial Machinery (part of Kubota Corporation), Sany Heavy Industry Co., Ltd., and Volvo Construction Equipment (part of the Volvo Group)."
+  },
+  {
+   "passage": 7,
+   "name": "Sany Heavy Industry Co., Ltd.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Examples of global competitors include CASE (part of CNH Industrial N.V.), Deere Construction & Forestry (part of Deere & Company), Doosan Bobcat (Part of Doosan Group), Hitachi Construction Machinery Co., Ltd., Hyundai Construction Equipment Co., Ltd., Hyundai Doosan Infracore Co., Ltd. (both part of Hyundai Heavy Industries Group), J.C. Bamford Excavators Ltd., Kobelco Construction Machinery (part of Kobe Steel, Ltd), Komatsu Ltd., Kubota Farm & Industrial Machinery (part of Kubota Corporation), Sany Heavy Industry Co., Ltd., and Volvo Construction Equipment (part of the Volvo Group)."
+  },
+  {
+   "passage": 7,
+   "name": "Volvo Construction Equipment",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Examples of global competitors include CASE (part of CNH Industrial N.V.), Deere Construction & Forestry (part of Deere & Company), Doosan Bobcat (Part of Doosan Group), Hitachi Construction Machinery Co., Ltd., Hyundai Construction Equipment Co., Ltd., Hyundai Doosan Infracore Co., Ltd. (both part of Hyundai Heavy Industries Group), J.C. Bamford Excavators Ltd., Kobelco Construction Machinery (part of Kobe Steel, Ltd), Komatsu Ltd., Kubota Farm & Industrial Machinery (part of Kubota Corporation), Sany Heavy Industry Co., Ltd., and Volvo Construction Equipment (part of the Volvo Group)."
+  },
+  {
+   "passage": 7,
+   "name": "Volvo Group",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Examples of global competitors include CASE (part of CNH Industrial N.V.), Deere Construction & Forestry (part of Deere & Company), Doosan Bobcat (Part of Doosan Group), Hitachi Construction Machinery Co., Ltd., Hyundai Construction Equipment Co., Ltd., Hyundai Doosan Infracore Co., Ltd. (both part of Hyundai Heavy Industries Group), J.C. Bamford Excavators Ltd., Kobelco Construction Machinery (part of Kobe Steel, Ltd), Komatsu Ltd., Kubota Farm & Industrial Machinery (part of Kubota Corporation), Sany Heavy Industry Co., Ltd., and Volvo Construction Equipment (part of the Volvo Group)."
+  },
+  {
+   "passage": 7,
+   "name": "Guangxi LiuGong Machinery Co., Ltd.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "As an example of regional and local competitors, our competitors in China also include Guangxi LiuGong Machinery Co., Ltd., Longking Holdings Ltd., Sany Heavy Industry Co, XCMG Construction Machinery Co., Ltd., Shandong Lingong Construction Machinery Co., Ltd. (SDLG, JV with Volvo Construction Equipment) and Shantui Construction Machinery Co., Ltd., (part of Shandong Heavy Industry Group Co.)."
+  },
+  {
+   "passage": 7,
+   "name": "Longking Holdings Ltd.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "As an example of regional and local competitors, our competitors in China also include Guangxi LiuGong Machinery Co., Ltd., Longking Holdings Ltd., Sany Heavy Industry Co, XCMG Construction Machinery Co., Ltd., Shandong Lingong Construction Machinery Co., Ltd. (SDLG, JV with Volvo Construction Equipment) and Shantui Construction Machinery Co., Ltd., (part of Shandong Heavy Industry Group Co.)."
+  },
+  {
+   "passage": 7,
+   "name": "XCMG Construction Machinery Co., Ltd.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "As an example of regional and local competitors, our competitors in China also include Guangxi LiuGong Machinery Co., Ltd., Longking Holdings Ltd., Sany Heavy Industry Co, XCMG Construction Machinery Co., Ltd., Shandong Lingong Construction Machinery Co., Ltd. (SDLG, JV with Volvo Construction Equipment) and Shantui Construction Machinery Co., Ltd., (part of Shandong Heavy Industry Group Co.)."
+  },
+  {
+   "passage": 7,
+   "name": "Shandong Lingong Construction Machinery Co., Ltd.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "As an example of regional and local competitors, our competitors in China also include Guangxi LiuGong Machinery Co., Ltd., Longking Holdings Ltd., Sany Heavy Industry Co, XCMG Construction Machinery Co., Ltd., Shandong Lingong Construction Machinery Co., Ltd. (SDLG, JV with Volvo Construction Equipment) and Shantui Construction Machinery Co., Ltd., (part of Shandong Heavy Industry Group Co.)."
+  },
+  {
+   "passage": 7,
+   "name": "Shantui Construction Machinery Co., Ltd.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "As an example of regional and local competitors, our competitors in China also include Guangxi LiuGong Machinery Co., Ltd., Longking Holdings Ltd., Sany Heavy Industry Co, XCMG Construction Machinery Co., Ltd., Shandong Lingong Construction Machinery Co., Ltd. (SDLG, JV with Volvo Construction Equipment) and Shantui Construction Machinery Co., Ltd., (part of Shandong Heavy Industry Group Co.)."
+  },
+  {
+   "passage": 7,
+   "name": "Shandong Heavy Industry Group Co.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "As an example of regional and local competitors, our competitors in China also include Guangxi LiuGong Machinery Co., Ltd., Longking Holdings Ltd., Sany Heavy Industry Co, XCMG Construction Machinery Co., Ltd., Shandong Lingong Construction Machinery Co., Ltd. (SDLG, JV with Volvo Construction Equipment) and Shantui Construction Machinery Co., Ltd., (part of Shandong Heavy Industry Group Co.)."
+  },
+  {
+   "passage": 9,
+   "name": "Epiroc AB",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Our global surface competitors include Deere Construction & Forestry (part of Deere & Company), Epiroc AB, Hitachi Construction Machinery Co., Ltd., Komatsu Ltd., Liebherr-International AG, Sandvik AB, and Volvo Construction Equipment."
+  },
+  {
+   "passage": 9,
+   "name": "Liebherr-International AG",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Our global surface competitors include Deere Construction & Forestry (part of Deere & Company), Epiroc AB, Hitachi Construction Machinery Co., Ltd., Komatsu Ltd., Liebherr-International AG, Sandvik AB, and Volvo Construction Equipment."
+  },
+  {
+   "passage": 9,
+   "name": "Sandvik AB",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Our global surface competitors include Deere Construction & Forestry (part of Deere & Company), Epiroc AB, Hitachi Construction Machinery Co., Ltd., Komatsu Ltd., Liebherr-International AG, Sandvik AB, and Volvo Construction Equipment."
+  },
+  {
+   "passage": 10,
+   "name": "Cummins Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Principal global competitors include Cummins Inc., Deutz AG, Rolls-Royce Power Systems AG and Siemens Energy AG."
+  },
+  {
+   "passage": 10,
+   "name": "Deutz AG",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Principal global competitors include Cummins Inc., Deutz AG, Rolls-Royce Power Systems AG and Siemens Energy AG."
+  },
+  {
+   "passage": 10,
+   "name": "Rolls-Royce Power Systems AG",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Principal global competitors include Cummins Inc., Deutz AG, Rolls-Royce Power Systems AG and Siemens Energy AG."
+  },
+  {
+   "passage": 10,
+   "name": "Siemens Energy AG",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Principal global competitors include Cummins Inc., Deutz AG, Rolls-Royce Power Systems AG and Siemens Energy AG."
+  },
+  {
+   "passage": 10,
+   "name": "Volvo Penta AB",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other competitors, such as Volvo Penta AB, FPT Industrial SpA (Iveco Group), INNIO Group, GE Vernova Inc., Kawasaki Heavy Industries Ltd., Everllence SE (formerly MAN Energy Solutions SE), Weichai Power Co., Ltd., and other emerging market competitors compete in certain markets in which Caterpillar competes."
+  },
+  {
+   "passage": 10,
+   "name": "FPT Industrial SpA",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other competitors, such as Volvo Penta AB, FPT Industrial SpA (Iveco Group), INNIO Group, GE Vernova Inc., Kawasaki Heavy Industries Ltd., Everllence SE (formerly MAN Energy Solutions SE), Weichai Power Co., Ltd., and other emerging market competitors compete in certain markets in which Caterpillar competes."
+  },
+  {
+   "passage": 10,
+   "name": "Iveco Group",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other competitors, such as Volvo Penta AB, FPT Industrial SpA (Iveco Group), INNIO Group, GE Vernova Inc., Kawasaki Heavy Industries Ltd., Everllence SE (formerly MAN Energy Solutions SE), Weichai Power Co., Ltd., and other emerging market competitors compete in certain markets in which Caterpillar competes."
+  },
+  {
+   "passage": 10,
+   "name": "INNIO Group",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other competitors, such as Volvo Penta AB, FPT Industrial SpA (Iveco Group), INNIO Group, GE Vernova Inc., Kawasaki Heavy Industries Ltd., Everllence SE (formerly MAN Energy Solutions SE), Weichai Power Co., Ltd., and other emerging market competitors compete in certain markets in which Caterpillar competes."
+  },
+  {
+   "passage": 10,
+   "name": "GE Vernova Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other competitors, such as Volvo Penta AB, FPT Industrial SpA (Iveco Group), INNIO Group, GE Vernova Inc., Kawasaki Heavy Industries Ltd., Everllence SE (formerly MAN Energy Solutions SE), Weichai Power Co., Ltd., and other emerging market competitors compete in certain markets in which Caterpillar competes."
+  },
+  {
+   "passage": 10,
+   "name": "Kawasaki Heavy Industries Ltd.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other competitors, such as Volvo Penta AB, FPT Industrial SpA (Iveco Group), INNIO Group, GE Vernova Inc., Kawasaki Heavy Industries Ltd., Everllence SE (formerly MAN Energy Solutions SE), Weichai Power Co., Ltd., and other emerging market competitors compete in certain markets in which Caterpillar competes."
+  },
+  {
+   "passage": 10,
+   "name": "Everllence SE",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other competitors, such as Volvo Penta AB, FPT Industrial SpA (Iveco Group), INNIO Group, GE Vernova Inc., Kawasaki Heavy Industries Ltd., Everllence SE (formerly MAN Energy Solutions SE), Weichai Power Co., Ltd., and other emerging market competitors compete in certain markets in which Caterpillar competes."
+  },
+  {
+   "passage": 10,
+   "name": "Weichai Power Co., Ltd.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other competitors, such as Volvo Penta AB, FPT Industrial SpA (Iveco Group), INNIO Group, GE Vernova Inc., Kawasaki Heavy Industries Ltd., Everllence SE (formerly MAN Energy Solutions SE), Weichai Power Co., Ltd., and other emerging market competitors compete in certain markets in which Caterpillar competes."
+  },
+  {
+   "passage": 10,
+   "name": "Aggreko plc",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "An additional set of competitors, including Aggreko plc, Generac Holdings Inc., Discovery Energy, LLC (Rehlko, formerly Kohler Energy), Baker Hughes Co., and others"
+  },
+  {
+   "passage": 10,
+   "name": "Generac Holdings Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "An additional set of competitors, including Aggreko plc, Generac Holdings Inc., Discovery Energy, LLC (Rehlko, formerly Kohler Energy), Baker Hughes Co., and others"
+  },
+  {
+   "passage": 10,
+   "name": "Discovery Energy, LLC",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "An additional set of competitors, including Aggreko plc, Generac Holdings Inc., Discovery Energy, LLC (Rehlko, formerly Kohler Energy), Baker Hughes Co., and others"
+  },
+  {
+   "passage": 10,
+   "name": "Baker Hughes Co.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "An additional set of competitors, including Aggreko plc, Generac Holdings Inc., Discovery Energy, LLC (Rehlko, formerly Kohler Energy), Baker Hughes Co., and others"
+  },
+  {
+   "passage": 10,
+   "name": "Wabtec Corp",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "In rail-related businesses, our global competitors include Wabtec Corp, Greenbrier Companies, Inc., Voestalpine AG, Vossloh AG, Alstom SA, and Siemens Mobility A/S."
+  },
+  {
+   "passage": 10,
+   "name": "Greenbrier Companies, Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "In rail-related businesses, our global competitors include Wabtec Corp, Greenbrier Companies, Inc., Voestalpine AG, Vossloh AG, Alstom SA, and Siemens Mobility A/S."
+  },
+  {
+   "passage": 10,
+   "name": "Voestalpine AG",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "In rail-related businesses, our global competitors include Wabtec Corp, Greenbrier Companies, Inc., Voestalpine AG, Vossloh AG, Alstom SA, and Siemens Mobility A/S."
+  },
+  {
+   "passage": 10,
+   "name": "Vossloh AG",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "In rail-related businesses, our global competitors include Wabtec Corp, Greenbrier Companies, Inc., Voestalpine AG, Vossloh AG, Alstom SA, and Siemens Mobility A/S."
+  },
+  {
+   "passage": 10,
+   "name": "Alstom SA",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "In rail-related businesses, our global competitors include Wabtec Corp, Greenbrier Companies, Inc., Voestalpine AG, Vossloh AG, Alstom SA, and Siemens Mobility A/S."
+  },
+  {
+   "passage": 10,
+   "name": "Siemens Mobility A/S",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "In rail-related businesses, our global competitors include Wabtec Corp, Greenbrier Companies, Inc., Voestalpine AG, Vossloh AG, Alstom SA, and Siemens Mobility A/S."
+  },
+  {
+   "passage": 12,
+   "name": "Wells Fargo Equipment Finance Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Cat Financial's competitors include Wells Fargo Equipment Finance Inc., Banc of America Leasing & Capital LLC, BNP Paribas Leasing Solutions Limited, Australia and New Zealand Banking Group Limited, Société Générale S.A. and various other banks and finance companies."
+  },
+  {
+   "passage": 12,
+   "name": "Banc of America Leasing & Capital LLC",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Cat Financial's competitors include Wells Fargo Equipment Finance Inc., Banc of America Leasing & Capital LLC, BNP Paribas Leasing Solutions Limited, Australia and New Zealand Banking Group Limited, Société Générale S.A. and various other banks and finance companies."
+  },
+  {
+   "passage": 12,
+   "name": "BNP Paribas Leasing Solutions Limited",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Cat Financial's competitors include Wells Fargo Equipment Finance Inc., Banc of America Leasing & Capital LLC, BNP Paribas Leasing Solutions Limited, Australia and New Zealand Banking Group Limited, Société Générale S.A. and various other banks and finance companies."
+  },
+  {
+   "passage": 12,
+   "name": "Australia and New Zealand Banking Group Limited",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Cat Financial's competitors include Wells Fargo Equipment Finance Inc., Banc of America Leasing & Capital LLC, BNP Paribas Leasing Solutions Limited, Australia and New Zealand Banking Group Limited, Société Générale S.A. and various other banks and finance companies."
+  },
+  {
+   "passage": 12,
+   "name": "Société Générale S.A.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Cat Financial's competitors include Wells Fargo Equipment Finance Inc., Banc of America Leasing & Capital LLC, BNP Paribas Leasing Solutions Limited, Australia and New Zealand Banking Group Limited, Société Générale S.A. and various other banks and finance companies."
+  },
+  {
+   "passage": 12,
+   "name": "John Deere Capital Corporation",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "In addition, many of the manufacturers that compete with Caterpillar also own financial subsidiaries, such as John Deere Capital Corporation, Komatsu Financial L.P., Volvo Financial Services and Kubota Credit Corporation, which utilize many below-market interest rate programs (funded by the manufacturer) to support machine sales."
+  },
+  {
+   "passage": 12,
+   "name": "Komatsu Financial L.P.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "In addition, many of the manufacturers that compete with Caterpillar also own financial subsidiaries, such as John Deere Capital Corporation, Komatsu Financial L.P., Volvo Financial Services and Kubota Credit Corporation, which utilize many below-market interest rate programs (funded by the manufacturer) to support machine sales."
+  },
+  {
+   "passage": 12,
+   "name": "Volvo Financial Services",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "In addition, many of the manufacturers that compete with Caterpillar also own financial subsidiaries, such as John Deere Capital Corporation, Komatsu Financial L.P., Volvo Financial Services and Kubota Credit Corporation, which utilize many below-market interest rate programs (funded by the manufacturer) to support machine sales."
+  },
+  {
+   "passage": 12,
+   "name": "Kubota Credit Corporation",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "In addition, many of the manufacturers that compete with Caterpillar also own financial subsidiaries, such as John Deere Capital Corporation, Komatsu Financial L.P., Volvo Financial Services and Kubota Credit Corporation, which utilize many below-market interest rate programs (funded by the manufacturer) to support machine sales."
+  }
+ ]
+}

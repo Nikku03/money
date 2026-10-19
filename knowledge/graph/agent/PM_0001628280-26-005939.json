@@ -1,0 +1,90 @@
+{
+ "ticker": "PM",
+ "accn": "0001628280-26-005939",
+ "relations": [
+  {
+   "passage": 5,
+   "name": "Altria Group, Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Competitors in our industry include Altria Group, Inc., British American Tobacco plc, Japan Tobacco Inc., Imperial Brands plc"
+  },
+  {
+   "passage": 5,
+   "name": "British American Tobacco plc",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Competitors in our industry include Altria Group, Inc., British American Tobacco plc, Japan Tobacco Inc., Imperial Brands plc"
+  },
+  {
+   "passage": 5,
+   "name": "Japan Tobacco Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Competitors in our industry include Altria Group, Inc., British American Tobacco plc, Japan Tobacco Inc., Imperial Brands plc"
+  },
+  {
+   "passage": 5,
+   "name": "Imperial Brands plc",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Competitors in our industry include Altria Group, Inc., British American Tobacco plc, Japan Tobacco Inc., Imperial Brands plc"
+  },
+  {
+   "passage": 29,
+   "name": "KT&G",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "we announced a long-term collaboration with KT&G to continue to commercialize KT&G's innovative smoke-free devices and consumables on such an exclusive basis."
+  },
+  {
+   "passage": 2,
+   "name": "KT&G",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "as well as the KT&G-licensed brands, Fiit and Miix (outside of South Korea)"
+  },
+  {
+   "passage": 43,
+   "name": "JSC TK Megapolis",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "Additionally, PMI holds a 23% equity interest in JSC TK Megapolis, PMI's distributor in Russia (SSEA, CIS & MEA segment)"
+  },
+  {
+   "passage": 52,
+   "name": "Société des Tabacs Algéro-Emiratie",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "PMI holds an approximate 25 % economic interest in Société des Tabacs Algéro-Emiratie (\"STAEM\"), an Algerian joint venture"
+  },
+  {
+   "passage": 56,
+   "name": "Godfrey Phillips India Ltd",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "Godfrey Phillips India Ltd (\"GPI\") is one of the non-controlling interest holders in IPM India, which is a 56.3 % owned PMI consolidated subsidiary in the SSEA, CIS & MEA segment."
+  },
+  {
+   "passage": 56,
+   "name": "Godfrey Phillips India Ltd",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "Godfrey Phillips India Ltd (\"GPI\") is one of the non-controlling interest holders in IPM India, which is a 56.3 % owned PMI consolidated subsidiary in the SSEA, CIS & MEA segment. GPI also acts as contract manufacturer and distributor for IPM India."
+  },
+  {
+   "passage": 56,
+   "name": "Godfrey Phillips India Ltd",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "Godfrey Phillips India Ltd (\"GPI\") is one of the non-controlling interest holders in IPM India, which is a 56.3 % owned PMI consolidated subsidiary in the SSEA, CIS & MEA segment. GPI also acts as contract manufacturer and distributor for IPM India."
+  },
+  {
+   "passage": 58,
+   "name": "Philip Morris USA Inc.",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "PMI will indemnify Altria and Philip Morris USA Inc. (\"PM USA\"), a U.S. tobacco subsidiary of Altria, for tobacco product claims based in substantial part on products manufactured by PMI or contract manufactured for PMI by PM USA"
+  }
+ ]
+}

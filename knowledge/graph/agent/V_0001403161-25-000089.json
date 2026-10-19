@@ -1,0 +1,69 @@
+{
+ "ticker": "V",
+ "accn": "0001403161-25-000089",
+ "relations": [
+  {
+   "passage": 42,
+   "name": "American Express",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Some of our competitors, including American Express, Discover, private-label card networks, virtual currency providers, technology companies that enable the exchange of digital assets, and certain alternative payments systems like Alipay and WeChat Pay, operate closed-loop payments systems, with direct connections to both sellers and consumers."
+  },
+  {
+   "passage": 42,
+   "name": "Discover",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Some of our competitors, including American Express, Discover, private-label card networks, virtual currency providers, technology companies that enable the exchange of digital assets, and certain alternative payments systems like Alipay and WeChat Pay, operate closed-loop payments systems, with direct connections to both sellers and consumers."
+  },
+  {
+   "passage": 42,
+   "name": "Alipay",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Some of our competitors, including American Express, Discover, private-label card networks, virtual currency providers, technology companies that enable the exchange of digital assets, and certain alternative payments systems like Alipay and WeChat Pay, operate closed-loop payments systems, with direct connections to both sellers and consumers."
+  },
+  {
+   "passage": 42,
+   "name": "WeChat Pay",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Some of our competitors, including American Express, Discover, private-label card networks, virtual currency providers, technology companies that enable the exchange of digital assets, and certain alternative payments systems like Alipay and WeChat Pay, operate closed-loop payments systems, with direct connections to both sellers and consumers."
+  },
+  {
+   "passage": 31,
+   "name": "Mastercard",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Examples include American Express, Diners Club/Discover (now owned by Capital One), JCB, Mastercard and UnionPay."
+  },
+  {
+   "passage": 31,
+   "name": "JCB",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "These competitors may be more concentrated in specific geographic regions, such as Discover in the U.S. and JCB in Japan, or have a leading position in certain countries, such as UnionPay in China."
+  },
+  {
+   "passage": 31,
+   "name": "UnionPay",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "These competitors may be more concentrated in specific geographic regions, such as Discover in the U.S. and JCB in Japan, or have a leading position in certain countries, such as UnionPay in China."
+  },
+  {
+   "passage": 38,
+   "name": "UnionPay",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "Although the PBOC has permitted Visa and UnionPay's cooperation on upgrading magstripe dual-branded cards to chip cards, these modernization efforts are limited to existing cards and not new issuances."
+  },
+  {
+   "passage": 39,
+   "name": "NetsUnion Clearing Corp",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "NetsUnion Clearing Corp, a Chinese digital transaction routing system, and other such systems could have a competitive advantage in comparison with international payments networks"
+  }
+ ]
+}

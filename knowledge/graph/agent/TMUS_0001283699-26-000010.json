@@ -1,0 +1,125 @@
+{
+ "ticker": "TMUS",
+ "accn": "0001283699-26-000010",
+ "relations": [
+  {
+   "passage": 7,
+   "name": "AT&T Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Our wireless communications services competitors include other carriers, such as AT&T Inc. (\"AT&T\") and Verizon Communications, Inc. (\"Verizon\")."
+  },
+  {
+   "passage": 7,
+   "name": "Verizon Communications, Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Our wireless communications services competitors include other carriers, such as AT&T Inc. (\"AT&T\") and Verizon Communications, Inc. (\"Verizon\")."
+  },
+  {
+   "passage": 7,
+   "name": "Charter Communications, Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "In addition, our wireless communications services competitors include numerous smaller and regional providers, including Charter Communications, Inc., Comcast Corporation, EchoStar Corporation (\"EchoStar\"), Cox Communications, Inc., and Altice USA, Inc., many of which offer no-contract, postpaid and prepaid service plans."
+  },
+  {
+   "passage": 7,
+   "name": "Comcast Corporation",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "In addition, our wireless communications services competitors include numerous smaller and regional providers, including Charter Communications, Inc., Comcast Corporation, EchoStar Corporation (\"EchoStar\"), Cox Communications, Inc., and Altice USA, Inc., many of which offer no-contract, postpaid and prepaid service plans."
+  },
+  {
+   "passage": 7,
+   "name": "EchoStar Corporation",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "In addition, our wireless communications services competitors include numerous smaller and regional providers, including Charter Communications, Inc., Comcast Corporation, EchoStar Corporation (\"EchoStar\"), Cox Communications, Inc., and Altice USA, Inc., many of which offer no-contract, postpaid and prepaid service plans."
+  },
+  {
+   "passage": 7,
+   "name": "Cox Communications, Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "In addition, our wireless communications services competitors include numerous smaller and regional providers, including Charter Communications, Inc., Comcast Corporation, EchoStar Corporation (\"EchoStar\"), Cox Communications, Inc., and Altice USA, Inc., many of which offer no-contract, postpaid and prepaid service plans."
+  },
+  {
+   "passage": 7,
+   "name": "Altice USA, Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "In addition, our wireless communications services competitors include numerous smaller and regional providers, including Charter Communications, Inc., Comcast Corporation, EchoStar Corporation (\"EchoStar\"), Cox Communications, Inc., and Altice USA, Inc., many of which offer no-contract, postpaid and prepaid service plans."
+  },
+  {
+   "passage": 5,
+   "name": "Comcast Corporation",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "we entered into a License Purchase Agreement with Comcast Corporation and its affiliate, Comcast OTR1, LLC (together with Comcast Corporation, \"Comcast\") pursuant to which we will acquire spectrum in the 600 MHz band"
+  },
+  {
+   "passage": 6,
+   "name": "Grain Management, LLC",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "affiliates of Grain Management, LLC (\"Grain\"), pursuant to which we will sell our 800 MHz spectrum licenses in exchange for cash consideration of $2.9 billion and the receipt of Grain's 600 MHz spectrum licenses, which we are currently utilizing under lease agreements with Grain"
+  },
+  {
+   "passage": 26,
+   "name": "Channel 51 License Co LLC",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "On August 8, 2022, we entered into License Purchase Agreements to acquire spectrum in the 600 MHz band from Channel 51 License Co LLC and LB License Co, LLC"
+  },
+  {
+   "passage": 26,
+   "name": "LB License Co, LLC",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "On August 8, 2022, we entered into License Purchase Agreements to acquire spectrum in the 600 MHz band from Channel 51 License Co LLC and LB License Co, LLC"
+  },
+  {
+   "passage": 30,
+   "name": "N77 License Co LLC",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "On September 10, 2024, we entered into a License Purchase Agreement with N77 License Co LLC (\"Buyer\"), pursuant to which Buyer has the option to purchase all or a portion of our remaining 3.45 GHz spectrum licenses in exchange for a range of cash consideration"
+  },
+  {
+   "passage": 18,
+   "name": "DT",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "we license certain trademarks from DT, including the right to use the trademark \"T-Mobile\" as a name for the Company and our flagship brand under a trademark license agreement, as amended, with DT"
+  },
+  {
+   "passage": 21,
+   "name": "EQT Infrastructure VI",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "we entered into a definitive agreement with a fund operated by EQT, EQT Infrastructure VI (\"Fund VI\"), to establish a joint venture between us and Fund VI to acquire Lumos"
+  },
+  {
+   "passage": 21,
+   "name": "Lumos",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "Following the joint acquisition, Lumos transitioned to a wholesale model where we are the anchor tenant owning residential and small business customer relationships."
+  },
+  {
+   "passage": 22,
+   "name": "KKR & Co. Inc.",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "On July 18, 2024, we entered into a definitive agreement with KKR & Co. Inc. to establish a joint venture to acquire Metronet Holdings, LLC and certain of its affiliates"
+  },
+  {
+   "passage": 22,
+   "name": "Metronet",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "Following the joint acquisition, Metronet became a wholesale services provider, and its residential fiber retail operations and customers transitioned to us."
+  }
+ ]
+}

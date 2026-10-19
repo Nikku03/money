@@ -1,0 +1,41 @@
+{
+ "ticker": "AVGO",
+ "accn": "0001730168-25-000121",
+ "relations": [
+  {
+   "passage": 8,
+   "name": "Taiwan Semiconductor Manufacturing Company Limited",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "The majority of our front-end wafer manufacturing operations is outsourced to external foundries, including Taiwan Semiconductor Manufacturing Company Limited (\"TSMC\")."
+  },
+  {
+   "passage": 8,
+   "name": "Advanced Semiconductor Engineering, Inc.",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "We use third-party CMs for a significant majority of our assembly and test operations, including TSMC, Advanced Semiconductor Engineering, Inc., Foxconn Technology Group, Amkor Technology, Inc. and Siliconware Precision Industries Co., Ltd."
+  },
+  {
+   "passage": 8,
+   "name": "Foxconn Technology Group",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "We use third-party CMs for a significant majority of our assembly and test operations, including TSMC, Advanced Semiconductor Engineering, Inc., Foxconn Technology Group, Amkor Technology, Inc. and Siliconware Precision Industries Co., Ltd."
+  },
+  {
+   "passage": 8,
+   "name": "Amkor Technology, Inc.",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "We use third-party CMs for a significant majority of our assembly and test operations, including TSMC, Advanced Semiconductor Engineering, Inc., Foxconn Technology Group, Amkor Technology, Inc. and Siliconware Precision Industries Co., Ltd."
+  },
+  {
+   "passage": 8,
+   "name": "Siliconware Precision Industries Co., Ltd.",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "We use third-party CMs for a significant majority of our assembly and test operations, including TSMC, Advanced Semiconductor Engineering, Inc., Foxconn Technology Group, Amkor Technology, Inc. and Siliconware Precision Industries Co., Ltd."
+  }
+ ]
+}

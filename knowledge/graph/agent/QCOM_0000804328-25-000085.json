@@ -1,0 +1,181 @@
+{
+ "ticker": "QCOM",
+ "accn": "0000804328-25-000085",
+ "relations": [
+  {
+   "passage": 5,
+   "name": "Taiwan Semiconductor Manufacturing Company",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "The primary foundry suppliers for our various digital, analog/mixed-signal, RF and PM integrated circuits include Taiwan Semiconductor Manufacturing Company (TSMC), Samsung Electronics and Global Foundries."
+  },
+  {
+   "passage": 5,
+   "name": "Samsung Electronics",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "The primary foundry suppliers for our various digital, analog/mixed-signal, RF and PM integrated circuits include Taiwan Semiconductor Manufacturing Company (TSMC), Samsung Electronics and Global Foundries."
+  },
+  {
+   "passage": 5,
+   "name": "Global Foundries",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "The primary foundry suppliers for our various digital, analog/mixed-signal, RF and PM integrated circuits include Taiwan Semiconductor Manufacturing Company (TSMC), Samsung Electronics and Global Foundries."
+  },
+  {
+   "passage": 5,
+   "name": "Advanced Semiconductor Engineering",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "Our primary semiconductor assembly and test suppliers are Advanced Semiconductor Engineering, Amkor Technology, Siliconware Precision Industries and STATSChipPAC."
+  },
+  {
+   "passage": 5,
+   "name": "Amkor Technology",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "Our primary semiconductor assembly and test suppliers are Advanced Semiconductor Engineering, Amkor Technology, Siliconware Precision Industries and STATSChipPAC."
+  },
+  {
+   "passage": 5,
+   "name": "Siliconware Precision Industries",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "Our primary semiconductor assembly and test suppliers are Advanced Semiconductor Engineering, Amkor Technology, Siliconware Precision Industries and STATSChipPAC."
+  },
+  {
+   "passage": 5,
+   "name": "STATSChipPAC",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "Our primary semiconductor assembly and test suppliers are Advanced Semiconductor Engineering, Amkor Technology, Siliconware Precision Industries and STATSChipPAC."
+  },
+  {
+   "passage": 12,
+   "name": "Apple",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "In fiscal 2025, revenues from Apple, Samsung and Xiaomi each comprised 10% or more of our consolidated revenues."
+  },
+  {
+   "passage": 12,
+   "name": "Samsung",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "In fiscal 2025, revenues from Apple, Samsung and Xiaomi each comprised 10% or more of our consolidated revenues."
+  },
+  {
+   "passage": 12,
+   "name": "Xiaomi",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "In fiscal 2025, revenues from Apple, Samsung and Xiaomi each comprised 10% or more of our consolidated revenues."
+  },
+  {
+   "passage": 19,
+   "name": "Huawei",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "the U.S. Department of Commerce revoked the export license under which we previously sold 4G and certain other integrated circuit products to Huawei, which is one of the largest smartphone OEMs in China"
+  },
+  {
+   "passage": 54,
+   "name": "Transsion",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "entered into comprehensive 4G and 5G license agreements with Transsion (a growing, China-headquartered OEM that sells primarily in developing regions)"
+  },
+  {
+   "passage": 41,
+   "name": "Broadcom",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Examples (some of which are strategic partners of ours in other areas) include Broadcom, HiSilicon, MediaTek, Mobileye, Nvidia, NXP Semiconductors, Qorvo, Samsung, Skyworks, Texas Instruments and UNISOC."
+  },
+  {
+   "passage": 41,
+   "name": "HiSilicon",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Examples (some of which are strategic partners of ours in other areas) include Broadcom, HiSilicon, MediaTek, Mobileye, Nvidia, NXP Semiconductors, Qorvo, Samsung, Skyworks, Texas Instruments and UNISOC."
+  },
+  {
+   "passage": 41,
+   "name": "MediaTek",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Examples (some of which are strategic partners of ours in other areas) include Broadcom, HiSilicon, MediaTek, Mobileye, Nvidia, NXP Semiconductors, Qorvo, Samsung, Skyworks, Texas Instruments and UNISOC."
+  },
+  {
+   "passage": 41,
+   "name": "Mobileye",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Examples (some of which are strategic partners of ours in other areas) include Broadcom, HiSilicon, MediaTek, Mobileye, Nvidia, NXP Semiconductors, Qorvo, Samsung, Skyworks, Texas Instruments and UNISOC."
+  },
+  {
+   "passage": 41,
+   "name": "Nvidia",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Examples (some of which are strategic partners of ours in other areas) include Broadcom, HiSilicon, MediaTek, Mobileye, Nvidia, NXP Semiconductors, Qorvo, Samsung, Skyworks, Texas Instruments and UNISOC."
+  },
+  {
+   "passage": 41,
+   "name": "NXP Semiconductors",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Examples (some of which are strategic partners of ours in other areas) include Broadcom, HiSilicon, MediaTek, Mobileye, Nvidia, NXP Semiconductors, Qorvo, Samsung, Skyworks, Texas Instruments and UNISOC."
+  },
+  {
+   "passage": 41,
+   "name": "Qorvo",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Examples (some of which are strategic partners of ours in other areas) include Broadcom, HiSilicon, MediaTek, Mobileye, Nvidia, NXP Semiconductors, Qorvo, Samsung, Skyworks, Texas Instruments and UNISOC."
+  },
+  {
+   "passage": 41,
+   "name": "Samsung",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Examples (some of which are strategic partners of ours in other areas) include Broadcom, HiSilicon, MediaTek, Mobileye, Nvidia, NXP Semiconductors, Qorvo, Samsung, Skyworks, Texas Instruments and UNISOC."
+  },
+  {
+   "passage": 41,
+   "name": "Skyworks",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Examples (some of which are strategic partners of ours in other areas) include Broadcom, HiSilicon, MediaTek, Mobileye, Nvidia, NXP Semiconductors, Qorvo, Samsung, Skyworks, Texas Instruments and UNISOC."
+  },
+  {
+   "passage": 41,
+   "name": "Texas Instruments",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Examples (some of which are strategic partners of ours in other areas) include Broadcom, HiSilicon, MediaTek, Mobileye, Nvidia, NXP Semiconductors, Qorvo, Samsung, Skyworks, Texas Instruments and UNISOC."
+  },
+  {
+   "passage": 41,
+   "name": "UNISOC",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Examples (some of which are strategic partners of ours in other areas) include Broadcom, HiSilicon, MediaTek, Mobileye, Nvidia, NXP Semiconductors, Qorvo, Samsung, Skyworks, Texas Instruments and UNISOC."
+  },
+  {
+   "passage": 58,
+   "name": "SSW Partners",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "we and SSW Partners, a New York-based investment partnership, entered into and closed a definitive agreement to acquire Veoneer, Inc. (Veoneer)"
+  },
+  {
+   "passage": 59,
+   "name": "Arm",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "are fully licensed under our existing Architecture License Agreement with Arm (the Qualcomm ALA) and Technology License Agreement with Arm (the Qualcomm TLA)"
+  }
+ ]
+}

@@ -1,0 +1,48 @@
+{
+ "ticker": "MU",
+ "accn": "0000723125-26-000023",
+ "relations": [
+  {
+   "passage": 13,
+   "name": "Samsung Electronics Co., Ltd.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "We face intense competition in the semiconductor memory and storage markets from a number of companies, including Samsung Electronics Co., Ltd.; SK hynix Inc.; Kioxia Holdings Corporation; Sandisk Corporation; ChangXin Memory Technologies, Inc. (\"CXMT\"); and Yangtze Memory Technologies Co., Ltd. (\"YMTC\")."
+  },
+  {
+   "passage": 13,
+   "name": "SK hynix Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "We face intense competition in the semiconductor memory and storage markets from a number of companies, including Samsung Electronics Co., Ltd.; SK hynix Inc.; Kioxia Holdings Corporation; Sandisk Corporation; ChangXin Memory Technologies, Inc. (\"CXMT\"); and Yangtze Memory Technologies Co., Ltd. (\"YMTC\")."
+  },
+  {
+   "passage": 13,
+   "name": "Kioxia Holdings Corporation",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "We face intense competition in the semiconductor memory and storage markets from a number of companies, including Samsung Electronics Co., Ltd.; SK hynix Inc.; Kioxia Holdings Corporation; Sandisk Corporation; ChangXin Memory Technologies, Inc. (\"CXMT\"); and Yangtze Memory Technologies Co., Ltd. (\"YMTC\")."
+  },
+  {
+   "passage": 13,
+   "name": "Sandisk Corporation",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "We face intense competition in the semiconductor memory and storage markets from a number of companies, including Samsung Electronics Co., Ltd.; SK hynix Inc.; Kioxia Holdings Corporation; Sandisk Corporation; ChangXin Memory Technologies, Inc. (\"CXMT\"); and Yangtze Memory Technologies Co., Ltd. (\"YMTC\")."
+  },
+  {
+   "passage": 13,
+   "name": "ChangXin Memory Technologies, Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "We face intense competition in the semiconductor memory and storage markets from a number of companies, including Samsung Electronics Co., Ltd.; SK hynix Inc.; Kioxia Holdings Corporation; Sandisk Corporation; ChangXin Memory Technologies, Inc. (\"CXMT\"); and Yangtze Memory Technologies Co., Ltd. (\"YMTC\")."
+  },
+  {
+   "passage": 13,
+   "name": "Yangtze Memory Technologies Co., Ltd.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "We face intense competition in the semiconductor memory and storage markets from a number of companies, including Samsung Electronics Co., Ltd.; SK hynix Inc.; Kioxia Holdings Corporation; Sandisk Corporation; ChangXin Memory Technologies, Inc. (\"CXMT\"); and Yangtze Memory Technologies Co., Ltd. (\"YMTC\")."
+  }
+ ]
+}

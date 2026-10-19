@@ -1,0 +1,181 @@
+{
+ "ticker": "DE",
+ "accn": "0001104659-25-122321",
+ "relations": [
+  {
+   "passage": 11,
+   "name": "AGCO Corporation",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "The competitive environment for the agriculture and turf operations includes some global competitors, such as AGCO Corporation, CLAAS KGaA mbH, CNH Industrial N.V., Kubota Tractor Corporation, and The Toro Company."
+  },
+  {
+   "passage": 11,
+   "name": "CLAAS KGaA mbH",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "The competitive environment for the agriculture and turf operations includes some global competitors, such as AGCO Corporation, CLAAS KGaA mbH, CNH Industrial N.V., Kubota Tractor Corporation, and The Toro Company."
+  },
+  {
+   "passage": 11,
+   "name": "CNH Industrial N.V.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "The competitive environment for the agriculture and turf operations includes some global competitors, such as AGCO Corporation, CLAAS KGaA mbH, CNH Industrial N.V., Kubota Tractor Corporation, and The Toro Company."
+  },
+  {
+   "passage": 11,
+   "name": "Kubota Tractor Corporation",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "The competitive environment for the agriculture and turf operations includes some global competitors, such as AGCO Corporation, CLAAS KGaA mbH, CNH Industrial N.V., Kubota Tractor Corporation, and The Toro Company."
+  },
+  {
+   "passage": 11,
+   "name": "The Toro Company",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "The competitive environment for the agriculture and turf operations includes some global competitors, such as AGCO Corporation, CLAAS KGaA mbH, CNH Industrial N.V., Kubota Tractor Corporation, and The Toro Company."
+  },
+  {
+   "passage": 13,
+   "name": "Caterpillar Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Global competitors of the CF segment include Caterpillar Inc., CNH Industrial N.V., Doosan Infracore Co., Ltd. and its subsidiary Doosan Bobcat Inc., Fayat Group, GOMACO Corporation, Hitachi Construction Machinery, Komatsu Ltd., Kubota Tractor Corporation, LGMG, Liugong, Ponsse Plc, SANY Group Co., Ltd., SDLG, Terex, Tigercat Industries Inc., Volvo Construction Equipment (part of Volvo Group AB), and XCMG."
+  },
+  {
+   "passage": 13,
+   "name": "Doosan Infracore Co., Ltd.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Global competitors of the CF segment include Caterpillar Inc., CNH Industrial N.V., Doosan Infracore Co., Ltd. and its subsidiary Doosan Bobcat Inc., Fayat Group, GOMACO Corporation, Hitachi Construction Machinery, Komatsu Ltd., Kubota Tractor Corporation, LGMG, Liugong, Ponsse Plc, SANY Group Co., Ltd., SDLG, Terex, Tigercat Industries Inc., Volvo Construction Equipment (part of Volvo Group AB), and XCMG."
+  },
+  {
+   "passage": 13,
+   "name": "Doosan Bobcat Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Global competitors of the CF segment include Caterpillar Inc., CNH Industrial N.V., Doosan Infracore Co., Ltd. and its subsidiary Doosan Bobcat Inc., Fayat Group, GOMACO Corporation, Hitachi Construction Machinery, Komatsu Ltd., Kubota Tractor Corporation, LGMG, Liugong, Ponsse Plc, SANY Group Co., Ltd., SDLG, Terex, Tigercat Industries Inc., Volvo Construction Equipment (part of Volvo Group AB), and XCMG."
+  },
+  {
+   "passage": 13,
+   "name": "Fayat Group",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Global competitors of the CF segment include Caterpillar Inc., CNH Industrial N.V., Doosan Infracore Co., Ltd. and its subsidiary Doosan Bobcat Inc., Fayat Group, GOMACO Corporation, Hitachi Construction Machinery, Komatsu Ltd., Kubota Tractor Corporation, LGMG, Liugong, Ponsse Plc, SANY Group Co., Ltd., SDLG, Terex, Tigercat Industries Inc., Volvo Construction Equipment (part of Volvo Group AB), and XCMG."
+  },
+  {
+   "passage": 13,
+   "name": "GOMACO Corporation",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Global competitors of the CF segment include Caterpillar Inc., CNH Industrial N.V., Doosan Infracore Co., Ltd. and its subsidiary Doosan Bobcat Inc., Fayat Group, GOMACO Corporation, Hitachi Construction Machinery, Komatsu Ltd., Kubota Tractor Corporation, LGMG, Liugong, Ponsse Plc, SANY Group Co., Ltd., SDLG, Terex, Tigercat Industries Inc., Volvo Construction Equipment (part of Volvo Group AB), and XCMG."
+  },
+  {
+   "passage": 13,
+   "name": "Hitachi Construction Machinery",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Global competitors of the CF segment include Caterpillar Inc., CNH Industrial N.V., Doosan Infracore Co., Ltd. and its subsidiary Doosan Bobcat Inc., Fayat Group, GOMACO Corporation, Hitachi Construction Machinery, Komatsu Ltd., Kubota Tractor Corporation, LGMG, Liugong, Ponsse Plc, SANY Group Co., Ltd., SDLG, Terex, Tigercat Industries Inc., Volvo Construction Equipment (part of Volvo Group AB), and XCMG."
+  },
+  {
+   "passage": 13,
+   "name": "Komatsu Ltd.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Global competitors of the CF segment include Caterpillar Inc., CNH Industrial N.V., Doosan Infracore Co., Ltd. and its subsidiary Doosan Bobcat Inc., Fayat Group, GOMACO Corporation, Hitachi Construction Machinery, Komatsu Ltd., Kubota Tractor Corporation, LGMG, Liugong, Ponsse Plc, SANY Group Co., Ltd., SDLG, Terex, Tigercat Industries Inc., Volvo Construction Equipment (part of Volvo Group AB), and XCMG."
+  },
+  {
+   "passage": 13,
+   "name": "LGMG",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Global competitors of the CF segment include Caterpillar Inc., CNH Industrial N.V., Doosan Infracore Co., Ltd. and its subsidiary Doosan Bobcat Inc., Fayat Group, GOMACO Corporation, Hitachi Construction Machinery, Komatsu Ltd., Kubota Tractor Corporation, LGMG, Liugong, Ponsse Plc, SANY Group Co., Ltd., SDLG, Terex, Tigercat Industries Inc., Volvo Construction Equipment (part of Volvo Group AB), and XCMG."
+  },
+  {
+   "passage": 13,
+   "name": "Liugong",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Global competitors of the CF segment include Caterpillar Inc., CNH Industrial N.V., Doosan Infracore Co., Ltd. and its subsidiary Doosan Bobcat Inc., Fayat Group, GOMACO Corporation, Hitachi Construction Machinery, Komatsu Ltd., Kubota Tractor Corporation, LGMG, Liugong, Ponsse Plc, SANY Group Co., Ltd., SDLG, Terex, Tigercat Industries Inc., Volvo Construction Equipment (part of Volvo Group AB), and XCMG."
+  },
+  {
+   "passage": 13,
+   "name": "Ponsse Plc",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Global competitors of the CF segment include Caterpillar Inc., CNH Industrial N.V., Doosan Infracore Co., Ltd. and its subsidiary Doosan Bobcat Inc., Fayat Group, GOMACO Corporation, Hitachi Construction Machinery, Komatsu Ltd., Kubota Tractor Corporation, LGMG, Liugong, Ponsse Plc, SANY Group Co., Ltd., SDLG, Terex, Tigercat Industries Inc., Volvo Construction Equipment (part of Volvo Group AB), and XCMG."
+  },
+  {
+   "passage": 13,
+   "name": "SANY Group Co., Ltd.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Global competitors of the CF segment include Caterpillar Inc., CNH Industrial N.V., Doosan Infracore Co., Ltd. and its subsidiary Doosan Bobcat Inc., Fayat Group, GOMACO Corporation, Hitachi Construction Machinery, Komatsu Ltd., Kubota Tractor Corporation, LGMG, Liugong, Ponsse Plc, SANY Group Co., Ltd., SDLG, Terex, Tigercat Industries Inc., Volvo Construction Equipment (part of Volvo Group AB), and XCMG."
+  },
+  {
+   "passage": 13,
+   "name": "SDLG",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Global competitors of the CF segment include Caterpillar Inc., CNH Industrial N.V., Doosan Infracore Co., Ltd. and its subsidiary Doosan Bobcat Inc., Fayat Group, GOMACO Corporation, Hitachi Construction Machinery, Komatsu Ltd., Kubota Tractor Corporation, LGMG, Liugong, Ponsse Plc, SANY Group Co., Ltd., SDLG, Terex, Tigercat Industries Inc., Volvo Construction Equipment (part of Volvo Group AB), and XCMG."
+  },
+  {
+   "passage": 13,
+   "name": "Terex",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Global competitors of the CF segment include Caterpillar Inc., CNH Industrial N.V., Doosan Infracore Co., Ltd. and its subsidiary Doosan Bobcat Inc., Fayat Group, GOMACO Corporation, Hitachi Construction Machinery, Komatsu Ltd., Kubota Tractor Corporation, LGMG, Liugong, Ponsse Plc, SANY Group Co., Ltd., SDLG, Terex, Tigercat Industries Inc., Volvo Construction Equipment (part of Volvo Group AB), and XCMG."
+  },
+  {
+   "passage": 13,
+   "name": "Tigercat Industries Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Global competitors of the CF segment include Caterpillar Inc., CNH Industrial N.V., Doosan Infracore Co., Ltd. and its subsidiary Doosan Bobcat Inc., Fayat Group, GOMACO Corporation, Hitachi Construction Machinery, Komatsu Ltd., Kubota Tractor Corporation, LGMG, Liugong, Ponsse Plc, SANY Group Co., Ltd., SDLG, Terex, Tigercat Industries Inc., Volvo Construction Equipment (part of Volvo Group AB), and XCMG."
+  },
+  {
+   "passage": 13,
+   "name": "Volvo Construction Equipment",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Global competitors of the CF segment include Caterpillar Inc., CNH Industrial N.V., Doosan Infracore Co., Ltd. and its subsidiary Doosan Bobcat Inc., Fayat Group, GOMACO Corporation, Hitachi Construction Machinery, Komatsu Ltd., Kubota Tractor Corporation, LGMG, Liugong, Ponsse Plc, SANY Group Co., Ltd., SDLG, Terex, Tigercat Industries Inc., Volvo Construction Equipment (part of Volvo Group AB), and XCMG."
+  },
+  {
+   "passage": 13,
+   "name": "XCMG",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Global competitors of the CF segment include Caterpillar Inc., CNH Industrial N.V., Doosan Infracore Co., Ltd. and its subsidiary Doosan Bobcat Inc., Fayat Group, GOMACO Corporation, Hitachi Construction Machinery, Komatsu Ltd., Kubota Tractor Corporation, LGMG, Liugong, Ponsse Plc, SANY Group Co., Ltd., SDLG, Terex, Tigercat Industries Inc., Volvo Construction Equipment (part of Volvo Group AB), and XCMG."
+  },
+  {
+   "passage": 18,
+   "name": "The Home Depot",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "In addition, certain lawn and garden and compact construction products are sold through The Home Depot and Lowe's."
+  },
+  {
+   "passage": 18,
+   "name": "Lowe's",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "In addition, certain lawn and garden and compact construction products are sold through The Home Depot and Lowe's."
+  },
+  {
+   "passage": 21,
+   "name": "Banco Bradesco S.A.",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "we completed a transaction with a Brazilian bank, Banco Bradesco S.A. (Bradesco), for Bradesco to invest and become 50% owner of our subsidiary in Brazil, Banco John Deere S.A."
+  },
+  {
+   "passage": 56,
+   "name": "Hitachi",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "This deferred consideration will be paid as we purchase Deere-branded excavators, components, and service parts from Hitachi under the agreement with a duration that ranges from 5 to 30 years after the acquisition date."
+  }
+ ]
+}

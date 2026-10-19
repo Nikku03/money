@@ -1,0 +1,55 @@
+{
+ "ticker": "JNJ",
+ "accn": "0000200406-26-000016",
+ "relations": [
+  {
+   "passage": 7,
+   "name": "Genmab A/S",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "Genmab A/S owns two patent families related to DARZALEX, and Janssen Biotech, Inc. (a wholly-owned subsidiary of the Company) has an exclusive license to those patent families."
+  },
+  {
+   "passage": 11,
+   "name": "Pharmacyclics LLC",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "IMBRUVICA, which is developed in collaboration and co-commercialized in the U.S. with Pharmacyclics LLC, an AbbVie company"
+  },
+  {
+   "passage": 55,
+   "name": "Bayer HealthCare AG",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "XARELTO, co-developed with Bayer HealthCare AG"
+  },
+  {
+   "passage": 55,
+   "name": "Legend Biotech USA Inc.",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "CARVYKTI, licensed and developed in collaboration with Legend Biotech USA Inc. and Legend Biotech Ireland Limited."
+  },
+  {
+   "passage": 55,
+   "name": "Legend Biotech Ireland Limited",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "CARVYKTI, licensed and developed in collaboration with Legend Biotech USA Inc. and Legend Biotech Ireland Limited."
+  },
+  {
+   "passage": 59,
+   "name": "Kenvue",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "Kenvue will manufacture and supply to Johnson & Johnson certain products"
+  },
+  {
+   "passage": 59,
+   "name": "Kenvue",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "Johnson & Johnson will manufacture and supply to Kenvue certain products"
+  }
+ ]
+}

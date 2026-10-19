@@ -1,0 +1,97 @@
+{
+ "ticker": "GE",
+ "accn": "0000040545-26-000008",
+ "relations": [
+  {
+   "passage": 3,
+   "name": "Boeing",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "Our CES customers for equipment and services consist primarily of airframers and airlines, including both Boeing and Airbus, and third-party MRO shops, to whom we sell spare parts and license MRO technology."
+  },
+  {
+   "passage": 3,
+   "name": "Airbus",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "Our CES customers for equipment and services consist primarily of airframers and airlines, including both Boeing and Airbus, and third-party MRO shops, to whom we sell spare parts and license MRO technology."
+  },
+  {
+   "passage": 3,
+   "name": "CFM International",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "the most significant of which is CFM International, a 50-50 non-consolidated joint venture with Safran Aircraft Engines, a subsidiary of Safran Group of France."
+  },
+  {
+   "passage": 3,
+   "name": "Safran Aircraft Engines",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "the most significant of which is CFM International, a 50-50 non-consolidated joint venture with Safran Aircraft Engines, a subsidiary of Safran Group of France."
+  },
+  {
+   "passage": 12,
+   "name": "GE HealthCare",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "The \"GE\" name and logo are licensed to various former businesses, including GE HealthCare and GE Vernova, pursuant to agreements governing their use."
+  },
+  {
+   "passage": 12,
+   "name": "GE Vernova",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "The \"GE\" name and logo are licensed to various former businesses, including GE HealthCare and GE Vernova, pursuant to agreements governing their use."
+  },
+  {
+   "passage": 21,
+   "name": "Qatar Airways",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "These wins span GE9X, GEnx and LEAP programs and include major selections by Qatar Airways, Emirates International Airlines Group, ANA Holdings, Malaysia Aviation Group, Korean Air, Cathay Pacific and Pegasus."
+  },
+  {
+   "passage": 21,
+   "name": "Emirates International Airlines Group",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "These wins span GE9X, GEnx and LEAP programs and include major selections by Qatar Airways, Emirates International Airlines Group, ANA Holdings, Malaysia Aviation Group, Korean Air, Cathay Pacific and Pegasus."
+  },
+  {
+   "passage": 21,
+   "name": "ANA Holdings",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "These wins span GE9X, GEnx and LEAP programs and include major selections by Qatar Airways, Emirates International Airlines Group, ANA Holdings, Malaysia Aviation Group, Korean Air, Cathay Pacific and Pegasus."
+  },
+  {
+   "passage": 21,
+   "name": "Malaysia Aviation Group",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "These wins span GE9X, GEnx and LEAP programs and include major selections by Qatar Airways, Emirates International Airlines Group, ANA Holdings, Malaysia Aviation Group, Korean Air, Cathay Pacific and Pegasus."
+  },
+  {
+   "passage": 21,
+   "name": "Korean Air",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "These wins span GE9X, GEnx and LEAP programs and include major selections by Qatar Airways, Emirates International Airlines Group, ANA Holdings, Malaysia Aviation Group, Korean Air, Cathay Pacific and Pegasus."
+  },
+  {
+   "passage": 21,
+   "name": "Cathay Pacific",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "These wins span GE9X, GEnx and LEAP programs and include major selections by Qatar Airways, Emirates International Airlines Group, ANA Holdings, Malaysia Aviation Group, Korean Air, Cathay Pacific and Pegasus."
+  },
+  {
+   "passage": 21,
+   "name": "Pegasus",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "These wins span GE9X, GEnx and LEAP programs and include major selections by Qatar Airways, Emirates International Airlines Group, ANA Holdings, Malaysia Aviation Group, Korean Air, Cathay Pacific and Pegasus."
+  }
+ ]
+}

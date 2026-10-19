@@ -1,0 +1,20 @@
+{
+ "ticker": "NFLX",
+ "accn": "0001065280-26-000034",
+ "relations": [
+  {
+   "passage": 18,
+   "name": "Amazon Web Services",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "Amazon Web Services (\"AWS\") provides a distributed computing infrastructure platform for business operations, or what is commonly referred to as a \"cloud\" computing service."
+  },
+  {
+   "passage": 18,
+   "name": "Amazon",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "While the retail side of Amazon competes with us"
+  }
+ ]
+}

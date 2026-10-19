@@ -1,0 +1,34 @@
+{
+ "ticker": "WMT",
+ "accn": "0000104169-26-000055",
+ "relations": [
+  {
+   "passage": 32,
+   "name": "Visa",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "our contracts with payment card processors and payment card networks (such as Visa, Mastercard, American Express and Discover) generally require us to adhere to payment card network rules"
+  },
+  {
+   "passage": 32,
+   "name": "Mastercard",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "our contracts with payment card processors and payment card networks (such as Visa, Mastercard, American Express and Discover) generally require us to adhere to payment card network rules"
+  },
+  {
+   "passage": 32,
+   "name": "American Express",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "our contracts with payment card processors and payment card networks (such as Visa, Mastercard, American Express and Discover) generally require us to adhere to payment card network rules"
+  },
+  {
+   "passage": 32,
+   "name": "Discover",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "our contracts with payment card processors and payment card networks (such as Visa, Mastercard, American Express and Discover) generally require us to adhere to payment card network rules"
+  }
+ ]
+}

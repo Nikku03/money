@@ -1,0 +1,111 @@
+{
+ "ticker": "DIS",
+ "accn": "0001744489-25-000155",
+ "relations": [
+  {
+   "passage": 11,
+   "name": "Apple",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "We distribute electronic formats through e-tailers such as Apple and Amazon, and MVPDs, such as Comcast and DirecTV."
+  },
+  {
+   "passage": 11,
+   "name": "Amazon",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "We distribute electronic formats through e-tailers such as Apple and Amazon, and MVPDs, such as Comcast and DirecTV."
+  },
+  {
+   "passage": 11,
+   "name": "Comcast",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "We distribute electronic formats through e-tailers such as Apple and Amazon, and MVPDs, such as Comcast and DirecTV."
+  },
+  {
+   "passage": 11,
+   "name": "DirecTV",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "We distribute electronic formats through e-tailers such as Apple and Amazon, and MVPDs, such as Comcast and DirecTV."
+  },
+  {
+   "passage": 13,
+   "name": "Feld Entertainment",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "Disney Theatrical Group also licenses the Company's IP to Feld Entertainment, the producer of Disney On Ice"
+  },
+  {
+   "passage": 16,
+   "name": "Sony Pictures Entertainment",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "Sony Pictures Entertainment has the rights to produce and distribute Spider-Man films as a result of licensing these rights from Marvel"
+  },
+  {
+   "passage": 21,
+   "name": "PENN Entertainment, Inc.",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "ESPN earns advertising and licensing revenues from providing promotional services and licensing the ESPN BET trademark to PENN Entertainment, Inc. in connection with its operation of a sportsbook."
+  },
+  {
+   "passage": 21,
+   "name": "DraftKings Inc.",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "ESPN entered into a promotional services agreement with DraftKings Inc., under which DraftKings Inc. will serve as the exclusive sportsbook and odds provider of ESPN effective December 1, 2025."
+  },
+  {
+   "passage": 22,
+   "name": "World Wrestling Entertainment",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "Beginning in September 2025, ESPN platforms became the exclusive distributor for all World Wrestling Entertainment Premium Live Events."
+  },
+  {
+   "passage": 24,
+   "name": "Miral LLC",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "In May 2025, the Company and Miral LLC (Miral) agreed to create a Disney-branded theme park and resort in Abu Dhabi, United Arab Emirates, to be built and operated by Miral."
+  },
+  {
+   "passage": 25,
+   "name": "OLC",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "The Company has a licensing agreement with OLC, under which OLC will own and operate a Disney-branded cruise ship based in Japan."
+  },
+  {
+   "passage": 29,
+   "name": "Reliance Industries Limited",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "On November 14, 2024, the Company and Reliance Industries Limited (RIL) formed a joint venture (the India joint venture)"
+  },
+  {
+   "passage": 59,
+   "name": "Bodhi Tree Systems",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "RIL has an effective 56 % controlling interest in the joint venture with 37 % held by the Company and 7 % by Bodhi Tree Systems, a third party investment company."
+  },
+  {
+   "passage": 35,
+   "name": "Epic Games",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "announced an investment in a multi-year project with Epic Games"
+  },
+  {
+   "passage": 38,
+   "name": "YouTube TV",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "On October 30, 2025, the Company's channels were removed from YouTube TV following the expiration of the parties' distribution contract without agreement on renewal terms"
+  }
+ ]
+}

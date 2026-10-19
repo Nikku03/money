@@ -1,0 +1,20 @@
+{
+ "ticker": "AAPL",
+ "accn": "0000320193-25-000079",
+ "relations": [
+  {
+   "passage": 45,
+   "name": "Google LLC",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "For example, the Company earns revenue from licensing arrangements with Google LLC (\"Google\") and other companies to offer their search services on the Company's platforms and applications, and certain of these arrangements are currently subject to government investigations and legal proceedings."
+  },
+  {
+   "passage": 32,
+   "name": "Nintendo",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "compared to competitors' platforms, such as Android for smartphones and tablets, Windows for personal computers and tablets, and PlayStation, Nintendo and Xbox for gaming platforms"
+  }
+ ]
+}

@@ -1,0 +1,97 @@
+{
+ "ticker": "APH",
+ "accn": "0001104659-26-013549",
+ "relations": [
+  {
+   "passage": 21,
+   "name": "Aptiv",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Primary competitors include Aptiv, Belden, Corning, Foxconn Interconnect Technology, Glenair, HUBER+SUHNER, ICT Luxshare, Jonhon, Molex, Rosenberger, Sensata, TE Connectivity and Yazaki, among others."
+  },
+  {
+   "passage": 21,
+   "name": "Belden",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Primary competitors include Aptiv, Belden, Corning, Foxconn Interconnect Technology, Glenair, HUBER+SUHNER, ICT Luxshare, Jonhon, Molex, Rosenberger, Sensata, TE Connectivity and Yazaki, among others."
+  },
+  {
+   "passage": 21,
+   "name": "Corning",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Primary competitors include Aptiv, Belden, Corning, Foxconn Interconnect Technology, Glenair, HUBER+SUHNER, ICT Luxshare, Jonhon, Molex, Rosenberger, Sensata, TE Connectivity and Yazaki, among others."
+  },
+  {
+   "passage": 21,
+   "name": "Foxconn Interconnect Technology",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Primary competitors include Aptiv, Belden, Corning, Foxconn Interconnect Technology, Glenair, HUBER+SUHNER, ICT Luxshare, Jonhon, Molex, Rosenberger, Sensata, TE Connectivity and Yazaki, among others."
+  },
+  {
+   "passage": 21,
+   "name": "Glenair",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Primary competitors include Aptiv, Belden, Corning, Foxconn Interconnect Technology, Glenair, HUBER+SUHNER, ICT Luxshare, Jonhon, Molex, Rosenberger, Sensata, TE Connectivity and Yazaki, among others."
+  },
+  {
+   "passage": 21,
+   "name": "HUBER+SUHNER",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Primary competitors include Aptiv, Belden, Corning, Foxconn Interconnect Technology, Glenair, HUBER+SUHNER, ICT Luxshare, Jonhon, Molex, Rosenberger, Sensata, TE Connectivity and Yazaki, among others."
+  },
+  {
+   "passage": 21,
+   "name": "ICT Luxshare",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Primary competitors include Aptiv, Belden, Corning, Foxconn Interconnect Technology, Glenair, HUBER+SUHNER, ICT Luxshare, Jonhon, Molex, Rosenberger, Sensata, TE Connectivity and Yazaki, among others."
+  },
+  {
+   "passage": 21,
+   "name": "Jonhon",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Primary competitors include Aptiv, Belden, Corning, Foxconn Interconnect Technology, Glenair, HUBER+SUHNER, ICT Luxshare, Jonhon, Molex, Rosenberger, Sensata, TE Connectivity and Yazaki, among others."
+  },
+  {
+   "passage": 21,
+   "name": "Molex",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Primary competitors include Aptiv, Belden, Corning, Foxconn Interconnect Technology, Glenair, HUBER+SUHNER, ICT Luxshare, Jonhon, Molex, Rosenberger, Sensata, TE Connectivity and Yazaki, among others."
+  },
+  {
+   "passage": 21,
+   "name": "Rosenberger",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Primary competitors include Aptiv, Belden, Corning, Foxconn Interconnect Technology, Glenair, HUBER+SUHNER, ICT Luxshare, Jonhon, Molex, Rosenberger, Sensata, TE Connectivity and Yazaki, among others."
+  },
+  {
+   "passage": 21,
+   "name": "Sensata",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Primary competitors include Aptiv, Belden, Corning, Foxconn Interconnect Technology, Glenair, HUBER+SUHNER, ICT Luxshare, Jonhon, Molex, Rosenberger, Sensata, TE Connectivity and Yazaki, among others."
+  },
+  {
+   "passage": 21,
+   "name": "TE Connectivity",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Primary competitors include Aptiv, Belden, Corning, Foxconn Interconnect Technology, Glenair, HUBER+SUHNER, ICT Luxshare, Jonhon, Molex, Rosenberger, Sensata, TE Connectivity and Yazaki, among others."
+  },
+  {
+   "passage": 21,
+   "name": "Yazaki",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Primary competitors include Aptiv, Belden, Corning, Foxconn Interconnect Technology, Glenair, HUBER+SUHNER, ICT Luxshare, Jonhon, Molex, Rosenberger, Sensata, TE Connectivity and Yazaki, among others."
+  }
+ ]
+}

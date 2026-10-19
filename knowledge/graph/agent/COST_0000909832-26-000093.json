@@ -1,0 +1,55 @@
+{
+ "ticker": "COST",
+ "accn": "0000909832-26-000093",
+ "relations": [
+  {
+   "passage": 8,
+   "name": "Walmart",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Walmart, Target, Kroger, and Amazon are among our significant general merchandise retail competitors in the U.S."
+  },
+  {
+   "passage": 8,
+   "name": "Target",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Walmart, Target, Kroger, and Amazon are among our significant general merchandise retail competitors in the U.S."
+  },
+  {
+   "passage": 8,
+   "name": "Kroger",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Walmart, Target, Kroger, and Amazon are among our significant general merchandise retail competitors in the U.S."
+  },
+  {
+   "passage": 8,
+   "name": "Amazon",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Walmart, Target, Kroger, and Amazon are among our significant general merchandise retail competitors in the U.S."
+  },
+  {
+   "passage": 8,
+   "name": "Sam's Club",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "We also compete with other warehouse clubs, including Walmart's Sam's Club and BJ's Wholesale Club in the U.S."
+  },
+  {
+   "passage": 8,
+   "name": "BJ's Wholesale Club",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "We also compete with other warehouse clubs, including Walmart's Sam's Club and BJ's Wholesale Club in the U.S."
+  },
+  {
+   "passage": 53,
+   "name": "Citibank, N.A.",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "Citibank, N.A. is the exclusive issuer of co-branded credit cards to U.S. members."
+  }
+ ]
+}

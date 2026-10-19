@@ -1,0 +1,97 @@
+{
+ "ticker": "KO",
+ "accn": "0001628280-26-010047",
+ "relations": [
+  {
+   "passage": 3,
+   "name": "Monster",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "certain Coca-Cola system bottlers distribute certain brands of Monster, primarily Monster Energy, in designated territories in the United States, Canada and other international territories pursuant to distribution coordination agreements between the Company and Monster"
+  },
+  {
+   "passage": 9,
+   "name": "PepsiCo, Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "In many of the countries in which we do business, PepsiCo, Inc. is a primary competitor."
+  },
+  {
+   "passage": 9,
+   "name": "Nestlé S.A.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other significant competitors include, but are not limited to, Nestlé S.A., Keurig Dr Pepper Inc., Danone S.A., Suntory Beverage & Food Limited, Anheuser-Busch InBev, Kirin Holdings, Heineken N.V., Diageo plc and Red Bull GmbH."
+  },
+  {
+   "passage": 9,
+   "name": "Keurig Dr Pepper Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other significant competitors include, but are not limited to, Nestlé S.A., Keurig Dr Pepper Inc., Danone S.A., Suntory Beverage & Food Limited, Anheuser-Busch InBev, Kirin Holdings, Heineken N.V., Diageo plc and Red Bull GmbH."
+  },
+  {
+   "passage": 9,
+   "name": "Danone S.A.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other significant competitors include, but are not limited to, Nestlé S.A., Keurig Dr Pepper Inc., Danone S.A., Suntory Beverage & Food Limited, Anheuser-Busch InBev, Kirin Holdings, Heineken N.V., Diageo plc and Red Bull GmbH."
+  },
+  {
+   "passage": 9,
+   "name": "Suntory Beverage & Food Limited",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other significant competitors include, but are not limited to, Nestlé S.A., Keurig Dr Pepper Inc., Danone S.A., Suntory Beverage & Food Limited, Anheuser-Busch InBev, Kirin Holdings, Heineken N.V., Diageo plc and Red Bull GmbH."
+  },
+  {
+   "passage": 9,
+   "name": "Anheuser-Busch InBev",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other significant competitors include, but are not limited to, Nestlé S.A., Keurig Dr Pepper Inc., Danone S.A., Suntory Beverage & Food Limited, Anheuser-Busch InBev, Kirin Holdings, Heineken N.V., Diageo plc and Red Bull GmbH."
+  },
+  {
+   "passage": 9,
+   "name": "Kirin Holdings",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other significant competitors include, but are not limited to, Nestlé S.A., Keurig Dr Pepper Inc., Danone S.A., Suntory Beverage & Food Limited, Anheuser-Busch InBev, Kirin Holdings, Heineken N.V., Diageo plc and Red Bull GmbH."
+  },
+  {
+   "passage": 9,
+   "name": "Heineken N.V.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other significant competitors include, but are not limited to, Nestlé S.A., Keurig Dr Pepper Inc., Danone S.A., Suntory Beverage & Food Limited, Anheuser-Busch InBev, Kirin Holdings, Heineken N.V., Diageo plc and Red Bull GmbH."
+  },
+  {
+   "passage": 9,
+   "name": "Diageo plc",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other significant competitors include, but are not limited to, Nestlé S.A., Keurig Dr Pepper Inc., Danone S.A., Suntory Beverage & Food Limited, Anheuser-Busch InBev, Kirin Holdings, Heineken N.V., Diageo plc and Red Bull GmbH."
+  },
+  {
+   "passage": 9,
+   "name": "Red Bull GmbH",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Other significant competitors include, but are not limited to, Nestlé S.A., Keurig Dr Pepper Inc., Danone S.A., Suntory Beverage & Food Limited, Anheuser-Busch InBev, Kirin Holdings, Heineken N.V., Diageo plc and Red Bull GmbH."
+  },
+  {
+   "passage": 11,
+   "name": "Coca-Cola Bottlers' Sales & Services Company LLC",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "In the United States, our bottlers, with the assistance of Coca-Cola Bottlers' Sales & Services Company LLC (\"CCBSS\") and based on terms that the Company negotiates, purchase HFCS to meet our and our bottlers' requirements."
+  },
+  {
+   "passage": 12,
+   "name": "Cutrale Citrus Juices U.S.A., Inc.",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "We work closely with Cutrale Citrus Juices U.S.A., Inc., our primary supplier of orange juice from Florida and Brazil"
+  }
+ ]
+}

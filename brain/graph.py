@@ -7,7 +7,8 @@ remembers from training but the filing does not state never enters the bank. (Wh
 chooses to return can still lean on what it remembers; docs/GRAPH.md says how far that goes.)
 
 Each kept relation is a ``derived`` fact on the filer, ``relation.<kind>``, whose value is the counterparty's
-ticker (or ``?<normalised name>`` when SEC's ticker list has no match). It carries the filing's ``as_of`` and
+normalised name, as the filing writes it (``Resolver`` maps names to tickers when the graph is read, so a better
+matcher never rewrites a fact). It carries the filing's ``as_of`` and
 ``known_at`` and cites the filing fact in ``inputs``, so a view at t sees exactly the relations stated in
 10-Ks public by t. A ``relation.scan`` fact per filing records that the filing was read and how many
 relations it gave, so "read, none named" differs from "not read".
@@ -21,6 +22,7 @@ import hashlib
 import html
 import json
 import re
+import unicodedata
 from dataclasses import dataclass
 from typing import Callable
 
@@ -38,6 +40,7 @@ BATCH = 8                               # passages per model request
 MAX_CHARS = 1500                        # a longer paragraph is cut at sentence ends into pieces of at most this
 LLM_FIXED = {"temperature": 0, "seed": 7, "max_tokens": 1200}
 DOC_TTL = 365 * 86400                   # a filed document never changes
+SCHEMA = 2                              # 2: relation values are names, resolved when read (1 stored tickers)
 
 SYSTEM = "You read SEC filings and answer with JSON only."
 PROMPT = (
@@ -64,6 +67,12 @@ _GENERIC = re.compile(r"^(?:the\s+)?(?:(?:our|its|a|an|one|two|three|several|cer
                       r"significant|key)\s+)*(?:customers?|clients?|suppliers?|vendors?|distributors?|competitors?|"
                       r"partners?|companies|company|manufacturers?|foundr(?:y|ies)|resellers?|retailers?|"
                       r"oems?|government|u\.?s\.? government)(?:\s+[a-z0-9])?$", re.I)
+# Trailing words that name a unit of a company rather than the company ('Amazon Web Services', 'Bayer HealthCare').
+DIVISION = {"web", "services", "service", "healthcare", "health", "financial", "finance", "capital", "credit",
+            "leasing", "usa", "us", "america", "americas", "north", "international", "global", "worldwide",
+            "technologies", "technology", "energy", "pharma", "pharmaceuticals", "aerospace", "aviation", "and", "of"}
+_DEPOSITARY = re.compile(r"(?i)^\s*(citibank|jpmorgan chase bank|the bank of new york mellon|bank of new york mellon|"
+                         r"deutsche bank trust)\b.*/\s*adr\b")
 _SUFFIX = {"inc", "incorporated", "corp", "corporation", "co", "company", "companies", "ltd", "limited", "plc",
            "llc", "lp", "llp", "holdings", "holding", "group", "sa", "ag", "nv", "se", "the", "de", "new"}
 
@@ -133,8 +142,11 @@ def passages(paras: list[str], limit: int = MAX_PASSAGES) -> list[str]:
 
 # ---------- names ----------
 def norm_name(s: str) -> str:
-    """A company name reduced for matching: lower case, '&' as 'and', no punctuation or legal suffixes."""
-    s = s.lower().replace("&", " and ")
+    """A company name reduced for matching: accents and apostrophes dropped, lower case, '&' as 'and', no
+    punctuation or legal suffixes. 'Lowe's Companies, Inc.' and 'LOWES COMPANIES INC' both give 'lowes'."""
+    s = "".join(c for c in unicodedata.normalize("NFKD", s) if not unicodedata.combining(c))
+    s = re.sub(r"(?<=\w)['’](?=\w)", "", s.lower()).replace("&", " and ")
+    s = re.sub(r"/\s*adr\b.*$", " ", s)       # an ADR listing: 'Kioxia Holdings Corporation/ADR'
     s = re.sub(r"/[a-z]{2}/?", " ", s)        # SEC titles carry a state: 'APPLE INC /CA/'
     words = re.sub(r"[^a-z0-9]+", " ", s).split()
     while words and words[-1] in _SUFFIX:
@@ -146,31 +158,61 @@ def norm_name(s: str) -> str:
 
 class Resolver:
     """Company name -> ticker, from SEC's ticker list (today's list: see docs/GRAPH.md on what that misses).
-    A name matches when its normalised form equals a listed title's. Several tickers on one title (share
-    classes) resolve to the first listed, which is the larger by SEC's ordering."""
+    Tried in order, on the normalised name; each answer says which rule matched:
+
+    - ``exact``: it equals a listed title ('Lowe's Companies' -> LOW).
+    - ``prefix``: it is the first whole words of exactly one listed company's title, and at least 4 characters
+      ('Amazon' -> 'AMAZON COM INC', 'Cisco' -> 'CISCO SYSTEMS'; 'Mitsubishi' starts several, so no match).
+    - ``shortened``: with trailing division words dropped ('USA', 'healthcare', 'capital', ...: ``DIVISION``), it
+      equals a listed title ('Legend Biotech USA Inc.' -> LEGN). Exact only: a shortened name matched by prefix
+      took 'Philip Morris USA' (Altria's) to PM and 'Banc of America Leasing' to Banc of California.
+
+    Several tickers on one company (share classes, preferreds) resolve to the first listed, which SEC orders by size.
+    ADRs that SEC lists under their depositary bank's name ('Citibank,N.A./ADR') are left out."""
 
     def __init__(self, table: list[dict]):
-        self.by_name: dict[str, str] = {}
-        self.tickers = set()
+        self.exact: dict[str, str] = {}
+        self.prefix: dict[str, set[str]] = {}
+        first: dict[int, str] = {}
         for row in table:
-            self.tickers.add(row["ticker"].upper())
+            t = first.setdefault(int(row["cik"]), row["ticker"].upper())
             n = norm_name(row["title"])
-            if n:
-                self.by_name.setdefault(n, row["ticker"].upper())
+            if not n or _DEPOSITARY.match(row["title"]):
+                continue
+            self.exact.setdefault(n, t)
+            words = n.split()
+            for k in range(1, len(words) + 1):
+                self.prefix.setdefault(" ".join(words[:k]), set()).add(t)
 
     @classmethod
     def from_sec(cls) -> "Resolver":
         from brain.sources import sec
         return cls(sec.ticker_table())
 
+    def _match(self, n: str) -> tuple[str | None, str]:
+        if n in self.exact:
+            return self.exact[n], "exact"
+        hits = self.prefix.get(n, set())
+        if len(n) >= 4 and len(hits) == 1:
+            return next(iter(hits)), "prefix"
+        return None, ""
+
+    def match(self, name: str) -> tuple[str | None, str]:
+        """(ticker, rule) or (None, "")."""
+        n = norm_name(name)
+        t, how = self._match(n)
+        if t:
+            return t, how
+        words = n.split()
+        while len(words) > 1 and words[-1] in DIVISION:
+            words.pop()
+            t = self.exact.get(" ".join(words))
+            if t:
+                return t, "shortened"
+        return None, ""
+
     def resolve(self, name: str) -> str | None:
-        return self.by_name.get(norm_name(name))
-
-
-def node(name: str, resolver: Resolver | None) -> str:
-    """The value a relation fact stores: a ticker, or '?' and the normalised name."""
-    t = resolver.resolve(name) if resolver else None
-    return t or "?" + norm_name(name)
+        return self.match(name)[0]
 
 
 # ---------- the model's answer ----------
@@ -259,7 +301,7 @@ def tenks(bank: Bank, ticker: str, since: str | None = None) -> list[Fact]:
 
 def _relation_fact(filing: Fact, rel: dict, value: str, extractor: str) -> Fact:
     ctx = {"accn": filing.context.get("accn"), "form": filing.value, "name": rel["name"], "quote": rel["quote"],
-           "share_pct": rel["share_pct"], "extractor": extractor}
+           "share_pct": rel["share_pct"], "extractor": extractor, "schema": SCHEMA}
     if extractor != "agent":
         ctx["prompt_sha"] = prompt_sha()
     return Fact(entity=filing.entity, attr=f"relation.{rel['relation']}", value=value, as_of=filing.as_of,
@@ -274,7 +316,7 @@ def _scan_fact(filing: Fact, n: int, n_passages: int, rejected: dict, text_sha: 
                 source={"name": f"SEC EDGAR {filing.value} text, read by {extractor}", "url": filing.source["url"]},
                 context={"accn": filing.context.get("accn"), "form": filing.value, "passages": n_passages,
                          "rejected": dict(sorted(rejected.items())), "text_sha": text_sha, "extractor": extractor,
-                         "prompt_sha": prompt_sha()},
+                         "prompt_sha": prompt_sha(), "schema": SCHEMA},
                 inputs=(filing.ref,))
 
 
@@ -288,17 +330,14 @@ def _read(filing: Fact, fetch_doc: Callable[[str], bytes]) -> tuple[list[str], l
     return paras, passages(paras)
 
 
-def _facts(filing: Fact, rels: list[dict], rejected: dict[str, int], resolver: Resolver | None, extractor: str,
-           paras: list[str], ps: list[str]) -> list[Fact]:
-    """Checked relations as facts, one per counterparty and kind (the first, or the first with a share), and the
-    filing's scan fact."""
-    rejected = dict(rejected)
+def _facts(filing: Fact, rels: list[dict], rejected: dict[str, int], extractor: str, paras: list[str],
+           ps: list[str]) -> list[Fact]:
+    """Checked relations as facts, one per name and kind (the first, or the first with a share), and the filing's
+    scan fact. Names are stored as written; which ticker each is (and whether it is the filer) is decided when
+    the graph is read."""
     kept: dict[tuple, dict] = {}
     for r in rels:
-        value = node(r["name"], resolver)
-        if value == filing.entity.upper():
-            rejected["the filer itself"] = rejected.get("the filer itself", 0) + 1
-            continue
+        value = norm_name(r["name"])
         key = (value, r["relation"])
         if key not in kept or (r["share_pct"] is not None and kept[key]["rel"]["share_pct"] is None):
             kept[key] = {"value": value, "rel": r}
@@ -308,8 +347,7 @@ def _facts(filing: Fact, rels: list[dict], rejected: dict[str, int], resolver: R
     return out
 
 
-def read_filing(filing: Fact, client, resolver: Resolver | None, company: str,
-                fetch_doc: Callable[[str], bytes] = fetch_document) -> list[Fact]:
+def read_filing(filing: Fact, client, company: str, fetch_doc: Callable[[str], bytes] = fetch_document) -> list[Fact]:
     """One 10-K read by the model: its relation facts (one per counterparty and kind) and its scan fact."""
     paras, ps = _read(filing, fetch_doc)
     rels, rejected = [], {}
@@ -319,7 +357,7 @@ def read_filing(filing: Fact, client, resolver: Resolver | None, company: str,
         rels += got
         for k, v in rej.items():
             rejected[k] = rejected.get(k, 0) + v
-    return _facts(filing, rels, rejected, resolver, str(getattr(client, "model", "model")), paras, ps)
+    return _facts(filing, rels, rejected, str(getattr(client, "model", "model")), paras, ps)
 
 
 # ---------- an agent reading in the model's place ----------
@@ -335,8 +373,7 @@ def packet(filing: Fact, company: str, fetch_doc: Callable[[str], bytes] = fetch
             "passages": [{"n": i, "text": p} for i, p in enumerate(ps, 1)]}
 
 
-def record_answer(bank: Bank, answer: str | dict, resolver: Resolver | None = None, extractor: str = "agent",
-                  fetch_doc: Callable[[str], bytes] = fetch_document) -> list[Fact]:
+def record_answer(bank: Bank, answer: str | dict, extractor: str = "agent", fetch_doc: Callable[[str], bytes] = fetch_document) -> list[Fact]:
     """An agent's answer to a ``packet``, held to the model's rules. The passages are rebuilt from the filing
     itself, never taken from the packet, so an edited packet cannot ground a quote. Raises ValueError when the
     answer names no 10-K the bank has for the ticker, or the 10-K was already read by this extractor and prompt."""
@@ -351,7 +388,7 @@ def record_answer(bank: Bank, answer: str | dict, resolver: Resolver | None = No
         raise ValueError(f"{ticker} {accn} was already read by {extractor} with this prompt")
     paras, ps = _read(filing, fetch_doc)
     rels, rejected = parse(json.dumps({"relations": obj.get("relations")}), ps)
-    facts = _facts(filing, rels, rejected, resolver, extractor, paras, ps)
+    facts = _facts(filing, rels, rejected, extractor, paras, ps)
     bank.add_many(facts)
     return facts
 
@@ -359,10 +396,11 @@ def record_answer(bank: Bank, answer: str | dict, resolver: Resolver | None = No
 def scanned(bank: Bank, ticker: str, extractor: str) -> set[str]:
     """Accession numbers of the ticker's filings already read by this extractor and prompt."""
     return {f.context.get("accn") for f in bank.facts(ticker, "relation.scan")
-            if f.context.get("extractor") == extractor and f.context.get("prompt_sha") == prompt_sha()}
+            if f.context.get("extractor") == extractor and f.context.get("prompt_sha") == prompt_sha()
+            and f.context.get("schema") == SCHEMA}
 
 
-def extract(bank: Bank, ticker: str, client, resolver: Resolver | None = None, *, since: str | None = None,
+def extract(bank: Bank, ticker: str, client, *, since: str | None = None,
             max_filings: int | None = None, fetch_doc: Callable[[str], bytes] = fetch_document,
             log: Callable[[str], None] | None = print) -> dict:
     """Read the ticker's 10-Ks in the bank (``brain ingest`` lists them) not yet read by this model and prompt."""
@@ -378,7 +416,7 @@ def extract(bank: Bank, ticker: str, client, resolver: Resolver | None = None, *
     out = {"filings": 0, "relations": 0, "failed": []}
     for f in todo:
         try:
-            facts = read_filing(f, client, resolver, company, fetch_doc)
+            facts = read_filing(f, client, company, fetch_doc)
         except (FetchError, LLMError, KeyError, OSError) as e:  # one failed filing must not stop the rest
             out["failed"].append(f"{f.context.get('accn')}: {e}")
             if log:
@@ -394,7 +432,7 @@ def extract(bank: Bank, ticker: str, client, resolver: Resolver | None = None, *
 
 
 def add_by_agent(bank: Bank, ticker: str, accn: str, name: str, kind: str, quote: str, share=None,
-                 resolver: Resolver | None = None, fetch_doc: Callable[[str], bytes] = fetch_document) -> Fact:
+                 fetch_doc: Callable[[str], bytes] = fetch_document) -> Fact:
     """An agent's own reading of a 10-K, held to the same rule: the quote must be in the filing and name the company.
     Raises ValueError when it is not, or when the bank has no such 10-K for the ticker."""
     filing = next((f for f in tenks(bank, ticker) if f.context.get("accn") == accn), None)
@@ -405,10 +443,7 @@ def add_by_agent(bank: Bank, ticker: str, accn: str, name: str, kind: str, quote
     rel, why = check(name, kind, quote, norm_space(text), share)
     if rel is None:
         raise ValueError(why)
-    value = node(rel["name"], resolver)
-    if value == filing.entity.upper():
-        raise ValueError("the filer itself")
-    f = _relation_fact(filing, rel, value, "agent")
+    f = _relation_fact(filing, rel, norm_name(rel["name"]), "agent")
     bank.add(f)
     return f
 
@@ -417,12 +452,14 @@ def add_by_agent(bank: Bank, ticker: str, accn: str, name: str, kind: str, quote
 @dataclass(frozen=True)
 class Edge:
     src: str          # the filer that states the relation
-    dst: str          # the counterparty: a ticker, or '?name'
+    dst: str          # the counterparty: a ticker, or '?' and its normalised name when none matches
     relation: str     # as the filer states it: dst is src's customer, supplier, competitor or partner
     share_pct: float | None
     as_of: str
     known_at: str
     ref: str          # the relation fact, ENTITY/id
+    name: str = ""    # the counterparty as the filing writes it
+    match: str = ""   # how dst was found: exact | prefix | shortened ('' when unresolved; Resolver.match)
 
 
 def latest_scan(view, ticker: str) -> Fact | None:
@@ -437,27 +474,34 @@ def latest_scan(view, ticker: str) -> Fact | None:
     return f if days_between(f.as_of, view.t) <= STALE_DAYS else None
 
 
-def edges_of(view, ticker: str) -> list[Edge]:
-    """The relations the ticker's latest read 10-K states, as known at the view's time. Agent readings of that
-    same 10-K count with the model's."""
+def edges_of(view, ticker: str, resolver: Resolver | None = None) -> list[Edge]:
+    """The relations the ticker's latest read 10-K states, as known at the view's time, with each counterparty
+    resolved to a ticker where the resolver can. Agent readings of that same 10-K count with the model's. Two
+    names that resolve to one ticker give one edge per kind (the first, or the first with a share); a name that
+    resolves to the filer itself gives none."""
     scan = latest_scan(view, ticker)
     if scan is None:
         return []
     accn = scan.context.get("accn")
-    seen, out = set(), []
+    kept: dict[tuple, Edge] = {}
     for kind in KINDS:
         for f in view.facts(ticker, f"relation.{kind}", lambda x: x.context.get("accn") == accn):
-            if (f.value, kind) in seen:
+            name = str(f.context.get("name") or f.value)
+            t, how = resolver.match(name) if resolver else (None, "")
+            if t == f.entity:
                 continue
-            seen.add((f.value, kind))
-            out.append(Edge(f.entity, str(f.value), kind, f.context.get("share_pct"), f.as_of, f.known_at, f.ref))
-    return out
+            e = Edge(f.entity, t or "?" + str(f.value), kind, f.context.get("share_pct"), f.as_of, f.known_at,
+                     f.ref, name, how)
+            k = (e.dst, kind)
+            if k not in kept or (e.share_pct is not None and kept[k].share_pct is None):
+                kept[k] = e
+    return list(kept.values())
 
 
-def graph_at(bank: Bank, tickers, t: str | None = None) -> list[Edge]:
+def graph_at(bank: Bank, tickers, t: str | None = None, resolver: Resolver | None = None) -> list[Edge]:
     """Every edge the given companies' 10-Ks state, as known at t."""
     view = bank.view(t)
-    return [e for tk in tickers for e in edges_of(view, tk)]
+    return [e for tk in tickers for e in edges_of(view, tk, resolver)]
 
 
 def neighbours(edges: list[Edge], ticker: str) -> list[tuple[str, str, Edge]]:
@@ -486,10 +530,9 @@ def _cmd(a) -> int:
         if not ok:
             print(f"graph extract: no model to read with: {why}")
             return 1
-        resolver = Resolver.from_sec()
         bad = 0
         for t in a.words:
-            out = extract(bank, t, client, resolver, since=a.since, max_filings=a.max)
+            out = extract(bank, t, client, since=a.since, max_filings=a.max)
             print(f"{t.upper()}: {out['filings']} 10-Ks read, {out['relations']} relations"
                   + (f", {len(out['failed'])} failed" if out["failed"] else ""))
             bad += bool(out["failed"])
@@ -499,7 +542,7 @@ def _cmd(a) -> int:
             print("graph add TICKER ACCESSION --name NAME --relation KIND --quote 'exact words' [--share PCT]")
             return 2
         try:
-            f = add_by_agent(bank, a.words[0], a.words[1], a.name, a.relation, a.quote, a.share, Resolver.from_sec())
+            f = add_by_agent(bank, a.words[0], a.words[1], a.name, a.relation, a.quote, a.share)
         except ValueError as e:
             print(f"graph add: refused: {e}")
             return 1
@@ -539,10 +582,10 @@ def _cmd(a) -> int:
             print("graph answer FILE...  (each: {\"ticker\", \"accn\", \"relations\": [...]})")
             return 2
         from pathlib import Path
-        resolver, bad = Resolver.from_sec(), 0
+        bad = 0
         for path in a.words:
             try:
-                facts = record_answer(bank, Path(path).read_text(), resolver)
+                facts = record_answer(bank, Path(path).read_text())
             except (ValueError, OSError) as e:
                 print(f"{path}: refused: {e}")
                 bad += 1
@@ -556,10 +599,10 @@ def _cmd(a) -> int:
             print("graph show TICKER [--at DATE]")
             return 2
         t = a.words[0].upper()
-        view = bank.view(a.at)
+        view, resolver = bank.view(a.at), Resolver.from_sec()
         scan = latest_scan(view, t)
         others = [x for x in bank.entities() if x != t]
-        edges = edges_of(view, t) + [e for x in others for e in edges_of(view, x) if e.dst == t]
+        edges = edges_of(view, t, resolver) + [e for x in others for e in edges_of(view, x, resolver) if e.dst == t]
         print(f"{t} at {view.t}: " + (f"own 10-K for {scan.as_of} (filed {scan.known_at[:10]})" if scan
                                          else "no 10-K of its own read yet"))
         rows = neighbours(edges, t)
@@ -568,23 +611,25 @@ def _cmd(a) -> int:
         for other, role, e in sorted(rows, key=lambda r: (r[1], r[0])):
             pct = f" {e.share_pct:g}%" if e.share_pct is not None else ""
             said = "its 10-K" if e.src == t else f"{e.src}'s 10-K"
-            print(f"  {role:<10} {other:<24}{pct:<6} per {said} {e.as_of}  [{e.ref}]")
+            how = f" ({e.match}: {e.name})" if e.src == t and e.match not in ("", "exact") else ""
+            print(f"  {role:<10} {other:<24}{pct:<6} per {said} {e.as_of}{how}  [{e.ref}]")
         return 0
     if a.action == "stats":
-        view = bank.view(a.at)
-        n_co = n_edges = n_res = 0
-        by_kind: dict[str, int] = {}
+        view, resolver = bank.view(a.at), Resolver.from_sec()
+        n_co = 0
+        es: list[Edge] = []
         for t in bank.entities():
-            es = edges_of(view, t)
             if latest_scan(view, t) is None:
                 continue
             n_co += 1
-            n_edges += len(es)
-            n_res += sum(not e.dst.startswith("?") for e in es)
-            for e in es:
-                by_kind[e.relation] = by_kind.get(e.relation, 0) + 1
-        print(f"at {view.t}: {n_co} companies with a current 10-K read, {n_edges} relations "
-              f"({n_res} to a listed ticker): " + ", ".join(f"{k} {by_kind.get(k, 0)}" for k in KINDS))
+            es += edges_of(view, t, resolver)
+        res = [e for e in es if e.match]
+        print(f"at {view.t}: {n_co} companies with a current 10-K read, {len(es)} relations")
+        for k in KINDS:
+            ks = [e for e in es if e.relation == k]
+            print(f"  {k:<10} {len(ks):>5}, {sum(bool(e.match) for e in ks):>5} to a listed ticker")
+        print("  matched by: " + ", ".join(f"{m} {sum(e.match == m for e in res)}"
+                                           for m in ("exact", "prefix", "shortened")))
         return 0
     return 2
 

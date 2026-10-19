@@ -1,0 +1,27 @@
+{
+ "ticker": "MSFT",
+ "accn": "0001193125-26-323660",
+ "relations": [
+  {
+   "passage": 48,
+   "name": "OpenAI",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "We have a long-term strategic partnership with OpenAI which was originally established in 2019."
+  },
+  {
+   "passage": 55,
+   "name": "OpenAI",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "For fiscal year 2026, we recorded revenue from commercial arrangements with OpenAI, inclusive of revenue-sharing payments, of $ 24.1 billion, and accounts receivable from OpenAI as of June 30, 2026 was $ 6.0 billion."
+  },
+  {
+   "passage": 48,
+   "name": "OpenAI",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "We hold rights to OpenAI's intellectual property, including models and infrastructure, for integration into our products."
+  }
+ ]
+}

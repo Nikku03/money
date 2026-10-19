@@ -1,0 +1,20 @@
+{
+ "ticker": "PG",
+ "accn": "0000080424-26-000103",
+ "relations": [
+  {
+   "passage": 2,
+   "name": "Walmart Inc.",
+   "relation": "customer",
+   "share_pct": 16,
+   "quote": "Sales to Walmart Inc. and its affiliates represent approximately 16% of our total sales in 2026, 2025 and 2024."
+  },
+  {
+   "passage": 35,
+   "name": "The Clorox Company",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "In January 2026, the Glad joint venture agreement between the Company and The Clorox Company (Clorox) expired."
+  }
+ ]
+}

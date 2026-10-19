@@ -1,0 +1,62 @@
+{
+ "ticker": "NVDA",
+ "accn": "0001045810-26-000021",
+ "relations": [
+  {
+   "passage": 5,
+   "name": "Taiwan Semiconductor Manufacturing Company Limited",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "We utilize foundries, such as Taiwan Semiconductor Manufacturing Company Limited, or TSMC, and Samsung Electronics Co., Ltd., or Samsung, to produce our semiconductor wafers."
+  },
+  {
+   "passage": 5,
+   "name": "Samsung Electronics Co., Ltd.",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "We utilize foundries, such as Taiwan Semiconductor Manufacturing Company Limited, or TSMC, and Samsung Electronics Co., Ltd., or Samsung, to produce our semiconductor wafers."
+  },
+  {
+   "passage": 5,
+   "name": "SK Hynix Inc.",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "We purchase memory from SK Hynix Inc., Micron Technology, Inc., and Samsung."
+  },
+  {
+   "passage": 5,
+   "name": "Micron Technology, Inc.",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "We purchase memory from SK Hynix Inc., Micron Technology, Inc., and Samsung."
+  },
+  {
+   "passage": 5,
+   "name": "Hon Hai Precision Industry Co., Ltd.",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "We engage with independent subcontractors and contract manufacturers such as Hon Hai Precision Industry Co., Ltd., Wistron Corporation, and Fabrinet to perform assembly, testing and packaging of our final products."
+  },
+  {
+   "passage": 5,
+   "name": "Wistron Corporation",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "We engage with independent subcontractors and contract manufacturers such as Hon Hai Precision Industry Co., Ltd., Wistron Corporation, and Fabrinet to perform assembly, testing and packaging of our final products."
+  },
+  {
+   "passage": 5,
+   "name": "Fabrinet",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "We engage with independent subcontractors and contract manufacturers such as Hon Hai Precision Industry Co., Ltd., Wistron Corporation, and Fabrinet to perform assembly, testing and packaging of our final products."
+  },
+  {
+   "passage": 15,
+   "name": "Groq, Inc.",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "We have entered into an intellectual property license arrangement with Groq, Inc., or Groq, that required significant, nonrefundable payments."
+  }
+ ]
+}

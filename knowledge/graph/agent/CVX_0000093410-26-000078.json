@@ -1,0 +1,62 @@
+{
+ "ticker": "CVX",
+ "accn": "0000093410-26-000078",
+ "relations": [
+  {
+   "passage": 11,
+   "name": "Petroboscan",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "Chevron has a 39.2 percent interest in Petroboscan, which operates the Boscan Field in western Venezuela"
+  },
+  {
+   "passage": 11,
+   "name": "Petroindependiente",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "a 25.2 percent interest in Petroindependiente, which operates the LL-652 Field in Lake Maracaibo"
+  },
+  {
+   "passage": 11,
+   "name": "Petropiar",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "Chevron has a 30 percent interest in Petropiar, which operates heavy oil production from Huyapari Field"
+  },
+  {
+   "passage": 11,
+   "name": "Petroindependencia",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "Chevron has a 35.8 percent interest in Petroindependencia, which includes the Carabobo 3 heavy oil project"
+  },
+  {
+   "passage": 17,
+   "name": "West African Gas Pipeline Company Limited",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "the company holds a 36.9 percent interest in the West African Gas Pipeline Company Limited affiliate, which supplies Nigerian natural gas to customers in Benin, Togo and Ghana."
+  },
+  {
+   "passage": 23,
+   "name": "Singapore Refining Company",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "Singapore Refining Company (SRC), a 50 percent-owned joint venture, has a total capacity of 290,000 barrels of crude per day and manufactures a wide range of petroleum products."
+  },
+  {
+   "passage": 23,
+   "name": "GS Caltex",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "The 50 percent-owned GS Caltex (GSC) Yeosu Refinery in South Korea remains one of the world's largest refineries with a total crude capacity of 800,000 barrels per day."
+  },
+  {
+   "passage": 53,
+   "name": "Chevron Phillips Chemical Company LLC",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "CUSA also holds the company's investment in the Chevron Phillips Chemical Company LLC joint venture, which is accounted for using the equity method."
+  }
+ ]
+}

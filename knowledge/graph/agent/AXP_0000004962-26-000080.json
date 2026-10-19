@@ -1,0 +1,188 @@
+{
+ "ticker": "AXP",
+ "accn": "0000004962-26-000080",
+ "relations": [
+  {
+   "passage": 9,
+   "name": "Delta Air Lines",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "issuing cards under cobrand arrangements with other corporations and institutions (e.g., Delta Air Lines (Delta), Marriott International, British Airways and Hilton Worldwide Holdings)"
+  },
+  {
+   "passage": 9,
+   "name": "Marriott International",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "issuing cards under cobrand arrangements with other corporations and institutions (e.g., Delta Air Lines (Delta), Marriott International, British Airways and Hilton Worldwide Holdings)"
+  },
+  {
+   "passage": 9,
+   "name": "British Airways",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "issuing cards under cobrand arrangements with other corporations and institutions (e.g., Delta Air Lines (Delta), Marriott International, British Airways and Hilton Worldwide Holdings)"
+  },
+  {
+   "passage": 9,
+   "name": "Hilton Worldwide Holdings",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "issuing cards under cobrand arrangements with other corporations and institutions (e.g., Delta Air Lines (Delta), Marriott International, British Airways and Hilton Worldwide Holdings)"
+  },
+  {
+   "passage": 9,
+   "name": "Coinbase",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "offering access to payment technologies, marketing solutions and brand assets for cards issued by third-party banks, financial technology companies and other institutions on the American Express network (e.g., cards offered by Coinbase and Credit Saison)"
+  },
+  {
+   "passage": 9,
+   "name": "Credit Saison",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "offering access to payment technologies, marketing solutions and brand assets for cards issued by third-party banks, financial technology companies and other institutions on the American Express network (e.g., cards offered by Coinbase and Credit Saison)"
+  },
+  {
+   "passage": 9,
+   "name": "Emburse",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "integrating into expense management processes of our business customers (e.g., Emburse and SAP Concur)"
+  },
+  {
+   "passage": 9,
+   "name": "SAP Concur",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "integrating into expense management processes of our business customers (e.g., Emburse and SAP Concur)"
+  },
+  {
+   "passage": 9,
+   "name": "Formula 1",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "providing experiences and entertainment for Card Members (e.g., via Formula 1 and AEG Worldwide)"
+  },
+  {
+   "passage": 9,
+   "name": "AEG Worldwide",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "providing experiences and entertainment for Card Members (e.g., via Formula 1 and AEG Worldwide)"
+  },
+  {
+   "passage": 9,
+   "name": "Global Business Travel Group, Inc.",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "We also have an equity investment in, and commercial arrangements with, Global Business Travel Group, Inc. (GBTG), which provides business travel-related services."
+  },
+  {
+   "passage": 39,
+   "name": "GBTG",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "We have commercial arrangements with GBTG, including, among other things, a long-term trademark license agreement pursuant to which GBTG uses select American Express marks."
+  },
+  {
+   "passage": 10,
+   "name": "Delta",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "Among other things, Delta is also a key participant in our Membership Rewards program, provides travel-related benefits and services, including airport lounge access for certain American Express Card Members, accepts American Express cards as a merchant and is a corporate payments customer."
+  },
+  {
+   "passage": 14,
+   "name": "Visa",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Our global card network competes in the global payments industry with other card networks, including, among others, Visa, China UnionPay, Mastercard, JCB, Discover and Diners Club International (the last two of which are owned by Capital One)."
+  },
+  {
+   "passage": 14,
+   "name": "China UnionPay",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Our global card network competes in the global payments industry with other card networks, including, among others, Visa, China UnionPay, Mastercard, JCB, Discover and Diners Club International (the last two of which are owned by Capital One)."
+  },
+  {
+   "passage": 14,
+   "name": "Mastercard",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Our global card network competes in the global payments industry with other card networks, including, among others, Visa, China UnionPay, Mastercard, JCB, Discover and Diners Club International (the last two of which are owned by Capital One)."
+  },
+  {
+   "passage": 14,
+   "name": "JCB",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Our global card network competes in the global payments industry with other card networks, including, among others, Visa, China UnionPay, Mastercard, JCB, Discover and Diners Club International (the last two of which are owned by Capital One)."
+  },
+  {
+   "passage": 14,
+   "name": "Discover",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Our global card network competes in the global payments industry with other card networks, including, among others, Visa, China UnionPay, Mastercard, JCB, Discover and Diners Club International (the last two of which are owned by Capital One)."
+  },
+  {
+   "passage": 14,
+   "name": "Diners Club International",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Our global card network competes in the global payments industry with other card networks, including, among others, Visa, China UnionPay, Mastercard, JCB, Discover and Diners Club International (the last two of which are owned by Capital One)."
+  },
+  {
+   "passage": 14,
+   "name": "Alipay",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "In addition to such networks, we compete against a range of companies globally, including merchant acquirers, processors, payment facilitators and web- and mobile-based payment platforms (e.g., Alipay, PayPal and Shop Pay), as well as regional payment networks (such as the National Payments Corporation of India)."
+  },
+  {
+   "passage": 14,
+   "name": "PayPal",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "In addition to such networks, we compete against a range of companies globally, including merchant acquirers, processors, payment facilitators and web- and mobile-based payment platforms (e.g., Alipay, PayPal and Shop Pay), as well as regional payment networks (such as the National Payments Corporation of India)."
+  },
+  {
+   "passage": 14,
+   "name": "Shop Pay",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "In addition to such networks, we compete against a range of companies globally, including merchant acquirers, processors, payment facilitators and web- and mobile-based payment platforms (e.g., Alipay, PayPal and Shop Pay), as well as regional payment networks (such as the National Payments Corporation of India)."
+  },
+  {
+   "passage": 14,
+   "name": "National Payments Corporation of India",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "In addition to such networks, we compete against a range of companies globally, including merchant acquirers, processors, payment facilitators and web- and mobile-based payment platforms (e.g., Alipay, PayPal and Shop Pay), as well as regional payment networks (such as the National Payments Corporation of India)."
+  },
+  {
+   "passage": 19,
+   "name": "KLM Royal Dutch Airlines",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "regarding our cobrand relationship with KLM Royal Dutch Airlines"
+  },
+  {
+   "passage": 28,
+   "name": "Amazon",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "We also may not renew certain relationships, such as our Amazon and Lowe's small business cobrand portfolios"
+  },
+  {
+   "passage": 28,
+   "name": "Lowe's",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "We also may not renew certain relationships, such as our Amazon and Lowe's small business cobrand portfolios"
+  }
+ ]
+}

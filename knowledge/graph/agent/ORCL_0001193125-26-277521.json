@@ -1,0 +1,118 @@
+{
+ "ticker": "ORCL",
+ "accn": "0001193125-26-277521",
+ "relations": [
+  {
+   "passage": 30,
+   "name": "Adobe Systems Incorporated",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Our enterprise cloud, software and hardware offerings compete directly with certain offerings from some of the largest and most competitive companies in the world, including Adobe Systems Incorporated, Alphabet Inc., Amazon.com, Inc., Cisco Systems, Inc., Intel Corporation, International Business Machines Corporation, Microsoft Corporation, Salesforce, Inc. and SAP SE, as well as other companies like Hewlett-Packard Enterprise and Workday, Inc."
+  },
+  {
+   "passage": 30,
+   "name": "Alphabet Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Our enterprise cloud, software and hardware offerings compete directly with certain offerings from some of the largest and most competitive companies in the world, including Adobe Systems Incorporated, Alphabet Inc., Amazon.com, Inc., Cisco Systems, Inc., Intel Corporation, International Business Machines Corporation, Microsoft Corporation, Salesforce, Inc. and SAP SE, as well as other companies like Hewlett-Packard Enterprise and Workday, Inc."
+  },
+  {
+   "passage": 30,
+   "name": "Amazon.com, Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Our enterprise cloud, software and hardware offerings compete directly with certain offerings from some of the largest and most competitive companies in the world, including Adobe Systems Incorporated, Alphabet Inc., Amazon.com, Inc., Cisco Systems, Inc., Intel Corporation, International Business Machines Corporation, Microsoft Corporation, Salesforce, Inc. and SAP SE, as well as other companies like Hewlett-Packard Enterprise and Workday, Inc."
+  },
+  {
+   "passage": 30,
+   "name": "Cisco Systems, Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Our enterprise cloud, software and hardware offerings compete directly with certain offerings from some of the largest and most competitive companies in the world, including Adobe Systems Incorporated, Alphabet Inc., Amazon.com, Inc., Cisco Systems, Inc., Intel Corporation, International Business Machines Corporation, Microsoft Corporation, Salesforce, Inc. and SAP SE, as well as other companies like Hewlett-Packard Enterprise and Workday, Inc."
+  },
+  {
+   "passage": 30,
+   "name": "Intel Corporation",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Our enterprise cloud, software and hardware offerings compete directly with certain offerings from some of the largest and most competitive companies in the world, including Adobe Systems Incorporated, Alphabet Inc., Amazon.com, Inc., Cisco Systems, Inc., Intel Corporation, International Business Machines Corporation, Microsoft Corporation, Salesforce, Inc. and SAP SE, as well as other companies like Hewlett-Packard Enterprise and Workday, Inc."
+  },
+  {
+   "passage": 30,
+   "name": "International Business Machines Corporation",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Our enterprise cloud, software and hardware offerings compete directly with certain offerings from some of the largest and most competitive companies in the world, including Adobe Systems Incorporated, Alphabet Inc., Amazon.com, Inc., Cisco Systems, Inc., Intel Corporation, International Business Machines Corporation, Microsoft Corporation, Salesforce, Inc. and SAP SE, as well as other companies like Hewlett-Packard Enterprise and Workday, Inc."
+  },
+  {
+   "passage": 30,
+   "name": "Microsoft Corporation",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Our enterprise cloud, software and hardware offerings compete directly with certain offerings from some of the largest and most competitive companies in the world, including Adobe Systems Incorporated, Alphabet Inc., Amazon.com, Inc., Cisco Systems, Inc., Intel Corporation, International Business Machines Corporation, Microsoft Corporation, Salesforce, Inc. and SAP SE, as well as other companies like Hewlett-Packard Enterprise and Workday, Inc."
+  },
+  {
+   "passage": 30,
+   "name": "Salesforce, Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Our enterprise cloud, software and hardware offerings compete directly with certain offerings from some of the largest and most competitive companies in the world, including Adobe Systems Incorporated, Alphabet Inc., Amazon.com, Inc., Cisco Systems, Inc., Intel Corporation, International Business Machines Corporation, Microsoft Corporation, Salesforce, Inc. and SAP SE, as well as other companies like Hewlett-Packard Enterprise and Workday, Inc."
+  },
+  {
+   "passage": 30,
+   "name": "SAP SE",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Our enterprise cloud, software and hardware offerings compete directly with certain offerings from some of the largest and most competitive companies in the world, including Adobe Systems Incorporated, Alphabet Inc., Amazon.com, Inc., Cisco Systems, Inc., Intel Corporation, International Business Machines Corporation, Microsoft Corporation, Salesforce, Inc. and SAP SE, as well as other companies like Hewlett-Packard Enterprise and Workday, Inc."
+  },
+  {
+   "passage": 30,
+   "name": "Hewlett-Packard Enterprise",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Our enterprise cloud, software and hardware offerings compete directly with certain offerings from some of the largest and most competitive companies in the world, including Adobe Systems Incorporated, Alphabet Inc., Amazon.com, Inc., Cisco Systems, Inc., Intel Corporation, International Business Machines Corporation, Microsoft Corporation, Salesforce, Inc. and SAP SE, as well as other companies like Hewlett-Packard Enterprise and Workday, Inc."
+  },
+  {
+   "passage": 30,
+   "name": "Workday, Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Our enterprise cloud, software and hardware offerings compete directly with certain offerings from some of the largest and most competitive companies in the world, including Adobe Systems Incorporated, Alphabet Inc., Amazon.com, Inc., Cisco Systems, Inc., Intel Corporation, International Business Machines Corporation, Microsoft Corporation, Salesforce, Inc. and SAP SE, as well as other companies like Hewlett-Packard Enterprise and Workday, Inc."
+  },
+  {
+   "passage": 31,
+   "name": "Allscripts Healthcare Solutions, Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "we also face competition from large healthcare IT providers such as Allscripts Healthcare Solutions, Inc., Arcadia Solutions, athenahealth, Inc., Epic Systems Corporation and InterSystems Corporation, among others."
+  },
+  {
+   "passage": 31,
+   "name": "Arcadia Solutions",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "we also face competition from large healthcare IT providers such as Allscripts Healthcare Solutions, Inc., Arcadia Solutions, athenahealth, Inc., Epic Systems Corporation and InterSystems Corporation, among others."
+  },
+  {
+   "passage": 31,
+   "name": "athenahealth, Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "we also face competition from large healthcare IT providers such as Allscripts Healthcare Solutions, Inc., Arcadia Solutions, athenahealth, Inc., Epic Systems Corporation and InterSystems Corporation, among others."
+  },
+  {
+   "passage": 31,
+   "name": "Epic Systems Corporation",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "we also face competition from large healthcare IT providers such as Allscripts Healthcare Solutions, Inc., Arcadia Solutions, athenahealth, Inc., Epic Systems Corporation and InterSystems Corporation, among others."
+  },
+  {
+   "passage": 31,
+   "name": "InterSystems Corporation",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "we also face competition from large healthcare IT providers such as Allscripts Healthcare Solutions, Inc., Arcadia Solutions, athenahealth, Inc., Epic Systems Corporation and InterSystems Corporation, among others."
+  }
+ ]
+}

@@ -1,0 +1,118 @@
+{
+ "ticker": "GILD",
+ "accn": "0000882095-26-000006",
+ "relations": [
+  {
+   "passage": 3,
+   "name": "Cardinal Health, Inc.",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "Historically, approximately 90% of our gross product sales in the U.S. have been to three large wholesalers-Cardinal Health, Inc., Cencora, Inc. and McKesson Corporation-and their specialty distributor affiliates."
+  },
+  {
+   "passage": 3,
+   "name": "Cencora, Inc.",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "Historically, approximately 90% of our gross product sales in the U.S. have been to three large wholesalers-Cardinal Health, Inc., Cencora, Inc. and McKesson Corporation-and their specialty distributor affiliates."
+  },
+  {
+   "passage": 3,
+   "name": "McKesson Corporation",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "Historically, approximately 90% of our gross product sales in the U.S. have been to three large wholesalers-Cardinal Health, Inc., Cencora, Inc. and McKesson Corporation-and their specialty distributor affiliates."
+  },
+  {
+   "passage": 45,
+   "name": "Arcellx, Inc.",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "we closed an agreement to enter into a global strategic collaboration with Arcellx, Inc."
+  },
+  {
+   "passage": 46,
+   "name": "Merck & Co., Inc.",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "we entered into a license and collaboration agreement with Merck Sharp & Dohme Corp., a subsidiary of Merck & Co., Inc."
+  },
+  {
+   "passage": 28,
+   "name": "Arcus Biosciences, Inc.",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "For equity investments in our strategic partners, such as in connection with our collaborations with Arcus Biosciences, Inc., Galapagos NV and Arcellx, Inc., the value of our equity investments may fluctuate and decline in value."
+  },
+  {
+   "passage": 28,
+   "name": "Galapagos NV",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "For equity investments in our strategic partners, such as in connection with our collaborations with Arcus Biosciences, Inc., Galapagos NV and Arcellx, Inc., the value of our equity investments may fluctuate and decline in value."
+  },
+  {
+   "passage": 8,
+   "name": "Apotex, Inc.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "In February 2025, Gilead reached an agreement with one generic manufacturer (Apotex, Inc., together with Apotex Corp., and its manufacturer of cobicistat, MSN Laboratories Private Limited, MSN Life Sciences Private Ltd., and MSN Pharmaceuticals Inc.) to settle the patent litigation concerning certain patents that protect cobicistat on silicon dioxide and TAF in our Genvoya product."
+  },
+  {
+   "passage": 8,
+   "name": "MSN Laboratories Private Limited",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "In February 2025, Gilead reached an agreement with one generic manufacturer (Apotex, Inc., together with Apotex Corp., and its manufacturer of cobicistat, MSN Laboratories Private Limited, MSN Life Sciences Private Ltd., and MSN Pharmaceuticals Inc.) to settle the patent litigation concerning certain patents that protect cobicistat on silicon dioxide and TAF in our Genvoya product."
+  },
+  {
+   "passage": 31,
+   "name": "Lupin Ltd.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Announced settlement agreements to resolve Biktarvy patent litigation with generic manufacturers Lupin Ltd., Cipla Ltd. and Laurus Labs Ltd."
+  },
+  {
+   "passage": 31,
+   "name": "Cipla Ltd.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Announced settlement agreements to resolve Biktarvy patent litigation with generic manufacturers Lupin Ltd., Cipla Ltd. and Laurus Labs Ltd."
+  },
+  {
+   "passage": 31,
+   "name": "Laurus Labs Ltd.",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Announced settlement agreements to resolve Biktarvy patent litigation with generic manufacturers Lupin Ltd., Cipla Ltd. and Laurus Labs Ltd."
+  },
+  {
+   "passage": 43,
+   "name": "Shenzhen Pregene Biopharma Co., Ltd.",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "we entered into a strategic license and collaboration agreement with Shenzhen Pregene Biopharma Co., Ltd."
+  },
+  {
+   "passage": 44,
+   "name": "LEO Pharma A/S",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "In January 2025, we entered into a strategic partnership with LEO Pharma A/S"
+  },
+  {
+   "passage": 51,
+   "name": "Janssen",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "we entered into a license and collaboration agreement with Janssen to develop and commercialize a fixed-dose combination of our Truvada"
+  },
+  {
+   "passage": 54,
+   "name": "Janssen",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "we supply the Gilead Compounds to Janssen for Symtuza"
+  }
+ ]
+}

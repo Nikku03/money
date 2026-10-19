@@ -1,0 +1,13 @@
+{
+ "ticker": "JPM",
+ "accn": "0001628280-26-008131",
+ "relations": [
+  {
+   "passage": 57,
+   "name": "Fixed Income Clearing Corporation",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "The Firm acts as a sponsoring member to clear eligible overnight and term resale and repurchase agreements through the Government Securities Division of the Fixed Income Clearing Corporation"
+  }
+ ]
+}

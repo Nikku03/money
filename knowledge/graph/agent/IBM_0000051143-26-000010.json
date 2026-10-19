@@ -1,0 +1,174 @@
+{
+ "ticker": "IBM",
+ "accn": "0000051143-26-000010",
+ "relations": [
+  {
+   "passage": 3,
+   "name": "Adobe",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "Our strategic partners include: Adobe, Amazon Web Services (AWS), Microsoft, Oracle, Palo Alto Networks, Salesforce, Samsung Electronics and SAP, among others."
+  },
+  {
+   "passage": 3,
+   "name": "Amazon Web Services",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "Our strategic partners include: Adobe, Amazon Web Services (AWS), Microsoft, Oracle, Palo Alto Networks, Salesforce, Samsung Electronics and SAP, among others."
+  },
+  {
+   "passage": 3,
+   "name": "Microsoft",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "Our strategic partners include: Adobe, Amazon Web Services (AWS), Microsoft, Oracle, Palo Alto Networks, Salesforce, Samsung Electronics and SAP, among others."
+  },
+  {
+   "passage": 3,
+   "name": "Oracle",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "Our strategic partners include: Adobe, Amazon Web Services (AWS), Microsoft, Oracle, Palo Alto Networks, Salesforce, Samsung Electronics and SAP, among others."
+  },
+  {
+   "passage": 3,
+   "name": "Palo Alto Networks",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "Our strategic partners include: Adobe, Amazon Web Services (AWS), Microsoft, Oracle, Palo Alto Networks, Salesforce, Samsung Electronics and SAP, among others."
+  },
+  {
+   "passage": 3,
+   "name": "Salesforce",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "Our strategic partners include: Adobe, Amazon Web Services (AWS), Microsoft, Oracle, Palo Alto Networks, Salesforce, Samsung Electronics and SAP, among others."
+  },
+  {
+   "passage": 3,
+   "name": "Samsung Electronics",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "Our strategic partners include: Adobe, Amazon Web Services (AWS), Microsoft, Oracle, Palo Alto Networks, Salesforce, Samsung Electronics and SAP, among others."
+  },
+  {
+   "passage": 3,
+   "name": "SAP",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "Our strategic partners include: Adobe, Amazon Web Services (AWS), Microsoft, Oracle, Palo Alto Networks, Salesforce, Samsung Electronics and SAP, among others."
+  },
+  {
+   "passage": 8,
+   "name": "Alphabet",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "The principal competitors in this segment include: Alphabet (Google), Amazon, BMC, Broadcom, Microsoft, Oracle, Salesforce, SAP and Splunk, a CISCO Company."
+  },
+  {
+   "passage": 8,
+   "name": "Amazon",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "The principal competitors in this segment include: Alphabet (Google), Amazon, BMC, Broadcom, Microsoft, Oracle, Salesforce, SAP and Splunk, a CISCO Company."
+  },
+  {
+   "passage": 8,
+   "name": "BMC",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "The principal competitors in this segment include: Alphabet (Google), Amazon, BMC, Broadcom, Microsoft, Oracle, Salesforce, SAP and Splunk, a CISCO Company."
+  },
+  {
+   "passage": 8,
+   "name": "Broadcom",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "The principal competitors in this segment include: Alphabet (Google), Amazon, BMC, Broadcom, Microsoft, Oracle, Salesforce, SAP and Splunk, a CISCO Company."
+  },
+  {
+   "passage": 8,
+   "name": "Microsoft",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "The principal competitors in this segment include: Alphabet (Google), Amazon, BMC, Broadcom, Microsoft, Oracle, Salesforce, SAP and Splunk, a CISCO Company."
+  },
+  {
+   "passage": 8,
+   "name": "Oracle",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "The principal competitors in this segment include: Alphabet (Google), Amazon, BMC, Broadcom, Microsoft, Oracle, Salesforce, SAP and Splunk, a CISCO Company."
+  },
+  {
+   "passage": 8,
+   "name": "Salesforce",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "The principal competitors in this segment include: Alphabet (Google), Amazon, BMC, Broadcom, Microsoft, Oracle, Salesforce, SAP and Splunk, a CISCO Company."
+  },
+  {
+   "passage": 8,
+   "name": "SAP",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "The principal competitors in this segment include: Alphabet (Google), Amazon, BMC, Broadcom, Microsoft, Oracle, Salesforce, SAP and Splunk, a CISCO Company."
+  },
+  {
+   "passage": 8,
+   "name": "Splunk",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "The principal competitors in this segment include: Alphabet (Google), Amazon, BMC, Broadcom, Microsoft, Oracle, Salesforce, SAP and Splunk, a CISCO Company."
+  },
+  {
+   "passage": 9,
+   "name": "Accenture",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Our competitors include global firms such as Accenture, Capgemini, India-based service providers"
+  },
+  {
+   "passage": 9,
+   "name": "Capgemini",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Our competitors include global firms such as Accenture, Capgemini, India-based service providers"
+  },
+  {
+   "passage": 10,
+   "name": "Dell Technologies",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Our principal competitors include: Dell Technologies, Hewlett-Packard Enterprise (HPE), Intel, NetApp and Pure Storage as well as original device manufacturers (ODMs) who provide systems that are re-branded."
+  },
+  {
+   "passage": 10,
+   "name": "Hewlett-Packard Enterprise",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Our principal competitors include: Dell Technologies, Hewlett-Packard Enterprise (HPE), Intel, NetApp and Pure Storage as well as original device manufacturers (ODMs) who provide systems that are re-branded."
+  },
+  {
+   "passage": 10,
+   "name": "Intel",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Our principal competitors include: Dell Technologies, Hewlett-Packard Enterprise (HPE), Intel, NetApp and Pure Storage as well as original device manufacturers (ODMs) who provide systems that are re-branded."
+  },
+  {
+   "passage": 10,
+   "name": "NetApp",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Our principal competitors include: Dell Technologies, Hewlett-Packard Enterprise (HPE), Intel, NetApp and Pure Storage as well as original device manufacturers (ODMs) who provide systems that are re-branded."
+  },
+  {
+   "passage": 10,
+   "name": "Pure Storage",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Our principal competitors include: Dell Technologies, Hewlett-Packard Enterprise (HPE), Intel, NetApp and Pure Storage as well as original device manufacturers (ODMs) who provide systems that are re-branded."
+  }
+ ]
+}

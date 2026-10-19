@@ -1,0 +1,90 @@
+{
+ "ticker": "AMGN",
+ "accn": "0000318154-26-000010",
+ "relations": [
+  {
+   "passage": 1,
+   "name": "Astellas Pharma Inc.",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "In the Asia Pacific region, we also sell our products in partnership with other companies, including Astellas Pharma Inc., BeOne, Mitsubishi Tanabe Pharma Corporation, Takeda Pharmaceutical Co., Ltd. and Kyowa Kirin."
+  },
+  {
+   "passage": 1,
+   "name": "Mitsubishi Tanabe Pharma Corporation",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "In the Asia Pacific region, we also sell our products in partnership with other companies, including Astellas Pharma Inc., BeOne, Mitsubishi Tanabe Pharma Corporation, Takeda Pharmaceutical Co., Ltd. and Kyowa Kirin."
+  },
+  {
+   "passage": 1,
+   "name": "Takeda Pharmaceutical Co., Ltd.",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "In the Asia Pacific region, we also sell our products in partnership with other companies, including Astellas Pharma Inc., BeOne, Mitsubishi Tanabe Pharma Corporation, Takeda Pharmaceutical Co., Ltd. and Kyowa Kirin."
+  },
+  {
+   "passage": 1,
+   "name": "Kyowa Kirin",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "In the Asia Pacific region, we also sell our products in partnership with other companies, including Astellas Pharma Inc., BeOne, Mitsubishi Tanabe Pharma Corporation, Takeda Pharmaceutical Co., Ltd. and Kyowa Kirin."
+  },
+  {
+   "passage": 20,
+   "name": "BeOne",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "In January 2020, we acquired an equity stake in BeOne for approximately $2.8 billion in cash as part of a collaboration agreement to expand our oncology presence in China."
+  },
+  {
+   "passage": 20,
+   "name": "BeOne",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "Amgen manufactures and supplies the collaboration products to BeOne."
+  },
+  {
+   "passage": 2,
+   "name": "McKesson Corporation",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "Our product sales to three large wholesalers, McKesson Corporation, Cencora, Inc. and Cardinal Health, Inc., each individually accounted for more than 10% of total revenues for each of the years 2025, 2024 and 2023."
+  },
+  {
+   "passage": 2,
+   "name": "Cencora, Inc.",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "Our product sales to three large wholesalers, McKesson Corporation, Cencora, Inc. and Cardinal Health, Inc., each individually accounted for more than 10% of total revenues for each of the years 2025, 2024 and 2023."
+  },
+  {
+   "passage": 2,
+   "name": "Cardinal Health, Inc.",
+   "relation": "customer",
+   "share_pct": null,
+   "quote": "Our product sales to three large wholesalers, McKesson Corporation, Cencora, Inc. and Cardinal Health, Inc., each individually accounted for more than 10% of total revenues for each of the years 2025, 2024 and 2023."
+  },
+  {
+   "passage": 18,
+   "name": "AstraZeneca",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "We are in a collaboration with AstraZeneca for the development and commercialization of TEZSPIRE."
+  },
+  {
+   "passage": 19,
+   "name": "UCB",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "We are in a collaboration with UCB for the development and commercialization of EVENITY."
+  },
+  {
+   "passage": 53,
+   "name": "Celltech R&D Limited",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "Collaboration and License Agreement between Amgen Inc. and Celltech R&D Limited dated May 10, 2002"
+  }
+ ]
+}

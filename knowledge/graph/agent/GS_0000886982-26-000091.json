@@ -1,0 +1,13 @@
+{
+ "ticker": "GS",
+ "accn": "0000886982-26-000091",
+ "relations": [
+  {
+   "passage": 47,
+   "name": "Apple Inc.",
+   "relation": "partner",
+   "share_pct": null,
+   "quote": "The firm issues credit cards through a partnership arrangement with Apple Inc. and raises deposits from Apple Card customers."
+  }
+ ]
+}

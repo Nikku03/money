@@ -1,0 +1,41 @@
+{
+ "ticker": "STX",
+ "accn": "0001137789-26-000159",
+ "relations": [
+  {
+   "passage": 10,
+   "name": "Western Digital Corporation",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Our global competitors include HDD manufacturers such as Western Digital Corporation and Toshiba Electronics Devices & Storage Corporation along with NAND flash suppliers that provide and enable alternative storage technologies, as well as storage systems and solutions providers."
+  },
+  {
+   "passage": 10,
+   "name": "Toshiba Electronics Devices & Storage Corporation",
+   "relation": "competitor",
+   "share_pct": null,
+   "quote": "Our global competitors include HDD manufacturers such as Western Digital Corporation and Toshiba Electronics Devices & Storage Corporation along with NAND flash suppliers that provide and enable alternative storage technologies, as well as storage systems and solutions providers."
+  },
+  {
+   "passage": 54,
+   "name": "NHK Spring Co. Ltd.",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "against suppliers of HDD suspension assemblies, including NHK Spring Co. Ltd. (\"NHK\"), TDK Corporation (\"TDK\") and Hutchinson Technology Inc (\"HTI\")"
+  },
+  {
+   "passage": 54,
+   "name": "TDK Corporation",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "against suppliers of HDD suspension assemblies, including NHK Spring Co. Ltd. (\"NHK\"), TDK Corporation (\"TDK\") and Hutchinson Technology Inc (\"HTI\")"
+  },
+  {
+   "passage": 54,
+   "name": "Hutchinson Technology Inc",
+   "relation": "supplier",
+   "share_pct": null,
+   "quote": "against suppliers of HDD suspension assemblies, including NHK Spring Co. Ltd. (\"NHK\"), TDK Corporation (\"TDK\") and Hutchinson Technology Inc (\"HTI\")"
+  }
+ ]
+}
