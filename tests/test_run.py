@@ -16,6 +16,7 @@ from tests.util import TempHome, filed, price_snapshot
 H1_H5 = ["H1-mom12_1", "H2-rev1", "H3-earnings_yield", "H4-low_asset_growth", "H5-ridge"]
 NEW = ["H3b-earnings_yield_ttm", "H6-insider_buying", "H7-earnings_reaction", "H8-sue",
        "H3c-earnings_yield_ttm", "H7b-earnings_reaction", "H8b-sue"]
+LARGE_NEW = ["H10-text_similarity"]   # on the large universe, so run with H1-H5's group
 
 
 def usd(f: Fact) -> Fact:
@@ -46,6 +47,10 @@ class DeclaredSpecsTest(TempHome):
                              (hypotheses.SPLIT, hypotheses.GATE, 10, 1 / 3))
         self.assertEqual({by_id[h]["select"] for h in NEW}, {"top_frac", "positive", "top_frac_vs_all"})
         self.assertEqual(run.universe_path("universe/us_broad.json"), universe.BROAD)
+        for hid in LARGE_NEW:
+            h = ledger.spec(by_id[hid])
+            self.assertEqual((h["universe"], h["select"]), ("universe/us_large.json", "top_frac"))
+            self.assertIn(h["signal"], signals.PER_TICKER)
 
 
     def test_a_withdrawn_hypothesis_gives_way_to_its_successor(self):
@@ -78,6 +83,17 @@ class RunEndToEndTest(TempHome):
                     filed(t, "us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding", 10.0, f"{y}-12-31",
                           f"{y + 1}-02-20", form="10-K", start=f"{y}-01-01", duration_days=364),
                 ])
+            for y in range(2009, 2022):   # report-to-report similarity, one per quarter (brain.changes)
+                for q, (end, filed_on) in enumerate([("03-31", "05-05"), ("06-30", "08-05"), ("09-30", "11-05"),
+                                                     ("12-31", "02-20")]):
+                    k = f"{y + (q == 3)}-{filed_on}"
+                    if k > "2021-06-30":
+                        continue
+                    self.bank.add(Fact(entity=t, attr="text.similarity", value=float(rng.uniform(0.9, 1.0)),
+                                       as_of=f"{y}-{end}", known_at=k, tier="derived",
+                                       source={"name": "test", "url": "https://example.test/text"},
+                                       inputs=(f"{t}/x",), context={"form": "10-K" if q == 3 else "10-Q",
+                                                                    "method": 1, "new_share": 0.3}))
         ends = pd.date_range("2009-03-31", "2021-03-31", freq="QE")
         for i, t in enumerate(self.broad):
             facts = []
@@ -130,7 +146,7 @@ class RunEndToEndTest(TempHome):
             ledger.declare_all()
             alone = run.run(self.bank, H1_H5, n_random=20)
             out = run.run(self.bank, n_random=20)
-        self.assertEqual([r["id"] for r in out], H1_H5 + NEW)
+        self.assertEqual([r["id"] for r in out], H1_H5 + LARGE_NEW + NEW)
         for r in out:  # synthetic releases come 35 days after each quarter: one month in three has one
             self.assertGreater(r["test"]["n_months"], 6 if r["id"].startswith("H7") else 20, r["id"])
             self.assertGreater(r["test_signal_coverage"], 0.2, r["id"])
@@ -138,13 +154,15 @@ class RunEndToEndTest(TempHome):
         for a, b in zip(alone, out[:5]):
             self.assertEqual(_strip_volatile(a), _strip_volatile(b))
             self.assertNotIn("universe", b)
-        new = {r["id"]: r for r in out[5:]}
+        new = {r["id"]: r for r in out[5 + len(LARGE_NEW):]}
+        self.assertNotIn("universe", out[5])   # H10 runs on the large universe, with H1-H5's panel
+        self.assertEqual(out[5]["panel_digest"], out[0]["panel_digest"])
         self.assertEqual({r["universe"] for r in new.values()}, {"universe/us_broad.json"})
         self.assertEqual({r["n_tickers"] for r in new.values()}, {12})
         self.assertNotEqual(new["H8-sue"]["panel_digest"], out[0]["panel_digest"])
         self.assertAlmostEqual(new["H6-insider_buying"]["test_signal_coverage"], 1.0)  # 0 is a value
         text = (self.home / "RESULTS.md").read_text()
-        for hid in H1_H5 + NEW:
+        for hid in H1_H5 + LARGE_NEW + NEW:
             self.assertIn(hid, text)
         self.assertIn("`universe/us_broad.json`: 12 US stocks (synthetic broad)", text)
         self.assertIn("| H6-insider_buying | us_broad | positive |", text)

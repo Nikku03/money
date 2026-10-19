@@ -20,7 +20,7 @@ from pathlib import Path
 
 import numpy as np
 
-from brain import events, metrics
+from brain import changes, events, metrics
 from brain.bank import Bank, View
 from brain.research.panel import Panel, build
 from brain.sources import insiders
@@ -122,8 +122,15 @@ def earnings_reaction(ctx: MonthCtx, t: str) -> float | None:
     return None
 
 
+def text_similarity(ctx: MonthCtx, t: str) -> float | None:
+    """Cosine similarity (word counts) of the latest 10-K or 10-Q known on the rebalance day to the same report a
+    year earlier (brain.changes; Cohen, Malloy & Nguyen 2020). None when no comparison was filed in 400 days."""
+    f = changes.latest(ctx.view, t)
+    return f.value if f else None
+
+
 PER_TICKER = {"earnings_yield_ttm": earnings_yield_ttm, "sue": sue, "insider_buying": insider_buying,
-              "earnings_reaction": earnings_reaction}
+              "earnings_reaction": earnings_reaction, "text_similarity": text_similarity}
 
 
 def _ticker_major(bank: Bank, panel: Panel, names) -> dict[str, np.ndarray]:

@@ -88,7 +88,9 @@ def wait_turn(host: str, gap: float | None = None) -> None:
             fcntl.flock(fh, fcntl.LOCK_UN)
 
 
-def fetch(url: str, *, user_agent: str | None = None, ttl: float = 86400, retries: int = 4) -> Response:
+def fetch(url: str, *, user_agent: str | None = None, ttl: float = 86400, retries: int = 4,
+          store: bool = True) -> Response:
+    """``store=False``: do not keep the body in the cache (a caller that keeps its own smaller copy)."""
     body_p, meta_p = _cache_paths(url)
     if ttl > 0 and body_p.exists() and meta_p.exists():
         meta = json.loads(meta_p.read_text())
@@ -110,8 +112,9 @@ def fetch(url: str, *, user_agent: str | None = None, ttl: float = 86400, retrie
                 if r.headers.get("Content-Encoding") == "gzip":
                     body = gzip.decompress(body)
             fetched_at = now_iso()
-            body_p.write_bytes(gzip.compress(body))
-            meta_p.write_text(json.dumps({"url": redact(url), "fetched_at": fetched_at, "epoch": time.time()}))
+            if store:
+                body_p.write_bytes(gzip.compress(body))
+                meta_p.write_text(json.dumps({"url": redact(url), "fetched_at": fetched_at, "epoch": time.time()}))
             return Response(redact(url), body, fetched_at, False)
         except urllib.error.HTTPError as e:
             err = e
