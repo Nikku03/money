@@ -97,6 +97,8 @@ python -m brain forecast score              # how recorded forecasts did once th
 - Each pair is tested twice: does the basket move with the cause that month, and does it move the next month? The next-month test is the one that matters for acting on a link.
 - `brain chain links` shows each link's test, or what would measure it. `brain chain follow` shows the results beside each chain.
 
+`python -m brain graph extract T` reads a company's 10-Ks with a local model and records whom each names as a customer, supplier, competitor or partner (`docs/GRAPH.md`). Every relation must quote the filing word for word and name the company in the quote, so the model can't add what it remembers. Relations carry the 10-K's filing time, and `graph show T --at DATE` shows the graph as it was known then. It is the input for H9 (news moving along customer–supplier links), which has not been declared yet.
+
 ## What the brain collects
 
 | Area | What | Command |
