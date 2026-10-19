@@ -34,7 +34,7 @@ MODELS = {"qwen3:30b": {"hf": "Qwen/Qwen3-30B-A3B", "quant": None, "gpu_gb": 75}
           "qwen3:32b": {"hf": "Qwen/Qwen3-32B", "quant": "nf4", "gpu_gb": 30}}
 SEL, TRAIN, TEST = (0, 40), (40, 140), (140, 240)
 TRIAL_SPLITS = ((0, 6), (6, 26), (26, 36))   # --trial only: small enough to exercise the code on a CPU
-N_SHUFFLE, N_RANDOM, N_RANDOM_SPEAK = 200, 20, 5
+N_SHUFFLE, N_RANDOM, N_RANDOM_SPEAK = 200, 10, 5
 SPEAK_FRACTIONS = (0.25, 0.375, 0.5, 0.625, 0.75)   # layers tried for speak, as a share of the depth
 Q = 0.10
 CODE = ["brain/neuro/lang.py", "brain/neuro/langclaims.py"]
@@ -53,7 +53,8 @@ CLAIMS = [
               "its language + mean of another) makes the model name the other language for at least the threshold "
               "share of TEST sentences.",
      "layer": "the layer with the best SEL swap rate (earliest on a tie)",
-     "null": f"the same-size step in a random direction ({N_RANDOM} draws)",
+     "null": f"the same-size step in a random direction ({N_RANDOM} draws); p is one-sided binomial against their "
+             f"pooled rate",
      "negative": "the swap with means from shuffled language labels"},
     {"id": "lang-shared", "threshold": 0.75,
      "claim": "Meaning and language are separate: with its language mean removed, a sentence's state (averaged over "
@@ -68,7 +69,8 @@ CLAIMS = [
               "for at least the threshold share of TEST sentences (French, German, Spanish, Russian, Chinese).",
      "layer": f"the (layer, strength) with the best SEL rate, layers at {SPEAK_FRACTIONS} of the depth, strengths "
               f"{G.ALPHAS}",
-     "null": f"the same-size step in a random direction ({N_RANDOM_SPEAK} draws)",
+     "null": f"the same-size step in a random direction ({N_RANDOM_SPEAK} draws); p is one-sided binomial against "
+             f"their pooled rate",
      "negative": "the step with means from shuffled language labels"},
 ]
 
@@ -134,6 +136,14 @@ def _p_ge(obs, null):
     return (1 + sum(x >= obs for x in null)) / (1 + len(null))
 
 
+def p_against_pooled(rate: float, n: int, null_rates: list[float]) -> float:
+    """One-sided binomial p of ``rate`` over ``n`` trials against the random draws' pooled rate (each draw also
+    over ``n``), with one extra hit added to the null so a null that never hits is not taken as a rate of zero."""
+    from brain.research.stats import binom_one_sided_greater
+    p0 = (sum(round(r * n) for r in null_rates) + 1) / (len(null_rates) * n + 1)
+    return binom_one_sided_greater(round(rate * n), n, p0)
+
+
 def measure_model(key: str, sha: str, log=print, batch: int = 16, splits=None) -> dict:
     """Every claim's numbers for one model (``splits``: SEL, TRAIN, TEST; the declared ones unless a trial)."""
     SEL, TRAIN, TEST = splits or (globals()["SEL"], globals()["TRAIN"], globals()["TEST"])
@@ -176,7 +186,7 @@ def measure_model(key: str, sha: str, log=print, batch: int = 16, splits=None) -
     sw = swap_rate(Le, ye, se, lw, mu)
     delta = mu[(ye + 5) % K] - mu[ye]
     null = [swap_rate(Le, ye, se, lw, mu, G.random_like(delta, 100 + j)) for j in range(N_RANDOM)]
-    out["lang-swap"] = {"layer": lw, "stat": sw, "sel_by_layer": sel_swap, "p": _p_ge(sw, null),
+    out["lang-swap"] = {"layer": lw, "stat": sw, "sel_by_layer": sel_swap, "p": p_against_pooled(sw, len(se), null),
                         "random_median": float(np.median(null)),
                         "negative": swap_rate(Le, ye, se, lw, G.means(Lt[:, lw], shuffled_t, K))}
 
@@ -221,7 +231,8 @@ def measure_model(key: str, sha: str, log=print, batch: int = 16, splits=None) -
     sp = speak_rate(eng_test, layer, a, muP_)
     null = [speak_rate(eng_test, layer, a, muP_, 200 + j) for j in range(N_RANDOM_SPEAK)]
     base = [G.detect(x) for x in m.continue_with(eng_test, None, None, batch)]
-    out["lang-speak"] = {"layer": layer, "alpha": a, "stat": sp, "sel_grid": grid, "p": _p_ge(sp, null),
+    out["lang-speak"] = {"layer": layer, "alpha": a, "stat": sp, "sel_grid": grid,
+                         "p": p_against_pooled(sp, len(eng_test) * len(G.SPEAK), null),
                          "random_median": float(np.median(null)), "unsteered_english": float(np.mean([b == "eng_Latn" for b in base])),
                          "negative": speak_rate(eng_test, layer, a, G.means(Pt[:, layer], shuffled_t, K))}
     out["entity"] = record(m, out)

@@ -179,3 +179,9 @@ class LanguageProbeTest(TempHome):
         self.assertLess(G.shared(shuffled, mu, n, K), 0.3)
         r = G.random_like(lang_dir, 1)
         self.assertTrue(np.allclose(np.linalg.norm(r, axis=1), np.linalg.norm(lang_dir, axis=1)))
+
+    def test_pooled_binomial_p(self):
+        from brain.neuro import langclaims
+        self.assertLess(langclaims.p_against_pooled(0.74, 500, [0.0] * 5), 1e-50)   # a null that never hits
+        self.assertGreater(langclaims.p_against_pooled(0.02, 500, [0.02] * 5), 0.3)  # no better than the null
+        self.assertLess(langclaims.p_against_pooled(0.87, 1200, [0.0] * 10), 0.05)
