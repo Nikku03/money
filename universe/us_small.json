@@ -1,0 +1,4483 @@
+{
+ "built_at": "2026-10-19T21:09:22Z",
+ "rule": "SEC company_tickers.json in file order (roughly descending market value); rows 1501-3000; first ticker per CIK (a CIK already listed above the band is not listed again); kept if SEC XBRL has us-gaap NetIncomeLoss and Assets from 10-K filings and Yahoo daily prices start on or before 2010-01-04; every CIK that qualifies is kept.",
+ "rule_short": "SEC ranks 1501-3000 with 10-K XBRL and prices since 2010",
+ "sec_listing_sha": "421852406f4169b0",
+ "n": 510,
+ "tickers": [
+  "GNTX",
+  "RDN",
+  "SIG",
+  "FELE",
+  "BCO",
+  "MYRG",
+  "CVSA",
+  "VSH",
+  "ITGR",
+  "SKY",
+  "GFF",
+  "PTEN",
+  "UFPI",
+  "FULT",
+  "KLIC",
+  "LOPE",
+  "EPR",
+  "BC",
+  "SLM",
+  "FHI",
+  "BBWI",
+  "ICUI",
+  "FNMA",
+  "FBP",
+  "HRI",
+  "TPC",
+  "CRVL",
+  "CVCO",
+  "ALK",
+  "KRC",
+  "FCN",
+  "KFY",
+  "UCB",
+  "TNL",
+  "UEC",
+  "CATY",
+  "BDC",
+  "TDW",
+  "PVH",
+  "SLGN",
+  "TDS",
+  "PRIM",
+  "CRK",
+  "BRC",
+  "MTH",
+  "AZZ",
+  "TCBI",
+  "AIR",
+  "MDU",
+  "CBT",
+  "GEO",
+  "WSFS",
+  "JOE",
+  "BFH",
+  "CAR",
+  "DIOD",
+  "CDP",
+  "CVBF",
+  "NHC",
+  "OTTR",
+  "HP",
+  "DORM",
+  "BMI",
+  "INDB",
+  "ITRI",
+  "AXTI",
+  "IPAR",
+  "BANF",
+  "SLG",
+  "SKYW",
+  "RNST",
+  "LXP",
+  "THO",
+  "AVNT",
+  "OLED",
+  "WSBC",
+  "LAZ",
+  "ACLS",
+  "CNS",
+  "RHI",
+  "EXPO",
+  "LRN",
+  "HNI",
+  "SHOO",
+  "ACAD",
+  "GNW",
+  "CENX",
+  "MWA",
+  "CPK",
+  "FFBC",
+  "AWR",
+  "SXI",
+  "ASH",
+  "WT",
+  "NHI",
+  "ARLP",
+  "PRK",
+  "FIZZ",
+  "AB",
+  "SFNC",
+  "MHO",
+  "AGYS",
+  "MMS",
+  "HTGC",
+  "WOR",
+  "SMG",
+  "CXT",
+  "CBU",
+  "SBCF",
+  "OSIS",
+  "CXW",
+  "COLM",
+  "AGO",
+  "IPGP",
+  "USLM",
+  "PII",
+  "ABG",
+  "AVA",
+  "KAI",
+  "DAN",
+  "AEO",
+  "PPLI",
+  "CBZ",
+  "ABM",
+  "CALM",
+  "ARCB",
+  "EXTR",
+  "ATRC",
+  "ACHC",
+  "AD",
+  "TR",
+  "UNFI",
+  "PFS",
+  "CWT",
+  "GPI",
+  "HOG",
+  "TDC",
+  "MZTI",
+  "IMAX",
+  "NG",
+  "HURN",
+  "DX",
+  "NTCT",
+  "FUL",
+  "DXPE",
+  "LBTYA",
+  "NOG",
+  "DRH",
+  "HWKN",
+  "MGRC",
+  "BANC",
+  "VECO",
+  "WDFC",
+  "MGEE",
+  "KWR",
+  "AKR",
+  "WLY",
+  "DGII",
+  "GRBK",
+  "NEOG",
+  "KBH",
+  "BOH",
+  "AAP",
+  "NBTB",
+  "CENT",
+  "GPK",
+  "ATRO",
+  "TRMK",
+  "BHE",
+  "COHU",
+  "KSS",
+  "DCO",
+  "LEU",
+  "BELFA",
+  "CALY",
+  "POWI",
+  "FRME",
+  "PLUS",
+  "FBNC",
+  "UCTT",
+  "EEFT",
+  "BANR",
+  "NWL",
+  "HCI",
+  "ROG",
+  "BKD",
+  "HTO",
+  "KALU",
+  "BUSE",
+  "BKE",
+  "ADEA",
+  "SYBT",
+  "IOSP",
+  "BHC",
+  "PBI",
+  "LTC",
+  "KMT",
+  "PBH",
+  "PRGO",
+  "BBT",
+  "UFPT",
+  "SLS",
+  "BLKB",
+  "RAMP",
+  "CNXN",
+  "CLDX",
+  "MD",
+  "AGM",
+  "UUUU",
+  "STGW",
+  "ANDE",
+  "HLIO",
+  "NEO",
+  "PEB",
+  "HOS",
+  "AEHR",
+  "OFG",
+  "ADUS",
+  "ECPG",
+  "WAFD",
+  "NWBI",
+  "PATK",
+  "DXC",
+  "FMCC",
+  "NVAX",
+  "EFSC",
+  "PRDO",
+  "VCEL",
+  "UAA",
+  "NLST",
+  "HTH",
+  "AXGN",
+  "MCRI",
+  "TILE",
+  "SRCE",
+  "BCRX",
+  "TRN",
+  "NWN",
+  "PENN",
+  "FCF",
+  "EZPW",
+  "PLUG",
+  "MAN",
+  "SAH",
+  "LCII",
+  "IDT",
+  "ZD",
+  "TBBK",
+  "WERN",
+  "CHCO",
+  "MTX",
+  "WU",
+  "ARR",
+  "INVX",
+  "ASTH",
+  "NSP",
+  "ALGT",
+  "DEI",
+  "LMAT",
+  "INOD",
+  "GRC",
+  "SRPT",
+  "SAM",
+  "WKC",
+  "WHR",
+  "CMPR",
+  "ALG",
+  "GABC",
+  "HMN",
+  "MPT",
+  "DHC",
+  "STRA",
+  "BXMT",
+  "SPB",
+  "RBCAA",
+  "EPAC",
+  "PLPC",
+  "OLN",
+  "SBET",
+  "GTY",
+  "XRAY",
+  "SNDA",
+  "PDFS",
+  "AIN",
+  "HOPE",
+  "STBA",
+  "DCOM",
+  "GEL",
+  "ATEC",
+  "KMPR",
+  "ANIP",
+  "PRGS",
+  "GIC",
+  "PLAB",
+  "TCBK",
+  "IMKTA",
+  "GLP",
+  "WWW",
+  "HUBG",
+  "BFC",
+  "THRM",
+  "OMCL",
+  "DSGR",
+  "QCRH",
+  "AZTA",
+  "EFOR",
+  "SBH",
+  "STC",
+  "ICFI",
+  "CTS",
+  "PRSU",
+  "OCFC",
+  "SAFT",
+  "CNOB",
+  "AMN",
+  "CSWC",
+  "HLF",
+  "QUBT",
+  "CASH",
+  "HUN",
+  "CBRL",
+  "MLKN",
+  "JJSF",
+  "HCSG",
+  "DMLP",
+  "HE",
+  "LKFN",
+  "UFCS",
+  "DMC",
+  "CNMD",
+  "ATLC",
+  "BHRB",
+  "WABC",
+  "TRS",
+  "TMP",
+  "SCL",
+  "REX",
+  "LQDT",
+  "CTBI",
+  "OMER",
+  "UVE",
+  "FLO",
+  "RES",
+  "FMBH",
+  "FOR",
+  "PEBO",
+  "UMH",
+  "WEN",
+  "EPC",
+  "GT",
+  "NKTR",
+  "USPH",
+  "BJRI",
+  "AMSC",
+  "NSSC",
+  "OSBC",
+  "APPS",
+  "PRG",
+  "LZB",
+  "GIII",
+  "GBX",
+  "ALX",
+  "DCH",
+  "SENEA",
+  "SCSC",
+  "CRI",
+  "JBLU",
+  "ODC",
+  "NBR",
+  "OPK",
+  "HZO",
+  "MYE",
+  "SPH",
+  "ROCK",
+  "UTI",
+  "HLIT",
+  "UVSP",
+  "LNN",
+  "TNC",
+  "STAA",
+  "CRAI",
+  "HFWA",
+  "ENOV",
+  "WINA",
+  "FCEL",
+  "OPY",
+  "WLDN",
+  "HROW",
+  "DLX",
+  "AORT",
+  "IART",
+  "NPK",
+  "MRTN",
+  "OCSL",
+  "VYX",
+  "HSTM",
+  "REPX",
+  "MSEX",
+  "MNKD",
+  "BFS",
+  "CFFN",
+  "MBWM",
+  "UVV",
+  "GPRE",
+  "CCNE",
+  "CSR",
+  "FMCB",
+  "HBNC",
+  "UTL",
+  "QDEL",
+  "UPBD",
+  "MUX",
+  "CMP",
+  "CAC",
+  "NWPX",
+  "CPF",
+  "SBGI",
+  "KFRC",
+  "OI",
+  "HAFC",
+  "TRST",
+  "FCBC",
+  "NPKI",
+  "SBSI",
+  "MPB",
+  "BBDC",
+  "EIG",
+  "APEI",
+  "FMNB",
+  "BZH",
+  "ASTE",
+  "FTK",
+  "FUN",
+  "MCS",
+  "RIGL",
+  "DAKT",
+  "PSEC",
+  "NX",
+  "THFF",
+  "PAYS",
+  "DJCO",
+  "SMBK",
+  "FMC",
+  "CYRX",
+  "APOG",
+  "EGBN",
+  "HTLD",
+  "GSBC",
+  "KRO",
+  "CCBG",
+  "GHM",
+  "QMCO",
+  "ARI",
+  "SMP",
+  "SAFE",
+  "KOP",
+  "VRTS",
+  "ORRF",
+  "WLFC",
+  "WRLD",
+  "SVC",
+  "CODI",
+  "CEVA",
+  "MTW",
+  "GERN",
+  "BBSI",
+  "TTI",
+  "CTO",
+  "JBSS",
+  "FEIM",
+  "CVLG",
+  "FISI",
+  "SMBC",
+  "TRNS",
+  "ALRS",
+  "PGC",
+  "LYTS",
+  "MITK",
+  "SHBI",
+  "PRAA",
+  "RCAT",
+  "MOV",
+  "LXRX",
+  "LXU",
+  "IBCP",
+  "CIM",
+  "LINC",
+  "PAR",
+  "ACHV",
+  "MLAB",
+  "SCHL",
+  "WASH",
+  "MALG",
+  "ADAM",
+  "MFIC",
+  "CARE",
+  "CWBC",
+  "BCAL",
+  "HELE",
+  "WGO",
+  "CASS",
+  "RGR",
+  "DGICA",
+  "GYRE",
+  "MDXG",
+  "PFIS",
+  "MFA",
+  "AROW",
+  "KOPN",
+  "VLGEA"
+ ],
+ "rejected": [
+  {
+   "ticker": "VNT",
+   "reason": "no 10-K us-gaap:NetIncomeLoss in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "PRM",
+   "reason": "prices start 2021-11-09"
+  },
+  {
+   "ticker": "DLO",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "ENVA",
+   "reason": "prices start 2014-11-13"
+  },
+  {
+   "ticker": "KRMN",
+   "reason": "prices start 2025-02-13"
+  },
+  {
+   "ticker": "MMYT",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "OMAB",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "SEZL",
+   "reason": "prices start 2023-09-13"
+  },
+  {
+   "ticker": "HTFL",
+   "reason": "prices start 2025-08-11"
+  },
+  {
+   "ticker": "CNR",
+   "reason": "prices start 2017-11-14"
+  },
+  {
+   "ticker": "OTF",
+   "reason": "prices start 2025-06-12"
+  },
+  {
+   "ticker": "VSNT",
+   "reason": "prices start 2025-12-15"
+  },
+  {
+   "ticker": "TKC",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "PAM",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "BETA",
+   "reason": "prices start 2025-11-04"
+  },
+  {
+   "ticker": "LIVN",
+   "reason": "prices start 2015-10-19"
+  },
+  {
+   "ticker": "SFBS",
+   "reason": "prices start 2014-05-14"
+  },
+  {
+   "ticker": "WHD",
+   "reason": "prices start 2018-02-08"
+  },
+  {
+   "ticker": "ARX",
+   "reason": "no 10-K us-gaap:NetIncomeLoss in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "SIM",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "CGAU",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "OII",
+   "reason": "no 10-K us-gaap:NetIncomeLoss in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "TENB",
+   "reason": "prices start 2018-07-26"
+  },
+  {
+   "ticker": "IBOC",
+   "reason": "prices start 2026-10-19"
+  },
+  {
+   "ticker": "WK",
+   "reason": "prices start 2014-12-12"
+  },
+  {
+   "ticker": "SKT",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "PARR",
+   "reason": "prices start 2012-09-05"
+  },
+  {
+   "ticker": "HHH",
+   "reason": "prices start 2010-11-05"
+  },
+  {
+   "ticker": "BMA",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "ALH",
+   "reason": "prices start 2025-10-09"
+  },
+  {
+   "ticker": "STNG",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "EWTX",
+   "reason": "prices start 2021-03-26"
+  },
+  {
+   "ticker": "USAR",
+   "reason": "prices start 2023-07-17"
+  },
+  {
+   "ticker": "IFHLY",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0002035057.json: HTTP 404)"
+  },
+  {
+   "ticker": "SITE",
+   "reason": "prices start 2016-05-12"
+  },
+  {
+   "ticker": "CIFR",
+   "reason": "prices start 2020-10-20"
+  },
+  {
+   "ticker": "DNTH",
+   "reason": "prices start 2018-06-21"
+  },
+  {
+   "ticker": "ADPT",
+   "reason": "prices start 2019-06-27"
+  },
+  {
+   "ticker": "JOYY",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "ESAB",
+   "reason": "prices start 2022-03-29"
+  },
+  {
+   "ticker": "COLD",
+   "reason": "prices start 2018-01-19"
+  },
+  {
+   "ticker": "MC",
+   "reason": "prices start 2014-04-16"
+  },
+  {
+   "ticker": "RGTI",
+   "reason": "prices start 2021-04-22"
+  },
+  {
+   "ticker": "ABCL",
+   "reason": "prices start 2020-12-11"
+  },
+  {
+   "ticker": "NP",
+   "reason": "prices start 2025-10-01"
+  },
+  {
+   "ticker": "CAAP",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "AQN",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "VVV",
+   "reason": "prices start 2016-09-23"
+  },
+  {
+   "ticker": "OBOCY",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0002094691.json: HTTP 404)"
+  },
+  {
+   "ticker": "KTB",
+   "reason": "prices start 2019-05-28"
+  },
+  {
+   "ticker": "INDV",
+   "reason": "prices start 2014-12-29"
+  },
+  {
+   "ticker": "PAY",
+   "reason": "prices start 2021-05-26"
+  },
+  {
+   "ticker": "TAC",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "APLE",
+   "reason": "prices start 2015-05-18"
+  },
+  {
+   "ticker": "SKE",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "MNDY",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "TRMD",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "ENPH",
+   "reason": "prices start 2012-03-30"
+  },
+  {
+   "ticker": "DOO",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "XXI",
+   "reason": "prices start 2024-08-13"
+  },
+  {
+   "ticker": "SPHR",
+   "reason": "prices start 2020-04-09"
+  },
+  {
+   "ticker": "ADOOY",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001489079.json: HTTP 404)"
+  },
+  {
+   "ticker": "BILL",
+   "reason": "prices start 2019-12-12"
+  },
+  {
+   "ticker": "ACMR",
+   "reason": "prices start 2017-11-02"
+  },
+  {
+   "ticker": "MIR",
+   "reason": "prices start 2020-08-20"
+  },
+  {
+   "ticker": "TGS",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "VAC",
+   "reason": "prices start 2011-11-08"
+  },
+  {
+   "ticker": "AWATY",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0002092258.json: HTTP 404)"
+  },
+  {
+   "ticker": "FSLY",
+   "reason": "prices start 2019-05-17"
+  },
+  {
+   "ticker": "BNL",
+   "reason": "prices start 2020-09-17"
+  },
+  {
+   "ticker": "LEGN",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "QTWO",
+   "reason": "prices start 2014-03-20"
+  },
+  {
+   "ticker": "SEB",
+   "reason": "no 10-K us-gaap:NetIncomeLoss in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "DHT",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "AMVOY",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0002085236.json: HTTP 404)"
+  },
+  {
+   "ticker": "RLAY",
+   "reason": "prices start 2020-07-16"
+  },
+  {
+   "ticker": "MSGE",
+   "reason": "prices start 2023-04-17"
+  },
+  {
+   "ticker": "TNGX",
+   "reason": "prices start 2020-09-03"
+  },
+  {
+   "ticker": "AKO-A",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "BMRRY",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001671235.json: HTTP 404)"
+  },
+  {
+   "ticker": "PLNT",
+   "reason": "prices start 2015-08-06"
+  },
+  {
+   "ticker": "NVST",
+   "reason": "prices start 2019-09-18"
+  },
+  {
+   "ticker": "DNP",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "RKGRY",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0002093907.json: HTTP 404)"
+  },
+  {
+   "ticker": "FRSH",
+   "reason": "prices start 2021-09-22"
+  },
+  {
+   "ticker": "AYA",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001826836.json: HTTP 404)"
+  },
+  {
+   "ticker": "SUNC",
+   "reason": "prices start 2025-11-06"
+  },
+  {
+   "ticker": "BWLP",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "PLMR",
+   "reason": "prices start 2019-04-17"
+  },
+  {
+   "ticker": "EE",
+   "reason": "no 10-K us-gaap:NetIncomeLoss in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "MRP",
+   "reason": "prices start 2025-02-05"
+  },
+  {
+   "ticker": "BOOT",
+   "reason": "prices start 2014-10-30"
+  },
+  {
+   "ticker": "HYPMY",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001486749.json: HTTP 404)"
+  },
+  {
+   "ticker": "ARQT",
+   "reason": "prices start 2020-01-31"
+  },
+  {
+   "ticker": "ONDS",
+   "reason": "prices start 2020-12-04"
+  },
+  {
+   "ticker": "OGN",
+   "reason": "prices start 2021-05-14"
+  },
+  {
+   "ticker": "GPGI",
+   "reason": "prices start 2020-11-19"
+  },
+  {
+   "ticker": "ERO",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "BTE",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "VCYT",
+   "reason": "prices start 2013-10-30"
+  },
+  {
+   "ticker": "SRAD",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "ZGN",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "USAC",
+   "reason": "prices start 2013-01-15"
+  },
+  {
+   "ticker": "TLX",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "ASO",
+   "reason": "prices start 2020-10-02"
+  },
+  {
+   "ticker": "IRT",
+   "reason": "prices start 2013-08-13"
+  },
+  {
+   "ticker": "WING",
+   "reason": "prices start 2015-06-12"
+  },
+  {
+   "ticker": "MANU",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "EQPT",
+   "reason": "prices start 2026-01-23"
+  },
+  {
+   "ticker": "ZIM",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "ARIS",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "ATMU",
+   "reason": "prices start 2023-05-26"
+  },
+  {
+   "ticker": "WBI",
+   "reason": "prices start 2025-09-17"
+  },
+  {
+   "ticker": "BATRA",
+   "reason": "prices start 2016-04-18"
+  },
+  {
+   "ticker": "IRTC",
+   "reason": "prices start 2016-10-20"
+  },
+  {
+   "ticker": "HG",
+   "reason": "no 10-K us-gaap:NetIncomeLoss in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "ECO",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "CECO",
+   "reason": "prices start 2026-10-19"
+  },
+  {
+   "ticker": "AMLX",
+   "reason": "prices start 2022-01-07"
+  },
+  {
+   "ticker": "LMND",
+   "reason": "prices start 2020-07-02"
+  },
+  {
+   "ticker": "MGNI",
+   "reason": "prices start 2014-04-02"
+  },
+  {
+   "ticker": "CDNA",
+   "reason": "prices start 2014-07-17"
+  },
+  {
+   "ticker": "CSTM",
+   "reason": "prices start 2013-05-23"
+  },
+  {
+   "ticker": "VKTX",
+   "reason": "prices start 2015-04-28"
+  },
+  {
+   "ticker": "BFAM",
+   "reason": "prices start 2013-01-25"
+  },
+  {
+   "ticker": "POST",
+   "reason": "prices start 2012-01-27"
+  },
+  {
+   "ticker": "NATL",
+   "reason": "prices start 2023-10-11"
+  },
+  {
+   "ticker": "NIC",
+   "reason": "prices start 2013-05-17"
+  },
+  {
+   "ticker": "FA",
+   "reason": "prices start 2021-06-23"
+  },
+  {
+   "ticker": "LIF",
+   "reason": "prices start 2024-06-06"
+  },
+  {
+   "ticker": "BULL",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "TNK",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "SMGSY",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0002093227.json: HTTP 404)"
+  },
+  {
+   "ticker": "BRZE",
+   "reason": "prices start 2021-11-17"
+  },
+  {
+   "ticker": "XENE",
+   "reason": "prices start 2014-11-05"
+  },
+  {
+   "ticker": "COCO",
+   "reason": "prices start 2021-10-21"
+  },
+  {
+   "ticker": "NGXXF",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0002044153.json: HTTP 404)"
+  },
+  {
+   "ticker": "KOZAY",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001532173.json: HTTP 404)"
+  },
+  {
+   "ticker": "TARS",
+   "reason": "prices start 2020-10-16"
+  },
+  {
+   "ticker": "WIX",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "FIBK",
+   "reason": "prices start 2010-03-24"
+  },
+  {
+   "ticker": "LION",
+   "reason": "prices start 2022-03-01"
+  },
+  {
+   "ticker": "AAMI",
+   "reason": "prices start 2014-10-09"
+  },
+  {
+   "ticker": "HIW",
+   "reason": "no 10-K us-gaap:NetIncomeLoss in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "INTA",
+   "reason": "prices start 2021-06-30"
+  },
+  {
+   "ticker": "FRPT",
+   "reason": "prices start 2014-11-07"
+  },
+  {
+   "ticker": "DKL",
+   "reason": "prices start 2012-11-02"
+  },
+  {
+   "ticker": "IDYA",
+   "reason": "prices start 2019-05-23"
+  },
+  {
+   "ticker": "SBLK",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "TNET",
+   "reason": "prices start 2014-03-27"
+  },
+  {
+   "ticker": "FIGS",
+   "reason": "prices start 2021-05-27"
+  },
+  {
+   "ticker": "CSQ",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "PFSI",
+   "reason": "prices start 2013-05-09"
+  },
+  {
+   "ticker": "VTMX",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "ADX",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "ATKR",
+   "reason": "prices start 2016-06-10"
+  },
+  {
+   "ticker": "UTG",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "GBDC",
+   "reason": "prices start 2010-04-15"
+  },
+  {
+   "ticker": "PLSE",
+   "reason": "prices start 2016-05-18"
+  },
+  {
+   "ticker": "MCHB",
+   "reason": "prices start 2012-02-10"
+  },
+  {
+   "ticker": "ACHR",
+   "reason": "prices start 2020-12-18"
+  },
+  {
+   "ticker": "PK",
+   "reason": "prices start 2017-01-04"
+  },
+  {
+   "ticker": "BSM",
+   "reason": "prices start 2015-04-30"
+  },
+  {
+   "ticker": "MARA",
+   "reason": "prices start 2012-05-04"
+  },
+  {
+   "ticker": "LQDA",
+   "reason": "prices start 2018-07-26"
+  },
+  {
+   "ticker": "SPSC",
+   "reason": "prices start 2010-04-22"
+  },
+  {
+   "ticker": "AVPT",
+   "reason": "prices start 2019-11-05"
+  },
+  {
+   "ticker": "FOUR",
+   "reason": "prices start 2020-06-05"
+  },
+  {
+   "ticker": "MNSO",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "PBLS",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "PTRN",
+   "reason": "prices start 2025-09-19"
+  },
+  {
+   "ticker": "FSM",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "SLDE",
+   "reason": "prices start 2025-06-18"
+  },
+  {
+   "ticker": "VGNT",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "PENG",
+   "reason": "prices start 2017-05-24"
+  },
+  {
+   "ticker": "PAGS",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "YETI",
+   "reason": "prices start 2018-10-25"
+  },
+  {
+   "ticker": "CURB",
+   "reason": "prices start 2024-09-26"
+  },
+  {
+   "ticker": "APPN",
+   "reason": "prices start 2017-05-25"
+  },
+  {
+   "ticker": "WRBY",
+   "reason": "prices start 2021-09-29"
+  },
+  {
+   "ticker": "NMIH",
+   "reason": "prices start 2013-11-08"
+  },
+  {
+   "ticker": "FHB",
+   "reason": "prices start 2016-08-05"
+  },
+  {
+   "ticker": "MIAX",
+   "reason": "prices start 2025-08-14"
+  },
+  {
+   "ticker": "NEA",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "INTR",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "FRVO",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "SHAK",
+   "reason": "prices start 2015-01-30"
+  },
+  {
+   "ticker": "ACCV",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "EFXT",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "BKU",
+   "reason": "prices start 2011-01-28"
+  },
+  {
+   "ticker": "TGB",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "WSC",
+   "reason": "prices start 2015-11-05"
+  },
+  {
+   "ticker": "FSK",
+   "reason": "prices start 2014-04-16"
+  },
+  {
+   "ticker": "CELC",
+   "reason": "prices start 2017-09-20"
+  },
+  {
+   "ticker": "DNLI",
+   "reason": "prices start 2017-12-08"
+  },
+  {
+   "ticker": "FLY",
+   "reason": "prices start 2025-08-07"
+  },
+  {
+   "ticker": "ELVN",
+   "reason": "prices start 2020-03-12"
+  },
+  {
+   "ticker": "CLBK",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "KN",
+   "reason": "prices start 2014-02-14"
+  },
+  {
+   "ticker": "ALM",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "GPOR",
+   "reason": "prices start 2021-05-18"
+  },
+  {
+   "ticker": "NMRK",
+   "reason": "prices start 2017-12-15"
+  },
+  {
+   "ticker": "SPNT",
+   "reason": "prices start 2013-08-15"
+  },
+  {
+   "ticker": "PRVA",
+   "reason": "prices start 2021-04-28"
+  },
+  {
+   "ticker": "SDRL",
+   "reason": "prices start 2022-10-14"
+  },
+  {
+   "ticker": "SII",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "BTU",
+   "reason": "prices start 2017-04-03"
+  },
+  {
+   "ticker": "IOND",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "CSQR",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "KYIV",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "IHS",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "HGV",
+   "reason": "prices start 2017-01-04"
+  },
+  {
+   "ticker": "RCUS",
+   "reason": "prices start 2018-03-15"
+  },
+  {
+   "ticker": "DYN",
+   "reason": "prices start 2020-09-17"
+  },
+  {
+   "ticker": "VIA",
+   "reason": "prices start 2025-09-12"
+  },
+  {
+   "ticker": "ALRM",
+   "reason": "prices start 2015-06-26"
+  },
+  {
+   "ticker": "AAUC",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "KNF",
+   "reason": "prices start 2023-06-06"
+  },
+  {
+   "ticker": "TALO",
+   "reason": "prices start 2018-05-10"
+  },
+  {
+   "ticker": "LFTO",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "KD",
+   "reason": "no 10-K us-gaap:NetIncomeLoss in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "CLBT",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "COTY",
+   "reason": "prices start 2013-06-13"
+  },
+  {
+   "ticker": "SA",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "BHF",
+   "reason": "prices start 2017-07-17"
+  },
+  {
+   "ticker": "AMBP",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "FXCNY",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001164009.json: HTTP 404)"
+  },
+  {
+   "ticker": "AVAH",
+   "reason": "prices start 2021-04-28"
+  },
+  {
+   "ticker": "CWK",
+   "reason": "prices start 2018-08-02"
+  },
+  {
+   "ticker": "AMBA",
+   "reason": "prices start 2012-10-10"
+  },
+  {
+   "ticker": "CARG",
+   "reason": "prices start 2017-10-12"
+  },
+  {
+   "ticker": "MH",
+   "reason": "prices start 2025-07-24"
+  },
+  {
+   "ticker": "DNOW",
+   "reason": "prices start 2014-05-20"
+  },
+  {
+   "ticker": "NRIX",
+   "reason": "prices start 2020-07-24"
+  },
+  {
+   "ticker": "PURR",
+   "reason": "prices start 2025-12-03"
+  },
+  {
+   "ticker": "LBRT",
+   "reason": "prices start 2018-01-11"
+  },
+  {
+   "ticker": "SKWD",
+   "reason": "prices start 2023-01-13"
+  },
+  {
+   "ticker": "ZLAB",
+   "reason": "prices start 2017-09-20"
+  },
+  {
+   "ticker": "STNE",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "UE",
+   "reason": "prices start 2015-01-16"
+  },
+  {
+   "ticker": "MTLMY",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0002091028.json: HTTP 404)"
+  },
+  {
+   "ticker": "LPL",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "AMC",
+   "reason": "prices start 2013-12-18"
+  },
+  {
+   "ticker": "BCC",
+   "reason": "prices start 2013-02-06"
+  },
+  {
+   "ticker": "WTTR",
+   "reason": "prices start 2017-06-26"
+  },
+  {
+   "ticker": "FIVN",
+   "reason": "prices start 2014-04-04"
+  },
+  {
+   "ticker": "TMDX",
+   "reason": "prices start 2019-05-02"
+  },
+  {
+   "ticker": "BBAR",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "KC",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "GRND",
+   "reason": "prices start 2021-01-14"
+  },
+  {
+   "ticker": "PGEN",
+   "reason": "prices start 2013-08-08"
+  },
+  {
+   "ticker": "QS",
+   "reason": "prices start 2020-08-17"
+  },
+  {
+   "ticker": "FG",
+   "reason": "prices start 2022-11-22"
+  },
+  {
+   "ticker": "MRVI",
+   "reason": "prices start 2020-11-20"
+  },
+  {
+   "ticker": "GRDN",
+   "reason": "prices start 2024-09-26"
+  },
+  {
+   "ticker": "ASST",
+   "reason": "prices start 2023-02-03"
+  },
+  {
+   "ticker": "NMM",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "JPC",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "LCLN",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "FBK",
+   "reason": "prices start 2016-09-16"
+  },
+  {
+   "ticker": "BEAM",
+   "reason": "prices start 2020-02-06"
+  },
+  {
+   "ticker": "REZI",
+   "reason": "prices start 2018-10-29"
+  },
+  {
+   "ticker": "TTAM",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "RNW",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "CUBI",
+   "reason": "prices start 2012-03-14"
+  },
+  {
+   "ticker": "LIFE",
+   "reason": "prices start 2026-01-29"
+  },
+  {
+   "ticker": "HAYW",
+   "reason": "prices start 2021-03-12"
+  },
+  {
+   "ticker": "CLOV",
+   "reason": "prices start 2020-06-12"
+  },
+  {
+   "ticker": "GDV",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001260729.json: HTTP 404)"
+  },
+  {
+   "ticker": "EROK",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "AEGXF",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001309167.json: HTTP 404)"
+  },
+  {
+   "ticker": "OSW",
+   "reason": "prices start 2017-11-17"
+  },
+  {
+   "ticker": "SMR",
+   "reason": "prices start 2022-03-01"
+  },
+  {
+   "ticker": "TSCFY",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001555815.json: HTTP 404)"
+  },
+  {
+   "ticker": "BKV",
+   "reason": "prices start 2024-09-26"
+  },
+  {
+   "ticker": "NAMS",
+   "reason": "prices start 2021-02-09"
+  },
+  {
+   "ticker": "PAYO",
+   "reason": "prices start 2020-10-16"
+  },
+  {
+   "ticker": "EXK",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "RUM",
+   "reason": "prices start 2021-04-14"
+  },
+  {
+   "ticker": "HCM",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "NGVT",
+   "reason": "prices start 2016-05-03"
+  },
+  {
+   "ticker": "NAD",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001083839.json: HTTP 404)"
+  },
+  {
+   "ticker": "ADMA",
+   "reason": "prices start 2013-10-17"
+  },
+  {
+   "ticker": "FCPT",
+   "reason": "prices start 2015-11-10"
+  },
+  {
+   "ticker": "CHA",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "PTY",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "AERO",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "UPST",
+   "reason": "prices start 2020-12-16"
+  },
+  {
+   "ticker": "MBX",
+   "reason": "prices start 2024-09-13"
+  },
+  {
+   "ticker": "VC",
+   "reason": "prices start 2010-10-05"
+  },
+  {
+   "ticker": "NVTS",
+   "reason": "prices start 2021-10-20"
+  },
+  {
+   "ticker": "CLSK",
+   "reason": "prices start 2016-11-16"
+  },
+  {
+   "ticker": "ASAN",
+   "reason": "prices start 2020-09-30"
+  },
+  {
+   "ticker": "KYN",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "FLYW",
+   "reason": "prices start 2021-05-26"
+  },
+  {
+   "ticker": "TSAT",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "ATHM",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "PTON",
+   "reason": "prices start 2019-09-26"
+  },
+  {
+   "ticker": "NVG",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001090116.json: HTTP 404)"
+  },
+  {
+   "ticker": "CHRN",
+   "reason": "prices start 2014-01-17"
+  },
+  {
+   "ticker": "SPGNY",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0002042556.json: HTTP 404)"
+  },
+  {
+   "ticker": "SUPN",
+   "reason": "prices start 2012-05-01"
+  },
+  {
+   "ticker": "CALX",
+   "reason": "prices start 2010-03-24"
+  },
+  {
+   "ticker": "IVT",
+   "reason": "prices start 2014-02-27"
+  },
+  {
+   "ticker": "APAM",
+   "reason": "prices start 2013-03-07"
+  },
+  {
+   "ticker": "LIND",
+   "reason": "prices start 2013-07-03"
+  },
+  {
+   "ticker": "NTB",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "PPTA",
+   "reason": "prices start 2021-02-18"
+  },
+  {
+   "ticker": "LPG",
+   "reason": "prices start 2014-05-08"
+  },
+  {
+   "ticker": "BGSI",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "MBIN",
+   "reason": "prices start 2017-10-27"
+  },
+  {
+   "ticker": "SMSGY",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001560968.json: HTTP 404)"
+  },
+  {
+   "ticker": "RXRX",
+   "reason": "prices start 2021-04-16"
+  },
+  {
+   "ticker": "BTDR",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "DBD",
+   "reason": "prices start 2023-08-14"
+  },
+  {
+   "ticker": "RH",
+   "reason": "prices start 2012-11-02"
+  },
+  {
+   "ticker": "HRMY",
+   "reason": "prices start 2020-08-19"
+  },
+  {
+   "ticker": "PONY",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "AUPH",
+   "reason": "prices start 2014-09-03"
+  },
+  {
+   "ticker": "NCNO",
+   "reason": "prices start 2020-07-14"
+  },
+  {
+   "ticker": "IMOS",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "CURLF",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "SHO",
+   "reason": "no 10-K us-gaap:NetIncomeLoss in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "BVC",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "IRON",
+   "reason": "prices start 2020-08-12"
+  },
+  {
+   "ticker": "DAO",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "STUB",
+   "reason": "prices start 2025-09-17"
+  },
+  {
+   "ticker": "VRDN",
+   "reason": "prices start 2014-06-18"
+  },
+  {
+   "ticker": "OUST",
+   "reason": "prices start 2020-10-09"
+  },
+  {
+   "ticker": "VERX",
+   "reason": "prices start 2020-07-29"
+  },
+  {
+   "ticker": "FRMI",
+   "reason": "prices start 2025-10-01"
+  },
+  {
+   "ticker": "RDW",
+   "reason": "prices start 2021-01-14"
+  },
+  {
+   "ticker": "FTRE",
+   "reason": "prices start 2023-06-16"
+  },
+  {
+   "ticker": "OPEN",
+   "reason": "prices start 2020-06-18"
+  },
+  {
+   "ticker": "WGS",
+   "reason": "prices start 2020-11-04"
+  },
+  {
+   "ticker": "DRD",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "VVX",
+   "reason": "prices start 2014-09-16"
+  },
+  {
+   "ticker": "NZF",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "SVM",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "GCT",
+   "reason": "prices start 2022-08-18"
+  },
+  {
+   "ticker": "PGNY",
+   "reason": "prices start 2019-10-25"
+  },
+  {
+   "ticker": "PHIN",
+   "reason": "prices start 2023-06-28"
+  },
+  {
+   "ticker": "DV",
+   "reason": "prices start 2021-04-21"
+  },
+  {
+   "ticker": "SOUN",
+   "reason": "prices start 2022-04-28"
+  },
+  {
+   "ticker": "AMR",
+   "reason": "prices start 2021-02-08"
+  },
+  {
+   "ticker": "RLX",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "DNN",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "SONO",
+   "reason": "prices start 2018-08-02"
+  },
+  {
+   "ticker": "HIMX",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "AMPL",
+   "reason": "prices start 2021-09-28"
+  },
+  {
+   "ticker": "PHVS",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "BFLY",
+   "reason": "prices start 2020-07-13"
+  },
+  {
+   "ticker": "CTOS",
+   "reason": "prices start 2017-10-09"
+  },
+  {
+   "ticker": "EBCRY",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001969796.json: HTTP 404)"
+  },
+  {
+   "ticker": "PRLB",
+   "reason": "prices start 2012-02-24"
+  },
+  {
+   "ticker": "UTZ",
+   "reason": "prices start 2018-11-26"
+  },
+  {
+   "ticker": "CDLR",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "INFQ",
+   "reason": "prices start 2026-02-17"
+  },
+  {
+   "ticker": "EBOSY",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001533082.json: HTTP 404)"
+  },
+  {
+   "ticker": "VERA",
+   "reason": "prices start 2021-05-14"
+  },
+  {
+   "ticker": "RVT",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0000804116.json: HTTP 404)"
+  },
+  {
+   "ticker": "PLGO",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "KRP",
+   "reason": "prices start 2017-02-03"
+  },
+  {
+   "ticker": "IMNM",
+   "reason": "prices start 2020-10-02"
+  },
+  {
+   "ticker": "EVT",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "DJT",
+   "reason": "prices start 2021-09-30"
+  },
+  {
+   "ticker": "LASR",
+   "reason": "prices start 2018-04-26"
+  },
+  {
+   "ticker": "FLOC",
+   "reason": "prices start 2025-01-16"
+  },
+  {
+   "ticker": "INSP",
+   "reason": "prices start 2018-05-03"
+  },
+  {
+   "ticker": "CTRI",
+   "reason": "prices start 2024-04-19"
+  },
+  {
+   "ticker": "PLBL",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "DRVN",
+   "reason": "prices start 2021-01-19"
+  },
+  {
+   "ticker": "TRLV",
+   "reason": "prices start 2018-09-27"
+  },
+  {
+   "ticker": "WS",
+   "reason": "prices start 2023-11-28"
+  },
+  {
+   "ticker": "LKFT",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "ETOR",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "MQ",
+   "reason": "prices start 2021-06-09"
+  },
+  {
+   "ticker": "CLM",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "NMZ",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001266585.json: HTTP 404)"
+  },
+  {
+   "ticker": "BLBD",
+   "reason": "prices start 2014-03-20"
+  },
+  {
+   "ticker": "ALMR",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "PRCH",
+   "reason": "prices start 2020-01-13"
+  },
+  {
+   "ticker": "SIND",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "PAEXY",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0002073620.json: HTTP 404)"
+  },
+  {
+   "ticker": "AADX",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "PAX",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "SMA",
+   "reason": "prices start 2025-04-02"
+  },
+  {
+   "ticker": "SGRY",
+   "reason": "prices start 2015-09-30"
+  },
+  {
+   "ticker": "NESR",
+   "reason": "prices start 2024-07-09"
+  },
+  {
+   "ticker": "BOBS",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "AGIO",
+   "reason": "prices start 2013-07-24"
+  },
+  {
+   "ticker": "VET",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "CC",
+   "reason": "prices start 2015-06-19"
+  },
+  {
+   "ticker": "GOF",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "KARO",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "CEPU",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "BSTZ",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001768666.json: HTTP 404)"
+  },
+  {
+   "ticker": "PTXKY",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001545057.json: HTTP 404)"
+  },
+  {
+   "ticker": "ALVO",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "ADRX",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "AI",
+   "reason": "prices start 2020-12-09"
+  },
+  {
+   "ticker": "VSTS",
+   "reason": "prices start 2023-09-27"
+  },
+  {
+   "ticker": "SEDG",
+   "reason": "prices start 2015-03-26"
+  },
+  {
+   "ticker": "SDGR",
+   "reason": "prices start 2020-02-06"
+  },
+  {
+   "ticker": "AGBK",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "TIC",
+   "reason": "prices start 2025-02-18"
+  },
+  {
+   "ticker": "MLYS",
+   "reason": "prices start 2023-02-10"
+  },
+  {
+   "ticker": "STDN",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "SXGCF",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001622629.json: HTTP 404)"
+  },
+  {
+   "ticker": "EVTC",
+   "reason": "prices start 2013-04-12"
+  },
+  {
+   "ticker": "BVENY",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0002095292.json: HTTP 404)"
+  },
+  {
+   "ticker": "ZYME",
+   "reason": "prices start 2017-04-28"
+  },
+  {
+   "ticker": "TY",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "XHR",
+   "reason": "prices start 2015-02-04"
+  },
+  {
+   "ticker": "MFP",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "ATEN",
+   "reason": "prices start 2014-03-21"
+  },
+  {
+   "ticker": "XERS",
+   "reason": "prices start 2018-06-21"
+  },
+  {
+   "ticker": "LUNR",
+   "reason": "prices start 2021-11-17"
+  },
+  {
+   "ticker": "UWMC",
+   "reason": "prices start 2020-05-01"
+  },
+  {
+   "ticker": "SECZ",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "CPRI",
+   "reason": "prices start 2011-12-15"
+  },
+  {
+   "ticker": "ESTA",
+   "reason": "prices start 2018-07-19"
+  },
+  {
+   "ticker": "MNR",
+   "reason": "prices start 2023-10-25"
+  },
+  {
+   "ticker": "MESO",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "PVLA",
+   "reason": "prices start 2015-01-02"
+  },
+  {
+   "ticker": "RUN",
+   "reason": "prices start 2015-08-05"
+  },
+  {
+   "ticker": "MHD",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001034665.json: HTTP 404)"
+  },
+  {
+   "ticker": "IQMX",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "RLJ",
+   "reason": "prices start 2011-05-11"
+  },
+  {
+   "ticker": "URGN",
+   "reason": "prices start 2017-05-04"
+  },
+  {
+   "ticker": "XNCR",
+   "reason": "prices start 2013-12-03"
+  },
+  {
+   "ticker": "ACVA",
+   "reason": "prices start 2021-03-24"
+  },
+  {
+   "ticker": "GAB",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0000794685.json: HTTP 404)"
+  },
+  {
+   "ticker": "BRSL",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "XPRO",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "VIR",
+   "reason": "prices start 2019-10-11"
+  },
+  {
+   "ticker": "ATS",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "NTST",
+   "reason": "no 10-K us-gaap:NetIncomeLoss in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "FORTY",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "NN",
+   "reason": "prices start 2020-11-02"
+  },
+  {
+   "ticker": "ETG",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "LIME",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "BL",
+   "reason": "prices start 2016-10-28"
+  },
+  {
+   "ticker": "GENI",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "SFL",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "GNL",
+   "reason": "prices start 2015-06-02"
+  },
+  {
+   "ticker": "BRVE",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "SEPN",
+   "reason": "prices start 2024-10-25"
+  },
+  {
+   "ticker": "MDCOY",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0002094100.json: HTTP 404)"
+  },
+  {
+   "ticker": "SSMR",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "WLTH",
+   "reason": "prices start 2025-12-15"
+  },
+  {
+   "ticker": "ICHR",
+   "reason": "prices start 2016-12-09"
+  },
+  {
+   "ticker": "TRVI",
+   "reason": "prices start 2019-05-07"
+  },
+  {
+   "ticker": "NWCL",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "PDO",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "STEW",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "ETV",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "CMRE",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "BHVN",
+   "reason": "prices start 2022-09-23"
+  },
+  {
+   "ticker": "ARDT",
+   "reason": "prices start 2024-07-18"
+  },
+  {
+   "ticker": "PICS",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "NUV",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0000812801.json: HTTP 404)"
+  },
+  {
+   "ticker": "PSNL",
+   "reason": "prices start 2019-06-20"
+  },
+  {
+   "ticker": "ARCO",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "ALHC",
+   "reason": "prices start 2021-03-26"
+  },
+  {
+   "ticker": "BDJ",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001332283.json: HTTP 404)"
+  },
+  {
+   "ticker": "CNXC",
+   "reason": "prices start 2020-11-24"
+  },
+  {
+   "ticker": "HAPN",
+   "reason": "prices start 2014-12-11"
+  },
+  {
+   "ticker": "GLOB",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "TSLX",
+   "reason": "prices start 2014-03-21"
+  },
+  {
+   "ticker": "NYAX",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "TGLS",
+   "reason": "prices start 2012-05-10"
+  },
+  {
+   "ticker": "FSUN",
+   "reason": "prices start 2022-08-03"
+  },
+  {
+   "ticker": "NUVB",
+   "reason": "prices start 2020-08-26"
+  },
+  {
+   "ticker": "BY",
+   "reason": "prices start 2017-06-30"
+  },
+  {
+   "ticker": "EVCM",
+   "reason": "prices start 2021-07-01"
+  },
+  {
+   "ticker": "NBHC",
+   "reason": "prices start 2012-09-20"
+  },
+  {
+   "ticker": "ZBIO",
+   "reason": "prices start 2024-09-13"
+  },
+  {
+   "ticker": "AAT",
+   "reason": "prices start 2011-01-13"
+  },
+  {
+   "ticker": "NEXA",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "TOP",
+   "reason": "prices start 2022-06-01"
+  },
+  {
+   "ticker": "NAT",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "GSHD",
+   "reason": "prices start 2018-04-27"
+  },
+  {
+   "ticker": "NVCR",
+   "reason": "prices start 2015-10-01"
+  },
+  {
+   "ticker": "RVLV",
+   "reason": "prices start 2019-06-07"
+  },
+  {
+   "ticker": "SBCLY",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0002087852.json: HTTP 404)"
+  },
+  {
+   "ticker": "ALNT",
+   "reason": "no 10-K us-gaap:NetIncomeLoss in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "MLCO",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "NTLA",
+   "reason": "prices start 2016-05-06"
+  },
+  {
+   "ticker": "ATEX",
+   "reason": "prices start 2015-02-03"
+  },
+  {
+   "ticker": "GENB",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "LOB",
+   "reason": "prices start 2015-07-23"
+  },
+  {
+   "ticker": "LILA",
+   "reason": "prices start 2015-07-02"
+  },
+  {
+   "ticker": "BXDC",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "NOMD",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "WB",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "KMTS",
+   "reason": "prices start 2025-03-06"
+  },
+  {
+   "ticker": "OCUL",
+   "reason": "prices start 2014-07-25"
+  },
+  {
+   "ticker": "OPRA",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "KOS",
+   "reason": "prices start 2011-05-11"
+  },
+  {
+   "ticker": "OBK",
+   "reason": "prices start 2018-05-08"
+  },
+  {
+   "ticker": "PBT",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0000319654.json: HTTP 404)"
+  },
+  {
+   "ticker": "VOYG",
+   "reason": "prices start 2025-06-11"
+  },
+  {
+   "ticker": "NEXT",
+   "reason": "prices start 2015-06-16"
+  },
+  {
+   "ticker": "CCS",
+   "reason": "prices start 2014-06-18"
+  },
+  {
+   "ticker": "GPCR",
+   "reason": "prices start 2023-02-03"
+  },
+  {
+   "ticker": "FOIL",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "EFC",
+   "reason": "prices start 2010-10-08"
+  },
+  {
+   "ticker": "STOK",
+   "reason": "prices start 2019-06-19"
+  },
+  {
+   "ticker": "HYMC",
+   "reason": "prices start 2018-03-12"
+  },
+  {
+   "ticker": "CMPS",
+   "reason": "prices start 2020-09-18"
+  },
+  {
+   "ticker": "FLNG",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "PAHC",
+   "reason": "prices start 2014-04-11"
+  },
+  {
+   "ticker": "KEEL",
+   "reason": "prices start 2019-08-16"
+  },
+  {
+   "ticker": "BAND",
+   "reason": "prices start 2017-11-09"
+  },
+  {
+   "ticker": "TH",
+   "reason": "prices start 2018-03-12"
+  },
+  {
+   "ticker": "TEN",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "SVV",
+   "reason": "prices start 2023-06-29"
+  },
+  {
+   "ticker": "GFR",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "KRSA",
+   "reason": "prices start 2019-03-18"
+  },
+  {
+   "ticker": "SID",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "GAM",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0000040417.json: HTTP 404)"
+  },
+  {
+   "ticker": "MQY",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "MAZE",
+   "reason": "prices start 2025-01-31"
+  },
+  {
+   "ticker": "COAG",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "INVA",
+   "reason": "no 10-K us-gaap:NetIncomeLoss in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "CBL",
+   "reason": "prices start 2021-11-02"
+  },
+  {
+   "ticker": "IMCR",
+   "reason": "prices start 2021-02-05"
+  },
+  {
+   "ticker": "HYT",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "QURE",
+   "reason": "prices start 2014-02-05"
+  },
+  {
+   "ticker": "INBT",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0002156068.json: HTTP 404)"
+  },
+  {
+   "ticker": "ALKT",
+   "reason": "prices start 2021-04-14"
+  },
+  {
+   "ticker": "AVVSY",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0002082141.json: HTTP 404)"
+  },
+  {
+   "ticker": "RARE",
+   "reason": "prices start 2014-01-31"
+  },
+  {
+   "ticker": "ENR",
+   "reason": "prices start 2015-06-12"
+  },
+  {
+   "ticker": "TRIN",
+   "reason": "no 10-K us-gaap:NetIncomeLoss in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "XZO",
+   "reason": "prices start 2025-11-05"
+  },
+  {
+   "ticker": "PRKS",
+   "reason": "prices start 2013-04-19"
+  },
+  {
+   "ticker": "ABSI",
+   "reason": "prices start 2021-07-22"
+  },
+  {
+   "ticker": "ETON",
+   "reason": "prices start 2018-11-13"
+  },
+  {
+   "ticker": "RQI",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "QQQX",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001608741.json: HTTP 404)"
+  },
+  {
+   "ticker": "KLRA",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "TFIN",
+   "reason": "prices start 2014-11-07"
+  },
+  {
+   "ticker": "PNTG",
+   "reason": "prices start 2019-10-01"
+  },
+  {
+   "ticker": "CERT",
+   "reason": "prices start 2020-12-11"
+  },
+  {
+   "ticker": "PGY",
+   "reason": "prices start 2021-04-21"
+  },
+  {
+   "ticker": "AGL",
+   "reason": "prices start 2021-04-15"
+  },
+  {
+   "ticker": "COUR",
+   "reason": "prices start 2021-03-31"
+  },
+  {
+   "ticker": "AGRO",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "ESRT",
+   "reason": "prices start 2013-10-02"
+  },
+  {
+   "ticker": "IIPR",
+   "reason": "prices start 2016-12-01"
+  },
+  {
+   "ticker": "PCRX",
+   "reason": "prices start 2011-02-03"
+  },
+  {
+   "ticker": "MGRT",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "ARHS",
+   "reason": "prices start 2021-11-04"
+  },
+  {
+   "ticker": "UNIT",
+   "reason": "prices start 2015-04-20"
+  },
+  {
+   "ticker": "ESQ",
+   "reason": "prices start 2017-06-27"
+  },
+  {
+   "ticker": "ANAB",
+   "reason": "prices start 2017-01-26"
+  },
+  {
+   "ticker": "RAPP",
+   "reason": "prices start 2024-06-07"
+  },
+  {
+   "ticker": "ADNT",
+   "reason": "prices start 2016-10-17"
+  },
+  {
+   "ticker": "CRSR",
+   "reason": "prices start 2020-09-23"
+  },
+  {
+   "ticker": "LSPD",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "BORR",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "AMAL",
+   "reason": "prices start 2018-08-09"
+  },
+  {
+   "ticker": "ORCRY",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0002142762.json: HTTP 404)"
+  },
+  {
+   "ticker": "HLMN",
+   "reason": "prices start 2020-12-03"
+  },
+  {
+   "ticker": "WRD",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "GTBIF",
+   "reason": "prices start 2018-06-14"
+  },
+  {
+   "ticker": "BCAT",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "AAPG",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "CRCT",
+   "reason": "prices start 2021-03-26"
+  },
+  {
+   "ticker": "EYE",
+   "reason": "prices start 2017-10-27"
+  },
+  {
+   "ticker": "UROY",
+   "reason": "prices start 2021-04-28"
+  },
+  {
+   "ticker": "BTT",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "MBC",
+   "reason": "prices start 2022-12-09"
+  },
+  {
+   "ticker": "DXYZ",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "NFJ",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "RYZ",
+   "reason": "prices start 2014-08-08"
+  },
+  {
+   "ticker": "NUTX",
+   "reason": "prices start 2022-04-04"
+  },
+  {
+   "ticker": "LCID",
+   "reason": "prices start 2020-09-18"
+  },
+  {
+   "ticker": "SFDMY",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001493507.json: HTTP 404)"
+  },
+  {
+   "ticker": "VISN",
+   "reason": "prices start 2013-10-25"
+  },
+  {
+   "ticker": "CXM",
+   "reason": "prices start 2021-06-23"
+  },
+  {
+   "ticker": "NVGS",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "IE",
+   "reason": "prices start 2022-06-28"
+  },
+  {
+   "ticker": "PD",
+   "reason": "prices start 2019-04-11"
+  },
+  {
+   "ticker": "ECAT",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "LUXE",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "WOLF",
+   "reason": "prices start 2025-09-29"
+  },
+  {
+   "ticker": "ESBA",
+   "reason": "prices start 2013-10-02"
+  },
+  {
+   "ticker": "INBX",
+   "reason": "prices start 2024-05-29"
+  },
+  {
+   "ticker": "FRNM",
+   "reason": "prices start 2024-06-12"
+  },
+  {
+   "ticker": "ARLO",
+   "reason": "prices start 2018-08-03"
+  },
+  {
+   "ticker": "LYNX",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "TYRA",
+   "reason": "prices start 2021-09-15"
+  },
+  {
+   "ticker": "ORIC",
+   "reason": "prices start 2020-04-24"
+  },
+  {
+   "ticker": "IAUX",
+   "reason": "prices start 2021-04-22"
+  },
+  {
+   "ticker": "TV",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "GO",
+   "reason": "prices start 2019-06-20"
+  },
+  {
+   "ticker": "PWP",
+   "reason": "prices start 2020-11-24"
+  },
+  {
+   "ticker": "ASIC",
+   "reason": "prices start 2025-06-11"
+  },
+  {
+   "ticker": "SLVM",
+   "reason": "prices start 2021-09-23"
+  },
+  {
+   "ticker": "SHLS",
+   "reason": "prices start 2021-01-28"
+  },
+  {
+   "ticker": "AESI",
+   "reason": "prices start 2023-03-09"
+  },
+  {
+   "ticker": "HBT",
+   "reason": "prices start 2019-10-11"
+  },
+  {
+   "ticker": "MNSKY",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001584297.json: HTTP 404)"
+  },
+  {
+   "ticker": "GHRS",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "USAS",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "AFYA",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "BH-A",
+   "reason": "prices start 2018-05-02"
+  },
+  {
+   "ticker": "REAL",
+   "reason": "prices start 2019-06-28"
+  },
+  {
+   "ticker": "ELE",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "KARD",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "HPK",
+   "reason": "prices start 2018-05-29"
+  },
+  {
+   "ticker": "DOLE",
+   "reason": "prices start 2021-07-30"
+  },
+  {
+   "ticker": "SG",
+   "reason": "prices start 2021-11-18"
+  },
+  {
+   "ticker": "VNET",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "TRAX",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "DFIN",
+   "reason": "prices start 2016-09-26"
+  },
+  {
+   "ticker": "INNV",
+   "reason": "prices start 2021-03-04"
+  },
+  {
+   "ticker": "AMBQ",
+   "reason": "prices start 2025-07-30"
+  },
+  {
+   "ticker": "TRUP",
+   "reason": "prices start 2014-07-18"
+  },
+  {
+   "ticker": "PSQL",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "HAWK",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "PFBC",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001492165.json: HTTP 404)"
+  },
+  {
+   "ticker": "TSHA",
+   "reason": "prices start 2020-09-24"
+  },
+  {
+   "ticker": "XPEL",
+   "reason": "prices start 2019-07-01"
+  },
+  {
+   "ticker": "TK",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "RDVT",
+   "reason": "prices start 2018-03-27"
+  },
+  {
+   "ticker": "CCEC",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "FLNC",
+   "reason": "prices start 2021-10-28"
+  },
+  {
+   "ticker": "AZUL",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "DRTS",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "MUC",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "SBE",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "SNDX",
+   "reason": "prices start 2016-03-02"
+  },
+  {
+   "ticker": "WBTN",
+   "reason": "prices start 2024-06-27"
+  },
+  {
+   "ticker": "NMAX",
+   "reason": "prices start 2025-03-31"
+  },
+  {
+   "ticker": "SVMB",
+   "reason": "prices start 2022-04-13"
+  },
+  {
+   "ticker": "TPB",
+   "reason": "prices start 2016-05-11"
+  },
+  {
+   "ticker": "MYI",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "IRS",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "JCAP",
+   "reason": "prices start 2025-06-26"
+  },
+  {
+   "ticker": "ADIG",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "RDWR",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "AMPX",
+   "reason": "prices start 2022-09-15"
+  },
+  {
+   "ticker": "CRON",
+   "reason": "prices start 2018-02-27"
+  },
+  {
+   "ticker": "LOMA",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "LBRX",
+   "reason": "prices start 2025-09-11"
+  },
+  {
+   "ticker": "AIIR",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "NBXG",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "AHG",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "HEPS",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "GTM",
+   "reason": "prices start 2020-06-04"
+  },
+  {
+   "ticker": "GDRX",
+   "reason": "prices start 2020-09-23"
+  },
+  {
+   "ticker": "VZLA",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "BCAX",
+   "reason": "prices start 2024-09-13"
+  },
+  {
+   "ticker": "DMRA",
+   "reason": "prices start 2020-10-29"
+  },
+  {
+   "ticker": "ULCC",
+   "reason": "prices start 2021-04-01"
+  },
+  {
+   "ticker": "VOR",
+   "reason": "prices start 2021-02-05"
+  },
+  {
+   "ticker": "GOLD",
+   "reason": "prices start 2014-03-17"
+  },
+  {
+   "ticker": "PSIX",
+   "reason": "prices start 2012-04-17"
+  },
+  {
+   "ticker": "WD",
+   "reason": "prices start 2010-12-15"
+  },
+  {
+   "ticker": "IRMD",
+   "reason": "prices start 2014-07-16"
+  },
+  {
+   "ticker": "AMTB",
+   "reason": "prices start 2018-10-18"
+  },
+  {
+   "ticker": "RSKD",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "NBTX",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "OMDA",
+   "reason": "prices start 2025-06-06"
+  },
+  {
+   "ticker": "VTOL",
+   "reason": "prices start 2013-01-22"
+  },
+  {
+   "ticker": "TNDM",
+   "reason": "prices start 2013-11-14"
+  },
+  {
+   "ticker": "TMC",
+   "reason": "prices start 2021-09-10"
+  },
+  {
+   "ticker": "LNXSY",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001311307.json: HTTP 404)"
+  },
+  {
+   "ticker": "AMPH",
+   "reason": "prices start 2014-06-25"
+  },
+  {
+   "ticker": "NEWP",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "LADR",
+   "reason": "no 10-K us-gaap:NetIncomeLoss in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "PDM",
+   "reason": "prices start 2010-02-10"
+  },
+  {
+   "ticker": "DSL",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "BOW",
+   "reason": "prices start 2024-05-23"
+  },
+  {
+   "ticker": "CDRE",
+   "reason": "prices start 2021-11-04"
+  },
+  {
+   "ticker": "MSDL",
+   "reason": "prices start 2024-01-24"
+  },
+  {
+   "ticker": "EOS",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "CLVT",
+   "reason": "prices start 2018-10-29"
+  },
+  {
+   "ticker": "IBTA",
+   "reason": "prices start 2024-04-19"
+  },
+  {
+   "ticker": "SHAZ",
+   "reason": "prices start 2026-02-18"
+  },
+  {
+   "ticker": "YELP",
+   "reason": "prices start 2012-03-02"
+  },
+  {
+   "ticker": "REPL",
+   "reason": "prices start 2018-07-20"
+  },
+  {
+   "ticker": "TBN",
+   "reason": "prices start 2024-06-27"
+  },
+  {
+   "ticker": "ECVT",
+   "reason": "prices start 2017-09-29"
+  },
+  {
+   "ticker": "TRIP",
+   "reason": "prices start 2011-12-07"
+  },
+  {
+   "ticker": "AVLN",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "NHP",
+   "reason": "prices start 2026-04-22"
+  },
+  {
+   "ticker": "UPWK",
+   "reason": "prices start 2018-10-03"
+  },
+  {
+   "ticker": "HRTG",
+   "reason": "prices start 2014-05-23"
+  },
+  {
+   "ticker": "ANDG",
+   "reason": "prices start 2025-12-17"
+  },
+  {
+   "ticker": "BBAI",
+   "reason": "prices start 2021-04-05"
+  },
+  {
+   "ticker": "CPAC",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "SLSR",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "MCB",
+   "reason": "prices start 2017-11-08"
+  },
+  {
+   "ticker": "GNK",
+   "reason": "prices start 2014-07-15"
+  },
+  {
+   "ticker": "DEA",
+   "reason": "prices start 2015-02-06"
+  },
+  {
+   "ticker": "LTGHY",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001569963.json: HTTP 404)"
+  },
+  {
+   "ticker": "IMTX",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "KRT",
+   "reason": "prices start 2021-04-15"
+  },
+  {
+   "ticker": "TDAY",
+   "reason": "prices start 2014-02-04"
+  },
+  {
+   "ticker": "LGSXY",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001447221.json: HTTP 404)"
+  },
+  {
+   "ticker": "AOD",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "MMI",
+   "reason": "prices start 2013-10-31"
+  },
+  {
+   "ticker": "TDOC",
+   "reason": "prices start 2015-06-30"
+  },
+  {
+   "ticker": "AVO",
+   "reason": "prices start 2020-10-02"
+  },
+  {
+   "ticker": "CBLL",
+   "reason": "prices start 2024-10-11"
+  },
+  {
+   "ticker": "LZ",
+   "reason": "prices start 2021-06-30"
+  },
+  {
+   "ticker": "ODD",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "JANX",
+   "reason": "prices start 2021-06-11"
+  },
+  {
+   "ticker": "PDS",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "FSBC",
+   "reason": "prices start 2021-05-04"
+  },
+  {
+   "ticker": "SBR",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0000710752.json: HTTP 404)"
+  },
+  {
+   "ticker": "HBNB",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "AMRC",
+   "reason": "prices start 2010-07-22"
+  },
+  {
+   "ticker": "BRBR",
+   "reason": "prices start 2019-10-18"
+  },
+  {
+   "ticker": "LMRI",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "TUYA",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "CNL",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "IGIC",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "AVEX",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "PRCT",
+   "reason": "prices start 2021-09-15"
+  },
+  {
+   "ticker": "YKCLY",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0002107946.json: HTTP 404)"
+  },
+  {
+   "ticker": "BMEZ",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "CSTL",
+   "reason": "prices start 2019-07-25"
+  },
+  {
+   "ticker": "CII",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "ORC",
+   "reason": "prices start 2013-02-14"
+  },
+  {
+   "ticker": "FSCO",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "LGIH",
+   "reason": "prices start 2013-11-07"
+  },
+  {
+   "ticker": "ETW",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "RAJAF",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "POET",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "BFST",
+   "reason": "prices start 2018-04-23"
+  },
+  {
+   "ticker": "CRF",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "BTX",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001836057.json: HTTP 404)"
+  },
+  {
+   "ticker": "GSBD",
+   "reason": "prices start 2015-03-18"
+  },
+  {
+   "ticker": "DEC",
+   "reason": "prices start 2021-01-04"
+  },
+  {
+   "ticker": "MCBS",
+   "reason": "prices start 2019-09-05"
+  },
+  {
+   "ticker": "HSLV",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "CRML",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "NXDR",
+   "reason": "prices start 2026-10-16"
+  },
+  {
+   "ticker": "SMPL",
+   "reason": "prices start 2017-07-10"
+  },
+  {
+   "ticker": "SGML",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "ITRN",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "ASA",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "CPPKF",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001691710.json: HTTP 404)"
+  },
+  {
+   "ticker": "SVRA",
+   "reason": "prices start 2017-04-28"
+  },
+  {
+   "ticker": "XNDU",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "NBBK",
+   "reason": "prices start 2023-12-28"
+  },
+  {
+   "ticker": "BV",
+   "reason": "prices start 2018-06-28"
+  },
+  {
+   "ticker": "TYG",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "PUMP",
+   "reason": "prices start 2017-03-17"
+  },
+  {
+   "ticker": "SYNSY",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0002004340.json: HTTP 404)"
+  },
+  {
+   "ticker": "EQBK",
+   "reason": "prices start 2015-11-11"
+  },
+  {
+   "ticker": "BRAI",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0002076975.json: HTTP 404)"
+  },
+  {
+   "ticker": "NXRT",
+   "reason": "prices start 2015-03-19"
+  },
+  {
+   "ticker": "LTGO",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "SLBT",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "AIP",
+   "reason": "prices start 2021-10-27"
+  },
+  {
+   "ticker": "TBLA",
+   "reason": "prices start 2021-06-30"
+  },
+  {
+   "ticker": "FPF",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "SPTX",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "IQ",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "MGTX",
+   "reason": "prices start 2018-06-08"
+  },
+  {
+   "ticker": "BVS",
+   "reason": "prices start 2021-02-11"
+  },
+  {
+   "ticker": "XIFR",
+   "reason": "prices start 2014-06-27"
+  },
+  {
+   "ticker": "PTA",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001793882.json: HTTP 404)"
+  },
+  {
+   "ticker": "STK",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "HIPO",
+   "reason": "prices start 2021-01-11"
+  },
+  {
+   "ticker": "QNST",
+   "reason": "prices start 2010-02-11"
+  },
+  {
+   "ticker": "BCX",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001506289.json: HTTP 404)"
+  },
+  {
+   "ticker": "CHY",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "RHLD",
+   "reason": "prices start 2025-02-24"
+  },
+  {
+   "ticker": "BBNX",
+   "reason": "prices start 2025-01-30"
+  },
+  {
+   "ticker": "CHI",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "RPC",
+   "reason": "prices start 2021-10-21"
+  },
+  {
+   "ticker": "BMBL",
+   "reason": "prices start 2021-02-11"
+  },
+  {
+   "ticker": "SB",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "PLOW",
+   "reason": "prices start 2010-05-05"
+  },
+  {
+   "ticker": "VMET",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "ACEL",
+   "reason": "prices start 2017-08-24"
+  },
+  {
+   "ticker": "BBN",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "NAVI",
+   "reason": "prices start 2014-04-17"
+  },
+  {
+   "ticker": "PDX",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "EMAT",
+   "reason": "prices start 2026-01-07"
+  },
+  {
+   "ticker": "VCX",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "OIG",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "IAM",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "ANRO",
+   "reason": "prices start 2024-02-02"
+  },
+  {
+   "ticker": "SIBN",
+   "reason": "prices start 2018-10-17"
+  },
+  {
+   "ticker": "FET",
+   "reason": "prices start 2012-04-12"
+  },
+  {
+   "ticker": "RNP",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001224450.json: HTTP 404)"
+  },
+  {
+   "ticker": "MLTX",
+   "reason": "prices start 2020-10-20"
+  },
+  {
+   "ticker": "FRBT",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "JBIO",
+   "reason": "prices start 2021-06-30"
+  },
+  {
+   "ticker": "AKTS",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "NANO",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "UMAC",
+   "reason": "prices start 2024-02-14"
+  },
+  {
+   "ticker": "PXED",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "CMRF",
+   "reason": "prices start 2022-05-12"
+  },
+  {
+   "ticker": "RERE",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "PIII",
+   "reason": "prices start 2021-04-06"
+  },
+  {
+   "ticker": "NABL",
+   "reason": "prices start 2021-07-19"
+  },
+  {
+   "ticker": "FSSL",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "KURA",
+   "reason": "prices start 2015-09-16"
+  },
+  {
+   "ticker": "KODK",
+   "reason": "prices start 2013-09-23"
+  },
+  {
+   "ticker": "AEBI",
+   "reason": "prices start 2025-07-02"
+  },
+  {
+   "ticker": "ASM",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "SXC",
+   "reason": "prices start 2011-07-21"
+  },
+  {
+   "ticker": "JBGS",
+   "reason": "prices start 2017-07-06"
+  },
+  {
+   "ticker": "PSTL",
+   "reason": "prices start 2019-05-15"
+  },
+  {
+   "ticker": "RPD",
+   "reason": "prices start 2015-07-17"
+  },
+  {
+   "ticker": "YALA",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "BLMN",
+   "reason": "prices start 2012-08-08"
+  },
+  {
+   "ticker": "GLUE",
+   "reason": "prices start 2021-06-24"
+  },
+  {
+   "ticker": "SIFY",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "ARDX",
+   "reason": "prices start 2014-06-19"
+  },
+  {
+   "ticker": "CGEM",
+   "reason": "prices start 2021-01-08"
+  },
+  {
+   "ticker": "AHCO",
+   "reason": "prices start 2018-05-31"
+  },
+  {
+   "ticker": "PLTK",
+   "reason": "prices start 2021-01-19"
+  },
+  {
+   "ticker": "REF",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "MTUS",
+   "reason": "prices start 2014-06-19"
+  },
+  {
+   "ticker": "DSP",
+   "reason": "prices start 2021-02-10"
+  },
+  {
+   "ticker": "ODTX",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "TE",
+   "reason": "prices start 2020-01-10"
+  },
+  {
+   "ticker": "VPG",
+   "reason": "prices start 2010-06-23"
+  },
+  {
+   "ticker": "KBDC",
+   "reason": "prices start 2024-05-22"
+  },
+  {
+   "ticker": "VSTM",
+   "reason": "prices start 2012-01-27"
+  },
+  {
+   "ticker": "PML",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "MYN",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0000882150.json: HTTP 404)"
+  },
+  {
+   "ticker": "CRVS",
+   "reason": "prices start 2016-03-23"
+  },
+  {
+   "ticker": "INMD",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "AWF",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0000906013.json: HTTP 404)"
+  },
+  {
+   "ticker": "GLIBA",
+   "reason": "prices start 2025-07-11"
+  },
+  {
+   "ticker": "OGG",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "PEO",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0000216851.json: HTTP 404)"
+  },
+  {
+   "ticker": "OXLC",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "YSS",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "SGP",
+   "reason": "prices start 2026-02-06"
+  },
+  {
+   "ticker": "HBIA",
+   "reason": "prices start 2011-04-13"
+  },
+  {
+   "ticker": "NRK",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "AIO",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001778114.json: HTTP 404)"
+  },
+  {
+   "ticker": "ALMS",
+   "reason": "prices start 2024-06-28"
+  },
+  {
+   "ticker": "GOOS",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "WEST",
+   "reason": "prices start 2021-10-20"
+  },
+  {
+   "ticker": "ASGI",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "AVBP",
+   "reason": "prices start 2024-01-26"
+  },
+  {
+   "ticker": "LAC",
+   "reason": "prices start 2023-10-02"
+  },
+  {
+   "ticker": "CAPL",
+   "reason": "prices start 2012-10-25"
+  },
+  {
+   "ticker": "SPFI",
+   "reason": "prices start 2019-05-09"
+  },
+  {
+   "ticker": "EOI",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "HELP",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "JMIA",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "PCN",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "CRESY",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "BUUU",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "PUBM",
+   "reason": "prices start 2020-12-09"
+  },
+  {
+   "ticker": "RXT",
+   "reason": "prices start 2020-08-05"
+  },
+  {
+   "ticker": "HTD",
+   "reason": "error reading sources (KeyError: 'cik')"
+  },
+  {
+   "ticker": "GCMG",
+   "reason": "prices start 2019-02-06"
+  },
+  {
+   "ticker": "MSSHY",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0002087844.json: HTTP 404)"
+  },
+  {
+   "ticker": "TXO",
+   "reason": "prices start 2023-01-27"
+  },
+  {
+   "ticker": "VREX",
+   "reason": "prices start 2017-01-23"
+  },
+  {
+   "ticker": "ABX",
+   "reason": "prices start 2020-09-14"
+  },
+  {
+   "ticker": "TIGR",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "MAKO",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001784930.json: HTTP 404)"
+  },
+  {
+   "ticker": "DNA",
+   "reason": "prices start 2021-04-19"
+  },
+  {
+   "ticker": "ROOT",
+   "reason": "prices start 2020-10-28"
+  },
+  {
+   "ticker": "TALMF",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0002001201.json: HTTP 404)"
+  },
+  {
+   "ticker": "ASC",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "FDUS",
+   "reason": "prices start 2011-06-21"
+  },
+  {
+   "ticker": "MNTN",
+   "reason": "prices start 2025-05-22"
+  },
+  {
+   "ticker": "LAR",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "FOXF",
+   "reason": "prices start 2013-08-08"
+  },
+  {
+   "ticker": "HTB",
+   "reason": "prices start 2012-07-11"
+  },
+  {
+   "ticker": "CRTO",
+   "reason": "prices start 2013-10-30"
+  },
+  {
+   "ticker": "LU",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "ANL",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "TASK",
+   "reason": "prices start 2021-06-11"
+  },
+  {
+   "ticker": "SMWB",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "APMD",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "KRNGY",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001494191.json: HTTP 404)"
+  },
+  {
+   "ticker": "APC",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "BRUN",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "BTGO",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "DFH",
+   "reason": "prices start 2021-01-21"
+  },
+  {
+   "ticker": "OBE",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "FWRG",
+   "reason": "prices start 2021-10-01"
+  },
+  {
+   "ticker": "SCZM",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001548536.json: HTTP 404)"
+  },
+  {
+   "ticker": "PHK",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "HSHP",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "RJET",
+   "reason": "prices start 2018-08-10"
+  },
+  {
+   "ticker": "COLL",
+   "reason": "prices start 2015-05-07"
+  },
+  {
+   "ticker": "FINV",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "CD",
+   "reason": "prices start 2015-04-08"
+  },
+  {
+   "ticker": "OBX",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "GPRK",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "EVER",
+   "reason": "prices start 2018-06-28"
+  },
+  {
+   "ticker": "RMIX",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "TCGLF",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "THQ",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001604522.json: HTTP 404)"
+  },
+  {
+   "ticker": "MTA",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "SKYH",
+   "reason": "prices start 2020-12-08"
+  },
+  {
+   "ticker": "ADSE",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "EVLV",
+   "reason": "prices start 2020-09-22"
+  },
+  {
+   "ticker": "HQ",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "ACDC",
+   "reason": "prices start 2022-05-13"
+  },
+  {
+   "ticker": "BXBL",
+   "reason": "prices start 2025-02-11"
+  },
+  {
+   "ticker": "WLKP",
+   "reason": "prices start 2014-07-30"
+  },
+  {
+   "ticker": "SWIM",
+   "reason": "prices start 2021-04-23"
+  },
+  {
+   "ticker": "GRPN",
+   "reason": "prices start 2011-11-04"
+  },
+  {
+   "ticker": "AEVA",
+   "reason": "prices start 2020-02-27"
+  },
+  {
+   "ticker": "IMC",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "OFRM",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "CGBD",
+   "reason": "prices start 2017-06-14"
+  },
+  {
+   "ticker": "BKSY",
+   "reason": "prices start 2019-12-20"
+  },
+  {
+   "ticker": "VTS",
+   "reason": "prices start 2023-01-10"
+  },
+  {
+   "ticker": "STRW",
+   "reason": "prices start 2023-02-22"
+  },
+  {
+   "ticker": "SANA",
+   "reason": "prices start 2021-02-04"
+  },
+  {
+   "ticker": "IVA",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "VBNK",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "EOSE",
+   "reason": "prices start 2020-11-02"
+  },
+  {
+   "ticker": "BUR",
+   "reason": "prices start 2020-10-19"
+  },
+  {
+   "ticker": "SABR",
+   "reason": "prices start 2014-04-17"
+  },
+  {
+   "ticker": "RZLV",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "DC",
+   "reason": "prices start 2022-04-05"
+  },
+  {
+   "ticker": "IMMX",
+   "reason": "prices start 2021-12-16"
+  },
+  {
+   "ticker": "MEGI",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "VINP",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "KRNT",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "BTO",
+   "reason": "error reading sources (KeyError: 'cik')"
+  },
+  {
+   "ticker": "LUCK",
+   "reason": "prices start 2021-04-23"
+  },
+  {
+   "ticker": "BW",
+   "reason": "prices start 2015-06-16"
+  },
+  {
+   "ticker": "RHNO",
+   "reason": "prices start 2022-05-18"
+  },
+  {
+   "ticker": "CAZGF",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0002074220.json: HTTP 404)"
+  },
+  {
+   "ticker": "DQ",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "NNE",
+   "reason": "prices start 2024-05-08"
+  },
+  {
+   "ticker": "PSNY",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "BWMN",
+   "reason": "prices start 2021-05-07"
+  },
+  {
+   "ticker": "BAK",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "FDMT",
+   "reason": "prices start 2020-12-11"
+  },
+  {
+   "ticker": "CTKB",
+   "reason": "prices start 2021-07-23"
+  },
+  {
+   "ticker": "YSWY",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "NGVC",
+   "reason": "prices start 2012-07-25"
+  },
+  {
+   "ticker": "QFIN",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "ITG",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "MRRDF",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001839886.json: HTTP 404)"
+  },
+  {
+   "ticker": "RVI",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "CNNE",
+   "reason": "prices start 2017-11-20"
+  },
+  {
+   "ticker": "AMRQF",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0002076631.json: HTTP 404)"
+  },
+  {
+   "ticker": "VTEX",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "CSIQ",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "FFC",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001174164.json: HTTP 404)"
+  },
+  {
+   "ticker": "NIE",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0001383441.json: HTTP 404)"
+  },
+  {
+   "ticker": "DCBO",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "YEXT",
+   "reason": "prices start 2017-04-13"
+  },
+  {
+   "ticker": "GDOT",
+   "reason": "prices start 2010-07-22"
+  },
+  {
+   "ticker": "SPT",
+   "reason": "prices start 2019-12-13"
+  },
+  {
+   "ticker": "PHAR",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "INN",
+   "reason": "prices start 2011-02-09"
+  },
+  {
+   "ticker": "LOGC",
+   "reason": "prices start 2020-12-16"
+  },
+  {
+   "ticker": "CLDT",
+   "reason": "prices start 2010-04-16"
+  },
+  {
+   "ticker": "BCSF",
+   "reason": "prices start 2018-11-15"
+  },
+  {
+   "ticker": "STLN",
+   "reason": "prices start 2020-06-04"
+  },
+  {
+   "ticker": "TCBX",
+   "reason": "prices start 2021-11-09"
+  },
+  {
+   "ticker": "AOSL",
+   "reason": "prices start 2010-04-29"
+  },
+  {
+   "ticker": "VLRS",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "RMT",
+   "reason": "no SEC companyfacts (https://data.sec.gov/api/xbrl/companyfacts/CIK0000912147.json: HTTP 404)"
+  },
+  {
+   "ticker": "WOOF",
+   "reason": "prices start 2021-01-14"
+  },
+  {
+   "ticker": "MOMO",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "BALY",
+   "reason": "prices start 2024-12-06"
+  },
+  {
+   "ticker": "HTZ",
+   "reason": "prices start 2021-07-01"
+  },
+  {
+   "ticker": "PHR",
+   "reason": "prices start 2019-07-18"
+  },
+  {
+   "ticker": "DDI",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "SUPV",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "FFMGF",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "ATTO",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "ANGX",
+   "reason": "prices start 2025-09-11"
+  },
+  {
+   "ticker": "CADL",
+   "reason": "prices start 2021-07-27"
+  },
+  {
+   "ticker": "BUI",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "OABI",
+   "reason": "prices start 2021-09-30"
+  },
+  {
+   "ticker": "GRNT",
+   "reason": "prices start 2020-11-06"
+  },
+  {
+   "ticker": "ANNX",
+   "reason": "prices start 2020-07-24"
+  },
+  {
+   "ticker": "CCSI",
+   "reason": "prices start 2021-09-30"
+  },
+  {
+   "ticker": "GROY",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "WHK",
+   "reason": "no 10-K us-gaap:NetIncomeLoss, us-gaap:Assets in SEC XBRL under this CIK (foreign filer, other taxonomy, or new CIK)"
+  },
+  {
+   "ticker": "MSBI",
+   "reason": "prices start 2016-05-24"
+  }
+ ],
+ "reference": "SPY (calendar and context only; not in the universe)",
+ "bias": "survivorship: chosen by 2026 market value, all members listed since 2010"
+}
