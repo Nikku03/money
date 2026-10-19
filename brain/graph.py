@@ -283,32 +283,77 @@ def fetch_document(url: str) -> bytes:
     return fetch(url, user_agent=config.sec_user_agent(), ttl=DOC_TTL).body
 
 
-def read_filing(filing: Fact, client, resolver: Resolver | None, company: str,
-                fetch_doc: Callable[[str], bytes] = fetch_document) -> list[Fact]:
-    """One 10-K read by the model: its relation facts (one per counterparty and kind) and its scan fact."""
-    body = fetch_doc(filing.source["url"])
-    paras = filing_text(body)
-    ps = passages(paras)
-    rejected: dict[str, int] = {}
+def _read(filing: Fact, fetch_doc: Callable[[str], bytes]) -> tuple[list[str], list[str]]:
+    paras = filing_text(fetch_doc(filing.source["url"]))
+    return paras, passages(paras)
+
+
+def _facts(filing: Fact, rels: list[dict], rejected: dict[str, int], resolver: Resolver | None, extractor: str,
+           paras: list[str], ps: list[str]) -> list[Fact]:
+    """Checked relations as facts, one per counterparty and kind (the first, or the first with a share), and the
+    filing's scan fact."""
+    rejected = dict(rejected)
     kept: dict[tuple, dict] = {}
-    for i in range(0, len(ps), BATCH):
-        batch = ps[i:i + BATCH]
-        rels, rej = parse(ask(client, company, batch), batch)
-        for k, v in rej.items():
-            rejected[k] = rejected.get(k, 0) + v
-        for r in rels:
-            value = node(r["name"], resolver)
-            if value == filing.entity.upper():
-                rejected["the filer itself"] = rejected.get("the filer itself", 0) + 1
-                continue
-            key = (value, r["relation"])
-            if key not in kept or (r["share_pct"] is not None and kept[key]["rel"]["share_pct"] is None):
-                kept[key] = {"value": value, "rel": r}
-    extractor = str(getattr(client, "model", "model"))
+    for r in rels:
+        value = node(r["name"], resolver)
+        if value == filing.entity.upper():
+            rejected["the filer itself"] = rejected.get("the filer itself", 0) + 1
+            continue
+        key = (value, r["relation"])
+        if key not in kept or (r["share_pct"] is not None and kept[key]["rel"]["share_pct"] is None):
+            kept[key] = {"value": value, "rel": r}
     out = [_relation_fact(filing, k["rel"], k["value"], extractor) for k in kept.values()]
     out.append(_scan_fact(filing, len(out), len(ps), rejected,
                           hashlib.sha256("\n".join(paras).encode()).hexdigest()[:16], extractor))
     return out
+
+
+def read_filing(filing: Fact, client, resolver: Resolver | None, company: str,
+                fetch_doc: Callable[[str], bytes] = fetch_document) -> list[Fact]:
+    """One 10-K read by the model: its relation facts (one per counterparty and kind) and its scan fact."""
+    paras, ps = _read(filing, fetch_doc)
+    rels, rejected = [], {}
+    for i in range(0, len(ps), BATCH):
+        batch = ps[i:i + BATCH]
+        got, rej = parse(ask(client, company, batch), batch)
+        rels += got
+        for k, v in rej.items():
+            rejected[k] = rejected.get(k, 0) + v
+    return _facts(filing, rels, rejected, resolver, str(getattr(client, "model", "model")), paras, ps)
+
+
+# ---------- an agent reading in the model's place ----------
+def packet(filing: Fact, company: str, fetch_doc: Callable[[str], bytes] = fetch_document) -> dict:
+    """What the model would be shown for one 10-K, for an agent to read instead: the same instructions and the
+    same passages, numbered from 1 across the whole filing. The answer goes to ``record_answer``."""
+    paras, ps = _read(filing, fetch_doc)
+    head = PROMPT.split("{passages}")[0].replace(" /no_think", "").format(company=company).strip()
+    return {"ticker": filing.entity, "accn": filing.context.get("accn"), "form": filing.value,
+            "period": filing.as_of, "filed": filing.known_at, "company": company, "prompt_sha": prompt_sha(),
+            "text_sha": hashlib.sha256("\n".join(paras).encode()).hexdigest()[:16],
+            "instructions": head + ' Also give "ticker" and "accn" as above. Passage numbers are the ones below.',
+            "passages": [{"n": i, "text": p} for i, p in enumerate(ps, 1)]}
+
+
+def record_answer(bank: Bank, answer: str | dict, resolver: Resolver | None = None, extractor: str = "agent",
+                  fetch_doc: Callable[[str], bytes] = fetch_document) -> list[Fact]:
+    """An agent's answer to a ``packet``, held to the model's rules. The passages are rebuilt from the filing
+    itself, never taken from the packet, so an edited packet cannot ground a quote. Raises ValueError when the
+    answer names no 10-K the bank has for the ticker, or the 10-K was already read by this extractor and prompt."""
+    obj = json.loads(answer) if isinstance(answer, str) else answer
+    if not isinstance(obj, dict):
+        raise ValueError("the answer is not a JSON object")
+    ticker, accn = str(obj.get("ticker") or "").upper(), str(obj.get("accn") or "")
+    filing = next((f for f in tenks(bank, ticker) if f.context.get("accn") == accn), None) if ticker else None
+    if filing is None:
+        raise ValueError(f"no 10-K {accn or '?'} for {ticker or '?'} in the bank")
+    if accn in scanned(bank, ticker, extractor):
+        raise ValueError(f"{ticker} {accn} was already read by {extractor} with this prompt")
+    paras, ps = _read(filing, fetch_doc)
+    rels, rejected = parse(json.dumps({"relations": obj.get("relations")}), ps)
+    facts = _facts(filing, rels, rejected, resolver, extractor, paras, ps)
+    bank.add_many(facts)
+    return facts
 
 
 def scanned(bank: Bank, ticker: str, extractor: str) -> set[str]:
@@ -460,6 +505,52 @@ def _cmd(a) -> int:
             return 1
         print(f"stored {f.ref}: {f.entity} names {f.value} its {f.attr.split('.', 1)[1]}")
         return 0
+    if a.action == "packet":
+        if not a.words or not a.dir:
+            print("graph packet TICKER... --dir DIR [--max N | --since DATE]")
+            return 2
+        from pathlib import Path
+
+        from brain.net import FetchError
+        out_dir = Path(a.dir)
+        out_dir.mkdir(parents=True, exist_ok=True)
+        bad = 0
+        for t in a.words:
+            t = t.upper()
+            done = scanned(bank, t, "agent")
+            todo = [f for f in tenks(bank, t, a.since) if f.context.get("accn") not in done]
+            todo = todo[-(a.max if a.max is not None else 1):] if not a.since or a.max is not None else todo
+            name = bank.view().latest(t, "identity.name")
+            for f in todo:
+                try:
+                    pk = packet(f, str(name.value) if name else t)
+                except (FetchError, OSError) as e:
+                    print(f"{t} {f.context.get('accn')}: failed ({e})")
+                    bad += 1
+                    continue
+                path = out_dir / f"{t}_{pk['accn']}.json"
+                path.write_text(json.dumps(pk, indent=1, ensure_ascii=False))
+                print(f"{t} {f.value} {f.as_of}: {len(pk['passages'])} passages -> {path}")
+            if not todo:
+                print(f"{t}: no unread 10-K in the bank (brain ingest {t})")
+        return 1 if bad else 0
+    if a.action == "answer":
+        if not a.words:
+            print("graph answer FILE...  (each: {\"ticker\", \"accn\", \"relations\": [...]})")
+            return 2
+        from pathlib import Path
+        resolver, bad = Resolver.from_sec(), 0
+        for path in a.words:
+            try:
+                facts = record_answer(bank, Path(path).read_text(), resolver)
+            except (ValueError, OSError) as e:
+                print(f"{path}: refused: {e}")
+                bad += 1
+                continue
+            scan = facts[-1]
+            rej = ", ".join(f"{k} {v}" for k, v in scan.context["rejected"].items()) or "none"
+            print(f"{scan.entity} {scan.as_of}: {scan.value} relations kept; dropped: {rej}")
+        return 1 if bad else 0
     if a.action == "show":
         if len(a.words) != 1:
             print("graph show TICKER [--at DATE]")
@@ -500,11 +591,14 @@ def _cmd(a) -> int:
 
 def add_cli(sub) -> None:
     s = sub.add_parser("graph", help="company relationship graph read from 10-Ks (docs/GRAPH.md): "
-                                     "extract TICKER... | add TICKER ACCESSION | show TICKER | stats")
-    s.add_argument("action", choices=["extract", "add", "show", "stats"])
-    s.add_argument("words", nargs="*", metavar="TICKER | ACCESSION")
-    s.add_argument("--since", help="extract: only 10-Ks for periods ending on or after this date")
-    s.add_argument("--max", type=int, help="extract: at most this many 10-Ks per ticker, the latest")
+                                     "extract TICKER... | packet TICKER... --dir DIR | answer FILE... | "
+                                     "add TICKER ACCESSION | show TICKER | stats")
+    s.add_argument("action", choices=["extract", "packet", "answer", "add", "show", "stats"])
+    s.add_argument("words", nargs="*", metavar="TICKER | ACCESSION | FILE")
+    s.add_argument("--since", help="extract/packet: only 10-Ks for periods ending on or after this date")
+    s.add_argument("--max", type=int, help="extract/packet: at most this many 10-Ks per ticker, the latest "
+                                           "(packet: 1 unless --since is given)")
+    s.add_argument("--dir", help="packet: where to write one JSON packet per 10-K for an agent to read")
     s.add_argument("--at", help="show/stats: the graph as known at this time (default now)")
     s.add_argument("--name", help="add: the company as the filing names it")
     s.add_argument("--relation", choices=KINDS, help="add: what it is to the filer")

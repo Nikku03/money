@@ -228,3 +228,43 @@ class ExtractTest(TempHome):
         # With no model scan of that 10-K, the agent's reading alone puts it in the graph.
         g = graph.graph_at(self.bank, ["NVDA"], "2015-06-30")
         self.assertEqual([(e.dst, e.relation) for e in g], [("AAPL", "customer")])
+
+
+class AgentPacketTest(TempHome):
+    def setUp(self):
+        super().setUp()
+        self.f15 = tenk("NVDA", "2015-01-25", "2015-03-12T16:00:00Z", "0001-15-000001", "a2015.htm")
+        self.bank.add(self.f15)
+        self.resolver = graph.Resolver(TABLE)
+
+    def test_packet_shows_what_the_model_would_see(self):
+        pk = graph.packet(self.f15, "NVIDIA CORP", DOCS.__getitem__)
+        self.assertEqual((pk["ticker"], pk["accn"], pk["prompt_sha"]), ("NVDA", "0001-15-000001", graph.prompt_sha()))
+        self.assertEqual([p["text"] for p in pk["passages"]], graph.passages(graph.filing_text(DOC_2015)))
+        self.assertIn("NVIDIA CORP's customer, supplier, competitor or partner", pk["instructions"])
+        self.assertNotIn("{", pk["instructions"].split("Answer with JSON")[0])
+
+    def test_answer_is_held_to_the_model_rules(self):
+        answer = dict(ANSWER_2015, ticker="nvda", accn="0001-15-000001")
+        facts = graph.record_answer(self.bank, json.dumps(answer), self.resolver, fetch_doc=DOCS.__getitem__)
+        self.assertEqual(sorted(f.value for f in facts[:-1]), ["AAPL", "AMD", "TSM"])
+        self.assertEqual({f.context["extractor"] for f in facts}, {"agent"})
+        scan = facts[-1]
+        self.assertEqual((scan.attr, scan.value), ("relation.scan", 3))
+        self.assertEqual(scan.context["rejected"], {"no company name": 1, "no such passage": 1,
+                                                    "quote not in the passage": 1})
+        self.assertEqual(len(graph.graph_at(self.bank, ["NVDA"], "2015-06-30")), 3)
+        with self.assertRaisesRegex(ValueError, "already read"):
+            graph.record_answer(self.bank, answer, self.resolver, fetch_doc=DOCS.__getitem__)
+
+    def test_answer_for_an_unknown_filing_is_refused(self):
+        for bad in ({"ticker": "NVDA", "accn": "nope", "relations": []}, {"relations": []}, []):
+            with self.assertRaises(ValueError):
+                graph.record_answer(self.bank, bad, self.resolver, fetch_doc=DOCS.__getitem__)
+
+    def test_a_read_with_nothing_named_still_counts_as_read(self):
+        facts = graph.record_answer(self.bank, {"ticker": "NVDA", "accn": "0001-15-000001", "relations": []},
+                                    self.resolver, fetch_doc=DOCS.__getitem__)
+        self.assertEqual([(f.attr, f.value) for f in facts], [("relation.scan", 0)])
+        self.assertIsNotNone(graph.latest_scan(self.bank.view("2015-06-30"), "NVDA"))
+        self.assertEqual(graph.graph_at(self.bank, ["NVDA"], "2015-06-30"), [])

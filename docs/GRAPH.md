@@ -53,12 +53,15 @@ python -m brain ingest NVDA                     # lists the 10-Ks (filing facts)
 python -m brain graph extract NVDA AMD --since 2010-01-01 [--max 3]
 python -m brain graph show NVDA [--at 2020-06-30]
 python -m brain graph stats [--at 2020-06-30]
+python -m brain graph packet NVDA AMD --dir packets/ [--max 3 | --since 2010-01-01]
+python -m brain graph answer packets/NVDA_0001045810-26-000021.answer.json
 python -m brain graph add NVDA 0001045810-25-000023 --name "..." --relation supplier \
     --quote "exact words from the 10-K" [--share 12]
 ```
 
 - `extract` needs a model behind `BRAIN_LLM_URL` (`brain/llm.py`). It reads at temperature 0 with a fixed seed: up to 60 cue passages per 10-K, 8 per request.
-- `add` is for an agent reading a 10-K itself. It is held to the same check, against the whole filing text, and is stored with `extractor: agent`.
+- `packet` and `answer` let an agent read in the model's place. `packet` writes, for each 10-K, the model's instructions and the same numbered passages. The agent's answer, `{"ticker", "accn", "relations": [...]}` in the model's format, goes to `answer`, which rebuilds the passages from the filing itself (never from the packet file) and applies the same checks. It stores the result with `extractor: agent` and a scan fact, so "read, none named" counts as read.
+- `add` is for an agent recording one relation it found anywhere in a 10-K. It is held to the same check, against the whole filing text, and is stored with `extractor: agent`.
 - Both fetch the filing from SEC, which needs `SEC_USER_AGENT` with a contact email. SEC refuses requests without one.
 
 ## Name matching
