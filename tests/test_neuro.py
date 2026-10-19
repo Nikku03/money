@@ -142,3 +142,40 @@ class LanguageModelProbeTest(TempHome):
         t = lm.targets()
         self.assertEqual(sorted(t), list(range(100)))
         self.assertTrue(all(t != np.arange(100)))
+
+
+class LanguageProbeTest(TempHome):
+    """brain.neuro.lang's measures and helpers, on made-up states (no model)."""
+
+    def test_detect_by_script_and_common_words(self):
+        from brain.neuro import lang as G
+        self.assertEqual(G.detect("Это было очень давно"), "rus_Cyrl")
+        self.assertEqual(G.detect("这是一个很好的问题"), "zho_Hans")
+        self.assertEqual(G.detect("これはペンです"), "jpn_Jpan")
+        self.assertEqual(G.detect("C'est une question que les gens posent dans la rue"), "fra_Latn")
+        self.assertEqual(G.detect("Der Hund ist nicht in dem Haus und die Katze auch"), "deu_Latn")
+        self.assertEqual(G.detect("The dog was in the house and it was warm"), "eng_Latn")
+        self.assertEqual(G.detect(""), "unknown")
+        self.assertEqual(G.detect("Zxq vrp"), "unknown")
+
+    def test_first_sentence(self):
+        from brain.neuro import lang as G
+        self.assertEqual(G.first_sentence("One two. Three four."), "One two.")
+        self.assertEqual(G.first_sentence("确保放松。然后继续。"), "确保放松。")
+        self.assertEqual(G.first_sentence("no end"), "no end")
+
+    def test_read_shared_and_random_like_on_planted_states(self):
+        from brain.neuro import lang as G
+        rng = np.random.default_rng(0)
+        K, n, d = 4, 30, 64
+        lang_dir = rng.normal(0, 3, (K, d))
+        meaning = rng.normal(0, 1, (n, d))
+        S = np.concatenate([meaning + lang_dir[k] + rng.normal(0, 0.1, (n, d)) for k in range(K)])   # language-major
+        y = np.repeat(np.arange(K), n)
+        self.assertEqual(G.read(S, y, S, y, K), 1.0)
+        mu = G.means(S, y, K)
+        self.assertGreater(G.shared(S, mu, n, K), 0.95)          # meaning matches once the language is removed
+        shuffled = np.concatenate([S[k * n:(k + 1) * n][rng.permutation(n)] if k else S[:n] for k in range(K)])
+        self.assertLess(G.shared(shuffled, mu, n, K), 0.3)
+        r = G.random_like(lang_dir, 1)
+        self.assertTrue(np.allclose(np.linalg.norm(r, axis=1), np.linalg.norm(lang_dir, axis=1)))

@@ -138,3 +138,59 @@ Controls:
 The false-discovery correction is shared with the N1 claims.
 
 **What it would and would not show.** If `helix-read` passes and `helix-write` fails, the bank's description of how a billion-parameter model holds a number is enough to read the number out of it exactly. It is not enough to write one in: the model also uses directions the helix leaves out. That is a description of one representation at one layer for one task. It says nothing about how the rest of the model works.
+
+## A ~30B model and language (N3)
+
+Run on Colab with [`colab/neuro_language.ipynb`](../colab/neuro_language.ipynb), or on any machine with a big enough GPU:
+
+```
+pip install -e ".[lm]" accelerate bitsandbytes
+python -m brain neuro lang-test --model qwen3:30b    # Qwen3-30B-A3B, bf16, needs about 62 GB of GPU memory
+python -m brain neuro lang-test --model qwen3:32b    # Qwen3-32B in 4-bit NF4, about 20 GB
+```
+
+**Which model.** The names are Ollama's.
+- `qwen3:30b` is Qwen3-30B-A3B: 30.5 billion parameters, a mixture of 128 experts with about 3 billion active per token.
+- `qwen3:32b` is the dense Qwen3-32B.
+
+Ollama serves quantized GGUF builds and returns only text, so the probes load the same models' open weights from Hugging Face (Apache-2.0). The notebook's last section asks the Ollama build the same questions, to compare behaviour.
+
+On this hardware:
+- **`qwen3:30b` needs about 62 GB.** In the `transformers` version used, the experts are fused 3-D tensors, which bitsandbytes does not quantize, so it needs an H100 or an A100 with 80 GB.
+- **`qwen3:32b` fits a 40 GB A100** in 4-bit. The 4-bit model is a different subject from the full-precision one, with its own claim ids.
+
+**The data.** FLORES sentences as Belebele publishes them (`facebook/belebele`, CC-BY-SA 4.0, pinned to a commit): the first sentence of 240 passages in 12 languages (English, French, Spanish, German, Italian, Portuguese, Dutch, Russian, Chinese, Japanese, Hindi, Arabic). Every passage is the same sentence in every language, so meaning stays fixed while language changes. The passages are split three ways, and no split shares a sentence with another:
+- 0–39 (SEL) choose each claim's layer;
+- 40–139 (TRAIN) give the language means;
+- 140–239 (TEST) give the verdict.
+
+**The behaviour.** Shown `"Text: {sentence}\nLanguage:"`, the model names the language. Each name is one token. A claim gets a verdict only if the model names at least 90% of TEST sentences correctly.
+
+**The known answer** (Wendler et al. 2024, [arXiv:2402.10588](https://arxiv.org/abs/2402.10588); Dumas et al. 2024, [arXiv:2411.08745](https://arxiv.org/abs/2411.08745); Tang et al. 2024, [arXiv:2402.16438](https://arxiv.org/abs/2402.16438)): multilingual models hold meaning largely apart from language in their middle layers. Language is a separate part, roughly something added on top.
+
+**The claims** (`brain/neuro/langclaims.py`):
+
+| Claim | What it tests | Threshold | Null | Negative control |
+| --- | --- | --- | --- | --- |
+| `lang-read` | The language is in the state at the final `:`, which is the same token in every prompt, so the model must have put it there | ≥ 0.95 | means from shuffled labels | layer 0 (the `:` embedding) |
+| `lang-swap` | Replacing that language part (h − its language's mean + another's) makes the model name the other language | ≥ 0.5 | a random step of the same size | means from shuffled labels |
+| `lang-shared` | With its language's mean removed, a sentence's state is nearest to its own translation in each other language (chance 1 in 100) | ≥ 0.75 | translations shuffled | layer 0 (the token embeddings) |
+| `lang-speak` | Adding (another language's mean − English's) at one layer makes the model continue an English sentence in that language (French, German, Spanish, Russian, Chinese) | ≥ 0.5 | a random step of the same size | means from shuffled labels |
+
+Each claim's layer is chosen on SEL by its own measure (for `lang-speak`, a layer and a strength from a declared grid), then measured once on TEST. The false-discovery correction is shared with N1 and N2.
+
+The continuation's language is judged by its script, and for Latin-script languages by counting common words. That is crude: a garbled continuation with a few French words counts as French. The notebook prints examples.
+
+**Looked at only on Qwen3-0.6B** (CPU, smaller splits):
+
+| | Dev model |
+| --- | --- |
+| Names the language | 0.86 (fails on Hindi and on half the Chinese sentences) |
+| `read`, by layer | 0.08 at layer 0, 0.99 at layer 2, dipping to 0.75 at layer 18, 1.00 at the end |
+| `shared` (chance 1 in 30) | 0.98 in the middle layers; 0.88 without removing the language mean; 0.50 at layer 0 |
+| `swap` | 0.84 at layers 22–26, 0.00 at every earlier layer; random steps 0.00 |
+| `speak` | 0.80 at layers 7–10 with strength ×2; random steps 0.00; ×4 and ×8 turn the text into gibberish |
+
+These dev numbers were measured before a fix to the sentence splitter. It had been taking whole Chinese and Japanese passages, because "。" has no space after it. The splits used by the claims are the fixed ones.
+
+The dip in `read` in the middle layers, and swaps that work only late, fit the known answer. The language is strong early and late, and weaker in the middle, where meaning dominates.

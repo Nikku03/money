@@ -42,7 +42,9 @@ PREFIX, SUFFIX = "Text: ", "\nLanguage:"
 ALPHAS = (1.0, 2.0, 4.0, 8.0)   # steering strengths tried for speak, as multiples of the language difference
 NEW_TOKENS = 20
 
-_END = re.compile(r"(.+?[.!?。！？।؟])(\s|$)", re.DOTALL)
+# a sentence ends at . ! ? (or the Hindi and Arabic marks) before a space or the end, or at a full-width
+# Chinese or Japanese mark, which needs no space after it
+_END = re.compile(r"(.+?(?:[.!?\u0964\u061f](?=\s|$)|[\u3002\uff01\uff1f]))", re.DOTALL)
 
 STOP = {   # a few of the commonest words, enough to tell these Latin-script languages apart in 20 tokens
     "eng_Latn": ["the", "and", "of", "to", "is", "in", "that", "it", "was", "for", "on", "are", "with", "as"],

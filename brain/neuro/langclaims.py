@@ -41,28 +41,28 @@ CODE = ["brain/neuro/lang.py", "brain/neuro/langclaims.py"]
 LEARNT = {"naming_acc_min": 0.9}
 
 CLAIMS = [
-    {"id": "lang-read", "threshold": None,
+    {"id": "lang-read", "threshold": 0.95,
      "claim": "The model gathers the language into the last token: at the chosen layer, the state at the final ':' "
               "(the same token in every prompt) names the sentence's language by nearest language mean for at least "
               "the threshold share of TEST sentences, which share no content with the TRAIN ones.",
      "layer": "the earliest layer with the best SEL accuracy",
      "null": f"means from shuffled language labels ({N_SHUFFLE} draws)",
      "negative": "layer 0, the ':' token's own embedding"},
-    {"id": "lang-swap", "threshold": None,
+    {"id": "lang-swap", "threshold": 0.5,
      "claim": "That language part is what the model reads when it names the language: replacing it (state - mean of "
               "its language + mean of another) makes the model name the other language for at least the threshold "
               "share of TEST sentences.",
      "layer": "the layer with the best SEL swap rate (earliest on a tie)",
      "null": f"the same-size step in a random direction ({N_RANDOM} draws)",
      "negative": "the swap with means from shuffled language labels"},
-    {"id": "lang-shared", "threshold": None,
+    {"id": "lang-shared", "threshold": 0.75,
      "claim": "Meaning and language are separate: with its language mean removed, a sentence's state (averaged over "
               "its own tokens) is nearest to its own translation, among the TEST sentences of each other language, "
               "for at least the threshold share (chance is 1 in 100).",
      "layer": "the layer with the best SEL retrieval",
      "null": f"translations shuffled ({N_SHUFFLE} draws)",
      "negative": "layer 0, the tokens' own embeddings"},
-    {"id": "lang-speak", "threshold": None,
+    {"id": "lang-speak", "threshold": 0.5,
      "claim": "Language can be written in: adding the difference between another language's mean and English's to "
               "every position while the model continues an English sentence makes the continuation that language "
               "for at least the threshold share of TEST sentences (French, German, Spanish, Russian, Chinese).",
