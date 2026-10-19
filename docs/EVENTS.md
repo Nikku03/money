@@ -33,13 +33,13 @@ Each event kind is tested in two windows. Day 0 is the first close at or after t
 - **The comparison.** Each month, the tagged releases' mean excess return over SPY minus the mean of the month's other earnings releases.
   - Every release moves in an earnings season. Only the gap says whether the event matters.
   - The move against SPY alone is shown beside it.
-- **The statistic.** The mean of the monthly differences: a month counts once, however many releases it has. Its p-value is a one-sided sign flip, 20,000 draws, in the direction the event implies: up for a raise, down for a cut.
+- **The statistic.** The mean of the monthly differences: a month counts once, however many releases it has. Its p-value is a sign flip, 20,000 draws. Version 1 makes it one-sided, in the direction the event implies: up for a raise, down for a cut. Version 2 makes it two-sided (below).
 - **Controls, on each test's TEST months.**
   - **Placebo:** untagged releases drawn at random in place of the tagged ones must reach p < 0.05 in at most 10% of 200 draws.
   - **Oracle:** the month's best (or worst) releases in their place must reach p < 0.01.
   - If either fails, the verdict is void.
 - **Gate (drift).** PASS when all four hold:
-  - the difference points the way the event implies;
+  - the difference points the way the event implies (version 1; either way counts in version 2, and the result says which);
   - p < 0.05;
   - the controls pass;
   - Benjamini–Hochberg q < 0.10 across every gated test in the ledger: hypotheses, forecasts, links and these.
@@ -57,11 +57,14 @@ E1 found a raise lifting a large cap by about 1.4 points on days -1..+1 against 
 - **Universes.** By the same rule as the broad universe, on lower rows of SEC's `company_tickers.json` (roughly by market value): SEC XBRL from 10-Ks, and Yahoo daily prices since 2010.
   - **small:** rows 1501–3000, `python -m brain universe --band small` → `universe/us_small.json`.
   - **micro:** rows 3001–4500, `python -m brain universe --band micro` → `universe/us_micro.json`.
+- **The lists are in the repo** (`universe/us_small.json`, 510 stocks, and `us_micro.json`, 332, built 2026-10-19). A rebuild starts again from the first row and re-reads SEC's listing, which changes daily, so it can give a different list. Each declared test pins its list's sha and refuses a changed file: a rebuilt band is a new experiment with new ids. The listing was re-read after `us_broad.json` was built, so 11 stocks near row 1500 are in both.
 - **Releases.** `python -m brain releases --band small`, then `--band micro`. That's tens of thousands of releases at under 10 SEC requests a second, so it takes hours. Re-running it resumes: releases already held are skipped.
+- **Declaring.** `python -m brain events declare --band small` once that band's releases are read, and the same for micro. A band is refused while more than 2% of its earnings filings have no release read. The declaration pins what the test will read (`data_sha`: every release and its window return), so a fact downgraded or added later makes the test refuse rather than quietly change.
+- **Unread releases.** Some filings have no exhibit 99 that the reader recognises, so no text is kept. Version 2 leaves them out of both groups and RESULTS.md says how many. Version 1 counted them among the "other releases". That dilutes its comparison a little, and its results stand as recorded.
 - **Tests.** `E2-small-…` and `E2-micro-…`, for guidance_raised and guidance_cut, each in the reaction and drift windows.
   - **Either way.** The drift p is two-sided. E1's drift pointed the other way, so a direction declared in advance would only be a guess.
   - **Cost.** A round trip in such stocks costs about 1% (small) and 2% (micro) in spread and impact. RESULTS.md states it beside each result: a drift smaller than that couldn't be acted on, whatever its p.
-  - Everything else is as above: the same rules, windows, controls, TRAIN/TEST split, and the one false-discovery correction across the ledger.
+  - Everything else is as above: the same rules, windows, controls (the oracle uses the month's best releases), TRAIN/TEST split, and the one false-discovery correction across the ledger.
 - **Bias.**
   - **Survivorship.** Each universe is chosen by today's market value, and every member has been listed since 2010. Companies that failed or were bought out are missing, and small caps fail more often.
   - **Reported events only.** A small company that never issues guidance never appears.

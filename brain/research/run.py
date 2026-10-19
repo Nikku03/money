@@ -629,15 +629,21 @@ def _event_section(rows: list[dict], ledger_path=None) -> list[str]:
     if not rows:
         return []
     specs = {r["id"]: r["spec"] for r in ledger.read(ledger_path) if r["op"] == "declare" and is_event(r)}
+    one = any(specs.get(r["id"], {}).get("sign") for r in rows)
+    two = any(not specs.get(r["id"], {}).get("sign") for r in rows)
+    pdesc = ("a sign-flip p, one-sided in the direction the event implies (version 1) or two-sided (version 2)"
+             if one and two else "a two-sided sign-flip p" if two else "a one-sided sign-flip p")
+    way = ("points the way the event implies (either way for a two-sided test)" if two
+           else "points the way the event implies")
     lines = [
         "## Events",
         "",
         "Tests of corporate events named in earnings press releases (SEC 8-K exhibit 99; `docs/EVENTS.md`). Fixed "
         "rules tag each release's opening text (`brain/web/events.py`). Each month, the tagged releases' mean excess "
         "return over SPY is compared with the month's other earnings releases; the statistic is the mean of those "
-        "monthly differences, with a one-sided sign-flip p. **Reaction** (days -1..+1) is descriptive: does the event "
+        f"monthly differences, with {pdesc}. **Reaction** (days -1..+1) is descriptive: does the event "
         "move the stock? **Drift** (days +2..+21) is gated, declared before running: it passes when the difference "
-        "points the way the event implies, p < 0.05, the controls pass, and Benjamini–Hochberg q < 0.10 across every "
+        f"{way}, p < 0.05, the controls pass, and Benjamini–Hochberg q < 0.10 across every "
         "gated test in the ledger. TEST from 2019; TRAIN 2011–2018 is shown beside it.",
         "",
         "| Test | Event | Days | TEST events (months) | vs other releases | 90% interval | p | BH q | vs SPY | "
@@ -658,6 +664,9 @@ def _event_section(rows: list[dict], ledger_path=None) -> list[str]:
                    f"The event implies {'up' if s.get('sign', 0) > 0 else 'down'}")
         cost = (f" A round trip in these stocks costs about {s['cost_round_trip'] * 100:.0f}%."
                 if s.get("cost_round_trip") else "")
+        if (cov := r.get("coverage")) and cov.get("unread"):
+            cost += (f" {cov['unread']} of the {cov['releases']} releases had no text read (no exhibit 99 found) "
+                     f"and are left out of both groups.")
         words.append(f"- **{r['id']}**: over days {s.get('days', '?')}, releases tagged {s.get('event', '?')} did "
                      f"{_pp(te['diff'])} against the month's other releases (90% interval {_pp(lo)} to {_pp(hi)}) and "
                      f"{_pp(te['vs_spy'])} against SPY, over {te['events']} releases in {te['months']} months. "

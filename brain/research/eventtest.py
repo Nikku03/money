@@ -67,7 +67,10 @@ MIN_MONTHS = 12           # TEST months with a tagged release; fewer is recorded
 CONTROLS = {"n_placebo": 200, "n_flip": 2000, "fpr_max": 0.10, "oracle_p_max": 0.01}
 BH = {"bh_q": 0.10, "bh_over": "every hypothesis, every gated forecast test, every gated link test and every gated "
                                "event test with a result in the ledger, withdrawn ones included"}
-CLEAN = ("brain", "knowledge")
+CLEAN = ("brain", "knowledge", "universe")
+# A band is declared only once its releases are read: at most this share of its earnings filings may stay unread
+# (filings SEC would not serve: no folder listing, a missing exhibit page).
+UNREAD_MAX = 0.02
 HERE = Path(__file__).resolve()
 
 
@@ -98,12 +101,14 @@ def run_universe_exists(name: str) -> bool:
 
 def code_files() -> list[Path]:
     """What the numbers run through: this file, the event rules, the release reader, the reaction windows, the
-    verdicts and their correction, the trial rules, the bank's view and the price book."""
-    from brain import bank, events, metrics
+    verdicts and their correction, the trial rules, the bank's view, the price book, the series store and the
+    time rules."""
+    from brain import bank, events, metrics, series, timeutil
     from brain.research import forecast_tests, run, stats
     from brain.sources import releases
     from brain.web import events as tags
-    return [HERE, *(Path(m.__file__).resolve() for m in (tags, releases, events, run, stats, forecast_tests, bank, metrics))]
+    return [HERE, *(Path(m.__file__).resolve()
+                    for m in (tags, releases, events, run, stats, forecast_tests, bank, metrics, series, timeutil))]
 
 
 def code_sha() -> str:
@@ -126,18 +131,23 @@ def claim(t: dict) -> str:
             f"{'>' if t['sign'] > 0 else '<'} 0).")
 
 
-VARYING = ("test", "code_sha", "data_asof", "trial")
+VARYING = ("test", "code_sha", "data_asof", "trial", "data_sha")
 
 
 def spec(t: dict, anchor: str, trial: bool, data_asof: str) -> dict:
     split = (dict(TRIAL_SPLIT) if trial else {"train": SPLIT["train"], "test": [SPLIT["test_start"], anchor]})
     w = WINDOWS[t["window"]]
-    v2 = {"suite": t["suite"], "two_sided": not t["sign"], "cost_round_trip": t["cost_round_trip"]} \
-        if t.get("version", VERSION) >= 2 else {}   # version 1's specs stay exactly as declared
+    uni = t.get("universe") or UNIVERSE
+    v2 = {}
+    if t.get("version", VERSION) >= 2:   # version 1's specs stay exactly as declared
+        from brain.research import run
+        # The universe file is pinned: a rebuilt band is a new experiment (test() refuses a changed file).
+        v2 = {"suite": t["suite"], "two_sided": not t["sign"], "cost_round_trip": t["cost_round_trip"],
+              "universe_sha": run.universe_sha(uni), "n_tickers": len(run.load_universe(uni)["tickers"])}
     return {"kind": "event", "version": t.get("version", VERSION), "id": t["id"], "event": t["event"],
             "exclusive": list(EXCLUSIVE), "sign": t["sign"], "window": t["window"], "days": w["days"],
             "reaction_key": w["key"], "gate": w["gate"], **v2,
-            "universe": t.get("universe") or UNIVERSE, "attr": ATTR, "bench": BENCH, **split, "n_flip": N_FLIP, "n_boot": N_BOOT,
+            "universe": uni, "attr": ATTR, "bench": BENCH, **split, "n_flip": N_FLIP, "n_boot": N_BOOT,
             "seed": SEED, "alpha": ALPHA, "min_others": MIN_OTHERS, "min_months": MIN_MONTHS, "controls": CONTROLS,
             **BH, "claim": claim(t),
             "code_sha": code_sha(), "data_asof": data_asof, "trial": bool(trial)}
@@ -145,6 +155,30 @@ def spec(t: dict, anchor: str, trial: bool, data_asof: str) -> dict:
 
 def spec_sha(s: dict) -> str:
     return hashlib.sha256(canon(s).encode()).hexdigest()[:16]
+
+
+def data_sha(rels: list[dict]) -> str:
+    """What a version 2 test reads, pinned at declare: every release's fact id, whether its text was read, and its
+    window return to 8 places. A fact downgraded or added since changes it, and test() refuses."""
+    rows = sorted([r["ref"], bool(r.get("read", True)), round(float(r["x"]), 8)] for r in rels)
+    return hashlib.sha256(json.dumps(rows).encode()).hexdigest()[:16]
+
+
+def collection_problem(bank: Bank, universe: str) -> str | None:
+    """Why a band's releases are not ready to declare on, or None: every earnings filing since releases.SINCE of
+    its stocks must have its release read, but for UNREAD_MAX of them."""
+    from brain.research import run
+    from brain.sources import releases as reader
+    view = bank.view()
+    left = total = 0
+    for t in run.load_universe(universe)["tickers"]:
+        todo, n = reader.pending(view, t)
+        left, total = left + len(todo), total + n
+    if not total:
+        return f"{universe}: no earnings filings in the bank"
+    if left > UNREAD_MAX * total:
+        return f"{universe}: {left} of its {total} earnings releases are not read yet"
+    return None
 
 
 # ---------- the data ----------
@@ -168,7 +202,7 @@ def releases(bank: Bank, s: dict) -> list[dict]:
                 continue
             kinds = set(tags.tag((f.context or {}).get("opening", "")))
             out.append({"ticker": t, "month": r["date"][:7], "date": r["date"], "x": float(r[s["reaction_key"]]),
-                        "kinds": kinds, "ref": f.ref})
+                        "kinds": kinds, "ref": f.ref, "read": bool((f.context or {}).get("opening"))})
     return out
 
 
@@ -257,6 +291,12 @@ def controls(mo: dict, s: dict, rng) -> dict:
 def evaluate(rels: list[dict], s: dict) -> dict:
     if not rels:
         raise Refused(f"{s['id']}: no earnings releases in the bank; collect them first (python -m brain releases)")
+    coverage = None
+    if s.get("version", 1) >= 2:   # a release whose text was not read is neither tagged nor one of the 'others'
+        coverage = {"releases": len(rels), "unread": sum(not r.get("read", True) for r in rels)}
+        rels = [r for r in rels if r.get("read", True)]
+        if not rels:
+            raise Refused(f"{s['id']}: no release with its text read")
     rng = np.random.default_rng(s["seed"])
     out = {}
     for name in ("train", "test"):
@@ -270,7 +310,8 @@ def evaluate(rels: list[dict], s: dict) -> dict:
     sign_ok = bool(math.isfinite(te["diff"]) and (s["sign"] * te["diff"] > 0 or not s["sign"]))
     gate = {"sign_ok": sign_ok, "p_ok": bool(te["p"] < s["alpha"]), "enough": not thin}
     gate["pass"] = bool(s["gate"] == "diff" and sign_ok and gate["p_ok"] and ctl["pass"] and not thin)
-    return {"metrics": out, "controls": ctl, "gate": gate, "p": te["p"], "thin": thin}
+    res = {"metrics": out, "controls": ctl, "gate": gate, "p": te["p"], "thin": thin}
+    return {**res, "coverage": coverage} if coverage else res
 
 
 # ---------- declare and test ----------
@@ -324,21 +365,41 @@ def anchor_month(bank: Bank) -> str:
     return f"{y:04d}-{m:02d}"
 
 
-def declare(bank: Bank, *, trial: bool = False, log=print) -> list[dict]:
+def declare(bank: Bank, *, trial: bool = False, log=print, bands=None) -> list[dict]:
+    """Declare every test not declared yet; with ``bands`` (suite tags, e.g. ["small"]) only those suites'. A
+    version 2 suite is declared only once its releases are read (collection_problem), and the releases and prices
+    it would read are pinned in its spec (data_sha). Nothing is written unless every new test can be declared."""
     trial = is_trial(trial)
     led, _ = paths(trial)
     if not trial and (dirty := tree_dirty()):
-        raise Refused("commit brain/ and knowledge/ first; a declaration pins the committed code: " + "; ".join(dirty))
+        raise Refused("commit brain/, knowledge/ and universe/ first; a declaration pins the committed code: "
+                      + "; ".join(dirty))
     anchor = TRIAL_SPLIT["test"][1] if trial else anchor_month(bank)
     asof = now_iso()
     have = {r["id"]: r["spec"] for r in _records(led) if r["op"] == "declare"}
-    new = []
-    for t in tests():
+    suites = [su for su in SUITES if bands is None or su["tag"] in bands]
+    if bands and not suites:
+        raise Refused(f"no suite tagged {', '.join(bands)}")
+    todo, ready, rels = [], {}, {}
+    for t in tests(suites):
         s = spec(t, anchor, trial, asof)
         if t["id"] in have:
             if {k: v for k, v in have[t["id"]].items() if k not in VARYING} != {k: v for k, v in s.items() if k not in VARYING}:
                 raise Refused(f"{t['id']} was declared with a different design; raise VERSION for new ids")
             continue
+        if s["version"] >= 2:
+            if s["universe"] not in ready:
+                ready[s["universe"]] = collection_problem(bank, s["universe"])
+            if ready[s["universe"]]:
+                raise Refused(f"{t['id']}: {ready[s['universe']]}. Run python -m brain releases --band {s['suite']} "
+                              f"first (it resumes), or declare the bands that are ready with --band")
+            key = (s["universe"], s["reaction_key"])
+            if key not in rels:
+                rels[key] = releases(bank, s)
+            s["data_sha"] = data_sha(rels[key])
+        todo.append((t, s))
+    new = []
+    for t, s in todo:   # written only once every new test passed its checks
         rec = {"op": "declare", "kind": "event", "id": t["id"], "spec_sha": spec_sha(s), "spec": s, "at": now_iso(),
                **ledger.git_state()}
         ledger.append(rec, led)
@@ -371,6 +432,9 @@ def test(bank: Bank, ids=None, *, trial: bool = False, log=print) -> list[dict]:
             raise Refused(f"{i}: its declared spec does not match its spec_sha")
         if trial and (not d["spec"].get("trial") or d["spec"]["test"][1] > TRIAL_SPLIT["test"][1]):
             raise Refused(f"{i} is not a trial declaration: a trial reads TRAIN years only")
+        if (u := d["spec"].get("universe_sha")) and run.universe_sha(d["spec"]["universe"]) != u:
+            raise Refused(f"{i} was declared on {d['spec']['universe']} as it stood then (sha {u}); the file has "
+                          f"changed since. A rebuilt universe is a new experiment: declare a new id")
         if not trial:
             if d["spec"].get("trial"):
                 raise Refused(f"{i} is a trial declaration")
@@ -387,7 +451,11 @@ def test(bank: Bank, ids=None, *, trial: bool = False, log=print) -> list[dict]:
     for i in want:   # every result computed before any is written
         s = decls[i]["spec"]
         key = (s["universe"], s["reaction_key"], s.get("data_asof"))
-        cache.setdefault(key, releases(bank, s))
+        if key not in cache:
+            cache[key] = releases(bank, s)
+        if s.get("data_sha") and data_sha(cache[key]) != s["data_sha"]:
+            raise Refused(f"{i}: the releases and prices it reads are not the ones pinned at declare (a fact was "
+                          f"downgraded or added since); declare a new id")
         results[i] = evaluate(cache[key], s)
     out = []
     for i, r in results.items():
@@ -410,7 +478,7 @@ def test(bank: Bank, ids=None, *, trial: bool = False, log=print) -> list[dict]:
 def _cmd(a) -> int:
     trial = is_trial(a.trial)
     if a.action == "declare":
-        new = declare(Bank(), trial=trial)
+        new = declare(Bank(), trial=trial, bands=[a.band] if a.band else None)
         print(f"{len(new)} declared" + ("" if trial or not new else "; commit the ledger before `brain events test`"))
         return 0
     test(Bank(), a.ids or None, trial=trial)
@@ -422,4 +490,5 @@ def add_cli(sub) -> None:
     s.add_argument("action", choices=["declare", "test"])
     s.add_argument("ids", nargs="*")
     s.add_argument("--trial", action="store_true", help="TRAIN years only, in the trial ledger")
+    s.add_argument("--band", choices=["small", "micro"], help="declare: only this band's tests (once its releases are read)")
     s.set_defaults(fn=_cmd)

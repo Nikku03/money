@@ -100,6 +100,15 @@ def read_release(filing: Fact, fetched_at: str | None = None) -> Fact:
 WORKERS = 6   # requests in flight at once; the shared SEC bucket still spaces them under 10 a second
 
 
+def pending(view, ticker: str, since: str = SINCE) -> tuple[list[Fact], int]:
+    """The earnings filings of ``ticker`` since ``since`` whose release the bank does not hold yet (read at this
+    OPENING_CHARS), and how many earnings filings there are since then in all."""
+    t = ticker.upper()
+    have = {f.context.get("accn") for f in view.facts(t, ATTR) if f.context.get("opening_chars") == OPENING_CHARS}
+    every = [f for f in earnings.distinct(earnings.earnings_events(view, t)) if f.known_at >= since]
+    return [f for f in every if f.context.get("accn") not in have], len(every)
+
+
 def collect(bank: Bank, tickers, since: str = SINCE, log=print, workers: int = WORKERS) -> dict:
     """Read every earnings release since ``since`` that the bank does not hold yet."""
     from concurrent.futures import ThreadPoolExecutor
@@ -112,9 +121,7 @@ def collect(bank: Bank, tickers, since: str = SINCE, log=print, workers: int = W
     view = bank.view()
     kept, failed = 0, []
     for t in [x.upper() for x in tickers]:
-        have = {f.context.get("accn") for f in view.facts(t, ATTR) if f.context.get("opening_chars") == OPENING_CHARS}
-        todo = [f for f in earnings.distinct(earnings.earnings_events(view, t))
-                if f.known_at >= since and f.context.get("accn") not in have]
+        todo, _ = pending(view, t, since)
         with ThreadPoolExecutor(max_workers=workers) as pool:
             done = list(pool.map(one, todo))
         out = [r for r, _ in done if r is not None]
