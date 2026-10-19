@@ -1,0 +1,6 @@
+{
+ "about": "Pages or feeds the web gateway watches for a ticker (brain/web/plan.py, docs/WEB.md). It reads the source, keeps links whose address or title matches 'pattern' (optional), and reads the first 'follow' of them as articles. 'feed': true for an RSS or Atom feed. Public sources only: robots.txt, logins, paywalls and bot checks are respected.",
+ "sources": [
+  {"ticker": "AAPL", "name": "Apple Newsroom (RSS)", "url": "https://www.apple.com/newsroom/rss-feed.rss", "feed": true, "follow": 3}
+ ]
+}

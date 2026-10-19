@@ -24,6 +24,7 @@ python -m brain check                              # bank invariants; exit 0 = O
    - `reported` is a factual event ("FDA approved X"). `opinion` is a view or forecast ("analyst says buy").
    - `--known-at` is when the page was published, not when you read it. If you can't find a publication time, leave it out (it defaults to now).
    - `--direction` is what the claim implies for the stock relative to the market over about a month. Use `none` when it implies nothing.
+   The engine can also read the web by itself, with no model: `python -m brain web plan` shows what it would fetch from the bank's gaps (the stories behind headlines, the sources in `knowledge/web_sources.json`), and `python -m brain web run` fetches it under the web rules below and keeps each `web.article` with its source and stated publication time (`docs/WEB.md`).
 4. `python -m brain brief TICKER`: a cited one-page summary. Quote numbers from the brief, not from memory.
 5. `python -m brain decide TICKER`: a paper decision under policy D1 (`docs/DECIDE.md`), weighing only tested evidence and citing every input. Quote its action, score and each item's weight and why as the card prints them. `--no-llm` skips the model; `--read` lets it read the web first. `python -m brain decide score` shows how past decisions and every source's calls did.
 6. For a person at a screen, `python -m brain terminal` serves the same bank as a keyboard-driven terminal (`docs/TERMINAL.md`). Its `ASK` analyst follows the same rules as you: bank-only facts, cited ids, verdicts quoted as recorded.

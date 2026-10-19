@@ -97,6 +97,14 @@ python -m brain forecast score              # how recorded forecasts did once th
 - Each pair is tested twice: does the basket move with the cause that month, and does it move the next month? The next-month test is the one that matters for acting on a link.
 - `brain chain links` shows each link's test, or what would measure it. `brain chain follow` shows the results beside each chain.
 
+## The web gateway
+
+`python -m brain web run` lets the reasoning engine read the web without a language model (`docs/WEB.md`):
+- **The engine chooses:** it picks what to fetch from the bank's gaps, such as the story behind each headline and company newsroom feeds.
+- **The browser fetches:** a real browser, browser-use with no agent, renders the pages, under the repo's web rules. It identifies itself, checks robots.txt, reads public hosts only, and stops at logins, paywalls and bot checks.
+- **Fixed rules extract:** the headline, the stated publication time, author, publisher and text, plus tags for corporate events. Each is stored with its source.
+- **Without a browser:** `--http` reads over plain HTTP.
+
 ## What the brain collects
 
 | Area | What | Command |
