@@ -37,7 +37,6 @@ FOMC_URL = "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
 YEAR = 364                  # 52 weeks: the same weekday a year on
 DONE_DAYS = 45              # a release this close before the expected date means this quarter is already out
 QUIET_Z = -1.5              # a report this many of the company's own standard deviations below its usual similarity
-QUIET_MIN_HISTORY = 4       # earlier comparisons of the same form needed to say what is usual
 MONTHS = {m: i for i, m in enumerate(["january", "february", "march", "april", "may", "june", "july", "august",
                                       "september", "october", "november", "december"], 1)}
 
@@ -162,23 +161,16 @@ def insider_sale_notices(view, ticker: str, days: int = 7) -> dict | None:
 
 
 def quiet_change(view, ticker: str, days: int = 14) -> dict | None:
-    """The ticker's latest report, if filed in the last ``days`` days and unusually changed for this company:
-    its similarity at least 1.5 of its own standard deviations below its earlier reports of the same form."""
-    f = changes.latest(view, ticker, max_age=days)
-    if f is None:
+    """The ticker's latest report, if filed in the last ``days`` days and unusually changed for this company
+    (``changes.unusual`` at or below ``QUIET_Z``)."""
+    got = changes.unusual(view, ticker, max_age=days)
+    if got is None or got[0] > QUIET_Z:
         return None
+    z, f = got
     past = [g.value for g in changes.history(view, ticker)
             if g.context.get("form") == f.context.get("form") and g.known_at < f.known_at]
-    if len(past) < QUIET_MIN_HISTORY:
-        return None
-    mu, sd = statistics.mean(past), statistics.pstdev(past)
-    if sd <= 0:
-        return None
-    z = (f.value - mu) / sd
-    if z > QUIET_Z:
-        return None
     return {"kind": "quiet_change", "ticker": ticker.upper(), "date": f.known_at[:10], "form": f.context.get("form"),
-            "period": f.as_of, "similarity": f.value, "usual": round(mu, 4), "z": round(z, 2),
+            "period": f.as_of, "similarity": f.value, "usual": round(statistics.mean(past), 4), "z": round(z, 2),
             "new_share": f.context.get("new_share"), "refs": [f.ref]}
 
 

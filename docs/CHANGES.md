@@ -39,12 +39,19 @@ python -m brain changes recent [--days 14]        # reports filed lately, most c
 
 ## H10
 
-H10 tests the change score on the 60-stock `us_large` universe. Each month, it holds the third of stocks whose latest report (filed in the last 400 days) is most similar to the year before. These are the quiet ones. It compares them with all 60, after costs, with the same gate as every other hypothesis.
+H10 tests the change score on the 60-stock `us_large` universe. Each month, every stock's latest report (filed in the last 400 days) is scored against the company's own earlier comparisons of the same form: its similarity minus their mean, in their standard deviations (`changes.unusual`, with at least 4 earlier ones). H10 holds the third that changed least compared with their usual, the quiet ones. It compares them with all 60, after costs, with the same gate as every other hypothesis.
+
+Why against the company's own history and not the raw similarity:
+- **Forms differ.** On the large caps, 10-Ks run more similar year to year (median about 0.99) than 10-Qs (about 0.97). At a month-end, a raw score would mostly sort stocks by which form they filed last.
+- **Companies differ.** Some rewrite more than others, every year.
+
+This was found by looking at the comparisons by year and form, before H10 was declared and before any return was computed. The week-ahead look (`docs/AHEAD.md`) flags a report on the same score, at -1.5 or below.
 
 It is declared in `brain/research/hypotheses.py`, committed before it runs, and counts in the false-discovery correction.
 
 Reading it:
 - **Few stocks.** 60 stocks give little power: an edge of a few tenths of a percent a month can hide in the noise.
 - **Survivorship.** The universe is today's survivors, so a firm whose reports changed because it was failing is missing. That works against finding the effect.
-- **Pooled forms.** At a given month-end some stocks' latest report is a 10-K and others' a 10-Q, and the two forms have different typical similarity. The paper pools them too.
+- **Not the paper's exact measure.** The paper sorts on the raw similarity. H10 sorts on similarity against the company's own usual, for the reasons above.
+- **Short histories.** A company with a new SEC registration has fewer comparisons and no score until it has 4 of a form: BLK (new holding company, 2024), LIN (2018), DIS (2019), MRVL (2021), AVGO (2018), GOOGL (2015). It is not ranked in those months.
 - **Wrapper filings.** Some banks (WFC, JPM, C) put most of their annual report in an exhibit the primary document doesn't contain. Their similarity is that of the wrapper.

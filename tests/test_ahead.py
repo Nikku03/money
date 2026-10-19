@@ -78,6 +78,8 @@ class SurfaceTest(TempHome):
                                context={"form": "10-K", "method": changes.METHOD, "new_share": 0.4}))
         got = ahead.quiet_change(self.bank.view("2025-02-25"), "ACME")
         self.assertEqual((got["similarity"], got["usual"]), (0.90, 0.9718))
+        z, f = changes.unusual(self.bank.view("2025-02-25"), "ACME")
+        self.assertAlmostEqual(z, got["z"], places=2)
         self.assertLess(got["z"], -1.5)
         self.assertIsNone(ahead.quiet_change(self.bank.view("2024-02-25"), "ACME"))   # 0.974 is usual
         self.assertIsNone(ahead.quiet_change(self.bank.view("2025-04-25"), "ACME"))   # filed too long ago

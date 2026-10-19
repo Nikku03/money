@@ -16,7 +16,7 @@ from tests.util import TempHome, filed, price_snapshot
 H1_H5 = ["H1-mom12_1", "H2-rev1", "H3-earnings_yield", "H4-low_asset_growth", "H5-ridge"]
 NEW = ["H3b-earnings_yield_ttm", "H6-insider_buying", "H7-earnings_reaction", "H8-sue",
        "H3c-earnings_yield_ttm", "H7b-earnings_reaction", "H8b-sue"]
-LARGE_NEW = ["H10-text_similarity"]   # on the large universe, so run with H1-H5's group
+LARGE_NEW = ["H10-text_unchanged"]   # on the large universe, so run with H1-H5's group
 
 
 def usd(f: Fact) -> Fact:

@@ -101,13 +101,13 @@ HYPOTHESES = [
               "difference in the 8 prior quarters, split-adjusted; Q4 = fiscal-year EPS minus nine-month EPS "
               "as known when the year was filed) beat the universe next month."},
     # H9 is kept for the relationship graph's propagation test (docs/GRAPH.md), not yet declared.
-    {"id": "H10-text_similarity", "signal": "text_similarity", "select": "top_frac",
+    {"id": "H10-text_unchanged", "signal": "text_unchanged", "select": "top_frac",
      "data": "SEC EDGAR 10-K and 10-Q primary documents from 2008 on; each against the same form whose period "
              "ended 300-430 days earlier (brain/changes.py, METHOD 1: cosine of word counts, letters only, common "
-             "words left out)",
-     "claim": "Stocks whose latest 10-K or 10-Q (known at the rebalance day, filed in the last 400 days) is most "
-              "similar to the same report a year earlier beat the universe next month: firms that quietly change "
-              "their reports do worse (Cohen, Malloy & Nguyen 2020, 'Lazy Prices')."},
+             "words left out); scored against the company's own earlier comparisons of that form (at least 4)",
+     "claim": "Stocks whose latest 10-K or 10-Q (known at the rebalance day, filed in the last 400 days) changed less "
+              "than usual for the company, against the same report a year earlier, beat the universe next month: "
+              "firms that quietly change their reports do worse (Cohen, Malloy & Nguyen 2020, 'Lazy Prices')."},
 ]
 
 

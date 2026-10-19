@@ -40,6 +40,7 @@ from brain.timeutil import days_between
 FAMILY = {"10-K": "10-K", "10-K405": "10-K", "10-KT": "10-K", "10-Q": "10-Q"}  # amendments are skipped
 PAIR_DAYS = (300, 430)      # the earlier report's period ends this many days before the newer one's
 MAX_AGE_DAYS = 400          # ``latest``: a comparison older than this no longer speaks for the company
+MIN_HISTORY = 4             # ``unusual``: earlier comparisons of the same form needed to say what is usual
 METHOD = 1                  # bump when the text, sentence or similarity rules change; facts record it
 ATTR = "text.similarity"
 STOP = frozenset("""a an the and or but if of to in on at by for with from as is are was were be been being it its this
@@ -212,6 +213,26 @@ def latest(view, ticker: str, max_age: int = MAX_AGE_DAYS) -> Fact | None:
         return None
     f = max(fs, key=lambda x: (x.known_at, x.as_of, x.id))
     return f if days_between(f.known_at, view.t) <= max_age else None
+
+
+def unusual(view, ticker: str, max_age: int = MAX_AGE_DAYS) -> tuple[float, Fact] | None:
+    """How unusual the ticker's latest report is for this company: its similarity minus the mean of the company's
+    earlier comparisons of the same form, in their standard deviations (the earlier ones known before it). Below 0
+    means it changed more than usual. Scored against the company's own same-form history because 10-Ks run more
+    similar year to year than 10-Qs (medians about 0.99 and 0.97 on the large caps), and some companies rewrite
+    more than others. None without a recent report or with fewer than ``MIN_HISTORY`` earlier ones."""
+    f = latest(view, ticker, max_age)
+    if f is None:
+        return None
+    past = [g.value for g in history(view, ticker)
+            if g.context.get("form") == f.context.get("form") and g.known_at < f.known_at]
+    if len(past) < MIN_HISTORY:
+        return None
+    mu = sum(past) / len(past)
+    sd = math.sqrt(sum((x - mu) ** 2 for x in past) / len(past))
+    if sd <= 0:
+        return None
+    return (f.value - mu) / sd, f
 
 
 def history(view, ticker: str) -> list[Fact]:
