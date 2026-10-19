@@ -4,16 +4,16 @@ Claims about two networks' insides, declared in `research/neuro_ledger.jsonl` be
 
 | Claim | Networks passing | Median measure | p | BH q | Controls (+ / −) | Verdict |
 | --- | --- | --- | --- | --- | --- | --- |
-| N1-one-frequency | 10/10 (of 10) | 0.911 | 0.00098 | 0.00098 | planted 10/10; memorizer 0/10, untrained 0/10 | PASS |
-| N1-same-frequency | 10/10 (of 10) | 0.984 | 0.00098 | 0.00098 | planted 10/10; memorizer 0/10, untrained 0/10 | PASS |
-| N1-phase-sum | 10/10 (of 10) | 0.999 | 0.00098 | 0.00098 | planted 10/10; untrained 0/10 | PASS |
-| N1-faithful | 10/10 (of 10) | 1.000 | 0.00098 | 0.00098 | planted 10/10; memorizer 0/10 | PASS |
-| N1-hidden-circuit | 10/10 (of 10) | 0.994 | 0.00098 | 0.00098 | planted 10/10; untrained 0/10 | PASS |
-| N1-rebuild | 10/10 (of 10) | 1.000 | 0.00098 | 0.00098 | planted 10/10; untrained 0/10, wrong-law 0/10 | PASS |
-| N1-transfer | 10/10 (of 10) | 1.000 | 0.00098 | 0.00098 | planted 10/10; untrained 0/10 | PASS |
-| N1-chain-pointer | 10/10 (of 10) | 1.000 | 0.00098 | 0.00098 | planted_lookup 1/1; planted_memory 0/1 | PASS |
-| N1-chain-lookup | 10/10 (of 10) | 0.995 | 0.00098 | 0.00098 | planted_lookup 1/1; planted_memory 0/1 | PASS |
-| N1-chain-rebuild | 10/10 (of 10) | 1.000 | 0.00098 | 0.00098 | trained 10/10; nomemory-pointer-ablated 0/10 | PASS |
+| N1-one-frequency | 10/10 (of 10) | 0.911 | 0.00098 | 0.0016 | planted 10/10; memorizer 0/10, untrained 0/10 | PASS |
+| N1-same-frequency | 10/10 (of 10) | 0.984 | 0.00098 | 0.0016 | planted 10/10; memorizer 0/10, untrained 0/10 | PASS |
+| N1-phase-sum | 10/10 (of 10) | 0.999 | 0.00098 | 0.0016 | planted 10/10; untrained 0/10 | PASS |
+| N1-faithful | 10/10 (of 10) | 1.000 | 0.00098 | 0.0016 | planted 10/10; memorizer 0/10 | PASS |
+| N1-hidden-circuit | 10/10 (of 10) | 0.994 | 0.00098 | 0.0016 | planted 10/10; untrained 0/10 | PASS |
+| N1-rebuild | 10/10 (of 10) | 1.000 | 0.00098 | 0.0016 | planted 10/10; untrained 0/10, wrong-law 0/10 | PASS |
+| N1-transfer | 10/10 (of 10) | 1.000 | 0.00098 | 0.0016 | planted 10/10; untrained 0/10 | PASS |
+| N1-chain-pointer | 10/10 (of 10) | 1.000 | 0.00098 | 0.0016 | planted_lookup 1/1; planted_memory 0/1 | PASS |
+| N1-chain-lookup | 10/10 (of 10) | 0.995 | 0.00098 | 0.0016 | planted_lookup 1/1; planted_memory 0/1 | PASS |
+| N1-chain-rebuild | 10/10 (of 10) | 1.000 | 0.00098 | 0.0016 | trained 10/10; nomemory-pointer-ablated 0/10 | PASS |
 
 Controls: the positive control must pass on at least 90% of its runs, each negative control must fail on at least 90% of its runs.
 
@@ -42,3 +42,33 @@ Controls: the positive control must pass on at least 90% of its runs, each negat
 - N1-chain-pointer: seed 30: 1.000; seed 31: 1.000; seed 32: 1.000; seed 33: 1.000; seed 34: 1.000; seed 35: 1.000; seed 36: 1.000; seed 37: 1.000; seed 38: 1.000; seed 39: 1.000
 - N1-chain-lookup: seed 30: 0.989, null p 0.000; seed 31: 0.996, null p 0.000; seed 32: 0.999, null p 0.000; seed 33: 0.991, null p 0.000; seed 34: 0.999, null p 0.000; seed 35: 0.994, null p 0.000; seed 36: 0.994, null p 0.000; seed 37: 0.996, null p 0.000; seed 38: 0.990, null p 0.000; seed 39: 0.997, null p 0.000
 - N1-chain-rebuild: seed 30: 1.000; seed 31: 1.000; seed 32: 1.000; seed 33: 1.000; seed 34: 1.000; seed 35: 1.000; seed 36: 1.000; seed 37: 1.000; seed 38: 1.000; seed 39: 1.000
+
+# How billion-parameter models hold a number while they count
+
+Claims declared before they ran on Pythia-1B and Pythia-1.4B, after looking only at Pythia-410M (`brain/neuro/lmclaims.py`, `docs/NEURO.md`). The BH q is shared with the claims above.
+
+| Claim | Model | Layer | Measure | Threshold | p | BH q | Controls | Verdict |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| N2-helix-fit-pythia1b | pythia-1b | 5 | 0.309 | 0.2 | 0.005 | 0.0062 | ok | PASS |
+| N2-helix-read-pythia1b | pythia-1b | 5 | 0.970 | 0.9 | 0.005 | 0.0062 | ok | PASS |
+| N2-locate-pythia1b | pythia-1b | 5 | 0.990 | 0.9 | 9.9e-197 | 9.9e-196 | ok | PASS |
+| N2-helix-steer-pythia1b | pythia-1b | 5 | 0.581 | 0.5 | 0.02 | 0.02 | ok | PASS |
+| N2-helix-write-pythia1b | pythia-1b | 5 | 0.170 | 0.5 | 0.02 | 0.02 | ok | FAIL |
+| N2-helix-fit-pythia1.4b | pythia-1.4b | 5 | 0.330 | 0.2 | 0.005 | 0.0062 | ok | PASS |
+| N2-helix-read-pythia1.4b | pythia-1.4b | 5 | 1.000 | 0.9 | 0.005 | 0.0062 | ok | PASS |
+| N2-locate-pythia1.4b | pythia-1.4b | 5 | 1.000 | 0.9 | 1e-200 | 2e-199 | ok | PASS |
+| N2-helix-steer-pythia1.4b | pythia-1.4b | 5 | 0.610 | 0.5 | 0.02 | 0.02 | ok | PASS |
+| N2-helix-write-pythia1.4b | pythia-1.4b | 5 | 0.100 | 0.5 | 0.02 | 0.02 | ok | FAIL |
+
+## The claims
+
+- **helix-fit**: At the chosen layer, the state at the number token is a helix in the number: the basis [n, waves of period 2, 5, 10, 100] predicts the states of numbers held out of the fit with R^2 >= 0.2. Null: the same fit with the numbers shuffled (200 draws) and with 4 other periods (200 sets). Controls: positive planted helix states; negative the untrained step0 checkpoint, same layer.
+- **helix-read**: The number is in that helix exactly: projected onto the helix directions of a fit that never saw it, a number's state decodes to that number for >= 90% of numbers. Null: the same with 4 other periods (200 sets). Controls: positive planted helix states; negative the untrained step0 checkpoint, same layer.
+- **locate**: The model reads the number from that token at that layer: with the state there replaced by the state another prompt had at its number m, it continues with m + 1 on >= 90% of prompts. Null: binomial against 1/100. Controls: positive none; negative the same patch at the last layer (the number has moved on).
+- **helix-steer**: The model uses the helix: moving only the helix part of a prompt's state from its number n to m (from a fit that never saw m) recovers >= half of the logit gap toward m + 1 that the real state of m opens (median over prompts), more than moving along 4 other periods. Null: the same shift along 4 other periods (50 sets). Controls: positive none; negative the same shift along a helix fitted to shuffled numbers.
+- **helix-write**: The helix is the whole number: that shift alone makes the model write exactly m + 1 on >= 50% of prompts. (Expected to fail; see the module docstring.) Null: the same shift along 4 other periods (50 sets). Controls: positive none; negative the same shift along a helix fitted to shuffled numbers.
+
+## Measurements
+
+- pythia-1b: counting accuracy 1.000; layer 5 (real-state patch by layer: 0.23, 0.26, 0.79, 0.83, 0.99, 0.98, 0.95, 0.76, 0.61, 0.51, 0.30, 0.00, 0.00, 0.00, 0.00). Helix shift: recovers 0.58 of the gap (random periods median 0.21, shuffled helix 0.03), keeps the original answer on 0.27, writes m+1 on 0.17 (random periods 0.00). Untrained checkpoint: counting 0.000, helix R^2 -0.118, read 0.00. Planted: R^2 0.328, read 1.00. Fitted size per part: T10 6.4, T100 12.4, T2 4.6, T5 6.1, linear 27.5.
+- pythia-1.4b: counting accuracy 1.000; layer 5 (real-state patch by layer: 0.19, 0.23, 0.40, 0.94, 1.00, 1.00, 1.00, 1.00, 0.84, 0.67, 0.62, 0.35, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00). Helix shift: recovers 0.61 of the gap (random periods median 0.24, shuffled helix 0.03), keeps the original answer on 0.13, writes m+1 on 0.10 (random periods 0.00). Untrained checkpoint: counting 0.000, helix R^2 -0.119, read 0.00. Planted: R^2 0.328, read 1.00. Fitted size per part: T10 6.1, T100 11.8, T2 4.5, T5 6.0, linear 27.8.
