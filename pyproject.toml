@@ -7,7 +7,7 @@ dependencies = ["numpy>=1.26", "pandas>=2.1"]
 
 [project.optional-dependencies]
 alt = ["opencv-python-headless>=4.8", "websockets>=13"]
-lm = ["torch>=2.2", "transformers>=4.40"]   # brain neuro lm-*: look inside a Pythia language model
+lm = ["torch>=2.2", "transformers>=4.56"]   # brain neuro lm-*: look inside a Pythia language model
 
 [project.scripts]
 brain = "brain.cli:main"

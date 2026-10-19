@@ -50,6 +50,17 @@ def _cmd(a) -> int:
             for e in a.words or [e for e in b.entities() if e.startswith("LM-")]:
                 print(lm.card(b, e), "\n")
         return 0
+    if a.action in ("lang-declare", "lang-test"):
+        from brain.neuro import langclaims
+        if a.action == "lang-declare":
+            new = langclaims.declare(trial=a.trial)
+            print(f"{len(new)} declared" + ("" if a.trial or not new else "; commit research/neuro_ledger.jsonl, "
+                                            "then python -m brain neuro lang-test --model qwen3:30b"))
+        else:
+            key = a.model or (langclaims.DEV[0] if a.trial else "qwen3:30b")
+            langclaims.test(key, trial=a.trial)
+            print(langclaims.report(claims.paths(a.trial)[0]))
+        return 0
     if a.action == "card":
         bank = memory.neuro_bank()
         ents = a.words or [e for e in bank.entities() if e.startswith("NN-")]
@@ -62,8 +73,11 @@ def _cmd(a) -> int:
 def add_cli(sub) -> None:
     s = sub.add_parser("neuro", help="look inside a neural network: probe it, record what is found, test claims "
                                      "about its mechanism, rebuild it from the facts: look | declare | test | card; "
-                                     "a language model (Pythia, needs torch): lm-declare | lm-test | lm-card")
-    s.add_argument("action", choices=["look", "declare", "test", "card", "lm-declare", "lm-test", "lm-card"])
+                                     "a language model (Pythia, needs torch): lm-declare | lm-test | lm-card; "
+                                     "how a ~30B model handles language (GPU): lang-declare | lang-test --model KEY")
+    s.add_argument("action", choices=["look", "declare", "test", "card", "lm-declare", "lm-test", "lm-card",
+                                      "lang-declare", "lang-test"])
+    s.add_argument("--model", help="lang-test: the Ollama name of the declared model (qwen3:30b, qwen3:32b)")
     s.add_argument("words", nargs="*", help="claim ids for test, entities (NN-...) for card")
     s.add_argument("--trial", action="store_true", help="dev seeds and a scratch ledger: exercise the code, "
                                                         "never the record")

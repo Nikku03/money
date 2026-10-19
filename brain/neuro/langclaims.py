@@ -21,7 +21,7 @@ import hashlib
 import numpy as np
 
 from brain import config
-from brain.bank import Bank, Fact, canon
+from brain.bank import Bank, Fact
 from brain.neuro import claims as n1
 from brain.neuro import lang as G
 from brain.neuro import lmclaims
@@ -33,6 +33,7 @@ DEV = ["Qwen/Qwen3-0.6B"]
 MODELS = {"qwen3:30b": {"hf": "Qwen/Qwen3-30B-A3B", "quant": None, "gpu_gb": 75},
           "qwen3:32b": {"hf": "Qwen/Qwen3-32B", "quant": "nf4", "gpu_gb": 30}}
 SEL, TRAIN, TEST = (0, 40), (40, 140), (140, 240)
+TRIAL_SPLITS = ((0, 6), (6, 26), (26, 36))   # --trial only: small enough to exercise the code on a CPU
 N_SHUFFLE, N_RANDOM, N_RANDOM_SPEAK = 200, 20, 5
 SPEAK_FRACTIONS = (0.25, 0.375, 0.5, 0.625, 0.75)   # layers tried for speak, as a share of the depth
 Q = 0.10
@@ -133,8 +134,9 @@ def _p_ge(obs, null):
     return (1 + sum(x >= obs for x in null)) / (1 + len(null))
 
 
-def measure_model(key: str, sha: str, log=print, batch: int = 16) -> dict:
-    """Every claim's numbers for one model."""
+def measure_model(key: str, sha: str, log=print, batch: int = 16, splits=None) -> dict:
+    """Every claim's numbers for one model (``splits``: SEL, TRAIN, TEST; the declared ones unless a trial)."""
+    SEL, TRAIN, TEST = splits or (globals()["SEL"], globals()["TRAIN"], globals()["TEST"])
     hf = MODELS[key]["hf"] if key in MODELS else key
     quant = MODELS[key]["quant"] if key in MODELS else None
     m = G.Model(hf, sha, quant)
@@ -223,7 +225,7 @@ def measure_model(key: str, sha: str, log=print, batch: int = 16) -> dict:
                          "random_median": float(np.median(null)), "unsteered_english": float(np.mean([b == "eng_Latn" for b in base])),
                          "negative": speak_rate(eng_test, layer, a, G.means(Pt[:, layer], shuffled_t, K))}
     out["entity"] = record(m, out)
-    del m
+    m.model = None   # free the GPU before the caller loads anything else
     gc.collect()
     if log:
         log("  " + "; ".join(f"{c['id']} {out[c['id']]['stat']:.2f} at layer {out[c['id']]['layer']}" for c in CLAIMS))
@@ -250,7 +252,7 @@ def judge(c: dict, m: dict) -> dict:
     learnt = m["naming_acc"] >= LEARNT["naming_acc_min"]
     neg_ok = not (x["negative"] >= th)
     gate = x["stat"] >= th and x["p"] < 0.05
-    return {"n": 1, "learnt": int(learnt), "passes": int(gate), "p": x["p"], "median_stat": x["stat"],
+    return {"n": 1, "learnt": int(learnt), "passes": int(gate), "p": x["p"], "median_stat": x["stat"], "threshold": th,
             "min_stat": x["stat"], "rows": [{"model": m["model"], **x}],
             "controls": {"positive": True, "negative": neg_ok, "pass": neg_ok}, "gate": {"pass": gate},
             "model": m["model"], "layer": x["layer"]}
@@ -294,7 +296,7 @@ def test(key: str, trial: bool = False, log=print) -> list[dict]:
         if d["spec"]["code_sha"] != code_sha():
             raise n1.Refused(f"{i}: the code changed since it was declared; declared claims are frozen")
     sha = next(iter(want.values()))["spec"]["sha"]
-    m = measure_model(key, sha, log)
+    m = measure_model(key, sha, log, splits=TRIAL_SPLITS if trial else None)
     out = []
     for c in CLAIMS:
         i = claim_id(c, key)
@@ -321,11 +323,9 @@ def report(path) -> str:
           "| --- | --- | --- | --- | --- | --- | --- | --- | --- |"]
     for k, r in vs.items():
         x = r["rows"][0]
-        c = next(c for c in CLAIMS if k.startswith(f"{VERSION}-{c['id']}-"))
         L_.append(f"| {k} | {r['model'].split('/')[-1]} | {r['layer']} | {r['median_stat']:.3f} | "
                   f"{r.get('threshold', '')} | {r['p']:.2g} | {r['bh_q']:.2g} | {x['negative']:.3f} "
                   f"({'fails, as it must' if r['controls']['negative'] else 'PASSES: control broken'}) | {r['verdict']} |")
-        del c
     L_ += ["", "## The claims", ""] + [f"- **{c['id']}**: {c['claim']} Layer: {c['layer']}. Null: {c['null']}. "
                                        f"Negative control: {c['negative']}." for c in CLAIMS]
     L_ += ["", "## Measurements", ""]

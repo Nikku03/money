@@ -42,16 +42,16 @@ PREFIX, SUFFIX = "Text: ", "\nLanguage:"
 ALPHAS = (1.0, 2.0, 4.0, 8.0)   # steering strengths tried for speak, as multiples of the language difference
 NEW_TOKENS = 20
 
-_END = re.compile(r"(.+?[.!?。！？।؟])(\s|$)", re.S)
+_END = re.compile(r"(.+?[.!?。！？।؟])(\s|$)", re.DOTALL)
 
 STOP = {   # a few of the commonest words, enough to tell these Latin-script languages apart in 20 tokens
-    "eng_Latn": "the and of to is in that it was for on are with as".split(),
-    "fra_Latn": "le la les et des est une un que du dans pour pas sur qui".split(),
-    "spa_Latn": "el la los las y de que en es un una por con para del".split(),
-    "deu_Latn": "der die das und ist nicht ein eine zu den mit sich auf des dem".split(),
-    "ita_Latn": "il la di e che è un una per non del della con sono gli".split(),
-    "por_Latn": "o a os as e de que em um uma para não do da com".split(),
-    "nld_Latn": "de het een en van is dat niet op te zijn met voor".split(),
+    "eng_Latn": ["the", "and", "of", "to", "is", "in", "that", "it", "was", "for", "on", "are", "with", "as"],
+    "fra_Latn": ["le", "la", "les", "et", "des", "est", "une", "un", "que", "du", "dans", "pour", "pas", "sur", "qui"],
+    "spa_Latn": ["el", "la", "los", "las", "y", "de", "que", "en", "es", "un", "una", "por", "con", "para", "del"],
+    "deu_Latn": ["der", "die", "das", "und", "ist", "nicht", "ein", "eine", "zu", "den", "mit", "sich", "auf", "des", "dem"],
+    "ita_Latn": ["il", "la", "di", "e", "che", "è", "un", "una", "per", "non", "del", "della", "con", "sono", "gli"],
+    "por_Latn": ["o", "a", "os", "as", "e", "de", "que", "em", "um", "uma", "para", "não", "do", "da", "com"],
+    "nld_Latn": ["de", "het", "een", "en", "van", "is", "dat", "niet", "op", "te", "zijn", "met", "voor"],
 }
 
 
@@ -73,9 +73,10 @@ def passages(n: int) -> dict[str, list[str]]:
     for code, _ in LANGS:
         p = hf_hub_download(DATASET, f"data/{code}.jsonl", repo_type="dataset", revision=DATASET_SHA)
         by = {}
-        for line in open(p, encoding="utf-8"):
-            r = json.loads(line)
-            by.setdefault(r["link"], r["flores_passage"])
+        with open(p, encoding="utf-8") as fh:
+            for line in fh:
+                r = json.loads(line)
+                by.setdefault(r["link"], r["flores_passage"])
         rows[code] = by
     links = [k for k in rows["eng_Latn"] if all(k in rows[c] for c, _ in LANGS)][:n]
     return {code: [first_sentence(rows[code][k]) for k in links] for code, _ in LANGS}
@@ -86,7 +87,7 @@ def detect(text: str) -> str:
     t = text.strip()
     if not t:
         return "unknown"
-    count = lambda lo, hi: sum(lo <= ord(ch) <= hi for ch in t)   # noqa: E731
+    count = lambda lo, hi: sum(lo <= ord(ch) <= hi for ch in t)
     scripts = {"rus_Cyrl": count(0x0400, 0x04FF), "hin_Deva": count(0x0900, 0x097F), "arb_Arab": count(0x0600, 0x06FF),
                "jpn_Jpan": count(0x3040, 0x30FF), "zho_Hans": count(0x4E00, 0x9FFF)}
     if scripts["jpn_Jpan"] >= 2:
