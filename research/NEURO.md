@@ -4,16 +4,16 @@ Claims about two networks' insides, declared in `research/neuro_ledger.jsonl` be
 
 | Claim | Networks passing | Median measure | p | BH q | Controls (+ / −) | Verdict |
 | --- | --- | --- | --- | --- | --- | --- |
-| N1-one-frequency | 10/10 (of 10) | 0.911 | 0.00098 | 0.0016 | planted 10/10; memorizer 0/10, untrained 0/10 | PASS |
-| N1-same-frequency | 10/10 (of 10) | 0.984 | 0.00098 | 0.0016 | planted 10/10; memorizer 0/10, untrained 0/10 | PASS |
-| N1-phase-sum | 10/10 (of 10) | 0.999 | 0.00098 | 0.0016 | planted 10/10; untrained 0/10 | PASS |
-| N1-faithful | 10/10 (of 10) | 1.000 | 0.00098 | 0.0016 | planted 10/10; memorizer 0/10 | PASS |
-| N1-hidden-circuit | 10/10 (of 10) | 0.994 | 0.00098 | 0.0016 | planted 10/10; untrained 0/10 | PASS |
-| N1-rebuild | 10/10 (of 10) | 1.000 | 0.00098 | 0.0016 | planted 10/10; untrained 0/10, wrong-law 0/10 | PASS |
-| N1-transfer | 10/10 (of 10) | 1.000 | 0.00098 | 0.0016 | planted 10/10; untrained 0/10 | PASS |
-| N1-chain-pointer | 10/10 (of 10) | 1.000 | 0.00098 | 0.0016 | planted_lookup 1/1; planted_memory 0/1 | PASS |
-| N1-chain-lookup | 10/10 (of 10) | 0.995 | 0.00098 | 0.0016 | planted_lookup 1/1; planted_memory 0/1 | PASS |
-| N1-chain-rebuild | 10/10 (of 10) | 1.000 | 0.00098 | 0.0016 | trained 10/10; nomemory-pointer-ablated 0/10 | PASS |
+| N1-one-frequency | 10/10 (of 10) | 0.911 | 0.00098 | 0.0017 | planted 10/10; memorizer 0/10, untrained 0/10 | PASS |
+| N1-same-frequency | 10/10 (of 10) | 0.984 | 0.00098 | 0.0017 | planted 10/10; memorizer 0/10, untrained 0/10 | PASS |
+| N1-phase-sum | 10/10 (of 10) | 0.999 | 0.00098 | 0.0017 | planted 10/10; untrained 0/10 | PASS |
+| N1-faithful | 10/10 (of 10) | 1.000 | 0.00098 | 0.0017 | planted 10/10; memorizer 0/10 | PASS |
+| N1-hidden-circuit | 10/10 (of 10) | 0.994 | 0.00098 | 0.0017 | planted 10/10; untrained 0/10 | PASS |
+| N1-rebuild | 10/10 (of 10) | 1.000 | 0.00098 | 0.0017 | planted 10/10; untrained 0/10, wrong-law 0/10 | PASS |
+| N1-transfer | 10/10 (of 10) | 1.000 | 0.00098 | 0.0017 | planted 10/10; untrained 0/10 | PASS |
+| N1-chain-pointer | 10/10 (of 10) | 1.000 | 0.00098 | 0.0017 | planted_lookup 1/1; planted_memory 0/1 | PASS |
+| N1-chain-lookup | 10/10 (of 10) | 0.995 | 0.00098 | 0.0017 | planted_lookup 1/1; planted_memory 0/1 | PASS |
+| N1-chain-rebuild | 10/10 (of 10) | 1.000 | 0.00098 | 0.0017 | trained 10/10; nomemory-pointer-ablated 0/10 | PASS |
 
 Controls: the positive control must pass on at least 90% of its runs, each negative control must fail on at least 90% of its runs.
 
@@ -49,14 +49,14 @@ Claims declared before they ran on Pythia-1B and Pythia-1.4B, after looking only
 
 | Claim | Model | Layer | Measure | Threshold | p | BH q | Controls | Verdict |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| N2-helix-fit-pythia1b | pythia-1b | 5 | 0.309 | 0.2 | 0.005 | 0.0062 | ok | PASS |
-| N2-helix-read-pythia1b | pythia-1b | 5 | 0.970 | 0.9 | 0.005 | 0.0062 | ok | PASS |
-| N2-locate-pythia1b | pythia-1b | 5 | 0.990 | 0.9 | 9.9e-197 | 9.9e-196 | ok | PASS |
+| N2-helix-fit-pythia1b | pythia-1b | 5 | 0.309 | 0.2 | 0.005 | 0.006 | ok | PASS |
+| N2-helix-read-pythia1b | pythia-1b | 5 | 0.970 | 0.9 | 0.005 | 0.006 | ok | PASS |
+| N2-locate-pythia1b | pythia-1b | 5 | 0.990 | 0.9 | 9.9e-197 | 5.9e-196 | ok | PASS |
 | N2-helix-steer-pythia1b | pythia-1b | 5 | 0.581 | 0.5 | 0.02 | 0.02 | ok | PASS |
 | N2-helix-write-pythia1b | pythia-1b | 5 | 0.170 | 0.5 | 0.02 | 0.02 | ok | FAIL |
-| N2-helix-fit-pythia1.4b | pythia-1.4b | 5 | 0.330 | 0.2 | 0.005 | 0.0062 | ok | PASS |
-| N2-helix-read-pythia1.4b | pythia-1.4b | 5 | 1.000 | 0.9 | 0.005 | 0.0062 | ok | PASS |
-| N2-locate-pythia1.4b | pythia-1.4b | 5 | 1.000 | 0.9 | 1e-200 | 2e-199 | ok | PASS |
+| N2-helix-fit-pythia1.4b | pythia-1.4b | 5 | 0.330 | 0.2 | 0.005 | 0.006 | ok | PASS |
+| N2-helix-read-pythia1.4b | pythia-1.4b | 5 | 1.000 | 0.9 | 0.005 | 0.006 | ok | PASS |
+| N2-locate-pythia1.4b | pythia-1.4b | 5 | 1.000 | 0.9 | 1e-200 | 8e-200 | ok | PASS |
 | N2-helix-steer-pythia1.4b | pythia-1.4b | 5 | 0.610 | 0.5 | 0.02 | 0.02 | ok | PASS |
 | N2-helix-write-pythia1.4b | pythia-1.4b | 5 | 0.100 | 0.5 | 0.02 | 0.02 | ok | FAIL |
 
@@ -72,3 +72,25 @@ Claims declared before they ran on Pythia-1B and Pythia-1.4B, after looking only
 
 - pythia-1b: counting accuracy 1.000; layer 5 (real-state patch by layer: 0.23, 0.26, 0.79, 0.83, 0.99, 0.98, 0.95, 0.76, 0.61, 0.51, 0.30, 0.00, 0.00, 0.00, 0.00). Helix shift: recovers 0.58 of the gap (random periods median 0.21, shuffled helix 0.03), keeps the original answer on 0.27, writes m+1 on 0.17 (random periods 0.00). Untrained checkpoint: counting 0.000, helix R^2 -0.118, read 0.00. Planted: R^2 0.328, read 1.00. Fitted size per part: T10 6.4, T100 12.4, T2 4.6, T5 6.1, linear 27.5.
 - pythia-1.4b: counting accuracy 1.000; layer 5 (real-state patch by layer: 0.19, 0.23, 0.40, 0.94, 1.00, 1.00, 1.00, 1.00, 0.84, 0.67, 0.62, 0.35, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00). Helix shift: recovers 0.61 of the gap (random periods median 0.24, shuffled helix 0.03), keeps the original answer on 0.13, writes m+1 on 0.10 (random periods 0.00). Untrained checkpoint: counting 0.000, helix R^2 -0.119, read 0.00. Planted: R^2 0.328, read 1.00. Fitted size per part: T10 6.1, T100 11.8, T2 4.5, T5 6.0, linear 27.8.
+
+# How a ~30B model handles language
+
+Claims declared before they ran, after looking only at Qwen3-0.6B (`brain/neuro/langclaims.py`, `docs/NEURO.md`). The BH q is shared with every claim above.
+
+| Claim | Model | Layer | Measure | Threshold | p | BH q | Negative control | Verdict |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| N3-lang-read-qwen330b | Qwen3-30B-A3B | 1 | 0.993 | 0.95 | 0.005 | 0.006 | 0.083 (fails, as it must) | PASS |
+| N3-lang-swap-qwen330b | Qwen3-30B-A3B | 41 | 0.941 | 0.5 | 0 | 0 | 0.001 (fails, as it must) | PASS |
+| N3-lang-shared-qwen330b | Qwen3-30B-A3B | 18 | 0.988 | 0.75 | 0.005 | 0.006 | 0.419 (fails, as it must) | PASS |
+| N3-lang-speak-qwen330b | Qwen3-30B-A3B | 24 | 0.824 | 0.5 | 0 | 0 | 0.000 (fails, as it must) | PASS |
+
+## The claims
+
+- **lang-read**: The model gathers the language into the last token: at the chosen layer, the state at the final ':' (the same token in every prompt) names the sentence's language by nearest language mean for at least the threshold share of TEST sentences, which share no content with the TRAIN ones. Layer: the earliest layer with the best SEL accuracy. Null: means from shuffled language labels (200 draws). Negative control: layer 0, the ':' token's own embedding.
+- **lang-swap**: That language part is what the model reads when it names the language: replacing it (state - mean of its language + mean of another) makes the model name the other language for at least the threshold share of TEST sentences. Layer: the layer with the best SEL swap rate (earliest on a tie). Null: the same-size step in a random direction (10 draws); p is one-sided binomial against their pooled rate. Negative control: the swap with means from shuffled language labels.
+- **lang-shared**: Meaning and language are separate: with its language mean removed, a sentence's state (averaged over its own tokens) is nearest to its own translation, among the TEST sentences of each other language, for at least the threshold share (chance is 1 in 100). Layer: the layer with the best SEL retrieval. Null: translations shuffled (200 draws). Negative control: layer 0, the tokens' own embeddings.
+- **lang-speak**: Language can be written in: adding the difference between another language's mean and English's to every position while the model continues an English sentence makes the continuation that language for at least the threshold share of TEST sentences (French, German, Spanish, Russian, Chinese). Layer: the (layer, strength) with the best SEL rate, layers at (0.25, 0.375, 0.5, 0.625, 0.75) of the depth, strengths (1.0, 2.0, 4.0, 8.0). Null: the same-size step in a random direction (5 draws); p is one-sided binomial against their pooled rate. Negative control: the step with means from shuffled language labels.
+
+## Measurements
+
+- Qwen/Qwen3-30B-A3B: 30.5B parameters, 48 layers; names the language of 0.932 of TEST sentences. Swap: random steps of the same size make it name the target 0.00. Shared meaning without removing the language mean: 0.96. Speak: strength x2.0, random directions 0.00, unsteered continuations English 0.98.
