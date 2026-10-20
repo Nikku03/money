@@ -135,6 +135,13 @@ class ExtractTest(unittest.TestCase):
                             "announced price increases fully offset the current forecast for raw material costs"):
             self.assertNotIn("guidance_raised", events.tag(not_a_raise))
         self.assertIn("guidance_raised", events.tag("Company raises 2019 guidance for net sales, Adjusted EBITDA and EPS"))
+        for not_a_change in ("downtime events that modestly lowered sales below previous guidance",
+                             "energy prices which dramatically increased since our previous guidance",
+                             "we are reducing our 2023 cash burn guidance", "an increase in the forecasted costs to complete",
+                             "two rate cuts in 2025, however, they also forecasted 6 rate cuts"):
+            self.assertEqual([k for k in events.tag(not_a_change) if k.startswith("guidance")], [], not_a_change)
+        self.assertIn("guidance_cut", events.tag("cutting its sales forecasts for the year"))
+        self.assertIn("guidance_raised", events.tag("we today raise our previous guidance for full-year 2023"))
 
 
 class GatewayRules:
