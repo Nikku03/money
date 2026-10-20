@@ -103,7 +103,7 @@ python -m brain forecast score              # how recorded forecasts did once th
 - **Reaction:** the 3 days around the release.
 - **Drift:** the following month.
 
-Each is measured against the same month's other earnings releases. Version 1 tests the 60 large caps. Version 2 tests small and micro caps (SEC rows 1501–3000 and 3001–4500, `brain universe --band small|micro`), in either direction, with the cost of trading such stocks stated beside each result.
+Each is measured against the same month's other earnings releases. Version 1 tests the 60 large caps. Version 2 tests small and micro caps (SEC rows 1501–3000 and 3001–4500, `brain universe --band small|micro`), in either direction, with the cost of trading such stocks stated beside each result. In every band the market prices a raise or a cut within the three days around the release (large caps +1.4 points for a raise; small caps +3.7 and −7.1 for a raise and a cut; micro caps +6.8 and −9.2), and no drift follows over the next month: every drift test failed (`research/RESULTS.md`).
 
 ## The web gateway
 
