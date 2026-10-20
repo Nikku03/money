@@ -131,6 +131,10 @@ class ExtractTest(unittest.TestCase):
         self.assertIn("downgrade", events.tag("Analyst downgrades Acme to neutral"))
         self.assertIn("earnings_beat", events.tag("Acme tops Wall Street estimates"))
         self.assertEqual(events.tag("Acme shares were little changed"), [])
+        for not_a_raise in ("gives us increased confidence in our outlook for the remainder of the year",
+                            "announced price increases fully offset the current forecast for raw material costs"):
+            self.assertNotIn("guidance_raised", events.tag(not_a_raise))
+        self.assertIn("guidance_raised", events.tag("Company raises 2019 guidance for net sales, Adjusted EBITDA and EPS"))
 
 
 class GatewayRules:

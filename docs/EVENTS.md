@@ -16,6 +16,7 @@ The first event tests ask about guidance: when a company **raises** its guidance
   - **guidance_raised:** "raises full-year 2026 revenue and EPS outlook", "increases fiscal 2025 guidance".
   - **guidance_cut:** "lowers full-year outlook", "cuts guidance", "profit warning". Verbs only: "lower than forecast" and "the lower end of our guidance" are not cuts.
   - Guidance for spending, costs or taxes doesn't count either way: a lower capex outlook isn't bad news.
+  - Neither does a feeling about the outlook ("increased confidence in our outlook") or "price increases" as a noun. In a check on small-cap text, these were the false raises; 17 of 1,934 small-cap raises were dropped by these two exclusions. A sample of 20 raises and 20 cuts was 90% and 95% right before that.
   - A phrase can't reach across a clause break or past words that say guidance didn't move: "reaffirms", "maintains", "unchanged". "Raises dividend; reaffirms guidance" is not a raise.
   - A release tagged both ways ("raises revenue guidance, lowers EPS outlook") counts as neither.
   - The rules are applied at test time to the stored text, so the declared code fixes them.

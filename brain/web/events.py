@@ -11,12 +11,14 @@ import re
 _W = r"(?:its |the |full[- ]year |annual |quarterly |fiscal |\w+ )?"
 # Up to five words between a verb and "guidance", as press releases write it ("Raises Full-Year 2026 Revenue and EPS
 # Outlook"), but never across a clause break, past a word that says the guidance did not move ("Raises Dividend;
-# Reaffirms Guidance"), or onto guidance for spending, costs or taxes, which is not a forecast of the business.
-_GAP = (r"(?:(?!(?:re)?affirm|reiterat|maintain|confirm|narrow|dividend|unchanged|capital|capex|expens|cost|spend|tax)"
-        r"[\w$%&/'’()-]+,?\s+){0,5}")
+# Reaffirms Guidance"), onto guidance for spending, costs or taxes, which is not a forecast of the business, or onto
+# a feeling about the outlook ("increasing confidence in our outlook").
+_GAP = (r"(?:(?!(?:re)?affirm|reiterat|maintain|confirm|narrow|dividend|unchanged|capital|capex|expens|cost|spend|tax|"
+        r"confiden)[\w$%&/'’()-]+,?\s+){0,5}")
 RULES: dict[str, str] = {
-    "guidance_raised": rf"\b(raises?|raised|raising|increases?|increased|increasing|lifts?|lifted|boosts?|boosted|ups|"
-                       rf"upped|hikes?|hiked) {_GAP}(guidance|outlook|forecast)",
+    # Not "price increases", a noun: "announced price increases fully offset the current forecast".
+    "guidance_raised": rf"(?<!price )(?<!prices )\b(raises?|raised|raising|increases?|increased|increasing|lifts?|"
+                       rf"lifted|boosts?|boosted|ups|upped|hikes?|hiked) {_GAP}(guidance|outlook|forecast)",
     "guidance_cut": rf"\b(cuts|cutting|lowers|lowered|lowering|slashes|slashed|reduces|reduced|reducing|trims|"
                     rf"trimmed) {_GAP}(guidance|outlook|forecast)|\bprofit warning\b",   # verbs only: not "lower than forecast"
     "earnings_beat": r"\b(beats?|tops?|topped|surpass(es|ed)?|exceeds?|exceeded) (wall street |analysts'? |the )?"
