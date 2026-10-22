@@ -26,9 +26,12 @@ class IngestTest(TempHome):
         px.assert_called_once_with("SPY")
 
     def test_a_delisted_ticker_without_prices_does_not_stop_the_ingest(self):
-        with mock.patch.object(ingest.prices, "ingest", side_effect=_missing()):
-            counts = ingest.ingest(self.bank, "gone", ("prices",), log=lambda m: None)
-        self.assertEqual(counts, {"prices": 0})
+        for gone in (_missing(), ValueError("no price rows for GONE")):
+            with mock.patch.object(ingest.prices, "ingest", side_effect=gone):
+                counts = ingest.ingest(self.bank, "gone", ("prices",), log=lambda m: None)
+            self.assertEqual(counts, {"prices": 0})
+        with mock.patch.object(ingest.prices, "ingest", side_effect=ValueError("bad body")), self.assertRaises(ValueError):
+            ingest.ingest(self.bank, "odd", ("prices",), log=lambda m: None)
 
     def test_other_sec_failures_still_stop_the_ingest(self):
         with mock.patch.object(ingest.sec, "cik_for", return_value=1), \

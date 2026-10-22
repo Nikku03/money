@@ -1,4 +1,6 @@
+import json
 import unittest
+from unittest import mock
 
 from brain.sources import news, prices, sec
 
@@ -67,6 +69,9 @@ class YahooParseTest(unittest.TestCase):
         df, splits, meta = prices.parse_chart(data)
         self.assertTrue(df.empty)
         self.assertEqual((splits, meta["currency"]), ([], "USD"))
+        with mock.patch.object(prices, "fetch", return_value=mock.Mock(body=json.dumps(data), fetched_at="2026-10-22T00:00:00Z")), \
+                self.assertRaisesRegex(ValueError, "no price rows"):
+            prices.fetch_daily("GONE")
 
 
 class RssParseTest(unittest.TestCase):

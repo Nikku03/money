@@ -77,8 +77,6 @@ def ingest(symbol: str, start: str = "2000-01-01", ttl: float = TTL) -> list[Fac
     """The daily bars and splits as facts. ``ttl``: seconds a cached chart body is reused (the watch
     loop re-reads every 15 minutes so a close can alert soon after the session ends)."""
     df, splits, meta, r = fetch_daily(symbol, start, ttl)
-    if df.empty:   # nothing to keep: no snapshot with no bars
-        return []
     sha = series.store(df)
     src = {"name": SOURCE_NAME, "url": f"https://finance.yahoo.com/quote/{symbol.upper()}/history"}
     out = [Fact(entity=symbol, attr="series.price_daily", value=sha, as_of=df["date"].iloc[-1],

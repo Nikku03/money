@@ -46,9 +46,12 @@ def ingest(bank: Bank, ticker: str, parts=PARTS, all_concepts: bool = False, log
     if "prices" in parts:
         try:
             counts["prices"] = bank.add_many(prices.ingest(t))
-        except FetchError as e:
-            # A delisted ticker (an acquisition that closed) has no price page; the other tickers still run.
-            if not (isinstance(e.__cause__, urllib.error.HTTPError) and e.__cause__.code == 404):
+        except (FetchError, ValueError) as e:
+            # A delisted ticker (an acquisition that closed) has no price page, or a page with no bars
+            # (prices.fetch_daily: "no price rows"); the other tickers still run.
+            gone = (isinstance(e, ValueError) and str(e).startswith("no price rows")) or \
+                (isinstance(e.__cause__, urllib.error.HTTPError) and e.__cause__.code == 404)
+            if not gone:
                 raise
             log(f"  {t}: no price history at the source (delisted?); skipping prices")
             counts["prices"] = 0
