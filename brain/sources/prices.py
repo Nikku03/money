@@ -27,7 +27,11 @@ def parse_chart(data: dict, now: float | None = None) -> tuple[pd.DataFrame, lis
     meta = res["meta"]
     off = int(meta.get("gmtoffset", 0))
     ts = res.get("timestamp") or []
-    q = res["indicators"]["quote"][0]
+    q = (res.get("indicators", {}).get("quote") or [{}])[0]
+    if not ts or "close" not in q:   # a symbol with no bars (delisted, suspended): an empty frame, not an error
+        empty = pd.DataFrame(columns=["date", "open", "high", "low", "close", "adjclose", "volume"])
+        return empty, [], {k: meta.get(k) for k in ("currency", "exchangeName", "instrumentType", "longName",
+                                                   "exchangeTimezoneName")}
     adj = res["indicators"].get("adjclose", [{}])[0].get("adjclose") or q["close"]
     df = pd.DataFrame({
         "date": [datetime.fromtimestamp(t + off, timezone.utc).strftime("%Y-%m-%d") for t in ts],
@@ -73,6 +77,8 @@ def ingest(symbol: str, start: str = "2000-01-01", ttl: float = TTL) -> list[Fac
     """The daily bars and splits as facts. ``ttl``: seconds a cached chart body is reused (the watch
     loop re-reads every 15 minutes so a close can alert soon after the session ends)."""
     df, splits, meta, r = fetch_daily(symbol, start, ttl)
+    if df.empty:   # nothing to keep: no snapshot with no bars
+        return []
     sha = series.store(df)
     src = {"name": SOURCE_NAME, "url": f"https://finance.yahoo.com/quote/{symbol.upper()}/history"}
     out = [Fact(entity=symbol, attr="series.price_daily", value=sha, as_of=df["date"].iloc[-1],

@@ -62,6 +62,12 @@ class YahooParseTest(unittest.TestCase):
         df, _, _ = prices.parse_chart(data, now=ts[2] + 7 * 3600)  # after the close
         self.assertEqual(len(df), 2)
 
+    def test_a_symbol_with_no_bars_parses_to_an_empty_frame(self):
+        data = {"chart": {"result": [{"meta": {"currency": "USD"}, "indicators": {"quote": [{}]}}]}}
+        df, splits, meta = prices.parse_chart(data)
+        self.assertTrue(df.empty)
+        self.assertEqual((splits, meta["currency"]), ([], "USD"))
+
 
 class RssParseTest(unittest.TestCase):
     def test_rss(self):

@@ -25,6 +25,11 @@ class IngestTest(TempHome):
         self.assertEqual(counts, {"sec_facts": 0, "filings": 0, "identity": 0, "prices": 0})
         px.assert_called_once_with("SPY")
 
+    def test_a_delisted_ticker_without_prices_does_not_stop_the_ingest(self):
+        with mock.patch.object(ingest.prices, "ingest", side_effect=_missing()):
+            counts = ingest.ingest(self.bank, "gone", ("prices",), log=lambda m: None)
+        self.assertEqual(counts, {"prices": 0})
+
     def test_other_sec_failures_still_stop_the_ingest(self):
         with mock.patch.object(ingest.sec, "cik_for", return_value=1), \
              mock.patch.object(ingest.sec, "facts_for", side_effect=FetchError("gave up after 4 tries")), \

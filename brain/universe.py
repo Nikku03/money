@@ -72,6 +72,8 @@ def qualify(t: str) -> tuple[list, list]:
         px = prices.ingest(t)
     except (FetchError, ValueError, KeyError) as e:
         raise Rejected(f"no Yahoo prices ({e})", _transient(e))
+    if not px:
+        raise Rejected("no Yahoo prices (no daily bars)")
     first = px[0].context["first"]
     if first > PRICE_START_BY:
         raise Rejected(f"prices start {first}")
