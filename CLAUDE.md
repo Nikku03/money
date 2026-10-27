@@ -50,6 +50,8 @@ Corporate events are tested the same way (`docs/EVENTS.md`): `python -m brain re
 - Policy D1 is never edited. A change to its weights, thresholds or gates is a new policy, D2, with its own sha; decisions already made stay scored under the policy that made them.
 - Report NO_EDGE plainly: it means no tested evidence carries weight. The lean shown beside it is unproven and not evidence; never present it as a call.
 - Decisions are paper. They are recorded and scored, never traded.
+- Any call you make to the person (a direction, a size, a trade idea) is recorded with `python -m brain predict add` before its outcome is known, with the chance you give it (`docs/PREDICT.md`). Quote `python -m brain predict score` before claiming any record, good or bad; under 30 judged calls it says nothing yet.
+- Check the world before a market call: `python -m brain radar --refresh` flags markets and country funds that moved hard.
 
 ## Hard rules
 
