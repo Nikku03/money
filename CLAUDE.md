@@ -52,6 +52,7 @@ Corporate events are tested the same way (`docs/EVENTS.md`): `python -m brain re
 - Decisions are paper. They are recorded and scored, never traded.
 - Any call you make to the person (a direction, a size, a trade idea) is recorded with `python -m brain predict add` before its outcome is known, with the chance you give it (`docs/PREDICT.md`). Quote `python -m brain predict score` before claiming any record, good or bad; under 30 judged calls it says nothing yet.
 - Check the world before a market call: `python -m brain radar --refresh` flags markets and country funds that moved hard.
+- Before talking about the week's reports, run `python -m brain earnings radar` (likely reporters, usual moves, what options price) and, the day after, `python -m brain earnings misses` to see what it missed (`docs/PREDICT.md`).
 
 ## Hard rules
 

@@ -1,6 +1,6 @@
-# The agent's calls, and the world radar
+# The agent's calls, the world radar and the earnings radar
 
-Two tools for working with a person day to day. Neither is a tested signal.
+Three tools for working with a person day to day. None is a tested signal.
 
 ## `brain predict`: every call, written before the outcome
 
@@ -40,3 +40,32 @@ India, Indonesia, Taiwan, ...), and flags any whose move over a day, a week or a
 three-month high, passes its kind's threshold (indices and funds 3% / 7% / 10% / 15%; FX, commodities, crypto
 and volatility have their own). A symbol whose last close is more than five days old is marked STALE. It
 reports what already happened, early and in one place; it forecasts nothing.
+
+## `brain earnings`: who reports next, how far they usually move, and what the options price
+
+```
+python -m brain earnings index [--ingest-missing]   # weekly, slow: report dates and past reactions, saved in the home
+python -m brain earnings radar [--days 5] [--budget 100]
+python -m brain earnings misses [--date YYYY-MM-DD] # a day's big movers among 8-K filers, and whether the radar had them
+```
+
+- **Who.** The research universe (`universe/`) plus the largest ~1,000 SEC-listed companies (the "top" band).
+  `--ingest-missing` reads filings and prices for any the bank lacks.
+- **When.** Last year's same-season report plus 52 weeks (the same weekday), from the companies' own 8-K item
+  2.02 filings. "Likely" when that lands in the window, "possible" (shown `~date?`) within 8 days of it:
+  companies often move a report a week. The radar first re-reads each candidate's latest filings, so one
+  that already reported this season drops out. A date is an estimate until the company announces its own.
+- **How far.** The median of the stock's last eight report reactions (`car_3d`, days -1..+1 vs SPY).
+- **What the options price.** The at-the-money straddle on the first expiry after the report (Cboe's public
+  delayed quotes, `brain/sources/options.py`, one request every 2.5 s). When that expiry is weeks away, the
+  ordinary days in between are stripped out with the stock's normal daily volatility, so the report's own
+  priced move is compared on the same three-session basis as its history. `CHEAP` means the stock moved more
+  than that after at least 60% of its last reports (5 of 8), `EXPENSIVE` after at most 30% (2 of 8). A strangle at the
+  priced width shows the cheapest two-sided bet; `[fits budget]` marks a bet at or under `--budget`.
+- **Did it work.** Each radar run is saved; `misses` lists one session's movers of 10%+ among companies that
+  filed an 8-K that day or the evening before (SEC's daily form index), with the cause their filing names, and
+  whether a radar made before that day had them in its window. Movers with no 8-K (trial data, rumours,
+  sector moves) are outside it.
+
+A size is not a direction, and no part of this has been tested as a signal. When the user acts on a cheap
+reading, record it with `brain predict add ... move --threshold <the priced move>` first.

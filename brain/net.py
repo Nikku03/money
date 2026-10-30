@@ -22,7 +22,8 @@ from urllib.parse import urlparse
 from brain import config
 from brain.timeutil import now_iso
 
-MIN_INTERVAL = {"sec.gov": 0.15, "data.sec.gov": 0.15, "www.sec.gov": 0.15}  # SEC: <= 10 req/s
+MIN_INTERVAL = {"sec.gov": 0.15, "data.sec.gov": 0.15, "www.sec.gov": 0.15,  # SEC: <= 10 req/s
+                "cdn-api.cboe.com": 2.5}  # Cboe's delayed quotes refuse (HTTP 429/1015) faster than about 1 a second
 DEFAULT_INTERVAL = 0.5
 SHARED = {"sec.gov"}  # rate buckets whose turns are shared by every process using this home
 _last: dict[str, float] = {}
