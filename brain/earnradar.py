@@ -16,6 +16,7 @@ been tested as a signal. Paper only.
 """
 from __future__ import annotations
 
+import gc
 import json
 import re
 import statistics
@@ -83,11 +84,14 @@ def build_index(bank: Bank, tickers: dict[str, str], log=print, merge: bool = Fa
     if merge and index_path().exists():
         out = load_index()
     names = sorted(tickers)
-    v = bank.view()
     skipped = 0
     for i in range(0, len(names), CHUNK):
         part = names[i:i + CHUNK]
-        book = PriceBook(bank, part + ["SPY"])
+        # A fresh bank per chunk: a view caches every entity it reads, and two thousand companies' filings
+        # do not fit in memory at once.
+        b = Bank(bank.root)
+        v = b.view()
+        book = PriceBook(b, part + ["SPY"])
         for t in part:
             ev = distinct(earnings_events(v, t))
             if not ev:
@@ -100,6 +104,8 @@ def build_index(bank: Bank, tickers: dict[str, str], log=print, merge: bool = Fa
                     moves.append(round(r["car_3d"] * 100, 2))
             out["tickers"][t] = {"band": tickers[t], "reports": [f.known_at for f in ev][-12:], "moves": moves[-8:],
                                  "day_vol": day_vol(book, v, t, [f.known_at for f in ev])}
+        del b, v, book
+        gc.collect()
         log(f"  indexed {min(i + CHUNK, len(names))} of {len(names)}")
     out["skipped_no_filings"] = out.get("skipped_no_filings", 0) + skipped if merge else skipped
     index_path().parent.mkdir(parents=True, exist_ok=True)
@@ -355,14 +361,23 @@ def misses(bank: Bank, day: date, min_move: float = 10.0, only_universe: bool = 
 
 
 # ---------- CLI ----------
+def _missing(tickers) -> list[str]:
+    """Tickers with no earnings 8-Ks in the bank, read a chunk at a time so the check itself stays small."""
+    names, out = sorted(tickers), []
+    for i in range(0, len(names), CHUNK):
+        v = Bank().view()
+        out += [t for t in names[i:i + CHUNK] if not earnings_events(v, t)]
+        del v
+        gc.collect()
+    return out
+
+
 def _cmd_index(a):
     bands = (*BANDS, "top") if a.band == "all" else (a.band,)
     tickers = universe(bands)
     if a.ingest_missing:
-        from brain.events import earnings_events
         from brain.ingest import ingest
-        v = Bank().view()
-        missing = [t for t in tickers if not earnings_events(v, t)]
+        missing = _missing(tickers)
         print(f"Reading filings and prices for {len(missing)} companies the bank lacks.")
         for t in missing:
             try:
