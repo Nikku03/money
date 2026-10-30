@@ -35,6 +35,8 @@ YEAR = 364            # 52 weeks: the same weekday a year later
 SEASON_GAP = 50       # a report this recent means the company already reported this season
 SLACK = 8             # companies move a report up to a week or so from last year's date: within this many
                       # days of the window, a report is "possible" rather than "likely"
+IV_BUMP = 1.15        # front-expiry volatility under this multiple of the next expiry's: no report priced in
+DATE_CHECK = 0.5      # without a later expiry: a priced move under this share of the usual one
 TOP = 1000            # the "top" band: SEC's ticker list in file order (roughly by market value), first TOP
 CHUNK = 200           # tickers per PriceBook while indexing, to bound memory
 DAILY_INDEX = "https://www.sec.gov/Archives/edgar/daily-index/{y}/QTR{q}/form.{ymd}.idx"
@@ -121,7 +123,10 @@ def day_vol(book: PriceBook, v, t: str, reports: list[str]) -> float | None:
     dates, adj = book.adj_upto(v, t)
     if len(adj) < 40:
         return None
-    lr = np.diff(np.log(np.asarray(adj, float)))
+    px = np.asarray(adj, float)
+    if (px <= 0).any():   # a bad bar in the source: no volatility rather than a wrong one
+        return None
+    lr = np.diff(np.log(px))
     near = set()
     for k in reports:
         j = int(np.searchsorted(dates, ny_date(k).isoformat()))
@@ -232,7 +237,7 @@ def radar(start: date, days: int = 5, budget: float = 100.0, with_options: bool 
         rows.append({"ticker": t, "band": row["band"], **nr, "react": reaction_day(nr["date"], nr["timing"]),
                      "mean_move": round(statistics.mean(size), 2), "median_move": round(statistics.median(size), 2),
                      "moves": moves})
-    rows.sort(key=lambda r: -r["median_move"])
+    rows.sort(key=lambda r: (r["confidence"] != "likely", -r["median_move"]))   # likely dates first
     if with_options:
         from brain.sources import options
         chain_for = chain_for or options.fetch_chain
@@ -253,7 +258,13 @@ def radar(start: date, days: int = 5, budget: float = 100.0, with_options: bool 
             beat = sum(x > r["event_pct"] for x in size)
             g = options.strangle(c, exp, s["implied_pct"])
             r.update(straddle=s, strangle=g, beat=beat, verdict=verdict(beat, len(size)),
-                     fits_budget=any(x and x["cost"] <= budget for x in (s, g)))
+                     fits_budget=any(x and x["cost"] <= budget for x in (s, g)),
+                     iv_bump=options.event_bump(c, exp))
+            # Options that see no report before they expire: the date estimate is likely wrong, and "cheap"
+            # then means nothing. The volatility bump says it best; without a later expiry, fall back on a
+            # priced move far under the usual one.
+            r["date_check"] = (r["iv_bump"] < IV_BUMP if r["iv_bump"] is not None
+                               else r["event_pct"] < DATE_CHECK * r["median_move"])
             log(f"  {r['ticker']}: options read")
     snap = {"made_at": now_iso(), "start": start.isoformat(), "days": days,
             "budget": budget, "rows": rows}
@@ -400,7 +411,8 @@ def _fmt(r: dict) -> str:
     cheap = (f"   options price ±{s['implied_pct']:.1f}% to {s['expiry']}{ev}: moved more {r['beat']}/{len(r['moves'])}"
              f": {r['verdict'].upper()}")
     cost = f"   straddle ${s['cost']:.0f}" + (f", strangle {g['call']:g}C/{g['put']:g}P ${g['cost']:.0f}" if g else "")
-    return head + cheap + cost + ("   [fits budget]" if r.get("fits_budget") else "")
+    flag = "   [check the date: options barely price a report]" if r.get("date_check") else ""
+    return head + cheap + cost + ("   [fits budget]" if r.get("fits_budget") else "") + flag
 
 
 def _cmd_radar(a):
@@ -415,12 +427,14 @@ def _cmd_radar(a):
         print(f"Re-read the latest filings of {n} likely reporters.")
         idx = load_index()
     rows = radar(start, a.days, a.budget, not a.no_options, a.max_options, index=idx, log=lambda m: None)
-    print(f"{len(rows)} companies likely to report {start} to {start + timedelta(days=a.days - 1)} (dates are "
-          "estimates: last year's report + 52 weeks). Biggest usual movers first. Size, not direction.")
+    lik = sum(r["confidence"] == "likely" for r in rows)
+    print(f"{len(rows)} companies may report {start} to {start + timedelta(days=a.days - 1)}: {lik} likely, "
+          f"{len(rows) - lik} possible (~date?). Dates are estimates (last year's report + 52 weeks). Likely ones "
+          "first, biggest usual movers first. Size, not direction.")
     show = rows if a.all else [r for r in rows if r.get("straddle") or r["median_move"] >= a.min_move]
     for r in show[: a.limit]:
         print("  " + _fmt(r))
-    fits = [r for r in rows if r.get("fits_budget") and r.get("verdict") == "cheap"]
+    fits = [r for r in rows if r.get("fits_budget") and r.get("verdict") == "cheap" and not r.get("date_check")]
     if fits:
         print(f"Cheap and within ${a.budget:.0f}: " + ", ".join(r["ticker"] for r in fits))
     return 0

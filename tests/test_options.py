@@ -4,9 +4,10 @@ import unittest
 from brain.sources import options
 
 
-def chain_json(spot=50.0):
+def chain_json(spot=50.0, front_iv=0.8, back_iv=0.5):
     def o(sym, bid, ask):
-        return {"option": sym, "bid": bid, "ask": ask, "iv": 0.5, "open_interest": 10, "volume": 1}
+        iv = front_iv if "261030" in sym else back_iv
+        return {"option": sym, "bid": bid, "ask": ask, "iv": iv, "open_interest": 10, "volume": 1}
     return {"timestamp": "2026-10-29 20:00:00", "data": {"symbol": "XYZ", "current_price": spot, "options": [
         o("XYZ261030C00050000", 1.9, 2.1), o("XYZ261030P00050000", 1.8, 2.0),
         o("XYZ261030C00054000", 0.45, 0.55), o("XYZ261030P00046000", 0.40, 0.50),
@@ -35,6 +36,12 @@ class OptionsTest(unittest.TestCase):
         self.assertAlmostEqual(s["mid"], 3.9)
         self.assertAlmostEqual(s["cost"], 410.0)
         self.assertAlmostEqual(s["implied_pct"], 7.8)
+
+    def test_event_bump(self):
+        self.assertAlmostEqual(options.event_bump(self.c, "2026-10-30"), 1.6)
+        self.assertIsNone(options.event_bump(self.c, "2026-11-06"))          # no later expiry
+        flat = options.parse(chain_json(front_iv=0.5, back_iv=0.5))
+        self.assertAlmostEqual(options.event_bump(flat, "2026-10-30"), 1.0)
 
     def test_strangle_skips_unusable_legs(self):
         g = options.strangle(self.c, "2026-10-30", 8.0)

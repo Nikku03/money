@@ -93,10 +93,20 @@ class RadarTest(TempHome):
         self.assertAlmostEqual(x["straddle"]["implied_pct"], 7.8)
         self.assertEqual((x["beat"], x["verdict"]), (5, "cheap"))
         self.assertTrue(x["fits_budget"])                     # the $105 strangle
+        self.assertFalse(x["date_check"])                     # front volatility 1.6x the next: a report is priced
         self.assertEqual(rows[1]["verdict"], "expensive")
         snaps = list(er.snap_dir().glob("*.json"))
         self.assertEqual(len(snaps), 1)
         self.assertEqual(json.loads(snaps[0].read_text())["rows"][0]["ticker"], "XYZ")
+
+    def test_options_that_barely_price_a_report_flag_the_date(self):
+        idx = {"tickers": {"MDB": {"band": "top", "reports": ["2025-10-30T11:00:00Z"], "moves": [23, -25, 20, 30, -22, 24, 21, -26]},
+                           "POSS": {"band": "top", "reports": ["2025-11-07T11:00:00Z"], "moves": [40] * 8}}}
+        rows = er.radar(date(2026, 10, 26), 5, 1000.0, index=idx, log=lambda m: None,
+                        chain_for=lambda t: options.parse(chain_json(front_iv=0.5, back_iv=0.5)))
+        self.assertEqual([r["ticker"] for r in rows], ["MDB", "POSS"])        # likely before possible
+        self.assertTrue(rows[0]["date_check"])                                 # flat volatility: no report priced
+        self.assertEqual(rows[1]["confidence"], "possible")
 
     def test_radar_keeps_going_when_quotes_fail(self):
         def boom(t):

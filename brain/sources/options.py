@@ -53,6 +53,25 @@ def first_expiry(chain: dict, on_or_after: str) -> str | None:
     return later[0] if later else None
 
 
+def atm_iv(c: dict, expiry: str) -> float | None:
+    """The at-the-money implied volatility on ``expiry`` (the call's and put's average), or None."""
+    spot, legs = c["spot"], c["chain"].get(expiry) or {}
+    both = [k for k, v in legs.items() if "C" in v and "P" in v and v["C"]["iv"] > 0 and v["P"]["iv"] > 0]
+    if not spot or not both:
+        return None
+    k = min(both, key=lambda x: abs(x - spot))
+    return (legs[k]["C"]["iv"] + legs[k]["P"]["iv"]) / 2
+
+
+def event_bump(c: dict, expiry: str) -> float | None:
+    """The expiry's at-the-money volatility over the next expiry's. A report before the first expiry lifts
+    it well above the later one; a ratio near 1 means the options see no event in between."""
+    later = sorted(e for e in c["chain"] if e > expiry)
+    a = atm_iv(c, expiry)
+    b = atm_iv(c, later[0]) if later else None
+    return round(a / b, 3) if a and b else None
+
+
 def straddle(c: dict, expiry: str) -> dict | None:
     """The at-the-money straddle on ``expiry``: its mid, its cost at the ask (one contract, x100) and the
     move it prices (mid / spot). None when the chain has no usable pair near the money."""

@@ -62,6 +62,11 @@ python -m brain earnings misses [--date YYYY-MM-DD] # a day's big movers among 8
   priced move is compared on the same three-session basis as its history. `CHEAP` means the stock moved more
   than that after at least 60% of its last reports (5 of 8), `EXPENSIVE` after at most 30% (2 of 8). A strangle at the
   priced width shows the cheapest two-sided bet; `[fits budget]` marks a bet at or under `--budget`.
+- **Is a report really coming.** When the first expiry's at-the-money volatility is under 1.15 times the next
+  expiry's, the options see no event in between: the row says `[check the date]`, and its verdict means
+  nothing (an estimate a quarter off, as for a company that reports in December). Likely dates are listed
+  before possible ones; replayed on Oct 29, 2026, sorting the likely list by usual move put 8 of its 20 big
+  movers in the top 100, about twice what a random order would.
 - **Did it work.** Each radar run is saved; `misses` lists one session's movers of 10%+ among companies that
   filed an 8-K that day or the evening before (SEC's daily form index), with the cause their filing names, and
   whether a radar made before that day had them in its window. Movers with no 8-K (trial data, rumours,
