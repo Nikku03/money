@@ -231,3 +231,46 @@ each: a slight lean whose expected value is near zero.
 **Correction.** CoreCivic's call thesis quotes Demos ("about 43% of 2023 revenue" from ICE). CoreCivic's 10-K says 30%
 for 2023 and 35% for 2025, and GEO's says 47.6% for 2025, so Demos appears to have swapped the two companies. The call
 itself is unchanged.
+
+## Is it already in the prices? (added Nov 2, about 20:30 UTC)
+
+**The odds moved first.** Polymarket's "Democrats control the Senate" (daily, `clob.polymarket.com` price history):
+
+| Date | Senate | House |
+|---|---|---|
+| Sep 1 | 50.5% | 88.5% |
+| Oct 1 | 62.5% | 92.5% |
+| Oct 30 close | 70.5% | about 94.5% |
+| Nov 2, 20:07 UTC | 77.5% | 95.5% |
+
+A Democratic win now leaves only 22.5 points of Senate surprise and 4.5 of House surprise.
+
+**Prices against SPY** (bank closes, Nov 2 prices from Stocklake about 20:00 UTC; SPY itself -0.7% since Sep 1, -1.3%
+since Oct 1; bitcoin +1.1% since Sep 1):
+
+| Group | Since Sep 1 | Since Oct 1 | Did it adjust? |
+|---|---|---|---|
+| Immigration detention (GEO, CXW) | -7.1%, -6.0% | -7.3%, -4.8% | Yes, partly |
+| Crypto (COIN, CRCL, HOOD) | -22%, -19%, -18% | -27%, -12%, -23% | Fell far more than bitcoin; the Clarity Act's failure (Sep 15) is part of it |
+| Trump Media (DJT) | -35% | -32% | Fell hard; causes mixed |
+| Defense (LMT, NOC, RTX, GD) | +19%, +5%, -1%, +2% | +29%, +17%, +11%, +14% | No: rose (earnings, the war) |
+| Medicare Advantage (UNH, HUM, CVS, ELV) | +2%, +4%, -7%, +3% | +11%, +9%, +7%, +9% | No |
+| Drug makers (MRK, PFE) | +1%, +9% | +5%, +11% | No |
+| Card lenders (COF, SYF, BFH) | 0%, 0%, +6% | +10%, +8%, +12% | No |
+| Banks (JPM, GS, XLF) | -3%, -10%, +2% | +4%, +2%, +9% | No |
+| Oil and gas (XLE); autos (F, GM) | +6%; -9%, +5% | +9%; +3%, +14% | No |
+| Winners for contrast: Medicaid/ACA insurers (CNC, MOH, OSCR); hospitals (HCA, THC, UHS) | +3%, +3%, +5%; +14%, +1%, +5% | +11%, +16%, +6%; +12%, +7%, +3% | Yes, up |
+
+**Did they move with the odds day by day?** Each name's excess return was regressed on the change in the Senate odds,
+Mar 2 to Oct 30, on daily changes and on non-overlapping weekly ones. The links were weak, and most flipped sign between
+the two (private equity: daily +40% per 100 points, t 3.2; weekly -13%, t -0.4). Only GEO was negative in both: daily
+-37.5% per 100 points (t -2.1), weekly -67% (t -1.6). With about 40 names tested, a couple of |t| > 2 are expected by
+chance. Read: the odds rose slowly while earnings, the war and crypto news moved these stocks more.
+
+**What it means.**
+- **Immigration detention** looks partly priced. GEO's daily link suggests about -8% more if Democrats take the Senate
+  and +29% if they do not. That is noisy, but it is consistent with the options' ±11% election share.
+- **Crypto and Trump Media** have already fallen 18-35%, more than any election link explains.
+- **Defense, Medicare Advantage insurers, drug makers, card lenders, banks, oil and autos** have not priced the analysts'
+  loser story; they rose. Past Democratic days moved them 1-6% at most, and not consistently.
+- The recorded calls (GEO, CXW and DJT down by Nov 6, 53%) stand as they are.
