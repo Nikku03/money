@@ -1,6 +1,6 @@
 # My own 2026 midterm forecast, written before any vote is counted
 
-Written Mon Nov 2, 2026, about 21:15 UTC, the day before the election. Committed to git before polls close, so it can be
+Written Mon Nov 2, 2026, about 20:50 UTC, the day before the election. Committed to git before polls close, so it can be
 judged honestly. It is my model, built from public polls and ratings. Markets and other forecasters are shown only for
 comparison. Exploratory: no declared test.
 
