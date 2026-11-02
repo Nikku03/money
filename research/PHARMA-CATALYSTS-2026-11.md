@@ -1,6 +1,6 @@
 # Drug and biotech catalysts, November 2026
 
-Written Nov 2, 2026 after the close (about 21:20 UTC). Facts and base rates only: the repo has not tested any FDA-event
+Written Nov 2, 2026 after the close (about 21:05 UTC). Facts and base rates only: the repo has not tested any FDA-event
 signal, and nothing here is a call.
 
 ## Sources
