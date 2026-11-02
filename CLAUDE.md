@@ -29,6 +29,7 @@ python -m brain check                              # bank invariants; exit 0 = O
 5. `python -m brain decide TICKER`: a paper decision under policy D1 (`docs/DECIDE.md`), weighing only tested evidence and citing every input. Quote its action, score and each item's weight and why as the card prints them. `--no-llm` skips the model; `--read` lets it read the web first. `python -m brain decide score` shows how past decisions and every source's calls did.
 6. For a person at a screen, `python -m brain terminal` serves the same bank as a keyboard-driven terminal (`docs/TERMINAL.md`). Its `ASK` analyst follows the same rules as you: bank-only facts, cited ids, verdicts quoted as recorded.
 7. `python -m brain forecast TICKER [--horizon 5|21] [--llm]`: a paper forecast (68% and 90% price bands, the chance to beat SPY, the drivers), recorded as a fact (`docs/FORECAST.md`). Quote the bands, the chance and the Record lines as the card prints them: the chance has no tested edge unless its declared test (F1b, F1c) says PASS. On the real bank it refuses until F1a-F1c have recorded results.
+8. `python -m brain moves predict TICKER [--implied X]`: the likely size of its next earnings move, either way, and the chance of moving more than the options' priced move X% (M1, `docs/MOVES.md`; `brain earnings radar` shows the same beside each priced move). Quote the range and the chance as printed; until M1a's verdict in `research/RESULTS.md` is PASS, call them unproven. A size is not a direction.
 
 ## Turning an idea into a tested claim
 

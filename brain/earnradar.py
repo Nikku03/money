@@ -223,9 +223,34 @@ def verdict(beat: int, n: int) -> str:
     return "cheap" if share >= 0.6 else "expensive" if share <= 0.3 else "fair"
 
 
+M1_MARGIN = 0.2    # M1's expected move this far above or below the priced move names a side (bid-ask room)
+
+
+def m1_view(model: dict, f: dict, event_pct: float) -> dict:
+    """M1's range, expected move and chance of beating the options' priced move (percent), and the side with the
+    edge if the gap is wider than M1_MARGIN: 'buy' when M1 expects more than the options price, 'sell' when less."""
+    from brain import moves
+    m = model["m1"]
+    q = moves.quantiles(m, f)
+    e = moves.expected(m, f) * 100
+    side = "buy" if e >= (1 + M1_MARGIN) * event_pct else "sell" if e <= (1 - M1_MARGIN) * event_pct else None
+    return {"q10": q[0.1] * 100, "q50": q[0.5] * 100, "q90": q[0.9] * 100, "expected": e,
+            "chance": moves.chance_above(m, f, event_pct / 100), "edge": e - event_pct, "side": side}
+
+
+def _m1_features():
+    from brain import moves
+    bank = Bank()
+    return lambda t: moves.live(bank, t)
+
+
 def radar(start: date, days: int = 5, budget: float = 100.0, with_options: bool = True, max_options: int = 60,
-          index: dict | None = None, log=print, chain_for=None) -> list[dict]:
-    """Likely reporters in the window, the biggest usual movers first, with options where read."""
+          index: dict | None = None, log=print, chain_for=None, m1=None, m1_features=None) -> list[dict]:
+    """Likely reporters in the window, the biggest usual movers first, with options where read. ``m1``: the fitted
+    move-size models (default: knowledge/moves_m1.json; False skips them); ``m1_features``: ticker -> features."""
+    from brain import moves
+    model = (moves.load() if m1 is None else m1) or None
+    feats = None
     idx = index or load_index()
     rows = []
     for t, row in idx["tickers"].items():
@@ -265,6 +290,11 @@ def radar(start: date, days: int = 5, budget: float = 100.0, with_options: bool 
             # priced move far under the usual one.
             r["date_check"] = (r["iv_bump"] < IV_BUMP if r["iv_bump"] is not None
                                else r["event_pct"] < DATE_CHECK * r["median_move"])
+            if model:
+                feats = feats or m1_features or _m1_features()
+                f = feats(r["ticker"])
+                if f:
+                    r["m1"] = m1_view(model, f, r["event_pct"])
             log(f"  {r['ticker']}: options read")
     snap = {"made_at": now_iso(), "start": start.isoformat(), "days": days,
             "budget": budget, "rows": rows}
@@ -412,7 +442,11 @@ def _fmt(r: dict) -> str:
              f": {r['verdict'].upper()}")
     cost = f"   straddle ${s['cost']:.0f}" + (f", strangle {g['call']:g}C/{g['put']:g}P ${g['cost']:.0f}" if g else "")
     flag = "   [check the date: options barely price a report]" if r.get("date_check") else ""
-    return head + cheap + cost + ("   [fits budget]" if r.get("fits_budget") else "") + flag
+    m = r.get("m1")
+    m1 = (f"   M1 expects ±{m['expected']:.1f}% (8 in 10: {m['q10']:.1f}-{m['q90']:.1f}%), beats the priced move "
+          f"{m['chance'] * 100:.0f}%" + (f": {'BUYER' if m['side'] == 'buy' else 'SELLER'}'S SIDE" if m["side"] else "")
+          if m else "")
+    return head + cheap + cost + ("   [fits budget]" if r.get("fits_budget") else "") + m1 + flag
 
 
 def _cmd_radar(a):
@@ -437,6 +471,13 @@ def _cmd_radar(a):
     fits = [r for r in rows if r.get("fits_budget") and r.get("verdict") == "cheap" and not r.get("date_check")]
     if fits:
         print(f"Cheap and within ${a.budget:.0f}: " + ", ".join(r["ticker"] for r in fits))
+    for side, words in (("sell", "M1 sees the options as dear (seller's side, defined risk only)"),
+                        ("buy", "M1 sees the options as cheap (buyer's side)")):
+        names = [r["ticker"] for r in rows if (r.get("m1") or {}).get("side") == side and not r.get("date_check")]
+        if names:
+            print(f"{words}: " + ", ".join(names))
+    if any(r.get("m1") for r in rows):
+        print("M1 is unproven until M1a has a result (RESULTS.md, Move sizes) and thirty of its calls are judged.")
     return 0
 
 

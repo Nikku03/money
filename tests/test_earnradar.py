@@ -108,6 +108,26 @@ class RadarTest(TempHome):
         self.assertTrue(rows[0]["date_check"])                                 # flat volatility: no report priced
         self.assertEqual(rows[1]["confidence"], "possible")
 
+    def test_m1_names_the_side_with_the_edge(self):
+        import numpy as np
+
+        from brain import moves
+        size = np.linspace(0.02, 0.2, 200)
+        model = {"m1": moves.fit([{"move": m, "med8": m, "last": m, "day_vol": m / 4, "vix": 20.0} for m in size])}
+        def feats(m):
+            return lambda t: {"med8": m, "last": m, "day_vol": m / 4, "vix": 20.0}
+        quote = lambda t: options.parse(chain_json())                       # priced at about 7.8%
+        big = er.radar(date(2026, 10, 26), 5, 120.0, index=self.index(), log=lambda m: None, chain_for=quote,
+                       m1=model, m1_features=feats(0.20))
+        self.assertEqual(big[0]["m1"]["side"], "buy")                        # expects about 20%: the options are cheap
+        self.assertGreater(big[0]["m1"]["chance"], 0.5)
+        small = er.radar(date(2026, 10, 26), 5, 120.0, index=self.index(), log=lambda m: None, chain_for=quote,
+                         m1=model, m1_features=feats(0.03))
+        self.assertEqual(small[0]["m1"]["side"], "sell")                     # expects about 3%: dear
+        self.assertIn("SELLER'S SIDE", er._fmt(small[0]))
+        none = er.radar(date(2026, 10, 26), 5, 120.0, index=self.index(), log=lambda m: None, chain_for=quote, m1=False)
+        self.assertNotIn("m1", none[0])
+
     def test_radar_keeps_going_when_quotes_fail(self):
         def boom(t):
             raise RuntimeError("HTTP 429")

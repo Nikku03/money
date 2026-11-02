@@ -191,13 +191,22 @@ def is_gated_event(r: dict) -> bool:
     return is_event(r) and r.get("gate_type") == "diff"
 
 
+def is_move(r: dict) -> bool:
+    """A test of the earnings move-size model (brain/research/movetest.py)."""
+    return r.get("kind") == "move"
+
+
+def is_gated_move(r: dict) -> bool:
+    return is_move(r) and r.get("gate_type") == "pinball"
+
+
 def is_gated_forecast(r: dict) -> bool:
     """A forecast result with a declared gate (F1b, F1c); descriptive ones (F1a, F1d) are not."""
     return is_forecast(r) and (r.get("gate_type") == "ic" or (r.get("gate_type") is None and "p" in r))
 
 
 def _bh_p(r: dict) -> float:
-    if is_forecast(r) or is_link(r) or is_event(r):
+    if is_forecast(r) or is_link(r) or is_event(r) or is_move(r):
         p = r.get("p")
         return float(p) if isinstance(p, (int, float)) and math.isfinite(p) else 1.0  # no p counts as 1
     return r["test"]["perm_p"]
@@ -223,6 +232,14 @@ def _link_verdict(r: dict, q: float) -> str:
     return "PASS" if (r.get("gate") or {}).get("pass") and q < FORECAST_BH_Q else "FAIL"
 
 
+def _move_verdict(r: dict, q: float) -> str:
+    if not is_gated_move(r):
+        return "REPORT"
+    if not (r.get("controls") or {}).get("pass"):
+        return "FAIL (controls)"
+    return "PASS" if (r.get("gate") or {}).get("pass") and q < FORECAST_BH_Q else "FAIL"
+
+
 def verdicts(path=None) -> list[dict]:
     """Verdicts for every hypothesis, forecast test and link test with a result. The false-discovery
     correction runs over every hypothesis, every gated forecast test and every gated link test (``p`` for a
@@ -233,7 +250,8 @@ def verdicts(path=None) -> list[dict]:
     res = ledger.latest_results(path)
     gone = ledger.withdrawn(path)
     tested = {k: r for k, r in res.items()
-              if is_hypothesis(r) or is_gated_forecast(r) or is_gated_link(r) or is_gated_event(r)}
+              if is_hypothesis(r) or is_gated_forecast(r) or is_gated_link(r) or is_gated_event(r)
+              or is_gated_move(r)}
     q_of = dict(zip(tested, bh_adjust([_bh_p(r) for r in tested.values()])))
     rows = []
     for k, r in res.items():
@@ -245,6 +263,9 @@ def verdicts(path=None) -> list[dict]:
             continue
         if is_link(r) or is_event(r):
             rows.append({**r, "bh_q": q, "verdict": _link_verdict(r, q)})
+            continue
+        if is_move(r):
+            rows.append({**r, "bh_q": q, "verdict": _move_verdict(r, q)})
             continue
         te = r["test"]
         if not r["controls"]["pass"]:
@@ -304,6 +325,7 @@ def report(ledger_path=None, results_path=None) -> str:
     forecasts = [r for r in every if is_forecast(r)]
     links = [r for r in every if is_link(r)]
     evts = [r for r in every if is_event(r)]
+    mvs = [r for r in every if is_move(r)]
     led = Path(ledger_path or config.LEDGER)
     try:
         led_name = led.resolve().relative_to(config.ROOT.resolve()).as_posix()
@@ -313,7 +335,7 @@ def report(ledger_path=None, results_path=None) -> str:
         text = "\n".join(["# Research results", "",
                           f"Generated {now_iso()} from `{led_name}`. Every number below is copied from the ledger.",
                           "", *_forecast_section(forecasts), *_link_section(links, ledger_path),
-                          *_event_section(evts, ledger_path)]) + "\n"
+                          *_event_section(evts, ledger_path), *_move_section(mvs)]) + "\n"
         Path(results_path or config.RESULTS).write_text(text)
         return text
     by_uni: dict[str, list[dict]] = {}
@@ -338,7 +360,8 @@ def report(ledger_path=None, results_path=None) -> str:
         "q < 0.10 across every hypothesis in the ledger"
         + (" and every gated forecast test (see Forecasts)" if any(is_gated_forecast(r) for r in forecasts) else "")
         + (" and every gated link test (see Links)" if any(is_gated_link(r) for r in links) else "")
-        + (" and every gated event test (see Events)" if any(is_gated_event(r) for r in evts) else "") + ".",
+        + (" and every gated event test (see Events)" if any(is_gated_event(r) for r in evts) else "")
+        + (" and every gated move-size test (see Move sizes)" if any(is_gated_move(r) for r in mvs) else "") + ".",
         "",
         "| Hypothesis | Universe | Select | TEST net excess / mo | Annualised | Info ratio | Months won | Perm p | BH q | TRAIN net excess / mo | TRAIN p | TEST coverage | Verdict |",
         "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
@@ -410,6 +433,8 @@ def report(ledger_path=None, results_path=None) -> str:
         lines += ["", *_link_section(links, ledger_path)]
     if evts:
         lines += ["", *_event_section(evts, ledger_path)]
+    if mvs:
+        lines += ["", *_move_section(mvs)]
     text = "\n".join(lines) + "\n"
     Path(results_path or config.RESULTS).write_text(text)
     return text
@@ -686,3 +711,47 @@ def _event_section(rows: list[dict], ledger_path=None) -> list[str]:
               "(survivorship). A reaction with no drift means the market prices the event at once.",
               ""]
     return lines
+
+
+def _move_section(rows: list[dict]) -> list[str]:
+    """The move-size tests' table and plain words (brain/research/movetest.py, docs/MOVES.md)."""
+    if not rows:
+        return []
+    lines = [
+        "## Move sizes",
+        "",
+        ("Tests of the earnings move-size model M1 (`brain/moves.py`, `docs/MOVES.md`): the size of a release's move "
+         "over days -1..+1 against SPY, whichever way, predicted as a range from what was known two sessions "
+         "before. Per release the score is the mean pinball loss over the 10/25/50/75/90% quantiles; each month the "
+         "history-only baseline's mean loss minus M1's, and the statistic is the mean of those monthly differences "
+         "with a one-sided sign-flip p. The gate, declared before running: positive, p < 0.05, M1's 80% range "
+         "holding 75%-85% of TEST releases, the controls passing, and Benjamini–Hochberg q < 0.10 across every "
+         "gated test in the ledger."),
+        "",
+        ("| Test | TEST releases (months) | Loss M1 | Loss baseline | Monthly difference | 90% interval | p | BH q | "
+         "80% range held | 50% range held | Verdict |"),
+        "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+    ]
+    words = []
+    for r in rows:
+        m = r["metrics"]
+        lo, hi = m["interval90"]
+        q = f"{r['bh_q']:.3f}" if isinstance(r.get("bh_q"), float) and math.isfinite(r["bh_q"]) else "–"
+        verdict = r["verdict"].split(":")[0]
+        lines.append(f"| {r['id']} | {m['releases']} ({m['months']}) | {m['loss_m1'] * 100:.3f} | "
+                     f"{m['loss_base'] * 100:.3f} | {m['diff'] * 100:+.3f} | {lo * 100:+.3f}..{hi * 100:+.3f} | "
+                     f"{m['p']:.4f} | {q} | {m['cover80'] * 100:.1f}% | {m['cover50'] * 100:.1f}% | **{verdict}** |")
+        c = r.get("controls") or {}
+        words.append(
+            f"- **{r['id']}**: over {m['releases']} releases from {m['first']} to {m['last']}, M1's ranges scored "
+            f"{m['loss_m1'] * 100:.3f} points of pinball loss against the baseline's {m['loss_base'] * 100:.3f} "
+            f"(better in {m['months_better']} of {m['months']} months). Its 80% range held {m['cover80'] * 100:.1f}% "
+            f"of the moves (the baseline's {m['base_cover80'] * 100:.1f}%) and its 50% range {m['cover50'] * 100:.1f}%. "
+            f"The chance of moving more than the usual move (median of the last eight) scored a Brier of "
+            f"{m['brier_m1']:.4f} against the baseline's {m['brier_base']:.4f} and the base rate's {m['brier_rate']:.4f} "
+            f"({m['above_usual_rate'] * 100:.1f}% did). Controls: shuffled ranges reached p < 0.05 in "
+            f"{c.get('placebo_fpr', float('nan')) * 100:.1f}% of {c.get('n_placebo', 0)} draws; the actual move as the "
+            f"middle reached p {c.get('oracle_p', float('nan')):.4f}. {verdict}.")
+    return lines + ["", *words, "",
+                    ("Reading this: a size is not a direction. The universe is chosen today (survivorship), and the "
+                     "pinball loss is in points of move (0.5 is half a percentage point)."), ""]
