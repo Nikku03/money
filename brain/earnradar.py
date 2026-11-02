@@ -477,7 +477,8 @@ def _cmd_radar(a):
         if names:
             print(f"{words}: " + ", ".join(names))
     if any(r.get("m1") for r in rows):
-        print("M1 is unproven until M1a has a result (RESULTS.md, Move sizes) and thirty of its calls are judged.")
+        print("M1's range passed its declared test (M1a, RESULTS.md); its read of the options is unproven until thirty "
+              "of its calls (research/m1_calls.jsonl) are judged.")
     return 0
 
 

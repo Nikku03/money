@@ -61,11 +61,17 @@ How to read the chance:
 - **High chance:** the options are cheap, and the buyer's side has the edge.
 - **In between:** no bet.
 
-Every such call goes into `brain predict` first, with M1's chance as its probability. M1's own calls, one per confirmed report with options, are kept apart from the agent's in `research/m1_calls.jsonl`:
+Every such call goes into `brain predict` first, with M1's chance as its probability. M1's own calls, one per
+confirmed report with options, are kept apart from the agent's in `research/m1_calls.jsonl`:
 
 ```
 BRAIN_PREDICTIONS=research/m1_calls.jsonl python -m brain predict score --refresh
 ```
 
-Each is a `move` call: the options' priced move for the report is the threshold, and M1's chance is the probability. It is made at the close two sessions before the release's first session and judged at the close one session after it. That is M1's own window, measured on the stock's raw price rather than against SPY. Until M1a has a result, and
-until thirty such calls are judged, the chance is unproven. A size is not a direction, and nothing here trades.
+Each is a `move` call: the options' priced move for the report is the threshold, and M1's chance is the
+probability. It is made at the close two sessions before the release's first session and judged at the close one
+session after it. That is M1's own window, measured on the stock's raw price rather than against SPY.
+
+M1a's PASS (`research/RESULTS.md`, Move sizes) is about the range against the stock's own history. Whether M1 reads
+the options' price better than the options do is unproven until thirty of these calls are judged. A size is not a
+direction, and nothing here trades.
