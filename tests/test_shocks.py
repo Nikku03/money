@@ -130,40 +130,93 @@ class DeclaredTestTrial(TempHome):
         super().tearDown()
 
     def test_fit_declare_and_test_in_a_trial(self):
+        from unittest import mock
         rng = np.random.default_rng(5)
         d = pd.bdate_range("2010-01-04", "2026-10-30").strftime("%Y-%m-%d").to_numpy()
-        facts, tickers = [], ["AAA", "BBB", "CCC", "DDD"]
+        facts, tickers = [], [f"T{k:02d}" for k in range(12)]
         for k, t in enumerate(tickers):
-            sd, q = 0.005 * (k + 1), 0.002 * (k + 1) ** 2          # jumpier stocks have more shocks
+            sd, q = 0.004 * (1 + k % 4), 0.0015 * (1 + k % 4) ** 2     # jumpier stocks have more shocks
             r = rng.normal(0, sd, len(d))
             hit = rng.random(len(d)) < q
-            r[hit] = rng.choice([-0.25, 0.3], hit.sum())
-            adj = list(10 * np.cumprod(1 + r))
-            facts.append(price_snapshot(t, list(d), adj))
+            r[hit] = rng.choice([-0.2, 0.35], hit.sum())
+            for i in np.flatnonzero(hit & (r > 0)):                      # jumps give some back over a month
+                if i + 21 < len(d):
+                    r[i + 1:i + 22] -= 0.05 / 21
+            facts.append(price_snapshot(t, list(d), list(10 * np.cumprod(1 + r))))
             facts.append(filed(t, "filing", "8-K", "2015-03-02", "2015-03-02T21:00:00Z", items="2.02"))
         facts += [price_snapshot("SPY", list(d), [400.0] * len(d)), price_snapshot("^VIX", list(d), [20.0] * len(d))]
         self.bank.add_many(facts)
         model = shocks.fit_and_save(self.bank, tickers=tickers, log=None)
-        self.assertGreater(model["s1"]["n"], 2000)
+        self.assertGreater(model["s1"]["n"], 6000)
         self.assertGreater(model["s1"]["rate"], 0.01)
         top = shocks.radar(self.bank, tickers)
-        self.assertEqual(len(top), 4)
+        self.assertEqual(len(top), len(tickers))
         self.assertGreater(top[0]["chance"], top[-1]["chance"])
         self.assertTrue(shocktest.is_trial(False))                         # a temp home: never the committed ledger
-        rec = shocktest.declare(log=None)
-        self.assertEqual(rec["id"], "S1a")
-        self.assertIsNone(shocktest.declare(log=None))                     # declared once
-        out = shocktest.test(self.bank, log=None, tickers=tickers)
-        m = out["metrics"]
-        self.assertGreater(m["stock_weeks"], 400)
+        recs = shocktest.declare(log=None)
+        self.assertEqual([r["id"] for r in recs], ["S1a", "S2a", "S2b"])
+        self.assertEqual(shocktest.declare(log=None), [])                  # declared once
+        with mock.patch.object(shocks, "FADE_MIN_PEERS", 5), mock.patch.object(shocks, "FADE_DECILES", 2):
+            out = shocktest.test(self.bank, log=None, tickers=tickers)
+        by = {r["id"]: r for r in out}
+        m = by["S1a"]["metrics"]
+        self.assertGreater(m["stock_weeks"], 1000)
         self.assertEqual(m["first"][:4], "2024")
-        self.assertIn("pass", out["gate"])
         self.assertGreater(m["auc_s1"], 0.6)
+        f = by["S2b"]["metrics"]
+        self.assertGreater(f["episodes"], 5)
+        self.assertEqual(f["first"][:4], "2024")
+        self.assertLess(f["abnormal"], 0)                                   # the built-in fade shows
+        self.assertIn("pass", by["S2a"]["gate"])
         led, res = shocktest.paths(True)
-        self.assertIn("## Shocks", res.read_text())
-        self.assertEqual([json.loads(x)["op"] for x in led.read_text().splitlines()], ["declare", "result"])
+        text = res.read_text()
+        self.assertIn("## Shocks", text)
+        self.assertIn("| S2b | abnormal |", text)
+        self.assertEqual([json.loads(x)["op"] for x in led.read_text().splitlines()], ["declare"] * 3 + ["result"] * 3)
         with self.assertRaises(SystemExit):
             shocktest.test(self.bank, log=None, tickers=tickers)           # one result per id
+
+
+class FadeTest(TempHome):
+    def test_episodes_skip_results_days_and_repeats(self):
+        dates = pd.bdate_range("2020-01-01", periods=120).strftime("%Y-%m-%d").to_numpy()
+        e = np.zeros(120)
+        e[[10, 15, 60, 90]] = 0.25                 # 15 repeats 10's episode; 90 is a results day
+        e[40] = -0.3                               # a fall is not an up-shock
+        self.assertEqual(shocks.up_shocks(e, dates, results={90}), [10, 60])
+        e2 = np.zeros(120)
+        e2[[5, 20]] = 0.25                         # 5 is a results day: it still opens the episode, so 20 does not
+        self.assertEqual(shocks.up_shocks(e2, dates, results={5}), [])
+
+    def test_matched_peers_share_the_volatility_decile(self):
+        n = 400
+        lv = np.linspace(0.01, 0.10, n)            # every stock's volatility, all different
+        fwd = lv * 10                              # each outcome names its stock's volatility
+        pn = {"lv60": np.vstack([lv, lv]), "fwd": np.vstack([fwd, fwd]), "e": np.zeros((2, n))}
+        j = n - 1                                  # the jumpiest stock shocks on session 1
+        pn["e"][1, j] = 0.3
+        pn["fwd"][1, j] = -0.15
+        m = shocks.matched(pn, 1, j)
+        top = np.quantile(lv[:-1], 0.9)            # its decile, among the stocks that did not shock
+        self.assertGreaterEqual(float(m["peers"].min()), top * 10 - 1e-12)
+        self.assertAlmostEqual(len(m["peers"]), (n - 1) / 10, delta=2)
+        self.assertAlmostEqual(m["peer_mean"], float(np.mean(m["peers"])))
+        self.assertEqual(m["pct"], 0.0)            # it did worse than every peer
+        self.assertLess(m["abn"], -0.9)
+        self.assertIsNone(shocks.matched(pn, 0, j))   # no session before the first
+        pn["fwd"][1, :n - 150] = np.nan            # too few stocks with an outcome that day
+        self.assertIsNone(shocks.matched(pn, 1, j))
+
+    def test_fade_statistics(self):
+        peers = np.linspace(-0.1, 0.1, 101)
+        evs = [{"date": f"2024-0{m}-10", "y": -0.05, "peers": peers, "peer_mean": 0.0, "pct": 0.25, "abn": -0.05,
+                "e": 0.3, "close": 10.0, "bio": 1.0, "t": "X"} for m in range(1, 10)]
+        np.testing.assert_allclose(shocktest.fade_values(evs, "percentile"), [(peers < -0.05).mean() - 0.5] * 9)
+        np.testing.assert_allclose(shocktest.fade_values(evs, "abnormal"), [-0.05] * 9)
+        r = shocktest.evaluate_fade(evs, "abnormal")
+        self.assertTrue(r["gate"]["pass"])
+        self.assertLess(r["p"], 0.01)
+        self.assertEqual(r["metrics"]["bio"]["n"], 9)
 
 
 class ScoreTest(TempHome):

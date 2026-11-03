@@ -10,8 +10,7 @@ designation, a stock up 70% on a bid, a country fund down 20% after an election.
 - **Where and roughly when.** Shocks are not spread evenly. They land on small, cheap, jumpy stocks; on drug
   companies waiting for an answer; on stocks that moved hard lately; on stocks about to report or about to sell
   shares. S1 ranks every stock each week by its chance of a shock.
-- **What follows.** Whether a shock tends to hold or fade is a separate, testable question (the after-shock study in
-  `research/SHOCKS-2026-11.md`).
+- **What follows.** Whether a shock tends to hold or fade is a separate, testable question: S2a and S2b below.
 
 ## What it predicts
 
@@ -25,20 +24,43 @@ and low, recent 8-Ks, a recent prospectus or shelf filing (a share sale is near)
 The model is a logistic regression with a small ridge, fitted on the research universe's stock-weeks of 2011-2023
 (`knowledge/shocks_s1.json`). The baseline is the same fit on the volatility history alone.
 
-## The declared test, S1a
+## The declared tests
 
-`brain/research/shocktest.py`, declared before it ran:
+`brain/research/shocktest.py`, declared before they ran. TEST is 2024-01-01 to 2026-09-30, which no model or rule
+here was built on.
 
-- TEST is every research-universe stock-week ending 2024-01-01 to 2026-09-30 whose five sessions have closed.
+**S1a, the radar.**
+- Every research-universe stock-week whose five sessions have closed.
 - Per stock-week the score is the log loss of the chance; per month, the baseline's mean loss minus S1's. The
   statistic is the mean of the monthly differences, with a one-sided sign-flip p.
-- S1a passes when the difference is positive with p < 0.05; S1's mean chance is within 0.67-1.5 of the actual rate,
-  overall and in each week's top twentieth; the controls pass (S1's chances shuffled within each week reach p < 0.05
-  in at most 10% of draws; an oracle reaches p < 0.01); and Benjamini-Hochberg q < 0.10 across every gated test.
+- It passes when:
+  - the difference is positive with p < 0.05;
+  - S1's mean chance is within 0.67-1.5 of the actual rate, overall and in each week's top twentieth;
+  - the controls pass: S1's chances shuffled within each week reach p < 0.05 in at most 10% of draws, and an oracle
+    reaches p < 0.01.
+
+**S2a and S2b, what follows a jump.** In 2011-2023 a stock that jumped 20%+ above SPY without a results report then
+did worse than equally jumpy stocks over the next month, every year (`research/SHOCKS-2026-11.md`). The tests ask
+the same of 2024-2026.
+- An episode opens on a session 20%+ above SPY:
+  - with no results report (an 8-K with item 2.02) that session;
+  - with no up-shock in the 30 days before.
+- Its outcome is its excess return over the next 21 sessions. Peers are the stocks in its 60-session volatility decile,
+  read the close before, that did not shock that day. Volatile stocks move more and drift down in log terms, so an
+  unmatched average would mislead.
+- **S2a**, the typical episode: per month, the share of its peers each episode beat, less one half.
+- **S2b**, the average episode, which is what a trade would earn before costs: per month, each episode's outcome
+  less its peers' mean.
+- Each passes when:
+  - its mean of monthly values is negative with a one-sided sign-flip p < 0.05;
+  - a random peer standing in for each episode reaches p < 0.05 in at most 10% of draws;
+  - an oracle that puts each episode at its peers' 10th percentile reaches p < 0.01.
+
+All three also need Benjamini-Hochberg q < 0.10 across every gated test in the ledger.
 
 ```
 python -m brain shocks fit          # 2011-2023 only; commit knowledge/shocks_s1.json
-python -m brain shocktest declare   # commit the ledger
+python -m brain shocktest declare   # S1a, S2a, S2b; commit the ledger
 python -m brain shocktest test      # commit the ledger and research/RESULTS.md, whatever they say
 ```
 
@@ -59,4 +81,6 @@ price already charges for most of what S1 sees. Any call made from it goes into 
 - **The smallest stocks are mostly outside it.** The micro list stops at SEC rank 4,500 and needs prices since 2010,
   so recent listings, where many 100%+ days happen, are not in it.
 - **Industry codes are today's**, and a report's expected date is a year-old date moved on, not the announced one.
+- **A fade against peers is not a trade.** Shorting a stock that just jumped costs borrow fees and risks a squeeze,
+  and among stocks under $5 a few keep exploding.
 - **A size is not a direction**, and nothing here trades.

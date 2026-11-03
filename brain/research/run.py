@@ -206,7 +206,7 @@ def is_shock(r: dict) -> bool:
 
 
 def is_gated_shock(r: dict) -> bool:
-    return is_shock(r) and r.get("gate_type") == "logloss"
+    return is_shock(r) and r.get("gate_type") in ("logloss", "fade")
 
 
 def is_gated_forecast(r: dict) -> bool:
@@ -771,26 +771,27 @@ def _move_section(rows: list[dict]) -> list[str]:
 
 
 def _shock_section(rows: list[dict]) -> list[str]:
-    """The shock radar's tests (brain/research/shocktest.py, docs/SHOCKS.md)."""
-    if not rows:
+    """The shock tests (brain/research/shocktest.py, docs/SHOCKS.md): the radar S1a, then what follows a shock."""
+    radar = [r for r in rows if r.get("gate_type") == "logloss"]
+    fade = [r for r in rows if r.get("gate_type") == "fade"]
+    if not (radar or fade):
         return []
-    lines = [
-        "## Shocks",
-        "",
-        ("Tests of the shock radar S1 (`brain/shocks.py`, `docs/SHOCKS.md`): the chance that a stock moves 20% or "
-         "more against SPY, either way, in one session of the next five, from what was known at a week's last "
-         "close. Per stock-week the score is the log loss of the chance; each month the volatility-only baseline's "
-         "mean loss minus S1's, and the statistic is the mean of those monthly differences with a one-sided "
-         "sign-flip p. The gate, declared before running: positive, p < 0.05, S1's chances calibrated overall and "
-         "in each week's top twentieth (actual over predicted within the declared band), the controls passing, and "
-         "Benjamini–Hochberg q < 0.10 across every gated test in the ledger."),
-        "",
-        ("| Test | TEST stock-weeks (months) | Loss S1 | Loss baseline | Monthly difference | 90% interval | p | BH q | "
-         "Actual / predicted (all, top 5%) | Top 5% caught | Verdict |"),
-        "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
-    ]
-    words = []
-    for r in rows:
+    lines, words = ["## Shocks", ""], []
+    if radar:
+        lines += [
+            ("Tests of the shock radar S1 (`brain/shocks.py`, `docs/SHOCKS.md`): the chance that a stock moves 20% "
+             "or more against SPY, either way, in one session of the next five, from what was known at a week's last "
+             "close. Per stock-week the score is the log loss of the chance; each month the volatility-only "
+             "baseline's mean loss minus S1's, and the statistic is the mean of those monthly differences with a "
+             "one-sided sign-flip p. The gate, declared before running: positive, p < 0.05, S1's chances calibrated "
+             "overall and in each week's top twentieth (actual over predicted within the declared band), the "
+             "controls passing, and Benjamini–Hochberg q < 0.10 across every gated test in the ledger."),
+            "",
+            ("| Test | TEST stock-weeks (months) | Loss S1 | Loss baseline | Monthly difference | 90% interval | p | "
+             "BH q | Actual / predicted (all, top 5%) | Top 5% caught | Verdict |"),
+            "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+        ]
+    for r in radar:
         m = r["metrics"]
         lo, hi = m["interval90"]
         q = f"{r['bh_q']:.3f}" if isinstance(r.get("bh_q"), float) and math.isfinite(r["bh_q"]) else "–"
@@ -812,6 +813,42 @@ def _shock_section(rows: list[dict]) -> list[str]:
             f"against a predicted {m['top_chance'] * 100:.1f}%. Controls: shuffled chances reached p < 0.05 in "
             f"{c.get('placebo_fpr', float('nan')) * 100:.1f}% of {c.get('n_placebo', 0)} draws; an oracle reached p "
             f"{c.get('oracle_p', float('nan')):.4f}. {verdict}.")
+    if fade:
+        lines += [
+            *([""] if radar else []),
+            ("Tests of what follows a shock: an up-shock episode opens on a session 20%+ above SPY without a results "
+             "report and with no up-shock in the 30 days before. Its outcome is its excess return over the next 21 "
+             "sessions, against the stocks in its 60-session volatility decile that did not shock that day. Per month, "
+             "**percentile** averages the share of peers each episode beat less one half (the typical episode); "
+             "**abnormal** averages each episode's outcome less its peers' mean (the average episode, before costs). "
+             "The gate, declared before running: the mean of monthly values negative with a one-sided sign-flip "
+             "p < 0.05, the controls passing, and Benjamini–Hochberg q < 0.10 across every gated test."),
+            "",
+            "| Test | Statistic | TEST episodes (months) | Mean of monthly values | 90% interval | p | BH q | Verdict |",
+            "| --- | --- | --- | --- | --- | --- | --- | --- |",
+        ]
+    for r in fade:
+        m = r["metrics"]
+        lo, hi = m["interval90"]
+        q = f"{r['bh_q']:.3f}" if isinstance(r.get("bh_q"), float) and math.isfinite(r["bh_q"]) else "–"
+        verdict = r["verdict"].split(":")[0]
+        stat = "percentile" if r["id"] == "S2a" else "abnormal"
+        lines.append(f"| {r['id']} | {stat} | {m['episodes']} ({m['months']}) | {m['stat']:+.4f} | {lo:+.4f}..{hi:+.4f} | "
+                     f"{m['p']:.4f} | {q} | **{verdict}** |")
+        c = r.get("controls") or {}
+        b, bio, u5 = m["big"], m["bio"], m["under5"]
+        words.append(
+            f"- **{r['id']}** ({stat}): {m['episodes']} episodes of {m['stocks']} stocks from {m['first']} to "
+            f"{m['last']}. Over the next 21 sessions their median excess return was {m['median_outcome'] * 100:+.1f}% "
+            f"and their mean {m['mean_outcome'] * 100:+.1f}%, against {m['peer_mean'] * 100:+.1f}% for their peers: "
+            f"{m['abnormal'] * 100:+.2f} points on average, beating {m['percentile'] * 100:.1f}% of peers "
+            f"({m['share_behind'] * 100:.0f}% fell behind the middle one). Negative in {m['months_negative']} of "
+            f"{m['months']} months. Jumps of 50%+: {b['n']}, {b['abn'] * 100:+.1f} points; drug and biotech: "
+            f"{bio['n']}, {bio['abn'] * 100:+.1f}; under $5: {u5['n']}, {u5['abn'] * 100:+.1f}. Controls: a random "
+            f"peer in each episode's place reached p < 0.05 in {c.get('placebo_fpr', float('nan')) * 100:.1f}% of "
+            f"{c.get('n_placebo', 0)} draws; an oracle reached p {c.get('oracle_p', float('nan')):.4f}. {verdict}.")
     return lines + ["", *words, "",
-                    ("Reading this: a chance of a shock is a size, not a direction. The universe is chosen today "
-                     "(survivorship: companies bought out or delisted are missing, so shocks are undercounted)."), ""]
+                    ("Reading this: a chance of a shock is a size, not a direction, and a fade measured against peers is "
+                     "not a trade: shorting a stock that just jumped costs borrow fees and risks a squeeze. The universe "
+                     "is chosen today (survivorship: companies bought out or delisted are missing, so shocks are "
+                     "undercounted and post-shock returns flattered)."), ""]

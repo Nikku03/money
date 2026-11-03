@@ -268,18 +268,29 @@ def _matrix(rows: list[dict], feats) -> np.ndarray:
 
 
 def _logit(X: np.ndarray, y: np.ndarray, lam: float) -> np.ndarray:
-    """Ridge logistic regression by Newton steps; the intercept (column 0) is not shrunk."""
+    """Ridge logistic regression by Newton steps, each halved until the penalized likelihood does not fall (a full
+    step can overshoot when features move together); the intercept (column 0) is not shrunk."""
     w = np.zeros(X.shape[1])
     m = float(np.clip(y.mean(), 1e-6, 1 - 1e-6))
     w[0] = np.log(m / (1 - m))
     pen = lam * np.eye(X.shape[1])
     pen[0, 0] = 0.0
+
+    def obj(v: np.ndarray) -> float:
+        z = X @ v
+        return float(np.sum(y * z - np.logaddexp(0.0, z)) - 0.5 * v @ pen @ v)
+
+    f = obj(w)
     for _ in range(100):
         p = 1 / (1 + np.exp(-np.clip(X @ w, -30, 30)))
-        g = X.T @ (y - p) - pen @ w
-        step = np.linalg.solve((X * (p * (1 - p))[:, None]).T @ X + pen, g)
-        w += step
-        if np.abs(step).max() < 1e-8:
+        step = np.linalg.solve((X * (p * (1 - p))[:, None]).T @ X + pen, X.T @ (y - p) - pen @ w)
+        t = 1.0
+        while (fn := obj(w + t * step)) < f and t > 1e-8:
+            t /= 2
+        w = w + t * step
+        done = abs(fn - f) < 1e-10 * max(1.0, abs(f))
+        f = fn
+        if done:
             break
     return w
 
@@ -333,6 +344,100 @@ def fit_and_save(bank: Bank, path: Path | None = None, log=print, tickers=None) 
     if log:
         log(f"fitted on {len(rows)} stock-weeks ({TRAIN_START}..{TRAIN_END}), shock rate "
             f"{out['s1']['rate'] * 100:.2f}% a week; saved {p}")
+    return out
+
+
+# ---------- after a shock (S2) ----------
+FADE_H = 21              # sessions after the shock's close
+FADE_GAP_DAYS = 30       # a shock within this many days of an earlier up-shock is the same episode
+FADE_DECILES = 10
+FADE_MIN_PEERS = 200     # stocks with a volatility and an outcome on the day, for deciles to mean anything
+
+
+def panel(bank: Bank, tickers: list[str], log=None) -> dict:
+    """Every ticker's adjusted and unadjusted closes on SPY's calendar from 2010, with each session's excess
+    return (data errors removed), the 60-session volatility of those returns, and the excess return from each close
+    to the close FADE_H sessions later."""
+    import pandas as pd
+    b = Bank(bank.root)
+    v = b.view()
+    mk = market(v)
+    if mk is None:
+        raise SystemExit(f"no {BENCH} or {VIX} prices in the bank: python -m brain ingest {BENCH} {VIX}")
+    cal, bclose, _ = mk
+    A = np.full((len(cal), len(tickers)), np.nan)
+    C = np.full((len(cal), len(tickers)), np.nan)
+    for j, t in enumerate(tickers):
+        df = _series(v, t)
+        if df is not None and len(df) >= MIN_RET + 60:
+            A[:, j], C[:, j] = _aligned(df, "adjclose", cal), _aligned(df, "close", cal)
+        if log and (j + 1) % 500 == 0:
+            log(f"{j + 1}/{len(tickers)} price series")
+    with np.errstate(all="ignore"):
+        r = np.vstack([np.full((1, len(tickers)), np.nan), A[1:] / A[:-1] - 1])
+        r[(r > BAD_UP) | (r < BAD_DOWN) | (C < MIN_PRICE)] = np.nan
+        rb = np.r_[np.nan, bclose[1:] / bclose[:-1] - 1]
+        e = r - rb[:, None]
+        lv60 = pd.DataFrame(e).rolling(60, min_periods=45).std().to_numpy()
+        fwd = np.full_like(A, np.nan)
+        fwd[:-FADE_H] = (A[FADE_H:] / A[:-FADE_H]) / (bclose[FADE_H:] / bclose[:-FADE_H])[:, None] - 1
+    return {"cal": cal, "tickers": list(tickers), "e": e, "lv60": lv60, "fwd": fwd, "close": C}
+
+
+def up_shocks(e: np.ndarray, dates: np.ndarray, results: set[int]) -> list[int]:
+    """The sessions of one stock that open an up-shock episode: 20%+ above SPY, no up-shock in the FADE_GAP_DAYS
+    calendar days before (results days included), and not itself a results session."""
+    out, last = [], None
+    for i in np.flatnonzero(np.nan_to_num(e) >= SHOCK):
+        d = date.fromisoformat(str(dates[i]))
+        fresh = last is None or (d - last).days > FADE_GAP_DAYS
+        last = d
+        if fresh and i not in results:
+            out.append(int(i))
+    return out
+
+
+def matched(pn: dict, i: int, j: int) -> dict | None:
+    """Stock ``j``'s outcome after its shock on session ``i``, set against the stocks in its 60-session volatility
+    decile (read at the close before) that did not shock that session: their mean outcome, and the share of them it
+    beat. None when the day has too few such stocks or the outcome is not known."""
+    if i < 1:
+        return None
+    lv, fwd, e = pn["lv60"][i - 1], pn["fwd"][i], pn["e"][i]
+    if not (np.isfinite(lv[j]) and np.isfinite(fwd[j])):
+        return None
+    ok = np.isfinite(lv) & np.isfinite(fwd) & (np.abs(np.nan_to_num(e)) < SHOCK)
+    if ok.sum() < FADE_MIN_PEERS:
+        return None
+    q = np.quantile(lv[ok], np.linspace(0, 1, FADE_DECILES + 1))
+    k = min(max(int(np.searchsorted(q, lv[j], side="right")) - 1, 0), FADE_DECILES - 1)
+    peers = fwd[ok & (lv >= q[k]) & (lv <= q[k + 1])]
+    y = float(fwd[j])
+    return {"y": y, "peers": peers, "peer_mean": float(peers.mean()), "pct": float((peers < y).mean()),
+            "abn": y - float(peers.mean())}
+
+
+def fade_events(bank: Bank, pn: dict, first: str, last: str, log=None) -> list[dict]:
+    """Up-shock episodes (``up_shocks``) whose session falls in [first, last], each with its matched outcome."""
+    cal = pn["cal"]
+    out = []
+    b = Bank(bank.root)
+    v = b.view()
+    for j, t in enumerate(pn["tickers"]):
+        e = pn["e"][:, j]
+        if not np.any(np.nan_to_num(e) >= SHOCK):
+            continue
+        reports, _, _ = filings(v, t, cal)
+        results = {int(np.searchsorted(cal, d)) for d in reports}
+        for i in up_shocks(e, cal, results):
+            if not first <= str(cal[i]) <= last:
+                continue
+            m = matched(pn, i, j)
+            if m:
+                out.append({"t": t, "date": str(cal[i]), "e": float(e[i]), "close": float(pn["close"][i, j]),
+                            "bio": is_bio(v, t), **m})
+    if log:
+        log(f"{len(out)} up-shock episodes from {first} to {last}")
     return out
 
 
