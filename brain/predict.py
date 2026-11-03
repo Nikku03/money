@@ -1,7 +1,7 @@
 """The agent's own calls, written down before the outcome and scored after it (docs/PREDICT.md).
 
-A call names a ticker, a direction (up, down) or a size (move), the chance it is right, and the date it is
-judged on. A paper trade can ride along: what was bought and what it cost, closed later at its exit price.
+A call names a ticker, a direction (up, down) or a size (move, or shock: one session beating or trailing SPY's by the
+threshold before its date), the chance it is right, and the date it is judged on. A paper trade can ride along: what was bought and what it cost, closed later at its exit price.
 The record is append-only and committed (research/predictions.jsonl): a call is never edited; a mistake is
 withdrawn with a reason. `score` judges each call against the bank's daily closes once its date has closed,
 and reports the hit rate, the Brier score against a coin flip, and the paper trades' profit and loss.
@@ -18,7 +18,8 @@ from brain.bank import Bank, canon
 from brain.research import ledger
 from brain.timeutil import now_iso
 
-CALLS = ("up", "down", "move")
+CALLS = ("up", "down", "move", "shock")
+BENCH = "SPY"   # a shock call is judged against SPY's same-session return
 MIN_CALLS = 30  # the same bar the engine sets for a source's record (CLAUDE.md, 'Claims are not evidence')
 
 
@@ -46,8 +47,8 @@ def add(bank: Bank, ticker: str, call: str, prob: float, by: str, thesis: str, *
         raise ValueError(f"call must be one of {CALLS}")
     if not 0 < prob < 1:
         raise ValueError("prob is a chance strictly between 0 and 1")
-    if threshold < 0 or (call == "move" and threshold <= 0):
-        raise ValueError("threshold is a positive percent (required for a move call)")
+    if threshold < 0 or (call in ("move", "shock") and threshold <= 0):
+        raise ValueError("threshold is a positive percent (required for a move or shock call)")
     made_at = made_at or now_iso()
     if by < made_at[:10]:
         raise ValueError(f"the judging date {by} is already past ({made_at[:10]})")
@@ -115,7 +116,8 @@ def state(bank: Bank, path=None) -> list[dict]:
             row["reason"] = gone[c["id"]]["reason"]
         else:
             closes = cache.setdefault(c["ticker"], _closes(bank, c["ticker"]))
-            judged = _judge(c, closes)
+            bench = cache.setdefault(BENCH, _closes(bank, BENCH)) if c["call"] == "shock" else None
+            judged = _judge(c, closes, bench)
             row.update(judged) if judged else row.update(status="open")
         if "trade" in c and c["id"] in exits:
             t, x = c["trade"], exits[c["id"]]["exit"]
@@ -126,11 +128,34 @@ def state(bank: Bank, path=None) -> list[dict]:
     return out
 
 
-def _judge(c: dict, closes) -> dict | None:
+def _shock(c: dict, closes, bench) -> dict | None:
+    """A shock call's outcome: the sessions after its start date through its date, each stock return less SPY's on
+    the same session; a hit when any reaches the threshold either way. None until both series reach the date."""
+    if not bench or bench[-1][0] < c["by"]:
+        return None
+    b = dict(bench)
+    px = [(d, p) for d, p in closes if d <= c["by"]]
+    start = [k for k, (d, _) in enumerate(px) if d <= c["start_date"]]
+    if not start:
+        return None
+    worst = 0.0
+    for (d0, p0), (d1, p1) in zip(px[start[-1]:], px[start[-1] + 1:]):
+        if d0 in b and d1 in b and p0 > 0 and b[d0] > 0:
+            x = ((p1 / p0 - 1) - (b[d1] / b[d0] - 1)) * 100
+            worst = x if abs(x) > abs(worst) else worst
+    hit = abs(worst) >= c["threshold_pct"]
+    return {"status": "hit" if hit else "miss", "move_pct": round(worst, 2), "final_price": px[-1][1],
+            "brier": round((c["prob"] - (1.0 if hit else 0.0)) ** 2, 4)}
+
+
+def _judge(c: dict, closes, bench=None) -> dict | None:
     """The call's outcome from the last close on or before its date. None until the bank's daily series
-    reaches that date (the price source keeps a session out until it has closed)."""
+    reaches that date (the price source keeps a session out until it has closed). A shock call's ``move_pct`` is its
+    largest session against SPY."""
     if not closes or closes[-1][0] < c["by"]:
         return None
+    if c["call"] == "shock":
+        return _shock(c, closes, bench)
     final = [p for d, p in closes if d <= c["by"]]
     if not final:
         return None
@@ -250,7 +275,7 @@ def add_cli(sub) -> None:
     s.add_argument("call", choices=CALLS)
     s.add_argument("--prob", type=float, required=True, help="the chance the call is right, 0-1")
     s.add_argument("--by", required=True, help="the date the call is judged on (its close), YYYY-MM-DD")
-    s.add_argument("--threshold", type=float, default=0.0, help="percent move the call needs (required for move)")
+    s.add_argument("--threshold", type=float, default=0.0, help="percent move the call needs (required for move and shock)")
     s.add_argument("--price", type=float, help="start price (default: the bank's latest close)")
     s.add_argument("--thesis", required=True, help="why, in one line")
     s.add_argument("--source", action="append", help="a URL the call rests on (repeatable)")

@@ -16,8 +16,9 @@ python -m brain predict list [--open] [--refresh]
 python -m brain predict score [--refresh]
 ```
 
-- **The call.** `up` or `down` (optionally by at least `--threshold` percent), or `move` (at least
-  `--threshold` percent either way). `--prob` is the chance the call is right. The start price is the bank's
+- **The call.** `up` or `down` (optionally by at least `--threshold` percent), `move` (at least
+  `--threshold` percent either way), or `shock` (at least one session after the start whose return beats or trails
+  SPY's by `--threshold` percent, through `--by`; the shock radar's event, `docs/SHOCKS.md`). `--prob` is the chance the call is right. The start price is the bank's
   latest close for the ticker (ingest it first) unless `--price` is given.
 - **Judging.** A call is judged on the last daily close on or before its `--by` date, once that close is in
   the bank (the price source keeps a session out until it has closed): hit or miss, and its Brier score,

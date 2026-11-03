@@ -65,6 +65,28 @@ class PredictTest(TempHome):
         got = [r["status"] for r in predict.state(self.bank, self.path)]
         self.assertEqual(got, ["miss", "hit", "miss"])
 
+    def test_shock_calls_need_one_session_against_spy(self):
+        spy = ["2025-10-22", "2025-10-23", "2025-10-26", "2025-10-27", "2025-10-28"]
+        with self.assertRaises(ValueError):
+            self.add(call="shock", by="2025-10-28")                       # a shock call needs its threshold
+        rec = self.add(call="shock", prob=0.2, by="2025-10-28", threshold=20)
+        self.later([60.0, 66.0])                                          # +9.9% then +10.0%: no session of 20%
+        self.bank.add_many([price_snapshot("SPY", spy, [400.0] * 5)])
+        row = predict.state(self.bank, self.path)[0]
+        self.assertEqual((row["status"], row["move_pct"]), ("miss", 10.0))
+        self.assertEqual(row["id"], rec["id"])
+        self.bank.add_many([price_snapshot("SPY", spy, [400.0, 400.0, 400.0, 340.0, 340.0])])
+        row = predict.state(self.bank, self.path)[0]                      # SPY fell 15% the day the stock rose 9.9%
+        self.assertEqual(row["status"], "hit")
+        self.assertAlmostEqual(row["move_pct"], (60.0 / 54.6 - 1 + 0.15) * 100, places=1)
+        self.assertAlmostEqual(row["brier"], 0.64)
+
+    def test_a_shock_call_waits_for_spy(self):
+        self.add(call="shock", prob=0.2, by="2025-10-27", threshold=20)
+        self.later([70.0])                                                 # the stock's close is in; SPY's is not
+        self.bank.add_many([price_snapshot("SPY", ["2025-10-23", "2025-10-26"], [400.0, 400.0])])
+        self.assertEqual(predict.state(self.bank, self.path)[0]["status"], "open")
+
     def test_judged_on_the_close_of_its_date_not_a_later_one(self):
         self.add(by="2025-10-27")
         self.later([56.0, 40.0])      # up on the 27th, crash on the 28th
