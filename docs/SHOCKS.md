@@ -58,6 +58,13 @@ the same of 2024-2026.
 
 All three also need Benjamini-Hochberg q < 0.10 across every gated test in the ledger.
 
+**Results (2026-11-03, `research/RESULTS.md`).**
+- **S1a: PASS.**
+  - Better than volatility alone in 31 of 33 months; each week's top 5% held 52% of the shocks.
+  - Its chances ran about a fifth low (0.72% actual against 0.58% predicted).
+- **S2a: FAIL.** The 2011-2023 fade after a jump did not repeat.
+- **S2b: FAIL (controls).**
+
 ```
 python -m brain shocks fit          # 2011-2023 only; commit knowledge/shocks_s1.json
 python -m brain shocktest declare   # S1a, S2a, S2b; commit the ledger
