@@ -200,13 +200,22 @@ def is_gated_move(r: dict) -> bool:
     return is_move(r) and r.get("gate_type") == "pinball"
 
 
+def is_shock(r: dict) -> bool:
+    """A test of the shock radar (brain/research/shocktest.py)."""
+    return r.get("kind") == "shock"
+
+
+def is_gated_shock(r: dict) -> bool:
+    return is_shock(r) and r.get("gate_type") == "logloss"
+
+
 def is_gated_forecast(r: dict) -> bool:
     """A forecast result with a declared gate (F1b, F1c); descriptive ones (F1a, F1d) are not."""
     return is_forecast(r) and (r.get("gate_type") == "ic" or (r.get("gate_type") is None and "p" in r))
 
 
 def _bh_p(r: dict) -> float:
-    if is_forecast(r) or is_link(r) or is_event(r) or is_move(r):
+    if is_forecast(r) or is_link(r) or is_event(r) or is_move(r) or is_shock(r):
         p = r.get("p")
         return float(p) if isinstance(p, (int, float)) and math.isfinite(p) else 1.0  # no p counts as 1
     return r["test"]["perm_p"]
@@ -233,7 +242,7 @@ def _link_verdict(r: dict, q: float) -> str:
 
 
 def _move_verdict(r: dict, q: float) -> str:
-    if not is_gated_move(r):
+    if not (is_gated_move(r) or is_gated_shock(r)):
         return "REPORT"
     if not (r.get("controls") or {}).get("pass"):
         return "FAIL (controls)"
@@ -251,7 +260,7 @@ def verdicts(path=None) -> list[dict]:
     gone = ledger.withdrawn(path)
     tested = {k: r for k, r in res.items()
               if is_hypothesis(r) or is_gated_forecast(r) or is_gated_link(r) or is_gated_event(r)
-              or is_gated_move(r)}
+              or is_gated_move(r) or is_gated_shock(r)}
     q_of = dict(zip(tested, bh_adjust([_bh_p(r) for r in tested.values()])))
     rows = []
     for k, r in res.items():
@@ -264,7 +273,7 @@ def verdicts(path=None) -> list[dict]:
         if is_link(r) or is_event(r):
             rows.append({**r, "bh_q": q, "verdict": _link_verdict(r, q)})
             continue
-        if is_move(r):
+        if is_move(r) or is_shock(r):
             rows.append({**r, "bh_q": q, "verdict": _move_verdict(r, q)})
             continue
         te = r["test"]
@@ -326,6 +335,7 @@ def report(ledger_path=None, results_path=None) -> str:
     links = [r for r in every if is_link(r)]
     evts = [r for r in every if is_event(r)]
     mvs = [r for r in every if is_move(r)]
+    shk = [r for r in every if is_shock(r)]
     led = Path(ledger_path or config.LEDGER)
     try:
         led_name = led.resolve().relative_to(config.ROOT.resolve()).as_posix()
@@ -335,7 +345,7 @@ def report(ledger_path=None, results_path=None) -> str:
         text = "\n".join(["# Research results", "",
                           f"Generated {now_iso()} from `{led_name}`. Every number below is copied from the ledger.",
                           "", *_forecast_section(forecasts), *_link_section(links, ledger_path),
-                          *_event_section(evts, ledger_path), *_move_section(mvs)]) + "\n"
+                          *_event_section(evts, ledger_path), *_move_section(mvs), *_shock_section(shk)]) + "\n"
         Path(results_path or config.RESULTS).write_text(text)
         return text
     by_uni: dict[str, list[dict]] = {}
@@ -361,7 +371,8 @@ def report(ledger_path=None, results_path=None) -> str:
         + (" and every gated forecast test (see Forecasts)" if any(is_gated_forecast(r) for r in forecasts) else "")
         + (" and every gated link test (see Links)" if any(is_gated_link(r) for r in links) else "")
         + (" and every gated event test (see Events)" if any(is_gated_event(r) for r in evts) else "")
-        + (" and every gated move-size test (see Move sizes)" if any(is_gated_move(r) for r in mvs) else "") + ".",
+        + (" and every gated move-size test (see Move sizes)" if any(is_gated_move(r) for r in mvs) else "")
+        + (" and every gated shock test (see Shocks)" if any(is_gated_shock(r) for r in shk) else "") + ".",
         "",
         "| Hypothesis | Universe | Select | TEST net excess / mo | Annualised | Info ratio | Months won | Perm p | BH q | TRAIN net excess / mo | TRAIN p | TEST coverage | Verdict |",
         "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
@@ -435,6 +446,8 @@ def report(ledger_path=None, results_path=None) -> str:
         lines += ["", *_event_section(evts, ledger_path)]
     if mvs:
         lines += ["", *_move_section(mvs)]
+    if shk:
+        lines += ["", *_shock_section(shk)]
     text = "\n".join(lines) + "\n"
     Path(results_path or config.RESULTS).write_text(text)
     return text
@@ -755,3 +768,50 @@ def _move_section(rows: list[dict]) -> list[str]:
     return lines + ["", *words, "",
                     ("Reading this: a size is not a direction. The universe is chosen today (survivorship), and the "
                      "pinball loss is in points of move (0.5 is half a percentage point)."), ""]
+
+
+def _shock_section(rows: list[dict]) -> list[str]:
+    """The shock radar's tests (brain/research/shocktest.py, docs/SHOCKS.md)."""
+    if not rows:
+        return []
+    lines = [
+        "## Shocks",
+        "",
+        ("Tests of the shock radar S1 (`brain/shocks.py`, `docs/SHOCKS.md`): the chance that a stock moves 20% or "
+         "more against SPY, either way, in one session of the next five, from what was known at a week's last "
+         "close. Per stock-week the score is the log loss of the chance; each month the volatility-only baseline's "
+         "mean loss minus S1's, and the statistic is the mean of those monthly differences with a one-sided "
+         "sign-flip p. The gate, declared before running: positive, p < 0.05, S1's chances calibrated overall and "
+         "in each week's top twentieth (actual over predicted within the declared band), the controls passing, and "
+         "Benjamini–Hochberg q < 0.10 across every gated test in the ledger."),
+        "",
+        ("| Test | TEST stock-weeks (months) | Loss S1 | Loss baseline | Monthly difference | 90% interval | p | BH q | "
+         "Actual / predicted (all, top 5%) | Top 5% caught | Verdict |"),
+        "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+    ]
+    words = []
+    for r in rows:
+        m = r["metrics"]
+        lo, hi = m["interval90"]
+        q = f"{r['bh_q']:.3f}" if isinstance(r.get("bh_q"), float) and math.isfinite(r["bh_q"]) else "–"
+        verdict = r["verdict"].split(":")[0]
+        cap, capb = m["capture"], m["capture_base"]
+        lines.append(f"| {r['id']} | {m['stock_weeks']} ({m['months']}) | {m['loss_s1']:.5f} | {m['loss_base']:.5f} | "
+                     f"{m['diff']:+.5f} | {lo:+.5f}..{hi:+.5f} | {m['p']:.4f} | {q} | {m['cal_ratio']:.2f}, "
+                     f"{m['top_ratio']:.2f} | {cap['top5'][0] * 100:.0f}% | **{verdict}** |")
+        c = r.get("controls") or {}
+        words.append(
+            f"- **{r['id']}**: over {m['stock_weeks']} stock-weeks of {m['stocks']} stocks from {m['first']} to "
+            f"{m['last']}, {m['rate'] * 100:.2f}% of stock-weeks had a 20%+ session ({m['up_share'] * 100:.0f}% of "
+            f"those were up). S1's chances averaged {m['mean_s1'] * 100:.2f}% (the baseline's "
+            f"{m['mean_base'] * 100:.2f}%) and beat the baseline's log loss in {m['months_better']} of {m['months']} "
+            f"months; AUC {m['auc_s1']:.3f} against {m['auc_base']:.3f}. Each week's top 1%, 5% and 10% by S1 held "
+            f"{cap['top1'][0] * 100:.0f}%, {cap['top5'][0] * 100:.0f}% and {cap['top10'][0] * 100:.0f}% of all shocks "
+            f"(the baseline's {capb['top1'][0] * 100:.0f}%, {capb['top5'][0] * 100:.0f}% and "
+            f"{capb['top10'][0] * 100:.0f}%); in S1's top 5% a shock came {m['top_rate'] * 100:.1f}% of the time "
+            f"against a predicted {m['top_chance'] * 100:.1f}%. Controls: shuffled chances reached p < 0.05 in "
+            f"{c.get('placebo_fpr', float('nan')) * 100:.1f}% of {c.get('n_placebo', 0)} draws; an oracle reached p "
+            f"{c.get('oracle_p', float('nan')):.4f}. {verdict}.")
+    return lines + ["", *words, "",
+                    ("Reading this: a chance of a shock is a size, not a direction. The universe is chosen today "
+                     "(survivorship: companies bought out or delisted are missing, so shocks are undercounted)."), ""]
