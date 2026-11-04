@@ -83,9 +83,11 @@ def band(y: float, n: int) -> int:
     return min(n - 1, max(0, int(y * n)))
 
 
-def build(walls: bool = True) -> Circuit:
+def build(walls: bool = True, plastic: bool = False) -> Circuit:
     """``walls=False`` wires the same circuit with each P cell's landing drawn as if there were no
-    walls: the ablation that shows what the folding buys."""
+    walls: the ablation that shows what the folding buys. ``plastic=True`` connects every P cell to
+    every landing cell, the rule's choice at full weight and the others at zero, so that learning
+    (brain/neurons/learn.py) can move the weight; with zero weights it plays exactly as the rule does."""
     c = Circuit()
     Y = [c.add(f"Y{i}", group="height") for i in range(Y_BANDS)]
     X = [c.add(f"X{x}", group="distance") for x in range(X_BANDS)]
@@ -103,7 +105,9 @@ def build(walls: bool = True) -> Circuit:
                 p = c.add(f"P{x}_{i}_{s:+d}", "FE", group="predict")
                 c.connect(r, p, pong.EYE_W, 1.0)
                 c.connect(X[x], p, pong.EYE_W, 1.0 + R_LATENCY)
-                c.connect(p, L[band(landing((x + 0.5) / X_BANDS, yc, vy, walls), L_BANDS)], P_TO_L_W, 1.0)
+                k = band(landing((x + 0.5) / X_BANDS, yc, vy, walls), L_BANDS)
+                for j in (range(L_BANDS) if plastic else [k]):
+                    c.connect(p, L[j], P_TO_L_W if j == k else 0.0, 1.0)
     # Landing spikes come about 1 + R + 1 + P + 1 + L ms after the frame's pulse; the paddle's are
     # delayed by as much, so a landing cell and a paddle cell arrive at the comparator together.
     pong.add_motor(c, L, pad, pad_delay=3.0 + R_LATENCY + P_LATENCY + L_LATENCY)
@@ -117,6 +121,8 @@ class Game:
     by: float = 0.5
     vy: float = 0.0
     py: float = 0.5
+    last_y: float = 0.5
+    gravity: float = 0.0               # pull on vy per frame (0: the straight-line world the rule assumes)
     hits: int = 0
     misses: int = 0
     rng: np.random.Generator = field(init=False)
@@ -130,7 +136,15 @@ class Game:
         self.vy = float(self.rng.uniform(-VY_MAX, VY_MAX))
 
     def landing(self) -> float:
-        return landing(self.bx, self.by, self.vy)
+        if not self.gravity:
+            return landing(self.bx, self.by, self.vy)
+        x, y, v = self.bx, self.by, self.vy             # with gravity: step a copy of the ball forward
+        while True:
+            x, y, v = x + VX, y + v, v - self.gravity
+            if y < 0 or y > 1:
+                y, v = fold(y), -v
+            if x >= 1.0 - 1e-9:
+                return y
 
     def move_paddle(self, dy: float):
         self.py = float(np.clip(self.py + dy, PADDLE_H / 2, 1 - PADDLE_H / 2))
@@ -138,10 +152,12 @@ class Game:
     def tick(self) -> str | None:
         self.bx += VX
         self.by += self.vy
+        self.vy -= self.gravity
         if self.by < 0 or self.by > 1:
             self.by = fold(self.by)
             self.vy = -self.vy
         if self.bx >= 1.0 - 1e-9:
+            self.last_y = self.by                       # where it crossed: the landing the circuit feels
             hit = abs(self.by - self.py) <= PADDLE_H / 2
             self.hits += hit
             self.misses += not hit

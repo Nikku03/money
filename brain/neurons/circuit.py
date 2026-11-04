@@ -128,8 +128,19 @@ class Sim:
         self.out = []
         for i in range(N):
             ss = [(s.post, s.weight, st) for s, st in zip(c.synapses, steps) if s.pre == i]
-            self.out.append(tuple(np.array(x) for x in zip(*ss)) if ss else None)
+            self.out.append((np.array([x[0] for x in ss]), np.array([x[1] for x in ss], float),
+                             np.array([x[2] for x in ss])) if ss else None)
         self.de, self.di = np.exp(-self.dt / TAU_EXC), np.exp(-self.dt / TAU_INH)
+
+    def set_weights(self, pre: int, weights: np.ndarray) -> None:
+        """Replace neuron ``pre``'s outgoing weights, in the order its synapses were connected: the
+        one way a running circuit changes (plasticity). Its targets and delays stay as wired."""
+        o = self.out[pre]
+        if o is None or len(o[1]) != len(weights):
+            raise ValueError(f"neuron {pre} has {0 if o is None else len(o[1])} synapses, not {len(weights)}")
+        if np.any(np.asarray(weights) < 0):
+            raise ValueError("weights are non-negative")
+        o[1][:] = weights
 
     def step(self, bias: np.ndarray | None = None) -> np.ndarray:
         """Advance one dt with the given bias current per neuron; return the ids that fired."""

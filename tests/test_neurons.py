@@ -169,3 +169,51 @@ class CatchTest(unittest.TestCase):
         r = catch.play(300, seed=10, controller="reactive")
         self.assertGreater(n["hits"], r["hits"])
         self.assertLess(n["guess_error"]["near"], catch.PADDLE_H / 2)
+
+
+class LearnTest(unittest.TestCase):
+    def test_set_weights(self):
+        c = Circuit()
+        a, b, x = c.add("a"), c.add("b"), c.add("x", "FE")
+        c.connect(a, x, 0.0, 1.0)
+        c.connect(b, x, 0.0, 1.0)
+        sim = c.compile()
+        self.assertNotIn(x, kick(c, sim, [a]))
+        sim.set_weights(a, np.array([0.3]))
+        self.assertIn(x, kick(c, sim, [a]))
+        with self.assertRaises(ValueError):
+            sim.set_weights(a, np.array([0.1, 0.1]))
+
+    def test_gravity_landing_matches_the_game(self):
+        from brain.neurons import catch
+        g = catch.Game(seed=7, gravity=0.0015)
+        want = g.landing()
+        while g.tick() is None:
+            pass
+        self.assertAlmostEqual(g.last_y, want, places=9)
+
+    def test_agent_starts_from_the_rule_and_learns(self):
+        from brain.neurons import catch, learn
+        a = learn.Agent("t", seed=0)
+        self.assertTrue(np.allclose(a.p.sum(axis=1), 1.0))
+        c = catch.build()
+        p = c.by_name("P3_9_+2")
+        rule = int(c.neurons[c.outputs(p)[0].post].name[1:])
+        row = int(a.row[a.c.by_name("P3_9_+2")])
+        self.assertEqual(int(np.argmax(a.p[row])), rule)
+        for _ in range(10):
+            a.learn([(np.array([row]), 2)], learn.SELF_RATE)
+        self.assertEqual(int(np.argmax(a.p[row])), 2)
+        a.apply()
+        post, w, _ = a.sim.out[a.c.by_name("P3_9_+2")]
+        self.assertAlmostEqual(w.max(), catch.P_TO_L_W)
+        self.assertEqual(int(np.argmax(w)), 2)                # L0..L7 in wiring order
+
+    def test_trust_is_earned(self):
+        from brain.neurons import learn
+        me, liar = learn.Agent("me", seed=0), learn.Agent("liar", seed=1)
+        truth = [(np.array([r]), int(np.argmax(me.p[r]))) for r in range(0, 1100, 50)]
+        me.records = truth
+        lies = [(rows, 7 - k) for rows, k in truth if abs((7 - k) - k) > 1]
+        self.assertGreater(me.trust(liar, truth), 0.9)     # same knowledge, honest reports
+        self.assertEqual(me.trust(liar, lies), 0.0)        # mirrored reports: no weight

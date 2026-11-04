@@ -1,0 +1,186 @@
+<title>Simplex School</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a lab notebook page for one experiment. Result first (the curves), then who trusted whom,
+   then the method. Same bench palette as Simplex Pong and Simplex Catch. */
+:root {
+  --bg: #e9edf1; --panel: #f7f9fb; --ink: #17202a; --muted: #5b6876; --rule: #cfd7df;
+  --fixed: #8a96a3; --alone: #c99a00; --naive: #e0552e; --trusted: #0f9d84; --honest: #2f6fd6;
+  --font-display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --font-body: "Instrument Sans", "Helvetica Neue", system-ui, sans-serif;
+  --font-data: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f1419; --panel: #161d24; --ink: #e3e9ef; --muted: #8b98a6; --rule: #2a343e;
+  --fixed: #7d8996; --alone: #f2c437; --naive: #ff7448; --trusted: #2fd3b1; --honest: #5c95ff; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0f1419; --panel: #161d24; --ink: #e3e9ef; --muted: #8b98a6; --rule: #2a343e;
+  --fixed: #7d8996; --alone: #f2c437; --naive: #ff7448; --trusted: #2fd3b1; --honest: #5c95ff; color-scheme: dark }
+html, body { background: var(--bg); color: var(--ink); }
+body { font-family: var(--font-body); font-size: 15px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 20px 40px; }
+.wrap { max-width: 1180px; margin: 0 auto; display: grid; gap: 18px; }
+header { display: grid; gap: 6px; }
+h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(28px, 4.4vw, 44px); line-height: 1.05; margin: 0; letter-spacing: -0.01em; text-wrap: balance; }
+.lede { color: var(--muted); max-width: 72ch; margin: 0; }
+.eyebrow { font-family: var(--font-data); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.bench { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 18px; }
+@media (max-width: 860px) { .bench { grid-template-columns: minmax(0, 1fr); } }
+.panel { background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 12px; display: grid; gap: 10px; min-width: 0; align-content: start; }
+.panel h2 { font-family: var(--font-display); font-weight: 500; font-size: 16px; margin: 0; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.sub { font-family: var(--font-data); font-size: 12px; color: var(--muted); font-weight: 400; }
+canvas { width: 100%; display: block; }
+#curves { aspect-ratio: 16 / 10; }
+#trust { aspect-ratio: 1 / 1; max-width: 420px; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-family: var(--font-data); font-size: 12px; color: var(--muted); }
+.legend button { font: inherit; color: inherit; background: none; border: 1px solid transparent; border-radius: 4px; padding: 2px 6px; cursor: pointer; }
+.legend button[aria-pressed="false"] { opacity: 0.4; }
+.legend button:focus-visible, input:focus-visible { outline: 2px solid var(--honest); outline-offset: 2px; }
+.legend i { display: inline-block; width: 14px; height: 3px; margin-right: 6px; vertical-align: 3px; }
+.row { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; font-family: var(--font-data); font-size: 12.5px; color: var(--muted); }
+#round { flex: 1 1 200px; min-width: 0; accent-color: var(--trusted); }
+table { border-collapse: collapse; font-family: var(--font-data); font-size: 12.5px; font-variant-numeric: tabular-nums; width: 100%; }
+td, th { text-align: right; padding: 5px 0 5px 10px; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+td:first-child, th:first-child { text-align: left; padding-left: 0; }
+th { color: var(--muted); font-weight: 400; }
+.tablewrap { overflow-x: auto; }
+.chip { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 7px; vertical-align: 0; }
+.notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+.notes h3 { font-family: var(--font-display); font-weight: 500; font-size: 16px; margin: 0 0 4px; }
+.notes p { margin: 0; }
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow" id="meta">4 circuits per school · gravity on · one circuit's landing sense mirrored</span>
+    <h1>Simplex School</h1>
+    <p class="lede">The Catch circuits wake up in a world with gravity, which their hand-wired straight-line rule never accounted for. One layer of synapses can now change. Each circuit learns from where its own balls land. It can also learn from its peers' serves and copy their knowledge, but one peer is broken and reports every landing mirrored. In the trusted mode, a peer's influence has to be earned by tests against the learner's own experience.</p>
+  </header>
+
+  <div class="bench">
+    <section class="panel" aria-label="Learning curves">
+      <h2>What the honest circuits know <span class="sub">landing band within one, 200 held-out serves</span></h2>
+      <canvas id="curves"></canvas>
+      <div class="legend" id="legend"></div>
+    </section>
+    <section class="panel" aria-label="Trust">
+      <h2>Who trusts whom <span class="sub">trusted mode · row trusts column</span></h2>
+      <canvas id="trust"></canvas>
+      <div class="row"><label for="round">round</label><input id="round" type="range" min="0" max="1" value="0" step="1"><span id="roundv">0</span></div>
+    </section>
+  </div>
+
+  <section class="panel" aria-label="Results by mode">
+    <h2>Results by mode <span class="sub" id="seedsnote"></span></h2>
+    <div class="tablewrap"><table id="table"></table></div>
+  </section>
+
+  <section class="notes">
+    <div>
+      <h3>What can change</h3>
+      <p>Each of the 1,168 prediction cells connects to all 8 landing cells. Its eight weights are its expectation of where the ball lands when it fires. The strongest is always 0.2, enough to fire a landing cell alone, and the rest are in proportion. When a ball crosses the paddle line, every prediction cell that fired during the serve moves 30% of the way toward that landing. Everything else stays wired by hand.</p>
+    </div>
+    <div>
+      <h3>Learning from others</h3>
+      <p>After each round of 10 serves, a circuit learns from each peer's serves as if they were its own (at 0.3 × trust) and moves its expectations toward each peer's (at 0.2 × trust). Its circuits are wired alike, so a peer's serve is one it could have seen itself.</p>
+    </div>
+    <div>
+      <h3>Earning trust</h3>
+      <p>Trust is the lower of two scores. One is how well the peer's knowledge predicts my last 40 serves. The other is how often the landings it reports agree with what I would predict for those serves. Both are scaled from 40% (no trust) to 100% (full trust). A source carries weight only through its tested record.</p>
+    </div>
+  </section>
+</div>
+
+<script id="runs" type="application/json">__RUNS__</script>
+<script>
+(() => {
+  const RUNS = JSON.parse(document.getElementById("runs").textContent);
+  const MODES = ["fixed", "alone", "naive", "trusted", "honest"].filter(m => RUNS.some(r => r.mode === m));
+  const LABEL = { fixed: "fixed rule, no learning", alone: "learns alone", naive: "learns from all, trusts all", trusted: "learns from all, trust earned", honest: "learns from all, no broken peer" };
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  let C = {};
+  const read = () => { C = Object.fromEntries(["panel","ink","muted","rule",...MODES].map(k => [k, css("--" + k)])); };
+  read();
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => { read(); draw(); });
+  new MutationObserver(() => { read(); draw(); }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  const mean = a => a.reduce((s, x) => s + x, 0) / a.length;
+  const seeds = new Set(RUNS.map(r => r.seed ?? 0)).size || RUNS.filter(r => r.mode === MODES[0]).length;
+  const nSeeds = RUNS.filter(r => r.mode === MODES[0]).length;
+  document.getElementById("seedsnote").textContent = `mean over ${nSeeds} independent school${nSeeds > 1 ? "s" : ""} per mode`;
+
+  // Curve per mode: mean over runs of the honest agents' (A0-A2) knowledge, round -1 .. last.
+  const curve = m => { const rs = RUNS.filter(r => r.mode === m); return rs[0].rounds.map((_, i) => mean(rs.map(r => mean(r.rounds[i].knowledge.slice(0, 3))))); };
+  const curves = Object.fromEntries(MODES.map(m => [m, curve(m)]));
+  const shown = Object.fromEntries(MODES.map(m => [m, true]));
+
+  const leg = document.getElementById("legend");
+  MODES.forEach(m => { const b = document.createElement("button"); b.type = "button"; b.setAttribute("aria-pressed", "true"); b.innerHTML = `<i style="background:var(--${m})"></i>${LABEL[m]}`; b.onclick = () => { shown[m] = !shown[m]; b.setAttribute("aria-pressed", shown[m]); draw(); }; leg.appendChild(b); });
+
+  const fit = cv => { const r = cv.getBoundingClientRect(), d = devicePixelRatio || 1; cv.width = Math.round(r.width * d); cv.height = Math.round(r.height * d); const g = cv.getContext("2d"); g.setTransform(d, 0, 0, d, 0, 0); return [g, r.width, r.height]; };
+  const allv = Object.values(curves).flat();
+  const lo = Math.floor(Math.min(...allv) * 20) / 20, hi = Math.ceil(Math.max(...allv) * 20) / 20;
+
+  function drawCurves() {
+    const [g, W, H] = fit(document.getElementById("curves")), L = 42, B = 26, T = 10, R = 12;
+    const n = curves[MODES[0]].length, X = i => L + i / (n - 1) * (W - L - R), Y = v => T + (hi - v) / (hi - lo) * (H - T - B);
+    g.fillStyle = C.panel; g.fillRect(0, 0, W, H);
+    g.font = "11px " + css("--font-data"); g.textBaseline = "middle";
+    for (let v = lo; v <= hi + 1e-9; v += 0.05) { g.strokeStyle = C.rule; g.beginPath(); g.moveTo(L, Y(v)); g.lineTo(W - R, Y(v)); g.stroke(); g.fillStyle = C.muted; g.textAlign = "right"; g.fillText(Math.round(v * 100) + "%", L - 6, Y(v)); }
+    g.textAlign = "center"; g.textBaseline = "alphabetic";
+    for (let i = 0; i < n; i += Math.max(1, Math.round(n / 8))) g.fillText(i === 0 ? "start" : `${i}`, X(i), H - 8);
+    g.textAlign = "right"; g.fillText("round →", W - R, H - 8);
+    for (const m of MODES) {
+      if (!shown[m]) continue;
+      const c = curves[m]; g.strokeStyle = C[m]; g.lineWidth = m === "trusted" ? 2.6 : 1.6; g.beginPath();
+      c.forEach((v, i) => i ? g.lineTo(X(i), Y(v)) : g.moveTo(X(i), Y(v))); g.stroke();
+      g.fillStyle = C[m]; g.beginPath(); g.arc(X(n - 1), Y(c[n - 1]), 3.5, 0, 7); g.fill();
+    }
+    g.lineWidth = 1;
+  }
+
+  const tr = RUNS.find(r => r.mode === "trusted");
+  const rs = tr ? tr.rounds.filter(r => r.trust) : [];
+  const slider = document.getElementById("round");
+  slider.max = Math.max(0, rs.length - 1); slider.value = slider.max;
+  function drawTrust() {
+    const cv = document.getElementById("trust"), [g, W, H] = fit(cv);
+    g.fillStyle = C.panel; g.fillRect(0, 0, W, H);
+    if (!rs.length) return;
+    const k = +slider.value, M = rs[k].trust, n = M.length, L = 74, T = 40, cell = Math.min((W - L - 8) / n, (H - T - 8) / n);
+    document.getElementById("roundv").textContent = `${rs[k].round + 1} of ${rs.length}`;
+    const names = tr.agents;
+    g.font = "11px " + css("--font-data"); g.textBaseline = "middle";
+    for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
+      const v = M[i][j], x = L + j * cell, y = T + i * cell;
+      g.fillStyle = C.rule; g.fillRect(x + 1, y + 1, cell - 2, cell - 2);
+      g.fillStyle = C.trusted; g.globalAlpha = i === j ? 0.25 : Math.max(0.04, v); g.fillRect(x + 1, y + 1, cell - 2, cell - 2); g.globalAlpha = 1;
+      g.fillStyle = C.ink; g.textAlign = "center"; g.fillText(i === j ? "self" : v.toFixed(2), x + cell / 2, y + cell / 2);
+    }
+    g.fillStyle = C.muted;
+    names.forEach((nm, i) => { const s = nm.replace(" (broken)", "*"); g.textAlign = "right"; g.fillText(s, L - 8, T + i * cell + cell / 2); g.textAlign = "center"; g.fillText(s, L + i * cell + cell / 2, T - 12); });
+    g.textAlign = "left"; g.fillText("* broken", 4, H - 10);
+  }
+
+  function table() {
+    const head = `<tr><th>mode</th><th>honest: start</th><th>honest: end</th><th>broken A3: end</th><th>honest catch, last 3 rounds</th><th>honest exam catch</th></tr>`;
+    const rows = MODES.map(m => {
+      const rr = RUNS.filter(r => r.mode === m);
+      const k0 = mean(rr.map(r => mean(r.rounds[0].knowledge.slice(0, 3))));
+      const k1 = mean(rr.map(r => mean(r.rounds.at(-1).knowledge.slice(0, 3))));
+      const kb = mean(rr.map(r => r.rounds.at(-1).knowledge[3]));
+      const cr = mean(rr.map(r => mean(r.rounds.slice(-3).map(x => mean(x.catch.slice(0, 3))))));
+      const ex = mean(rr.map(r => mean(r.exam.slice(0, 3))));
+      const pct = v => Math.round(v * 100) + "%";
+      return `<tr><td><span class="chip" style="background:var(--${m})"></span>${LABEL[m]}</td><td>${pct(k0)}</td><td>${pct(k1)}</td><td>${m === "honest" ? "–" : pct(kb)}</td><td>${pct(cr)}</td><td>${pct(ex)}</td></tr>`;
+    });
+    document.getElementById("table").innerHTML = head + rows.join("");
+  }
+
+  function draw() { drawCurves(); drawTrust(); }
+  slider.addEventListener("input", drawTrust);
+  addEventListener("resize", draw);
+  table(); draw();
+})();
+</script>

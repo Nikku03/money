@@ -58,6 +58,41 @@ def _catch(a):
           f"{', killed ' + ','.join(kill) if kill else ''}; paddle half-height {catch.PADDLE_H / 2})")
 
 
+def _school(a):
+    from concurrent.futures import ProcessPoolExecutor
+
+    import numpy as np
+
+    from brain.neurons import learn
+    modes = learn.MODES if a.mode == "all" else (a.mode,)
+    jobs = [(m, s) for s in range(a.seed, a.seed + 10 * a.seeds, 10) for m in modes]
+    with ProcessPoolExecutor(max_workers=a.workers) as ex:
+        runs = list(ex.map(_school_one, [(m, s, a.rounds, a.frames) for m, s in jobs]))
+    if a.json:
+        Path(a.json).write_text(json.dumps(runs, separators=(",", ":")))
+        print(f"runs written to {a.json}")
+    if a.html:
+        page = Path(__file__).with_name("school_viewer.html").read_text()
+        Path(a.html).write_text(page.replace("__RUNS__", json.dumps(runs, separators=(",", ":")).replace("</", "<\\/")))
+        print(f"results page written to {a.html}")
+    print(f"landing knowledge: band within one on {len(learn.exam_set())} held-out serves (gravity {learn.GRAVITY});"
+          f" {a.rounds} rounds x {a.frames // 30} serves; mean over {a.seeds} seed(s); agent A3 broken except in honest")
+    print(f"{'mode':8s} {'honest start':>12s} {'honest end':>10s} {'broken A3 end':>13s} {'catch, last 3 rounds':>21s}")
+    for m in modes:
+        rs = [r for r in runs if r["mode"] == m]
+        k0 = np.mean([r["rounds"][0]["knowledge"][:3] for r in rs])
+        k1 = np.mean([r["rounds"][-1]["knowledge"][:3] for r in rs])
+        kb = np.mean([r["rounds"][-1]["knowledge"][3] for r in rs])
+        cr = np.mean([[row["catch"][:3] for row in r["rounds"][-3:]] for r in rs])
+        print(f"{m:8s} {k0:12.0%} {k1:10.0%} {kb:13.0%} {cr:21.0%}")
+
+
+def _school_one(args):
+    from brain.neurons import learn
+    mode, seed, rounds, frames = args
+    return learn.school(mode, rounds=rounds, frames=frames, seed=seed)
+
+
 def _wiring(a):
     from brain.neurons import catch, pong
     c = catch.build() if a.game == "catch" else pong.build()
@@ -108,6 +143,16 @@ def add_cli(sub) -> None:
     q.add_argument("--compare", action="store_true", help="play every controller, same serves")
     q.add_argument("--html", help="write a page that replays the first game")
     q.set_defaults(fn=_catch)
+    q = s.add_parser("school", help="Catch circuits that learn under gravity, alone and from each other")
+    q.add_argument("--mode", choices=["all", "fixed", "alone", "naive", "trusted", "honest"], default="all")
+    q.add_argument("--rounds", type=int, default=15)
+    q.add_argument("--frames", type=int, default=300, help="frames per round (30 per serve)")
+    q.add_argument("--seeds", type=int, default=1, help="independent schools per mode (seeds 0, 10, 20, ...)")
+    q.add_argument("--seed", type=int, default=0)
+    q.add_argument("--workers", type=int, default=4)
+    q.add_argument("--json", help="write every run (curves, trust, exams) here")
+    q.add_argument("--html", help="write a results page: learning curves, trust map, table")
+    q.set_defaults(fn=_school)
     q = s.add_parser("wiring", help="who feeds each neuron and whom it feeds, with weights and delays")
     q.add_argument("neuron", nargs="?", help="one neuron's name, e.g. UP11, C62, or (catch) P3_9_+2")
     q.add_argument("--game", choices=["pong", "catch"], default="pong")
