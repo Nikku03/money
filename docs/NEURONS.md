@@ -108,3 +108,59 @@ What this shows:
     its band, so a spike now and one from 120 ms ago no longer coincided.
   - A code firing two eye cells too often smeared the landing vote (61%).
   - A code too narrow left the paddle blind at band edges: it never moved (18%).
+
+# School: learning alone and from others (`brain/neurons/learn.py`)
+
+```
+python -m brain neurons school --seeds 3 --html school.html    # all five modes, three schools each (~17 min)
+```
+
+The world changes: **gravity** (vy loses 0.0015 per frame). The hand-wired straight-line rule now
+predicts the wrong landing. One layer becomes plastic: each prediction cell P connects to all 8 landing
+cells. Its eight weights are its expectation of the landing; the strongest is 0.2, the rest in proportion.
+
+- **From itself.** When a ball crosses the paddle line, every P cell that fired during that serve (from
+  its 7th frame on) moves 30% of the way toward the landing it felt: `p <- p + 0.3 (onehot - p)`. It is
+  a delayed teaching signal, like the cerebellum's climbing fibres.
+- **From others.** Four circuits play their own serves. After each round of 10 serves, each learns from
+  every peer's serves as if they were its own (0.3 × trust) and copies its knowledge (0.2 × trust). They
+  are wired alike, so a peer's serve is one it could have seen.
+- **Trust is earned.** Circuit A3's landing sense is broken: it reports every landing mirrored. Trust in
+  a peer is the lower of two tests: how well its knowledge predicts *my* last 40 serves, and how often
+  its reported landings agree with what I'd predict. Each is scaled from 40% (zero) to 100% (one). This
+  is the bank's own rule for sources: weight comes only from a tested record.
+
+## Recorded results (3 schools per mode, 15 rounds × 10 serves; exams on 200 held-out serves)
+
+The **early** exam asks for the exact landing band from the predictions made in the ball's far half,
+which is what a paddle at half the ball's speed needs. Under gravity the rule scores 12.5% (chance is
+12.5%); in its own no-gravity world it scores 49%. The **lenient** exam (within one band, whole serve)
+gives the rule 92% under gravity and saturates near 98% for every learner, so it cannot separate modes.
+
+| mode | early: start | early: end | broken A3: end | lenient: end | honest catch, final exam |
+|---|---|---|---|---|---|
+| fixed rule, no learning | 12% | 12% | 12% | 92% | 56% |
+| learns alone | 12% | 32% | 5% | 98% | 67% |
+| learns from all, trusts all | 12% | 36% | 38% | 92% | 60% |
+| **learns from all, trust earned** | 12% | **41%** | 5% | 99% | **71%** |
+| learns from all, no broken peer | 12% | 42% | – | 99% | 72% |
+
+Early-exam end per school: alone 34/30/32%, naive 38/34/35%, trusted 43/39/41%, honest 43/39/43%.
+Trust in the trusted mode: honest → honest 0.95-0.98, honest → broken 0.00, in every round of every school.
+
+What this shows:
+
+- Learning from experience works. Alone, a circuit's early guess goes from 12% to 32% exact in 150
+  serves, and its catch rate from 56% to 67%.
+- Learning from others works faster and goes further: 41-42% exact with honest peers. Each circuit
+  gets four times the experience.
+- Trusting everyone costs. The broken peer's mirrored lessons cut the honest circuits' gain. Their
+  early guess still rises (36%), because the honest majority outvotes the liar. But their whole-serve
+  knowledge falls back to the rule's 92%, and their catch rate (60%) ends *below* learning alone (67%).
+- Earned trust recovers almost all of it. It matches a school with no broken peer (41% vs 42%, catch
+  71% vs 72%) and gives the broken peer zero weight from round 1 on.
+- What trust cannot fix: the broken circuit. It tests peers against its own mirrored sense, so it
+  trusts no one and learns itself into 5%. Under naive trust, the others had dragged it up to 38%. A
+  learner that tests sources against a broken sense rejects the people who could correct it.
+- The learning is small and tuned by hand: the rates, the trust floor of 0.4, 4 circuits, one fault
+  type, one world change. These are recorded results for this setup, not general claims.

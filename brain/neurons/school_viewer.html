@@ -129,7 +129,7 @@ th { color: var(--muted); font-weight: 400; }
     g.font = "11px " + css("--font-data"); g.textBaseline = "middle";
     for (let v = lo; v <= hi + 1e-9; v += 0.05) { g.strokeStyle = C.rule; g.beginPath(); g.moveTo(L, Y(v)); g.lineTo(W - R, Y(v)); g.stroke(); g.fillStyle = C.muted; g.textAlign = "right"; g.fillText(Math.round(v * 100) + "%", L - 6, Y(v)); }
     g.textAlign = "center"; g.textBaseline = "alphabetic";
-    for (let i = 0; i < n; i += Math.max(1, Math.round(n / 8))) g.fillText(i === 0 ? "start" : `${i}`, X(i), H - 8);
+    for (let i = 0; i < n - 2; i += Math.max(1, Math.round(n / 8))) g.fillText(i === 0 ? "start" : `${i}`, X(i), H - 8);
     g.textAlign = "right"; g.fillText("round →", W - R, H - 8);
     for (const m of MODES) {
       if (!shown[m]) continue;
