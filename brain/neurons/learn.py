@@ -72,6 +72,7 @@ class Agent:
             self.p[r, [self.lrow[int(x)] for x in post]] = w / catch.P_TO_L_W
         self.records: list[tuple[np.ndarray, int]] = []     # my own serves: (P rows that fired, landing band)
         self.up, self.dn = self.c.group("up")[-1], self.c.group("down")[-1]
+        self.eligible_until = 1.0                              # record P cells only while the ball is short of this x
 
     def apply(self) -> None:
         """Write the expectations into the synapses: the strongest at full weight, the rest in proportion."""
@@ -98,7 +99,7 @@ class Agent:
                 fired = sim.step(drive if k < pulse else None)
                 ups += int(self.up in fired)
                 dns += int(self.dn in fired)
-                if serve_frame >= ELIGIBLE_FROM:
+                if serve_frame >= ELIGIBLE_FROM and g.bx < self.eligible_until:
                     fired_rows.update(int(r) for r in self.row[fired] if r >= 0)
             g.move_paddle(catch.STEP * max(-catch.MAX_STEPS, min(catch.MAX_STEPS, ups - dns)))
             serve_frame += 1
@@ -142,12 +143,15 @@ class Agent:
 _EXAMS: dict = {}
 
 
-def exam_set(serves: int = 200, seed: int = 5000, gravity: float = GRAVITY) -> list:
+def exam_set(serves: int = 200, seed: int = 5000, gravity: float = GRAVITY, until: float = 1.0) -> list:
     """Held-out serves as (P rows that fired, true landing band). P cells hear only the ball, never the
-    paddle or the P -> L weights, so one recording scores any agent's expectations."""
-    key = (serves, seed, gravity)
+    paddle or the P -> L weights, so one recording scores any agent's expectations. ``until`` keeps
+    only the P cells that fired while the ball was short of that x: 0.5 asks for the early guess, the
+    one a slow paddle needs."""
+    key = (serves, seed, gravity, until)
     if key not in _EXAMS:
         a = Agent("examiner", seed=seed, gravity=gravity)
+        a.eligible_until = until
         recs: list = []
         while len(recs) < serves:
             recs += a.play(30 * (serves - len(recs)))[2]
@@ -155,23 +159,28 @@ def exam_set(serves: int = 200, seed: int = 5000, gravity: float = GRAVITY) -> l
     return _EXAMS[key]
 
 
-def knowledge(p: np.ndarray, records: list) -> float:
-    """Share of serves whose landing band ``p`` predicts within one."""
-    return float(np.mean([abs(int(np.argmax(p[rows].sum(axis=0))) - k) <= 1 for rows, k in records]))
+def knowledge(p: np.ndarray, records: list, within: int = 1) -> float:
+    """Share of serves whose landing band ``p`` predicts within ``within`` bands."""
+    return float(np.mean([abs(int(np.argmax(p[rows].sum(axis=0))) - k) <= within for rows, k in records]))
+
+
+def grades(p: np.ndarray) -> dict:
+    """Two exams on the same 200 held-out serves: the whole serve, band within one (lenient), and the
+    far half only, exact band (what a paddle at half the ball's speed needs)."""
+    return {"lenient": knowledge(p, exam_set()), "early": knowledge(p, exam_set(until=0.5), within=0)}
 
 
 def school(mode: str, rounds: int = 12, frames: int = 300, agents: int = 4, seed: int = 0,
            exam_frames: int = 600) -> dict:
     """Run one mode. Agent 3 is broken except in ``honest``. Returns, per round, each agent's catch
-    rate, its trust in each peer and its knowledge (landing band within one on 200 held-out serves,
-    ``exam_set``; round -1 is before any learning), and a final exam: each agent plays fresh serves
+    rate, its trust in each peer and its two exam grades (``grades``; round -1 is before any
+    learning), and a final exam: each agent plays fresh serves
     with learning off."""
     if mode not in MODES:
         raise ValueError(f"mode must be one of {MODES}")
     team = [Agent(f"A{i}", seed=seed + i, broken=(i == agents - 1 and mode != "honest")) for i in range(agents)]
     heard: list[list] = [[] for _ in team]                     # each agent's recent reports, as shared
-    test = exam_set()
-    history = [{"round": -1, "catch": None, "trust": None, "knowledge": [knowledge(a.p, test) for a in team]}]
+    history = [{"round": -1, "catch": None, "trust": None, "grades": [grades(a.p) for a in team]}]
     for r in range(rounds):
         played = [a.play(frames) for a in team]
         for j, (_, _, recs) in enumerate(played):
@@ -193,7 +202,7 @@ def school(mode: str, rounds: int = 12, frames: int = 300, agents: int = 4, seed
             row["trust"] = trust
         for a in team:
             a.apply()
-        row["knowledge"] = [knowledge(a.p, test) for a in team]
+        row["grades"] = [grades(a.p) for a in team]
         history.append(row)
     exam = []
     for i, a in enumerate(team):                             # fresh serves, nobody learning

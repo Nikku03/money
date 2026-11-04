@@ -61,7 +61,7 @@ th { color: var(--muted); font-weight: 400; }
 
   <div class="bench">
     <section class="panel" aria-label="Learning curves">
-      <h2>What the honest circuits know <span class="sub">landing band within one, 200 held-out serves</span></h2>
+      <h2>What the honest circuits know <span class="sub">exact landing band, guessed from the far half · 200 held-out serves</span></h2>
       <canvas id="curves"></canvas>
       <div class="legend" id="legend"></div>
     </section>
@@ -111,7 +111,7 @@ th { color: var(--muted); font-weight: 400; }
   document.getElementById("seedsnote").textContent = `mean over ${nSeeds} independent school${nSeeds > 1 ? "s" : ""} per mode`;
 
   // Curve per mode: mean over runs of the honest agents' (A0-A2) knowledge, round -1 .. last.
-  const curve = m => { const rs = RUNS.filter(r => r.mode === m); return rs[0].rounds.map((_, i) => mean(rs.map(r => mean(r.rounds[i].knowledge.slice(0, 3))))); };
+  const curve = m => { const rs = RUNS.filter(r => r.mode === m); return rs[0].rounds.map((_, i) => mean(rs.map(r => mean(r.rounds[i].grades.slice(0, 3).map(x => x.early))))); };
   const curves = Object.fromEntries(MODES.map(m => [m, curve(m)]));
   const shown = Object.fromEntries(MODES.map(m => [m, true]));
 
@@ -164,16 +164,17 @@ th { color: var(--muted); font-weight: 400; }
   }
 
   function table() {
-    const head = `<tr><th>mode</th><th>honest: start</th><th>honest: end</th><th>broken A3: end</th><th>honest catch, last 3 rounds</th><th>honest exam catch</th></tr>`;
+    const head = `<tr><th>mode</th><th>early guess: start</th><th>end</th><th>broken A3: end</th><th>lenient exam: end</th><th>catch, last 3 rounds</th><th>catch, final exam</th></tr>`;
     const rows = MODES.map(m => {
       const rr = RUNS.filter(r => r.mode === m);
-      const k0 = mean(rr.map(r => mean(r.rounds[0].knowledge.slice(0, 3))));
-      const k1 = mean(rr.map(r => mean(r.rounds.at(-1).knowledge.slice(0, 3))));
-      const kb = mean(rr.map(r => r.rounds.at(-1).knowledge[3]));
+      const k0 = mean(rr.map(r => mean(r.rounds[0].grades.slice(0, 3).map(x => x.early))));
+      const k1 = mean(rr.map(r => mean(r.rounds.at(-1).grades.slice(0, 3).map(x => x.early))));
+      const kb = mean(rr.map(r => r.rounds.at(-1).grades[3].early));
+      const kl = mean(rr.map(r => mean(r.rounds.at(-1).grades.slice(0, 3).map(x => x.lenient))));
       const cr = mean(rr.map(r => mean(r.rounds.slice(-3).map(x => mean(x.catch.slice(0, 3))))));
       const ex = mean(rr.map(r => mean(r.exam.slice(0, 3))));
       const pct = v => Math.round(v * 100) + "%";
-      return `<tr><td><span class="chip" style="background:var(--${m})"></span>${LABEL[m]}</td><td>${pct(k0)}</td><td>${pct(k1)}</td><td>${m === "honest" ? "–" : pct(kb)}</td><td>${pct(cr)}</td><td>${pct(ex)}</td></tr>`;
+      return `<tr><td><span class="chip" style="background:var(--${m})"></span>${LABEL[m]}</td><td>${pct(k0)}</td><td>${pct(k1)}</td><td>${m === "honest" ? "–" : pct(kb)}</td><td>${pct(kl)}</td><td>${pct(cr)}</td><td>${pct(ex)}</td></tr>`;
     });
     document.getElementById("table").innerHTML = head + rows.join("");
   }

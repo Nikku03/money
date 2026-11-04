@@ -75,16 +75,19 @@ def _school(a):
         page = Path(__file__).with_name("school_viewer.html").read_text()
         Path(a.html).write_text(page.replace("__RUNS__", json.dumps(runs, separators=(",", ":")).replace("</", "<\\/")))
         print(f"results page written to {a.html}")
-    print(f"landing knowledge: band within one on {len(learn.exam_set())} held-out serves (gravity {learn.GRAVITY});"
-          f" {a.rounds} rounds x {a.frames // 30} serves; mean over {a.seeds} seed(s); agent A3 broken except in honest")
-    print(f"{'mode':8s} {'honest start':>12s} {'honest end':>10s} {'broken A3 end':>13s} {'catch, last 3 rounds':>21s}")
+    print(f"exams on {len(learn.exam_set())} held-out serves (gravity {learn.GRAVITY}): early = exact landing band from the"
+          f" ball's far half; lenient = within one band, whole serve. {a.rounds} rounds x {a.frames // 30} serves,"
+          f" mean over {a.seeds} school(s); agent A3 broken except in honest")
+    print(f"{'mode':8s} {'early: start':>12s} {'end':>6s} {'broken A3':>10s}   {'lenient: end':>12s}   {'catch, last 3 rounds':>20s}")
+    g = lambda r, i: r["rounds"][i]["grades"]
     for m in modes:
         rs = [r for r in runs if r["mode"] == m]
-        k0 = np.mean([r["rounds"][0]["knowledge"][:3] for r in rs])
-        k1 = np.mean([r["rounds"][-1]["knowledge"][:3] for r in rs])
-        kb = np.mean([r["rounds"][-1]["knowledge"][3] for r in rs])
+        e0 = np.mean([[x["early"] for x in g(r, 0)[:3]] for r in rs])
+        e1 = np.mean([[x["early"] for x in g(r, -1)[:3]] for r in rs])
+        eb = np.mean([g(r, -1)[3]["early"] for r in rs])
+        l1 = np.mean([[x["lenient"] for x in g(r, -1)[:3]] for r in rs])
         cr = np.mean([[row["catch"][:3] for row in r["rounds"][-3:]] for r in rs])
-        print(f"{m:8s} {k0:12.0%} {k1:10.0%} {kb:13.0%} {cr:21.0%}")
+        print(f"{m:8s} {e0:12.0%} {e1:6.0%} {eb:10.0%}   {l1:12.0%}   {cr:20.0%}")
 
 
 def _school_one(args):
