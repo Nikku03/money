@@ -8,7 +8,7 @@ Every system gets the same training rows, the same candidate library and the sam
     SR3         PySINDy's sparse relaxed regularized regression, L0 penalty
     SSR         PySINDy's stepwise sparse regression (backward elimination)
     FROLS       PySINDy's forward-regression orthogonal least squares (greedy forward selection)
-    E-SINDy     PySINDy's ensemble: STLSQ bagged over 30 resamples; a term is kept if chosen in 90%
+    E-SINDy     PySINDy's ensemble: STLSQ bagged over 20 resamples; a term is kept if chosen in 90%
     LassoCV     scikit-learn's cross-validated L1 regression, the classical baseline
 
 None of the PySINDy optimizers chooses its own sparsity. Each gets a sweep of its knob (threshold, or
@@ -78,9 +78,9 @@ def fit_system(name: str, X: np.ndarray, y: np.ndarray, seed: int = 0) -> np.nda
         return _best(X, y, [_support(h) for h in o.history_])
     if name == "E-SINDy":
         best = None
-        for t in thresholds[::-1][::2][:12]:            # 12 thresholds: each one bags 30 fits
+        for t in np.logspace(-4, 0, 8):                 # 8 thresholds: each one bags 20 fits
             np.random.seed(seed)
-            o = ps.EnsembleOptimizer(opt=ps.STLSQ(threshold=t, alpha=1e-8), bagging=True, n_models=30).fit(X, y)
+            o = ps.EnsembleOptimizer(opt=ps.STLSQ(threshold=t, alpha=1e-8), bagging=True, n_models=20).fit(X, y)
             share = (np.abs(np.array(o.coef_list)[:, 0, :]) > 0).mean(axis=0)
             cols = list(np.flatnonzero(share >= 0.9))
             if cols:
