@@ -13,7 +13,8 @@ from brain import config
 PLUGINS = ("brain.sources.insiders", "brain.sources.aviation", "brain.sources.shipping",
            "brain.sources.cameras", "brain.watch", "brain.scout", "brain.decide", "brain.forecast.live", "brain.chain",
            "brain.web", "brain.sources.releases", "brain.research.eventtest", "brain.predict", "brain.radar", "brain.earnradar",
-           "brain.moves", "brain.research.movetest", "brain.shocks", "brain.research.shocktest")
+           "brain.moves", "brain.research.movetest", "brain.shocks", "brain.research.shocktest",
+           "brain.neurons.cli")
 
 
 def _bank():
