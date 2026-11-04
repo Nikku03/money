@@ -65,7 +65,9 @@ def _stack(cols, w=None):
     return X
 
 
-def field_law(n: int = 600, noise: float = 0.01, seed: int = 0, powers=(1, 2, 3, 4, 5), shuffle: bool = False) -> dict:
+def field_data(n: int = 600, noise: float = 0.01, seed: int = 0, powers=(1, 2, 3, 4, 5), shuffle: bool = False) -> dict:
+    """The field experiment's inputs: a survey at 1-2.5 Earth radii (train) and 2.5-6 (test), the raw
+    readings, and the library rows, each reading weighted by 1/|B| so errors are relative."""
     rng = np.random.default_rng(seed)
     r, B = earth.survey(n, 1.0, 2.5, rng, noise)
     rt, Bt = earth.survey(n // 2, 2.5, 6.0, rng, noise)
@@ -74,9 +76,23 @@ def field_law(n: int = 600, noise: float = 0.01, seed: int = 0, powers=(1, 2, 3,
     w, wt = 1 / np.linalg.norm(B, axis=1), 1 / np.linalg.norm(Bt, axis=1)   # relative error per reading
     names, cols, fams = field_library(r, powers)
     _, tcols, _ = field_library(rt, powers)
-    law = discover("B", names, _stack(cols, w), (B * w[:, None]).reshape(-1), _stack(tcols, wt),
-                   (Bt * wt[:, None]).reshape(-1), seed=seed, groups=np.repeat(np.arange(n), 3), families=fams)
+    return {"names": names, "families": fams, "X": _stack(cols, w), "y": (B * w[:, None]).reshape(-1),
+            "X_test": _stack(tcols, wt), "y_test": (Bt * wt[:, None]).reshape(-1), "groups": np.repeat(np.arange(n), 3),
+            "r": r, "B": B, "r_test": rt, "B_test": Bt}
+
+
+def field_law(n: int = 600, noise: float = 0.01, seed: int = 0, powers=(1, 2, 3, 4, 5), shuffle: bool = False) -> dict:
+    d = field_data(n, noise, seed, powers, shuffle)
+    law = discover("B", d["names"], d["X"], d["y"], d["X_test"], d["y_test"], seed=seed, groups=d["groups"],
+                   families=d["families"])
     return {"law": law, **grade_field(law)}
+
+
+# The terms the world is made of, written in each library's names: what a perfect engine would choose.
+FIELD_TRUTH = ({f"e{a}/r^3" for a in AX} | {f"u{a} u/r^3" for a in AX}
+               | {f"(e{AX[i]} u{AX[j]} + e{AX[j]} u{AX[i]})/r^4" for i, j in ((0, 1), (0, 2), (1, 2))}
+               | {f"u{AX[i]} u{AX[j]} u/r^4" for i, j in ((0, 1), (0, 2), (1, 2))}
+               | {f"(e{a} u{a} - ez uz)/r^4" for a in "xy"} | {f"({a}^2 - uz^2) u/r^4".replace(a, f"u{a}") for a in "xy"})
 
 
 def grade_field(law: Law) -> dict:
@@ -154,6 +170,16 @@ def motion_law(kind: str = "proton", noise: float = 1e-7, seed: int = 0, drop=()
     """``kind`` "proton" (q/m = 50) or "satellite" (neutral). Train on 6 bodies launched at ``train_L``
     Earth radii, test on 3 launched at ``test_L``. ``known`` carries laws found earlier (term ->
     coefficient): their part of the acceleration is taken off first, and the engine looks for the rest."""
+    d = motion_data(kind, noise, seed, drop, shuffle, train_L, test_L, known)
+    law = discover("a", d["names"], d["X"], d["y"], d["X_test"], d["y_test"], seed=seed, groups=d["groups"],
+                   families=d["families"])
+    return {"law": law, "q/m": law.terms.get("v x B"), "GM": -law.terms.get("u/r^2", 0.0) if "u/r^2" in law.terms else None}
+
+
+def motion_data(kind: str = "proton", noise: float = 1e-7, seed: int = 0, drop=(), shuffle: bool = False,
+                train_L=(1.8, 3.0), test_L=(3.0, 4.0), known: dict | None = None) -> dict:
+    """The motion experiment's inputs: library rows and accelerations for training and test bodies,
+    plus the raw tracks (positions, velocities, field, accelerations)."""
     rng = np.random.default_rng(seed)
     qm = earth.QM if kind == "proton" else 0.0
     t_end, sample = (6.0, 0.005) if kind == "proton" else (40.0, 0.02)
@@ -178,8 +204,8 @@ def motion_law(kind: str = "proton", noise: float = 1e-7, seed: int = 0, drop=()
     _, _, Xt, yt, _ = build(test)
     if shuffle:
         y = y.reshape(-1, 3)[rng.permutation(len(y) // 3)].reshape(-1)
-    law = discover("a", names, X, y, Xt, yt, seed=seed, groups=g, families=fams)
-    return {"law": law, "q/m": law.terms.get("v x B"), "GM": -law.terms.get("u/r^2", 0.0) if "u/r^2" in law.terms else None}
+    return {"names": names, "families": fams, "X": X, "y": y, "X_test": Xt, "y_test": yt, "groups": g,
+            "train": train, "test": test}
 
 
 # --- Maxwell ----------------------------------------------------------------------------------------

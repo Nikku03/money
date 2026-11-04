@@ -81,3 +81,20 @@ class LawsTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class CompareTest(unittest.TestCase):
+    def test_systems_run_on_a_planted_law(self):
+        try:
+            import pysindy  # noqa: F401
+        except ImportError:
+            self.skipTest("pysindy not installed")
+        import warnings
+        warnings.filterwarnings("ignore")
+        from brain.discover import compare
+        rng = np.random.default_rng(0)
+        X, Xt = rng.normal(size=(300, 10)), rng.normal(size=(100, 10))
+        task = {"X": X, "y": 2 * X[:, 3] - X[:, 6], "X_test": Xt, "y_test": 2 * Xt[:, 3] - Xt[:, 6],
+                "names": [f"x{i}" for i in range(10)], "groups": None, "families": None}
+        rows = compare.run(task, {"x3", "x6"}, systems=("ours", "STLSQ", "FROLS", "LassoCV"))
+        self.assertTrue(all(r["exact"] for r in rows), rows)

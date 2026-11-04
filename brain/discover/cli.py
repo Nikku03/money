@@ -90,6 +90,27 @@ def _earth(a):
         print(f"results written to {a.json}")
 
 
+def _compare(a):
+    import warnings
+    warnings.filterwarnings("ignore")
+    try:
+        from brain.discover import compare
+        import pysindy  # noqa: F401
+    except ImportError:
+        print("needs PySINDy and scikit-learn: pip install pysindy")
+        return 1
+    seeds = tuple(range(a.seeds))
+    rows = compare.benchmark(seeds=seeds, workers=a.workers)
+    print(f"Same data, same library, same held-out tests; {len(seeds)} seed(s) per task (docs/DISCOVER.md).")
+    print(compare.table(rows))
+    if a.json:
+        Path(a.json).write_text(json.dumps(rows, indent=1, default=float))
+    if a.pysr:
+        for r in compare.compare_pysr(seconds=a.pysr):
+            print(f"\nPySR, {r['task']}  ({r['seconds']:.0f} s)\n  found: {r['equation']}\n  truth: {r['truth']}"
+                  f"\n  held-out error {r['test_err']:.2%}")
+
+
 def add_cli(sub) -> None:
     p = sub.add_parser("discover", help="equation discovery on a simulated Earth (docs/DISCOVER.md)")
     s = p.add_subparsers(dest="discover_cmd", required=True)
@@ -98,3 +119,9 @@ def add_cli(sub) -> None:
     q.add_argument("--quick", action="store_true", help="skip the slow q/m 500 invariant run")
     q.add_argument("--json", help="write every result here")
     q.set_defaults(fn=_earth)
+    q = s.add_parser("compare", help="this engine against PySINDy's optimizers and LassoCV (and PySR)")
+    q.add_argument("--seeds", type=int, default=3)
+    q.add_argument("--workers", type=int, default=4)
+    q.add_argument("--pysr", type=int, default=0, help="also run PySR, this many seconds per task (needs pysr)")
+    q.add_argument("--json", help="write every row here")
+    q.set_defaults(fn=_compare)
