@@ -88,3 +88,67 @@ What this shows:
 - **The library sets the limit.** The engine can only find what its library can express. Every term
   it was offered was written by a person, and a law outside the library is reported NOT FOUND,
   never approximated into a false discovery.
+
+# Against the field's standard tools (`python -m brain discover compare`)
+
+Every system gets the same training rows, the same 85-term (field) or 17-term (motion) library, and
+the same held-out test rows farther from Earth. Each is graded against the terms the world is made of.
+
+The systems:
+- **PySINDy 2.1** (the reference SINDy implementation): STLSQ, SR3 (L0), SSR, FROLS and E-SINDy.
+  None of them chooses its own sparsity, so each gets a sweep of its knob and the lowest-BIC model on
+  the training rows, the same criterion this engine uses.
+- **scikit-learn's LassoCV**, as the classical baseline.
+- **PySR 1.x** (Cranmer 2023), which searches formulas over the raw variables with no library.
+
+These are recorded runs, 3 seeds per task, on 4 shared cores; seconds are wall time per run. "Exact"
+means the chosen terms are the true ones, no more and no fewer.
+
+| task | ours | STLSQ | SR3 | SSR | FROLS | E-SINDy | LassoCV |
+|---|---|---|---|---|---|---|---|
+| field, no noise: exact / false terms | **3/3** / 0 | **3/3** / 0 | **3/3** / 0 | 0/3 / 6.7 | 0/3 / 13.3 | 2/3 / 22.3 | 0/3 / 10.7 |
+| field, 1% noise: true of 16 / false / held-out error | 9.3 / **0** / 2.2% | 15.3 / 57 / 48% | 15.7 / 59 / 48% | 15.3 / 54 / 46% | **16 / 0 / 1.0% (3/3 exact)** | 15.3 / 63 / 43% | 16 / 12 / 1.1% |
+| field, 5% noise: true / false / held-out error | 7.7 / **0** / 5.8% | 15.7 / 64 / 243% | 16 / 65 / 243% | 15.7 / 58 / 242% | **15 / 1 / 5.0%** | 15.3 / 63 / 224% | 16 / 23 / 14% |
+| gravity from satellites: exact | 3/3 | 3/3 | 3/3 | 3/3 | 3/3 | 3/3 | 1/3 |
+| protons unaided: exact (a = 50 v×B − r̂/r²) | **0/3** (gravity unstable, NOT FOUND) | 3/3 | 3/3 | 3/3 | 3/3 | 3/3 | 0/3 |
+| protons, gravity carried over: exact | 3/3 | 3/3 | 3/3 | 3/3 | 3/3 | 3/3 | 3/3 |
+| control, shuffled field: verdict / held-out error | **NOT FOUND** ×3 | 85 terms / 4574% | 85 / 4574% | 1 / 100% | 1.7 / 118% | 85 / 4574% | 7 / 117% |
+| control, library without r⁻³: verdict / held-out error | **NOT FOUND** ×3 / 71% | 47 terms / 28% | 52 / 28% | 42 / 28% | 32 / 26% | 55 / 28% | 40 / 42% |
+| mean seconds, field tasks | 180-620 | 50-68 | 25-32 | 26-30 | **6-9** | 250-340 | 1 |
+
+PySR (2 minutes per target, raw variables, no library, seed 0):
+
+| target | PySR's formula | truth | held-out error |
+|---|---|---|---|
+| a_x of satellites from (x, y, z) | −0.997 x / (√(x²+y²) · r²) | −x / r³ | 1.9%: right fit, wrong formula |
+| a_x of protons from (v, B), gravity carried over | 49.98 v_z·(−B_y) + 49.99 v_y B_z | 50 (v_y B_z − v_z B_y) | 3.7%: **exact** |
+| B_z from (x, y, z), no noise | a 6-constant rational function | dipole + quadrupole | 3,900%: blows up near r ≈ 0.9 |
+
+The satellites orbit near the equator, where √(x²+y²) ≈ r, so PySR's distance from the axis fits as
+well as the distance from the centre. Nothing in a free formula search rules that out; a library of
+radial terms does.
+
+What this shows, plainly:
+
+- **FROLS beats this engine.** It is greedy forward selection like this one, but without families,
+  swaps or bootstrap. It recovered the full field law exactly at 1% noise, and all but one term at 5%,
+  in 6-9 seconds against this engine's 3-10 minutes. It also found gravity on unaided protons, where
+  this engine refused.
+- **This engine is the most conservative.** In every real task it chose **zero false terms**, and it is
+  the only system that says NOT FOUND. That verdict was right on both controls, where every other
+  system returned a confident-looking law. The price is missed truths: half the quadrupole under
+  noise, and gravity on protons, which a plain BIC choice gets right 3 times out of 3. Its 90%
+  bootstrap-stability bar is too strict for small effects.
+- **Thresholding fails under noise, as found earlier.** STLSQ, SR3, SSR and E-SINDy take in 54-65
+  false terms at 1-5% noise and miss by 43-243% when extrapolating: the collinear r⁻¹ to r⁻⁵ library
+  defeats them. E-SINDy's bagging did not save it.
+- **LassoCV keeps every true term but always adds false ones** (10-23), a known L1 behaviour.
+- **PySR is the most capable when a law is compact** (the Lorentz force, exact, with no library), and
+  the weakest on the multi-term field, inside a 2-minute budget. It can also fit a wrong formula that
+  the sampled data cannot tell apart from the right one.
+- **Caveats.** The PySINDy optimizers' thresholds were selected by BIC, not tuned by hand, and an
+  expert's tuning might do better. PySR had 2 minutes per target, and longer runs may find the field.
+  The tasks are mine and this engine was developed on them, which favours it. FROLS won anyway.
+
+The next engine would take FROLS's path and keep this one's verdict. That would be a declared new
+version, run against the same benchmark; this one stays as recorded.
