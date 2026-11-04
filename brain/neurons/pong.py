@@ -66,12 +66,8 @@ def add_motor(c: Circuit, target: list[int], pad: list[int], pad_delay: float = 
     and drive the paddle through the UP and DOWN cliques. ``pad_delay`` is the paddle cells' delay onto
     the coincidence cells: set it so their spikes arrive with the target cells' spikes."""
     hold = c.add("HOLD", "FS", group="hold", sign=-1)
-    up = [c.add(f"UP{k}", "FE", group="up") for k in range(CLIQUE)]
-    dn = [c.add(f"DOWN{k}", "FE", group="down") for k in range(CLIQUE)]
-    for q in (up, dn):
-        for k in range(1, CLIQUE):
-            for j in range(k):
-                c.connect(q[j], q[k], CLIQUE_W / k, (k - j - 1) * STAGE_MS + 1.0)
+    up = add_clique(c, "UP", "up")
+    dn = add_clique(c, "DOWN", "down")
     inh_up = c.add("INH_UP", "FS", group="wta", sign=-1)      # fired by UP, silences DOWN
     inh_dn = c.add("INH_DOWN", "FS", group="wta", sign=-1)
     c.connect(up[0], inh_up, WTA_W, 0.5)
@@ -86,6 +82,17 @@ def add_motor(c: Circuit, target: list[int], pad: list[int], pad_delay: float = 
             c.connect(target[i], x, EYE_W, 1.0)
             c.connect(pad[j], x, EYE_W, pad_delay)
             c.connect(x, up[0] if i > j else dn[0] if i < j else hold, HOLD_W if i == j else DECIDE_W, 1.0)
+
+
+def add_clique(c: Circuit, prefix: str, group: str) -> list[int]:
+    """A directed 11-simplex: CLIQUE neurons, j feeding every k > j. Neuron k's weights share CLIQUE_W
+    and each delay is (k - j - 1) * STAGE_MS + 1 ms, so every input to k lands at once. Returns the
+    neurons, source first, sink last."""
+    q = [c.add(f"{prefix}{k}", "FE", group=group) for k in range(CLIQUE)]
+    for k in range(1, CLIQUE):
+        for j in range(k):
+            c.connect(q[j], q[k], CLIQUE_W / k, (k - j - 1) * STAGE_MS + 1.0)
+    return q
 
 
 def place_drive(y: float, bands: int = BANDS) -> np.ndarray:

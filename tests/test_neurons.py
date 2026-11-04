@@ -217,3 +217,50 @@ class LearnTest(unittest.TestCase):
         lies = [(rows, 7 - k) for rows, k in truth if abs((7 - k) - k) > 1]
         self.assertGreater(me.trust(liar, truth), 0.9)     # same knowledge, honest reports
         self.assertEqual(me.trust(liar, lies), 0.0)        # mirrored reports: no weight
+
+
+class RunnerTest(unittest.TestCase):
+    def test_game_rules(self):
+        from brain.neurons import runner
+        g = runner.Game(seed=0)
+        g.obstacles = [[1, "hurdle", 1.5 * g.speed]]
+        self.assertTrue(g.act("jump"))
+        self.assertFalse(g.act("duck"))                # no duck mid-air
+        g.tick()
+        self.assertIsNone(g.tick())                    # cleared it in the air
+        g = runner.Game(seed=0)
+        g.obstacles = [[1, "wall", 0.5 * g.speed]]
+        self.assertEqual(g.tick(), "wall")
+        g = runner.Game(seed=0)
+        self.assertTrue(g.act("left"))
+        self.assertFalse(g.act("right"))               # cooldown
+        self.assertEqual(g.lane, 0)
+
+    def test_eyes_are_tuned_to_time_not_distance(self):
+        from brain.neurons import runner
+        g = runner.Game(seed=0)
+        g.speed = 2.0
+        g.obstacles = [[1, "hurdle", 6.0]]             # 3 frames away at speed 2, 6 at speed 1
+        self.assertIn(("HURDLE", 1), g.view("time"))
+        self.assertNotIn(("HURDLE", 1), g.view("distance"))
+        g.obstacles = [[0, "wall", 10.0]]
+        v = g.view("time")
+        self.assertIn(("WALL", 0), v)
+        self.assertNotIn(("CLEAR", 0), v)
+        self.assertIn(("CLEAR", 2), v)
+
+    def test_steering_cell_needs_all_three(self):
+        from brain.neurons import runner
+        c = runner.build()
+        x = c.by_name("GO_R0")
+        self.assertEqual({c.neurons[s.pre].name for s in c.inputs(x)}, {"LANE0", "WALL0", "CLEAR1"})
+        for on, fires in ((["LANE0", "WALL0", "CLEAR1"], True), (["LANE0", "WALL0"], False), (["WALL0", "CLEAR1"], False)):
+            self.assertEqual(x in kick(c, c.compile(), [c.by_name(n) for n in on]), fires, on)
+
+    def test_four_cliques_and_it_survives(self):
+        from brain.neurons import runner
+        self.assertEqual(simplices(runner.build().adjacency())[11], 4)
+        n = runner.play(1500, seed=21)
+        s = runner.play(1500, seed=21, controller="still")
+        self.assertEqual(n["crashes"], 0)
+        self.assertGreater(s["crashes"], 10)

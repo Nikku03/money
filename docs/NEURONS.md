@@ -164,3 +164,52 @@ What this shows:
   learner that tests sources against a broken sense rejects the people who could correct it.
 - The learning is small and tuned by hand: the rates, the trust floor of 0.4, 4 circuits, one fault
   type, one world change. These are recorded results for this setup, not general claims.
+
+# Runner: a three-lane endless runner (`brain/neurons/runner.py`)
+
+An original game in the endless-runner genre. Rows of obstacles come down three lanes: a **wall**
+means switch lanes, a **hurdle** means jump, a **beam** means duck. Every row leaves a lane without a
+wall. Speed rises from 1 to 2.4 units per frame, and a crash restarts the run at the start speed. A
+lane switch has a 4-frame cooldown; a jump or duck lasts 8 frames.
+
+```
+python -m brain neurons run --compare                 # every controller, 4 fresh tracks x 5,000 frames
+python -m brain neurons run --games 1 --frames 1200 --html runner.html
+python -m brain neurons wiring --game run GO_R20
+```
+
+| layer | cells | rule |
+|---|---|---|
+| eyes | 15 | LANE_l (the runner is in lane l); WALL_l (wall arrives in 3-12 frames); CLEAR_l (no wall within 13 frames: an OFF cell, since a spike can't signal absence); HURDLE_l and BEAM_l (arrive in 2-5 frames). Obstacle cells are tuned to **time-to-contact**, like the locust's looming detector, so they fire the same number of frames ahead at any speed. |
+| decide | 12 | GO_R(l) = LANE_l + WALL_l + CLEAR_(l+1), 0.055 per input: two inputs make 0.11, under threshold, three fire. GO_L mirrors it; GO_R2/GO_L2 handle escapes two lanes away. JUMP(l) = LANE_l + HURDLE_l, and DUCK likewise (0.08 each). |
+| act | 4 × 12 | LEFT, RIGHT, JUMP and DUCK are each a directed 11-simplex (`pong.add_clique`); each sink spike is a command. LEFT and RIGHT race through inhibitory cells, and GO_L axons are 1.5 ms longer, so the circuit goes right when both sides are clear. |
+
+77 neurons, 310 synapses, four 11-simplices. Commands come out about 2 frames after the eyes see,
+so every window leads the needed action by 2 frames.
+
+## Recorded results (4 tracks × 5,000 frames, seeds 20-23; tuned on seed 0)
+
+| controller | crashes | rows per crash | top speed |
+|---|---|---|---|
+| standing still | 335 | 1.5 | 1.23 |
+| random moves | 319 | 1.7 | 1.25 |
+| same circuit, eyes tuned to distance (at the start speed) | 38 | 24.9 | 2.23 |
+| **this circuit** | **0** | all 974 rows | 2.40 |
+| oracle: true state, no delay | 0 | all 974 rows | 2.40 |
+| this circuit, membrane noise 2 | 191 | 3.8 | 1.66 |
+| this circuit, membrane noise 4 | 256 | 2.5 | 1.44 |
+
+What this shows:
+
+- On these tracks the circuit plays as well as the oracle. The game is fully observed and the rules
+  are simple, so a correct wiring rule is enough. That says more about the game than about the neurons.
+- Timing in the eye is what scales with speed. The same circuit with distance-tuned eyes crashes 38
+  times, almost all into hurdles and beams: as speed rises, its fixed-distance windows fire too late.
+- My first wall window (3-9 frames) lost every crash the same way. An escape two lanes away needs two
+  switches 4 frames apart, and the lane it ends in may hold a hurdle the runner then sees too late.
+  Widening the window to 12 frames fixed it.
+- It is fragile to noise, more than Pong (83% at noise 2). Every stray command acts and can be fatal,
+  and the three-input cells sit one input from firing, so noise fires them with only two.
+
+This is not Subway Surfers or any other existing game: it is an original runner with the genre's
+mechanics, and the circuit does not connect to any real game.

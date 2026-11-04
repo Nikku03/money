@@ -96,9 +96,38 @@ def _school_one(args):
     return learn.school(mode, rounds=rounds, frames=frames, seed=seed)
 
 
+def _run(a):
+    from brain.neurons import runner
+    ctls = ["still", "random", "distance", "neurons", "oracle"] if a.compare else [a.controller]
+    for ctl in ctls:
+        C = R = best = 0
+        top = 0.0
+        causes: dict = {}
+        for s in range(a.seed, a.seed + a.games):
+            first = s == a.seed and ctl == "neurons" and a.html
+            r = runner.play(a.frames, seed=s, controller=ctl, noise=a.noise, record=bool(first))
+            C, R, best, top = C + r["crashes"], R + r["rows"], max(best, r["best_run_rows"]), max(top, r["top_speed"])
+            for k, v in r["causes"].items():
+                causes[k] = causes.get(k, 0) + v
+            if first:
+                page = Path(__file__).with_name("runner_viewer.html").read_text()
+                data = json.dumps(r, separators=(",", ":")).replace("</", "<\\/")
+                Path(a.html).write_text(page.replace("__REPLAY__", data))
+                print(f"viewer of game {s} written to {a.html}")
+        why = ", ".join(f"{k} {v}" for k, v in causes.items() if v) or "none"
+        print(f"{ctl:9s} crashes {C:4d}  rows passed {R:5d}  rows per crash {R / max(1, C):6.1f}"
+              f"  best run {best:4d}  top speed {top:.2f}  (crashes into: {why})")
+    print(f"({a.games} game(s) x {a.frames} frames from seed {a.seed}, noise {a.noise}; speed {runner.SPEED0} -> {runner.SPEED_MAX})")
+
+
+def _circuit(game: str):
+    from brain.neurons import catch, pong, runner
+    return {"pong": pong.build, "catch": catch.build, "run": runner.build}[game]()
+
+
 def _wiring(a):
     from brain.neurons import catch, pong
-    c = catch.build() if a.game == "catch" else pong.build()
+    c = _circuit(a.game)
     names = [n.name for n in c.neurons]
     ids = [c.by_name(a.neuron)] if a.neuron else range(len(names))
     for i in ids:
@@ -113,7 +142,7 @@ def _wiring(a):
 def _topology(a):
     from brain.neurons import catch, pong
     from brain.neurons.topology import simplices
-    c = catch.build() if a.game == "catch" else pong.build()
+    c = _circuit(a.game)
     counts = simplices(c.adjacency())
     print("directed simplices by dimension (k neurons+1, all-to-all forward):")
     for k, n in counts.items():
@@ -156,10 +185,19 @@ def add_cli(sub) -> None:
     q.add_argument("--json", help="write every run (curves, trust, exams) here")
     q.add_argument("--html", help="write a results page: learning curves, trust map, table")
     q.set_defaults(fn=_school)
+    q = s.add_parser("run", help="Runner: a three-lane endless runner (walls, hurdles, beams, rising speed)")
+    q.add_argument("--frames", type=int, default=5000)
+    q.add_argument("--games", type=int, default=4)
+    q.add_argument("--seed", type=int, default=20)
+    q.add_argument("--noise", type=float, default=0.0)
+    q.add_argument("--controller", choices=["neurons", "distance", "oracle", "still", "random"], default="neurons")
+    q.add_argument("--compare", action="store_true", help="play every controller on the same tracks")
+    q.add_argument("--html", help="write a page that replays the first game")
+    q.set_defaults(fn=_run)
     q = s.add_parser("wiring", help="who feeds each neuron and whom it feeds, with weights and delays")
     q.add_argument("neuron", nargs="?", help="one neuron's name, e.g. UP11, C62, or (catch) P3_9_+2")
-    q.add_argument("--game", choices=["pong", "catch"], default="pong")
+    q.add_argument("--game", choices=["pong", "catch", "run"], default="pong")
     q.set_defaults(fn=_wiring)
     q = s.add_parser("topology", help="count the circuit's directed simplices by dimension")
-    q.add_argument("--game", choices=["pong", "catch"], default="pong")
+    q.add_argument("--game", choices=["pong", "catch", "run"], default="pong")
     q.set_defaults(fn=_topology)
