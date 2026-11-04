@@ -120,3 +120,52 @@ class PongTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class CatchTest(unittest.TestCase):
+    def test_fold_and_landing(self):
+        from brain.neurons import catch
+        self.assertAlmostEqual(catch.fold(1.2), 0.8)
+        self.assertAlmostEqual(catch.fold(-0.3), 0.3)
+        self.assertAlmostEqual(catch.fold(2.5), 0.5)
+        # Served from the middle, rising 1/30 per frame: up 1.0 in 30 frames, one bounce, lands at 0.5.
+        self.assertAlmostEqual(catch.landing(0.0, 0.5, 1 / 30), 0.5)
+        self.assertAlmostEqual(catch.landing(0.0, 0.5, 1 / 30, walls=False), 1.0)
+
+    def test_game_lands_where_predicted(self):
+        from brain.neurons import catch
+        g = catch.Game(seed=4)
+        want = g.landing()
+        while g.bx + catch.VX < 1.0 - 1e-9:
+            g.tick()
+        self.assertAlmostEqual(g.by + g.vy if 0 <= g.by + g.vy <= 1 else catch.fold(g.by + g.vy), want, places=6)
+
+    def test_motion_cell_needs_the_delayed_spike(self):
+        from brain.neurons import catch
+        c = catch.build()
+        r = c.by_name("R9_+2")
+        ins = {c.neurons[s.pre].name: s.delay for s in c.inputs(r)}
+        self.assertEqual(ins, {"Y9": 1.0, "Y7": catch.K * catch.FRAME_MS + 1.0})
+        # Y7 then, Y9 six frames later: the R cell for +2 fires; Y9 alone does not fire it.
+        sim = c.compile()
+        hits = 0
+        for f in range(catch.K + 1):
+            for k in range(int(catch.FRAME_MS / c.dt)):
+                b = np.zeros(len(c.neurons))
+                if k < 4:
+                    b[c.by_name("Y7" if f == 0 else "Y9" if f == catch.K else "Y0")] = pong.PULSE_AMP
+                hits += r in sim.step(b)
+        self.assertEqual(hits, 1)
+
+    def test_predict_cells_feed_their_landing(self):
+        from brain.neurons import catch
+        c = catch.build()
+        outs = [c.neurons[s.post].name for s in c.outputs(c.by_name("P3_9_+2"))]
+        self.assertEqual(outs, ["L7"])            # 0.59 + 0.0208 * 16.9 frames = 0.946 -> band 7
+
+    def test_prediction_beats_chasing(self):
+        from brain.neurons import catch
+        n = catch.play(300, seed=10)
+        r = catch.play(300, seed=10, controller="reactive")
+        self.assertGreater(n["hits"], r["hits"])
+        self.assertLess(n["guess_error"]["near"], catch.PADDLE_H / 2)

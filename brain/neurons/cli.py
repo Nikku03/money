@@ -31,9 +31,36 @@ def _play(a):
     print(f"circuit: {r['neurons']} neurons, {r['synapses']} synapses; no weight was learned")
 
 
+def _catch(a):
+    from brain.neurons import catch
+    kill = tuple(x.strip() for x in (a.kill or "").split(",") if x.strip())
+    ctls = ["still", "random", "reactive", "nowalls", "neurons", "oracle"] if a.compare else [a.controller]
+    for ctl in ctls:
+        H = M = 0
+        errs = []
+        for s in range(a.seed, a.seed + a.games):
+            first = s == a.seed and ctl == "neurons" and a.html
+            r = catch.play(a.frames, seed=s, controller=ctl, noise=a.noise, kill=kill, record=bool(first))
+            H, M = H + r["hits"], M + r["misses"]
+            if r.get("guess_error"):
+                errs.append(r["guess_error"])
+            if first:
+                page = Path(__file__).with_name("catch_viewer.html").read_text()
+                data = json.dumps(r, separators=(",", ":")).replace("</", "<\\/")
+                Path(a.html).write_text(page.replace("__REPLAY__", data))
+                print(f"viewer of game {s} written to {a.html}")
+        err = ""
+        if errs:
+            keys = [k for k in ("far", "mid", "near") if all(k in e for e in errs)]
+            err = "   landing guess off by " + ", ".join(f"{k} {sum(e[k] for e in errs) / len(errs):.3f}" for k in keys)
+        print(f"{ctl:9s} caught {H:4d}  missed {M:4d}  catch rate {H / max(1, H + M):.0%}{err}")
+    print(f"({a.games} game(s) x {a.frames} frames from seed {a.seed}, noise {a.noise}"
+          f"{', killed ' + ','.join(kill) if kill else ''}; paddle half-height {catch.PADDLE_H / 2})")
+
+
 def _wiring(a):
-    from brain.neurons import pong
-    c = pong.build()
+    from brain.neurons import catch, pong
+    c = catch.build() if a.game == "catch" else pong.build()
     names = [n.name for n in c.neurons]
     ids = [c.by_name(a.neuron)] if a.neuron else range(len(names))
     for i in ids:
@@ -46,9 +73,9 @@ def _wiring(a):
 
 
 def _topology(a):
-    from brain.neurons import pong
+    from brain.neurons import catch, pong
     from brain.neurons.topology import simplices
-    c = pong.build()
+    c = catch.build() if a.game == "catch" else pong.build()
     counts = simplices(c.adjacency())
     print("directed simplices by dimension (k neurons+1, all-to-all forward):")
     for k, n in counts.items():
@@ -71,8 +98,20 @@ def add_cli(sub) -> None:
     q.add_argument("--replay", help="write a frame-by-frame replay (spikes, voltages) as JSON here")
     q.add_argument("--html", help="write a page that replays the first game: court, circuit, raster, voltages")
     q.set_defaults(fn=_play)
+    q = s.add_parser("catch", help="Catch: a fast, bouncing ball the circuit must predict to reach")
+    q.add_argument("--frames", type=int, default=900, help="frames per game (30 per serve)")
+    q.add_argument("--games", type=int, default=1)
+    q.add_argument("--seed", type=int, default=10)
+    q.add_argument("--noise", type=float, default=0.0)
+    q.add_argument("--kill", help="comma-separated neuron names to remove")
+    q.add_argument("--controller", choices=["neurons", "nowalls", "reactive", "oracle", "still", "random"], default="neurons")
+    q.add_argument("--compare", action="store_true", help="play every controller, same serves")
+    q.add_argument("--html", help="write a page that replays the first game")
+    q.set_defaults(fn=_catch)
     q = s.add_parser("wiring", help="who feeds each neuron and whom it feeds, with weights and delays")
-    q.add_argument("neuron", nargs="?", help="one neuron's name, e.g. UP11 or C62")
+    q.add_argument("neuron", nargs="?", help="one neuron's name, e.g. UP11, C62, or (catch) P3_9_+2")
+    q.add_argument("--game", choices=["pong", "catch"], default="pong")
     q.set_defaults(fn=_wiring)
     q = s.add_parser("topology", help="count the circuit's directed simplices by dimension")
+    q.add_argument("--game", choices=["pong", "catch"], default="pong")
     q.set_defaults(fn=_topology)
