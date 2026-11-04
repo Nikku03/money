@@ -5,3 +5,6 @@ __pycache__/
 *.pyc
 .pytest_cache/
 *.pid
+
+# PySR search checkpoints (brain/discover/compare.py)
+outputs/

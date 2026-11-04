@@ -159,10 +159,14 @@ def compare_pysr(seconds: int = 120, seed: int = 0) -> list[dict]:
     """PySR (Cranmer 2023) searches expression trees built from + - * / and powers over raw measured
     variables, with no library. It works one scalar target at a time. Given the same measurements as
     above, can it write the gravity law, the Lorentz force, and one component of the field?"""
+    import tempfile
+
     from pysr import PySRRegressor
 
+    scratch = tempfile.mkdtemp(prefix="pysr-")             # PySR's checkpoints, kept out of the repo
+
     def search(X, y, names, ops, Xt, yt):
-        m = PySRRegressor(niterations=10_000, timeout_in_seconds=seconds, binary_operators=["+", "-", "*", "/"],
+        m = PySRRegressor(output_directory=scratch, niterations=10_000, timeout_in_seconds=seconds, binary_operators=["+", "-", "*", "/"],
                           unary_operators=ops, maxsize=40, populations=24, random_state=seed, deterministic=True,
                           parallelism="serial", verbosity=0, progress=False, model_selection="best")
         t0 = time.perf_counter()
