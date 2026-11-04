@@ -81,6 +81,14 @@ python -m brain shocks radar SUPN CAPR    # named tickers (they need prices in t
 Each line is a chance, not a call. A stock's chance of a shock says nothing about its direction, and an option's
 price already charges for most of what S1 sees. Any call made from it goes into `brain predict` first.
 
+**The live record.**
+- The radar's top 25 on Tuesday Nov 3's close went into `research/s1_calls.jsonl` as shock calls, judged through
+  Nov 10 (`BRAIN_PREDICTIONS=research/s1_calls.jsonl python -m brain predict score`).
+- A call is withdrawn, with its reason, only for bad input found before its first session closes. On Nov 3 that took
+  out two:
+  - BSAI, whose price history jumps 52,074% in one day (an unadjusted split or a reused ticker);
+  - BSCL, which had no Nov 3 bar and no trades on 17 of its last 20 sessions.
+
 ## Limits
 
 - **Survivorship.** The universe is chosen today: companies bought out or delisted are missing, and so are their
@@ -88,6 +96,11 @@ price already charges for most of what S1 sees. Any call made from it goes into 
 - **The smallest stocks are mostly outside it.** The micro list stops at SEC rank 4,500 and needs prices since 2010,
   so recent listings, where many 100%+ days happen, are not in it.
 - **Industry codes are today's**, and a report's expected date is a year-old date moved on, not the announced one.
+- **Broken price histories can top the list.** An unadjusted split, a reused ticker or a stock that has stopped
+  trading feeds the radar wrong inputs, and the radar does not flag them yet. Check a name's prices before quoting
+  its chance.
+- **Thin over-the-counter names rank high.** Some top names trade a few thousand dollars a day, where one small
+  trade can make a 20% session. Their chances are honest, but such a shock means little.
 - **A fade against peers is not a trade.** Shorting a stock that just jumped costs borrow fees and risks a squeeze,
   and among stocks under $5 a few keep exploding.
 - **A size is not a direction**, and nothing here trades.
