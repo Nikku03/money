@@ -264,7 +264,8 @@ class DossierTest(unittest.TestCase):
             ("us-gaap:CashAndCashEquivalentsAtCarryingValue", 40e6, None, "2022-03-31", "2022-05-10", "10-Q", 0),
             ("us-gaap:NetCashProvidedByUsedInOperatingActivities", -20e6, "2022-01-01", "2022-03-31", "2022-05-10", "10-Q", 89),
             ("dei:EntityCommonStockSharesOutstanding", 10e6, None, "2022-05-01", "2022-05-10", "10-Q", 0),
-            ("dei:EntityCommonStockSharesOutstanding", 5e6, None, "2021-05-01", "2021-05-10", "10-Q", 0)]}
+            ("dei:EntityCommonStockSharesOutstanding", 5e6, None, "2021-05-01", "2021-05-10", "10-Q", 0),
+            ("us-gaap:Revenues", 99e6, None, "2021-03-31", "2021-05-10", "10-Q", 0)]}   # ties, with no start
         return ds, ds.Dossier(facts, {"X": "Example Corp"}, P, {"X": []}, {"X": "2834"}), list(dates)
 
     def test_point_in_time(self):

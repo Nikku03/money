@@ -51,7 +51,8 @@ class Dossier:
             for attr, val, start, end, filed, form, dur in rows:
                 vis = int(np.searchsorted(self.dates, filed, side="right"))   # from the session after the filing date
                 d.setdefault(attr, []).append((vis, end, start, dur or 0, val, form))
-            self.by[t] = {a: sorted(v) for a, v in d.items()}
+            # by when it became public, then its period end and length (a missing start must not be compared)
+            self.by[t] = {a: sorted(v, key=lambda r: (r[0], r[1], r[3])) for a, v in d.items()}
 
     # --- reading the filings as of a session ----------------------------------------------------------
     def _rows(self, t, attr, d):
