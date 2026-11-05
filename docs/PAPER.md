@@ -293,3 +293,59 @@ up to 6 open at once), with costs included, gains and losses compounding, and no
   (NLST, April 2021, +50%); the worst −$42 (NVAX, August 2022, −35%).
 - **The withdrawn P3's profit came from the stock nobody could trade:** its best trade was MALG,
   +233% on a stale quote.
+
+# Version 2: dynamic exits, sturdier learning, and a post-mortem of every trade (P4, `moonshot2.py`)
+
+Asked for: a dynamic exit strategy, learning that is harder to fool, and an analysis of every trade
+from every direction (why it won, why it lost), used on the next trade. Same clock, 510 small caps,
+tradability check and 0.25% costs as P3b. Written and committed before its first run.
+
+- **Five exits, fixed in advance:**
+
+  | exit | rule |
+  |---|---|
+  | E0 fixed | +20%, −10%, 10 sessions (P3b) |
+  | E1 scaled | target 2.5 and stop 1.25 times the stock's own 10-session volatility (8-60% and 4-30%), 10 sessions |
+  | E2 trailing | no target; −10% stop, then trailing 2.5 daily volatilities (5-25%) below the highest close, up to 15 sessions |
+  | E3 breakeven | −10% stop; once a close is 10% up, the stop moves to the entry; +30% target; 15 sessions |
+  | E4 follow-through | as E0, but out at the 3rd close unless at least 3% up |
+
+  Stops move only after a close, so no day uses its own later prices. Every candidate is simulated
+  under all five.
+- **The exit is chosen by experience.** There are 6 kinds of trade: market fear (VIX above or below
+  its last year's median) × the stock's volatility tercile. For each kind, every exit's average over
+  the trader's own top-10 candidates of past weeks (closed trades only), shrunk toward that exit's
+  overall average, 30 trades' worth. The best is used. E0 until 30 weeks are known.
+- **Sturdier learning.** It predicts the expected net under each exit: ridge regression on outcomes
+  winsorized at ±40%, older weeks fading (half-life 52 weeks), bagged 8 times over weeks. It scores a
+  stock as the mean of the 8 predictions for its chosen exit, less half their spread. It buys up to 3,
+  only those scoring above 0, so it may sit out a week.
+- **Memory of each stock.** Its last year of resolved outcomes under E0 (how often it hit +20%, how
+  often it was stopped, its mean net, shrunk toward the average, 5 trades' worth) enter as features.
+- **A post-mortem of every trade it takes:**
+  - the path: its best and worst point and on which day; never worked, went right then reversed,
+    gapped through the stop, timed out flat, or worked;
+  - every exit's result in hindsight, the best one, and the regret of the one chosen;
+  - its predicted net against the result;
+  - the three features that drove the pick;
+  - the market's, oil's, bonds' and the dollar's parts and the stock's own;
+  - the company's filings during the trade.
+
+  These lessons reach the next trade through the exit chooser (hindsight exits), the memory features
+  (each stock's record), and the stake. The stake is half size for the $1,000 account while its last
+  26 weeks of trades have not beaten random picks under the same exits. The stake does not enter P4.
+
+## P4: PASS only if all three hold
+
+Weekly mean net of its book (weeks it sits out count as 0):
+1. beats 3 random tradable picks that week, under the exits the chooser gave their kinds of trade
+   (one-sided p < 0.05);
+2. is above 0 (one-sided p < 0.05);
+3. beats the same machine taught shuffled outcomes (one-sided p < 0.05).
+
+FAIL otherwise.
+
+**Stated in advance:** this is the trader's fifth declared test on overlapping data (P1, P2, P3, P3b,
+P4). Five tries raise the odds that one passes by luck, so a P4 PASS would be checked against that
+before anything relied on it. By the repo's record, direction has never been predictable from public
+data. Exits can change the shape of the losses, not create an edge that is not there.

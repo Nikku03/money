@@ -184,3 +184,45 @@ class TradableTest(unittest.TestCase):
         raw = pd.DataFrame({"LIVE": [5.0] * n, "GHOST": [3.5] * n, "THIN": [5.0] * n}, index=idx)
         ok = m.tradable({"vol": vol, "raw": raw}, ["LIVE", "GHOST", "THIN"], 25)
         self.assertEqual(ok.tolist(), [True, False, False])
+
+
+class DynamicExitTest(unittest.TestCase):
+    def _arr(self, o, h, l, c):
+        return [np.array(x, float).reshape(-1, 1) for x in (o, h, l, c)]
+
+    def test_trailing_stop_follows_the_high_close(self):
+        from brain.paper import moonshot2 as m
+        n = 16
+        c = [100, 110, 130, 150, 140, 120] + [120] * (n - 6)
+        o = [100] + c[:-1]
+        h = [x + 1 for x in c]
+        l = [100, 109, 129, 149, 139, 119] + [119] * (n - 6)
+        prm = {"target": None, "stop": np.array([0.10]), "trail": np.array([0.10]), "hold": 15}
+        net, ex = m.run_exit(*self._arr(o, h, l, c), 0, prm)
+        # after the 150 close the stop sits at 135: day 5 (low 119) hits it
+        self.assertAlmostEqual(net[0], 1.35 - 1 - 2 * 0.0025, places=6)
+        self.assertEqual(ex[0], 5)
+
+    def test_breakeven_and_follow_through(self):
+        from brain.paper import moonshot2 as m
+        n = 16
+        c = [112, 105, 99] + [99] * (n - 3)
+        o = [100] + c[:-1]
+        h = [113, 106, 100] + [100] * (n - 3)
+        l = [100, 104, 98] + [98] * (n - 3)
+        prm = {"target": np.array([0.30]), "stop": np.array([0.10]), "breakeven": 0.10, "hold": 15}
+        net, ex = m.run_exit(*self._arr(o, h, l, c), 0, prm)
+        self.assertAlmostEqual(net[0], -2 * 0.0025, places=6)          # out at the entry, not at -10%
+        c2 = [101, 101.5, 102] + [130] * (n - 3)
+        prm = {"target": np.array([0.20]), "stop": np.array([0.10]), "check": (2, 0.03), "hold": 10}
+        net, ex = m.run_exit(*self._arr([100] + c2[:-1], [x + 0.5 for x in c2], [x - 0.5 for x in c2], c2), 0, prm)
+        self.assertEqual(ex[0], 2)                                     # no follow-through by the 3rd close: out
+        self.assertAlmostEqual(net[0], 0.02 - 2 * 0.0025, places=6)
+
+    def test_stop_never_uses_the_same_days_close(self):
+        from brain.paper import moonshot2 as m
+        # day 0: a close of 150 must not raise the stop for day 0 itself (the low of 95 is before it)
+        c = [150] + [150] * 15
+        prm = {"target": None, "stop": np.array([0.10]), "trail": np.array([0.10]), "hold": 15}
+        net, _ = m.run_exit(*self._arr([100] + [150] * 15, [151] * 16, [95] + [149] * 15, c), 0, prm)
+        self.assertGreater(net[0], 0.3)
