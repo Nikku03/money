@@ -387,3 +387,36 @@ class P8Test(unittest.TestCase):
         self.assertEqual(m.MEMF, ("an_net", "an_hit", "own_n", "own_net"))
         for f in m.MEMF:
             self.assertIn(f, m.PLAIN)
+
+
+class AttentionTest(unittest.TestCase):
+    def _mem(self, seed=0):
+        from brain.paper import attention as at
+        rng = np.random.default_rng(seed)
+        A = at.AttentionMemory(d_in=6, n_values=2, seed=seed)
+        for w in range(80):
+            X = rng.normal(size=(120, 6))
+            v = np.column_stack([np.where(X[:, 2] > 0.8, 0.25, -0.05), (X[:, 2] > 0.8).astype(float)])
+            A.add(w, w * 5 + 14, X, v + 0.01 * rng.normal(size=v.shape), [(f"S{j}", f"w{w}") for j in range(120)])
+        return A, rng
+
+    def test_learns_what_to_attend_to(self):
+        A, rng = self._mem()
+        A.fit(d=1000, week=80)
+        Xq = rng.normal(size=(400, 6))
+        pred, _ = A.recall(1000, Xq)
+        truth = np.where(Xq[:, 2] > 0.8, 0.25, -0.05)
+        self.assertGreater(np.corrcoef(pred[:, 0], truth)[0, 1], 0.5)    # uniform attention would give ~0
+        self.assertGreater(np.abs(A.Wq[:, 2]).mean(), np.abs(A.Wq[:, [0, 1, 3, 4, 5]]).mean())
+
+    def test_never_attends_to_unfinished_situations(self):
+        A, rng = self._mem()
+        A.fit(d=1000, week=80)
+        _, top = A.recall(200, rng.normal(size=(5, 6)), top=50)           # at session 200, weeks <= 37 have finished
+        weeks = {int(m[1][1:]) for row in top for m, _, _ in row}
+        self.assertLessEqual(max(weeks), 37)
+
+    def test_untrained_recall_is_empty(self):
+        from brain.paper import attention as at
+        A = at.AttentionMemory(d_in=3, n_values=2)
+        self.assertEqual(A.recall(100, np.zeros((2, 3)))[0].shape, (2, 2))
