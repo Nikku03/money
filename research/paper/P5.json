@@ -1,0 +1,29 @@
+{
+ "test": "P5",
+ "declared_in": "docs/PAPER.md, commit 6ac83f0",
+ "run_at": "2026-11-05",
+ "weeks": 302,
+ "traded_weeks": 300,
+ "trades": 889,
+ "weekly_net": {
+  "mean": 0.016992669453736883,
+  "t": 3.1588470334387955,
+  "p": 0.000791973016238961
+ },
+ "vs_random": {
+  "mean": 0.01764203768983233,
+  "t": 3.6639154641636487,
+  "p": 0.0001241943971484363
+ },
+ "vs_shuffled": {
+  "mean": 0.008383931952311317,
+  "t": 1.5036594919696404,
+  "p": 0.06633453220736359
+ },
+ "checks": {
+  "beats random picks under the same exits (one-sided p < 0.05)": true,
+  "makes money after costs (one-sided p < 0.05)": true,
+  "beats the same learner taught shuffled outcomes (p < 0.05)": false
+ },
+ "verdict": "FAIL"
+}

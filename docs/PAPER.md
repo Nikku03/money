@@ -536,3 +536,65 @@ the learner came to weigh.
 - A company's published accounts are known to everyone who trades it, and are old news by the time
   they are filed. Knowing them is necessary for judging risk (runway, dilution), but they are not
   expected to tell which way the next two weeks go.
+
+## P5 result, recorded 2026-11-05: **FAIL**, two of three checks (`research/paper/P5.json`; every trade with its dossier and post-mortem in `P5_journal.jsonl`)
+
+The first attempt stopped on a sorting bug before producing any result. It was fixed and the test
+run unchanged. The changed code reproduces P4's run exactly without the dossier.
+
+300 of 302 weeks traded, 889 trades.
+
+| check, per week (one-sided) | result | |
+|---|---|---|
+| beats random picks under the same exits | +1.76%, t 3.66, p 0.0001 | held |
+| makes money after costs | +1.70%, t 3.16, p 0.0008 | held |
+| beats the same machine taught shuffled outcomes | +0.84%, t 1.50, p 0.066 | **failed** |
+
+Declared verdict: **FAIL**. Checked after the fact, where P4 was fragile:
+
+- **Not carried by a few trades.** The edge over random picks was +1.76% a week with all trades,
+  +1.19% without its 10 best (p 0.003), and +0.82% without its 20 best (p 0.02).
+- **Positive every year:** +0.15%, +1.97%, +1.92%, +2.66%, +0.84% and +3.37% a week, 2021 to 2026.
+  P4's edge came only from 2024-26.
+- **Six tests.** p 0.0001 × 6 = 0.0006 for the random-picks check.
+- **The dossier's own contribution is not proven.** P5 beat P4 by +0.42% a week (t 0.84, p 0.20).
+- **The shuffled machine still made money.** The machine taught shuffled outcomes earned about
+  +0.86% a week, because its exits and stock memory learn from real outcomes. Part of the edge
+  therefore comes from those, and from the stock list, not from learning which stocks will win.
+- **Survivorship is still the most likely explanation for the rest.** These 510 stocks were chosen
+  by their 2026 size, and the trader leans toward stocks near their highs and toward bigger
+  companies, which is what survivors look like in hindsight.
+
+**What it learned to weigh, from the dossier.** Of the dossier facts, "bigger company" was among a
+pick's top three reasons 199 times, "latest report is old" 99, "issued many new shares" 30,
+"expensive against sales" 21, and "heavy R&D" 20. Bigger companies, an old report, new shares and a
+long runway leaned toward a pick; operating profitability and "no revenue" leaned away. The pulls are
+small next to the price features, whose top reasons stayed high fear (VIX), near the 52-week high and
+a gap up at the open.
+
+**Dossier limits, seen in the journal:**
+- A reverse split makes the share count fall and reads as "shares −63% on a year ago" (SBET,
+  June 2025), when the company in fact consolidated its shares.
+- Runway under one quarter printed as "about 0 quarters"; it now reads "under 1 quarter".
+- The dossier has no text: no business description, no risk factors, no going-concern warning, no
+  insider trades. Those need each filing's documents, not the financial data.
+
+**As a $1,000 account** (1/6 per trade, half stakes while its last 26 weeks trailed random picks):
+$1,000 → **$3,814**, against SPY's $2,206 over the same period. Its worst fall from a peak was −36%.
+
+| 2021 | 2022 | 2023 | 2024 | 2025 | 2026 |
+|---|---|---|---|---|---|
+| $1,000 | $944 | $1,094 | $1,501 | $2,133 | $2,052 |
+
+Inflated by survivorship, as above.
+
+## Where this leaves the trader
+
+Across six declared tests:
+- P1 to P3b failed outright;
+- P4 and P5 beat random picks but not their shuffled twins;
+- P5's edge is the steadiest yet, and the stock list's survivorship can explain it.
+
+The question history cannot settle is whether any of it survives without hindsight. Only a forward
+test can answer that: P5's machine running live, on paper, from a list chosen today, with its
+dossiers and post-mortems written before each outcome.
