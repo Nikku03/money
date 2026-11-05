@@ -169,7 +169,8 @@ class Dossier:
                "f_gross_margin": max(-1, min(1, div(f["gross_profit_q"], rev))) if rev and rev > 0 and f["gross_profit_q"] is not None else None,
                "f_op_margin": max(-3, min(1, div(f["operating_income_q"], rev))) if rev and rev > 0 and f["operating_income_q"] is not None else None,
                "f_profitable": float(f["net_income_q"] > 0) if f["net_income_q"] is not None else None,
-               "f_rnd": math.log1p(min(5, f["rnd_q"] / rev)) if rev and rev > 0 and f["rnd_q"] else (0.0 if f["rnd_q"] is None else math.log1p(5)),
+               "f_rnd": (None if f["rnd_q"] is not None and f["rnd_q"] < 0 else      # negative R&D: a tagging error
+                         math.log1p(min(5, f["rnd_q"] / rev)) if rev and rev > 0 and f["rnd_q"] else (0.0 if f["rnd_q"] is None else math.log1p(5))),
                "f_runway": math.log1p(runway) if runway is not None else None,
                "f_debt": max(0, min(2, div(f["long_term_debt"], f["assets"]))) if f["long_term_debt"] is not None and f["assets"] else 0.0,
                "f_current": max(-3, min(3, math.log(f["current_assets"] / f["current_liabilities"]))) if f["current_assets"] and f["current_liabilities"] and f["current_assets"] > 0 and f["current_liabilities"] > 0 else None,
