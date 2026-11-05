@@ -1,0 +1,3 @@
+# rebuildable caches; the journal shards are the memory
+*.idx
+*.lock

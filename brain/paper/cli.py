@@ -117,6 +117,23 @@ def _forward(a):
             print(f"  open: {t} from the week of {w}, exit {e}")
 
 
+def _memory(a):
+    from brain.paper import memory as mem
+    b = mem.bank()
+    if a.action == "backfill":
+        mem.backfill(b)
+    else:
+        if not a.ticker:
+            print("recall needs a ticker")
+            return 1
+        from brain.timeutil import now_iso
+        r = mem.recall(b, a.ticker.upper(), a.at or now_iso())
+        print(mem.card(r))
+        for les in r["last_lessons"]:
+            if les:
+                print("  -", les[:300])
+
+
 def add_cli(sub) -> None:
     p = sub.add_parser("paper", help="a paper trader that learns from its own closed trades (docs/PAPER.md)")
     s = p.add_subparsers(dest="paper_cmd", required=True)
@@ -134,5 +151,10 @@ def add_cli(sub) -> None:
     q = s.add_parser("forward", help="F1: the frozen P5 machine trading forward on paper (needs SEC_USER_AGENT)")
     q.add_argument("action", choices=["step", "status"])
     q.set_defaults(fn=_forward)
+    q = s.add_parser("memory", help="the trader's memory bank: backfill it, or recall a company as of a date")
+    q.add_argument("action", choices=["backfill", "recall"])
+    q.add_argument("ticker", nargs="?")
+    q.add_argument("--at", help="recall as known at this date (default: now)")
+    q.set_defaults(fn=_memory)
     q = s.add_parser("status", help="the live record so far")
     q.set_defaults(fn=_status)

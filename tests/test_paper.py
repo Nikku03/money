@@ -1,5 +1,6 @@
 """The learning paper trader (brain/paper): point-in-time features, the learner, the replay, news tags."""
 import math
+from pathlib import Path
 import unittest
 from unittest import mock
 
@@ -350,3 +351,31 @@ class P7Test(unittest.TestCase):
                 st.add_week(w, X, Y)
             st.fit(120)
             self.assertEqual(st.lam, want)
+
+
+class MemoryTest(unittest.TestCase):
+    def test_recall_respects_time(self):
+        import tempfile
+        from brain.paper import memory as mem
+        with tempfile.TemporaryDirectory() as tmp:
+            b = mem.bank(Path(tmp))
+            tr = {"date": "2021-03-01", "closed": "2021-03-12", "ticker": "XYZ", "exit": "E0 fixed", "net": -0.105,
+                  "shape": "never worked (it never got 3% up)", "lesson": "XYZ -10.5%: it never got going"}
+            mem.remember(b, [mem.trade_fact(tr, "test")])
+            self.assertEqual(mem.recall(b, "XYZ", "2021-03-11")["trades"], 0)    # still open on the 11th
+            r = mem.recall(b, "XYZ", "2021-03-13")
+            self.assertEqual(r["trades"], 1)
+            self.assertIn("traded XYZ 1 time(s) before, mean -10.5%", mem.card(r))
+            self.assertIn("it never got going", mem.card(r))
+
+    def test_analogs_recall_similar_situations(self):
+        from brain.paper import memory as mem
+        rng = np.random.default_rng(0)
+        A = mem.Analogs(k=20)
+        for w in range(30):
+            X = rng.normal(size=(100, 3))
+            A.add(w, w * 5 + 10, X, np.where(X[:, 0] > 1, 0.2, -0.05), (X[:, 0] > 1).astype(float))
+        net, hit = A.recall(30, 1000, np.array([[2.0, 0, 0], [-2.0, 0, 0]]))
+        self.assertGreater(net[0], 0.1)
+        self.assertLess(net[1], 0.0)
+        self.assertEqual(A.recall(30, 5, np.zeros((1, 3)))[0][0], 0.0)              # nothing resolved by session 5
