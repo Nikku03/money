@@ -635,3 +635,29 @@ the close of 2020-12-31. Written and committed before any price for the new list
   The stock list is new, and the machine is frozen.
 
 A clean forward test from today, on a list chosen today, is set up alongside it.
+
+# F1: the forward test (declared 2026-11-05, before its first week)
+
+The only test hindsight cannot reach. P5's machine, frozen as committed, trades on paper from the
+week of **2026-11-09**, on `universe/us_small.json`, a list built on 2026-10-12, before the start.
+
+```
+SEC_USER_AGENT='...' python -m brain paper forward step     # after each close; commit research/paper/forward/
+python -m brain paper forward status
+```
+
+- **Each week's first session:** its picks (or that it stays out), with each pick's dossier, exit
+  rule, predicted net and reasons, are appended to `research/paper/forward/ledger.jsonl`. They are
+  written that evening, from data before that morning's open, before any of their outcome exists.
+- **Every later session:** each open trade is followed under its own exit rule, and its close is
+  appended when it happens.
+- **The ledger is append-only:** a week once written is never rewritten. The machine learns each week
+  from everything resolved by then, as in the historical runs.
+- **The test, read once 30 weeks have fully closed (about June 2027).** It needs all three checks at
+  one-sided p < 0.05:
+  1. beats random picks from the list under the same exits (computed afterwards by re-running the
+     frozen machine over the same weeks, which must reproduce the ledger's picks);
+  2. makes money after costs;
+  3. beats the machine taught shuffled outcomes.
+
+  Before then, `status` reports the record but claims nothing from it.

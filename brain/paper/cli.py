@@ -91,6 +91,32 @@ def _status(a):
               + ", ".join(s["open"]["shorts"]) if s["open"]["trade"] else "flat"))
 
 
+def _forward(a):
+    from brain.paper import forward
+    if a.action == "step":
+        r = forward.step()
+        print(f"data through {r['data_through']}; forward test from {forward.FORWARD_START}")
+        for w in r["new_weeks"]:
+            picks = [p for p in r["opened"] if p["date"] == w]
+            print(f"  week of {w}: " + ("; ".join(f"{p['ticker']} ({p['exit']}, predicted {p['predicted']:+.1%})" for p in picks)
+                                         if picks else "no pick cleared its bar: stays out"))
+            for p in picks:
+                print(f"    {p['dossier']}")
+        for t, w, net in r["closed"]:
+            print(f"  closed {t} (week of {w}): {net:+.1%} after costs")
+        print("paper only; commit research/paper/forward/ to keep this step")
+    else:
+        s = forward.status()
+        print(f"forward weeks {s['weeks']} ({s['closed_weeks']} fully closed); trades {s['trades']} ({s['closed_trades']} closed)")
+        if s["weekly"]:
+            m, t, p = s["weekly"]
+            print(f"  net per closed week {m:+.2%} (t {t:+.2f})")
+        if s["closed_weeks"] < 30:
+            print("  under 30 closed weeks: this record says nothing yet, good or bad")
+        for w, t, e in s["open"]:
+            print(f"  open: {t} from the week of {w}, exit {e}")
+
+
 def add_cli(sub) -> None:
     p = sub.add_parser("paper", help="a paper trader that learns from its own closed trades (docs/PAPER.md)")
     s = p.add_subparsers(dest="paper_cmd", required=True)
@@ -105,5 +131,8 @@ def add_cli(sub) -> None:
     q.add_argument("--from-replay", required=True, help="a replay's --json output")
     q.add_argument("--reason", required=True)
     q.set_defaults(fn=_restart)
+    q = s.add_parser("forward", help="F1: the frozen P5 machine trading forward on paper (needs SEC_USER_AGENT)")
+    q.add_argument("action", choices=["step", "status"])
+    q.set_defaults(fn=_forward)
     q = s.add_parser("status", help="the live record so far")
     q.set_defaults(fn=_status)

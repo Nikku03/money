@@ -285,3 +285,17 @@ class DossierTest(unittest.TestCase):
         self.assertIn("Example Corp", card)
         self.assertIn("+50% on a year ago", card)
         self.assertIn("shares +100% on a year ago", card)
+
+
+class ForwardTest(unittest.TestCase):
+    def test_follow_waits_for_the_exit(self):
+        from brain.paper import forward
+        idx = pd.Index([f"2026-11-{9 + i:02d}" for i in range(5)])
+        mk = lambda v: pd.DataFrame({"X": v}, index=idx, dtype=float)
+        flat = [10.0] * 5
+        P = {"open": mk(flat), "high": mk([10.5] * 5), "low": mk([9.8] * 5), "close": mk(flat)}
+        self.assertEqual(forward.follow(P, "X", 0, "E0 fixed", 0.03), (None, None))   # still open
+        P["low"] = mk([9.8, 9.8, 8.5, 9.0, 9.0])                                       # stopped on day 3
+        net, when = forward.follow(P, "X", 0, "E0 fixed", 0.03)
+        self.assertAlmostEqual(net, -0.10 - 2 * 0.0025)
+        self.assertEqual(when, "2026-11-11")

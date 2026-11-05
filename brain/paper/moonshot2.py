@@ -242,11 +242,14 @@ def lesson(dg: dict) -> str:
 
 # --- the simulation ---------------------------------------------------------------------------------------
 def simulate(raw: dict, sec: dict, stocks: list[str], start: str = m1.START, shuffle: bool = False,
-             seed: int = 0, journal: bool = True, record_all: bool = False, dossier=None) -> dict:
+             seed: int = 0, journal: bool = True, record_all: bool = False, dossier=None, live: bool = False) -> dict:
     """``record_all`` keeps, for every week, every stock's score and outcome too (for the review of the
     moonshots it missed, brain/paper/misses.py); it changes nothing the trader does. ``dossier``
     (brain/paper/dossier.Dossier, test P5) adds what the company's own reports say, as features, and
-    writes each trade's dossier into the journal before the trade."""
+    writes each trade's dossier into the journal before the trade. ``live`` also scores the weeks whose
+    10-15 sessions have not all happened yet: their picks are returned as ``pending`` (for the forward
+    test, brain/paper/forward.py) and nothing about them is learned, since their outcomes are unknown.
+    Weeks with a complete future run exactly as without it."""
     from brain.paper import dossier as ds
     names = list(FEATURES) + (list(ds.FEATURES) if dossier is not None else [])
     if dossier is not None:
@@ -256,7 +259,8 @@ def simulate(raw: dict, sec: dict, stocks: list[str], start: str = m1.START, shu
     stocks = [s for s in stocks if s in P["close"] and P["close"][s].iloc[:260].notna().sum() > 200]
     events = m1.filing_events(sec, dates)
     week = pd.Series(pd.to_datetime(dates)).dt.to_period("W").values
-    firsts = [i for i in range(1, len(dates)) if week[i] != week[i - 1] and i >= 261 and i + MAXH <= len(dates)]
+    firsts = [i for i in range(1, len(dates)) if week[i] != week[i - 1] and i >= 261 and (live or i + MAXH <= len(dates))]
+    pending, pending_weeks = [], []
     s0 = int(np.searchsorted(dates, start))
     rng = np.random.default_rng(seed)
     ens, chooser = Ensemble(len(names), seed, names), ExitChooser()
@@ -270,10 +274,14 @@ def simulate(raw: dict, sec: dict, stocks: list[str], start: str = m1.START, shu
         ok = m1.tradable(P, stocks, d) & np.isfinite(F.values).all(1)
         r = np.log(P["close"][stocks].iloc[d - 21:d]).diff().iloc[1:]
         sig = r.std().fillna(0.05).values
-        ex = all_exits(P, stocks, d, sig)
-        nets = np.column_stack([ex[e][0] for e in EXITS])
-        resolved = np.max(np.column_stack([ex[e][1] for e in EXITS]), axis=1)
-        ok &= np.isfinite(nets).all(1)
+        complete = d + MAXH <= len(dates)
+        if complete:
+            ex = all_exits(P, stocks, d, sig)
+            nets = np.column_stack([ex[e][0] for e in EXITS])
+            resolved = np.max(np.column_stack([ex[e][1] for e in EXITS]), axis=1)
+            ok &= np.isfinite(nets).all(1)
+        else:                                                      # its future has not happened yet
+            ex, nets, resolved = None, np.full((len(stocks), len(EXITS)), np.nan), np.full(len(stocks), np.inf)
         # memory: each stock's resolved E0 record over the last year, shrunk to the cross-section
         past = [mm for mm in memo if mm[1] < d and mm[0] > wk - 52]
         hitv, stopv, netv = (np.zeros(len(stocks)), np.zeros(len(stocks)), np.zeros(len(stocks)))
@@ -313,6 +321,14 @@ def simulate(raw: dict, sec: dict, stocks: list[str], start: str = m1.START, shu
                 score[~ok] = -np.inf
                 order = np.argsort(score)[::-1]
                 picks = [j for j in order[:m1.TOP] if score[j] > 0]
+                if not complete:
+                    pending_weeks.append(str(dates[d]))
+                    for j in picks:
+                        pending.append({"date": str(dates[d]), "ticker": stocks[j], "exit": EXITS[cj[j]],
+                                        "sig": float(sig[j]), "score": float(score[j]), "predicted": float(mean[j, cj[j]]),
+                                        "reasons": ens.reasons(X[j], cj[j]),
+                                        "dossier": dossier.card(stocks[j], d) if dossier is not None else None})
+                    continue
                 top10 = [j for j in order[:TOP_TRACK] if ok[j]]
                 chooser.add(wk, bucket[top10], nets[top10])
                 for j in picks:
@@ -329,6 +345,8 @@ def simulate(raw: dict, sec: dict, stocks: list[str], start: str = m1.START, shu
                     every.append({"d": d, "ok": ok.copy(), "score": np.where(np.isfinite(score), score, np.nan).astype(np.float32),
                                   "picked": np.isin(np.arange(len(stocks)), picks), "X": X.astype(np.float32)})
             else:
+                if not complete:
+                    continue
                 rnd = float(np.mean(nets[ok, 0]))
             edge_hist = [x for x in record[-26:]]
             trust = 1.0 if (len(edge_hist) < 8 or np.mean(edge_hist) > 0) else 0.5
@@ -337,6 +355,8 @@ def simulate(raw: dict, sec: dict, stocks: list[str], start: str = m1.START, shu
                 record.append(wnet - rnd)
             weeks.append({"date": str(dates[d]), "net": wnet, "random": rnd, "n": len(book), "trust": trust,
                           "exits": {EXITS[k]: int(sum(1 for b in bucket[ok] if choice[b] == k)) for k in range(len(EXITS))}})
+        if not complete:
+            continue
         Y = nets[ok].copy()
         if shuffle:
             Y = Y[rng.permutation(len(Y))]
@@ -348,7 +368,8 @@ def simulate(raw: dict, sec: dict, stocks: list[str], start: str = m1.START, shu
         for j in np.flatnonzero(ok):
             n0 = float(e0n[j])
             memo.append((wk, int(e0x[j]), j, float(n0 >= 0.20 - 2 * m1.COST - 1e-9), float(n0 <= -0.10 - 2 * m1.COST + 1e-9), n0))
-    out = {"trades": trades, "weeks": weeks, "stocks": len(stocks), "shuffled": shuffle}
+    out = {"trades": trades, "weeks": weeks, "stocks": len(stocks), "shuffled": shuffle, "pending": pending,
+           "pending_weeks": pending_weeks, "last_date": str(dates[-1])}
     if record_all:
         out.update(every=every, names=stocks)
     return out
