@@ -91,8 +91,14 @@ def _status(a):
               + ", ".join(s["open"]["shorts"]) if s["open"]["trade"] else "flat"))
 
 
-def _forward(a):
+def _forward2(a):
+    from brain.paper import forward2 as fw
+    _forward(a, fw)
+
+
+def _forward(a, fw=None):
     from brain.paper import forward
+    forward = fw or forward
     if a.action == "step":
         r = forward.step()
         print(f"data through {r['data_through']}; forward test from {forward.FORWARD_START}")
@@ -152,6 +158,9 @@ def add_cli(sub) -> None:
     q = s.add_parser("forward", help="F1: the frozen P5 machine trading forward on paper (needs SEC_USER_AGENT)")
     q.add_argument("action", choices=["step", "status"])
     q.set_defaults(fn=_forward)
+    q = s.add_parser("forward2", help="F2: the P8 machine (with memory) trading forward on paper (needs SEC_USER_AGENT)")
+    q.add_argument("action", choices=["step", "status"])
+    q.set_defaults(fn=_forward2)
     q = s.add_parser("memory", help="the trader's memory bank: backfill it, or recall a company as of a date")
     q.add_argument("action", choices=["backfill", "recall"])
     q.add_argument("ticker", nargs="?")

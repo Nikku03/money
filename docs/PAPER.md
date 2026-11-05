@@ -798,3 +798,47 @@ up are:
 None of them predicts direction.
 
 F1 keeps running forward, as declared, on the frozen P5 machine.
+
+# Memory (`memory.py`), and F2: a machine that decides with it (declared 2026-11-05)
+
+**The memory bank.** The trader keeps a committed bank of its own (`research/paper/memory/`, the
+repo's `Bank` with its point-in-time `View`). It holds three kinds of memory:
+- **episodes:** every trade, known from the session it closed: its result, how the move went, the
+  exit that would have been best, its call against the result, its reasons, the influences, the
+  filings, the lesson;
+- **misses:** every missed moonshot, known from when its move finished, with its causes and where it
+  was ranked;
+- **beliefs:** what it held, dated.
+
+Recall reads through a View at the decision, so nothing learned later can be recalled earlier.
+Backfilled with 843 P6 trades (corrected run), 108 P7 held-out trades and 5,575 missed moonshots from
+the P4 review.
+
+```
+python -m brain paper memory recall SNEX                    # what it remembers now
+python -m brain paper memory recall SNEX --at 2022-01-01    # what it remembered then
+```
+
+**F1 now remembers.** Each pick's memory card (recalled as of that morning) is written beside it in
+the ledger, and each closed trade is added to the bank. F1's decisions are unchanged: frozen P5.
+
+**P8: the P7 machine deciding with memory** (`moonshot3.simulate(memory=True)`). Before each decision
+it recalls, as features:
+- the 50 nearest finished situations of the last two years among everything it watched, with their
+  mean net and +20% rate;
+- its own trades of the stock: how many, and their mean net, shrunk by 3 trades' worth.
+
+With memory off, the code reproduces the frozen P7 exactly.
+
+**F2, declared before its first week.** P8 trades forward on paper from the week of 2026-11-09, on
+`universe/us_small.json`, beside F1, with the same ledger rules (`research/paper/forward2/`), the same
+exit-following, the same memory bank, and the same daily schedule.
+- It studies everything back to 2011 before each decision.
+- It may stay out, by its gate.
+- **Test, read once 30 weeks have fully closed (about June 2027).** It needs all three checks at
+  one-sided p < 0.05: beats random picks under the same exits; makes money after costs; beats the
+  machine taught shuffled outcomes (both computed afterwards by re-running the frozen code over the
+  same weeks, which must reproduce the ledger).
+
+The held-out years 2016-2020 have now been used once, by P7, so they are no longer a clean test for
+P8. F2 is P8's test.

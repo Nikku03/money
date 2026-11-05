@@ -46,13 +46,13 @@ def _append(e: dict) -> None:
         f.write(json.dumps({"recorded_at": now_iso(), **e}, default=float, separators=(",", ":")) + "\n")
 
 
-def inputs(stocks: list[str], log=print) -> tuple[dict, dict, dict]:
+def inputs(stocks: list[str], log=print, price_start: str = "2019-06-01") -> tuple[dict, dict, dict]:
     """Prices (Yahoo), filings and SIC codes (SEC submissions), financial reports (SEC XBRL)."""
     from brain.sources import prices, sec
     raw, filings, sic, facts, names = {}, {}, {}, {}, {}
     for t in list(MACRO) + stocks:
         try:
-            raw[t] = prices.fetch_daily(t, start="2019-06-01")[0]
+            raw[t] = prices.fetch_daily(t, start=price_start)[0]
         except Exception as e:
             log(f"  {t}: no prices ({type(e).__name__})")
     for t in stocks:
