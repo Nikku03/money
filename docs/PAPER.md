@@ -726,3 +726,23 @@ count as 0):
 3. beats the same machine taught shuffled outcomes.
 
 FAIL otherwise. This is the eighth declared test of a trader here.
+
+## Correction, 2026-11-05: a look-ahead in P4-P6's exit chooser
+
+The exit chooser filtered past trades by comparing a week number with a session number, so every
+past week counted, including the last one or two, whose trades had not finished at the decision's
+open. The stake rule did the same. Both now count only trades finished before the open (with a test).
+- F1's live decisions were not affected: in live mode, every week the chooser used was complete.
+- The original results stay recorded above. Re-run with the fix (`research/paper/P4_corrected.json`
+  and the like):
+
+| test | as first run | corrected | verdict |
+|---|---|---|---|
+| P4 | +1.28%/wk (p 0.017); vs random +1.33% (p 0.007) | **+0.65%/wk (p 0.12); vs random +0.76% (p 0.063); vs shuffled +0.10% (p 0.43)** | FAIL, now on all three |
+| P5 | +1.70%/wk (p 0.0008); vs random +1.76% (p 0.0001) | **+1.51%/wk (p 0.0027); vs random +1.58% (p 0.0004); vs shuffled +0.70% (p 0.12)** | FAIL, two of three |
+| P6 | +0.17%/wk (p 0.35); vs random +0.45% (p 0.15) | **+0.23%/wk (p 0.32); vs random +0.49% (p 0.15)** | FAIL |
+
+About half of P4's edge was the leak. P5's shrank a little, and P6, already flat, barely moved. The
+conclusions stand: P5's edge is on the 2026-chosen list only, and P6 shows it does not survive a
+list chosen in 2021. With full stakes, $1,000 became $1,716 (P4), $2,966 (P5) and $1,524 (P6),
+against SPY's $2,206.

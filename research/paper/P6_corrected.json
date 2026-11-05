@@ -1,0 +1,28 @@
+{
+ "test": "P6 (corrected)",
+ "why": "re-run 2026-11-05 after fixing the exit chooser's look-ahead (commit 'Fix a look-ahead in the exit chooser'); the original result stays in P6.json",
+ "weeks": 302,
+ "traded_weeks": 289,
+ "trades": 843,
+ "weekly_net": {
+  "mean": 0.002263372998640676,
+  "t": 0.4618698819702589,
+  "p": 0.3220873166882859
+ },
+ "vs_random": {
+  "mean": 0.004866056070883636,
+  "t": 1.049695426013805,
+  "p": 0.1469290836916216
+ },
+ "vs_shuffled": {
+  "mean": 0.014224445481462802,
+  "t": 2.2097225887919865,
+  "p": 0.01356221052717375
+ },
+ "checks": {
+  "beats random picks under the same exits (one-sided p < 0.05)": false,
+  "makes money after costs (one-sided p < 0.05)": false,
+  "beats the same learner taught shuffled outcomes (p < 0.05)": true
+ },
+ "verdict": "FAIL"
+}
