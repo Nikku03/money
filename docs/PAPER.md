@@ -746,3 +746,23 @@ About half of P4's edge was the leak. P5's shrank a little, and P6, already flat
 conclusions stand: P5's edge is on the 2026-chosen list only, and P6 shows it does not survive a
 list chosen in 2021. With full stakes, $1,000 became $1,716 (P4), $2,966 (P5) and $1,524 (P6),
 against SPY's $2,206.
+
+## P7 development (in-sample: 2021-2026 on the 2021-chosen list), recorded 2026-11-05
+
+It learned from 2011-06 onward and traded from 2021-01-04. In-sample, so this proves nothing; it is
+here because it decided what happened next.
+
+- **Per week after costs:** −0.10% (p 0.64). Against random picks −0.08%; against the shuffled
+  machine −0.17%.
+- **Trading:** the gate let it trade 123 of 302 weeks, and none in 2022 or 2026. Its 368 trades
+  averaged −0.27% (median −2.6%, 41% winners).
+- **Its own validation chose the strongest ridge (300) in 280 of 302 refits:** by its own test, the
+  features carry next to no signal.
+- **The gate did not help.** The shadow record (its top 3 against random over the last 52 finished
+  weeks) was positive 75% of the time, yet the weeks it then traded lost. A good past year of picks
+  did not predict a good next week.
+
+**Decision: freeze, do not tune.** Nothing is broken, and the machine's own validation says there is
+no signal. Adjusting it until 2021-2026 looked good would be fitting those years. P7 is frozen at
+commit **465a14e** (moonshot3.py, moonshot2.py, moonshot.py, dossier.py as of that commit) and run
+once on the held-out 2016-2020, as declared.

@@ -1,0 +1,28 @@
+{
+ "test": "P7 development (in-sample)",
+ "run_at": "2026-11-05",
+ "weeks": 302,
+ "traded_weeks": 123,
+ "trades": 368,
+ "weekly_net": {
+  "mean": -0.0009751165273899707,
+  "t": -0.36520491257178916,
+  "p": 0.6425207742540451
+ },
+ "vs_random": {
+  "mean": -0.0007520965464325117,
+  "t": -0.28744437516680654,
+  "p": 0.6131139561867355
+ },
+ "vs_shuffled": {
+  "mean": -0.00165827822536751,
+  "t": -0.6049517569846009,
+  "p": 0.7273944740124362
+ },
+ "checks": {
+  "beats random picks under the same exits (one-sided p < 0.05)": false,
+  "makes money after costs (one-sided p < 0.05)": false,
+  "beats the same learner taught shuffled outcomes (p < 0.05)": false
+ },
+ "verdict": "FAIL"
+}
