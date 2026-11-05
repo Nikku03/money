@@ -274,3 +274,22 @@ What it did and did not learn (descriptive, not claims):
 
 The conclusion matches every direction test in this repo: public data, including a company's own
 filings, predicts how much a stock will move, not which way.
+
+## As a $1,000 account (computed 2026-11-05)
+
+Each new trade takes 1/6 of the account's current value (3 trades a week, held up to 2 weeks, so
+up to 6 open at once), with costs included, gains and losses compounding, and nothing added.
+
+| | 2021-01-04 | end (2026-11-04 trades) | best | worst fall from a peak |
+|---|---|---|---|---|
+| **P3b, tradable stocks only** | $1,000 | **$551 (−45%)** | $1,410 | −82% (low $252) |
+| random picks from the same list, same sizing | $1,000 | $817 (−18%) | | |
+| P3, withdrawn (included the stale-quote stock) | $1,000 | $1,295 (+30%) | $1,595 | −69% |
+| SPY, held (dividends reinvested) | $1,000 | $2,206 (+121%) | | |
+
+- **P3b year by year** (the account at each year's first trade): 2021 $1,000; 2022 $1,184;
+  2023 $480; 2024 $364; 2025 $329; 2026 $409; end $551.
+- **Its trades:** 339 winners made +$5,268 and 564 losers lost −$5,718. The best trade was +$98
+  (NLST, April 2021, +50%); the worst −$42 (NVAX, August 2022, −35%).
+- **The withdrawn P3's profit came from the stock nobody could trade:** its best trade was MALG,
+  +233% on a stale quote.
