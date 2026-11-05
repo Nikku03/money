@@ -122,3 +122,35 @@ and committed before any filing history was fetched or the replay run.
   recorded in the ledger as a `restart` event.
 - **Expectation, stated in advance:** filings become public before or at the reaction, and the repo's
   earnings-event drift tests all failed (E1, E2), so little is expected beyond P1.
+
+## P2 result, recorded 2026-11-05: **FAIL** (`research/paper/P2.json`)
+
+The filing history: 19,604 tagged filings across all 60 companies, read from SEC EDGAR. Test period
+and weeks as P1 (539 weeks; it traded in 537). Figures are per week, after costs:
+
+| book | mean | t | one-sided p | total | worst drawdown |
+|---|---|---|---|---|---|
+| **trader, prices + filings** | **−0.217%** | −1.08 | 0.86 | **−83%** | −88% |
+| first half | −0.458% | −1.99 | 0.98 | −76% | |
+| second half | +0.024% | +0.07 | 0.47 | −28% | |
+| shuffled-outcome control (with filings) | −0.052% | −0.46 | 0.68 | −37% | −63% |
+| P1, prices only (for comparison) | −0.171% | −0.81 | 0.79 | −79% | −88% |
+
+None of the three checks held. Adding the news history made it slightly worse, not better.
+
+Looked at after the fact (not claims):
+
+- **Before costs** it made +0.18% a week (t 0.90).
+- **Its largest learned weight** is +0.028 on `sec_trouble` (restatements, auditor changes,
+  delisting notices), that is, buy troubled stocks. Those filings are rare among these 60 large
+  companies, so this is most likely fitted to a handful of events. The ridge prior shrinks rare
+  features less than it should when their few outcomes happen to agree.
+
+## The live trader now starts from the past
+
+On 2026-11-05 the live trader was restarted from P2's learner, as declared: 591 weekly lessons,
+2015 to 2026-10-27, with the headline features at 0 (ledger event `restart`). The first live book, on
+2026-11-04's close, went long MRVL, STX, AMD, MU and INTC and short BRK-B, COST, KO, WMT and ABT,
+with a predicted spread of +1.12%. That is its learned lean toward volatile stocks over steady ones.
+This is the paper decision of a model that failed both declared tests; it is recorded to be scored,
+and it is not a recommendation.
