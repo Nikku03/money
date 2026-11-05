@@ -286,6 +286,17 @@ class DossierTest(unittest.TestCase):
         self.assertIn("+50% on a year ago", card)
         self.assertIn("shares +100% on a year ago", card)
 
+    def test_nonsense_numbers_count_as_missing(self):
+        from brain.paper import dossier as ds
+        f = {"revenue_q": 1e6, "revenue_q_year_ago": None, "gross_profit_q": None, "operating_income_q": None,
+             "net_income_q": None, "rnd_q": None, "cash": -5e6, "operating_cash_flow_q": -1e6, "long_term_debt": None,
+             "assets": 1e7, "current_assets": -1.0, "current_liabilities": 2e6, "shares": 1e6, "shares_year_ago": -3.0,
+             "mcap": 1e7, "sessions_since_report": 10, "results_moves": []}
+        n = ds.Dossier.numbers(f)
+        self.assertIsNone(n["f_runway"])
+        self.assertIsNone(n["f_current"])
+        self.assertIsNone(n["f_dilution"])
+
     def test_card_with_cash_but_no_cash_flow(self):
         ds, D, dates = self._dossier()
         D.by["X"].pop("us-gaap:NetCashProvidedByUsedInOperatingActivities")

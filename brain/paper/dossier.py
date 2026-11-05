@@ -161,7 +161,7 @@ class Dossier:
             return a / b if a is not None and b not in (None, 0) else None
         rev = f["revenue_q"]
         runway = None
-        if f["cash"] is not None and f["operating_cash_flow_q"] is not None:
+        if f["cash"] is not None and f["cash"] >= 0 and f["operating_cash_flow_q"] is not None:   # a negative cash figure is a tagging error
             runway = 20.0 if f["operating_cash_flow_q"] >= 0 else min(20.0, f["cash"] / -f["operating_cash_flow_q"])
         out = {"f_size": math.log(f["mcap"]) if f["mcap"] and f["mcap"] > 0 else None,
                "f_ps": math.log(f["mcap"] / (4 * rev)) if f["mcap"] and rev and rev > 0 else None,
@@ -172,8 +172,8 @@ class Dossier:
                "f_rnd": math.log1p(min(5, f["rnd_q"] / rev)) if rev and rev > 0 and f["rnd_q"] else (0.0 if f["rnd_q"] is None else math.log1p(5)),
                "f_runway": math.log1p(runway) if runway is not None else None,
                "f_debt": max(0, min(2, div(f["long_term_debt"], f["assets"]))) if f["long_term_debt"] is not None and f["assets"] else 0.0,
-               "f_current": max(-3, min(3, math.log(f["current_assets"] / f["current_liabilities"]))) if f["current_assets"] and f["current_liabilities"] else None,
-               "f_dilution": max(-1, min(2, math.log(f["shares"] / f["shares_year_ago"]))) if f["shares"] and f["shares_year_ago"] else None,
+               "f_current": max(-3, min(3, math.log(f["current_assets"] / f["current_liabilities"]))) if f["current_assets"] and f["current_liabilities"] and f["current_assets"] > 0 and f["current_liabilities"] > 0 else None,
+               "f_dilution": max(-1, min(2, math.log(f["shares"] / f["shares_year_ago"]))) if f["shares"] and f["shares_year_ago"] and f["shares"] > 0 and f["shares_year_ago"] > 0 else None,
                "f_stale": min(4, f["sessions_since_report"] / 63) if f["sessions_since_report"] is not None else 4.0,
                "f_earn_abs": float(np.mean(np.abs(f["results_moves"]))) if f["results_moves"] else None,
                "f_earn_sign": float(np.mean(f["results_moves"])) if f["results_moves"] else None,
