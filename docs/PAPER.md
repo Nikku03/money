@@ -487,3 +487,52 @@ its own: causes it has no feature for. Two candidates, both found by looking at 
 
 Adding them and testing on 2021-2026 would be testing on the data that suggested them, so the only
 clean test of them is forward, from now.
+
+# Know the company before trading it (P5, `dossier.py`)
+
+Asked for: the trader should know the company inside out before it trades. Before each trade it
+builds a dossier from what was public before that open:
+- the company's own financial reports (SEC XBRL), each number counted from the session after the
+  day it was filed;
+- its filing history;
+- its own price history, including how it reacted to its last four results.
+
+The dossier is written into the journal for every trade, before the trade, and its numbers enter
+the learner as features:
+
+| feature | what it says |
+|---|---|
+| `f_size`, `f_ps` | market value; price against sales |
+| `f_rev_growth` | revenue against the same quarter a year before |
+| `f_gross_margin`, `f_op_margin`, `f_profitable` | margins; a profit or a loss last quarter |
+| `f_rnd` | R&D against revenue |
+| `f_runway` | cash over the quarterly operating burn (20 quarters if it does not burn) |
+| `f_debt`, `f_current` | long-term debt over assets; current assets over current liabilities |
+| `f_dilution` | shares outstanding against a year before |
+| `f_stale` | how old its latest report is |
+| `f_earn_abs`, `f_earn_sign` | its last four results moves: their mean size and mean direction |
+| `f_fin_missing` | it reports no revenue |
+
+A missing number takes that week's median.
+
+**Not included:** the industry-wave and trend ideas from the missed-moonshot review. They were found
+by looking at 2021-2026, so testing them on those years would be testing on the answers. P5 adds
+only the company's own public facts.
+
+## P5: PASS only if all three hold
+
+Everything as P4 (exits, chooser, ensemble, memory, tradability, costs, controls), plus the dossier:
+1. beats random picks under the same exits (one-sided p < 0.05);
+2. makes money after costs (one-sided p < 0.05);
+3. beats the same machine taught shuffled outcomes (one-sided p < 0.05).
+
+FAIL otherwise. Reported beside it: whether the dossier changed P4's result, and which dossier facts
+the learner came to weigh.
+
+**Stated in advance:**
+- This is the trader's sixth declared test on overlapping data, so a pass would be weighed against
+  six tries.
+- The survivorship bias of the 2026-chosen list still applies to every absolute number.
+- A company's published accounts are known to everyone who trades it, and are old news by the time
+  they are filed. Knowing them is necessary for judging risk (runway, dilution), but they are not
+  expected to tell which way the next two weeks go.

@@ -1,4 +1,5 @@
 """The learning paper trader (brain/paper): point-in-time features, the learner, the replay, news tags."""
+import math
 import unittest
 from unittest import mock
 
@@ -249,3 +250,37 @@ class MissesTest(unittest.TestCase):
         from brain.paper import misses
         self.assertAlmostEqual(misses.auc(np.array([3.0, 2.0, 1.0, 0.0]), np.array([1, 1, 0, 0])), 1.0)
         self.assertAlmostEqual(misses.auc(np.array([1.0, 1.0, 1.0, 1.0]), np.array([1, 0, 1, 0])), 0.5)
+
+
+class DossierTest(unittest.TestCase):
+    def _dossier(self):
+        from brain.paper import dossier as ds
+        dates = pd.bdate_range("2021-01-01", periods=500).strftime("%Y-%m-%d")
+        px = pd.DataFrame({"X": np.full(500, 10.0)}, index=dates)
+        P = {"close": px, "raw": px}
+        facts = {"X": [
+            ("us-gaap:Revenues", 100e6, "2021-01-01", "2021-03-31", "2021-05-10", "10-Q", 89),
+            ("us-gaap:Revenues", 150e6, "2022-01-01", "2022-03-31", "2022-05-10", "10-Q", 89),
+            ("us-gaap:CashAndCashEquivalentsAtCarryingValue", 40e6, None, "2022-03-31", "2022-05-10", "10-Q", 0),
+            ("us-gaap:NetCashProvidedByUsedInOperatingActivities", -20e6, "2022-01-01", "2022-03-31", "2022-05-10", "10-Q", 89),
+            ("dei:EntityCommonStockSharesOutstanding", 10e6, None, "2022-05-01", "2022-05-10", "10-Q", 0),
+            ("dei:EntityCommonStockSharesOutstanding", 5e6, None, "2021-05-01", "2021-05-10", "10-Q", 0)]}
+        return ds, ds.Dossier(facts, {"X": "Example Corp"}, P, {"X": []}, {"X": "2834"}), list(dates)
+
+    def test_point_in_time(self):
+        ds, D, dates = self._dossier()
+        before = dates.index("2022-05-10")                   # filed that day: visible from the next session
+        self.assertEqual(D.facts("X", before)["revenue_q"], 100e6)
+        self.assertEqual(D.facts("X", before + 1)["revenue_q"], 150e6)
+
+    def test_numbers_and_card(self):
+        ds, D, dates = self._dossier()
+        d = dates.index("2022-05-10") + 1
+        n = ds.Dossier.numbers(D.facts("X", d))
+        self.assertAlmostEqual(math.exp(n["f_rev_growth"]), 1.5, places=6)
+        self.assertAlmostEqual(math.expm1(n["f_runway"]), 40e6 / (20e6 / 89 * 91), places=6)
+        self.assertAlmostEqual(math.exp(n["f_dilution"]), 2.0, places=6)
+        card = D.card("X", d)
+        self.assertIn("Example Corp", card)
+        self.assertIn("+50% on a year ago", card)
+        self.assertIn("shares +100% on a year ago", card)

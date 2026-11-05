@@ -142,8 +142,9 @@ def path_stats(P: dict, t: str, d: int, exit_i: int) -> dict:
 class Ensemble:
     """Per exit, ridge on winsorized net, bagged over weeks; score = mean - spread / 2."""
 
-    def __init__(self, k: int, seed: int = 0):
+    def __init__(self, k: int, seed: int = 0, names: list[str] | None = None):
         self.k, self.rng = k, np.random.default_rng(seed)
+        self.names = list(names or FEATURES)
         self.W = None
         self.mu, self.sd = np.zeros(k), np.ones(k)
 
@@ -177,7 +178,7 @@ class Ensemble:
         z = np.clip((x - self.mu) / self.sd, -5, 5)
         contrib = z * self.W[:, 1:, exit_j].mean(0)
         top = np.argsort(-np.abs(contrib))[:k]
-        return [(PLAIN[FEATURES[j]], float(contrib[j])) for j in top]
+        return [(PLAIN.get(self.names[j], self.names[j]), float(contrib[j])) for j in top]
 
 
 class ExitChooser:
@@ -241,9 +242,15 @@ def lesson(dg: dict) -> str:
 
 # --- the simulation ---------------------------------------------------------------------------------------
 def simulate(raw: dict, sec: dict, stocks: list[str], start: str = m1.START, shuffle: bool = False,
-             seed: int = 0, journal: bool = True, record_all: bool = False) -> dict:
+             seed: int = 0, journal: bool = True, record_all: bool = False, dossier=None) -> dict:
     """``record_all`` keeps, for every week, every stock's score and outcome too (for the review of the
-    moonshots it missed, brain/paper/misses.py); it changes nothing the trader does."""
+    moonshots it missed, brain/paper/misses.py); it changes nothing the trader does. ``dossier``
+    (brain/paper/dossier.Dossier, test P5) adds what the company's own reports say, as features, and
+    writes each trade's dossier into the journal before the trade."""
+    from brain.paper import dossier as ds
+    names = list(FEATURES) + (list(ds.FEATURES) if dossier is not None else [])
+    if dossier is not None:
+        PLAIN.update(ds.PLAIN)
     P = m1.panels(raw)
     dates = P["close"].index.values
     stocks = [s for s in stocks if s in P["close"] and P["close"][s].iloc[:260].notna().sum() > 200]
@@ -252,7 +259,7 @@ def simulate(raw: dict, sec: dict, stocks: list[str], start: str = m1.START, shu
     firsts = [i for i in range(1, len(dates)) if week[i] != week[i - 1] and i >= 261 and i + MAXH <= len(dates)]
     s0 = int(np.searchsorted(dates, start))
     rng = np.random.default_rng(seed)
-    ens, chooser = Ensemble(len(FEATURES), seed), ExitChooser()
+    ens, chooser = Ensemble(len(names), seed, names), ExitChooser()
     hist = {"X": [], "Y": [], "exit": [], "week": []}
     memo = []                                                      # (week, resolved_at, stock idx, hit, stop, net) under E0
     vixs = []
@@ -282,14 +289,18 @@ def simulate(raw: dict, sec: dict, stocks: list[str], start: str = m1.START, shu
         F["mem_hit"] = (hitv + SHRINK_MEM * base[0]) / (cnt + SHRINK_MEM)
         F["mem_stop"] = (stopv + SHRINK_MEM * base[1]) / (cnt + SHRINK_MEM)
         F["mem_net"] = (netv + SHRINK_MEM * base[2]) / (cnt + SHRINK_MEM)
-        X = F[list(FEATURES)].values
+        if dossier is not None:
+            E = dossier.features(d, stocks)
+            for col in ds.FEATURES:
+                F[col] = E[col].values
+        X = F[names].values
         vix = F["lvix"].iloc[0]
         vixs.append(vix)
         hi_fear = vix > np.median(vixs[-52:])
         vt = pd.Series(np.where(ok, sig, np.nan)).rank(pct=True).fillna(0.5).values
         bucket = (hi_fear * 3 + np.minimum(2, (vt * 3).astype(int))).astype(int)
         if d >= s0:
-            HX = np.vstack(hist["X"]) if hist["X"] else np.zeros((0, len(FEATURES)))
+            HX = np.vstack(hist["X"]) if hist["X"] else np.zeros((0, len(names)))
             if len(HX):
                 known = np.concatenate(hist["exit"]) < d
                 ens.fit(HX[known], np.vstack(hist["Y"])[known], np.concatenate(hist["week"])[known], wk)
@@ -309,6 +320,8 @@ def simulate(raw: dict, sec: dict, stocks: list[str], start: str = m1.START, shu
                         {"net": float(nets[j, cj[j]]), "exit": EXITS[cj[j]], "ticker": stocks[j], "date": str(dates[d])}
                     if journal:
                         dg["lesson"] = lesson(dg)
+                        if dossier is not None:
+                            dg["dossier"] = dossier.card(stocks[j], d)
                     trades.append(dg)
                     book.append(dg["net"])
                 rnd = float(np.mean(nets[ok, :][np.arange(ok.sum()), cj[ok]]))
@@ -341,8 +354,8 @@ def simulate(raw: dict, sec: dict, stocks: list[str], start: str = m1.START, shu
     return out
 
 
-def grade(run: dict, shuffled: dict) -> dict:
-    """P4, as declared in docs/PAPER.md before the first run."""
+def grade(run: dict, shuffled: dict, test: str = "P4") -> dict:
+    """P4 or P5, as declared in docs/PAPER.md before each first run (the same three checks)."""
     w = run["weeks"]
     net = [x["net"] for x in w]
     edge = [x["net"] - x["random"] if x["n"] else 0.0 for x in w]
@@ -352,7 +365,7 @@ def grade(run: dict, shuffled: dict) -> dict:
     checks = {"beats random picks under the same exits (one-sided p < 0.05)": me > 0 and pe < 0.05,
               "makes money after costs (one-sided p < 0.05)": m > 0 and p < 0.05,
               "beats the same learner taught shuffled outcomes (p < 0.05)": ms > 0 and ps < 0.05}
-    return {"test": "P4", "weeks": len(w), "traded_weeks": sum(1 for x in w if x["n"]), "trades": len(run["trades"]),
+    return {"test": test, "weeks": len(w), "traded_weeks": sum(1 for x in w if x["n"]), "trades": len(run["trades"]),
             "weekly_net": {"mean": m, "t": tt, "p": p}, "vs_random": {"mean": me, "t": te, "p": pe},
             "vs_shuffled": {"mean": ms, "t": ts, "p": ps}, "checks": checks,
             "verdict": "PASS" if all(checks.values()) else "FAIL"}
