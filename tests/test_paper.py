@@ -286,6 +286,11 @@ class DossierTest(unittest.TestCase):
         self.assertIn("+50% on a year ago", card)
         self.assertIn("shares +100% on a year ago", card)
 
+    def test_card_with_cash_but_no_cash_flow(self):
+        ds, D, dates = self._dossier()
+        D.by["X"].pop("us-gaap:NetCashProvidedByUsedInOperatingActivities")
+        self.assertIn("cash $40.0M", D.card("X", dates.index("2022-05-10") + 1))
+
 
 class ForwardTest(unittest.TestCase):
     def test_follow_waits_for_the_exit(self):

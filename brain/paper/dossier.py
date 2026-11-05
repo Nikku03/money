@@ -180,7 +180,7 @@ class Dossier:
             parts.append(f"net {'profit' if f['net_income_q'] > 0 else 'loss'} {m(abs(f['net_income_q']))} last quarter")
         if f["cash"] is not None:
             rw = math.expm1(n["f_runway"]) if n["f_runway"] is not None else None
-            left = "under 1 quarter" if rw is not None and rw < 1 else f"about {rw:.0f} quarters"
+            left = "unknown" if rw is None else ("under 1 quarter" if rw < 1 else f"about {rw:.0f} quarters")
             burn = (f"; burning {m(-f['operating_cash_flow_q'])} a quarter, {left} of runway"
                     if f["operating_cash_flow_q"] is not None and f["operating_cash_flow_q"] < 0 else "; operations bring cash in")
             parts.append(f"cash {m(f['cash'])}{burn}")
