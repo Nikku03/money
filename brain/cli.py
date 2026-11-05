@@ -14,7 +14,7 @@ PLUGINS = ("brain.sources.insiders", "brain.sources.aviation", "brain.sources.sh
            "brain.sources.cameras", "brain.watch", "brain.scout", "brain.decide", "brain.forecast.live", "brain.chain",
            "brain.web", "brain.sources.releases", "brain.research.eventtest", "brain.predict", "brain.radar", "brain.earnradar",
            "brain.moves", "brain.research.movetest", "brain.shocks", "brain.research.shocktest",
-           "brain.neurons.cli", "brain.discover.cli")
+           "brain.neurons.cli", "brain.discover.cli", "brain.paper.cli")
 
 
 def _bank():
