@@ -889,3 +889,19 @@ and P8 exactly.
 exit-following, memory bank, daily schedule, and test. That test is read once 30 weeks have fully
 closed, and needs all three checks at one-sided p < 0.05. P9's in-sample development run on
 2021-2026 is reported when it finishes, and proves nothing either way.
+
+## P9 development (in-sample, 2021-2026 on the 2021-chosen list), 2026-11-05
+
+**P9 FAILED in-sample, like P7 and P8.**
+- −0.07% a week after costs (p 0.58), between P7's −0.10% and P8's −0.27%.
+- Against random picks: −0.07% (p 0.59). Against the same machine taught shuffled outcomes: −0.16% (p 0.64).
+- 327 trades in 112 weeks (gate open 118 of 302): mean −0.34%, median −2.7%, 41% winners.
+- Compounded, $1000 became about $485.
+
+**What attention did.** Its features were used: "what it attended to often hit +20%" was among a
+pick's top three reasons 134 times, and one of the per-exit recalls 416 times. With sharpness bounded, it spread
+widely: the most-attended past situation took a median 0.3% of the weight (largest 13%), so no pick
+rested on one remembered case. Its validation loss (0.76, in units of each outcome's spread) barely
+beat uniform attention. Learning what "near" means did not make the past predict direction.
+
+In-sample, this proves nothing either way. F3 stands as declared and is P9's only test.

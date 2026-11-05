@@ -1,0 +1,28 @@
+{
+ "test": "P9 development (in-sample)",
+ "run_at": "2026-11-05",
+ "weeks": 302,
+ "traded_weeks": 112,
+ "trades": 327,
+ "weekly_net": {
+  "mean": -0.0006771076934294662,
+  "t": -0.20037757493574815,
+  "p": 0.5794073517809726
+ },
+ "vs_random": {
+  "mean": -0.0006699917685292529,
+  "t": -0.21596904774900397,
+  "p": 0.5854940627396169
+ },
+ "vs_shuffled": {
+  "mean": -0.001593439194960086,
+  "t": -0.371310083422394,
+  "p": 0.644796705766167
+ },
+ "checks": {
+  "beats random picks under the same exits (one-sided p < 0.05)": false,
+  "makes money after costs (one-sided p < 0.05)": false,
+  "beats the same learner taught shuffled outcomes (p < 0.05)": false
+ },
+ "verdict": "FAIL"
+}
