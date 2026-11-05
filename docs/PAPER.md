@@ -230,3 +230,47 @@ Identical to P3 in every rule, check and comparison, with one addition fixed in 
   shuffled controls alike.
 - **The same three checks**, at one-sided p < 0.05: beats random picks from the tradable list; makes
   money after costs; beats the shuffled learner.
+
+## P3b result, recorded 2026-11-05: **FAIL** (`research/paper/P3b.json`; every trade and its lesson in `P3b_journal.jsonl`)
+
+303 weeks from 2021-01-04, 909 trades, tradable stocks only.
+
+| | per week | t | one-sided p |
+|---|---|---|---|
+| **its trades, after costs** | **−0.13%** | −0.24 | 0.60 |
+| minus random picks from the same tradable list | −0.03% | −0.05 | 0.52 |
+| minus the same learner taught shuffled outcomes | +0.59% | +1.06 | 0.15 |
+| random picks (context) | −0.10% | −0.52 | |
+| the 3 jumpiest stocks each week (context) | −0.47% | −1.02 | |
+
+None of the three checks held. Without the stale-quote stock, P3's small positive number disappears:
+the trader did no better than random picks.
+
+What it did and did not learn (descriptive, not claims):
+
+- **It finds big movers, not winners.**
+  - 27.5% of its trades hit +20%, against a 3.8% base rate for any tradable stock that week. That
+    is the size effect the shock radar S1 already passed on.
+  - But 56% hit the −10% stop first: the stocks it picks move hard in both directions. Its median
+    trade lost 10.5%.
+- **Its learned beliefs are about size, not direction.** Odds rise with volatility, with earnings
+  likely during the trade, with a high VIX, and with a big move earlier in the year. They fall with a
+  higher share price and with a results filing already made. Nothing in them says up rather than
+  down.
+- **Overconfident.** It predicted a 47% chance on average and got 27.5%.
+- **"Smarter with each trade" is not shown.**
+  - Hit rate by year: 28%, 21%, 23%, 30%, 31%, 33%. Net per trade by year: +0.8%, −3.0%, −1.0%,
+    +0.5%, +0.7%, +1.5%.
+  - The second half of the test was better than the first (+1.0% a week, t 1.30, p 0.10), but that is
+    within chance, and the market regime changed too (2022 was a bear market for small caps).
+- **Why the moves happened, as attribution:**
+  - About 71% of each trade's move was the stock itself, not the market, oil, bonds or the dollar.
+  - Results filings were present in 18% of the moonshots and 14% of the stop-outs: news came with big
+    moves in both directions.
+  - The biggest winners and the biggest losers were the same kind of trade. APPS hit +54% and +70%
+    around results, and lost 57% around results.
+- **Buying the jumpiest stocks loses most** (−0.47% a week): lottery-like stocks underperform, a
+  known effect.
+
+The conclusion matches every direction test in this repo: public data, including a company's own
+filings, predicts how much a stock will move, not which way.
