@@ -112,8 +112,8 @@ class Analogs:
     Only situations whose outcome was known before the decision are kept; the oldest are let go after
     ``keep_weeks`` weeks."""
 
-    def __init__(self, k: int = 50, keep_weeks: int = 104):
-        self.k, self.keep = k, keep_weeks
+    def __init__(self, k: int = 50, keep_weeks: int = 104, cap: int = 20000):
+        self.k, self.keep, self.cap = k, keep_weeks, cap
         self.rows = []                                         # (week, resolved session, Z, net, hit)
         self.mu = self.sd = None
 
@@ -122,7 +122,12 @@ class Analogs:
 
     def recall(self, now_week: int, d: int, X: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
         self.rows = [r for r in self.rows if r[0] > now_week - self.keep]
-        known = [r for r in self.rows if r[1] < d]
+        known, n = [], 0
+        for r in reversed([r for r in self.rows if r[1] < d]):       # the most recent first, up to ``cap`` rows
+            if n >= self.cap:
+                break
+            known.append(r)
+            n += len(r[2])
         if sum(len(r[2]) for r in known) < self.k * 10:
             return np.zeros(len(X)), np.zeros(len(X))
         A = np.vstack([r[2] for r in known])

@@ -10,7 +10,9 @@ arrive later.
     status  the record so far; under 30 closed weeks it says nothing, good or bad.
 
 The ledger (research/paper/forward/ledger.jsonl) is append-only: a week once written is never
-rewritten, even if later data would change its picks. Commit it after every step.
+rewritten, even if later data would change its picks. Each pick's memory card (what the memory bank
+held about the company before that open) is written beside it, and each closed trade is remembered
+in research/paper/memory/. Commit both directories after every step.
 
 Paper only. Nothing here places an order.
 """
@@ -22,6 +24,7 @@ import numpy as np
 
 from brain import config
 from brain.paper import dossier as ds
+from brain.paper import memory as mem
 from brain.paper import moonshot as m1
 from brain.paper import moonshot2 as m2
 from brain.timeutil import now_iso
@@ -94,11 +97,14 @@ def step(log=print) -> dict:
     written = {e["week"] for e in ev if e["event"] in ("open", "flat")}
     new_weeks = [w for w in run["pending_weeks"] if w >= FORWARD_START and w not in written]
     opened = []
+    mb = mem.bank()
     for w in new_weeks:
         picks = [p for p in run["pending"] if p["date"] == w]
         if not picks:
             _append({"event": "flat", "week": w, "data_through": run["last_date"]})
         for p in picks:
+            # recall, as known before that morning's open; informational: F1's picks are the frozen machine's
+            p["memory"] = mem.card(mem.recall(mb, p["ticker"], f"{w}T13:00:00Z"))
             _append({"event": "open", "week": w, **p, "data_through": run["last_date"]})
             opened.append(p)
     closed = []
@@ -110,6 +116,10 @@ def step(log=print) -> dict:
         if net is not None:
             _append({"event": "close", "week": e["week"], "ticker": e["ticker"], "exit": e["exit"], "net": net, "closed": when})
             closed.append((e["ticker"], e["week"], net))
+            mem.remember(mb, [mem.trade_fact({"date": e["week"], "closed": when, "ticker": e["ticker"], "exit": e["exit"],
+                                              "net": net, "predicted": e.get("predicted"), "reasons": e.get("reasons"),
+                                              "lesson": f"{e['ticker']} {net:+.1%} with {e['exit']} (F1, week of {e['week']})"},
+                                             "F1 forward")])
     return {"data_through": run["last_date"], "new_weeks": new_weeks, "opened": opened, "closed": closed}
 
 

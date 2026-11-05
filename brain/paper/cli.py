@@ -102,9 +102,10 @@ def _forward(a):
                                          if picks else "no pick cleared its bar: stays out"))
             for p in picks:
                 print(f"    {p['dossier']}")
+                print(f"    {p.get('memory', '')}")
         for t, w, net in r["closed"]:
             print(f"  closed {t} (week of {w}): {net:+.1%} after costs")
-        print("paper only; commit research/paper/forward/ to keep this step")
+        print("paper only; commit research/paper/forward/ and research/paper/memory/ to keep this step")
     else:
         s = forward.status()
         print(f"forward weeks {s['weeks']} ({s['closed_weeks']} fully closed); trades {s['trades']} ({s['closed_trades']} closed)")
