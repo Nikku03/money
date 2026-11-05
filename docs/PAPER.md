@@ -661,3 +661,37 @@ python -m brain paper forward status
   3. beats the machine taught shuffled outcomes.
 
   Before then, `status` reports the record but claims nothing from it.
+
+## P6 result, recorded 2026-11-05: **FAIL** (`research/paper/P6.json`, `P6_journal.jsonl`)
+
+The frozen P5 machine on `universe/p6_2021.json`: 1,097 small operating companies, chosen from
+7,986 using only 2020's data. It covers 302 weeks from 2021-01-04; it traded in 289 of them, 846
+trades in all.
+
+| per week (one-sided) | P5, 2026-chosen list | **P6, 2021-chosen list** |
+|---|---|---|
+| net after costs | +1.70% (p 0.0008) | **+0.17% (t 0.37, p 0.35)** |
+| minus random picks, same exits | +1.76% (p 0.0001) | **+0.45% (t 1.04, p 0.15)** |
+| minus the shuffled machine | +0.84% (p 0.066) | +0.87% (t 1.33, p 0.09) |
+| edge without its 10 best trades | +1.19% | **−0.10%** |
+| edge without its 20 best trades | +0.82% | **−0.50%** |
+| $1,000 by 2026 (SPY: $2,206) | $3,814 | **$1,123**, worst fall −30% |
+
+None of the three checks held. Edge over random picks by year: +1.23%, +0.85%, −0.28%, +1.85%,
+−0.63% and −0.58% a week. Of its trades, 37% won and the median lost 2.2%; "never worked" was the
+commonest shape (244 of 846).
+
+**What this says about everything before it.** The same machine, unchanged, lost its edge when the
+stock list stopped knowing the future. P5's steady edge was mostly the 2026-chosen list's
+survivorship: a list of companies known to have grown into 2026 rewards a trader that leans toward
+bigger stocks near their highs. On a list a trader could actually have had in January 2021, the
+machine's picks are indistinguishable from random ones, after costs and without its few luckiest
+trades.
+
+What remains true:
+- It finds stocks that are about to move a lot (the size effect, as S1 and P3b found).
+- Its exits and post-mortems describe trades well.
+- Nothing in seven declared tests shows that it knows which way a stock will go.
+
+F1, the forward test, keeps running as declared, and will judge the machine on weeks no one has
+seen.

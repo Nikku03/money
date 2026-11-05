@@ -1,0 +1,29 @@
+{
+ "test": "P6",
+ "declared_in": "docs/PAPER.md, commit 779798c; list frozen in universe/p6_2021.json",
+ "run_at": "2026-11-05",
+ "weeks": 302,
+ "traded_weeks": 289,
+ "trades": 846,
+ "weekly_net": {
+  "mean": 0.0016773719191656225,
+  "t": 0.3743120098164807,
+  "p": 0.35408609896614396
+ },
+ "vs_random": {
+  "mean": 0.004452515831122663,
+  "t": 1.0432573894034989,
+  "p": 0.14841455011768823
+ },
+ "vs_shuffled": {
+  "mean": 0.008713695852360483,
+  "t": 1.3268941480820546,
+  "p": 0.09227185021504865
+ },
+ "checks": {
+  "beats random picks under the same exits (one-sided p < 0.05)": false,
+  "makes money after costs (one-sided p < 0.05)": false,
+  "beats the same learner taught shuffled outcomes (p < 0.05)": false
+ },
+ "verdict": "FAIL"
+}
