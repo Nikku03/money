@@ -598,3 +598,40 @@ Across six declared tests:
 The question history cannot settle is whether any of it survives without hindsight. Only a forward
 test can answer that: P5's machine running live, on paper, from a list chosen today, with its
 dossiers and post-mortems written before each outcome.
+
+# P6: the same machine on a stock list chosen in 2021 (declared before the list was built)
+
+Every historical test so far used stocks chosen by their 2026 size, so their history contains
+hindsight: P5's edge could be the machine exploiting that bias. P6 changes nothing in the machine
+(P5's code, as committed). It changes only the list, which is chosen with what a trader knew at
+the close of 2020-12-31. Written and committed before any price for the new list was fetched.
+
+**The list rule (all inputs dated on or before 2020-12-31):**
+1. **Pool:** every company in SEC's current ticker list: the first ticker per CIK, a plain ticker
+   (1-5 letters, optionally a class letter), about 7,986 names. Today's list contains companies that
+   have since shrunk to almost nothing, so losers are in the pool, not only survivors who grew.
+2. **Traded through 2020:** Yahoo daily prices for at least 240 of 2020's sessions, and trades on
+   every one of the last 20 sessions of 2020.
+3. **Small but tradable then:** a median daily dollar volume from 2020-07-01 to 2020-12-31 between
+   $1 million and $20 million, and a close on 2020-12-31 of at least $1.
+4. **An operating company then:** a 10-K or 10-Q filed with the SEC before 2021-01-04 (this excludes
+   funds and trusts).
+
+**The machine and the test:**
+- P5 exactly: exits, exit chooser, ensemble, memory, dossier, tradability check, costs, controls,
+  start on 2021-01-04.
+- **PASS only if all three hold**, one-sided p < 0.05:
+  1. beats random picks from the same list under the same exits;
+  2. makes money after costs;
+  3. beats the same machine taught shuffled outcomes.
+
+  FAIL otherwise.
+
+**What this does not fix, stated in advance:**
+- A company that is no longer on SEC's list or has no Yahoo prices today is missing: those delisted,
+  acquired or bankrupt between 2021 and 2026. Bankruptcies missing flatter a long-only trader.
+  Acquisitions missing (often a jump of 20%+) count against it.
+- The test period is the same one P1-P5 were developed on, and this is the trader's seventh test.
+  The stock list is new, and the machine is frozen.
+
+A clean forward test from today, on a list chosen today, is set up alongside it.
