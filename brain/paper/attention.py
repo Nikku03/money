@@ -2,7 +2,11 @@
 
 The kNN recall of P8 (memory.Analogs) averages the 50 nearest past situations, near by a fixed
 distance where every feature counts the same. Attention learns what "near" should mean. One head,
-scaled dot-product, as in a transformer:
+scaled dot-product, as in a transformer, with its sharpness bounded (NORM): a first version put
+91% of one pick's attention on a single week of March 2020, which is matching an outlier, not
+learning from many cases. NORM was chosen on a synthetic problem with a planted answer only
+(3: recall/truth correlation 0.75, ~7,700 of 9,600 cases attended; 6: 0.83, ~4,300; 10: 0.84,
+~4,100), never on market data.
 
     query    q = Wq z            z: the present situation's features, standardized
     keys     k_j = Wk z_j        z_j: a remembered situation (a stock, a week) whose outcome is known
@@ -30,6 +34,8 @@ import numpy as np
 
 D = 8
 STEPS, BATCH_Q, BATCH_K, LR, L2 = 200, 1500, 6000, 0.01, 1e-3
+NORM = 6.0          # each projection's Frobenius norm is held at or under this, so no logit can exceed
+                    # about NORM**2 / sqrt(D) and one remembered case cannot take nearly all the weight
 QUERY_WEEKS, GAP_WEEKS, CAP = 26, 3, 20000
 
 
@@ -43,12 +49,14 @@ class AttentionMemory:
         self.rows = []                                     # (week, resolved session, X, V, meta)
         self.trained_at = None
         self.val_loss = None
+        self.last_effective_n = None
 
     def add(self, week, resolved, X, V, meta):
         self.rows.append((week, int(resolved), X.astype(np.float32), V.astype(np.float32), list(meta)))
 
     def _z(self, X):
-        return np.clip((X - self.mu) / self.sd, -5, 5).astype(np.float32)
+        """Standardized and scaled by 1/sqrt(features), so a situation's vector has length about 1."""
+        return (np.clip((X - self.mu) / self.sd, -5, 5) / np.sqrt(X.shape[1])).astype(np.float32)
 
     def _known(self, d, cap=CAP, before_week=None):
         out, n = [], 0
@@ -114,6 +122,9 @@ class AttentionMemory:
                 m[k] = 0.9 * m[k] + 0.1 * g[k]
                 v[k] = 0.999 * v[k] + 0.001 * g[k] ** 2
                 W[k] -= LR * (m[k] / (1 - 0.9 ** step)) / (np.sqrt(v[k] / (1 - 0.999 ** step)) + 1e-8)
+                nrm = np.linalg.norm(W[k])
+                if nrm > NORM:
+                    W[k] *= NORM / nrm
             if step % 25 == 0:
                 vl = val_loss(W)
                 if vl < best[0]:
@@ -132,6 +143,7 @@ class AttentionMemory:
         Zk = self._z(np.vstack([r[2] for r in known]))
         Vk = np.vstack([r[3] for r in known])
         _, _, A, Yh = self._forward(self._z(X), Zk, self.Wq, self.Wk, Vk)
+        self.last_effective_n = float(np.mean(1.0 / (A * A).sum(1)))   # how many cases it effectively attends to
         if not top:
             return Yh, None
         meta = [m for r in known for m in r[4]]
