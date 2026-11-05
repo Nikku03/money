@@ -349,3 +349,67 @@ FAIL otherwise.
 P4). Five tries raise the odds that one passes by luck, so a P4 PASS would be checked against that
 before anything relied on it. By the repo's record, direction has never been predictable from public
 data. Exits can change the shape of the losses, not create an edge that is not there.
+
+## P4 result, recorded 2026-11-05: **FAIL**, two of three checks (`research/paper/P4.json`; every trade's post-mortem in `P4_journal.jsonl`)
+
+302 weeks from 2021-01-04. It traded in 299 of them, 877 trades in all.
+
+| check, per week (one-sided) | result | |
+|---|---|---|
+| beats random picks under the same exits | +1.33%, t 2.46, p 0.007 | held |
+| makes money after costs | +1.28%, t 2.12, p 0.017 | held |
+| beats the same machine taught shuffled outcomes | +0.84%, t 1.37, p 0.085 | **failed** |
+
+Declared verdict: **FAIL**. This is the closest any version has come, so it was checked harder, after
+the fact. None of these checks changes the verdict:
+
+- **A few trades carry it.**
+
+  | edge over random picks, per week | |
+  |---|---|
+  | all 877 trades | +1.33% (p 0.007) |
+  | without its 5 best | +0.88% (p 0.034) |
+  | without its 10 best | +0.59% (p 0.11) |
+  | without its 20 best | +0.13% (p 0.39) |
+
+  The best was Digital Turbine (APPS), +136% under the trailing exit in August 2024.
+- **It all comes from 2024-2026.** The edge over random picks by year was −0.87%, +0.51%, −0.30%,
+  +2.99%, +3.74% and +2.04% a week. It did not get better steadily; it did well once small, jumpy
+  stocks near their highs (quantum computing, drones, AI suppliers) ran in 2024-25.
+- **Survivorship can explain that.** The 510 stocks were chosen by their 2026 size. A stock that
+  ran in 2024-25 and stayed up is on the list; one that ran and then collapsed below the cutoff is
+  not. A trader leaning toward stocks near their 52-week highs gains from exactly that, and random
+  picks gain less. This bias was stated before the run, and the 2024-26 edge is what it would look
+  like.
+- **The learning itself shows little.** The machine taught shuffled outcomes still made +0.44% a week:
+  the exits and the stock memory (both learned from real outcomes in both machines) and the
+  stock list do part of the work. Among the trades it took, its predicted return did not track the
+  realized one (correlation −0.03). It was overconfident: +2.8% predicted, +1.4% realized per trade.
+- **Five tests.** p 0.007 × 5 trader tests = 0.035, so the random-picks check would survive a
+  Bonferroni correction on its own. But the declared rule needed all three checks.
+
+What the post-mortems say (877 trades):
+
+- **Shapes:**
+  - never worked 23%, worked a little 22%, a moonshot or close 16%;
+  - drifted to a loss 14%, timed out flat 13%;
+  - went right then reversed 8%, gapped through the stop 4%.
+- **Exits:** it chose the volatility-scaled exit most (546), then breakeven (139), trailing (102) and
+  fixed (90). In hindsight the best exit varied evenly (fixed 248, trailing 201, follow-through 179,
+  scaled 142, breakeven 107). The average regret was 6.2% a trade: no single exit is right, and the
+  chooser could not tell in advance which one would be.
+- **Influences:** 62% of each move was the stock itself. Results filings came with 23% of the
+  winners and 14% of the losers.
+- **Its reasons:** most picks leaned on high fear (VIX), being near the 52-week high, and a gap up
+  at the open: momentum in jumpy stocks.
+
+**As a $1,000 account** (1/6 of the account per trade, half stakes while its last 26 weeks trailed
+random picks): $1,000 → **$2,723 (+172%)**, against SPY's $2,206 over the same period. On the way it
+fell to $642 by early 2023 (a −48% fall from its peak). The account at each year's start:
+
+| 2021 | 2022 | 2023 | 2024 | 2025 | 2026 |
+|---|---|---|---|---|---|
+| $1,000 | $777 | $642 | $677 | $1,221 | $2,256 |
+
+With full stakes it ends at $3,340. Because of the survivorship bias above, these figures overstate
+what a trader in 2021 could have had.
