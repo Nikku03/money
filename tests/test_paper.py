@@ -379,3 +379,11 @@ class MemoryTest(unittest.TestCase):
         self.assertGreater(net[0], 0.1)
         self.assertLess(net[1], 0.0)
         self.assertEqual(A.recall(30, 5, np.zeros((1, 3)))[0][0], 0.0)              # nothing resolved by session 5
+
+
+class P8Test(unittest.TestCase):
+    def test_memory_features_are_declared(self):
+        from brain.paper import moonshot3 as m
+        self.assertEqual(m.MEMF, ("an_net", "an_hit", "own_n", "own_net"))
+        for f in m.MEMF:
+            self.assertIn(f, m.PLAIN)

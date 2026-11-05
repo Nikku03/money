@@ -42,7 +42,11 @@ from brain.paper import moonshot as m1
 from brain.paper import moonshot2 as m2
 
 NEW = ("ind_ret5", "ind_ret20")
-PLAIN = {**m2.PLAIN, **ds.PLAIN, "ind_ret5": "its industry rose last week", "ind_ret20": "its industry rose this month"}
+MEMF = ("an_net", "an_hit", "own_n", "own_net")             # P8: what memory recalls (memory.Analogs, its own trades)
+PLAIN = {**m2.PLAIN, **ds.PLAIN, "ind_ret5": "its industry rose last week", "ind_ret20": "its industry rose this month",
+         "an_net": "situations like this one did well", "an_hit": "situations like this one often hit +20%",
+         "own_n": "it has traded this stock before", "own_net": "its own trades of this stock did well"}
+OWN_SHRINK = 3.0
 FEATURES = tuple(m2.FEATURES) + tuple(ds.FEATURES) + NEW
 LAMBDAS = (3.0, 30.0, 300.0)
 VAL_WEEKS = 26
@@ -67,8 +71,9 @@ def industry(F: pd.DataFrame, sic2: np.ndarray, ok: np.ndarray) -> dict:
 class Stats:
     """Bagged ridge over per-week sufficient statistics, with its ridge strength chosen by validation."""
 
-    def __init__(self, k: int, seed: int = 0):
+    def __init__(self, k: int, seed: int = 0, names=None):
         self.k, self.rng = k, np.random.default_rng(seed)
+        self.names = list(names or FEATURES)
         self.mu = self.sd = None
         self.weeks = {}                                        # week -> (S, B, yy)
         self.W = None
@@ -125,7 +130,7 @@ class Stats:
         zz = np.clip((x - self.mu) / self.sd, -5, 5)
         c = zz * self.W[:, 1:, j].mean(0)
         top = np.argsort(-np.abs(c))[:k]
-        return [(PLAIN.get(FEATURES[i], FEATURES[i]), float(c[i])) for i in top]
+        return [(PLAIN.get(self.names[i], self.names[i]), float(c[i])) for i in top]
 
 
 def gate(shadow: list, d: int) -> tuple[bool, float, float]:
@@ -137,8 +142,16 @@ def gate(shadow: list, d: int) -> tuple[bool, float, float]:
 
 
 def simulate(raw: dict, sec: dict, facts: dict, stocks: list[str], start: str, end_data: str | None = None,
-             shuffle: bool = False, seed: int = 0, journal: bool = True) -> dict:
-    """Trade from ``start``; see no data after ``end_data`` (the held-out test ends at 2020-12-31)."""
+             shuffle: bool = False, seed: int = 0, journal: bool = True, memory: bool = False, live: bool = False) -> dict:
+    """Trade from ``start``; see no data after ``end_data`` (the held-out test ends at 2020-12-31).
+
+    ``memory`` (P8): before each decision it recalls situations like each stock's present one among
+    everything it has watched (memory.Analogs: the 50 nearest finished cases of the last two years,
+    their mean net and +20% rate under the fixed exit) and its own trades of that stock (how many,
+    their mean net, shrunk to 0 by 3 trades' worth), and weighs them as features.
+    ``live``: also score weeks whose future has not happened; their picks come back as ``pending``
+    and nothing about them is learned. With both off, this is P7 exactly."""
+    from brain.paper import memory as mem
     if end_data:
         raw = {t: df[df["date"].astype(str) <= end_data] for t, df in raw.items()}
     P = m1.panels(raw)
@@ -148,12 +161,15 @@ def simulate(raw: dict, sec: dict, facts: dict, stocks: list[str], start: str, e
     dos = ds.Dossier({t: facts["facts"].get(t, []) for t in stocks}, facts["names"], P, events, sec.get("sic", {}))
     sic2 = np.array([str(sec.get("sic", {}).get(t) or "")[:2] for t in stocks])
     week = pd.Series(pd.to_datetime(dates)).dt.to_period("W").values
-    firsts = [i for i in range(1, len(dates)) if week[i] != week[i - 1] and i >= 261 and i + m2.MAXH <= len(dates)]
+    firsts = [i for i in range(1, len(dates)) if week[i] != week[i - 1] and i >= 261 and (live or i + m2.MAXH <= len(dates))]
     s0 = int(np.searchsorted(dates, start))
+    names = list(FEATURES) + (list(MEMF) if memory else [])
+    analogs, own = (mem.Analogs(), []) if memory else (None, None)
+    pending, pending_weeks = [], []
     w_start = next(w for w, d in enumerate(firsts) if d >= s0)
     w_score = max(26, w_start - SCORE_LEAD)
     rng = np.random.default_rng(seed)
-    st, chooser = Stats(len(FEATURES), seed), m2.ExitChooser()
+    st, chooser = Stats(len(names), seed, names), m2.ExitChooser()
     raw_weeks = {}                                             # week -> (d, X, Y) until the scaler exists
     finished = collections.deque()                             # (resolved session, week)
     memo = collections.deque()
@@ -164,10 +180,14 @@ def simulate(raw: dict, sec: dict, facts: dict, stocks: list[str], start: str, e
         ok = m1.tradable(P, stocks, d) & np.isfinite(F.values).all(1)
         r = np.log(P["close"][stocks].iloc[d - 21:d]).diff().iloc[1:]
         sig = r.std().fillna(0.05).values
-        ex = m2.all_exits(P, stocks, d, sig)
-        nets = np.column_stack([ex[e][0] for e in m2.EXITS])
-        resolved = np.max(np.column_stack([ex[e][1] for e in m2.EXITS]), axis=1)
-        ok &= np.isfinite(nets).all(1)
+        complete = d + m2.MAXH <= len(dates)
+        if complete:
+            ex = m2.all_exits(P, stocks, d, sig)
+            nets = np.column_stack([ex[e][0] for e in m2.EXITS])
+            resolved = np.max(np.column_stack([ex[e][1] for e in m2.EXITS]), axis=1)
+            ok &= np.isfinite(nets).all(1)
+        else:                                                  # its future has not happened yet
+            ex, nets, resolved = None, np.full((len(stocks), len(m2.EXITS)), np.nan), np.full(len(stocks), np.inf)
         while memo and memo[0][0] <= wk - 52:
             memo.popleft()
         past = [mm for mm in memo if mm[1] < d]
@@ -184,7 +204,15 @@ def simulate(raw: dict, sec: dict, facts: dict, stocks: list[str], start: str, e
             F[c] = E[c].values
         for c, v in industry(F, sic2, ok).items():
             F[c] = v
-        X = F[list(FEATURES)].values
+        X = Xbase = F[list(FEATURES)].values
+        if memory:
+            an_net, an_hit = analogs.recall(wk, d, Xbase)
+            on, osum = np.zeros(len(stocks)), np.zeros(len(stocks))
+            for r_at, j, n in own:
+                if r_at < d:
+                    on[j] += 1
+                    osum[j] += n
+            X = np.column_stack([Xbase, an_net, an_hit, on, osum / (on + OWN_SHRINK)])
         vixs.append(F["lvix"].iloc[0])
         hi_fear = vixs[-1] > np.median(vixs[-52:])
         vt = pd.Series(np.where(ok, sig, np.nan)).rank(pct=True).fillna(0.5).values
@@ -203,6 +231,20 @@ def simulate(raw: dict, sec: dict, facts: dict, stocks: list[str], start: str, e
                     st.add_week(w, Xw, Yw)
             st.fit(wk)
             mean, spread = st.predict(X)
+            if mean is not None and not complete:
+                if d >= s0:
+                    open_, gm, gt = gate(shadow, d)
+                    choice = chooser.choose(wk, d)
+                    cj = np.array([choice[b] for b in bucket])
+                    score = mean[np.arange(len(stocks)), cj] - 0.5 * spread[np.arange(len(stocks)), cj]
+                    score[~ok] = -np.inf
+                    top3 = [j for j in np.argsort(score)[::-1][:m1.TOP] if ok[j]]
+                    pending_weeks.append({"date": str(dates[d]), "gate": bool(open_), "gate_mean": gm, "gate_t": gt})
+                    for j in ([j for j in top3 if score[j] > 0] if open_ else []):
+                        pending.append({"date": str(dates[d]), "ticker": stocks[j], "exit": m2.EXITS[cj[j]], "sig": float(sig[j]),
+                                        "score": float(score[j]), "predicted": float(mean[j, cj[j]]),
+                                        "reasons": st.reasons(X[j], cj[j]), "dossier": dos.card(stocks[j], d)})
+                continue
             if mean is not None:
                 choice = chooser.choose(wk, d)
                 cj = np.array([choice[b] for b in bucket])
@@ -227,8 +269,15 @@ def simulate(raw: dict, sec: dict, facts: dict, stocks: list[str], start: str, e
                             dg["dossier"] = dos.card(stocks[j], d)
                         trades.append(dg)
                         book.append(dg["net"])
+                        if memory:
+                            own.append((int(ex[m2.EXITS[cj[j]]][1][j]), j, float(nets[j, cj[j]])))
                     weeks.append({"date": str(dates[d]), "net": float(np.mean(book)) if book else 0.0, "random": rnd,
                                   "n": len(book), "gate": bool(open_), "gate_mean": gm, "gate_t": gt, "lam": st.lam})
+        if not complete:
+            continue
+        if memory:
+            e0 = ex["E0 fixed"][0]
+            analogs.add(wk, int(d + m2.MAXH - 1), Xbase[ok], e0[ok], (e0[ok] >= 0.20 - 2 * m1.COST - 1e-9).astype(float))
         Y = nets[ok].copy()
         if shuffle:
             Y = Y[rng.permutation(len(Y))]
@@ -240,4 +289,5 @@ def simulate(raw: dict, sec: dict, facts: dict, stocks: list[str], start: str, e
             memo.append((wk, int(d + m2.MAXH - 1), j, float(n0 >= 0.20 - 2 * m1.COST - 1e-9),
                          float(n0 <= -0.10 - 2 * m1.COST + 1e-9), n0))
     return {"trades": trades, "weeks": weeks, "stocks": len(stocks), "shuffled": shuffle, "start": start,
-            "learned_from": str(dates[firsts[0]]), "end_data": end_data}
+            "learned_from": str(dates[firsts[0]]), "end_data": end_data, "pending": pending,
+            "pending_weeks": pending_weeks, "last_date": str(dates[-1]), "memory": memory}
