@@ -304,3 +304,15 @@ class ForwardTest(unittest.TestCase):
         net, when = forward.follow(P, "X", 0, "E0 fixed", 0.03)
         self.assertAlmostEqual(net, -0.10 - 2 * 0.0025)
         self.assertEqual(when, "2026-11-11")
+
+
+class NoPeekTest(unittest.TestCase):
+    def test_exit_chooser_ignores_unfinished_trades(self):
+        from brain.paper import moonshot2 as m
+        ch = m.ExitChooser()
+        good = np.array([[0.0, 0.0, 0.5, 0.0, 0.0]])                 # E2 would have been great...
+        for w in range(40):
+            ch.add(w, [0], np.array([[0.1, 0.0, 0.0, 0.0, 0.0]]), [w * 5 + 14])
+        ch.add(40, [0], np.repeat(good, 1000, 0), [999] * 1000)      # ...but those trades finish at session 999
+        self.assertEqual(ch.choose(41, 300)[0], 0)                    # at session 300 it cannot know that
+        self.assertEqual(ch.choose(41, 1000)[0], 2)

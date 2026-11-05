@@ -182,15 +182,20 @@ class Ensemble:
 
 
 class ExitChooser:
-    def __init__(self):
-        self.rows = []                                             # (week, bucket, nets per exit)
+    """Each row: a past top-10 candidate's kind of trade and its net under every exit, with the session
+    by whose close all of those exits had finished. Only rows finished before the decision's open count.
+    (Until 2026-11-05 the filter compared a week number with a session number, so every past week
+    counted, including the last one or two, whose trades were still open: a look-ahead, now fixed.)"""
 
-    def add(self, week, buckets, nets):
-        for b, n in zip(buckets, nets):
-            self.rows.append((week, int(b), n))
+    def __init__(self):
+        self.rows = []                                             # (week, bucket, nets per exit, resolved session)
+
+    def add(self, week, buckets, nets, resolved):
+        for b, n, r in zip(buckets, nets, resolved):
+            self.rows.append((week, int(b), n, int(r)))
 
     def choose(self, now_week, known_before) -> dict[int, int]:
-        rows = [r for r in self.rows if r[0] < known_before]
+        rows = [r for r in self.rows if r[3] < known_before]
         if len({r[0] for r in rows}) < 30:
             return {b: 0 for b in range(6)}
         allv = np.array([r[2] for r in rows])
@@ -330,7 +335,7 @@ def simulate(raw: dict, sec: dict, stocks: list[str], start: str = m1.START, shu
                                         "dossier": dossier.card(stocks[j], d) if dossier is not None else None})
                     continue
                 top10 = [j for j in order[:TOP_TRACK] if ok[j]]
-                chooser.add(wk, bucket[top10], nets[top10])
+                chooser.add(wk, bucket[top10], nets[top10], resolved[top10])
                 for j in picks:
                     dg = diagnose(P, stocks[j], d, None, ex, cj[j], mean[j, cj[j]], X[j], ens, events, j) if journal else \
                         {"net": float(nets[j, cj[j]]), "exit": EXITS[cj[j]], "ticker": stocks[j], "date": str(dates[d])}
@@ -348,11 +353,11 @@ def simulate(raw: dict, sec: dict, stocks: list[str], start: str = m1.START, shu
                 if not complete:
                     continue
                 rnd = float(np.mean(nets[ok, 0]))
-            edge_hist = [x for x in record[-26:]]
+            edge_hist = [e for r, e in record if r < d][-26:]          # only weeks whose trades have finished
             trust = 1.0 if (len(edge_hist) < 8 or np.mean(edge_hist) > 0) else 0.5
             wnet = float(np.mean(book)) if book else 0.0
             if book:
-                record.append(wnet - rnd)
+                record.append((d + MAXH - 1, wnet - rnd))
             weeks.append({"date": str(dates[d]), "net": wnet, "random": rnd, "n": len(book), "trust": trust,
                           "exits": {EXITS[k]: int(sum(1 for b in bucket[ok] if choice[b] == k)) for k in range(len(EXITS))}})
         if not complete:
