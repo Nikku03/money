@@ -47,6 +47,10 @@ PLAIN = {**m2.PLAIN, **ds.PLAIN, "ind_ret5": "its industry rose last week", "ind
          "an_net": "situations like this one did well", "an_hit": "situations like this one often hit +20%",
          "own_n": "it has traded this stock before", "own_net": "its own trades of this stock did well"}
 OWN_SHRINK = 3.0
+ATTF = ("att_e0", "att_e1", "att_e2", "att_e3", "att_e4", "att_hit")   # P9: attention's recall
+PLAIN.update({f"att_e{i}": f"what it attended to did well under {e}" for i, e in enumerate(m2.EXITS)})
+PLAIN["att_hit"] = "what it attended to often hit +20%"
+ATT_EVERY = 13
 FEATURES = tuple(m2.FEATURES) + tuple(ds.FEATURES) + NEW
 LAMBDAS = (3.0, 30.0, 300.0)
 VAL_WEEKS = 26
@@ -141,8 +145,17 @@ def gate(shadow: list, d: int) -> tuple[bool, float, float]:
     return (m > 0 and t > GATE_T), m, t
 
 
+def attended(att, d: int, x: np.ndarray, k: int = 5) -> list[str]:
+    """The past situations a pick attended to most: stock, week, weight, and how it went (fixed exit)."""
+    _, top = att.recall(d, x[None, :], top=k)
+    if not top:
+        return []
+    return [f"{m[0]} week of {m[1]} (weight {w:.3f}, fixed exit {v[0]:+.1%})" for m, w, v in top[0]]
+
+
 def simulate(raw: dict, sec: dict, facts: dict, stocks: list[str], start: str, end_data: str | None = None,
-             shuffle: bool = False, seed: int = 0, journal: bool = True, memory: bool = False, live: bool = False) -> dict:
+             shuffle: bool = False, seed: int = 0, journal: bool = True, memory: bool = False, live: bool = False,
+             attention: bool = False) -> dict:
     """Trade from ``start``; see no data after ``end_data`` (the held-out test ends at 2020-12-31).
 
     ``memory`` (P8): before each decision it recalls situations like each stock's present one among
@@ -150,7 +163,11 @@ def simulate(raw: dict, sec: dict, facts: dict, stocks: list[str], start: str, e
     their mean net and +20% rate under the fixed exit) and its own trades of that stock (how many,
     their mean net, shrunk to 0 by 3 trades' worth), and weighs them as features.
     ``live``: also score weeks whose future has not happened; their picks come back as ``pending``
-    and nothing about them is learned. With both off, this is P7 exactly."""
+    and nothing about them is learned. With both off, this is P7 exactly.
+    ``attention`` (P9, with memory): attention over every finished situation (brain/paper/attention.py),
+    retrained every ATT_EVERY weeks, adds its recall of each exit's net and the +20% rate as features,
+    and names the past situations each pick attended to most. Off, nothing changes."""
+    from brain.paper import attention as atn
     from brain.paper import memory as mem
     if end_data:
         raw = {t: df[df["date"].astype(str) <= end_data] for t, df in raw.items()}
@@ -163,7 +180,8 @@ def simulate(raw: dict, sec: dict, facts: dict, stocks: list[str], start: str, e
     week = pd.Series(pd.to_datetime(dates)).dt.to_period("W").values
     firsts = [i for i in range(1, len(dates)) if week[i] != week[i - 1] and i >= 261 and (live or i + m2.MAXH <= len(dates))]
     s0 = int(np.searchsorted(dates, start))
-    names = list(FEATURES) + (list(MEMF) if memory else [])
+    names = list(FEATURES) + (list(MEMF) if memory else []) + (list(ATTF) if attention else [])
+    att = atn.AttentionMemory(len(FEATURES), len(ATTF), seed) if attention else None
     analogs, own = (mem.Analogs(), []) if memory else (None, None)
     pending, pending_weeks = [], []
     w_start = next(w for w, d in enumerate(firsts) if d >= s0)
@@ -213,6 +231,10 @@ def simulate(raw: dict, sec: dict, facts: dict, stocks: list[str], start: str, e
                     on[j] += 1
                     osum[j] += n
             X = np.column_stack([Xbase, an_net, an_hit, on, osum / (on + OWN_SHRINK)])
+        if attention:
+            if att.trained_at is None or wk - att.trained_at >= ATT_EVERY:
+                att.fit(d, wk)
+            X = np.column_stack([X, att.recall(d, Xbase)[0]])
         vixs.append(F["lvix"].iloc[0])
         hi_fear = vixs[-1] > np.median(vixs[-52:])
         vt = pd.Series(np.where(ok, sig, np.nan)).rank(pct=True).fillna(0.5).values
@@ -243,7 +265,8 @@ def simulate(raw: dict, sec: dict, facts: dict, stocks: list[str], start: str, e
                     for j in ([j for j in top3 if score[j] > 0] if open_ else []):
                         pending.append({"date": str(dates[d]), "ticker": stocks[j], "exit": m2.EXITS[cj[j]], "sig": float(sig[j]),
                                         "score": float(score[j]), "predicted": float(mean[j, cj[j]]),
-                                        "reasons": st.reasons(X[j], cj[j]), "dossier": dos.card(stocks[j], d)})
+                                        "reasons": st.reasons(X[j], cj[j]), "dossier": dos.card(stocks[j], d),
+                                        **({"attended": attended(att, d, Xbase[j])} if attention else {})})
                 continue
             if mean is not None:
                 choice = chooser.choose(wk, d)
@@ -267,6 +290,8 @@ def simulate(raw: dict, sec: dict, facts: dict, stocks: list[str], start: str, e
                         if journal:
                             dg["lesson"] = m2.lesson(dg)
                             dg["dossier"] = dos.card(stocks[j], d)
+                            if attention:
+                                dg["attended"] = attended(att, d, Xbase[j])
                         trades.append(dg)
                         book.append(dg["net"])
                         if memory:
@@ -275,6 +300,10 @@ def simulate(raw: dict, sec: dict, facts: dict, stocks: list[str], start: str, e
                                   "n": len(book), "gate": bool(open_), "gate_mean": gm, "gate_t": gt, "lam": st.lam})
         if not complete:
             continue
+        if attention:
+            hit0 = (ex["E0 fixed"][0][ok] >= 0.20 - 2 * m1.COST - 1e-9).astype(float)
+            att.add(wk, int(d + m2.MAXH - 1), Xbase[ok], np.column_stack([np.clip(nets[ok], -m2.WIN, m2.WIN), hit0]),
+                    [(stocks[j], str(dates[d])) for j in np.flatnonzero(ok)])
         if memory:
             e0 = ex["E0 fixed"][0]
             analogs.add(wk, int(d + m2.MAXH - 1), Xbase[ok], e0[ok], (e0[ok] >= 0.20 - 2 * m1.COST - 1e-9).astype(float))
@@ -290,4 +319,5 @@ def simulate(raw: dict, sec: dict, facts: dict, stocks: list[str], start: str, e
                          float(n0 <= -0.10 - 2 * m1.COST + 1e-9), n0))
     return {"trades": trades, "weeks": weeks, "stocks": len(stocks), "shuffled": shuffle, "start": start,
             "learned_from": str(dates[firsts[0]]), "end_data": end_data, "pending": pending,
-            "pending_weeks": pending_weeks, "last_date": str(dates[-1]), "memory": memory}
+            "pending_weeks": pending_weeks, "last_date": str(dates[-1]), "memory": memory, "attention": attention,
+            "attention_val_loss": att.val_loss if attention else None}
