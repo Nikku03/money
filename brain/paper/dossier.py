@@ -53,6 +53,11 @@ class Dossier:
                 d.setdefault(attr, []).append((vis, end, start, dur or 0, val, form))
             # by when it became public, then its period end and length (a missing start must not be compared)
             self.by[t] = {a: sorted(v, key=lambda r: (r[0], r[1], r[3])) for a, v in d.items()}
+        # Speed only, the same answers: what a filing-derived fact says changes only when another of the
+        # company's rows becomes public, so it is computed once per such moment.
+        self._vis = {t: np.sort([r[0] for a in v.values() for r in a]) for t, v in self.by.items()}
+        self._res = {t: [k for k, labels in ev if "sec_results" in labels] for t, ev in events.items()}
+        self._cache = {}
 
     # --- reading the filings as of a session ----------------------------------------------------------
     def _rows(self, t, attr, d):
@@ -99,6 +104,23 @@ class Dossier:
         return r[4] / r[3] * 91.0
 
     def facts(self, t: str, d: int) -> dict:
+        """As ``facts_uncached``, from a cache keyed by how many of the company's rows are public by d."""
+        key = (t, int(np.searchsorted(self._vis.get(t, np.array([])), d, side="right")))
+        base = self._cache.get(key)
+        if base is None:
+            base = self._cache[key] = self.facts_uncached(t, d)
+        f = dict(base)
+        raw = self.P["raw"][t].iloc[d - 1] if t in self.P["raw"] else np.nan
+        f["price"] = raw
+        f["mcap"] = f["shares"] * raw if f["shares"] and np.isfinite(raw) else None
+        f["sessions_since_report"] = (d - f["_last_report"]) if f["_last_report"] is not None else None
+        c = self.P["close"][t].values
+        moves = [math.log(c[k] / c[k - 1]) for k in self._res.get(t, [])
+                 if 1 <= k < d and np.isfinite(c[k]) and np.isfinite(c[k - 1])]
+        f["results_moves"] = moves[-4:]
+        return f
+
+    def facts_uncached(self, t: str, d: int) -> dict:
         raw = self.P["raw"][t].iloc[d - 1] if t in self.P["raw"] else np.nan
         rev, rev_end = self._quarter(t, REVENUE, d)
         rev1, _ = self._quarter(t, REVENUE, d, 365) if rev is not None else (None, None)
@@ -130,7 +152,7 @@ class Dossier:
                 "net_income_q": ni, "rnd_q": rnd, "cash": cash, "assets": assets, "current_assets": ca,
                 "current_liabilities": cl, "long_term_debt": debt, "shares": sh, "shares_year_ago": sh1,
                 "operating_cash_flow_q": ocf, "sessions_since_report": (d - last_report) if last_report is not None else None,
-                "results_moves": moves}
+                "results_moves": moves, "_last_report": last_report}
 
     # --- as features --------------------------------------------------------------------------------------
     @staticmethod
