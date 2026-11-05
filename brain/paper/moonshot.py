@@ -41,6 +41,7 @@ import pandas as pd
 from brain.paper import filings as fl
 
 TARGET, STOP, HOLD, COST, TOP = 0.20, 0.10, 10, 0.0025, 3
+LIQUID_DAYS, LIQUID_DOLLARS = 20, 500_000   # P3b: traded every one of the last 20 sessions, $500k a day on average
 HALF_LIFE = 52.0          # weeks
 RIDGE = 1.0
 START = "2021-01-04"
@@ -260,8 +261,18 @@ def lesson_text(t: str, tr: dict, why: dict) -> str:
 
 
 # --- the simulation ---------------------------------------------------------------------------------------
+def tradable(P: dict, stocks: list[str], d: int) -> np.ndarray:
+    """Could it have been bought at session d's open? It traded on every one of the last LIQUID_DAYS
+    sessions and averaged LIQUID_DOLLARS a day. (P3 had no such check, and picked a stock with no
+    volume on 86% of days in 99 of its 909 trades.)"""
+    v = P["vol"][stocks].iloc[d - LIQUID_DAYS:d]
+    dv = (P["raw"][stocks].iloc[d - LIQUID_DAYS:d] * v).mean()
+    return ((v > 0).all() & (dv >= LIQUID_DOLLARS)).values
+
+
 def simulate(raw: dict, sec: dict, stocks: list[str], start: str = START, shuffle: bool = False,
-             seed: int = 0, journal: bool = True) -> dict:
+             seed: int = 0, journal: bool = True, liquid: bool = False) -> dict:
+    """``liquid`` (P3b): only stocks that could have been traded are bought or learned from."""
     P = panels(raw)
     dates = P["close"].index.values
     stocks = [s for s in stocks if s in P["close"] and P["close"][s].iloc[:260].notna().sum() > 200]
@@ -277,6 +288,8 @@ def simulate(raw: dict, sec: dict, stocks: list[str], start: str = START, shuffl
         F = panel(P, stocks, events, sec.get("sic", {}), d)
         O = outcomes(P, stocks, d)
         ok = O["valid"].values & np.isfinite(F.values).all(1)
+        if liquid:
+            ok &= tradable(P, stocks, d)
         if d >= s0:
             Xa = np.vstack(seen_X) if seen_X else np.zeros((0, len(FEATURES)))
             if len(Xa):
@@ -311,7 +324,7 @@ def simulate(raw: dict, sec: dict, stocks: list[str], start: str = START, shuffl
         seen_y.append(y)
         seen_exit.append(O["exit"].values[ok])
         seen_week.append(np.full(ok.sum(), wk))
-    return {"trades": trades, "weeks": weeks, "notes": notes, "stocks": len(stocks), "shuffled": shuffle,
+    return {"trades": trades, "weeks": weeks, "notes": notes, "stocks": len(stocks), "shuffled": shuffle, "liquid": liquid,
             "final_lessons": L.lessons(10)}
 
 
@@ -323,8 +336,8 @@ def tstat(x) -> tuple[float, float, float]:
     return float(x.mean()), float(t), float(0.5 * math.erfc(t / math.sqrt(2)))
 
 
-def grade(run: dict, shuffled: dict) -> dict:
-    """P3, as declared in docs/PAPER.md before the first run."""
+def grade(run: dict, shuffled: dict, test: str = "P3") -> dict:
+    """P3 or P3b, as declared in docs/PAPER.md before each first run (the same three checks)."""
     w = run["weeks"]
     net = [x["net"] for x in w]
     edge = [x["net"] - x["random"] for x in w]
@@ -337,7 +350,7 @@ def grade(run: dict, shuffled: dict) -> dict:
     checks = {"beats random picks from the same list (weekly, one-sided p < 0.05)": me > 0 and pe < 0.05,
               "makes money after costs (weekly mean > 0, one-sided p < 0.05)": m > 0 and p < 0.05,
               "beats the same learner taught shuffled outcomes (p < 0.05)": ms > 0 and ps < 0.05}
-    return {"test": "P3", "weeks": len(w), "trades": len(tr),
+    return {"test": test, "weeks": len(w), "trades": len(tr),
             "weekly_net": {"mean": m, "t": t, "p": p}, "vs_random": {"mean": me, "t": te, "p": pe},
             "vs_shuffled": {"mean": ms, "t": ts, "p": ps},
             "hit_rate": float(np.mean([x["hit"] for x in tr])) if tr else 0.0,

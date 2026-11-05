@@ -208,3 +208,25 @@ year by year (is it getting smarter?), the first and second halves, and buying t
 **Expectation, stated in advance:** S1 has shown that size can be predicted, but every direction
 test in this repo has failed. A moonshot needs direction, so P3 will likely fail. It is run anyway,
 and recorded either way.
+
+## P3 result, recorded 2026-11-05: **FAIL**, withdrawn as flawed (`research/paper/P3.json`)
+
+303 weeks from 2021-01-04 and 909 trades. Its weekly net was +0.73% (t 0.99, p 0.16). It beat random
+picks by +0.76% a week (p 0.15) and the shuffled learner by +0.76% (p 0.16). None of the three checks
+held.
+
+**Withdrawn as a mistake in the design, not deleted.** P3 never asked whether a stock could actually
+be bought. It picked MALG, a stock with no recorded volume on 86% of days whose "price" was a stale
+quote jumping between levels, in 99 of its 909 trades, because stale jumps look like volatility.
+Its numbers stay above, for the record.
+
+## P3b, declared before its first run: P3 with a tradability check
+
+Identical to P3 in every rule, check and comparison, with one addition fixed in advance:
+
+- **Tradable:** at each open, a stock counts only if it traded on every one of the last 20 sessions
+  and averaged at least $500,000 a day in dollar volume. This applies to what it buys, to what it
+  learns from (an untradable stock's outcome is not a real outcome), and to the random-pick and
+  shuffled controls alike.
+- **The same three checks**, at one-sided p < 0.05: beats random picks from the tradable list; makes
+  money after costs; beats the shuffled learner.

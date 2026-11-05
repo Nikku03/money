@@ -173,3 +173,14 @@ class MoonshotTest(unittest.TestCase):
         L.fit(X, y, np.zeros(3000))
         self.assertGreater(L.w[1], 1.0)
         self.assertEqual(L.lessons(1)[0][0], m.PLAIN[m.FEATURES[0]])
+
+
+class TradableTest(unittest.TestCase):
+    def test_ghost_stocks_are_not_tradable(self):
+        from brain.paper import moonshot as m
+        n = 30
+        idx = pd.Index([f"d{i:02d}" for i in range(n)])
+        vol = pd.DataFrame({"LIVE": [200_000.0] * n, "GHOST": [0.0] * 25 + [100.0] * 5, "THIN": [1000.0] * n}, index=idx)
+        raw = pd.DataFrame({"LIVE": [5.0] * n, "GHOST": [3.5] * n, "THIN": [5.0] * n}, index=idx)
+        ok = m.tradable({"vol": vol, "raw": raw}, ["LIVE", "GHOST", "THIN"], 25)
+        self.assertEqual(ok.tolist(), [True, False, False])

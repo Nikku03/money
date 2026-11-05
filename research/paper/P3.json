@@ -1,0 +1,121 @@
+{
+ "test": "P3",
+ "declared_in": "docs/PAPER.md, commit e42e161",
+ "run_at": "2026-11-05",
+ "verdict": "FAIL",
+ "status": "WITHDRAWN as flawed: no tradability check; it bought MALG (no volume on 86% of days, stale quotes) in 99 of 909 trades",
+ "weeks": 303,
+ "trades": 909,
+ "weekly_net": {
+  "mean": 0.007338460016438982,
+  "t": 0.9909482460214722,
+  "p": 0.16085542610912795
+ },
+ "vs_random": {
+  "mean": 0.007589373232790108,
+  "t": 1.0296010080670834,
+  "p": 0.1515986709298887
+ },
+ "vs_shuffled": {
+  "mean": 0.00761605880724657,
+  "t": 1.0119572307465503,
+  "p": 0.15577925165985307
+ },
+ "hit_rate": 0.2552255225522552,
+ "base_hit_rate": 0.03998878148684434,
+ "hit_rate_by_year": {
+  "2021": 0.23076923076923078,
+  "2022": 0.24358974358974358,
+  "2023": 0.23717948717948717,
+  "2024": 0.2578616352201258,
+  "2025": 0.2564102564102564,
+  "2026": 0.31746031746031744
+ },
+ "checks": {
+  "beats random picks from the same list (weekly, one-sided p < 0.05)": false,
+  "makes money after costs (weekly mean > 0, one-sided p < 0.05)": false,
+  "beats the same learner taught shuffled outcomes (p < 0.05)": false
+ },
+ "final_lessons": [
+  [
+   "earnings likely during the trade",
+   0.446748120699037
+  ],
+  [
+   "jumpy (60-day volatility)",
+   0.44412894155020916
+  ],
+  [
+   "fear is high (VIX)",
+   0.20388621698789403
+  ],
+  [
+   "far above its 52-week low",
+   0.14477956484539486
+  ],
+  [
+   "had a huge one-day move this year",
+   0.13455593717830636
+  ],
+  [
+   "jumpy lately (20-day volatility)",
+   0.13351429749584187
+  ],
+  [
+   "the market rose last week",
+   0.06277787864722388
+  ],
+  [
+   "many 10%+ days this year",
+   0.061053261243513506
+  ],
+  [
+   "big move yesterday",
+   0.05559478058695744
+  ],
+  [
+   "volume surging",
+   0.04473825365399376
+  ],
+  [
+   "higher share price",
+   -0.2637074602944973
+  ],
+  [
+   "filed: results",
+   -0.21900100307015466
+  ],
+  [
+   "near its 52-week high",
+   -0.10340113430475334
+  ],
+  [
+   "filed: trouble",
+   -0.0923764023678117
+  ],
+  [
+   "share sale in prospect (shelf/prospectus)",
+   -0.06492971335534216
+  ],
+  [
+   "filed: disclosure",
+   -0.05741253891794301
+  ],
+  [
+   "up this quarter vs the market",
+   -0.04966252499202535
+  ],
+  [
+   "filed: restructure",
+   -0.04815525266941809
+  ],
+  [
+   "gapped up at this morning's open",
+   -0.038750714088087106
+  ],
+  [
+   "filed: deal",
+   -0.0012277836872362604
+  ]
+ ]
+}
