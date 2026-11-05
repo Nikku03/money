@@ -58,3 +58,45 @@ Known biases, stated in advance:
   live, going forward.
 - **Prior expectations.** The repo's record says to expect little: momentum, reversal, value and
   earnings-reaction hypotheses all failed (`research/RESULTS.md`).
+
+## P1 result, recorded 2026-11-05: **FAIL** (`research/paper/P1.json`)
+
+Test period 2016-02-16 to 2026-10-27, 539 weeks, of which it traded 533. Figures are per week,
+after costs:
+
+| book | mean | t | one-sided p | annualized | Sharpe | total | worst drawdown |
+|---|---|---|---|---|---|---|---|
+| **the learning trader** | **−0.171%** | −0.81 | 0.79 | −8.5% | −0.25 | **−79%** | −87.5% |
+| first half | −0.256% | −1.05 | 0.85 | | | −60% | |
+| second half | −0.087% | −0.25 | 0.60 | | | −49% | |
+| shuffled-outcome control | +0.032% | +0.47 | 0.32 | +1.7% | +0.15 | +11% | −32% |
+| 12-1 momentum book, no learning | −0.308% | −1.38 | 0.92 | −14.8% | −0.43 | −91% | −94% |
+| SPY, held (context) | +0.322% | +3.11 | 0.001 | +18.2% | +0.96 | +382% | −29% |
+| the 60 stocks, held equally (context; survivorship-biased) | +0.480% | +4.32 | <0.001 | +28.3% | +1.34 | +1002% | −27% |
+
+None of the three checks held: the mean is below 0, it is worse than the shuffled control, and it
+is negative in both halves.
+
+Looked at after the fact (not part of P1, and not a claim):
+
+- **Before costs**, the trader made +0.227% a week (t 1.06, p 0.14): no evidence of an edge. The
+  0.4% weekly cost turned noise into a steady loss.
+- **It was overconfident.** Its median predicted spread was +0.83% a week; it got +0.23%. So its
+  cost bar almost never held it back. The shuffled control, knowing nothing, predicted small spreads
+  and stayed flat in 451 of 539 weeks, which is why it lost less.
+- **The learned weights are tiny** (all under 0.002 per z-score). It found nothing durable: its
+  strongest leanings (towards volatile stocks and 12-1 momentum, away from stocks that move with the
+  market) are the kind that come and go.
+- **This agrees with the repo's record:** momentum, reversal, value and earnings-drift hypotheses all
+  failed (`research/RESULTS.md`).
+
+A fix for the overconfidence (trade only when the learner's own uncertainty allows it), or anything
+else, is a new test, P2, declared before it runs. P1 stays as recorded.
+
+## Live record
+
+Started 2026-11-04 (first step after that day's close) with **every weight at zero**, not seeded
+from the replay that failed. Each closed week updates it; its news weights can only be learned this
+way. `brain paper status` reports it; under 30 closed weeks it says nothing. On the first live day
+the news rules mis-tagged several headlines. They were tightened, and the day's step redone, before
+any outcome existed (`news.py`).

@@ -85,6 +85,20 @@ class NewsTest(unittest.TestCase):
         self.assertIn("news_downgrade", news.tag("Analyst downgrades Apple to underweight"))
         self.assertEqual(news.tag("Apple unveils new colors"), [])
 
+    def test_first_live_day_mistakes(self):
+        # paraphrases of 2026-11-04's mis-tags
+        self.assertEqual(news.tag("Top analyst reports for Microsoft and Marvell"), [])
+        self.assertEqual(news.tag("Apple may turn Siri into a paid upgrade"), [])
+        self.assertEqual(news.tag("Siri could become a paid upgrade, as the CEO plans to charge for it"), [])
+        self.assertIn("news_upgrade", news.tag("Ratings agency upgrades KLA to A"))
+        self.assertIn("news_beat", news.tag("Qualcomm tops fourth-quarter estimates"))
+        self.assertIn("news_upgrade", news.tag("Salesforce moves to strong buy after upgrade"))
+        self.assertFalse(news.about("Wells Fargo starts On Holding at overweight", news.aliases("WFC", "Wells Fargo & Company")))
+        self.assertFalse(news.about("Why Morgan Stanley sees 70% upside in a chip stock", news.aliases("MS", "Morgan Stanley")))
+        self.assertFalse(news.about("Upgrades and downgrades today: Adobe, Apple, Exxon, Fiserv, Visa", news.aliases("V", "Visa Inc.")))
+        self.assertTrue(news.about("Amgen raised guidance after an earnings beat", news.aliases("AMGN", "Amgen Inc.")))
+        self.assertEqual(set(news.tag("Amgen raised guidance after an earnings beat")), {"news_guide_up", "news_beat"})
+
 
 if __name__ == "__main__":
     unittest.main()

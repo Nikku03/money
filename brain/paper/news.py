@@ -2,20 +2,32 @@
 
 The per-ticker Yahoo feed (brain/sources/news.py) mixes in other companies' headlines (asked for NVDA
 on 2026-11-04, its top five were other firms' earnings calls), so a headline counts for a stock only
-if it names the company. Each counted headline is tagged by fixed, readable rules; the tags are the
-trader's news features, and their weights start at 0 and are learned only from outcomes, going
-forward (the feed holds no history).
+if it names the company as its subject (``about``).
+
+The first live run (2026-11-04) tagged "Top" as an earnings beat, a product "upgrade" as an analyst
+upgrade, and a bank's rating of another company as news about the bank. The rules were tightened the
+same day, before any of those trades' outcomes existed, and that first step was redone.
+
+Each counted headline is tagged by fixed, readable rules; the tags are the trader's news features,
+and their weights start at 0 and are learned only from outcomes, going forward (the feed holds no
+history).
 """
 from __future__ import annotations
 
 import re
 
 TAGS = {
-    "news_upgrade": r"\b(upgrade[sd]?|raises? (its )?(price )?target|outperform|overweight|buy rating)\b",
-    "news_downgrade": r"\b(downgrade[sd]?|cuts? (its )?(price )?target|underperform|underweight|sell rating)\b",
-    "news_beat": r"\b(beats?|tops?|surpass(es)?|exceeds?|record (revenue|profit|sales))\b",
-    "news_miss": r"\b(miss(es)?|falls? short|disappoint\w*|below (estimates|expectations))\b",
-    "news_guide_up": r"\b(raises?|lifts?|boosts?|hikes?) (its |full-year |annual )?(guidance|outlook|forecast)\b",
+    # analyst actions only: "upgrades X to buy", "raises price target", "moves to strong buy" (not a product upgrade)
+    "news_upgrade": r"\b(upgrade[sd]\b[^.]{0,30}\bto\b|upgrade \w+( \w+)? to (buy|outperform|overweight)|(raises?|lifts?|boosts?) (its |the )?price target|moves? to (strong )?buy|"
+                    r"(rated|rating|initiated|starts?)\b[^.]{0,25}\b(buy|outperform|overweight))",
+    "news_downgrade": r"\b(downgrade[sd]\b[^.]{0,30}\bto\b|downgrade \w+( \w+)? to (sell|underperform|underweight)|(cuts?|lowers?|slashes?) (its |the )?price target|moves? to (strong )?sell|"
+                      r"(rated|rating|initiated|starts?)\b[^.]{0,25}\b(sell|underperform|underweight))",
+    # results against a yardstick, not any "top" or "beat"
+    "news_beat": r"\b((beats?|tops?|surpass(es)?|exceeds?)\b[^.]{0,40}\b(estimates?|expectations|forecasts?|consensus|views?)|"
+                 r"earnings (and \w+ )?beat|record (quarterly )?(revenue|sales|profit)s?)\b",
+    "news_miss": r"\b((miss(es)?|falls? short of|trails?)\b[^.]{0,40}\b(estimates?|expectations|forecasts?|consensus|views?)|"
+                 r"earnings miss|below (estimates|expectations))\b",
+    "news_guide_up": r"\b(rais(es?|ed)|lift(s|ed)?|boost(s|ed)?|hike[sd]?) (its |full-year |annual )?(guidance|outlook|forecast)\b",
     "news_guide_down": r"\b(cuts?|lowers?|slashes?|withdraws?) (its |full-year |annual )?(guidance|outlook|forecast)\b",
     "news_approval": r"\b(approv(al|es|ed)|clearance|wins? (contract|deal|order))\b",
     "news_legal": r"\b(lawsuit|sued|probe|investigation|subpoena|antitrust|fine[ds]?|recall)\b",
@@ -38,8 +50,20 @@ def aliases(ticker: str, long_name: str | None) -> list[str]:
     return sorted(out, key=len, reverse=True)
 
 
+ACTOR = r"\W+(starts|initiates|upgrades|downgrades|sees|says|raises|cuts|lifts|rates|keeps|reiterates|expects)\b"
+
+
 def about(headline: str, names: list[str]) -> bool:
-    return any(re.search(rf"(?<![\w$]){re.escape(n)}(?!\w)", headline, re.I) for n in names)
+    """Names the company, as its subject: not a roundup of many companies, and not with the company as
+    the analyst ("Wells Fargo starts X at overweight" is news about X, not about Wells Fargo)."""
+    if headline.count(",") >= 3:                                   # "Top upgrades: A, B, C, D, ..." is a list
+        return False
+    for n in names:
+        if re.search(rf"(?<![\w$]){re.escape(n)}(?!\w)", headline, re.I):
+            if re.search(rf"(?<![\w$]){re.escape(n)}(\s\w+)?{ACTOR}", headline, re.I):
+                return False
+            return True
+    return False
 
 
 def tag(headline: str) -> list[str]:
