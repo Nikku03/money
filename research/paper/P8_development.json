@@ -1,0 +1,28 @@
+{
+ "test": "P8 development (in-sample)",
+ "run_at": "2026-11-05",
+ "weeks": 302,
+ "traded_weeks": 79,
+ "trades": 231,
+ "weekly_net": {
+  "mean": -0.0027386928932259936,
+  "t": -1.1824388405608586,
+  "p": 0.8814841903079691
+ },
+ "vs_random": {
+  "mean": -0.0031446663186480766,
+  "t": -1.3152084839149383,
+  "p": 0.9057800776738567
+ },
+ "vs_shuffled": {
+  "mean": -0.0018696240251599434,
+  "t": -0.6178588359934953,
+  "p": 0.7316658021716034
+ },
+ "checks": {
+  "beats random picks under the same exits (one-sided p < 0.05)": false,
+  "makes money after costs (one-sided p < 0.05)": false,
+  "beats the same learner taught shuffled outcomes (p < 0.05)": false
+ },
+ "verdict": "FAIL"
+}

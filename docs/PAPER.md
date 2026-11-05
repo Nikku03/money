@@ -842,3 +842,20 @@ exit-following, the same memory bank, and the same daily schedule.
 
 The held-out years 2016-2020 have now been used once, by P7, so they are no longer a clean test for
 P8. F2 is P8's test.
+
+## P8 development (in-sample, 2021-2026 on the 2021-chosen list), and F2's dry run, 2026-11-05
+
+**P8 development.** With memory, P8 did worse in-sample than P7 without it:
+- −0.27% a week after costs (p 0.88), against P7's −0.10%;
+- against random picks −0.31% (P7 −0.08%);
+- 231 trades in 79 weeks, mean −0.91% (median −3.2%, 38% winners).
+
+Memory was used ("it has traded this stock before" was among a pick's top reasons 37 times, "this
+stock often got stopped this year" 48), but recalling situations like the present one did not pick
+better stocks. Like every other feature here, the past cases it recalls do not predict direction.
+In-sample, this proves nothing either way. F2 stands as declared and is P8's only test.
+
+**F2's dry run.** The real forward list, real inputs, P8 in live mode, no ledger written: inputs in
+6.6 minutes, the machine in 5. On the latest weeks (2026-10-19 to 2026-11-02) its gate was shut
+(shadow record +0.3% to +0.5% a week, t 0.3 to 0.5, under the bar of 1). F2 will likely begin by
+staying out, as declared, until its record earns trades.
