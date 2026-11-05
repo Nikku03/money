@@ -766,3 +766,35 @@ here because it decided what happened next.
 no signal. Adjusting it until 2021-2026 looked good would be fitting those years. P7 is frozen at
 commit **465a14e** (moonshot3.py, moonshot2.py, moonshot.py, dossier.py as of that commit) and run
 once on the held-out 2016-2020, as declared.
+
+## P7 held-out result, recorded 2026-11-05: **FAIL** (`research/paper/P7_heldout.json`, `P7_heldout_journal.jsonl`)
+
+Run once, as declared: machine frozen at 465a14e, the 815 companies of `universe/p7_2015.json`,
+learning from 2011-06, trading 2016-01-04 to 2020-12-07 (the last week whose exits finished in 2020),
+no data after 2020-12-31.
+
+| per week (one-sided) | result |
+|---|---|
+| net after costs | +0.06% (t 0.23, p 0.41) |
+| minus random picks, same exits | −0.06% (t −0.26, p 0.60) |
+| minus the shuffled machine | +0.24% (t 0.66, p 0.26) |
+
+None of the three checks held.
+
+- **Trading:** the gate opened in only 36 of 258 weeks (17 in 2016, 19 in 2020, none in 2017-2019).
+- **Trades:** its 108 averaged +0.43% (median −4.8%, 34% winners).
+- **Validation:** it chose the strongest ridge in 233 of 258 refits.
+- **As a $1,000 account:** $1,000 → $1,046, against SPY's $2,054 over the same five years.
+
+**Where eight declared tests leave this trader.** On a stock list chosen without hindsight, in
+years it was never developed on, the best machine built here does no better than random picks,
+and stays out of the market most weeks because its own record never earns it the right to trade.
+P5's edge on the 2026-chosen list was survivorship. P4's was half look-ahead. The parts that hold
+up are:
+- the size effect (it finds stocks about to move a lot, either way);
+- exits that change the shape of the losses;
+- dossiers and post-mortems that explain each trade.
+
+None of them predicts direction.
+
+F1 keeps running forward, as declared, on the frozen P5 machine.

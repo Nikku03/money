@@ -1,0 +1,29 @@
+{
+ "test": "P7 held-out",
+ "declared_in": "docs/PAPER.md, commit 3729cb2; machine frozen at 465a14e; list universe/p7_2015.json",
+ "run_at": "2026-11-05",
+ "weeks": 258,
+ "traded_weeks": 36,
+ "trades": 108,
+ "weekly_net": {
+  "mean": 0.000593120286212525,
+  "t": 0.2284663796319187,
+  "p": 0.40964184507756635
+ },
+ "vs_random": {
+  "mean": -0.0006036951203087136,
+  "t": -0.2566451215255428,
+  "p": 0.6012736303100663
+ },
+ "vs_shuffled": {
+  "mean": 0.0023678680243767575,
+  "t": 0.6573267061078094,
+  "p": 0.2554854340479702
+ },
+ "checks": {
+  "beats random picks under the same exits (one-sided p < 0.05)": false,
+  "makes money after costs (one-sided p < 0.05)": false,
+  "beats the same learner taught shuffled outcomes (p < 0.05)": false
+ },
+ "verdict": "FAIL"
+}
