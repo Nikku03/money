@@ -695,3 +695,34 @@ What remains true:
 
 F1, the forward test, keeps running as declared, and will judge the machine on weeks no one has
 seen.
+
+# P7: develop on 2021-2026, judge once on 2016-2020 (declared 2026-11-05, before any 2016-2020 data was fetched)
+
+Every machine so far was built and judged on 2021-2026, so an improvement found by studying those
+years may only fit them. P7 separates the two:
+
+- **Development (in-sample, iterated freely):** the 2021-2026 weeks on `universe/p6_2021.json`.
+  Results there are reported as in-sample and prove nothing.
+- **Held-out test (run once):** trading weeks from 2016-01-04 to 2020-12-28 (the last first-session
+  whose exits finish in 2020's data), on a list chosen with 2015's data. No moonshot machine has
+  seen small-company data before 2021. The machine is frozen at a commit, named in this file, before
+  the held-out run, and is never changed after it. Whatever the result, it is recorded.
+
+**The held-out list, by P6's rule shifted back six years:** SEC's current ticker list, first plain
+ticker per CIK.
+- at least 240 Yahoo sessions in 2015, and trades on each of the last 20 sessions of 2015;
+- a median daily dollar volume from 2015-07-01 to 2015-12-31 between $1M and $20M;
+- a 2015-12-31 close of at least $1;
+- a 10-K or 10-Q filed before 2016-01-04.
+
+Its bias is the same as P6's: companies gone from SEC's list or Yahoo today are missing, and over
+10 years more of them are gone. The held-out machine learns from history before 2016-01-04 only
+(prices from 2011).
+
+**The held-out test, PASS only if all three hold** (one-sided p < 0.05, weekly, weeks it stays out
+count as 0):
+1. beats random picks from the list under the same exits;
+2. makes money after costs;
+3. beats the same machine taught shuffled outcomes.
+
+FAIL otherwise. This is the eighth declared test of a trader here.
