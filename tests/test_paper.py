@@ -316,3 +316,26 @@ class NoPeekTest(unittest.TestCase):
         ch.add(40, [0] * 1000, np.repeat(good, 1000, 0), [999] * 1000)  # ...but those trades finish at session 999
         self.assertEqual(ch.choose(41, 300)[0], 0)                    # at session 300 it cannot know that
         self.assertEqual(ch.choose(41, 1000)[0], 2)
+
+
+class P7Test(unittest.TestCase):
+    def test_gate_needs_a_finished_record(self):
+        from brain.paper import moonshot3 as m
+        good = [(i, 0.02 + 0.001 * (i % 3)) for i in range(40)]
+        self.assertTrue(m.gate(good, 100)[0])
+        self.assertFalse(m.gate(good[:20], 100)[0])                    # too short a record
+        self.assertFalse(m.gate(good, 10)[0])                           # those weeks had not finished by session 10
+        self.assertFalse(m.gate([(i, -0.01) for i in range(40)], 100)[0])
+
+    def test_ridge_strength_follows_the_signal(self):
+        from brain.paper import moonshot3 as m
+        rng = np.random.default_rng(0)
+        for signal, want in ((0.05, 3.0), (0.0, 300.0)):
+            st = m.Stats(4, seed=0)
+            st.set_scaler(rng.normal(size=(500, 4)))
+            for w in range(120):
+                X = rng.normal(size=(50, 4))
+                Y = np.column_stack([signal * X[:, 0] + 0.02 * rng.normal(size=50)] * 5)
+                st.add_week(w, X, Y)
+            st.fit(120)
+            self.assertEqual(st.lam, want)
