@@ -313,6 +313,6 @@ class NoPeekTest(unittest.TestCase):
         good = np.array([[0.0, 0.0, 0.5, 0.0, 0.0]])                 # E2 would have been great...
         for w in range(40):
             ch.add(w, [0], np.array([[0.1, 0.0, 0.0, 0.0, 0.0]]), [w * 5 + 14])
-        ch.add(40, [0], np.repeat(good, 1000, 0), [999] * 1000)      # ...but those trades finish at session 999
+        ch.add(40, [0] * 1000, np.repeat(good, 1000, 0), [999] * 1000)  # ...but those trades finish at session 999
         self.assertEqual(ch.choose(41, 300)[0], 0)                    # at session 300 it cannot know that
         self.assertEqual(ch.choose(41, 1000)[0], 2)
