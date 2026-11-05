@@ -102,3 +102,27 @@ class NewsTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class FilingsTest(unittest.TestCase):
+    def test_counts_are_point_in_time(self):
+        from brain.paper import filings
+        dates = pd.bdate_range("2024-01-01", periods=20).strftime("%Y-%m-%d")
+        hist = {"A": [("2024-01-08T15:00:00Z", {"sec_results"}),      # 10:00 New York, Jan 8: counts at Jan 8's close
+                      ("2024-01-08T22:00:00Z", {"sec_exec"})]}        # 17:00 New York: after the close, counts Jan 9
+        idx = filings.index_events(hist, dates)
+        i8 = list(dates).index("2024-01-08")
+        c = filings.counts(idx, ["A"], i8 - 5, i8)
+        self.assertEqual(c[0, filings.FILING_FEATURES.index("sec_results")], 1)
+        self.assertEqual(c[0, filings.FILING_FEATURES.index("sec_exec")], 0)
+        c9 = filings.counts(idx, ["A"], i8, i8 + 1)
+        self.assertEqual(c9[0, filings.FILING_FEATURES.index("sec_exec")], 1)
+
+    def test_learner_extends_without_forgetting(self):
+        L = Learner(["a", "b"])
+        L.update(np.eye(2), np.array([0.01, -0.01]))
+        w, P = L.w.copy(), L.P.copy()
+        L.extend(["a", "b", "c"])
+        np.testing.assert_allclose(L.w[:2], w)
+        np.testing.assert_allclose(L.P[:2, :2], P)
+        self.assertEqual(L.w[2], 0.0)

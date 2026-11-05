@@ -21,7 +21,7 @@ from datetime import datetime, timedelta, timezone
 import numpy as np
 
 from brain import config
-from brain.paper import data, features, news
+from brain.paper import data, features, filings, news
 from brain.paper.learner import Learner
 from brain.paper.replay import HORIZON, ROUND_TRIP, TOP, stats
 from brain.sources import news as feed
@@ -30,7 +30,7 @@ from brain.timeutil import now_iso
 
 DIR = config.ROOT / "research" / "paper"
 LEDGER, STATE = DIR / "ledger.jsonl", DIR / "state.json"
-NAMES = list(features.PRICE_FEATURES) + list(news.NEWS_FEATURES)
+NAMES = list(features.PRICE_FEATURES) + list(filings.FILING_FEATURES) + list(news.NEWS_FEATURES)
 NEWS_HOURS = 24
 
 
@@ -58,9 +58,22 @@ def save(s: dict) -> None:
     STATE.write_text(json.dumps(out, indent=1))
 
 
-def seed_from_replay(weights: list[float], s: dict) -> None:
-    """Start the price weights where the replay left them; news weights stay at 0 (no history)."""
-    s["learner"].w[: len(weights)] = weights
+def restart_from_replay(replay_learner: dict, reason: str) -> dict:
+    """Replace the live learner with a replay's whole memory (weights and their uncertainty), extended
+    with the headline features it never saw (weight 0). Any open book is dropped unlearned; the ledger
+    records why."""
+    L = Learner.load(replay_learner)
+    L.extend(NAMES)
+    if L.names != NAMES:                                       # same order as the live feature table
+        order = [L.names.index(n) for n in NAMES]
+        L.w, L.P, L.names = L.w[order], L.P[np.ix_(order, order)], list(NAMES)
+    old = load()
+    _append({"event": "restart", "reason": reason, "dropped_book": old.get("book") and
+             {k: old["book"][k] for k in ("entry", "trade", "longs", "shorts")}, "w": L.w.round(6).tolist(),
+             "names": NAMES, "updates": L.updates})
+    s = {"learner": L, "book": None}
+    save(s)
+    return s
 
 
 def headlines(stocks: list[str], now: datetime) -> dict:
@@ -112,6 +125,10 @@ def step(now: datetime | None = None, use_news: bool = True) -> dict:
     if book is None:
         i = len(px) - 1
         F = features.at(px, i, stocks)
+        hist = filings.history(stocks, log=lambda *_: None) if use_news else {t: [] for t in stocks}
+        C = filings.counts(filings.index_events(hist, px.index), stocks, i - HORIZON, i)
+        for j, name in enumerate(filings.FILING_FEATURES):
+            F[name] = C[:, j]
         nw = headlines(stocks, now) if use_news else {"counts": {t: dict.fromkeys(news.NEWS_FEATURES, 0) for t in stocks}, "kept": []}
         for tg in news.NEWS_FEATURES:
             F[tg] = [min(3, nw["counts"][t][tg]) for t in stocks]

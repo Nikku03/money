@@ -43,6 +43,14 @@ class Learner:
         return {"names": self.names, "w": self.w.tolist(), "P": self.P.tolist(), "forget": self.forget,
                 "updates": self.updates}
 
+    def extend(self, names: list[str], prior: float = PRIOR) -> None:
+        """Add features it has never seen: weight 0, prior variance, uncorrelated with what it knows."""
+        new = [n for n in names if n not in self.names]
+        k, m = len(self.names), len(new)
+        P = np.eye(k + m) * prior
+        P[:k, :k] = self.P
+        self.P, self.w, self.names = P, np.concatenate([self.w, np.zeros(m)]), self.names + new
+
     @classmethod
     def load(cls, s: dict) -> "Learner":
         L = cls(s["names"], forget=s["forget"])

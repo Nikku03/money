@@ -31,14 +31,19 @@ HORIZON = 5
 WARMUP = 52                  # learner updates before the test period starts (about a year)
 
 
-def run(px: pd.DataFrame | None = None, shuffle: bool = False, seed: int = 0, mode: str = "learn") -> dict:
-    """``mode`` "learn" (the trader) or "momentum" (fixed 12-1 momentum book, no learning)."""
+def run(px: pd.DataFrame | None = None, shuffle: bool = False, seed: int = 0, mode: str = "learn",
+        filings: dict | None = None) -> dict:
+    """``mode`` "learn" (the trader) or "momentum" (fixed 12-1 momentum book, no learning). With
+    ``filings`` (filings.history), the trader also sees each stock's SEC filings since its last decision."""
+    from brain.paper import filings as fl
     stocks = data.universe()
     if px is None:
         px = data.closes(stocks + [m for m in data.MACRO if m != "SPY"])
     stocks = [s for s in stocks if s in px and px[s].notna().iloc[features.YEAR:].all()]
     rng = np.random.default_rng(seed)
-    L = Learner(list(features.PRICE_FEATURES))
+    names = list(features.PRICE_FEATURES) + (list(fl.FILING_FEATURES) if filings is not None else [])
+    indexed = fl.index_events(filings, px.index) if filings is not None else None
+    L = Learner(names)
     rows = list(range(features.YEAR + 21, len(px) - HORIZON, HORIZON))
     weeks = []
     pending = None
@@ -49,6 +54,10 @@ def run(px: pd.DataFrame | None = None, shuffle: bool = False, seed: int = 0, mo
                 y0 = rng.permutation(y0)
             L.update(F0, y0)
         F = features.at(px, i, stocks)
+        if indexed is not None:
+            C = fl.counts(indexed, stocks, i - HORIZON, i)
+            for j, name in enumerate(fl.FILING_FEATURES):
+                F[name] = C[:, j]
         y = features.forward(px, i, stocks, HORIZON).values
         pred = L.predict(F.values) if mode == "learn" else F["mom_12_1"].values
         order = np.argsort(pred)
@@ -62,10 +71,13 @@ def run(px: pd.DataFrame | None = None, shuffle: bool = False, seed: int = 0, mo
                       "shorts": [stocks[j] for j in shorts] if trade else [],
                       "w": L.w.round(6).tolist()})
         pending = (F.values, y)
+    if pending is not None and mode == "learn":                # the last book closed too: its lesson counts
+        L.update(pending[0], rng.permutation(pending[1]) if shuffle else pending[1])
     spy = px["SPY"].iloc[rows].pct_change().shift(-1).fillna(0).values
     ew = (px[stocks].iloc[rows].pct_change().shift(-1).fillna(0).mean(axis=1).values)
-    return {"mode": mode, "shuffled": shuffle, "stocks": stocks, "features": list(features.PRICE_FEATURES),
-            "weeks": weeks, "spy_weekly": spy.tolist(), "ew_weekly": ew.tolist(), "final_w": L.w.tolist()}
+    return {"mode": mode, "shuffled": shuffle, "stocks": stocks, "features": names,
+            "weeks": weeks, "spy_weekly": spy.tolist(), "ew_weekly": ew.tolist(), "final_w": L.w.tolist(),
+            "learner": L.state(), "last_date": str(px.index[rows[-1]])}
 
 
 def stats(net: list[float]) -> dict:
@@ -87,8 +99,8 @@ def test_weeks(r: dict) -> list[dict]:
     return [w for w in r["weeks"] if w["updates"] >= WARMUP]
 
 
-def grade(trader: dict, shuffled: dict) -> dict:
-    """P1, as declared in docs/PAPER.md before the first run."""
+def grade(trader: dict, shuffled: dict, test: str = "P1") -> dict:
+    """P1 or P2, as declared in docs/PAPER.md before each first run (the same three checks)."""
     tw, sw = test_weeks(trader), test_weeks(shuffled)
     net = [w["net"] for w in tw]
     half = len(net) // 2
@@ -97,7 +109,7 @@ def grade(trader: dict, shuffled: dict) -> dict:
     checks = {"mean > 0 with one-sided p < 0.05": s["mean"] > 0 and s["p"] < 0.05,
               "beats the shuffled control": s["mean"] > sh["mean"],
               "mean > 0 in both halves": s1["mean"] > 0 and s2["mean"] > 0}
-    return {"test": "P1", "from": tw[0]["date"] if tw else None, "to": tw[-1]["date"] if tw else None,
+    return {"test": test, "from": tw[0]["date"] if tw else None, "to": tw[-1]["date"] if tw else None,
             "trader": s, "first_half": s1, "second_half": s2, "shuffled": sh,
             "traded_weeks": sum(w["trade"] for w in tw), "checks": checks,
             "verdict": "PASS" if all(checks.values()) else "FAIL"}

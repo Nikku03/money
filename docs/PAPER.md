@@ -100,3 +100,25 @@ from the replay that failed. Each closed week updates it; its news weights can o
 way. `brain paper status` reports it; under 30 closed weeks it says nothing. On the first live day
 the news rules mis-tagged several headlines. They were tightened, and the day's step redone, before
 any outcome existed (`news.py`).
+
+## The second test, declared before its first run (P2): prices and historical company news
+
+Asked to start from the past, with news, the trader gets the only dated news history available here
+for free: each company's SEC EDGAR filings since 2010, with the moment each became public. Written
+and committed before any filing history was fetched or the replay run.
+
+- **Added features** (`filings.py`): per stock, the filings public after the previous decision close
+  and by this one, counted by group (clipped at 2). The groups come from the 8-K form's own item list,
+  fixed in advance:
+  - `sec_results` 2.02, `sec_deal` 1.01/1.02/2.01, `sec_exec` 5.02;
+  - `sec_restructure` 2.05/2.06, `sec_trouble` 4.01/4.02/3.01/1.03/2.04;
+  - `sec_disclosure` 7.01/8.01, `sec_capital` 2.03/3.02;
+  - `sec_activist`: SC 13D and 13D/A.
+- **Everything else is as P1:** the same prices, universe, learner, costs and test period rule, and
+  the same three checks (mean > 0 with one-sided p < 0.05; beats the same learner taught shuffled
+  outcomes, now with the filings too; mean > 0 in both halves). FAIL otherwise.
+- **The live trader then continues from P2's learner** (its weights and their uncertainty), whatever
+  the verdict, as asked. The headline features it never saw in history start at 0. The handover is
+  recorded in the ledger as a `restart` event.
+- **Expectation, stated in advance:** filings become public before or at the reaction, and the repo's
+  earnings-event drift tests all failed (E1, E2), so little is expected beyond P1.

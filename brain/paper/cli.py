@@ -12,17 +12,23 @@ def _run(kw):
 
 
 def _replay(a):
-    from brain.paper import data, replay
+    from brain.paper import data, filings, replay
     px = data.closes(data.universe() + [m for m in data.MACRO if m != "SPY"])
+    fl = None
+    if a.test == "P2":
+        print("reading each company's SEC filing history (EDGAR; SEC_USER_AGENT required)...")
+        fl = filings.history(data.universe())
+        print(f"  {sum(len(v) for v in fl.values())} tagged filings across {sum(1 for v in fl.values() if v)} companies")
     with ProcessPoolExecutor(max_workers=3) as ex:
-        trader, shuffled, mom = ex.map(_run, [{"px": px}, {"px": px, "shuffle": True}, {"px": px, "mode": "momentum"}])
-    g = replay.grade(trader, shuffled)
+        trader, shuffled, mom = ex.map(_run, [{"px": px, "filings": fl}, {"px": px, "shuffle": True, "filings": fl},
+                                              {"px": px, "mode": "momentum"}])
+    g = replay.grade(trader, shuffled, test=a.test)
     tw = replay.test_weeks(trader)
     k = len(tw)
     spy = replay.stats(trader["spy_weekly"][-k:])
     ew = replay.stats(trader["ew_weekly"][-k:])
     momt = replay.stats([w["net"] for w in mom["weeks"][-k:]])
-    print(f"P1 test period {g['from']} .. {g['to']}: {g['trader']['weeks']} weeks, traded in {g['traded_weeks']}")
+    print(f"{a.test} test period {g['from']} .. {g['to']}: {g['trader']['weeks']} weeks, traded in {g['traded_weeks']}")
     fmt = lambda s: (f"mean/week {s['mean']:+.3%}  t {s['t']:+.2f}  p {s['p']:.3f}  annual {s['ann']:+.1%}"
                      f"  Sharpe {s['sharpe']:+.2f}  total {s['total']:+.1%}  worst drawdown {s['max_dd']:.1%}")
     print(f"  trader (after costs)  {fmt(g['trader'])}")
@@ -34,7 +40,7 @@ def _replay(a):
     print(f"  60 stocks held, equal (context; survivorship-biased)  {fmt(ew)}")
     for c, ok in g["checks"].items():
         print(f"  [{'x' if ok else ' '}] {c}")
-    print(f"P1: {g['verdict']}")
+    print(f"{a.test}: {g['verdict']}")
     print("final weights:", {n: round(w, 5) for n, w in zip(trader["features"], trader["final_w"])})
     if a.json:
         Path(a.json).write_text(json.dumps({"grade": g, "trader": trader, "shuffled": shuffled, "momentum": mom},
@@ -44,10 +50,6 @@ def _replay(a):
 
 def _step(a):
     from brain.paper import live
-    if a.seed_json and not live.STATE.exists():
-        s = live.load()
-        live.seed_from_replay(json.loads(Path(a.seed_json).read_text())["trader"]["final_w"], s)
-        live.save(s)
     r = live.step(use_news=not a.no_news)
     print(f"session {r['date']}")
     if r["closed"]:
@@ -63,6 +65,15 @@ def _step(a):
         tagged = [h for h in o["headlines"] if "tag" in h]
         print(f"  headlines tagged: {len(tagged)}" + "".join(f"\n    {h['ticker']} {h['tag']}: {h['headline'][:90]}" for h in tagged[:12]))
     print("paper only; commit research/paper/ to keep this step (the container is temporary)")
+
+
+def _restart(a):
+    from brain.paper import live
+    rep = json.loads(Path(a.from_replay).read_text())
+    s = live.restart_from_replay(rep["trader"]["learner"], a.reason)
+    L = s["learner"]
+    print(f"live learner replaced by the replay's memory: {L.updates} weekly lessons through {rep['trader']['last_date']};"
+          f" {len(L.names)} features ({sum(1 for n in L.names if n.startswith('news_'))} headline features start at 0)")
 
 
 def _status(a):
@@ -83,12 +94,16 @@ def _status(a):
 def add_cli(sub) -> None:
     p = sub.add_parser("paper", help="a paper trader that learns from its own closed trades (docs/PAPER.md)")
     s = p.add_subparsers(dest="paper_cmd", required=True)
-    q = s.add_parser("replay", help="walk-forward replay over past years, graded by the declared test P1")
+    q = s.add_parser("replay", help="walk-forward replay over past years, graded by a declared test")
+    q.add_argument("--test", choices=["P1", "P2"], default="P1", help="P1: prices; P2: prices and SEC filings")
     q.add_argument("--json", help="write the full replay here")
     q.set_defaults(fn=_replay)
     q = s.add_parser("step", help="one live day: close a due book, learn, open the next (paper only)")
     q.add_argument("--no-news", action="store_true")
-    q.add_argument("--seed-json", help="start the price weights from a replay's --json output")
     q.set_defaults(fn=_step)
+    q = s.add_parser("restart", help="give the live trader a replay's whole memory (recorded in the ledger)")
+    q.add_argument("--from-replay", required=True, help="a replay's --json output")
+    q.add_argument("--reason", required=True)
+    q.set_defaults(fn=_restart)
     q = s.add_parser("status", help="the live record so far")
     q.set_defaults(fn=_status)
