@@ -154,3 +154,57 @@ On 2026-11-05 the live trader was restarted from P2's learner, as declared: 591 
 with a predicted spread of +1.12%. That is its learned lean toward volatile stocks over steady ones.
 This is the paper decision of a model that failed both declared tests; it is recorded to be scored,
 and it is not a recommendation.
+
+# The time machine: a moonshot hunter living from 2021 (P3, `brain/paper/moonshot.py`)
+
+Asked for: a trader dropped into Monday 4 January 2021 at the opening bell, taking short-term paper
+trades aimed at moonshots, learning from every result why the stock moved, and using those lessons
+on its next trades. Paper only, a simulation of the past.
+
+## The rules, fixed before the first run
+
+- **Universe:** the 510 companies of `universe/us_small.json`.
+  **Survivorship, stated plainly:** the list was drawn up in 2026, so every member survived to 2026.
+  A trader in 2021 could not have known which would, so the list inflates every absolute result. Only
+  the comparison with random picks from the same list is fair, and that is what P3 tests.
+- **Clock:** each week's first session, at the open, from 2021-01-04 to the last week whose trades
+  have finished. It knows:
+  - prices up to the previous close, and that morning's opening prices;
+  - SEC filings public before 09:30 New York time.
+  Before 2021 it may study the outcomes it can see from mid-2020 (its features need a year of prices
+  first), as someone living then could. It takes no trades before 2021-01-04.
+- **The trade:** buy the 3 stocks it rates likeliest to moonshot, at the open.
+  - Exit at +20% (the moonshot), at −10%, or at the close of the 10th session, whichever comes first.
+  - A day touching both levels counts as the stop. An open beyond a level exits at that open.
+  - 0.25% cost each way.
+- **What it sees:**
+  - jumpiness (volatility, its largest move and its 10%+ days over the year);
+  - recent moves against SPY, and the morning's gap;
+  - distance from its 52-week high and low, price, dollar volume and volume surge;
+  - last week's SEC filings by 8-K group, a share sale in prospect, earnings likely during the hold;
+  - drug or biotech company or not;
+  - the market's last week and the VIX.
+- **How it learns:** the chance of hitting +20% before −10% within 10 sessions, by ridge logistic
+  regression. It learns from every stock it watched whose trade would have resolved before this
+  open, not only its own three, and refits each week, with older outcomes fading (half-life 52 weeks).
+- **Why it moved:** each closed trade's move is split into the market's part, oil's, bonds' and the
+  dollar's (the stock's sensitivity over the prior year times each asset's move), and the stock's own
+  remainder, plus the filings it made during the trade. This is attribution, what the move went with,
+  not proof of cause. A journal keeps every lesson, and every quarter what the learner currently
+  believes raises and lowers the odds.
+
+## P3: PASS only if all three hold
+
+1. The weekly mean net return of its trades beats the expected return of 3 random picks from the same
+   list that week, the same rules applied to every stock (one-sided t-test over weeks, p < 0.05).
+2. The weekly mean net return is above 0 (one-sided p < 0.05).
+3. It beats the same learner taught shuffled outcomes (outcomes permuted within each week),
+   one-sided p < 0.05.
+
+FAIL otherwise. Reported but not part of the test: its hit rate against the base rate, its hit rate
+year by year (is it getting smarter?), the first and second halves, and buying the 3 jumpiest stocks
+(size without direction, as the shock radar S1 does).
+
+**Expectation, stated in advance:** S1 has shown that size can be predicted, but every direction
+test in this repo has failed. A moonshot needs direction, so P3 will likely fail. It is run anyway,
+and recorded either way.

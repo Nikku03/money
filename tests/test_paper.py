@@ -126,3 +126,50 @@ class FilingsTest(unittest.TestCase):
         np.testing.assert_allclose(L.w[:2], w)
         np.testing.assert_allclose(L.P[:2, :2], P)
         self.assertEqual(L.w[2], 0.0)
+
+
+class MoonshotTest(unittest.TestCase):
+    def _P(self, o, h, l, c):
+        idx = pd.Index([f"d{i:02d}" for i in range(len(c))])
+        mk = lambda v: pd.DataFrame({"X": v}, index=idx, dtype=float)
+        return {"open": mk(o), "high": mk(h), "low": mk(l), "close": mk(c)}
+
+    def test_exit_rules(self):
+        from brain.paper import moonshot as m
+        n = m.HOLD + 2
+        flat = [100.0] * n
+        # target hit on day 2: +20% gross
+        P = self._P(flat, [100, 105, 121] + [100] * (n - 3), [99] * n, flat)
+        O = m.outcomes(P, ["X"], 0)
+        self.assertTrue(O["hit"].iloc[0])
+        self.assertAlmostEqual(O["net"].iloc[0], m.TARGET - 2 * m.COST)
+        self.assertEqual(O["exit"].iloc[0], 2)
+        # both touched the same day: the stop counts
+        P = self._P(flat, [100, 125] + [100] * (n - 2), [100, 85] + [99] * (n - 2), flat)
+        O = m.outcomes(P, ["X"], 0)
+        self.assertFalse(O["hit"].iloc[0])
+        self.assertAlmostEqual(O["net"].iloc[0], -m.STOP - 2 * m.COST)
+        # gap down through the stop: out at the open, worse than the stop
+        o = [100, 80] + [80] * (n - 2)
+        P = self._P(o, [100] + [80] * (n - 1), [99] + [79] * (n - 1), [100] + [80] * (n - 1))
+        self.assertAlmostEqual(m.outcomes(P, ["X"], 0)["net"].iloc[0], -0.20 - 2 * m.COST)
+        # neither: out at the close of the last day held
+        c = [100.0] * (m.HOLD - 1) + [105.0] * 3
+        P = self._P(flat, [106] * n, [99] * n, c)
+        self.assertAlmostEqual(m.outcomes(P, ["X"], 0)["net"].iloc[0], 0.05 - 2 * m.COST)
+
+    def test_before_the_bell(self):
+        from brain.paper import moonshot as m
+        dates = np.array(["2021-01-04", "2021-01-05", "2021-01-06"])
+        self.assertEqual(m.visible_index(dates, "2021-01-05T12:00:00Z"), 1)   # 07:00 New York: that day's open
+        self.assertEqual(m.visible_index(dates, "2021-01-05T15:00:00Z"), 2)   # 10:00 New York: the next open
+
+    def test_learner_ranks_a_planted_signal(self):
+        from brain.paper import moonshot as m
+        rng = np.random.default_rng(0)
+        X = rng.normal(size=(3000, len(m.FEATURES)))
+        y = (rng.random(3000) < 1 / (1 + np.exp(-(-2 + 1.5 * X[:, 0])))).astype(float)
+        L = m.Learner()
+        L.fit(X, y, np.zeros(3000))
+        self.assertGreater(L.w[1], 1.0)
+        self.assertEqual(L.lessons(1)[0][0], m.PLAIN[m.FEATURES[0]])
