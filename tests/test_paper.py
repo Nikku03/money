@@ -226,3 +226,26 @@ class DynamicExitTest(unittest.TestCase):
         prm = {"target": None, "stop": np.array([0.10]), "trail": np.array([0.10]), "hold": 15}
         net, _ = m.run_exit(*self._arr([100] + [150] * 15, [151] * 16, [95] + [149] * 15, c), 0, prm)
         self.assertGreater(net[0], 0.3)
+
+
+class MissesTest(unittest.TestCase):
+    def test_anatomy_and_causes(self):
+        from brain.paper import misses
+        o = np.array([10.0, 10.1, 13.0, 13.1, 13.2])
+        c = np.array([10.1, 10.2, 13.0, 13.2, 13.3])
+        a = misses.anatomy(o, c, 0, 4)
+        self.assertEqual(a["shape"], "one jump")
+        self.assertEqual(a["jump_kind"], "gap")
+        self.assertEqual(a["jump_at"], 2)
+        self.assertGreater(a["overnight_share"], 0.8)
+        self.assertEqual(misses.classify(a, {"sec_results"}, {"sec_results"}, 0, 0, 0, 1), "earnings jump")
+        self.assertEqual(misses.classify(a, set(), set(), 0, 0, 0, 1), "jump with no filing (news not in its filings)")
+        steady = misses.anatomy(np.linspace(10, 12, 11), np.linspace(10.1, 12.2, 11), 0, 10)
+        self.assertEqual(steady["shape"], "steady climb")
+        self.assertEqual(misses.classify(steady, set(), set(), 0.5, 5, 0.0, 1), "industry wave")
+        self.assertEqual(misses.classify(steady, set(), set(), 0.0, 5, 0.0, 1), "steady climb")
+
+    def test_auc(self):
+        from brain.paper import misses
+        self.assertAlmostEqual(misses.auc(np.array([3.0, 2.0, 1.0, 0.0]), np.array([1, 1, 0, 0])), 1.0)
+        self.assertAlmostEqual(misses.auc(np.array([1.0, 1.0, 1.0, 1.0]), np.array([1, 0, 1, 0])), 0.5)

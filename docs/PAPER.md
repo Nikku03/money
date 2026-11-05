@@ -413,3 +413,77 @@ fell to $642 by early 2023 (a −48% fall from its peak). The account at each ye
 
 With full stakes it ends at $3,340. Because of the survivorship bias above, these figures overstate
 what a trader in 2021 could have had.
+
+## Every moonshot that happened, and why (`misses.py`; `research/paper/P4_moonshots.jsonl`)
+
+The trader studied its own trades. This review asks "why?" of every moonshot that happened, caught
+or missed: each tradable stock that, bought at a week's first open, reached +20% before −10% within
+10 sessions. It uses P4's run, re-run with every stock's weekly score recorded; the result is
+identical to the declared run. This is hindsight: it explains, it does not predict.
+
+**How many it caught.** About 19 moonshots happened each week. Over 302 weeks there were 5,729; the
+trader caught 154 (2.7%). Three random picks a week would catch about 0.6%, so it did about 4.4
+times better than chance and still missed 97%.
+
+| year | moonshots | caught | in its top 10 | in its top tenth | ranking skill (AUC; 0.5 = coin) |
+|---|---|---|---|---|---|
+| 2021 | 1,049 | 30 | 84 | 231 | 0.57 |
+| 2022 | 845 | 18 | 43 | 115 | 0.52 |
+| 2023 | 776 | 18 | 65 | 204 | 0.56 |
+| 2024 | 995 | 34 | 78 | 200 | 0.56 |
+| 2025 | 1,055 | 28 | 64 | 215 | 0.56 |
+| 2026 (to Oct) | 1,009 | 26 | 77 | 271 | 0.62 |
+
+Its ranking is a little better than a coin and did not improve steadily. 2026's 0.62 is its best year,
+but one year is not a trend. Of the missed ones, 19% were in its top tenth that morning, 36% in its
+top quarter, and 44% in its bottom half: for those, it saw nothing. Only 6 were in its top 3 and left
+out for scoring under its bar.
+
+**Why the missed moonshots happened** (primary cause, first that fits):
+
+| cause | missed | caught |
+|---|---|---|
+| steady climb, no single jump | 22% | 12% |
+| mixed (a big day plus a climb) | 27% | 33% |
+| industry wave (median 50% of its industry up 10%+ with it) | 18% | 8% |
+| jump with no SEC filing (news this system cannot see) | 16% | 38% |
+| earnings jump | 12% | 8% |
+| deal or activist jump | 1% | 1% |
+| other filed-news jump | 2% | 1% |
+| market wave | 2% | 0% |
+
+Factors present among the missed (several at once):
+- 35% were steady climbs, 31% one jump;
+- 30% had earnings expected in the window;
+- the market was up 3%+ in 21%;
+- an industry wave in 21%;
+- mostly overnight in 16%;
+- volume tripled or more in 7%.
+
+What this says:
+
+- **It catches surprises in jumpy stocks and misses trends and waves.** Its catches are mostly jumps
+  with no filing behind them, in the cheap, jumpy stocks it favours. It misses most steady climbs and
+  industry waves. The largest waves were July 2024, April 2026, November 2024 and February 2021,
+  months when whole industries moved together.
+- **What the missed moonshots looked like.** Against an ordinary stock, they had more 10%+ days and
+  a huge move earlier in the year, a big move that week, were further from their 52-week high,
+  and were more often under $5. Against its picks, they were less extreme: further up over the past
+  week, month and quarter, nearer their highs, and higher priced. So the missed ones are jumpy too,
+  but trending, where its picks are the very jumpiest.
+- **Earnings were knowable and not used.** 71% of the missed earnings jumps had earnings expected in
+  the window, yet the median one ranked at the 37th percentile. A report date says a big move is
+  likely, but not which way.
+- **Some causes are outside its sight.** The biggest misses were jumps of 75-107% (log) in a few
+  days, mostly overnight on huge volume: NKTR twice in June 2025, REPX in January 2021, OMER in
+  October 2025 (a deal), and CAR in October 2021 (earnings, ranked 484 of 486). The news that moved
+  most of them came from outside its filings: trial results, press releases, a short squeeze.
+
+**What reaches the next trade.** The trader already learns from every stock's outcome, missed
+moonshots included; that is how its model is fitted. The review adds what the model cannot learn on
+its own: causes it has no feature for. Two candidates, both found by looking at these same years:
+1. an industry-wave feature: how its industry moved over the last week, measured at the open;
+2. trend inside jumpy stocks.
+
+Adding them and testing on 2021-2026 would be testing on the data that suggested them, so the only
+clean test of them is forward, from now.

@@ -1,0 +1,136 @@
+{
+ "by_year": {
+  "2021": {
+   "moonshots": 1049,
+   "caught": 30,
+   "in_top3": 30,
+   "in_top10": 84,
+   "in_top_tenth": 231,
+   "auc": 0.5707025022540002
+  },
+  "2022": {
+   "moonshots": 845,
+   "caught": 18,
+   "in_top3": 18,
+   "in_top10": 43,
+   "in_top_tenth": 115,
+   "auc": 0.5182573271505065
+  },
+  "2023": {
+   "moonshots": 776,
+   "caught": 18,
+   "in_top3": 24,
+   "in_top10": 65,
+   "in_top_tenth": 204,
+   "auc": 0.5608614993957415
+  },
+  "2024": {
+   "moonshots": 995,
+   "caught": 34,
+   "in_top3": 34,
+   "in_top10": 78,
+   "in_top_tenth": 200,
+   "auc": 0.5630500815581775
+  },
+  "2025": {
+   "moonshots": 1055,
+   "caught": 28,
+   "in_top3": 28,
+   "in_top10": 64,
+   "in_top_tenth": 215,
+   "auc": 0.5572326946561799
+  },
+  "2026": {
+   "moonshots": 1009,
+   "caught": 26,
+   "in_top3": 26,
+   "in_top10": 77,
+   "in_top_tenth": 271,
+   "auc": 0.6211043189183724
+  }
+ },
+ "blind_spots": [
+  [
+   "penny stock (under $5)",
+   -1.6743159327195554,
+   0.647382499153304
+  ],
+  [
+   "big move this week",
+   -1.2573864298319246,
+   0.729594291157252
+  ],
+  [
+   "up this week vs the market",
+   1.2155245085667952,
+   0.03282467176561398
+  ],
+  [
+   "up this month vs the market",
+   1.1148532641935571,
+   0.048504656171050306
+  ],
+  [
+   "big move yesterday",
+   -1.0654834978857939,
+   0.5315130643914099
+  ],
+  [
+   "higher share price",
+   1.0424435954908473,
+   -0.6795036759157352
+  ],
+  [
+   "near its 52-week high",
+   1.0379878820878572,
+   -0.8133558895609304
+  ],
+  [
+   "many 10%+ days this year",
+   -0.9429741070180313,
+   1.147156773132059
+  ],
+  [
+   "more dollar volume (liquid)",
+   0.7473487142078111,
+   0.03936062177200488
+  ],
+  [
+   "up this quarter vs the market",
+   0.6961522813413393,
+   -0.0027838284285079205
+  ],
+  [
+   "volume surging",
+   -0.6011290834341718,
+   -0.057248073683993164
+  ],
+  [
+   "had a huge one-day move this year",
+   -0.5968855070556021,
+   0.9226358017205123
+  ]
+ ],
+ "causes": {
+  "earnings jump": 688,
+  "deal jump": 62,
+  "other filed-news jump": 89,
+  "jump with no filing (news not in its filings)": 886,
+  "industry wave": 983,
+  "market wave": 118,
+  "steady climb": 1224,
+  "mixed": 1525
+ },
+ "causes_caught": {
+  "earnings jump": 12,
+  "deal jump": 2,
+  "other filed-news jump": 1,
+  "jump with no filing (news not in its filings)": 58,
+  "industry wave": 12,
+  "market wave": 0,
+  "steady climb": 18,
+  "mixed": 51
+ },
+ "moonshots": 5729,
+ "caught": 154
+}

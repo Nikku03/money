@@ -241,7 +241,9 @@ def lesson(dg: dict) -> str:
 
 # --- the simulation ---------------------------------------------------------------------------------------
 def simulate(raw: dict, sec: dict, stocks: list[str], start: str = m1.START, shuffle: bool = False,
-             seed: int = 0, journal: bool = True) -> dict:
+             seed: int = 0, journal: bool = True, record_all: bool = False) -> dict:
+    """``record_all`` keeps, for every week, every stock's score and outcome too (for the review of the
+    moonshots it missed, brain/paper/misses.py); it changes nothing the trader does."""
     P = m1.panels(raw)
     dates = P["close"].index.values
     stocks = [s for s in stocks if s in P["close"] and P["close"][s].iloc[:260].notna().sum() > 200]
@@ -255,6 +257,7 @@ def simulate(raw: dict, sec: dict, stocks: list[str], start: str = m1.START, shu
     memo = []                                                      # (week, resolved_at, stock idx, hit, stop, net) under E0
     vixs = []
     trades, weeks, record = [], [], []
+    every = []
     for wk, d in enumerate(firsts):
         F = m1.panel(P, stocks, events, sec.get("sic", {}), d)
         ok = m1.tradable(P, stocks, d) & np.isfinite(F.values).all(1)
@@ -309,6 +312,9 @@ def simulate(raw: dict, sec: dict, stocks: list[str], start: str = m1.START, shu
                     trades.append(dg)
                     book.append(dg["net"])
                 rnd = float(np.mean(nets[ok, :][np.arange(ok.sum()), cj[ok]]))
+                if record_all:
+                    every.append({"d": d, "ok": ok.copy(), "score": np.where(np.isfinite(score), score, np.nan).astype(np.float32),
+                                  "picked": np.isin(np.arange(len(stocks)), picks), "X": X.astype(np.float32)})
             else:
                 rnd = float(np.mean(nets[ok, 0]))
             edge_hist = [x for x in record[-26:]]
@@ -329,7 +335,10 @@ def simulate(raw: dict, sec: dict, stocks: list[str], start: str = m1.START, shu
         for j in np.flatnonzero(ok):
             n0 = float(e0n[j])
             memo.append((wk, int(e0x[j]), j, float(n0 >= 0.20 - 2 * m1.COST - 1e-9), float(n0 <= -0.10 - 2 * m1.COST + 1e-9), n0))
-    return {"trades": trades, "weeks": weeks, "stocks": len(stocks), "shuffled": shuffle}
+    out = {"trades": trades, "weeks": weeks, "stocks": len(stocks), "shuffled": shuffle}
+    if record_all:
+        out.update(every=every, names=stocks)
+    return out
 
 
 def grade(run: dict, shuffled: dict) -> dict:
