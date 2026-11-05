@@ -859,3 +859,33 @@ In-sample, this proves nothing either way. F2 stands as declared and is P8's onl
 6.6 minutes, the machine in 5. On the latest weeks (2026-10-19 to 2026-11-02) its gate was shut
 (shadow record +0.3% to +0.5% a week, t 0.3 to 0.5, under the bar of 1). F2 will likely begin by
 staying out, as declared, until its record earns trades.
+
+# Attention (`attention.py`), and F3: the machine with attention over memory (declared 2026-11-05)
+
+**What attention adds.** P8 recalled the 50 nearest past situations by a fixed distance, every
+feature counting the same. Attention learns what "near" should mean: one scaled dot-product head,
+query and key projections (8 dimensions) learned by gradient descent.
+- **Values:** how each remembered situation turned out, its net under each exit and whether it hit
+  +20%.
+- **Training:** only on finished situations. Queries are from the latest 26 finished weeks, keys at
+  least 3 weeks older still, and the latest fifth of query weeks is held out to stop training at
+  its best.
+- **Retraining:** every 13 weeks.
+- **At a decision:** it attends over everything finished before that open, and each pick names the
+  past situations it attended to most.
+- **Sharpness is bounded** (each projection's norm is held at 6 or under). A first version put 91% of
+  one pick's attention on a single week of March 2020: matching an outlier, not learning from many
+  cases. The bound was chosen on a synthetic problem with a planted answer, never on market data.
+- **Tests:** with the answer planted in one feature, attention learns to look at that feature (its
+  recall correlates 0.83 with the truth, where uniform attention gives about 0). It never attends to
+  a situation that had not finished by the decision.
+
+**P9 = P8 + attention** (`moonshot3.simulate(memory=True, attention=True)`): attention's recall
+(each exit's net, the +20% rate) enters as six features. With attention off, the code reproduces P7
+and P8 exactly.
+
+**F3, declared before its first week.** P9 trades forward on paper from the week of 2026-11-09, on
+`universe/us_small.json`, beside F1 and F2, with the same ledger rules (`research/paper/forward3/`),
+exit-following, memory bank, daily schedule, and test. That test is read once 30 weeks have fully
+closed, and needs all three checks at one-sided p < 0.05. P9's in-sample development run on
+2021-2026 is reported when it finishes, and proves nothing either way.

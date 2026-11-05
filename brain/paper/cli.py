@@ -96,6 +96,11 @@ def _forward2(a):
     _forward(a, fw)
 
 
+def _forward3(a):
+    from brain.paper import forward3 as fw
+    _forward(a, fw)
+
+
 def _forward(a, fw=None):
     from brain.paper import forward
     forward = fw or forward
@@ -161,6 +166,9 @@ def add_cli(sub) -> None:
     q = s.add_parser("forward2", help="F2: the P8 machine (with memory) trading forward on paper (needs SEC_USER_AGENT)")
     q.add_argument("action", choices=["step", "status"])
     q.set_defaults(fn=_forward2)
+    q = s.add_parser("forward3", help="F3: the P9 machine (memory with attention) trading forward on paper")
+    q.add_argument("action", choices=["step", "status"])
+    q.set_defaults(fn=_forward3)
     q = s.add_parser("memory", help="the trader's memory bank: backfill it, or recall a company as of a date")
     q.add_argument("action", choices=["backfill", "recall"])
     q.add_argument("ticker", nargs="?")
