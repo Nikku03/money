@@ -1163,3 +1163,102 @@ account. That overstated their losses. With the method used everywhere else:
 | P10 held-out | $703 | $994 |
 
 No verdict changes. The method is now code (`review.account`).
+
+## The P11 review: what every version got right and wrong (2026-11-06, on seen data only)
+
+`review.py` rebuilt the ground truth every version was trying to learn: every tradable stock in every
+week of 2016-2020 (the 2015-chosen list, 167,116 stock-weeks) and 2021-2026 (the 2021-chosen list,
+201,196), with every exit's outcome. No 2013-2015 outcome was used.
+
+**1. Head to head on the same list and years (2021-2026, 2021-chosen list), as $1,000 accounts:**
+
+| | P5 machine (P6) | P7 | P8 | P9 | P10 |
+|---|---|---|---|---|---|
+| $1,000 became | $1,524 | $933 | $865 | $766 | $627 |
+| vs random, per week | +0.49% | −0.04% | −0.19% | +0.06% | +0.08% |
+| weeks traded | 289 | 123 | 79 | 112 | 96 |
+
+- The versions' weekly edges barely move together: P5's correlates 0.02-0.14 with the others.
+- No version was ahead year after year.
+- On the held-out 2016-2020, P7 made $1,046 and P10 $994, against SPY's $2,054.
+
+**2. What every version chased loses.** The traits that make a +20% run likelier make the −10% stop
+likelier still. For E0, a trait's rank correlation with hitting +20% runs about +0.15 to +0.22, and
+with being stopped +0.22 to +0.32. Its rank correlation with the net is negative in both periods:
+- volatility, many 10% days, a lottery-like day this year, big recent moves (t −3 to −17);
+- penny prices, biotech, share sales in prospect, dilution.
+
+  | the versions' picks, in standard deviations from their list | volatility | lottery-like day | penny | profitable | near 52-week high | gapped up at the open |
+  |---|---|---|---|---|---|---|
+  | P5 machine (P6) | +0.49 | +0.86 | +0.75 | −0.31 | −0.43 | **−0.29** |
+  | P7-P10, development | +0.77 to +1.10 | +0.79 to +1.20 | +0.61 to +0.84 | −0.49 to −0.62 | −0.78 to −1.24 | **+0.78 to +1.28** |
+  | P7 and P10, held-out | +0.36 to +0.80 | +0.86 to +0.94 | +0.44 to +0.71 | −0.36 to −0.52 | −0.80 to −0.92 | +1.27 and −0.11 |
+
+  **What P5 got right that the others got wrong:** it picked calmer stocks, and it bought gap-downs
+  where P7-P10 chased gap-ups.
+
+**3. Sixteen lessons held in both periods,** for the fixed, trailing and follow-through exits alike:
+the same sign, and |t| of at least 2 in each period for each exit.
+- **Against:** volatility (20- and 60-day), many 10% days, a lottery-like day this year, a big move
+  yesterday or this week, penny prices, biotech, a share sale in prospect, dilution.
+- **For:** profitability, operating margin, cash runway, liquidity, results that usually lift the
+  stock, an older last report.
+- **Flipped between periods:** gross margin, sensitivity to credit, sensitivity to the dollar.
+
+  Inside each version, the picks that scored better on these lessons did better in five of seven runs.
+
+**4. The lessons tell the worst from the rest. They do not find winners.**
+- Their top 3 or top 10 by score are calm stocks that rarely move. In 2021-2026 the top 3 did worse
+  than the list (t −1.7).
+- Among the most volatile third (the stocks that can run 20%), they separate the worst. The bottom
+  five lost −0.18% and −0.94% a week under E0; the top five +0.03% and −0.01%.
+
+**5. When to hunt.** Moonshot trades on the whole list did better in weeks of high fear (the VIX above
+its past-year median):
+
+| list E0 net, per week | fear high | fear low |
+|---|---|---|
+| 2016-2020 | +0.26% | −0.20% |
+| 2021-2026 | +0.23% | −0.41% |
+
+**6. The exit.** The breakeven exit (E3) had the best average on the whole list in both periods
+(+0.30% and −0.01%; E0 +0.02% and −0.14%).
+
+**7. With the outcomes scrambled across all stock-weeks,** no trait lesson survives and the fear effect
+disappears.
+
+**Six designs tried on these two periods** (in-sample: both periods taught the lessons). Ten picks; weeks
+out count as 0, as in the declared test:
+
+| design | exit | 2016-20 vs random | 2016-20 net | 2021-26 vs random | 2021-26 net |
+|---|---|---|---|---|---|
+| fear gate, random picks | E0 | +0.15% (t 1.7) | +0.28% (t 1.4) | −0.07% (t −0.7) | +0.03% (t 0.2) |
+| fear gate, random picks | E3 | −0.12% (t −1.2) | +0.22% (t 0.9) | +0.03% (t 0.3) | +0.28% (t 1.3) |
+| **fear gate, best lessons among the most volatile third** | E0 | +0.02% (t 0.2) | +0.15% (t 0.7) | +0.17% (t 2.1) | +0.27% (t 1.6) |
+| **fear gate, best lessons among the most volatile third** | **E3** | **+0.01% (t 0.1)** | **+0.35% (t 1.4)** | **+0.12% (t 1.1)** | **+0.37% (t 1.8)** |
+| fear gate, best lessons overall | E0 | −0.04% (t −0.5) | +0.08% (t 0.5) | −0.08% (t −1.0) | +0.02% (t 0.2) |
+| fear gate, best lessons overall | E3 | −0.06% (t −0.6) | +0.28% (t 1.5) | −0.10% (t −1.1) | +0.14% (t 0.9) |
+
+Even on the years they came from, none clears p < 0.05 on beating random picks in both periods. The
+most consistent is the bold row. E3 was chosen as the exit by finding 6, not by this table.
+
+# P11 as frozen (`moonshot5.py`)
+
+- **When:** it trades only in weeks of high fear (the VIX at the last close above the median of its
+  last 52 weekly readings).
+- **What:** only the most volatile third of the tradable list.
+- **Rank:** by the sixteen lessons, each trait's gaussianized rank with its sign, equally weighted.
+- **Buy:** the top ten at the open, each with E3 (−10% stop, moved to the entry once a close is 10% up;
+  +30% target; 15 sessions).
+- **It checks its own lessons** on its finished history. A lesson running against its sign over the
+  last 104 finished weeks (at least 52) with t below −2 is set aside until it recovers.
+- **The control** is the same machine taught scrambled outcomes: no lessons and no fear effect, so it
+  trades every week, ranks the volatile third at random, and uses E3.
+- **The test** is the one declared above: 2013-2015 on the 2012-chosen list, graded as P7-P10 (weeks
+  out count as 0).
+- **As a $1,000 account:** each trade takes 1/20 of the account's value (ten a week, held up to three
+  weeks).
+
+P11's lessons were learned on 2016-2026 and are tested on earlier years. That tests whether they hold
+in years they were not learned on, which is what using them in the future depends on. It is not what
+a trader living in 2013 could have known.

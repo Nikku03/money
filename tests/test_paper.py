@@ -523,3 +523,36 @@ class MarketTest(unittest.TestCase):
         A = mk.StateAttention(12, seed=0)
         A.fit(S, V, at=200)
         self.assertGreater(A.val_loss, 0.9 * A.base_loss)              # a query that could see itself would recall its answer
+
+
+class P11Test(unittest.TestCase):
+    def test_lessons_rank_quality_above_lottery(self):
+        from brain.paper import moonshot5 as m
+        rng = np.random.default_rng(0)
+        n = 200
+        X = pd.DataFrame({k: rng.normal(size=n) for k in m.LESSONS})
+        X.loc[0, list(m.LESSONS)] = [3.0 * s for s in m.LESSONS.values()]      # everything the lessons like
+        X.loc[1, list(m.LESSONS)] = [-3.0 * s for s in m.LESSONS.values()]     # everything they dislike
+        sc, C = m.score(X, np.ones(n, bool), m.LESSONS)
+        self.assertEqual(int(np.argmax(sc)), 0)
+        self.assertEqual(int(np.argmin(sc)), 1)
+        self.assertEqual(C.shape, (n, len(m.LESSONS)))
+
+    def test_fear_is_the_vix_above_its_past_year_median(self):
+        from brain.paper import moonshot5 as m
+        calm = [2.8] * 60
+        self.assertFalse(m.fear(calm))
+        self.assertTrue(m.fear(calm + [3.2]))
+        self.assertFalse(m.fear(calm + [2.7]))
+
+    def test_a_lesson_that_stops_working_is_set_aside_only_once_known(self):
+        from brain.paper import moonshot5 as m
+        rec = [(10 * i, {"lv20": 0.05 + 0.01 * (i % 3), "f_profitable": 0.03 + 0.01 * (i % 2)}) for i in range(80)]
+        kept = m.health(rec, 10_000, {"lv20": -1, "f_profitable": 1})
+        self.assertEqual(kept, {"f_profitable": 1})                         # volatility began to pay: set aside
+        self.assertEqual(m.health(rec, 300, {"lv20": -1, "f_profitable": 1}),  # too few finished weeks by then
+                         {"lv20": -1, "f_profitable": 1})
+
+    def test_the_control_has_no_lessons(self):
+        from brain.paper import moonshot5 as m
+        self.assertEqual(m.score(pd.DataFrame({"x": [1.0, 2.0]}), np.ones(2, bool), {})[0].tolist(), [0.0, 0.0])
