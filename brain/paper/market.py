@@ -417,7 +417,7 @@ class MarketModel:
                 + (f"It had expected {', '.join(f'{n} ({v:+.2%})' for n, v in exp)} to pay; its ranking of the list "
                    f"came out with a rank correlation of {ic:+.2f}." if exp is not None and np.isfinite(ic)
                    else "It was not forecasting yet."))
-        return {"week": str(self.dates[pv["d"]]), "market": spy, "list_vs_market": lvm, "explained": r2,
+        return {"week": str(self.dates[pv["d"]]), "known": str(self.dates[d]), "market": spy, "list_vs_market": lvm, "explained": r2,
                 "forces": moves, "paid": paid, "punished": punished, "expected": exp,
                 "ic": ic, "attended": self.last.get("att_top") if exp is not None else None, "lesson": text}
 

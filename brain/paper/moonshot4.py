@@ -210,7 +210,7 @@ def simulate(raw: dict, sec: dict, facts: dict, stocks: list[str], start: str, e
     return {"trades": trades, "weeks": weeks, "stocks": len(stocks), "shuffled": shuffle, "start": start,
             "learned_from": str(dates[firsts[0]]), "end_data": end_data, "pending": pending,
             "pending_weeks": pending_weeks, "last_date": str(dates[-1]),
-            "market": mm.journal if journal else [], "beliefs": beliefs, "final_belief": mm.belief(),
+            "market": mm.journal, "beliefs": beliefs, "final_belief": mm.belief(),
             "market_record": [{"week": w, "ic": ic, "ic_static": ics, "explained": r2}
                               for w, ic, ics, r2 in zip(H["date"], H["ic"], H["ic_static"], H["r2"])],
             "skill": skill, "attention_val_loss": att.val_loss}

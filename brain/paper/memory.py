@@ -31,6 +31,7 @@ from brain.bank import Bank, Fact
 
 ROOT = config.ROOT / "research" / "paper" / "memory"
 TRADER = "TRADER"
+MARKET = "MARKET"
 
 
 def bank(root: Path | None = None) -> Bank:
@@ -68,6 +69,22 @@ def beliefs_fact(date: str, lessons: list, source: str) -> Fact:
     return Fact(entity=TRADER, attr="memory.beliefs", value={"lessons": [[n, round(float(w), 5)] for n, w in lessons]},
                 as_of=date[:10], known_at=_at(date), tier="derived", source={"name": f"paper trader: {source}"},
                 context={"run": source})
+
+
+def market_fact(les: dict, source: str) -> Fact:
+    """A week's market lesson (brain/paper/market.py), known from the open after the week, when its
+    last move was known."""
+    keep = ("market", "list_vs_market", "explained", "forces", "paid", "punished", "expected", "ic", "lesson")
+    value = {k: (None if isinstance(les[k], float) and not np.isfinite(les[k]) else les[k]) for k in keep if k in les}
+    return Fact(entity=MARKET, attr="memory.market", value=value, as_of=les["week"][:10],
+                known_at=f"{les['known'][:10]}T14:35:00Z", tier="derived", source={"name": f"market model: {source}"},
+                context={"run": source})
+
+
+def market_recall(b: Bank, at: str, n: int = 4) -> list[dict]:
+    """The latest ``n`` market lessons known at ``at``."""
+    rows = sorted(b.view(at).facts(MARKET, "memory.market"), key=lambda f: f.as_of)[-n:]
+    return [f.value | {"week": f.as_of} for f in rows]
 
 
 def remember(b: Bank, facts: list[Fact]) -> int:
@@ -153,6 +170,11 @@ def backfill(b: Bank, log=print) -> dict:
             continue
         facts = [trade_fact(json.loads(x), src) for x in p.read_text().splitlines() if x.strip()]
         n[name] = remember(b, facts)
+    for name, src in (("P10_development_market.jsonl", "P10 development, 2021-chosen list, 2011-2026"),
+                      ("P10_heldout_market.jsonl", "P10 held-out, 2015-chosen list, 2011-2020")):
+        p = paper / name
+        if p.exists():
+            n[name] = remember(b, [market_fact(json.loads(x), src) for x in p.read_text().splitlines() if x.strip()])
     p = paper / "P4_moonshots.jsonl"
     if p.exists():
         facts = []

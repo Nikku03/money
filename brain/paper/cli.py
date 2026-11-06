@@ -101,6 +101,11 @@ def _forward3(a):
     _forward(a, fw)
 
 
+def _forward4(a):
+    from brain.paper import forward4 as fw
+    _forward(a, fw)
+
+
 def _forward(a, fw=None):
     from brain.paper import forward
     forward = fw or forward
@@ -114,9 +119,13 @@ def _forward(a, fw=None):
             for p in picks:
                 print(f"    {p['dossier']}")
                 print(f"    {p.get('memory', '')}")
+                if p.get("market_view"):
+                    mv = p["market_view"]
+                    print(f"    its forces: {', '.join(mv['forces'])}" + (f"; expected {mv['expected']:+.2%} against its list: "
+                                                                         f"{'; '.join(mv['why'])}" if "why" in mv else ""))
         for t, w, net in r["closed"]:
             print(f"  closed {t} (week of {w}): {net:+.1%} after costs")
-        print("paper only; commit research/paper/forward/ and research/paper/memory/ to keep this step")
+        print("paper only; commit research/paper/forward*/ and research/paper/memory/ to keep this step")
     else:
         s = forward.status()
         print(f"forward weeks {s['weeks']} ({s['closed_weeks']} fully closed); trades {s['trades']} ({s['closed_trades']} closed)")
@@ -134,6 +143,10 @@ def _memory(a):
     b = mem.bank()
     if a.action == "backfill":
         mem.backfill(b)
+    elif a.action == "market":
+        from brain.timeutil import now_iso
+        for les in mem.market_recall(b, a.at or now_iso(), n=6):
+            print("-", les["lesson"])
     else:
         if not a.ticker:
             print("recall needs a ticker")
@@ -169,8 +182,11 @@ def add_cli(sub) -> None:
     q = s.add_parser("forward3", help="F3: the P9 machine (memory with attention) trading forward on paper")
     q.add_argument("action", choices=["step", "status"])
     q.set_defaults(fn=_forward3)
+    q = s.add_parser("forward4", help="F4: the P10 machine (it learns how the market works first) trading forward on paper")
+    q.add_argument("action", choices=["step", "status"])
+    q.set_defaults(fn=_forward4)
     q = s.add_parser("memory", help="the trader's memory bank: backfill it, or recall a company as of a date")
-    q.add_argument("action", choices=["backfill", "recall"])
+    q.add_argument("action", choices=["backfill", "recall", "market"])
     q.add_argument("ticker", nargs="?")
     q.add_argument("--at", help="recall as known at this date (default: now)")
     q.set_defaults(fn=_memory)

@@ -381,6 +381,22 @@ class MemoryTest(unittest.TestCase):
         self.assertEqual(A.recall(30, 5, np.zeros((1, 3)))[0][0], 0.0)              # nothing resolved by session 5
 
 
+class MarketMemoryTest(unittest.TestCase):
+    def test_market_lessons_are_recalled_only_once_known(self):
+        import tempfile
+        from brain.paper import memory as mem
+        les = {"week": "2021-03-01", "known": "2021-03-08", "market": 0.02, "list_vs_market": -0.01, "explained": 0.12,
+               "forces": [["oil", 0.05]], "paid": [["volatile stocks", 0.004]], "punished": [], "expected": None,
+               "ic": float("nan"), "lesson": "Week of 2021-03-01: oil up"}
+        with tempfile.TemporaryDirectory() as tmp:
+            b = mem.bank(Path(tmp))
+            mem.remember(b, [mem.market_fact(les, "test")])
+            self.assertEqual(mem.market_recall(b, "2021-03-08T14:00:00Z"), [])     # before the open after the week
+            got = mem.market_recall(b, "2021-03-08T15:00:00Z")
+            self.assertEqual(got[0]["lesson"], "Week of 2021-03-01: oil up")
+            self.assertIsNone(got[0]["ic"])
+
+
 class P8Test(unittest.TestCase):
     def test_memory_features_are_declared(self):
         from brain.paper import moonshot3 as m
