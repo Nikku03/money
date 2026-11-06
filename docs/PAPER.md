@@ -1328,3 +1328,77 @@ Weekly rank correlation with the trade's net (t):
 P12 is frozen at commit 99648d8. Its first test run stopped at its start, before producing any result:
 a ticker with no FINRA rows in the period left an empty series that the short-volume reader could not
 check. The fix handles an empty series as missing and changes no design. P12 then ran once.
+
+## P11 test result, recorded 2026-11-06: **FAIL** (`research/paper/P11_test.json`, `P11_test_journal.jsonl`)
+
+Run once, as declared: frozen at cd3aa13, the 685 companies of `universe/p11_2012.json`, trading the
+weeks of 2013-01-07 to 2015-12-07, no data after 2015-12-31.
+
+| per week (one-sided) | result |
+|---|---|
+| net after costs | +0.09% (t 0.43, p 0.34) |
+| minus random picks, same exit | −0.15% (t −1.63, p 0.95) |
+| minus the control (scrambled lessons) | +0.23% (t 0.79, p 0.22) |
+
+- **Trading:** it hunted in 72 of 153 weeks. Its 720 trades averaged +0.19% (median +0.18%, 51%
+  winners).
+- **As a $1,000 account:** $1,000 became $1,094, worst fall −10%.
+
+**Beside it on the same list and years** (reported, not graded):
+
+| | per week | vs random | $1,000 became |
+|---|---|---|---|
+| P11 | +0.09% | −0.15% | $1,094 |
+| P11's control | −0.14% | −0.05% | $880 |
+| P5, frozen | +0.74% (t 1.54) | +0.88% (t 2.24) | $1,259 |
+| P10, frozen | +0.27% | +0.27% | $1,102 |
+| SPY | | | $1,484 |
+
+**What held, and what failed.** The lessons generalized; the machine built on them did not.
+- **15 of the 16 lessons kept their sign in 2013-2015,** for E0, E2 and E4 alike, most of them strongly:
+  - volatility, lottery-like days and big recent moves: t −4 to −12;
+  - profitability and cash runway: t +5 to +11.
+  - Only "an older last report" went to zero.
+- **The fear lesson held a third time.** The whole list's E3 trades made +0.51% a week in the 72 fear
+  weeks and −0.62% in the 81 calm ones.
+- **E3 was again the best exit on average** (−0.09%, against E0 −0.23% and E4 −0.46%).
+- **The one choice that went against the lessons undid them.** P11 hunted only among the most
+  volatile third, to keep moonshot potential. The strongest lessons say volatility loses.
+  - In fear weeks that third made +0.23%, against the list's +0.51%.
+  - Ranking by the lessons inside it made +0.19%.
+
+  The edge was in when to trade, not in which stocks. The declared test credits that only in
+  "makes money" and "beats the control", and there it fell short.
+- **P5, the version that made $3,814 on the 2026-chosen list,** was again the best of the machines
+  here. It beat random picks by +0.88% a week (t 2.24), after +0.49% (t 1.04) on the 2021-chosen
+  list. These are reference runs without its shuffled control, among several compared, so they are
+  not a pass.
+
+## P12 test result, recorded 2026-11-06: **FAIL** (`research/paper/P12_test.json`, `P12_test_journal.jsonl`)
+
+Run once on the same list, weeks and grading as P11, after the empty-series fix.
+
+| per week (one-sided) | P12 | P11, for comparison |
+|---|---|---|
+| net after costs | +0.19% (t 0.83, p 0.20) | +0.09% (t 0.43) |
+| minus random picks, same exit | −0.05% (t −0.51, p 0.69) | −0.15% (t −1.63) |
+| minus the control | +0.32% (t 1.10, p 0.14) | +0.23% (t 0.79) |
+| $1,000 became | $1,136 (worst fall −11%) | $1,094 (worst fall −10%) |
+
+- **Trading:** 720 trades in 72 fear weeks; mean +0.40%, median +0.39%, 52% winners. An insider lesson
+  was among the top three reasons for 432 of them.
+- **Self-checks:** its health check set "insiders bought more than they sold" aside in 5 weeks, and
+  "heavily traded" in 10.
+- **Against the index:** SPY turned $1,000 into $1,484 over the same years.
+
+Wiring in the insider layer improved every number a little. None reaches the bar.
+
+**Where twelve historical verdicts leave this.** Every version has failed its declared test on years
+it did not learn from. What has held up across periods is knowledge, not a trade:
+- the size of moves is predictable (S1, M1a);
+- moonshot hunting by volatility loses after its stops (the review, in three periods);
+- profitable, funded, unspectacular companies do better under these exits (fifteen lessons, three
+  periods);
+- the whole list's moonshot trades do better after fear rises (three periods).
+
+None of it has yet beaten random picks inside a declared test.

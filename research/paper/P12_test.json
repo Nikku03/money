@@ -1,0 +1,31 @@
+{
+ "test": "P12 (2013-2015, 2012-chosen list)",
+ "run_at": "2026-11-06",
+ "frozen_at": "99648d8 (+4358fdf, empty-series fix)",
+ "weeks": 153,
+ "traded_weeks": 72,
+ "trades": 720,
+ "weekly_net": {
+  "mean": 0.0018693778114965006,
+  "t": 0.8335861227503281,
+  "p": 0.20225712413144206
+ },
+ "vs_random": {
+  "mean": -0.0005237309123078539,
+  "t": -0.5077333227885875,
+  "p": 0.6941798120542012
+ },
+ "vs_shuffled": {
+  "mean": 0.003224934845127534,
+  "t": 1.0998563918962734,
+  "p": 0.13569734875549705
+ },
+ "checks": {
+  "beats random picks under the same exits (one-sided p < 0.05)": false,
+  "makes money after costs (one-sided p < 0.05)": false,
+  "beats the same learner taught shuffled outcomes (p < 0.05)": false
+ },
+ "verdict": "FAIL",
+ "account_end": 1135.9451501654582,
+ "worst_fall": -0.10659434633847553
+}
