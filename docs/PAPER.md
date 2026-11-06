@@ -1324,3 +1324,7 @@ Weekly rank correlation with the trade's net (t):
 - **Short volume pointed opposite ways in the two periods,** so the rule leaves it out.
 
 **P12 = P11 plus two lessons: "insiders sold" (+) and "insiders bought more than they sold" (−).**
+
+P12 is frozen at commit 99648d8. Its first test run stopped at its start, before producing any result:
+a ticker with no FINRA rows in the period left an empty series that the short-volume reader could not
+check. The fix handles an empty series as missing and changes no design. P12 then ran once.

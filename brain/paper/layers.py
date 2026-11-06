@@ -66,8 +66,11 @@ class ShortVolume:
         dates = P["close"].index
         self.short, self.total = {}, {}
         for t, rs in rows.items():
-            df = pd.DataFrame(rs, columns=["date", "s", "v"]).groupby("date").sum().reindex(dates)
-            self.short[t], self.total[t] = df["s"].values, df["v"].values
+            if not rs:                                          # no FINRA rows in the period: missing, not an error
+                continue
+            df = pd.DataFrame(rs, columns=["date", "s", "v"]).astype({"s": float, "v": float})
+            df = df.groupby("date")[["s", "v"]].sum().reindex(dates)
+            self.short[t], self.total[t] = df["s"].values.astype(float), df["v"].values.astype(float)
         self.vol = P["vol"]
 
     def features(self, d: int, stocks: list[str]) -> pd.DataFrame:

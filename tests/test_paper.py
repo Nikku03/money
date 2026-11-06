@@ -581,3 +581,5 @@ class LayersTest(unittest.TestCase):
         f = S.features(100, ["X", "Y"])
         self.assertAlmostEqual(f.loc["X", "short_r20"], 0.5)
         self.assertTrue(np.isnan(f.loc["Y", "short_r20"]))
+        S2 = ly.ShortVolume({"X": rows["X"], "Z": []}, {"close": vol, "vol": vol})      # a ticker with no rows
+        self.assertTrue(np.isnan(S2.features(100, ["Z"]).loc["Z", "short_r20"]))
