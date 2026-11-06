@@ -1402,3 +1402,27 @@ it did not learn from. What has held up across periods is knowledge, not a trade
 - the whole list's moonshot trades do better after fear rises (three periods).
 
 None of it has yet beaten random picks inside a declared test.
+
+# F5: P12 trading forward, with every live-only source recorded (declared 2026-11-06, before its first week)
+
+The P12 machine, as frozen (with the empty-series fix), trades on paper from the week of 2026-11-09,
+on `universe/us_small.json`, beside F1-F4. It follows the same ledger rules (`research/paper/forward5/`),
+exit-following, memory bank, daily schedule and test: read once 30 weeks have fully closed, all
+three checks at one-sided p < 0.05.
+
+- **Its insider layer** is `research/paper/layers/insiders.jsonl`: the list's open-market insider
+  trades since 2024, from SEC's data sets, with no insider names or IDs. Each run extends it with the
+  Form 4s filed since its last date.
+- **Recorded beside each pick, with no weight** (no free history, so they can only be tested forward):
+  - the options' priced move to the first expiry after the entry;
+  - the latest three headlines before the open;
+  - guidance tags from an earnings release in the 30 days before the open;
+  - the share of FINRA volume sold short over 20 sessions (it flipped sign between the review's
+    periods).
+
+  The options and short volume are fetched the evening the week is written.
+- **Alternative data** (company aircraft, port traffic, traffic cameras) maps to none of these
+  companies, and is not recorded.
+
+`python -m brain paper forward5 step|status`. Commit `research/paper/forward5/`,
+`research/paper/layers/` and `research/paper/memory/` after each step.

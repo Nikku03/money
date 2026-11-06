@@ -106,6 +106,11 @@ def _forward4(a):
     _forward(a, fw)
 
 
+def _forward5(a):
+    from brain.paper import forward5 as fw
+    _forward(a, fw)
+
+
 def _forward(a, fw=None):
     from brain.paper import forward
     forward = fw or forward
@@ -114,11 +119,17 @@ def _forward(a, fw=None):
         print(f"data through {r['data_through']}; forward test from {forward.FORWARD_START}")
         for w in r["new_weeks"]:
             picks = [p for p in r["opened"] if p["date"] == w]
-            print(f"  week of {w}: " + ("; ".join(f"{p['ticker']} ({p['exit']}, predicted {p['predicted']:+.1%})" for p in picks)
-                                         if picks else "no pick cleared its bar: stays out"))
+            print(f"  week of {w}: " + ("; ".join(f"{p['ticker']} ({p['exit']}" + (f", predicted {p['predicted']:+.1%}" if "predicted" in p else "")
+                                                   + ")" for p in picks) if picks else "no pick cleared its bar: stays out"))
             for p in picks:
                 print(f"    {p['dossier']}")
                 print(f"    {p.get('memory', '')}")
+                if p.get("why"):
+                    print(f"    why: {'; '.join(p['why'])}")
+                if p.get("context"):
+                    c = p["context"]
+                    print(f"    seen, not weighed: options price a {c.get('options_priced_move_pct')}% move; guidance {c.get('guidance') or 'none'}; "
+                          f"short share {c.get('short_share_20d')}; headlines: {' | '.join(h['title'] for h in c.get('headlines', [])) or 'none'}")
                 if p.get("market_view"):
                     mv = p["market_view"]
                     print(f"    its forces: {', '.join(mv['forces'])}" + (f"; expected {mv['expected']:+.2%} against its list: "
@@ -185,6 +196,9 @@ def add_cli(sub) -> None:
     q = s.add_parser("forward4", help="F4: the P10 machine (it learns how the market works first) trading forward on paper")
     q.add_argument("action", choices=["step", "status"])
     q.set_defaults(fn=_forward4)
+    q = s.add_parser("forward5", help="F5: the P12 machine (every data layer wired in) trading forward on paper")
+    q.add_argument("action", choices=["step", "status"])
+    q.set_defaults(fn=_forward5)
     q = s.add_parser("memory", help="the trader's memory bank: backfill it, or recall a company as of a date")
     q.add_argument("action", choices=["backfill", "recall", "market"])
     q.add_argument("ticker", nargs="?")

@@ -583,3 +583,23 @@ class LayersTest(unittest.TestCase):
         self.assertTrue(np.isnan(f.loc["Y", "short_r20"]))
         S2 = ly.ShortVolume({"X": rows["X"], "Z": []}, {"close": vol, "vol": vol})      # a ticker with no rows
         self.assertTrue(np.isnan(S2.features(100, ["Z"]).loc["Z", "short_r20"]))
+
+
+class Forward5Test(unittest.TestCase):
+    def test_context_survives_every_source_failing(self):
+        from brain.paper import forward5 as f5
+        boom = mock.Mock(side_effect=RuntimeError("offline"))
+        with mock.patch("brain.sources.options.fetch_chain", boom), mock.patch("brain.sources.news.ingest", boom), \
+             mock.patch("brain.sources.sec.filings_for", boom):
+            c = f5.context("XYZ", "2026-11-09", "2026-11-09T13:30:00Z")
+        self.assertEqual(c, {"options_priced_move_pct": None, "options_expiry": None, "headlines": [], "guidance": []})
+
+    def test_insider_cache_reads_as_layer_rows(self):
+        import tempfile
+        from brain.paper import forward5 as f5
+        with tempfile.TemporaryDirectory() as tmp:
+            p = Path(tmp) / "insiders.jsonl"
+            p.write_text('["XYZ","2026-10-01","2026-09-30","S",1000.0,12.5]\n')
+            with mock.patch.object(f5, "CACHE", p):
+                rows = f5.load_insiders()
+        self.assertEqual(rows, {"XYZ": [("2026-10-01", "2026-09-30", "S", 1000.0, 12.5, "", "")]})
