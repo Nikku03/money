@@ -1,0 +1,39 @@
+{
+ "test": "P13: P5 on 2016-2020 (2015-chosen list)",
+ "run_at": "2026-11-06",
+ "code_unchanged_since": "465a14e",
+ "weeks": 258,
+ "traded_weeks": 250,
+ "trades": 733,
+ "weekly_net": {
+  "mean": -0.0028278601291090964,
+  "t": -0.5827973608196786,
+  "p": 0.7199851390826335
+ },
+ "vs_random": {
+  "mean": -0.0037322463605003312,
+  "t": -0.9189495889623318,
+  "p": 0.8209390297634679
+ },
+ "vs_shuffled": {
+  "mean": -0.004268481152921273,
+  "t": -0.7591359735673846,
+  "p": 0.7761143891315468
+ },
+ "checks": {
+  "beats random picks under the same exits (one-sided p < 0.05)": false,
+  "makes money after costs (one-sided p < 0.05)": false,
+  "beats the same learner taught shuffled outcomes (p < 0.05)": false
+ },
+ "verdict": "FAIL",
+ "account_end": 706.3188988839879,
+ "worst_fall": -0.5780768210345378,
+ "spy_account_end": 2054,
+ "vs_random_by_year": {
+  "2016": -0.015267350224926311,
+  "2017": -0.009792927746839005,
+  "2018": -0.002957348693805247,
+  "2019": 0.005601188781825043,
+  "2020": 0.004197807298765026
+ }
+}

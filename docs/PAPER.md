@@ -1453,3 +1453,32 @@ It has never been run on 2016-2020. This is that run, once.
 - **This is the thirteenth verdict on historical data.** A p just under 0.05 would be weak evidence
   after this many.
 - **Survivorship as in P7:** companies gone from SEC's list or Yahoo today are missing.
+
+## P13 result, recorded 2026-11-06: **FAIL** (`research/paper/P13.json`, `P13_journal.jsonl`)
+
+Run once, as declared: P5's code unchanged since 465a14e, the 2015-chosen list, from 2016-01-04, no
+data after 2020-12-31.
+
+| per week (one-sided) | result |
+|---|---|
+| net after costs | −0.28% (t −0.58, p 0.72) |
+| minus random picks, same exits | −0.37% (t −0.92, p 0.82) |
+| minus the shuffled machine | −0.43% (t −0.76, p 0.78) |
+
+- **Trading:** it traded in 250 of 258 weeks. Its 733 trades averaged −0.18% (median −1.46%, 42%
+  winners; best +110%, worst −33%).
+- **By year, against random:** 2016 −1.53%, 2017 −0.98%, 2018 −0.30%, 2019 +0.56%, 2020 +0.42%.
+- **As a $1,000 account:** $1,000 became $706, worst fall −58%, against SPY's $2,054.
+
+**P5 on all three point-in-time lists, against random picks:**
+
+| list and years | per week |
+|---|---|
+| the 2012-chosen list, 2013-2015 | +0.88% (t 2.24) |
+| the 2015-chosen list, 2016-2020 | −0.37% (t −0.92) |
+| the 2021-chosen list, 2021-2026 | +0.49% (t 1.05) |
+| **pooled, 713 weeks** | **+0.26% (t 1.00, one-sided p 0.16)** |
+
+What looked like the one consistent machine was the best of many on two samples. On the third it lost
+to random picks. Pooled over every honest week, its edge is not distinguishable from zero.
+F1 keeps trading it forward, as declared.
