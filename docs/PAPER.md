@@ -1106,3 +1106,41 @@ cannot capture that.
 
 **The memory bank now holds the market model's 800 weekly lessons** (development run, 2011-2026),
 each known from the open after its week: `python -m brain paper memory market --at DATE`.
+
+# P11: "the oracle", built from every version's lessons (protocol declared 2026-11-06, before any 2013-2015 test data was fetched)
+
+The request: take every version, find what each got right that the others got wrong, and build one
+that learns from all of it. No machine can see the future; "the oracle" names the attempt, nothing
+more.
+- **Design:** P11 is designed only from what has already been seen: every recorded run on 2016-2026,
+  on both point-in-time lists.
+- **Freeze:** it is frozen at a commit named here before its test.
+- **Test:** it is judged once, on years no machine here has traded: 2013-2015.
+
+**The test list (P6's rule, shifted back to 2012):** SEC's current ticker list, first plain ticker
+per CIK.
+- at least 240 Yahoo sessions in 2012, and trades on each of the last 20 sessions of 2012;
+- a median daily dollar volume from 2012-07-01 to 2012-12-31 between $1M and $20M;
+- a 2012-12-31 close of at least $1;
+- a 10-K or 10-Q filed before 2013-01-02.
+
+**The test:**
+- **Period:** trading weeks from 2013-01-07 to the last week whose exits finish by 2015-12-31. No data
+  after 2015-12-31. Learning from 2011, on prices from 2010-06.
+- **PASS only if all three hold** (one-sided p < 0.05, weekly, weeks it stays out count as 0):
+  1. beats random picks from the list under the same exits;
+  2. makes money after costs;
+  3. beats the same machine taught shuffled outcomes.
+
+  FAIL otherwise.
+- **Reported beside it, not graded:** P5 (the version whose run on the 2026-chosen list made $3,814)
+  and P10, on the same list and years; and SPY.
+
+**Stated in advance:**
+- **2013-2015 is not entirely unseen.** P7 and P10 studied those years as history before trading
+  2016, and P10's market model's mean weekly record over 2012-2020 was summarized. No trading result
+  for 2013-2015 has been computed or read.
+- **More survivorship than P6 and P7:** 13 years of companies gone from SEC's list or from Yahoo are
+  missing.
+- **Less power:** three years (about 150 weeks) instead of five.
+- **This is the eleventh verdict on historical data.**
