@@ -1265,3 +1265,35 @@ a trader living in 2013 could have known.
 
 **P11 is frozen at commit cd3aa13** (`moonshot5.py` and the code it calls, as of that commit). It is run
 once on 2013-2015 as declared, beside P5 and P10 on the same list and years, and never changed after.
+
+# P12: every data layer wired in (protocol declared 2026-11-06, before P11's test result exists)
+
+The request: wire in every source the repo collects that the trader ignored.
+
+**Testable on history (point-in-time), new to the trader:**
+- **Insider open-market purchases and sales** (SEC Forms 4/5 data sets, matched by CIK, so a ticker
+  change cannot mismatch them). Visible from the session after the filing date.
+- **Short-sale volume reported to FINRA** (daily files from 2011, one per reporting facility before
+  2018-08, consolidated after). Visible from the next session.
+  - A stock's series is used only where FINRA's volume is consistent with the stock's own trading
+    volume, so a reused ticker cannot borrow another company's data.
+
+**Already in through earlier machines:**
+- filings as events, and the financial reports (the dossier);
+- the market's forces and each stock's sensitivity to them (P10's market model). This carries the
+  chain engine's links as measured from data. Its textbook links' next-month tests all failed.
+
+**Forward only (no free history):**
+- earnings-release guidance tags (whose drift already failed E1/E2);
+- options' priced moves;
+- headlines and web articles;
+- alternative data.
+
+These are recorded with each forward pick and carry no weight until a forward record tests them.
+
+**The rule:** a new trait joins P11's sixteen lessons only if it passes P11's rule on 2016-2020 and
+2021-2026: the same sign for E0, E2 and E4 in both periods, with |t| of at least 2 each. Nothing else
+changes. If none passes, P12 is P11.
+
+**The test:** once, on 2013-2015, with the same list and grading as P11, after P11's run. The rule
+fixes P12's design, so P11's result cannot shape it.
