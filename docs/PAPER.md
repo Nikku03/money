@@ -1426,3 +1426,30 @@ three checks at one-sided p < 0.05.
 
 `python -m brain paper forward5 step|status`. Commit `research/paper/forward5/`,
 `research/paper/layers/` and `research/paper/memory/` after each step.
+
+# P13: P5, unchanged, on 2016-2020 (declared 2026-11-06, before the run)
+
+P5 was the best machine on both honest lists it has been run on:
+- +0.49% a week against random picks on 2021-2026 (the 2021-chosen list, t 1.04);
+- +0.88% on 2013-2015 (the 2012-chosen list, t 2.24, a reference run).
+
+It has never been run on 2016-2020. This is that run, once.
+
+- **The machine:** P5 exactly as it stands. Its code (`moonshot.py`, `moonshot2.py` with the
+  exit-chooser fix, `dossier.py`, `filings.py`) has not changed since 465a14e.
+- **The list and years:** the 815 companies of `universe/p7_2015.json`, trading from 2016-01-04, no
+  data after 2020-12-31, learning from 2011. The same set-up P7 and P10 were judged on.
+- **PASS only if all three hold** (one-sided p < 0.05, weekly, graded as P4-P6):
+  1. it beats random picks from the list under the same exits;
+  2. it makes money after costs;
+  3. it beats the same machine taught shuffled outcomes.
+- **Reported beside it:** the $1,000 account (1/6 of the account per trade), and SPY.
+
+**Stated in advance:**
+- **I chose to test P5 because of its results on two other lists.** That selection is why it needs
+  years it has not been chosen on.
+- **2016-2020 is not untouched.** P7 and P10 were judged there, and the P11 review studied it. But P5's
+  code was fixed before any of that, so nothing about it was shaped by those years.
+- **This is the thirteenth verdict on historical data.** A p just under 0.05 would be weak evidence
+  after this many.
+- **Survivorship as in P7:** companies gone from SEC's list or Yahoo today are missing.
