@@ -592,7 +592,8 @@ class Forward5Test(unittest.TestCase):
         with mock.patch("brain.sources.options.fetch_chain", boom), mock.patch("brain.sources.news.ingest", boom), \
              mock.patch("brain.sources.sec.filings_for", boom):
             c = f5.context("XYZ", "2026-11-09", "2026-11-09T13:30:00Z")
-        self.assertEqual(c, {"options_priced_move_pct": None, "options_expiry": None, "headlines": [], "guidance": []})
+        self.assertEqual(c, {"options_priced_move_pct": None, "options_atm_iv": None, "options_expiry": None,
+                             "headlines": [], "guidance": []})
 
     def test_insider_cache_reads_as_layer_rows(self):
         import tempfile

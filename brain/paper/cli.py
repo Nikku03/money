@@ -128,7 +128,7 @@ def _forward(a, fw=None):
                     print(f"    why: {'; '.join(p['why'])}")
                 if p.get("context"):
                     c = p["context"]
-                    print(f"    seen, not weighed: options price a {c.get('options_priced_move_pct')}% move; guidance {c.get('guidance') or 'none'}; "
+                    print(f"    seen, not weighed: options implied vol {c.get('options_atm_iv')}, priced move {c.get('options_priced_move_pct')}%; guidance {c.get('guidance') or 'none'}; "
                           f"short share {c.get('short_share_20d')}; headlines: {' | '.join(h['title'] for h in c.get('headlines', [])) or 'none'}")
                 if p.get("market_view"):
                     mv = p["market_view"]

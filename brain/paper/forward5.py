@@ -11,8 +11,8 @@ the Form 4s filed since the file's last date (``update_insiders``); commit that 
 
 **Recorded beside each pick** (``context``), with no weight until a forward record tests them, since
 none has free history:
-- **options:** the at-the-money straddle's priced move to the first expiry after the entry (Yahoo
-  option chains);
+- **options:** the at-the-money implied volatility at the first expiry after the entry, and the
+  straddle's priced move when its quotes are tight enough to trust (Yahoo option chains);
 - **headlines:** the latest three published before that morning's open (Yahoo RSS);
 - **guidance:** the event tags of an earnings release filed in the 30 days before the open (SEC 8-K
   exhibit 99, read by the repo's fixed rules);
@@ -128,14 +128,15 @@ def short_share(dates: list[str], tickers: list[str], n: int = 20) -> dict:
 
 def context(ticker: str, week: str, opened_at: str) -> dict:
     """Options' priced move, headlines and guidance tags for one pick, as known before ``opened_at``."""
-    out = {"options_priced_move_pct": None, "options_expiry": None, "headlines": [], "guidance": []}
+    out = {"options_priced_move_pct": None, "options_atm_iv": None, "options_expiry": None, "headlines": [], "guidance": []}
     try:
         from brain.sources import options
         ch = options.fetch_chain(ticker)
-        exp = options.first_expiry(ch, week)
-        s = options.straddle(ch, exp) if exp else None
-        if s:
-            out["options_priced_move_pct"], out["options_expiry"] = s["implied_pct"], s["expiry"]
+        exp = options.first_expiry(ch["chain"], week)
+        if exp:
+            out["options_expiry"], out["options_atm_iv"] = exp, options.atm_iv(ch, exp)
+            s = options.straddle(ch, exp)                      # None when the quotes are too wide to trust
+            out["options_priced_move_pct"] = s["implied_pct"] if s else None
     except Exception:
         pass
     try:
