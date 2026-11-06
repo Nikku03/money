@@ -23,7 +23,7 @@ from brain.paper import moonshot2 as m2
 from brain.paper import moonshot5 as m5
 
 # new lessons that passed P11's rule on both seen periods (filled from review, docs/PAPER.md P12)
-EXTRA: dict[str, int] = {}
+EXTRA: dict[str, int] = {"ins_sells": 1, "ins_net": -1}
 NEG = {"ins_buys": "no insider buying", "ins_buyers": "no insiders buying", "ins_sells": "insiders not selling",
        "ins_net": "insiders sold more than they bought", "short_r5": "little short selling this week",
        "short_r20": "little short selling this month", "short_chg": "short selling falling"}

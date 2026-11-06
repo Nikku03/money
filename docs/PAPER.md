@@ -1297,3 +1297,30 @@ changes. If none passes, P12 is P11.
 
 **The test:** once, on 2013-2015, with the same list and grading as P11, after P11's run. The rule
 fixes P12's design, so P11's result cannot shape it.
+
+## P12's rule, applied (2026-11-06, before P11's or P12's test result exists)
+
+The new layers were added to the review's ground truth for both seen periods:
+- **Insider trades:** 569,077 open-market purchases and sales for 1,863 companies, from SEC's Form 4/5
+  data sets, 2010q4-2026q3. About a fifth of the list had an insider purchase in any 90 days.
+- **Short-sale volume:** 6.6 million FINRA daily rows for 2,049 tickers, 2011-2026, with no failed
+  files. It covered 86% and 93% of the stock-weeks after the volume check.
+
+Weekly rank correlation with the trade's net (t):
+
+| trait | E0 16-20 | E2 16-20 | E4 16-20 | E0 21-26 | E2 21-26 | E4 21-26 | passes |
+|---|---|---|---|---|---|---|---|
+| insiders bought (count) | +0.000 (0.1) | −0.009 (−2.0) | −0.006 (−1.3) | +0.001 (0.3) | −0.000 (−0.0) | −0.003 (−0.7) | no |
+| distinct insiders buying | +0.001 (0.2) | −0.008 (−1.9) | −0.006 (−1.2) | +0.001 (0.3) | +0.000 (0.1) | −0.003 (−0.7) | no |
+| **insiders sold** | +0.016 (3.1) | +0.025 (4.9) | +0.024 (4.4) | +0.013 (3.1) | +0.012 (3.1) | +0.013 (3.2) | **yes, +** |
+| **insiders bought more than they sold** | −0.015 (−2.5) | −0.028 (−4.9) | −0.025 (−4.1) | −0.013 (−2.7) | −0.014 (−3.2) | −0.015 (−3.2) | **yes, −** |
+| short volume, last week | −0.008 (−2.1) | −0.011 (−3.2) | −0.008 (−2.1) | +0.014 (3.9) | +0.017 (4.7) | +0.012 (3.1) | no (flips) |
+| short volume, last month | −0.009 (−2.4) | −0.011 (−3.2) | −0.009 (−2.6) | +0.012 (3.2) | +0.016 (4.4) | +0.007 (1.8) | no (flips) |
+| short selling rising | −0.003 (−1.0) | −0.006 (−1.9) | −0.003 (−0.9) | +0.009 (2.9) | +0.007 (2.5) | +0.009 (3.1) | no |
+
+- **Insider buying says nothing here,** as H6 found on large companies.
+- **Insider selling is a good sign, not a bad one.** Insiders sell after a stock has done well and in
+  companies doing well, so this lesson travels with the quality lessons P11 already has.
+- **Short volume pointed opposite ways in the two periods,** so the rule leaves it out.
+
+**P12 = P11 plus two lessons: "insiders sold" (+) and "insiders bought more than they sold" (−).**
