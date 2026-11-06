@@ -1262,3 +1262,6 @@ most consistent is the bold row. E3 was chosen as the exit by finding 6, not by 
 P11's lessons were learned on 2016-2026 and are tested on earlier years. That tests whether they hold
 in years they were not learned on, which is what using them in the future depends on. It is not what
 a trader living in 2013 could have known.
+
+**P11 is frozen at commit cd3aa13** (`moonshot5.py` and the code it calls, as of that commit). It is run
+once on 2013-2015 as declared, beside P5 and P10 on the same list and years, and never changed after.
