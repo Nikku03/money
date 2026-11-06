@@ -905,3 +905,67 @@ rested on one remembered case. Its validation loss (0.76, in units of each outco
 beat uniform attention. Learning what "near" means did not make the past predict direction.
 
 In-sample, this proves nothing either way. F3 stands as declared and is P9's only test.
+
+# P10: a machine that learns how the market works first (declared 2026-11-06, before its first run on real data)
+
+Every machine so far learned which trades went well, and why each one moved. P10 first learns the
+market, every week, from every stock on its list (`market.py`), and only then trades (`moonshot4.py`).
+
+**What runs the market, as it reads it** (`market.state`): the market; big tech; small companies;
+value stocks; rates (Treasuries, the 10-year and 3-month yields, the curve); credit (junk bonds
+against Treasuries); the dollar; oil; gold; emerging markets; fear (the VIX, and the VIX against its
+3-month version); sectors and industries from biotech to regional banks. And the crowd on its own
+list: breadth, the list against the market, dispersion, moonshot weather (how many ran 20%+ in two
+weeks), how jumpy they are, earnings season, January. All series come from Yahoo's chart data
+back to 2010.
+
+**How the forces reach each stock** (`exposures`): each stock's sensitivity to each force over its
+last year of daily moves (ridge regression, each force net of the market). A move splits into the
+forces' part and the stock's own part.
+
+**What the market pays for** (`learn`): each week, the list's moves (this week's open to next week's
+open) regressed on 31 traits. The traits cover the company's own reports, its price behaviour, its
+sensitivities, last week's push from its forces against its own move, and catalysts. Each
+coefficient is what the market paid that week for one standard deviation of a trait.
+
+**How that changes** (`forecast`): next week's payoffs are forecast from:
+- persistence: what each trait paid over the long run, the last year, quarter, month and week;
+- attention over every past week (`StateAttention`): which past markets looked like this one, and
+  what the market paid the week after. Its sharpness is bounded as in P9.
+
+A pooled ridge learns how much each source has been worth, using the forecasts actually made at
+the time. A stock's expected move is its traits times the forecast payoffs.
+
+**The trader:** P9 unchanged (exits, exit chooser, gate, dossier, memory, attention over situations),
+plus seven readings from the market model as features. Lessons now include each week's market
+lesson (what moved, what the market paid for and punished, what it expected, how its ranking did),
+a quarterly statement of what it believes about how the market works, and each trade's market view
+(its strongest forces, what its traits were expected to earn).
+
+**Development (in-sample, may be iterated):** 2021-2026 on `universe/p6_2021.json`. Reported as
+in-sample; proves nothing.
+
+**Held-out test (run once):** trading from 2016-01-04 on `universe/p7_2015.json`, no data after
+2020-12-31, learning from 2011. The machine is frozen at a commit named here before the run, and
+never changed after it.
+
+**Two verdicts, each PASS only at one-sided p < 0.05:**
+- **P10 (the trader).** All three must hold:
+  1. it beats random picks from the list under the same exits;
+  2. it makes money after costs;
+  3. it beats the same machine taught shuffled outcomes. That shuffled machine also learns its
+     market model from moves scrambled across stocks within each week.
+- **P10-M (does it understand the market?).** Each week, the rank correlation between each tradable
+  stock's expected move and the move that followed (open to next week's open), over the held-out
+  weeks. PASS if the mean is above 0.
+  - Reported beside it, not graded: the same for the long-run payoffs alone (no persistence, no
+    attention), and for the shuffled machine.
+
+**Stated in advance:**
+- **2016-2020 is not untouched.** P7 was judged there and I have read its results. Nothing in P10
+  was designed on those years, and P10 sees them once. But I designed P10 knowing P7's result, and
+  knowing what markets did then (2018's fall, 2020's crash), as anyone does.
+- **The lists carry the same survivorship as P6 and P7:** companies gone from SEC's list or Yahoo
+  today are missing.
+- **Many tries.** These are the ninth and tenth verdicts on historical data. A p just under 0.05
+  would be weak evidence after this many tries.

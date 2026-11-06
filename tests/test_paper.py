@@ -420,3 +420,90 @@ class AttentionTest(unittest.TestCase):
         from brain.paper import attention as at
         A = at.AttentionMemory(d_in=3, n_values=2)
         self.assertEqual(A.recall(100, np.zeros((2, 3)))[0].shape, (2, 2))
+
+
+def _market_panel(seed=0, T=760, N=60, premium=0.0):
+    """A synthetic market: random-walk forces and levels, N stocks with a market beta, and (optionally)
+    a weekly premium of ``premium`` per standard deviation of the trait f_size."""
+    from brain.paper import market as mk
+    rng = np.random.default_rng(seed)
+    dates = pd.bdate_range("2012-01-02", periods=T).strftime("%Y-%m-%d")
+    cl = {a: 100 * np.exp(np.cumsum(rng.normal(0, 0.01, T))) for a in list(mk.FORCES) + ["IEF"]}
+    cl["^VIX"] = 18 * np.exp(0.3 * np.sin(np.arange(T) / 40))
+    cl["^VIX3M"] = 19 * np.exp(0.2 * np.sin(np.arange(T) / 50))
+    cl["^TNX"] = 25 + 5 * np.sin(np.arange(T) / 90)
+    cl["^IRX"] = 5 + 3 * np.sin(np.arange(T) / 120)
+    spy = np.diff(np.log(cl["SPY"]), prepend=np.log(cl["SPY"][0]))
+    trait = rng.normal(size=N)
+    stocks = [f"S{j:02d}" for j in range(N)]
+    for j, t in enumerate(stocks):
+        r = rng.uniform(0.5, 1.5) * spy + rng.normal(0, 0.02, T) + premium * trait[j] / 5
+        cl[t] = 20 * np.exp(np.cumsum(r))
+    close = pd.DataFrame(cl, index=dates)
+    op = close.shift(1).bfill() * np.exp(rng.normal(0, 0.002, close.shape))
+    P = {"close": close, "open": op}
+    F = pd.DataFrame(rng.normal(size=(N, 11)), index=stocks,
+                     columns=["lv20", "lmax250", "ret60", "hi52", "ldv", "logp", "volsurge", "gap", "earn_win", "offer30", "bio"])
+    E = pd.DataFrame(rng.normal(size=(N, 9)), index=stocks, columns=[c for c in mk.TRAITS if c.startswith("f_")])
+    E["f_size"] = trait
+    return P, stocks, F, E, trait
+
+
+class MarketTest(unittest.TestCase):
+    def _run(self, P, stocks, F, E, upto=None):
+        from brain.paper import market as mk
+        mm = mk.MarketModel(P, stocks, {})
+        ok = np.ones(len(stocks), bool)
+        out = []
+        for wk, d in enumerate(range(260, len(P["close"]) - 5, 5)):
+            if upto is not None and d > upto:
+                break
+            out.append((d, mm.week(d, wk, F, E, ok)))
+        return mm, out
+
+    def test_learns_a_planted_premium(self):
+        P, stocks, F, E, trait = _market_panel(premium=0.01)
+        mm, out = self._run(P, stocks, F, E)
+        ic = [x for x in mm.hist["ic"][60:] if np.isfinite(x)]
+        self.assertGreater(np.mean(ic), 0.1)                            # it ranks next week's moves
+        self.assertEqual(mm.belief()["rewarded"][0][0], "bigger companies")
+        self.assertGreater(np.corrcoef(out[-1][1]["mm_exp"], trait)[0, 1], 0.6)
+
+    def test_no_planted_premium_no_skill(self):
+        P, stocks, F, E, _ = _market_panel(seed=1, premium=0.0)
+        mm, _ = self._run(P, stocks, F, E)
+        ic = [x for x in mm.hist["ic"] if np.isfinite(x)]
+        self.assertLess(abs(np.mean(ic)) / (np.std(ic) / np.sqrt(len(ic))), 3.0)
+
+    def test_never_uses_what_came_after_the_open(self):
+        P, stocks, F, E, _ = _market_panel(seed=2, premium=0.01)
+        dstar = 260 + 5 * 70
+        _, a = self._run(P, stocks, F, E, upto=dstar)
+        Q = {k: v.copy() for k, v in P.items()}
+        Q["close"].iloc[dstar:] *= 1.7                                  # closes from the decision day on
+        Q["open"].iloc[dstar + 1:] *= 0.4                               # opens after the decision's open
+        _, b = self._run(Q, stocks, F, E, upto=dstar)
+        self.assertEqual(a[-1][0], dstar)
+        for k in ("mm_exp", "mm_force5", "mm_own5", "mm_own20", "mm_list", "mm_breadth", "mm_moon"):
+            np.testing.assert_allclose(a[-1][1][k], b[-1][1][k])
+
+    def test_state_attention_learns_regimes(self):
+        from brain.paper import market as mk
+        rng = np.random.default_rng(3)
+        S = rng.normal(size=(220, 6))
+        V = np.column_stack([np.where(S[:, 1] > 0, 1.0, -1.0), rng.normal(size=220)]) + 0.1 * rng.normal(size=(220, 2))
+        A = mk.StateAttention(6, seed=0)
+        A.fit(S, V, at=220)
+        s = rng.normal(size=(200, 6))
+        rec = np.array([A.recall(x, S, V)[0][0] for x in s])
+        self.assertGreater(np.corrcoef(rec, np.where(s[:, 1] > 0, 1.0, -1.0))[0, 1], 0.5)
+        self.assertLess(A.val_loss, A.base_loss)
+
+    def test_state_attention_cannot_see_its_own_answer(self):
+        from brain.paper import market as mk
+        rng = np.random.default_rng(4)
+        S = rng.normal(size=(200, 12))                                  # every week unique, values unrelated to states
+        V = rng.normal(size=(200, 3))
+        A = mk.StateAttention(12, seed=0)
+        A.fit(S, V, at=200)
+        self.assertGreater(A.val_loss, 0.9 * A.base_loss)              # a query that could see itself would recall its answer
