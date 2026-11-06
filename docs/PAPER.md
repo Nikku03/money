@@ -1040,3 +1040,69 @@ beside F1-F3. It follows the same rules as they do:
 
 Beside it, F4's market model is scored the same way as P10-M, on the forward weeks.
 `python -m brain paper forward4 step|status`.
+
+## P10 held-out result, recorded 2026-11-06: **FAIL**, both verdicts (`research/paper/P10_heldout.json`, `P10_heldout_journal.jsonl`, `P10_heldout_market.jsonl`)
+
+Run once, as declared:
+- the machine frozen at 5465e3d;
+- the 815 companies of `universe/p7_2015.json`;
+- learning from 2011, trading from 2016-01-04;
+- no data after 2020-12-31.
+
+**P10, the trader: FAIL** (one check of three).
+
+| per week (one-sided) | result |
+|---|---|
+| net after costs | −0.10% (t −0.57, p 0.72) |
+| minus random picks, same exits | +0.05% (t 0.38, p 0.35) |
+| minus the shuffled machine | +0.55% (t 1.75, p 0.040) |
+
+- **Trading:** the gate opened in 49 of 258 weeks. Its 132 trades averaged −0.57% (median −1.7%,
+  43% winners).
+- **As a $1,000 account:** $1,000 became $703, against SPY's $2,054 over the same years.
+- It beat its shuffled twin because the twin lost more. It neither made money nor beat random
+  picks.
+
+**P10-M, the market model: FAIL.**
+- The mean weekly rank correlation was +0.011 (t 1.56, p 0.059) over 257 weeks: above zero, short
+  of the bar.
+- It faded year by year: 2016 +0.033, 2017 +0.014, 2018 +0.007, 2019 +0.004, 2020 −0.006.
+- Reported, not graded:
+
+  | weekly rank correlation, 2016-2020 | mean | t |
+  |---|---|---|
+  | as declared (open to next week's open) | +0.011 | 1.56 |
+  | long-run payoffs alone | +0.014 | 2.39 |
+  | without the morning-gap trait | +0.006 | 0.94 |
+  | from the decision day's close to the next week's last close | −0.000 | −0.07 |
+  | both | −0.002 | −0.27 |
+  | the shuffled model | −0.001 | −0.25 |
+
+  What it knew held up only where opening prices were involved. The part that did not involve them
+  (+0.017 in development) is gone in 2016-2020.
+
+**What it believed about the market by the end of 2020** (2011-2020, per standard deviation, per
+week):
+- **Rewarded:**
+  - profitable operations: +0.04% (t 3.3);
+  - results due: +0.04% (t 2.4);
+  - heavy R&D: +0.04% (t 1.9);
+  - near the 52-week high: +0.04% (t 1.6).
+- **Punished:**
+  - gapped up at the open: −0.11% (t −6.3);
+  - high share price: −0.07% (t −5.3);
+  - expensive against sales: −0.05% (t −4.0);
+  - bigger companies: −0.05% (t −4.0);
+  - its own move last week, apart from its forces: −0.06% (t −3.9).
+- Its traits explained 18% of a typical week's moves in 2020.
+- Attention over market weeks again stayed uniform: it attended to all 495 weeks alike.
+
+**Where ten declared tests leave this.** The market model learns real patterns in how the market
+paid in the past, and they explain about a sixth of a week's moves across the list. On years it has
+not seen, it cannot rank next week beyond what opening prices give. A buyer at the open likely
+cannot capture that.
+- Most of a small company's week is its own news, which none of these forces or traits foresee.
+- No machine here has yet predicted direction on unseen years.
+
+**The memory bank now holds the market model's 800 weekly lessons** (development run, 2011-2026),
+each known from the open after its week: `python -m brain paper memory market --at DATE`.

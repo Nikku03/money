@@ -170,8 +170,9 @@ def backfill(b: Bank, log=print) -> dict:
             continue
         facts = [trade_fact(json.loads(x), src) for x in p.read_text().splitlines() if x.strip()]
         n[name] = remember(b, facts)
-    for name, src in (("P10_development_market.jsonl", "P10 development, 2021-chosen list, 2011-2026"),
-                      ("P10_heldout_market.jsonl", "P10 held-out, 2015-chosen list, 2011-2020")):
+    # the market model's weekly lessons, one per week (the held-out run's, on another list over the same
+    # weeks, stay in research/paper/P10_heldout_market.jsonl)
+    for name, src in (("P10_development_market.jsonl", "P10 development, 2021-chosen list, 2011-2026"),):
         p = paper / name
         if p.exists():
             n[name] = remember(b, [market_fact(json.loads(x), src) for x in p.read_text().splitlines() if x.strip()])
