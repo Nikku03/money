@@ -896,7 +896,8 @@ closed, and needs all three checks at one-sided p < 0.05. P9's in-sample develop
 - −0.07% a week after costs (p 0.58), between P7's −0.10% and P8's −0.27%.
 - Against random picks: −0.07% (p 0.59). Against the same machine taught shuffled outcomes: −0.16% (p 0.64).
 - 327 trades in 112 weeks (gate open 118 of 302): mean −0.34%, median −2.7%, 41% winners.
-- Compounded, $1000 became about $485.
+- As a $1,000 account (1/6 of the account per trade, as everywhere here), $1,000 became $766
+  (corrected 2026-11-06; first reported as $485 from a different calculation).
 
 **What attention did.** Its features were used: "what it attended to often hit +20%" was among a
 pick's top three reasons 134 times, and one of the per-exit recalls 416 times. With sharpness bounded, it spread
@@ -976,7 +977,8 @@ never changed after it.
 - −0.12% a week after costs (p 0.63). Against random picks −0.11%; against the shuffled machine +0.09%
   (p 0.41).
 - 280 trades in 96 weeks (gate open 102 of 302): mean −0.75%, median −3.3%, 37% winners.
-- Compounded, $1,000 became about $420.
+- As a $1,000 account, $1,000 became $627 (corrected 2026-11-06; first reported as $420 from a
+  different calculation).
 
 **The market model ranked the list's next week well.** Each week's forecast used only what was known
 before that open, so this is walk-forward, though on years the design was developed on.
@@ -1059,7 +1061,8 @@ Run once, as declared:
 
 - **Trading:** the gate opened in 49 of 258 weeks. Its 132 trades averaged −0.57% (median −1.7%,
   43% winners).
-- **As a $1,000 account:** $1,000 became $703, against SPY's $2,054 over the same years.
+- **As a $1,000 account:** $1,000 became $994, against SPY's $2,054 over the same years (corrected
+  2026-11-06; first reported as $703 from a different calculation).
 - It beat its shuffled twin because the twin lost more. It neither made money nor beat random
   picks.
 
@@ -1144,3 +1147,19 @@ per CIK.
   missing.
 - **Less power:** three years (about 150 weeks) instead of five.
 - **This is the eleventh verdict on historical data.**
+
+## Correction, 2026-11-06: three account figures
+
+Every $1,000 account in this file gives each new trade 1/6 of the account's value, so up to six
+trades are open at once. That is the method of P3b-P7, and it reproduces their figures exactly.
+
+For P9 development and both P10 runs, I instead compounded each week's average net over the whole
+account. That overstated their losses. With the method used everywhere else:
+
+| run | reported | correct |
+|---|---|---|
+| P9 development | $485 | $766 |
+| P10 development | $420 | $627 |
+| P10 held-out | $703 | $994 |
+
+No verdict changes. The method is now code (`review.account`).

@@ -28,7 +28,8 @@
  "verdict": "FAIL",
  "account": {
   "start": 1000,
-  "end": 703.2170099344773
+  "end": 994.0,
+  "method": "1/6 of the account per trade (review.account); first reported as 703 from compounding weekly averages"
  },
  "gate_open_weeks": 49,
  "P10-M": {
