@@ -556,3 +556,28 @@ class P11Test(unittest.TestCase):
     def test_the_control_has_no_lessons(self):
         from brain.paper import moonshot5 as m
         self.assertEqual(m.score(pd.DataFrame({"x": [1.0, 2.0]}), np.ones(2, bool), {})[0].tolist(), [0.0, 0.0])
+
+
+class LayersTest(unittest.TestCase):
+    def test_insider_trades_count_only_after_their_filing(self):
+        from brain.paper import layers as ly
+        dates = pd.bdate_range("2015-01-01", periods=200).strftime("%Y-%m-%d").values
+        rows = {"X": [("2015-03-02", "2015-02-27", "P", 1000.0, 5.0, "111", "director"),
+                      ("2015-03-02", "2015-02-27", "P", 500.0, 5.0, "222", "officer"),
+                      ("2015-03-10", "2015-03-09", "S", 300.0, 6.0, "111", "director")]}
+        I = ly.Insiders(rows, dates)
+        d_file = int(np.searchsorted(dates, "2015-03-02"))
+        self.assertEqual(I.features(d_file, ["X"]).loc["X", "ins_buys"], 0)        # filed that day: not yet
+        f = I.features(d_file + 1, ["X"]).loc["X"]
+        self.assertEqual((f["ins_buys"], f["ins_buyers"], f["ins_sells"]), (2, 2, 0))
+        self.assertEqual(I.features(d_file + 1 + ly.WINDOW, ["X"]).loc["X", "ins_buys"], 0)   # out of the window
+
+    def test_short_volume_needs_consistent_volume(self):
+        from brain.paper import layers as ly
+        dates = pd.bdate_range("2015-01-01", periods=120).strftime("%Y-%m-%d")
+        vol = pd.DataFrame({"X": np.full(120, 1e6), "Y": np.full(120, 1e6)}, index=dates)
+        rows = {"X": [(d, 2e5, 4e5) for d in dates], "Y": [(d, 2e7, 4e7) for d in dates]}   # Y: 40x its own volume
+        S = ly.ShortVolume(rows, {"close": vol, "vol": vol})
+        f = S.features(100, ["X", "Y"])
+        self.assertAlmostEqual(f.loc["X", "short_r20"], 0.5)
+        self.assertTrue(np.isnan(f.loc["Y", "short_r20"]))
