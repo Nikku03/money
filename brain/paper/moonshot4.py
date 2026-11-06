@@ -211,9 +211,36 @@ def simulate(raw: dict, sec: dict, facts: dict, stocks: list[str], start: str, e
             "learned_from": str(dates[firsts[0]]), "end_data": end_data, "pending": pending,
             "pending_weeks": pending_weeks, "last_date": str(dates[-1]),
             "market": mm.journal, "beliefs": beliefs, "final_belief": mm.belief(),
-            "market_record": [{"week": w, "ic": ic, "ic_static": ics, "explained": r2}
-                              for w, ic, ics, r2 in zip(H["date"], H["ic"], H["ic_static"], H["r2"])],
+            "market_record": _record(H),
             "skill": skill, "attention_val_loss": att.val_loss}
+
+
+def _record(H: dict) -> list[dict]:
+    return [{"week": w, "ic": ic, "ic_static": ics, "explained": r2, "ic_nogap": a, "ic_close": b, "ic_nogap_close": c}
+            for w, ic, ics, r2, a, b, c in zip(H["date"], H["ic"], H["ic_static"], H["r2"], H["ic_nogap"], H["ic_close"],
+                                               H["ic_nogap_close"])]
+
+
+def market_pass(raw: dict, sec: dict, facts: dict, stocks: list[str], end_data: str | None = None, shuffle: bool = False,
+                seed: int = 0) -> dict:
+    """The market model alone, stepped exactly as ``simulate`` steps it (same list, weeks, tradable
+    stocks, seed): its weekly record and lessons, without the trader. Its forecasts never depend on
+    the trades, so they are the same as in a full run."""
+    if end_data:
+        raw = {t: df[df["date"].astype(str) <= end_data] for t, df in raw.items()}
+    P = m1.panels(raw)
+    dates = P["close"].index.values
+    stocks = [s for s in stocks if s in P["close"] and s not in mk.NEEDED and P["close"][s].iloc[:260].notna().sum() > 200]
+    events = m1.filing_events(sec, dates)
+    dos = ds.Dossier({t: facts["facts"].get(t, []) for t in stocks}, facts["names"], P, events, sec.get("sic", {}))
+    week = pd.Series(pd.to_datetime(dates)).dt.to_period("W").values
+    firsts = [i for i in range(1, len(dates)) if week[i] != week[i - 1] and i >= 261 and i + m2.MAXH <= len(dates)]
+    mm = mk.MarketModel(P, stocks, events, seed, shuffle)
+    for wk, d in enumerate(firsts):
+        F = m1.panel(P, stocks, events, sec.get("sic", {}), d)
+        E = dos.features(d, stocks)
+        mm.week(d, wk, F, E, m1.tradable(P, stocks, d) & np.isfinite(F.values).all(1))
+    return {"market": mm.journal, "market_record": _record(mm.hist), "final_belief": mm.belief()}
 
 
 def _reasons(st, x, j, plain, k=3):
@@ -231,7 +258,11 @@ def grade_market(run: dict, start: str, end: str | None = None) -> dict:
     ic = [r["ic"] for r in rec if np.isfinite(r["ic"])]
     ics = [r["ic_static"] for r in rec if np.isfinite(r["ic_static"])]
     m, t, p = m1.tstat(ic)
+    extra = {k: dict(zip(("mean", "t", "p"), m1.tstat([r[k] for r in rec if np.isfinite(r.get(k, np.nan))])))
+             for k in ("ic_nogap", "ic_close", "ic_nogap_close")}
     return {"weeks": len(ic), "mean_rank_corr": m, "t": t, "p": p,
             "static_premia_only": dict(zip(("mean", "t", "p"), m1.tstat(ics))),
+            "reported_only": {"without the morning gap": extra["ic_nogap"], "close to close": extra["ic_close"],
+                              "without the gap, close to close": extra["ic_nogap_close"]},
             "explained": float(np.mean([r["explained"] for r in rec])) if rec else None,
             "verdict": "PASS" if (m > 0 and p < 0.05) else "FAIL"}

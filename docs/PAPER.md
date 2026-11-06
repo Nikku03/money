@@ -969,3 +969,57 @@ never changed after it.
   today are missing.
 - **Many tries.** These are the ninth and tenth verdicts on historical data. A p just under 0.05
   would be weak evidence after this many tries.
+
+## P10 development (in-sample, 2021-2026 on the 2021-chosen list), 2026-11-06
+
+**The trader FAILED in-sample, like P7-P9.**
+- −0.12% a week after costs (p 0.63). Against random picks −0.11%; against the shuffled machine +0.09%
+  (p 0.41).
+- 280 trades in 96 weeks (gate open 102 of 302): mean −0.75%, median −3.3%, 37% winners.
+- Compounded, $1,000 became about $420.
+
+**The market model ranked the list's next week well.** Each week's forecast used only what was known
+before that open, so this is walk-forward, though on years the design was developed on.
+- Mean weekly rank correlation +0.037 (t 5.9) over 301 weeks of 2021-2026, between +0.028 and +0.045
+  every year. Over all 748 weeks from 2012: +0.031 (t 8.4).
+- The same model learning from scrambled moves: −0.011.
+- The traits explained 15% of a typical week's moves across the list (adjusted). The rest was each
+  company's own news.
+
+**Where the skill comes from:**
+- **The long run.** The long-run payoffs alone rank as well (+0.037).
+  - Attention over market weeks stayed uniform: it attended to all 800 weeks about equally, and its
+    held-out loss equalled uniform attention's.
+  - The shorter spans added almost nothing. The dynamics put 0.80 on the long run, 0.23 on the last
+    year beyond it, and about 0 on the rest.
+- **What it learned the market pays for,** 2011-2026, per standard deviation of a trait, per week:
+
+  | rewarded | | punished | |
+  |---|---|---|---|
+  | near the 52-week high | +0.10% (t 5.5) | gapped up at the open | −0.11% (t −8.6) |
+  | profitable operations | +0.04% (t 4.4) | bigger companies | −0.07% (t −6.5) |
+  | long cash runway | +0.04% (t 3.4) | expensive against sales | −0.08% (t −6.5) |
+  | | | high share price | −0.08% (t −6.4) |
+  | | | share sale in prospect | −0.06% (t −4.8) |
+
+  These match patterns documented in finance research: momentum toward 52-week highs,
+  profitability, value, size, and poor returns after share issuance.
+- **Part of it is the opening print.** A stock's opening price enters both its gap and the move
+  measured from that open. So an opening price off the true price looks like a gap that reverses.
+
+  | weekly rank correlation, 2021-2026 | mean | t |
+  |---|---|---|
+  | as declared (open to next week's open) | +0.037 | 5.9 |
+  | without the morning-gap trait | +0.022 | 3.6 |
+  | from the decision day's close to the next week's last close | +0.020 | 3.1 |
+  | both | +0.017 | 2.8 |
+
+  The part that involves no opening price is about half the headline.
+
+**Why the trader cannot use it.** A rank correlation of 0.02-0.04 means expected moves that differ by
+tenths of a percent a week, while a moonshot trade swings by ±10-20%. Three such trades a week cannot
+show an edge that small. It would take many small positions at once.
+
+**Added before the held-out run** (2026-11-06, after the development run, before any held-out run):
+beside P10-M, the three rank correlations in the table above are reported, not graded. Computing them
+changes no decision.

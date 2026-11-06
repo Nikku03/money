@@ -198,11 +198,13 @@ class MarketModel:
         self.lev = cl[list(LEVELS)].ffill()
         self.Rs = np.log(cl[stocks]).diff().values                       # stocks, daily log returns (NaN missing)
         self.logc = np.log(cl[stocks]).values
+        self.close_ = cl[stocks].values
         self.open_ = P["open"][stocks].values
         self.spy_open = P["open"]["SPY"].values
         self.res = {t: np.array(sorted(k for k, lab in events.get(t, []) if "sec_results" in lab)) for t in stocks}
         self.att = StateAttention(len(STATE), seed)
-        self.hist = {"date": [], "S": [], "F": [], "A": [], "ic": [], "ic_static": [], "r2": [], "n": []}
+        self.hist = {"date": [], "S": [], "F": [], "A": [], "ic": [], "ic_static": [], "r2": [], "n": [],
+                     "ic_nogap": [], "ic_close": [], "ic_nogap_close": []}
         self.prev = None
         self.coef = np.zeros(len(DYN))
         self._U = []
@@ -283,6 +285,16 @@ class MarketModel:
         y[valid] = r[valid] - r[valid].mean()
         ic = spearman(pv["exp"][valid], r[valid]) if pv["exp"] is not None else float("nan")
         ics = spearman(pv["static"][valid], r[valid]) if pv["static"] is not None else float("nan")
+        # reported only: the same ranking without the morning-gap trait, and the move from the decision
+        # day's close to the last close before the next open (no opening print at either end), because
+        # a stock's opening print enters both its gap and the move measured from that open
+        rc = np.log(self.close_[d - 1] / self.close_[pv["d"]])
+        vc = pv["ok"] & np.isfinite(rc)
+        icng = iccl = icngc = float("nan")
+        if pv["exp"] is not None:
+            gi = list(TRAITS).index("gap")
+            ng = pv["exp"] - pv["Z"][:, gi] * pv["fhat"][gi]
+            icng, iccl, icngc = spearman(ng[valid], r[valid]), spearman(pv["exp"][vc], rc[vc]), spearman(ng[vc], rc[vc])
         if self.shuffle:                                      # the control: what each stock did is scrambled
             y[valid] = self.rng.permutation(y[valid])
         Z = pv["Z"][valid]
@@ -304,6 +316,9 @@ class MarketModel:
         H["ic_static"].append(ics)
         H["r2"].append(r2)
         H["n"].append(n)
+        H["ic_nogap"].append(icng)
+        H["ic_close"].append(iccl)
+        H["ic_nogap_close"].append(icngc)
         self.journal.append(self._lesson(pv, d, f, r2, spy, lvm, ic))
         self.prev = None
 

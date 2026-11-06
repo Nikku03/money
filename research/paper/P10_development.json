@@ -1,0 +1,146 @@
+{
+ "test": "P10 development (in-sample)",
+ "run_at": "2026-11-06",
+ "weeks": 302,
+ "traded_weeks": 96,
+ "trades": 280,
+ "weekly_net": {
+  "mean": -0.0012171086765374202,
+  "t": -0.34178203162559895,
+  "p": 0.6337425335760053
+ },
+ "vs_random": {
+  "mean": -0.001073778030075591,
+  "t": -0.31118713917708607,
+  "p": 0.6221708202709189
+ },
+ "vs_shuffled": {
+  "mean": 0.0009454732545142638,
+  "t": 0.23301352204361753,
+  "p": 0.40787545283935256
+ },
+ "checks": {
+  "beats random picks under the same exits (one-sided p < 0.05)": false,
+  "makes money after costs (one-sided p < 0.05)": false,
+  "beats the same learner taught shuffled outcomes (p < 0.05)": false
+ },
+ "verdict": "FAIL",
+ "market_model": {
+  "weeks": 301,
+  "mean_rank_corr": 0.036500444134141295,
+  "t": 5.868969314445027,
+  "p": 2.192562892203888e-09,
+  "static_premia_only": {
+   "mean": 0.03717842736720663,
+   "t": 6.303801175104232,
+   "p": 1.4521651119823696e-10
+  },
+  "reported_only": {
+   "without the morning gap": {
+    "mean": 0.02184052740638477,
+    "t": 3.621768058534719,
+    "p": 0.00014629820263901695
+   },
+   "close to close": {
+    "mean": 0.01983803481035514,
+    "t": 3.140855243056481,
+    "p": 0.0008422763594084903
+   },
+   "without the gap, close to close": {
+    "mean": 0.016723198163103324,
+    "t": 2.796858505298942,
+    "p": 0.0025801063243365147
+   }
+  },
+  "explained": 0.15223435117469455,
+  "verdict": "PASS"
+ },
+ "market_model_shuffled": {
+  "weeks": 301,
+  "mean_rank_corr": -0.011211734574326537,
+  "t": -1.8219397619551476,
+  "p": 0.9657679368764484,
+  "static_premia_only": {
+   "mean": -0.011679168507548686,
+   "t": -1.4982229088142929,
+   "p": 0.9329623272345374
+  },
+  "explained": -0.0016379246844672101,
+  "verdict": "FAIL"
+ },
+ "belief_at_end": {
+  "weeks": 800,
+  "rewarded": [
+   [
+    "near the 52-week high",
+    0.000997419975788112,
+    5.504057227306473
+   ],
+   [
+    "profitable operations",
+    0.0004476925594757264,
+    4.39425454638676
+   ],
+   [
+    "long cash runway",
+    0.0004236380102802606,
+    3.3633585243476793
+   ],
+   [
+    "moves with small caps",
+    0.00033692411751454405,
+    2.3457230618816016
+   ],
+   [
+    "high market beta",
+    0.00039724188066728617,
+    1.6041098046995097
+   ]
+  ],
+  "punished": [
+   [
+    "gapped up at the open",
+    -0.0011432000552426462,
+    -8.60242091913593
+   ],
+   [
+    "bigger companies",
+    -0.0007328683825956462,
+    -6.546123475943964
+   ],
+   [
+    "expensive against sales",
+    -0.0007675433832667037,
+    -6.499370609805024
+   ],
+   [
+    "high share price",
+    -0.0007693669136831417,
+    -6.432399547218851
+   ],
+   [
+    "share sale in prospect",
+    -0.000577790351193108,
+    -4.778562699898205
+   ]
+  ],
+  "dynamics": {
+   "long run": 0.803427473854216,
+   "last year, beyond the long run": 0.23298058228178198,
+   "last quarter, beyond the year": -0.0007350476536350229,
+   "last month, beyond the quarter": 0.004623949794230496,
+   "last week, beyond the month": -0.0012016830393689196,
+   "attention, beyond the long run": 20.14226618175353
+  },
+  "skill": {
+   "weeks": 748,
+   "mean_ic": 0.03139960063250411
+  },
+  "explained": 0.15752511095641072,
+  "attention": {
+   "weeks_attended": 799.9999999950736,
+   "val_loss": 1.2210183881671393,
+   "uniform_loss": 1.2210183958226786
+  }
+ }
+}
