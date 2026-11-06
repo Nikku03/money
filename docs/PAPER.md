@@ -1023,3 +1023,20 @@ show an edge that small. It would take many small positions at once.
 **Added before the held-out run** (2026-11-06, after the development run, before any held-out run):
 beside P10-M, the three rank correlations in the table above are reported, not graded. Computing them
 changes no decision.
+
+**P10 is frozen at commit 5465e3d** (`market.py`, `moonshot4.py`, and the P7-P9 code they call, as of
+that commit). It is run once on the held-out years as declared, and never changed after.
+
+# F4: P10 trading forward (declared 2026-11-06, before its first week)
+
+The frozen P10 machine trades on paper from the week of 2026-11-09, on `universe/us_small.json`,
+beside F1-F3. It follows the same rules as they do:
+- the ledger (`research/paper/forward4/`);
+- exit-following;
+- the memory bank, which now also keeps each week's market lesson, known from the open after the
+  week;
+- the daily schedule;
+- the test: read once 30 weeks have fully closed, all three checks at one-sided p < 0.05.
+
+Beside it, F4's market model is scored the same way as P10-M, on the forward weeks.
+`python -m brain paper forward4 step|status`.
