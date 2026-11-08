@@ -75,3 +75,34 @@ session after it. That is M1's own window, measured on the stock's raw price rat
 M1a's PASS (`research/RESULTS.md`, Move sizes) is about the range against the stock's own history. Whether M1 reads
 the options' price better than the options do is unproven until thirty of these calls are judged. A size is not a
 direction, and nothing here trades.
+
+## M1 against the options: the first 99 calls judged (2026-11-08)
+
+All 99 recorded calls (reports with a first session from 2026-11-03 to 2026-11-05) were judged with
+`BRAIN_PREDICTIONS=research/m1_calls.jsonl python -m brain predict score --refresh`. This is one
+earnings week, so the calls share the week's market moves and are not 99 independent tests.
+
+- **The options already priced most of it.** Their priced move for the report had a median of 8.5%;
+  the stocks moved a median of 6.3%. Only 36% moved more than priced; fair pricing would put that at
+  about 37-43%. Buying every straddle at its mid would have lost 0.83 points of the stock's price per
+  report, before the bid-ask.
+- **The options ranked the sizes about as well as M1:** a rank correlation with the actual move of
+  +0.31 for the options, +0.29 for M1.
+- **M1's chance of beating the priced move scored a Brier of 0.234.** A fixed 42.5% (fair options,
+  normal moves) scores 0.235, so M1's chance is no better yet than assuming the options are fair.
+- **Where M1 disagreed with the options, it leaned the right way:**
+
+  | M1's side | calls | actual move / priced move | straddle buyer, mean |
+  |---|---|---|---|
+  | buy (M1 expects 20%+ more) | 7 | 1.46 | +1.80 points |
+  | none | 43 | 1.02 | −0.30 points |
+  | sell (M1 expects 20%+ less) | 49 | 0.79 | −1.66 points |
+
+  The rank correlation of M1's view relative to the options with the actual move relative to them is
+  +0.18 (p 0.08). Following M1's side would have made +1.68 points per call, against +0.83 for
+  always selling. That is before the bid-ask, and with only seven buys.
+
+**Verdict: unproven.** The ordering is the one a real edge would show, but one week of reports cannot
+show it, and the options' bid-ask may take it all. More earnings weeks are needed. Each is judged the
+same way: M1's side against the options' priced move, net of half the quoted spread, with the weeks as
+the unit.
