@@ -75,3 +75,21 @@ session after it. That is M1's own window, measured on the stock's raw price rat
 M1a's PASS (`research/RESULTS.md`, Move sizes) is about the range against the stock's own history. Whether M1 reads
 the options' price better than the options do is unproven until thirty of these calls are judged. A size is not a
 direction, and nothing here trades.
+
+**The live record so far (scored 2026-11-08): no skill against the options' price.**
+
+All 99 calls are judged. They are the reports of one week, Nov 4-6, 2026, so they are not 99 independent tests.
+
+| | Calls | M1's chance | Moved more than the options priced |
+|---|---|---|---|
+| All | 99 | 31% | 36% |
+| M1 said the options were dear ("sell") | 49 | 23% | 33% |
+| M1 said no edge | 43 | 36% | 40% |
+| M1 said the options were cheap ("buy") | 7 | 53% | 43% |
+
+- **Brier score:** M1 0.2335. Treating every option as fairly priced (a flat 38%) scored 0.2317, so M1 did a
+  little worse.
+- **Ranking:** its chances sorted the calls only weakly (AUC 0.57).
+- **Where it was off:** M1 thought the options dearer than they were.
+- **What still holds:** M1's ranges against the stock's own history (M1a). Its edge over the options' price is
+  not shown, and a call made from it carries no tested weight.
