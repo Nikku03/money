@@ -123,7 +123,7 @@ stocks, January 2024 to September 2026.
 
 ```
 python -m brain scan run                 # the whole research universe at the bank's latest close, widest first
-python -m brain scan run --refresh       # re-read the daily prices first (about 15 minutes)
+python -m brain scan run --refresh       # re-read daily prices and latest filings first (about 20 minutes)
 python -m brain scan run --sort shock    # likeliest 20%+ day first
 python -m brain scan run CATX AAPL       # named tickers, in full (they need prices in the bank)
 python -m brain scan run --record        # also write research/scans/<close>.json, so the scan can be scored

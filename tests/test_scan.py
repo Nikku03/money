@@ -147,8 +147,49 @@ class ModelTest(TempHome):
         why = scan.reasons(m, row, {"date": "2026-11-12", "timing": "after close"})
         self.assertEqual(why, ["results due within eight days (about 2026-11-12, after close)"])
         self.assertGreater(scan.pulls(m, row)["report"], 1.0)
+        self.assertEqual(scan.reasons(m, row), ["results due within eight days (by last year's date)"])
+        self.assertIn("results came out on 2026-11-05", scan.reasons(m, row, {"out": "2026-11-05"})[0])
         row["earn_win"] = -2.5
         self.assertEqual(scan.reasons(m, row), [])                         # nothing widens it
+
+
+class LiveHelpersTest(TempHome):
+    def test_report_dates_say_due_or_already_out(self):
+        from unittest import mock
+
+        from brain import earnradar
+        idx = {"tickers": {"DUE": {"reports": ["2025-08-06T20:05:00Z", "2025-11-12T21:05:00Z"]},
+                           "OUT": {"reports": ["2025-11-13T21:05:00Z", "2026-11-05T21:05:00Z"]},
+                           "FAR": {"reports": ["2025-09-30T12:00:00Z"]}}}
+        with mock.patch.object(earnradar, "load_index", return_value=idx):
+            got = scan.report_dates("2026-11-09", ["DUE", "OUT", "FAR", "NONE"])
+        self.assertEqual(got["DUE"]["date"], "2026-11-11")                # last year's date moved on 52 weeks
+        self.assertEqual(got["DUE"]["timing"], "after close")
+        self.assertEqual(got["OUT"], {"out": "2026-11-05"})
+        self.assertEqual(sorted(got), ["DUE", "OUT"])
+        with mock.patch.object(earnradar, "load_index", side_effect=FileNotFoundError):
+            self.assertEqual(scan.report_dates("2026-11-09", ["DUE"]), {})
+
+    def test_refresh_reads_prices_then_filings_and_counts_outages(self):
+        from unittest import mock
+
+        from brain.sources import prices, sec
+        seen = []
+
+        def px(t, ttl):
+            seen.append(("px", t))
+            if t == "BAD":
+                raise OSError("down")
+            return []
+
+        def fil(t, all_pages, ttl):
+            seen.append(("fil", t, all_pages))
+            return [], []
+        with mock.patch.object(prices, "ingest", px), mock.patch.object(sec, "filings_for", fil):
+            r = scan.refresh(self.bank, ["aaa", "BAD"], log=None)
+        self.assertEqual(seen, [("px", "SPY"), ("px", "^VIX"), ("px", "AAA"), ("px", "BAD"),
+                                ("fil", "AAA", False), ("fil", "BAD", False)])
+        self.assertEqual(r, {"symbols": 4, "failed": {"prices": 1, "filings": 0}})
 
 
 class TrialTest(TempHome):

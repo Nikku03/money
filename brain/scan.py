@@ -293,8 +293,12 @@ def reasons(part: dict, row: dict, report: dict | None = None, top: int = 3) -> 
             out.append(s)
         elif g == "report":
             if row["earn_win"] > 0:
-                when = f" (about {report['date']}, {report['timing']})" if report else ""
-                out.append("results due within eight days" + when)
+                if report and report.get("out"):
+                    out.append(f"results came out on {report['out']} (last year's came later, so the range still "
+                               "allows for a report)")
+                else:
+                    when = f" (about {report['date']}, {report['timing']})" if report else " (by last year's date)"
+                    out.append("results due within eight days" + when)
         elif g == "price":
             price = float(np.exp(row["logp"]))
             out.append(f"a ${price:.2f} stock" if price < 5 else
@@ -371,9 +375,13 @@ def live(bank: Bank, tickers: list[str], log=None) -> dict:
             "s1_sha": shocks.model_sha() if s1 else None}
 
 
+RECENT_REPORT = 12          # days: a report this recent is this season's, already out
+
+
 def report_dates(asof: str, tickers: list[str]) -> dict[str, dict]:
-    """The earnings index's estimate of each ticker's next report in the eight days after ``asof`` (none if the
-    index is missing)."""
+    """What the earnings index knows of each ticker's report around ``asof``: its estimate of the next one in the
+    eight days after (``date``, ``timing``), or that this season's is already out (``out``). Empty if the index
+    is missing."""
     from datetime import date, timedelta
 
     from brain import earnradar
@@ -381,13 +389,42 @@ def report_dates(asof: str, tickers: list[str]) -> dict[str, dict]:
         idx = earnradar.load_index()["tickers"]
     except FileNotFoundError:
         return {}
-    start = date.fromisoformat(asof) + timedelta(days=1)
+    day = date.fromisoformat(asof)
     out = {}
     for t in tickers:
-        nr = earnradar.next_report(idx[t], start, 8) if t in idx else None
-        if nr:
+        row = idx.get(t)
+        if not row:
+            continue
+        reps = row.get("reports") or []
+        last = earnradar.ny_date(reps[-1]) if reps else None
+        if last and 0 <= (day - last).days <= RECENT_REPORT:
+            out[t] = {"out": last.isoformat()}
+        elif nr := earnradar.next_report(row, day + timedelta(days=1), 8):
             out[t] = nr
     return out
+
+
+def refresh(bank: Bank, tickers: list[str], log=print) -> dict:
+    """Re-read what the scan stands on: the market's and each ticker's daily prices, then each company's latest
+    filings (SEC's recent page), so a new 8-K or share-sale filing counts. One symbol's outage does not stop it."""
+    from brain.sources import prices, sec
+    todo = [shocks.BENCH, shocks.VIX, *[t.upper() for t in tickers]]
+    bad = {"prices": 0, "filings": 0}
+    for k, t in enumerate(todo):
+        try:
+            bank.add_many(prices.ingest(t, ttl=3600))
+        except Exception:  # noqa: BLE001
+            bad["prices"] += 1
+        if log and (k + 1) % 200 == 0:
+            log(f"  prices: {k + 1}/{len(todo)}")
+    for k, t in enumerate(todo[2:]):
+        try:
+            bank.add_many(sec.filings_for(t, all_pages=False, ttl=6 * 3600)[0])
+        except Exception:  # noqa: BLE001
+            bad["filings"] += 1
+        if log and (k + 1) % 200 == 0:
+            log(f"  filings: {k + 1}/{len(todo) - 2}")
+    return {"symbols": len(todo), "failed": bad}
 
 
 def line(part: dict, r: dict, report: dict | None = None) -> str:
@@ -504,17 +541,9 @@ def _cmd(a) -> int:
               "little. The tested evidence is W1a and S1a in research/RESULTS.md.")
         return 0
     if a.refresh:
-        from brain.sources import prices
-        todo = [shocks.BENCH, shocks.VIX, *(a.tickers or shocks.universe_tickers())]
-        bad = 0
-        for k, t in enumerate(todo):
-            try:
-                bank.add_many(prices.ingest(t.upper(), ttl=3600))
-            except Exception:  # noqa: BLE001 - one symbol's outage must not stop the scan
-                bad += 1
-            if (k + 1) % 200 == 0:
-                print(f"  prices: {k + 1}/{len(todo)}", flush=True)
-        print(f"prices refreshed for {len(todo) - bad} of {len(todo)} symbols")
+        r = refresh(bank, a.tickers or shocks.universe_tickers(), log=lambda m: print(m, flush=True))
+        print(f"re-read {r['symbols']} symbols; not read: {r['failed']['prices']} prices, {r['failed']['filings']} "
+              "filing lists")
         bank = Bank()
     named = [t.upper() for t in a.tickers]
     res = live(bank, named or shocks.universe_tickers())
@@ -553,6 +582,6 @@ def add_cli(sub) -> None:
     p.add_argument("tickers", nargs="*", help="run: only these tickers, in full (they need prices in the bank)")
     p.add_argument("--top", type=int, default=25, help="run: how many of the widest ranges to list")
     p.add_argument("--sort", choices=["move", "shock"], default="move", help="run: widest range first, or likeliest 20%+ day")
-    p.add_argument("--refresh", action="store_true", help="run: re-read the daily prices first (slow for the whole list)")
+    p.add_argument("--refresh", action="store_true", help="run: re-read the daily prices and latest filings first (about 20 minutes for the whole list)")
     p.add_argument("--record", action="store_true", help="run: write the scan to research/scans/ so it can be scored")
     p.set_defaults(fn=_cmd)
