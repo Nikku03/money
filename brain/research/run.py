@@ -209,13 +209,22 @@ def is_gated_shock(r: dict) -> bool:
     return is_shock(r) and r.get("gate_type") in ("logloss", "fade")
 
 
+def is_range(r: dict) -> bool:
+    """A test of the scan's weekly range (brain/research/rangetest.py)."""
+    return r.get("kind") == "range"
+
+
+def is_gated_range(r: dict) -> bool:
+    return is_range(r) and r.get("gate_type") == "pinball"
+
+
 def is_gated_forecast(r: dict) -> bool:
     """A forecast result with a declared gate (F1b, F1c); descriptive ones (F1a, F1d) are not."""
     return is_forecast(r) and (r.get("gate_type") == "ic" or (r.get("gate_type") is None and "p" in r))
 
 
 def _bh_p(r: dict) -> float:
-    if is_forecast(r) or is_link(r) or is_event(r) or is_move(r) or is_shock(r):
+    if is_forecast(r) or is_link(r) or is_event(r) or is_move(r) or is_shock(r) or is_range(r):
         p = r.get("p")
         return float(p) if isinstance(p, (int, float)) and math.isfinite(p) else 1.0  # no p counts as 1
     return r["test"]["perm_p"]
@@ -242,7 +251,7 @@ def _link_verdict(r: dict, q: float) -> str:
 
 
 def _move_verdict(r: dict, q: float) -> str:
-    if not (is_gated_move(r) or is_gated_shock(r)):
+    if not (is_gated_move(r) or is_gated_shock(r) or is_gated_range(r)):
         return "REPORT"
     if not (r.get("controls") or {}).get("pass"):
         return "FAIL (controls)"
@@ -260,7 +269,7 @@ def verdicts(path=None) -> list[dict]:
     gone = ledger.withdrawn(path)
     tested = {k: r for k, r in res.items()
               if is_hypothesis(r) or is_gated_forecast(r) or is_gated_link(r) or is_gated_event(r)
-              or is_gated_move(r) or is_gated_shock(r)}
+              or is_gated_move(r) or is_gated_shock(r) or is_gated_range(r)}
     q_of = dict(zip(tested, bh_adjust([_bh_p(r) for r in tested.values()])))
     rows = []
     for k, r in res.items():
@@ -273,7 +282,7 @@ def verdicts(path=None) -> list[dict]:
         if is_link(r) or is_event(r):
             rows.append({**r, "bh_q": q, "verdict": _link_verdict(r, q)})
             continue
-        if is_move(r) or is_shock(r):
+        if is_move(r) or is_shock(r) or is_range(r):
             rows.append({**r, "bh_q": q, "verdict": _move_verdict(r, q)})
             continue
         te = r["test"]
@@ -336,6 +345,7 @@ def report(ledger_path=None, results_path=None) -> str:
     evts = [r for r in every if is_event(r)]
     mvs = [r for r in every if is_move(r)]
     shk = [r for r in every if is_shock(r)]
+    rng = [r for r in every if is_range(r)]
     led = Path(ledger_path or config.LEDGER)
     try:
         led_name = led.resolve().relative_to(config.ROOT.resolve()).as_posix()
@@ -345,7 +355,8 @@ def report(ledger_path=None, results_path=None) -> str:
         text = "\n".join(["# Research results", "",
                           f"Generated {now_iso()} from `{led_name}`. Every number below is copied from the ledger.",
                           "", *_forecast_section(forecasts), *_link_section(links, ledger_path),
-                          *_event_section(evts, ledger_path), *_move_section(mvs), *_shock_section(shk)]) + "\n"
+                          *_event_section(evts, ledger_path), *_move_section(mvs), *_shock_section(shk),
+                          *_range_section(rng)]) + "\n"
         Path(results_path or config.RESULTS).write_text(text)
         return text
     by_uni: dict[str, list[dict]] = {}
@@ -372,7 +383,9 @@ def report(ledger_path=None, results_path=None) -> str:
         + (" and every gated link test (see Links)" if any(is_gated_link(r) for r in links) else "")
         + (" and every gated event test (see Events)" if any(is_gated_event(r) for r in evts) else "")
         + (" and every gated move-size test (see Move sizes)" if any(is_gated_move(r) for r in mvs) else "")
-        + (" and every gated shock test (see Shocks)" if any(is_gated_shock(r) for r in shk) else "") + ".",
+        + (" and every gated shock test (see Shocks)" if any(is_gated_shock(r) for r in shk) else "")
+        + (" and every gated weekly-range test (see Weekly ranges)" if any(is_gated_range(r) for r in rng) else "")
+        + ".",
         "",
         "| Hypothesis | Universe | Select | TEST net excess / mo | Annualised | Info ratio | Months won | Perm p | BH q | TRAIN net excess / mo | TRAIN p | TEST coverage | Verdict |",
         "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
@@ -448,6 +461,8 @@ def report(ledger_path=None, results_path=None) -> str:
         lines += ["", *_move_section(mvs)]
     if shk:
         lines += ["", *_shock_section(shk)]
+    if rng:
+        lines += ["", *_range_section(rng)]
     text = "\n".join(lines) + "\n"
     Path(results_path or config.RESULTS).write_text(text)
     return text
@@ -852,3 +867,58 @@ def _shock_section(rows: list[dict]) -> list[str]:
                      "not a trade: shorting a stock that just jumped costs borrow fees and risks a squeeze. The universe "
                      "is chosen today (survivorship: companies bought out or delisted are missing, so shocks are "
                      "undercounted and post-shock returns flattered)."), ""]
+
+
+def _range_section(rows: list[dict]) -> list[str]:
+    """The weekly-range tests' table and plain words (brain/research/rangetest.py, docs/SCAN.md)."""
+    if not rows:
+        return []
+    lines = [
+        "## Weekly ranges",
+        "",
+        ("Tests of the scan's weekly range W1 (`brain/scan.py`, `docs/SCAN.md`): the range of a stock's return over "
+         "the next five sessions, from what was known at a week's last close, on tradable stock-weeks. Per stock-week "
+         "the score is the mean pinball loss of the log return over the 5/16/50/84/95% quantiles; each month the "
+         "baseline's mean loss (the range its 60-session volatility alone gives) minus W1's, and the statistic is the "
+         "mean of those monthly differences with a one-sided sign-flip p. The gate, declared before running: "
+         "positive, p < 0.05, W1's 68% range holding 63%-73% of TEST stock-weeks and its 90% range 86%-94%, the "
+         "controls passing, and Benjamini–Hochberg q < 0.10 across every gated test in the ledger."),
+        "",
+        ("| Test | TEST stock-weeks (months) | Loss W1 | Loss baseline | Monthly difference | 90% interval | p | BH q | "
+         "68% range held | 90% range held | Verdict |"),
+        "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+    ]
+    words = []
+    for r in rows:
+        m = r["metrics"]
+        lo, hi = m["interval90"]
+        q = f"{r['bh_q']:.3f}" if isinstance(r.get("bh_q"), float) and math.isfinite(r["bh_q"]) else "–"
+        verdict = r["verdict"].split(":")[0]
+        lines.append(f"| {r['id']} | {m['stock_weeks']} ({m['months']}) | {m['loss_w1'] * 100:.3f} | "
+                     f"{m['loss_base'] * 100:.3f} | {m['diff'] * 100:+.3f} | {lo * 100:+.3f}..{hi * 100:+.3f} | "
+                     f"{m['p']:.4f} | {q} | {m['cover68'] * 100:.1f}% | {m['cover90'] * 100:.1f}% | **{verdict}** |")
+        c = r.get("controls") or {}
+        bands = "; ".join(f"{b.replace('us_', '')} {v['cover68'] * 100:.1f}% and {v['cover90'] * 100:.1f}% ({v['n']})"
+                          for b, v in (m.get("by_band") or {}).items())
+        due, calm = m["report_due"], m["no_report"]
+        words.append(
+            f"- **{r['id']}**: over {m['stock_weeks']} stock-weeks of {m['stocks']} stocks from {m['first']} to "
+            f"{m['last']}, W1's ranges scored {m['loss_w1'] * 100:.3f} points of pinball loss against the baseline's "
+            f"{m['loss_base'] * 100:.3f} (better in {m['months_better']} of {m['months']} months). Its 68% range held "
+            f"{m['cover68'] * 100:.1f}% of the moves and its 90% range {m['cover90'] * 100:.1f}% (the baseline's "
+            f"{m['base_cover68'] * 100:.1f}% and {m['base_cover90'] * 100:.1f}%); {m['below05'] * 100:.1f}% fell below "
+            f"the 90% range and {m['above95'] * 100:.1f}% rose above it. By list (68% and 90%): {bands}. With a "
+            f"report due: {due['cover68'] * 100:.1f}% and {due['cover90'] * 100:.1f}% ({due['n']}); without: "
+            f"{calm['cover68'] * 100:.1f}% and {calm['cover90'] * 100:.1f}%. The typical move was "
+            f"{m['median_abs'] * 100:.1f}% either way, against a typical 68% range of ±{m['median_half68'] * 100:.1f}%. "
+            f"Within a week, W1's size ranked the stocks' actual moves with a rank correlation of {m['rank_w1']:.3f} "
+            f"(the baseline's {m['rank_base']:.3f}). Direction, reported and not tested: {m['up_rate'] * 100:.1f}% of "
+            f"stock-weeks rose (the training years' share for stocks of the same size of move: "
+            f"{m['up_said'] * 100:.1f}%), and {m['above_middle'] * 100:.1f}% ended above the range's middle. Controls: "
+            f"shuffled ranges reached p < 0.05 in {c.get('placebo_fpr', float('nan')) * 100:.1f}% of "
+            f"{c.get('n_placebo', 0)} draws; a range that knows the outcome reached p "
+            f"{c.get('oracle_p', float('nan')):.4f}. {verdict}.")
+    return lines + ["", *words, "",
+                    ("Reading this: a range is a size, not a direction; its middle sits near zero for every stock. The "
+                     "universe is chosen today (survivorship: companies bought out or delisted are missing, so the "
+                     "largest moves are undercounted), and the pinball loss is in points of log return."), ""]
