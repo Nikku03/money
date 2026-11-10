@@ -119,6 +119,25 @@ stocks, January 2024 to September 2026.
 - **No direction, as expected:** 51.9% of stock-weeks rose, and 49.1% ended above the range's middle.
 - **Controls passed:** shuffled ranges never reached p < 0.05 in 200 draws.
 
+**Looked at after the fact** (the same TEST stock-weeks cut other ways; descriptive, not verdicts):
+
+| Cut | 2-in-3 held | 9-in-10 held |
+|---|---|---|
+| VIX under 15 | 66.4% | 89.0% |
+| VIX 15-20 | 67.7% | 89.7% |
+| VIX 20-25 | 69.1% | 89.1% |
+| VIX 25-30 | 74.6% | 94.4% |
+| VIX 30 or more | 82.9% | 97.2% |
+| After the stock's calmest weeks (a tenth of them) | 65.8% | 87.4% |
+| After its wildest weeks (one in twenty) | 73.8% | 92.1% |
+| S1's chance of a 20%+ day at 10% or more (597 stock-weeks) | 63.8% | 86.3% |
+
+- **In a frightened market the ranges are too wide.** Fear fades faster than W1 allows.
+- **After a wild week they are a little wide, after a calm one a little narrow.**
+- **For the likeliest shock names they are a little narrow.**
+- **S1's highest chances held up** on its own TEST set: where it said 20%-30%, a 20%+ day came 22.5% of the time
+  (240 stock-weeks); 30%-50%, 38.0% (208); 50% or more, 55.6% (63).
+
 ## Using it
 
 ```
@@ -126,6 +145,7 @@ python -m brain scan run                 # the whole research universe at the ba
 python -m brain scan run --refresh       # re-read daily prices and latest filings first (about 20 minutes)
 python -m brain scan run --sort shock    # likeliest 20%+ day first
 python -m brain scan run CATX AAPL       # named tickers, in full (they need prices in the bank)
+python -m brain scan run TSLA --refresh  # a ticker outside the research universe: read, and marked as untested
 python -m brain scan run --record        # also write research/scans/<close>.json, so the scan can be scored
 python -m brain scan score               # every recorded scan whose five sessions have closed
 python -m brain scan fit                 # 2011-2023 only; a refit is a new model and a new test id
@@ -145,7 +165,8 @@ python -m brain scan fit                 # 2011-2023 only; a refit is a new mode
 - **Survivorship.** The universe is chosen today: companies bought out or delisted are missing, and so are their
   largest moves.
 - **Not the whole market.** The research universe is 1,565 US stocks with prices since 2010. A company listed
-  after that is not in it, and those are often the wildest.
+  after that is not in it, and those are often the wildest. A named ticker outside it (Tesla, Meta, Coinbase) gets
+  a line marked "outside the tested list": W1 and S1 were neither fitted nor tested on it.
 - **Report dates are estimates:** last year's date moved on 52 weeks.
 - **A range is not a trade.** Options already charge for the move they expect. Whether a size forecast beats that
   price is unproven (`docs/MOVES.md`).

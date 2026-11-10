@@ -149,8 +149,44 @@ class ModelTest(TempHome):
         self.assertGreater(scan.pulls(m, row)["report"], 1.0)
         self.assertEqual(scan.reasons(m, row), ["results due within eight days (by last year's date)"])
         self.assertIn("results came out on 2026-11-05", scan.reasons(m, row, {"out": "2026-11-05"})[0])
+        self.assertEqual(scan.reasons(m, {**row, "date": "2026-11-09"}, {"date": "2026-11-09", "timing": "after close"}),
+                         ["results due about now (expected 2026-11-09, after close)"])
         row["earn_win"] = -2.5
         self.assertEqual(scan.reasons(m, row), [])                         # nothing widens it
+
+
+class ReasonsTest(TempHome):
+    def part(self, heavy):
+        """A model whose only weights are on ``heavy`` (every feature centred on 0 with unit spread)."""
+        w = [0.0] + [1.0 if k in heavy else 0.0 for k in scan.FEATS]
+        n = len(scan.FEATS)
+        return {"feats": list(scan.FEATS), "lo": [-99.0] * n, "hi": [99.0] * n, "mu": [0.0] * n, "sd": [1.0] * n, "w": w}
+
+    def row(self, **kw):
+        return {**{k: 0.0 for k in scan.FEATS}, "lv5": np.log(0.04), "logp": np.log(20.0), "ldv": np.log(5e7), **kw}
+
+    def test_swings_are_said_from_the_last_five_sessions(self):
+        m = self.part({"lv250"})
+        self.assertEqual(scan.reasons(m, self.row(lv250=2.0, n10=12.0)),
+                         ["moved about 4.0% a day over its last five sessions, with 12 days of 10%+ in a year"])
+        self.assertEqual(scan.reasons(m, self.row(lv250=2.0, a1=0.41)),
+                         ["moved about 4.0% a day over its last five sessions, 41% against the market on the last one"])
+
+    def test_price_and_volume_are_named_only_when_true(self):
+        m = self.part({"logp2"})
+        self.assertEqual(scan.reasons(m, self.row(logp2=2.0, logp=np.log(1.5))), ["a $1.50 stock"])
+        self.assertEqual(scan.reasons(m, self.row(logp2=2.0, volsurge=0.9)), ["its trading volume has jumped this week"])
+        self.assertEqual(scan.reasons(m, self.row(logp2=2.0, ldv=np.log(2e6))), ["thinly traded ($2.0M a day)"])
+        self.assertEqual(scan.reasons(m, self.row(logp2=2.0)), [])          # $50M a day at $20: nothing to say
+
+    def test_runs_filings_drugs_and_fear(self):
+        self.assertEqual(scan.reasons(self.part({"ret20"}), self.row(ret20=np.log(1.5))), ["up 50% against the market in a month"])
+        self.assertEqual(scan.reasons(self.part({"hi52"}), self.row(hi52=1.0, lo52=0.01)), ["at its 52-week low"])
+        self.assertEqual(scan.reasons(self.part({"offer30"}), self.row(offer30=1.0)), ["a share-sale filing in the last 30 sessions"])
+        self.assertEqual(scan.reasons(self.part({"bio"}), self.row(bio=1.0)), ["a drug or biotech company"])
+        self.assertEqual(scan.reasons(self.part({"vix"}), self.row(vix=np.log(30.0))), ["market fear is high (VIX 30)"])
+        both = scan.reasons(self.part({"vix", "bio", "offer30", "ret20"}), self.row(vix=4.0, bio=3.0, offer30=2.0, ret20=1.0), top=2)
+        self.assertEqual(both, ["market fear is high (VIX 55)", "a drug or biotech company"])   # the two widest pulls
 
 
 class LiveHelpersTest(TempHome):

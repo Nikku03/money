@@ -285,9 +285,9 @@ def reasons(part: dict, row: dict, report: dict | None = None, top: int = 3) -> 
         if c < MIN_PULL or len(out) >= top:
             break
         if g == "swings":
-            s = f"moves about {np.exp(row['lv20']) * 100:.1f}% a day against the market lately"
+            s = f"moved about {np.exp(row['lv5']) * 100:.1f}% a day over its last five sessions"
             if row["a1"] >= 0.10:
-                s += f", {_pct(row['a1'])} on the last session"
+                s += f", {_pct(row['a1'])} against the market on the last one"
             elif row["n10"] >= 5:
                 s += f", with {row['n10']:.0f} days of 10%+ in a year"
             out.append(s)
@@ -296,13 +296,19 @@ def reasons(part: dict, row: dict, report: dict | None = None, top: int = 3) -> 
                 if report and report.get("out"):
                     out.append(f"results came out on {report['out']} (last year's came later, so the range still "
                                "allows for a report)")
+                elif report and report["date"] <= str(row.get("date", "")):
+                    out.append(f"results due about now (expected {report['date']}, {report['timing']})")
                 else:
                     when = f" (about {report['date']}, {report['timing']})" if report else " (by last year's date)"
                     out.append("results due within eight days" + when)
         elif g == "price":
-            price = float(np.exp(row["logp"]))
-            out.append(f"a ${price:.2f} stock" if price < 5 else
-                       f"thinly traded (${np.exp(row['ldv']) / 1e6:.1f}M a day)")
+            price, dv = float(np.exp(row["logp"])), float(np.exp(row["ldv"]))
+            if price < 5:
+                out.append(f"a ${price:.2f} stock")
+            elif row["volsurge"] >= 0.5:
+                out.append("its trading volume has jumped this week")
+            elif dv < 5e6:
+                out.append(f"thinly traded (${dv / 1e6:.1f}M a day)")
         elif g == "run":
             if row["ret20"] <= -0.2:
                 out.append(f"down {_pct(1 - np.exp(row['ret20']))} against the market in a month")
@@ -572,11 +578,16 @@ def _cmd(a) -> int:
         print(f"Typical stock here: 2 in 3 within ±{np.median([r['half'] for r in rows]) * 100:.1f}%. In the "
               f"training years stocks like these rose in {ups * 100:.0f}% of weeks, whatever the scan said.")
     shown = rows if named else sorted(rows, key=lambda r: -(r["shock"] or 0))[:a.top] if a.sort == "shock" else rows[:a.top]
+    listed = set(shocks.universe_tickers())
     for r in shown:
-        print(line(part, r, report_note(r, reports.get(r["t"]))))
+        print(line(part, r, report_note(r, reports.get(r["t"])))
+              + ("" if r["t"] in listed else "  [outside the tested list: W1 and S1 were fitted and tested on the "
+                                           "research universe]"))
     if named:
         for s in res["skipped"]:
             print(f"  {s['t']:6} left out: {s['why']}")
+        if any(s["why"] == WHY[1] for s in res["skipped"]) and not a.refresh:
+            print("  (a price older than the market's latest close: add --refresh to re-read these tickers)")
     elif res["skipped"]:
         why: dict[str, int] = {}
         for s in res["skipped"]:
