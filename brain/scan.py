@@ -498,7 +498,7 @@ def score(bank: Bank, log=None) -> list[dict]:
     if mk is None:
         return out
     cal = [str(x) for x in mk[0]]
-    for p in sorted(scans_dir().glob("*.json")):
+    for p in sorted(scans_dir().glob("????-??-??.json")):       # one file per recorded close
         rec = json.loads(p.read_text())
         if rec["asof"] not in cal or cal.index(rec["asof"]) + H >= len(cal):
             out.append({"asof": rec["asof"], "judged": False, "n": len(rec["rows"])})
@@ -534,6 +534,9 @@ HEAD = ("What it says: how far each stock is likely to move over the next {h} se
 
 
 def _cmd(a) -> int:
+    if a.action == "replay":
+        from brain import scanreplay
+        return scanreplay.cmd(a)
     bank = Bank()
     if a.action == "fit":
         fit_and_save(bank)
@@ -602,10 +605,13 @@ def _cmd(a) -> int:
 
 def add_cli(sub) -> None:
     p = sub.add_parser("scan", help="the market scan: each stock's likely move over five sessions, and why (docs/SCAN.md)")
-    p.add_argument("action", choices=["run", "fit", "score"])
+    p.add_argument("action", choices=["run", "fit", "score", "replay"])
     p.add_argument("tickers", nargs="*", help="run: only these tickers, in full (they need prices in the bank)")
     p.add_argument("--top", type=int, default=25, help="run: how many of the widest ranges to list")
     p.add_argument("--sort", choices=["move", "shock"], default="move", help="run: widest range first, or likeliest 20%+ day")
     p.add_argument("--refresh", action="store_true", help="run: re-read the daily prices and latest filings first (about 20 minutes for the whole list)")
     p.add_argument("--record", action="store_true", help="run: write the scan to research/scans/ so it can be scored")
+    p.add_argument("--from", dest="first", default="2024-11-04", help="replay: the first week's end on or after this")
+    p.add_argument("--to", dest="last", default="2026-12-31", help="replay: the last week's end on or before this")
+    p.add_argument("--save", action="store_true", help="replay: write research/scans/replays/replay-<from>_<to>.json")
     p.set_defaults(fn=_cmd)

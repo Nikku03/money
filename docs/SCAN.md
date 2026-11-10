@@ -148,6 +148,7 @@ python -m brain scan run CATX AAPL       # named tickers, in full (they need pri
 python -m brain scan run TSLA --refresh  # a ticker outside the research universe: read, and marked as untested
 python -m brain scan run --record        # also write research/scans/<close>.json, so the scan can be scored
 python -m brain scan score               # every recorded scan whose five sessions have closed
+python -m brain scan replay --from 2024-11-04 [--save]   # the scan as it would have read each week since
 python -m brain scan fit                 # 2011-2023 only; a refit is a new model and a new test id
 ```
 
@@ -157,6 +158,27 @@ python -m brain scan fit                 # 2011-2023 only; a refit is a new mode
   against the bank's prices: how often each range held, and the 20%+ days against their chances.
 - One week's stocks move together, so a week is one reading. Under 30 judged scans the record says little; the
   tested evidence is W1a and S1a.
+
+## The replay: two years as if live
+
+`brain scan replay` (`brain/scanreplay.py`) reads the scan at each week's last close with only what was known then,
+and judges each week against what followed. It is descriptive, not a test.
+
+Over the 104 weeks from November 2024 to October 2026 (`research/SCAN-REPLAY-2026-11.md`):
+
+| | Result |
+|---|---|
+| 2-in-3 range held | 68.8% |
+| 9-in-10 range held | 90.0% |
+| Weeks the 2-in-3 range held 44%-86% | 9 in 10 |
+| The 25 widest ranges moved, either way | 11.8% on average (every stock: 4.1%) |
+| Weeks they moved more than the average stock | 104 of 104 |
+| S1's 25 likeliest with a 20%+ day | 242 of 2,600 (219 expected) |
+
+- **Ranges broke in market-wide moves:** in the April 2025 tariff crash week, 20% of stocks stayed inside the
+  2-in-3 range.
+- **As a buy list the top movers were a lottery.** Five of 2,600 picks (SBET, CAPR, QUBT, QMCO, SLNH) carried
+  the gains; without the three best weeks it lost after costs.
 
 ## Limits
 

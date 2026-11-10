@@ -235,7 +235,9 @@ class LiveHelpersTest(TempHome):
         self.assertEqual(r, {"symbols": 4, "failed": {"prices": 1, "filings": 0}})
 
 
-class TrialTest(TempHome):
+class ModelHome(TempHome):
+    """A temp home whose fitted models and recorded scans stay in it."""
+
     def setUp(self):
         super().setUp()
         self._env = {k: os.environ.get(k) for k in ("BRAIN_SCAN_MODEL", "BRAIN_SHOCKS_MODEL", "BRAIN_SCANS")}
@@ -251,6 +253,8 @@ class TrialTest(TempHome):
                 os.environ[k] = v
         super().tearDown()
 
+
+class TrialTest(ModelHome):
     def test_fit_scan_record_score_and_the_declared_test(self):
         rng = np.random.default_rng(12)
         d = pd.bdate_range("2010-01-04", "2026-10-16").strftime("%Y-%m-%d").to_numpy()   # both ends are in the past:
@@ -288,6 +292,8 @@ class TrialTest(TempHome):
         self.assertTrue(p.exists())
         self.assertIsNone(scan.record(early))
         self.assertEqual([x["judged"] for x in scan.score(self.bank)], [False])
+        (p.parent / "notes.json").write_text("{}")                         # anything else in the folder is not a scan
+        self.assertEqual(len(scan.score(self.bank)), 1)
         d2 = pd.bdate_range("2010-01-04", "2026-10-30").strftime("%Y-%m-%d").to_numpy()
         more = []
         for t in tickers:
@@ -340,3 +346,49 @@ class PinballTest(TempHome):
         self.assertAlmostEqual(loss[1], 0.1 * float(np.mean(scan.QS)), places=12)
         self.assertEqual(rangetest.monthly(np.array(["2024-01", "2024-01", "2024-02"]), np.array([1.0, 3.0, 5.0]))[1].tolist(),
                          [2.0, 5.0])
+
+
+class ReplayTest(ModelHome):
+    def test_replay_reads_each_week_as_live_and_judges_it(self):
+        from brain import scanreplay
+        rng = np.random.default_rng(21)
+        d = pd.bdate_range("2010-01-04", "2026-10-16").strftime("%Y-%m-%d").to_numpy()
+        tickers = [f"T{k:02d}" for k in range(30)]
+        facts = []
+        for k, t in enumerate(tickers):
+            sd = 0.005 * (1 + k % 5)                                       # five sizes of daily move
+            r = rng.normal(0, sd, len(d))
+            if k == 29:
+                r[len(d) - 40] = 0.6                                       # one 60% day, in a week of the replay
+            facts.append(snapshot(t, d, 20 * np.cumprod(1 + r)))
+        spy = 400 * np.cumprod(1 + np.where(np.arange(len(d)) % 2, 0.001, -0.0005))
+        facts += [snapshot("SPY", d, spy), snapshot("^VIX", d, np.full(len(d), 20.0))]
+        self.bank.add_many(facts)
+        scan.fit_and_save(self.bank, tickers=tickers, log=None)
+        shocks.fit_and_save(self.bank, tickers=tickers, log=None)
+        res = scanreplay.run(self.bank, "2026-01-01", "2026-12-31", tickers=tickers, log=None)
+        s, weeks = res["summary"], res["weeks"]
+        self.assertEqual(s["weeks"], len(weeks))
+        self.assertGreater(s["weeks"], 35)
+        self.assertEqual(weeks[0]["week"][:4], "2026")
+        self.assertLessEqual(weeks[-1]["week"], d[-6])                    # only weeks whose five sessions closed
+        self.assertTrue(all(25 <= w["stocks"] <= 30 for w in weeks))       # a stock that drifted under $0.50 trades too
+        self.assertEqual(s["stock_weeks"], sum(w["stocks"] for w in weeks))  # little to list, and is left out
+        self.assertAlmostEqual(s["held68"], 0.68, delta=0.06)
+        self.assertAlmostEqual(s["held90"], 0.90, delta=0.05)
+        self.assertGreater(s["top_abs"], s["all_abs"])                    # the widest ranges moved most
+        self.assertEqual(s["shock_picks"], 25 * s["weeks"])
+        self.assertGreaterEqual(s["shock_all"], 1)                        # the planted 60% day is seen
+        i = list(d).index(weeks[3]["week"])
+        self.assertAlmostEqual(weeks[3]["spy"], spy[i + 5] / spy[i] - 1, places=9)
+        j = list(d).index(weeks[4]["week"])                                # the next reading: held to it, no overlap
+        self.assertAlmostEqual(weeks[3]["spy_ret"], spy[j] / spy[i] - 1, places=9)
+        first, last = list(d).index(weeks[0]["week"]), list(d).index(weeks[-1]["week"])
+        self.assertAlmostEqual(scanreplay.growth([w["spy_ret"] for w in weeks])[0],
+                               spy[last + 5] / spy[first], places=6)      # every session counted once
+        end, fall = scanreplay.growth([0.1, -0.5, 0.2])
+        self.assertAlmostEqual(end, 1.1 * 0.5 * 1.2)
+        self.assertAlmostEqual(fall, -0.5)
+        q = scanreplay.by_quarter(weeks)
+        self.assertEqual(sum(x["weeks"] for x in q), s["weeks"])
+        self.assertEqual(q[0]["quarter"], "2026Q1")
