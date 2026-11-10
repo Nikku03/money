@@ -143,6 +143,23 @@ not fitted on: 120,721 tradable stock-weeks of 934 stocks.
 - **With a report due, the ranges held 60.5% and 84.4%.** Read a newer listing's report week as wider than printed.
 - **No direction:** 48.8% of stock-weeks ended above the range's middle.
 
+**W1c: PASS** (2026-11-10). The same model and gate, read at every session's close instead of each week's last,
+on both lists: 1,592,265 readings of 2,483 stocks, January 2024 to September 2026.
+
+| | Aimed for | Held |
+|---|---|---|
+| The 2-in-3 range | 68% | 67.4% |
+| The 9-in-10 range | 90% | 89.1% |
+
+- **A scan on any day is as good as a Friday's.** It beat volatility alone: 1.329 against 1.346, better in 28 of
+  33 months (p 0.0001, BH q 0.001).
+- **By list:** large and mid caps 68.3% and 90.0%; small caps 68.0% and 89.5%; micro caps 68.7% and 89.4%; newer
+  listings 65.1%-66.2% and 87.6%-88.1%.
+- **With a report due, the ranges held 65.2% and 87.3%.**
+- **Readings overlap:** one day's five sessions share four with the next day's, so 1.6 million readings are far
+  fewer independent ones. The test counts each month as one reading.
+- **No direction:** 49.0% of readings ended above the range's middle.
+
 **Looked at after the fact** (the same TEST stock-weeks cut other ways; descriptive, not verdicts):
 
 | Cut | 2-in-3 held | 9-in-10 held |
@@ -185,6 +202,47 @@ python -m brain scan fit                 # 2011-2023 only; a refit is a new mode
 - One week's stocks move together, so a week is one reading. Under 30 judged scans the record says little; the
   tested evidence is W1a and S1a.
 
+## Through the day: a scan at every close, checks in between
+
+The market keeps moving between closes: news after the close, trading before the open, the session itself.
+The scan handles that in two ways.
+
+**A scan at every close.**
+- `python -m brain scan run --refresh --record` re-reads every stock's prices and filings and records the day's
+  scan, every trading day, not only on Fridays.
+- W1c tests the ranges read at every session's close (Results).
+
+**Checks between scans.** `python -m brain scan watch [--record]` holds the latest recorded scan against what has
+happened since its close:
+- **each stock's latest trade** (Yahoo's five-minute chart, trading before the open and after the close included),
+  against the close the scan read and the range it recorded;
+- **the market:** SPY, QQQ, IWM, S&P 500 futures (which trade through the night) and the VIX.
+  - A move of 1.5% or more in SPY or the futures is flagged as market-wide: then every range is likely too
+    narrow until the next scan. The replay's worst weeks were market-wide.
+  - A VIX up 15% or more is flagged as fear rising;
+- **filings since the close** (SEC's per-company filing lists), for every stock outside its range and for each of
+  the scan's 25 likeliest 20%+ days: a results report, a share sale, other 8-Ks.
+
+A check forecasts nothing. A flag says where a range is already used up, or where news came in; the next close's
+scan re-reads every range from the new facts.
+
+| Command | What it does |
+|---|---|
+| `scan watch` | one check of every stock in the latest scan (about 20 minutes: Yahoo is read at most twice a second) |
+| `scan watch --only-top 300` | the 300 widest ranges and the 300 likeliest 20%+ days only (a few minutes) |
+| `scan watch --every 30 --record` | a check every 30 minutes until Ctrl+C, each one written to `research/scans/updates/<close>/` |
+
+`--every` is for a computer that stays on; it waits at least 15 minutes between starts. SEC's live filings feed
+sits under `/cgi-bin`, which SEC's robots.txt disallows, so the checks read each company's own filing list.
+
+**The schedule.** Scheduled tasks run in the session that holds the bank, on weekdays, in New York time:
+
+| Time | What |
+|---|---|
+| 8:07 | a check: overnight news and trading before the open |
+| 12:13 | a check: the session so far |
+| 20:23 | a scan: prices and filings re-read, the day's scan recorded, scans whose five sessions closed judged |
+
 ## The replay: two years as if live
 
 `brain scan replay` (`brain/scanreplay.py`) reads the scan at each week's last close with only what was known then,
@@ -218,6 +276,8 @@ Over the 104 weeks from November 2024 to October 2026 (`research/SCAN-REPLAY-202
     fitted nor tested on it.
   - S1's shock chances were fitted and tested on the research universe only.
 - **Report dates are estimates:** last year's date moved on 52 weeks.
+- **The checks between scans are not forecasts.** They compare the latest trade with the last close's range.
+  A price before the open or after the close can come from a few shares, and many small stocks trade little then.
 - **A range is not a trade.** Options already charge for the move they expect. Whether a size forecast beats that
   price is unproven (`docs/MOVES.md`).
 - **Paper only.** Nothing here places an order.

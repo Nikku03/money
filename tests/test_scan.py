@@ -430,3 +430,100 @@ class WatchListTest(TempHome):
         self.assertEqual(d["n"], len(d["tickers"]))
         self.assertEqual(set(d["bands"]), set(d["tickers"]))
         self.assertTrue(scan.watch_status().startswith("W1b ") or scan.watch_status() == "untested until W1b runs")
+
+
+class BetweenScansTest(TempHome):
+    def setUp(self):
+        super().setUp()
+        self._old_scans = os.environ.get("BRAIN_SCANS")
+        os.environ["BRAIN_SCANS"] = os.path.join(self._tmp.name, "scans")
+
+    def tearDown(self):
+        if self._old_scans is None:
+            os.environ.pop("BRAIN_SCANS", None)
+        else:
+            os.environ["BRAIN_SCANS"] = self._old_scans
+        super().tearDown()
+
+    def chart(self, closes, start, periods):
+        ts = [start + 300 * k for k in range(len(closes))]
+        return json.dumps({"chart": {"result": [{"meta": {"currentTradingPeriod": periods}, "timestamp": ts,
+                                                  "indicators": {"quote": [{"close": closes}]}}]}}).encode()
+
+    def test_the_latest_trade_and_the_part_of_the_day_it_falls_in(self):
+        from brain import scanwatch
+        day = 1_794_000_000 - 1_794_000_000 % 86400                       # a UTC midnight
+        periods = {"pre": {"start": day + 9 * 3600, "end": day + 14.5 * 3600},
+                   "regular": {"start": day + 14.5 * 3600, "end": day + 21 * 3600},
+                   "post": {"start": day + 21 * 3600, "end": day + 25 * 3600}}
+        q = scanwatch.parse_quote(self.chart([10.0, 10.5, None], day + 10 * 3600, periods))
+        self.assertEqual((q["price"], q["session"]), (10.5, "before the open"))   # a missing last bar is skipped
+        self.assertEqual(scanwatch.parse_quote(self.chart([11.0], day + 15 * 3600, periods))["session"], "in session")
+        self.assertEqual(scanwatch.parse_quote(self.chart([12.0], day + 22 * 3600, periods))["session"], "after the close")
+        self.assertEqual(scanwatch.parse_quote(self.chart([9.0], day + 3600, periods))["session"], "overnight")
+        self.assertIsNone(scanwatch.parse_quote(self.chart([None], day + 15 * 3600, periods)))
+
+    def test_moves_judged_against_the_recorded_range(self):
+        from brain import scanwatch
+        rng = [np.log(0.85), np.log(0.92), np.log(1.09), np.log(1.18)]
+        self.assertEqual({k: v for k, v in scanwatch.judge(np.log(1.05), rng).items() if k != "used"},
+                         {"outside68": False, "outside90": False})
+        self.assertAlmostEqual(scanwatch.judge(np.log(1.05), rng)["used"], np.log(1.05) / np.log(1.09))
+        self.assertTrue(scanwatch.judge(np.log(1.12), rng)["outside68"])
+        self.assertFalse(scanwatch.judge(np.log(1.12), rng)["outside90"])
+        self.assertTrue(scanwatch.judge(np.log(0.80), rng)["outside90"])
+
+    def test_filings_since_the_close_and_what_they_are(self):
+        from brain import scanwatch
+        fs = [filed("X", "filing", "8-K", "2026-11-09", "2026-11-09T20:10:00Z", items="2.02,9.01"),   # 15:10 ET: before
+              filed("X", "filing", "8-K", "2026-11-09", "2026-11-09T21:30:00Z", items="2.02,9.01"),   # 16:30 ET: after
+              filed("X", "filing", "424B5", "2026-11-10", "2026-11-10T12:00:00Z"),
+              filed("X", "filing", "8-K", "2026-11-10", "2026-11-10T13:00:00Z", items="1.01,8.01,9.01")]
+        got = scanwatch.since_close(fs, "2026-11-09")
+        self.assertEqual([f.known_at for f in got], [f.known_at for f in fs[1:]])
+        self.assertEqual([scanwatch.describe(f) for f in got],
+                         ["results report (8-K 2.02)", "share-sale filing (424B5)", "8-K 1.01, 8.01"])
+
+    def test_watch_flags_stocks_outside_their_range_and_a_market_wide_move(self):
+        from unittest import mock
+
+        from brain import scanwatch
+        d = pd.bdate_range("2025-01-02", "2026-11-09").strftime("%Y-%m-%d").to_numpy()
+        self.bank.add_many([snapshot(t, d, np.full(len(d), 20.0)) for t in ("AAA", "BBB", "CCC")])
+        r = [round(float(x), 4) for x in (np.log(0.85), np.log(0.92), np.log(1.09), np.log(1.18))]
+        p = scanwatch.scan.scans_dir() / "2026-11-09.json"
+        p.parent.mkdir(parents=True)
+        p.write_text(json.dumps({"asof": "2026-11-09", "rows": {"AAA": r + [0.01], "BBB": r + [0.30], "CCC": r + [0.02]}}))
+        prices = {"AAA": 24.0, "BBB": 20.4, "CCC": 21.0, "SPY": 98.0, "QQQ": 99.0, "IWM": 100.0, "ES=F": 97.9,
+                  "^VIX": 23.2}
+        with mock.patch.object(scanwatch, "quote", lambda s: {"price": prices[s], "at": "2026-11-10T15:00Z",
+                                                                "session": "in session"}), \
+                mock.patch.object(scanwatch, "market_close_on", lambda s, day: 20.0 if s == "^VIX" else 100.0), \
+                mock.patch.object(scanwatch, "filings_since", lambda t, asof: ["results report (8-K 2.02) at x"] if t == "AAA" else []), \
+                mock.patch.object(scanwatch, "TOP_SHOCKS", 1):                # the scan's single likeliest 20%+ day
+            res = scanwatch.watch(self.bank)
+        self.assertEqual((res["asof"], res["checked"], res["outside68"], res["outside90"]), ("2026-11-09", 3, 1, 1))
+        self.assertTrue(res["market_wide"])                                   # futures -2.1% since the close
+        self.assertTrue(res["fear_up"])                                       # VIX +16%
+        top = res["flags"][0]
+        self.assertEqual((top["t"], top["outside90"], top["filings"]), ("AAA", True, ["results report (8-K 2.02) at x"]))
+        self.assertIn("BBB", [f["t"] for f in res["flags"]])                 # the scan's likeliest 20%+ day, inside
+        self.assertNotIn("CCC", [f["t"] for f in res["flags"]])              # inside, nothing to say
+        out = scanwatch.record(res)
+        self.assertEqual(out.parent.name, "2026-11-09")
+        self.assertEqual(json.loads(out.read_text())["outside90"], 1)
+
+    def test_a_loop_checks_again_after_its_interval(self):
+        from types import SimpleNamespace
+        from unittest import mock
+
+        from brain import scanwatch
+        calls, naps = [], []
+        res = {"asof": "2026-11-09", "at": "2026-11-10T15:00:00Z", "listed": 0, "market": [], "checked": 0,
+               "outside68": 0, "outside90": 0, "market_wide": False, "fear_up": False, "flags": []}
+        with mock.patch.object(scanwatch, "watch", lambda *a, **k: calls.append(1) or res), \
+                mock.patch.object(scanwatch, "show", lambda *a, **k: None):
+            scanwatch.cmd(SimpleNamespace(tickers=[], only_top=None, every=5, record=False), sleep=naps.append, cycles=3)
+        self.assertEqual(len(calls), 3)
+        self.assertEqual(len(naps), 2)
+        self.assertTrue(all(14 * 60 < x <= 15 * 60 for x in naps))          # never more often than every 15 minutes
