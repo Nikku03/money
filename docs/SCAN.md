@@ -11,8 +11,18 @@ Every declared test in the repo is one of two kinds.
 
 | Question | Tests | Passed |
 |---|---|---|
-| Which way will it go? | 36: nine price and accounting signals (H1-H8), "quiet changes" in filings (H10), the forecaster's chance to beat SPY (F1b, F1c), five cause-and-effect links, five earnings drifts, the fade after a jump (S2a, S2b), and twelve verdicts on the paper trader (P1-P13) | 0 |
-| How far will it move? | The forecaster's bands (reported with F1b, F1c), earnings moves (M1a), 20%+ days (S1a), and the weekly range below (W1a) | see Results |
+| Which way will it go? | 36 | 0 |
+| How far will it move? | 3 | 3 |
+
+- **Which way** (all FAIL):
+  - nine signals from prices, accounts, insider buying and earnings (H1-H8);
+  - "quiet changes" in filings (H10);
+  - the forecaster's chance to beat SPY (F1b, F1c);
+  - five cause-and-effect links and five earnings drifts;
+  - the fade after a jump (S2a, S2b);
+  - twelve verdicts on the paper trader (P1-P13).
+- **How far** (all PASS): earnings moves (M1a), 20%+ days (S1a) and the weekly range below (W1a). The
+  forecaster's price bands also held their odds, reported beside F1b and F1c.
 
 H10 is on the `claude/eloquent-cori-9mojj5` branch and the paper trader on `claude/sleepy-goldberg-2ma18z`; the
 rest are in `research/RESULTS.md`.
@@ -89,7 +99,25 @@ stocks the scan lists.
 
 ## Results
 
-Not run yet.
+**W1a: PASS** (2026-11-10, `research/RESULTS.md`). Run once, as declared: 209,939 tradable stock-weeks of 1,550
+stocks, January 2024 to September 2026.
+
+| | Aimed for | Held |
+|---|---|---|
+| The 2-in-3 range | 68% | 68.1% |
+| The 9-in-10 range | 90% | 89.7% |
+
+- **Every kind of stock:**
+  - large and mid caps 68.1% and 89.9%; small caps 67.9% and 89.5%; micro caps 68.2% and 89.3%;
+  - every tenth of size, calm to wild: 66%-70% and 89%-91%.
+- **Tighter than volatility alone:** a pinball loss of 1.148 against 1.164, better in 30 of 33 months (p 0.0001,
+  BH q 0.001). The 60-session volatility's own ranges were too wide (70.4% and 91.6%).
+- **It ranks the movers:** within a week, the rank correlation between W1's size and the actual move was 0.347
+  (volatility alone: 0.300).
+- **Report weeks ran a little narrow:** with a report due the ranges held 64.7% and 87.1%.
+- **Tails were even:** 5.0% of moves fell below the 9-in-10 range and 5.3% rose above it.
+- **No direction, as expected:** 51.9% of stock-weeks rose, and 49.1% ended above the range's middle.
+- **Controls passed:** shuffled ranges never reached p < 0.05 in 200 draws.
 
 ## Using it
 
