@@ -158,3 +158,67 @@ The trader lost less than the S&P 500 in two of its four falling quarters. It ga
 - **The rules were set once, before the run, and not tuned.** Other thresholds would give other numbers.
   Trying many and keeping the best would only fit this one path.
 - **Paper only.** Nothing here placed an order.
+
+## One trade a day at most
+
+Run on 2026-11-10 with `python -m brain scan trader --one-trade --save`.
+
+- **Rules:** committed in `9e88223` before the run; it ran once. They are in `docs/SCAN.md`, "One trade a day
+  at most".
+- **Span and stocks:** the same 500 sessions and 2,537 stocks as above.
+- **Results:** `research/scans/replays/trader-one-2024-11-11_2026-11-09.json`.
+- **A check on the data:** the books run beside it reproduced their earlier results exactly.
+
+| Book | Rules | $1 → | Worst fall | Sharpe | Money held | Orders | Most in one session | Costs paid | Without its 5 best sessions |
+|---|---|---|---|---|---|---|---|---|---|
+| 25 movers | fixed weekly (M0) | 5.30 | -50% | 1.58 | 100% | 3,462 | 43 | 0.39 | 2.84 |
+| 25 movers | the trader, no limit (M4) | 2.83 | -52% | 1.14 | 93% | 13,466 | 56 | 0.35 | 1.71 |
+| 25 movers | **one trade a day (M5)** | **2.88** | **-45%** | 1.12 | 88% | **381** | **1** | **0.05** | 1.64 |
+| S&P 500 | bought and held (S0) | 1.28 | -19% | 0.60 | 100% | 1 | 1 | 0.00 | 1.04 |
+| S&P 500 | the trader, no limit (S2) | 1.21 | -14% | 0.51 | 91% | 371 | 2 | 0.00 | 1.05 |
+| S&P 500 | **one trade a day (S3)** | **1.22** | **-14%** | 0.53 | 89% | **69** | **1** | 0.00 | 1.06 |
+
+1. **The limit cut trading, not results.**
+   - Among the movers, orders fell by 97% (13,466 to 381) and costs by 86% ($0.35 to $0.05 per $1 started).
+   - It ended about level with the trader with no limit: $2.88 against $2.83.
+   - The worst fall was smaller: 45% against 52%.
+   - It still ended far below the fixed weekly list's $5.30.
+2. **Why the saved costs did not show up as profit:**
+   - The book fills one stock a day, so it was not 90% invested until December 30, 2024.
+   - It held 88% of the money on average.
+   - It caught new runners later. In its first seven weeks it made 20.9%, against 35.7% for the trader with
+     no limit and 47.3% for the fixed list.
+3. **On the S&P 500, one trade a day matched the trader with no limit:** $1.22 against $1.21, with 69 orders
+   instead of 371.
+   - The orders: 38 buys back to the scan's target, 16 sells at the open, and 15 midday cuts.
+   - The worst fall was the same 14%, against 19% held throughout.
+   - Holding throughout still ended higher: $1.28.
+4. **The movers' log was a lottery, as before.**
+   - 184 closed positions: median -0.2% and mean +28.2%. 49% rose. The median hold was 28 days.
+   - Best: BW +1,730%, TNGX +676%, QBTS +371%, UAMY +320%, RGTI +316%.
+   - Worst: SBET -88%, FWDI -72%, CD -71%, QMCO -69%.
+   - Why it sold:
+
+     | Reason | Sales |
+     |---|---|
+     | No longer among the 50 widest ranges | 163 |
+     | Opened through its floor | 10 |
+     | No longer tradable | 6 |
+     | Fell through its floor during the session | 5 |
+
+5. **Quarter by quarter, the one-trade books:**
+
+   | Quarter | SPY held | SPY one trade | Movers fixed | Movers one trade |
+   |---|---|---|---|---|
+   | 2024 Q4 | -2.0% | -1.7% | +47.3% | +20.9% |
+   | 2025 Q1 | -4.3% | -3.8% | -26.1% | -28.3% |
+   | 2025 Q2 | +10.8% | +8.3% | +79.4% | +73.5% |
+   | 2025 Q3 | +8.1% | +7.2% | +74.8% | +70.7% |
+   | 2025 Q4 | +2.7% | +1.8% | -6.3% | -2.7% |
+   | 2026 Q1 | -4.4% | -4.7% | +50.0% | +34.7% |
+   | 2026 Q2 | +15.1% | +13.8% | +77.9% | +31.6% |
+   | 2026 Q3 | +2.4% | +2.1% | -24.6% | -20.2% |
+   | 2026 Q4 | -1.3% | -1.3% | -17.7% | -18.3% |
+
+The limits above apply unchanged. The movers' levels are flattered by the 2026 lists, so compare inside a book.
+Trading less did no harm, but it did not turn the trader into an edge.

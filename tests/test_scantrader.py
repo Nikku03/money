@@ -186,7 +186,7 @@ class OneTradeTest(unittest.TestCase):
         D.open[2, 0] = 8.0                                                  # S0 opens through its 8.81 floor
         D.open[4, -1] = 97.0                                                # SPY -3% at the open of session 4
         r = self.run_one(D, self.M5)
-        day = lambda d: [(t["stock"], t["action"], t["when"]) for t in r["trades"] if t["date"] == d]  # noqa: E731
+        day = lambda d: [(t["stock"], t["action"], t["when"]) for t in r["trades"] if t["date"] == d]
         self.assertEqual(day("2025-03-03"), [("S0", "sell", "open")])      # not the planned buy of S1
         self.assertEqual(day("2025-03-04"), [("S1", "buy", "open")])
         self.assertEqual(day("2025-03-05"), [])                             # the check: no buying today

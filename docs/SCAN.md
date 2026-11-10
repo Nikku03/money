@@ -341,6 +341,18 @@ committed before it ran, and it runs once beside the fixed books and the trader 
   market check at midday cuts it to half.
 - **Every tradable stock** has no one-trade version: with one order a day it would take years to build.
 
+**Result** (2026-11-10, `research/SCAN-TRADER-2026-11.md`). $1, after costs:
+
+| Book | Fixed | The trader, no limit | One trade a day |
+|---|---|---|---|
+| The S&P 500 | $1.28 (1 order) | $1.21 (371 orders) | $1.22 (69 orders) |
+| The 25 widest ranges | $5.30 (3,462 orders) | $2.83 (13,466 orders) | $2.88 (381 orders) |
+
+- **Fewer orders, about the same money.** Among the movers, one trade a day cut orders by 97% and costs from
+  $0.35 to $0.05 per $1 started. It also cut the worst fall from 52% to 45%.
+- **No better than the fixed books.** Filling one stock a day, it held 88% of the money and caught new runners
+  later, so it ended about level with the trader with no limit, below both fixed books.
+
 ## Limits
 
 - **No direction.** The middle of every range sits near zero. It is a little above zero because the list holds
