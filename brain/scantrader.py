@@ -734,7 +734,8 @@ def run(bank: Bank, first: str = FIRST, last: str = "2026-12-31", tickers=None, 
         policies: tuple[Policy, ...] = POLICIES, tag: str = "") -> dict:
     """The replay of ``policies`` (each needs S0 beside it, the yardstick for beta). ``tag`` names the saved file."""
     tickers = tickers or scan.scan_tickers()
-    missing = [t for t in [shocks.BENCH, shocks.VIX, *tickers] if t not in load_midday()]
+    have = load_midday()                               # read once: it is a 10 MB file
+    missing = [t for t in [shocks.BENCH, shocks.VIX, *tickers] if t not in have]
     if missing and data is None:
         log(f"fetching midday prices for {len(missing)} symbols (Yahoo's hourly chart, two years each)")
         fetch_midday(missing, log=log)
