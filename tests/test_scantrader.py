@@ -158,5 +158,66 @@ class AccuracyTest(unittest.TestCase):
         self.assertEqual(a["all"]["sessions"], 10)
 
 
+class OneTradeTest(unittest.TestCase):
+    """One order a day at most (simulate_one)."""
+
+    def movers(self, n: int = 12) -> st.Data:
+        D = market(n=n, m=3)
+        for k, f in enumerate((1.2, 1.1, 1.0)):                             # S0 the widest, then S1, then S2
+            D.q[:, k, :] = (f * WIDE).astype(np.float32)
+        return D
+
+    def run_one(self, D, p, top=3, keep=3, R=None):
+        with mock.patch.object(st, "cost_side", free), mock.patch.object(st, "TOP", top), \
+                mock.patch.object(st, "KEEP", keep):
+            return st.simulate_one(D, R or st.readings(D), p, 1, len(D.dates) - 1, log_trades=True)
+
+    M5 = st.Policy("T", "movers", "one", daily=True, stops=True, market=True, one=True)
+
+    def test_the_book_fills_one_stock_a_day(self):
+        r = self.run_one(self.movers(), self.M5)
+        buys = [(t["date"], t["stock"]) for t in r["trades"] if t["action"] == "buy"]
+        self.assertEqual(buys, [("2025-03-02", "S0"), ("2025-03-03", "S1"), ("2025-03-04", "S2")])
+        self.assertEqual(r["counts"]["most_orders_a_day"], 1)
+        self.assertAlmostEqual(r["gross"][2], 1.0, places=9)                # a third of the account each
+
+    def test_a_stop_comes_first_and_a_market_check_holds_off_buying(self):
+        D = self.movers()
+        D.open[2, 0] = 8.0                                                  # S0 opens through its 8.81 floor
+        D.open[4, -1] = 97.0                                                # SPY -3% at the open of session 4
+        r = self.run_one(D, self.M5)
+        day = lambda d: [(t["stock"], t["action"], t["when"]) for t in r["trades"] if t["date"] == d]  # noqa: E731
+        self.assertEqual(day("2025-03-03"), [("S0", "sell", "open")])      # not the planned buy of S1
+        self.assertEqual(day("2025-03-04"), [("S1", "buy", "open")])
+        self.assertEqual(day("2025-03-05"), [])                             # the check: no buying today
+        self.assertEqual(day("2025-03-06"), [("S2", "buy", "open")])
+        self.assertEqual(r["counts"]["most_orders_a_day"], 1)
+
+    def test_a_standing_stop_fills_only_on_a_day_with_no_order_yet(self):
+        D = self.movers()
+        D.low[2, 0] = 8.5                                                   # S0 dips through its floor ...
+        D.low[4, 0], D.mid[4, 0] = 8.5, 9.5                                 # ... on a buying day, then a quiet one
+        r = self.run_one(D, self.M5)
+        sells = [(t["date"], t["stock"], t["when"]) for t in r["trades"] if t["action"] == "sell"]
+        self.assertEqual(sells, [("2025-03-05", "S0", "afternoon")])        # the day S1 was bought it held on
+        self.assertEqual(r["counts"]["most_orders_a_day"], 1)
+
+    def test_spy_trades_only_when_far_from_its_target_or_on_a_check(self):
+        D = market()
+        D.open[4, -1] = 97.0                                                # a fall at the open of session 4
+        D.vix_mid[7] = 24.0                                                 # fear at midday in session 7
+        p = st.Policy("T", "spy", "one", daily=True, risk=True, market=True, one=True)
+        R = st.readings(D)
+        R["usual"]["spy"][:] = 1.0
+        R["risk"]["spy"][:] = 1.0                                           # the target: fully in ...
+        R["risk"]["spy"][9] = 1.0 / 0.95                                    # ... 95% after session 9 (within the band)
+        r = self.run_one(D, p, R=R)
+        got = [(t["date"], t["action"], t["when"]) for t in r["trades"]]
+        self.assertEqual(got, [("2025-03-02", "buy", "open"), ("2025-03-05", "sell", "open"),
+                               ("2025-03-06", "buy", "open"), ("2025-03-08", "sell", "midday"),
+                               ("2025-03-09", "buy", "open")])
+        self.assertEqual(r["counts"]["most_orders_a_day"], 1)
+
+
 if __name__ == "__main__":
     unittest.main()

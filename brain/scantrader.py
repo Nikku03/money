@@ -55,6 +55,7 @@ REF_DAYS = 250              # the book's usual risk: the median over the last 25
 STALE = 5                   # a stock with no trade for this many sessions is sold at its last price
 COSTS = ((100e6, 0.0005), (20e6, 0.001), (5e6, 0.002), (0.0, 0.004))   # a side, by dollar volume a day
 SPY_COST = 0.0001
+ONE_BAND = 0.10             # one trade a day: SPY is traded to its target only when this far off it (or on a check)
 CHART_1H = "https://query1.finance.yahoo.com/v8/finance/chart/{sym}?range=2y&interval=1h"
 MIDDAY = (12, 30)           # New York time of the midday check: the last price of the bar that ended by then
 FIRST = "2024-11-11"        # the first session with Yahoo's hourly prices (they reach back two years)
@@ -70,6 +71,7 @@ class Policy:
     risk: bool = False      # size each stock by its range and scale the book to its usual risk
     stops: bool = False     # standing stops at each stock's 9-in-10 floor
     market: bool = False    # the open and midday market checks
+    one: bool = False       # one order a day at most (simulate_one)
 
 
 def _steps(book: str, p: str) -> tuple[Policy, ...]:
@@ -84,6 +86,9 @@ POLICIES = (*_steps("movers", "M"), *_steps("all", "A"),
             Policy("S0", "spy", "fixed: bought and held"),
             Policy("S1", "spy", "+ sized by risk, read after every close", daily=True, risk=True),
             Policy("S2", "spy", "+ market checks: the trader", daily=True, risk=True, market=True))
+ONE_POLICIES = (Policy("M5", "movers", "one trade a day at most", daily=True, stops=True, market=True, one=True),
+                Policy("S3", "spy", "one trade a day at most", daily=True, risk=True, market=True, one=True))
+ONE_COMPARE = ("M0", "M4", "S0", "S2")      # run beside them: the fixed books and the trader with no limit
 PAIRS = (("movers", "M0", "M4"), ("all", "A0", "A4"), ("spy", "S0", "S2"))
 BOOKS = {"movers": f"the scan's {TOP} widest ranges", "all": "every tradable stock", "spy": "the S&P 500 (SPY)"}
 
@@ -344,7 +349,8 @@ def simulate(D: Data, R: dict, p: Policy, start: int, end: int, log_trades: bool
     stop, cool, last_bar = np.full(m, np.nan), np.full(m, -1), np.full(m, -1)
     acct = {"cash": 1.0, "costs": 0.0, "turnover": 0.0}
     nav, gross_log, flags, trades = [], [], [], []
-    counts = {"stops": 0, "cuts_open": 0, "cuts_midday": 0, "buys": 0, "sells": 0, "stale": 0}
+    counts = {"stops": 0, "cuts_open": 0, "cuts_midday": 0, "buys": 0, "sells": 0, "stale": 0, "orders": 0}
+    per_day: list[int] = []
 
     def mark(px: np.ndarray) -> None:
         who = (val != 0) & np.isfinite(px) & np.isfinite(lp)
@@ -356,6 +362,7 @@ def simulate(D: Data, R: dict, p: Policy, start: int, end: int, log_trades: bool
         if not len(idx):
             return
         dlt = new - val[idx]
+        counts["orders"] += int(np.sum(np.abs(dlt) > 1e-12))
         cost = np.abs(dlt) * (c[idx] + extra)
         acct["cash"] -= float(dlt.sum() + cost.sum())
         acct["costs"] += float(cost.sum())
@@ -389,6 +396,7 @@ def simulate(D: Data, R: dict, p: Policy, start: int, end: int, log_trades: bool
         return f"SPY {a * 100:+.1f}%, the VIX {b * 100:+.0f}%" if (a <= -FALL or b >= FEAR) else None
 
     for d in range(start, end + 1):
+        per_day.append(counts["orders"])
         s = d - 1
         c = cost_side(D.dv[s], D.spy)
         acct["cash"] *= 1 + D.rf[d]
@@ -473,6 +481,153 @@ def simulate(D: Data, R: dict, p: Policy, start: int, end: int, log_trades: bool
         nav.append(total)
         gross_log.append(float(val.sum() / total) if total > 0 else 0.0)
         flags.append(flag or "")
+    per_day = np.diff(np.r_[per_day, counts["orders"]])
+    counts["most_orders_a_day"] = int(per_day.max()) if len(per_day) else 0
+    return {"key": p.key, "nav": np.array(nav), "gross": np.array(gross_log), "flags": flags, "costs": acct["costs"],
+            "turnover": acct["turnover"], "counts": counts, "trades": trades}
+
+
+def simulate_one(D: Data, R: dict, p: Policy, start: int, end: int, log_trades: bool = False) -> dict:
+    """One book placing one order a day at most. Each session the trader picks its single most important order:
+
+    - **movers:** a holding that opened through its floor is sold; else a holding no longer among the KEEP widest
+      ranges (or not tradable) is sold; else, with a slot free and no market check at the open, the widest range
+      not held is bought with a TOP-th of the account. With no order by then, a standing stop may sell the first
+      holding to fall through its floor during the session. Bought stocks are never resized.
+    - **spy:** a market check at the open cuts the holding to half; else the holding is traded to the scan's
+      target (sizing by risk) when it is ONE_BAND or more away from it; with no order by then, a market check at
+      midday cuts it to half.
+    """
+    m = len(D.names)
+    val, lp, entry = np.zeros(m), np.full(m, np.nan), np.full(m, np.nan)
+    stop, cool, last_bar = np.full(m, np.nan), np.full(m, -1), np.full(m, -1)
+    acct = {"cash": 1.0, "costs": 0.0, "turnover": 0.0}
+    nav, gross_log, flags, trades, per_day = [], [], [], [], []
+    counts = {"stops": 0, "cuts_open": 0, "cuts_midday": 0, "buys": 0, "sells": 0, "stale": 0, "orders": 0}
+
+    def mark(px: np.ndarray) -> None:
+        who = (val != 0) & np.isfinite(px) & np.isfinite(lp)
+        val[who] *= px[who] / lp[who]
+        lp[who] = px[who]
+
+    def order(d: int, when: str, i: int, new: float, px: float, c: np.ndarray, why: str) -> None:
+        if np.isfinite(lp[i]) and lp[i] > 0 and val[i] != 0:
+            val[i] *= px / lp[i]
+        dlt = new - val[i]
+        cost = abs(dlt) * c[i]
+        acct["cash"] -= dlt + cost
+        acct["costs"] += cost
+        acct["turnover"] += abs(dlt)
+        ret = px / entry[i] - 1 if new == 0 and np.isfinite(entry[i]) and entry[i] > 0 else None
+        if val[i] == 0 and new > 0:
+            entry[i] = px
+            counts["buys"] += 1
+        elif new == 0:
+            counts["sells"] += 1
+        val[i], lp[i] = new, px
+        counts["orders"] += 1
+        if log_trades:
+            what = "buy" if dlt > 0 else "sell"
+            trades.append({"date": str(D.dates[d]), "when": when, "stock": D.names[i], "action": what, "why": why,
+                           **({"return": round(float(ret), 4)} if ret is not None else {})})
+
+    def check(spy_px: float, vix_px: float, s: int) -> str | None:
+        a, b = spy_px / D.close[s, D.spy] - 1, vix_px / D.vix_close[s] - 1
+        return f"SPY {a * 100:+.1f}%, the VIX {b * 100:+.0f}%" if (a <= -FALL or b >= FEAR) else None
+
+    for d in range(start, end + 1):
+        s = d - 1
+        c = cost_side(D.dv[s], D.spy)
+        acct["cash"] *= 1 + D.rf[d]
+        last_bar[D.has[d]] = d
+        if p.stops:
+            fresh = D.close[s] * np.exp(D.q[s, :, 0].astype(float))
+            stop = np.where(np.isfinite(fresh), fresh, stop)
+        po, pm, lo = D.open[d], D.mid[d], D.low[d]
+        mark(po)
+        done, before = False, counts["orders"]
+        flag = check(D.open[d, D.spy], D.vix_open[d], s) if p.market else None
+        if flag:
+            counts["cuts_open"] += 1
+            flag = f"{flag} at the open"
+        held = val > 0
+        gone = np.flatnonzero(held & (d - last_bar >= STALE))
+        if len(gone):                                      # a stock that stopped trading: the day's order
+            order(d, "open", int(gone[0]), 0.0, lp[gone[0]], c, f"no trade for {STALE} sessions: sold at its last price")
+            counts["stale"] += 1
+            done = True
+        if p.book == "spy":
+            i = D.spy
+            tot = acct["cash"] + val.sum()
+            cur = val[i] / tot if tot > 0 else 0.0
+            if not done and flag and cur > 0 and np.isfinite(po[i]):
+                order(d, "open", i, val[i] * CUT, po[i], c, f"{flag}: the holding cut to half")
+                done = True
+            elif not done and np.isfinite(po[i]):
+                gross = target(D, R, p, s, d, held, cool)[1]
+                if abs(gross - cur) >= ONE_BAND:
+                    order(d, "open", i, tot * gross, po[i], c,
+                          f"to the scan's target: {gross:.0%} of the account (from {cur:.0%})")
+                    done = True
+            if not done and p.market and val[i] > 0 and np.isfinite(pm[i]):
+                fl = check(pm[i], D.vix_mid[d], s)
+                if fl:
+                    counts["cuts_midday"] += 1
+                    order(d, "midday", i, val[i] * pm[i] / lp[i] * CUT, pm[i], c, f"{fl} at midday: the holding cut to half")
+                    flag, done = f"{fl} at midday", True
+        else:
+            can = D.has[d] & np.isfinite(po)
+            if not done and p.stops:
+                gap = np.flatnonzero(held & can & np.isfinite(stop) & (po <= stop))
+                if len(gap):
+                    i = int(gap[np.argmin(po[gap] / stop[gap])])
+                    order(d, "open", i, 0.0, po[i], c, f"opened through its 9-in-10 floor ({stop[i] / D.close[s, i] - 1:+.1%})")
+                    cool[i] = d + COOL
+                    counts["stops"] += 1
+                    done = True
+            half = R["half"][s]
+            ok = np.flatnonzero(np.isfinite(half))
+            ok = ok[ok != D.spy]
+            ranked = ok[np.argsort(-half[ok], kind="mergesort")]
+            rank = np.full(m, np.inf)
+            rank[ranked] = np.arange(len(ranked))
+            if not done:
+                out = np.flatnonzero(held & can & (rank >= KEEP))
+                if len(out):
+                    i = int(out[np.argmax(rank[out])])
+                    order(d, "open", i, 0.0, po[i], c, "not tradable at the close" if not np.isfinite(rank[i])
+                          else f"no longer among the {KEEP} widest ranges")
+                    done = True
+            if not done and not flag and np.sum(val > 0) < TOP:
+                tot = acct["cash"] + val.sum()
+                size = min(acct["cash"], tot / TOP)
+                if size >= 0.5 * tot / TOP:
+                    for i in ranked:
+                        if val[i] > 0 or cool[i] >= d or not can[i] or (p.stops and np.isfinite(stop[i]) and po[i] <= stop[i]):
+                            continue
+                        lo68, hi68 = np.expm1(D.q[s, i, 1]), np.expm1(D.q[s, i, 3])
+                        order(d, "open", int(i), size, po[i], c, f"the widest range not held at {D.dates[s]}'s close "
+                              f"(2 in 3: {lo68:+.0%}..{hi68:+.0%})")
+                        done = True
+                        break
+            if not done and p.stops:                       # a standing stop: the first holding through its floor
+                hit = np.flatnonzero((val > 0) & D.has[d] & np.isfinite(stop) & np.isfinite(lo) & (lo <= stop))
+                if len(hit):
+                    morning = hit[np.isfinite(pm[hit]) & (pm[hit] <= stop[hit])]
+                    i = int(morning[np.argmin(pm[morning] / stop[morning])] if len(morning)
+                            else hit[np.argmin(lo[hit] / stop[hit])])
+                    when = "morning" if len(morning) else "afternoon"
+                    order(d, when, i, 0.0, max(stop[i] * (1 - STOP_SLIP), lo[i]), c,
+                          f"fell through its 9-in-10 floor ({stop[i] / D.close[s, i] - 1:+.1%})")
+                    cool[i] = d + COOL
+                    counts["stops"] += 1
+        mark(D.close[d])
+        total = acct["cash"] + val.sum()
+        nav.append(total)
+        gross_log.append(float(val.sum() / total) if total > 0 else 0.0)
+        flags.append(flag or "")
+        per_day.append(counts["orders"] - before)
+    counts["most_orders_a_day"] = int(max(per_day)) if per_day else 0
     return {"key": p.key, "nav": np.array(nav), "gross": np.array(gross_log), "flags": flags, "costs": acct["costs"],
             "turnover": acct["turnover"], "counts": counts, "trades": trades}
 
@@ -575,7 +730,9 @@ def checks(D: Data, start: int, end: int) -> dict:
     return res
 
 
-def run(bank: Bank, first: str = FIRST, last: str = "2026-12-31", tickers=None, log=print, data: Data | None = None) -> dict:
+def run(bank: Bank, first: str = FIRST, last: str = "2026-12-31", tickers=None, log=print, data: Data | None = None,
+        policies: tuple[Policy, ...] = POLICIES, tag: str = "") -> dict:
+    """The replay of ``policies`` (each needs S0 beside it, the yardstick for beta). ``tag`` names the saved file."""
     tickers = tickers or scan.scan_tickers()
     missing = [t for t in [shocks.BENCH, shocks.VIX, *tickers] if t not in load_midday()]
     if missing and data is None:
@@ -587,16 +744,17 @@ def run(bank: Bank, first: str = FIRST, last: str = "2026-12-31", tickers=None, 
     R = readings(D)
     spy_nav = None
     out = {}
-    for p in POLICIES:
-        r = simulate(D, R, p, start, end, log_trades=p.key in ("M0", "M4", "A4", "S2"))
+    for p in policies:
+        sim = simulate_one if p.one else simulate
+        r = sim(D, R, p, start, end, log_trades=p.one or p.key in ("M0", "M4", "A4", "S2"))
         out[p.key] = r
         if p.key == "S0":
             spy_nav = r["nav"]
     rf = D.rf[start:end + 1]
     res = {"first": str(D.dates[start]), "last": str(D.dates[end]), "sessions": end - start + 1,
-           "stocks": len(D.names) - 1, "w1_sha": scan.model_sha(), "rules": rules(),
+           "stocks": len(D.names) - 1, "w1_sha": scan.model_sha(), "rules": rules(policies), "tag": tag,
            "policies": [], "accuracy": accuracy(D, start), "checks": checks(D, start, end), "trades": {}}
-    for p in POLICIES:
+    for p in policies:
         r = out[p.key]
         st = stats(r["nav"], spy_nav, rf, r["gross"])
         res["policies"].append({"key": p.key, "book": p.book, "label": p.label, **st, "costs": r["costs"],
@@ -610,14 +768,21 @@ def run(bank: Bank, first: str = FIRST, last: str = "2026-12-31", tickers=None, 
     return res
 
 
-def rules() -> dict:
+def rules(policies: tuple[Policy, ...] = POLICIES) -> dict:
     return {"top": TOP, "keep": KEEP, "fall": FALL, "fear": FEAR, "cut": CUT, "cool": COOL, "stop_slip": STOP_SLIP,
             "ref_days": REF_DAYS, "stale": STALE, "costs": [list(c) for c in COSTS], "spy_cost": SPY_COST,
-            "midday": f"{MIDDAY[0]}:{MIDDAY[1]:02d} New York", "policies": [p.__dict__ for p in POLICIES]}
+            "one_band": ONE_BAND, "midday": f"{MIDDAY[0]}:{MIDDAY[1]:02d} New York",
+            "policies": [p.__dict__ for p in policies]}
+
+
+def one_policies() -> tuple[Policy, ...]:
+    """One trade a day at most (M5, S3), beside the fixed books and the trader with no limit."""
+    return (*[p for p in POLICIES if p.key in ONE_COMPARE], *ONE_POLICIES)
 
 
 def save(res: dict) -> Path:
-    p = config.ROOT / "research" / "scans" / "replays" / f"trader-{res['first']}_{res['last']}.json"
+    tag = f"-{res['tag']}" if res.get("tag") else ""
+    p = config.ROOT / "research" / "scans" / "replays" / f"trader{tag}-{res['first']}_{res['last']}.json"
     p.parent.mkdir(parents=True, exist_ok=True)
     p.write_text(canon(res) + "\n")
     return p
@@ -631,11 +796,12 @@ def show(res: dict) -> None:
     print(f"The scan as a trader, {res['first']} to {res['last']}: {res['sessions']} sessions, {res['stocks']} stocks. "
           "Read after every close, checked at the open and at midday, standing stops; paper only, after costs.")
     print(f"  {'':4} {'book and rules':48} {'$1 ->':>6} {'a year':>7} {'worst fall':>10} {'Sharpe':>6} {'beta':>5} "
-          f"{'held':>5} {'costs':>6} {'w/o best 5 days':>15}")
+          f"{'held':>5} {'costs':>6} {'w/o best 5 days':>15} {'orders':>7} {'most a day':>10}")
     for r in res["policies"]:
         print(f"  {r['key']:4} {BOOKS[r['book']][:22] + ': ' + r['label']:48.48} {r['end']:6.2f} {_pct(r['cagr'], 1, True):>7} "
               f"{_pct(r['worst_fall'], 0):>10} {r['sharpe']:6.2f} {r['beta']:5.2f} {_pct(r['exposure'], 0):>5} "
-              f"{_pct(r['costs'], 1):>6} {r['end_without_best5']:15.2f}")
+              f"{_pct(r['costs'], 1):>6} {r['end_without_best5']:15.2f} {r.get('orders', 0):7d} "
+              f"{r.get('most_orders_a_day', 0):10d}")
     a = res["accuracy"]
     if "midweek" in a:
         x = a["midweek"]
@@ -659,7 +825,8 @@ def show(res: dict) -> None:
 
 
 def cmd(a) -> int:
-    res = run(Bank(), max(a.first, FIRST), a.last)
+    one = getattr(a, "one_trade", False)
+    res = run(Bank(), max(a.first, FIRST), a.last, policies=one_policies() if one else POLICIES, tag="one" if one else "")
     show(res)
     if a.save:
         print(f"saved {save(res)}")

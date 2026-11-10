@@ -324,6 +324,23 @@ before it ran, and it runs once:
   from the newer listings), and the every-stock book's $1.38 beat every real fund, for example IWM's $1.21.
   Compare within a book; the S&P 500 book has no picking.
 
+**One trade a day at most** (`brain scan trader --one-trade`). The same trader limited to one order a day: one
+buy or one sell of one stock. Each session it places only its most important order. The rules were fixed and
+committed before it ran, and it runs once beside the fixed books and the trader with no limit.
+
+- **The 25 movers (M5):** at the open, in this order:
+  1. sell a holding that opened through its floor;
+  2. else sell a holding no longer among the 50 widest ranges, or no longer tradable;
+  3. else, with a slot free and no market check at the open, buy the widest range not held, with a 25th of
+     the account. A stock is never resized once bought.
+
+  With no order by then, a standing stop may sell the first holding to fall through its floor during the
+  session. The book fills one stock a day from cash, and cash earns the bill rate.
+- **The S&P 500 (S3):** a market check at the open cuts the holding to half. Otherwise the holding is traded to
+  the scan's target (sizing by risk) only when it is 10 points or more away from it. With no order by then, a
+  market check at midday cuts it to half.
+- **Every tradable stock** has no one-trade version: with one order a day it would take years to build.
+
 ## Limits
 
 - **No direction.** The middle of every range sits near zero. It is a little above zero because the list holds

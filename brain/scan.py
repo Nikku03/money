@@ -679,4 +679,6 @@ def add_cli(sub) -> None:
                    "trader: write research/scans/replays/trader-<from>_<to>.json")
     p.add_argument("--only-top", dest="only_top", type=int, help="watch: only the N widest ranges and N likeliest 20%%+ days")
     p.add_argument("--every", type=int, help="watch: check again every N minutes (at least 15) until Ctrl+C")
+    p.add_argument("--one-trade", dest="one_trade", action="store_true",
+                   help="trader: one order a day at most (M5, S3), beside the fixed books and the trader with no limit")
     p.set_defaults(fn=_cmd)
