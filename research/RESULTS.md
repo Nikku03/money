@@ -1,6 +1,6 @@
 # Research results
 
-Generated 2026-11-03T21:09:10Z from `research/ledger.jsonl`. Every number below is copied from the ledger.
+Generated 2026-11-10T03:24:59Z from `research/ledger.jsonl`. Every number below is copied from the ledger.
 
 TRAIN 2011-01-31..2018-12-31, TEST from 2019-01-01. Monthly, equal weight against the equal-weight universe, 10 bps per unit turnover. Holdings: the top third by signal unless the hypothesis names another selection (Select column; see `brain/research/harness.py`).
 
@@ -9,19 +9,19 @@ Universes (each has its own panel and controls):
 - `universe/us_large.json`: 60 US stocks (top SEC filers by market value with 10-K XBRL and prices since 2010). Hypotheses: H1-mom12_1, H2-rev1, H3-earnings_yield, H4-low_asset_growth, H5-ridge.
 - `universe/us_broad.json`: 741 US stocks (SEC ranks 1-1500 with 10-K XBRL and prices since 2010). Hypotheses: H6-insider_buying, H3c-earnings_yield_ttm, H7b-earnings_reaction, H8b-sue, H3b-earnings_yield_ttm, H7-earnings_reaction, H8-sue.
 
-Gate (declared before running): TEST mean net excess > 0, permutation p < 0.05, and Benjamini–Hochberg q < 0.10 across every hypothesis in the ledger and every gated forecast test (see Forecasts) and every gated link test (see Links) and every gated event test (see Events) and every gated move-size test (see Move sizes) and every gated shock test (see Shocks).
+Gate (declared before running): TEST mean net excess > 0, permutation p < 0.05, and Benjamini–Hochberg q < 0.10 across every hypothesis in the ledger and every gated forecast test (see Forecasts) and every gated link test (see Links) and every gated event test (see Events) and every gated move-size test (see Move sizes) and every gated shock test (see Shocks) and every gated weekly-range test (see Weekly ranges).
 
 | Hypothesis | Universe | Select | TEST net excess / mo | Annualised | Info ratio | Months won | Perm p | BH q | TRAIN net excess / mo | TRAIN p | TEST coverage | Verdict |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| H1-mom12_1 | us_large | top_frac | +0.11% | +1.3% | 0.12 | 42/92 | 0.1758 | 0.601 | +0.22% | 0.0148 | 100% | **FAIL** |
-| H2-rev1 | us_large | top_frac | -0.01% | -0.1% | -0.01 | 49/92 | 0.2142 | 0.601 | +0.05% | 0.0722 | 100% | **FAIL** |
-| H3-earnings_yield | us_large | top_frac | -0.23% | -2.7% | -0.31 | 46/92 | 0.8710 | 0.917 | -0.10% | 0.8714 | 85% | **FAIL** |
-| H4-low_asset_growth | us_large | top_frac | -0.11% | -1.3% | -0.22 | 48/92 | 0.7363 | 0.912 | -0.09% | 0.7251 | 97% | **FAIL** |
-| H5-ridge | us_large | top_frac | +0.19% | +2.3% | 0.27 | 48/92 | 0.0510 | 0.476 | +0.14% | 0.0546 | 100% | **FAIL** |
-| H6-insider_buying | us_broad | positive | +0.00% | +0.0% | 0.01 | 48/92 | 0.2789 | 0.601 | +0.11% | 0.0080 | 100% | **FAIL** |
-| H3c-earnings_yield_ttm | us_broad | top_frac | -0.11% | -1.3% | -0.25 | 48/92 | 0.8846 | 0.917 | -0.11% | 0.9282 | 94% | **FAIL** |
-| H7b-earnings_reaction | us_broad | top_frac_vs_all | -0.24% | -2.8% | -0.55 | 36/92 | 0.5845 | 0.844 | -0.07% | 0.1838 | 36% | **FAIL** |
-| H8b-sue | us_broad | top_frac | -0.05% | -0.6% | -0.20 | 48/92 | 0.4867 | 0.835 | -0.03% | 0.1058 | 92% | **FAIL** |
+| H1-mom12_1 | us_large | top_frac | +0.11% | +1.3% | 0.12 | 42/92 | 0.1758 | 0.577 | +0.22% | 0.0148 | 100% | **FAIL** |
+| H2-rev1 | us_large | top_frac | -0.01% | -0.1% | -0.01 | 49/92 | 0.2142 | 0.577 | +0.05% | 0.0722 | 100% | **FAIL** |
+| H3-earnings_yield | us_large | top_frac | -0.23% | -2.7% | -0.31 | 46/92 | 0.8710 | 0.916 | -0.10% | 0.8714 | 85% | **FAIL** |
+| H4-low_asset_growth | us_large | top_frac | -0.11% | -1.3% | -0.22 | 48/92 | 0.7363 | 0.905 | -0.09% | 0.7251 | 97% | **FAIL** |
+| H5-ridge | us_large | top_frac | +0.19% | +2.3% | 0.27 | 48/92 | 0.0510 | 0.370 | +0.14% | 0.0546 | 100% | **FAIL** |
+| H6-insider_buying | us_broad | positive | +0.00% | +0.0% | 0.01 | 48/92 | 0.2789 | 0.578 | +0.11% | 0.0080 | 100% | **FAIL** |
+| H3c-earnings_yield_ttm | us_broad | top_frac | -0.11% | -1.3% | -0.25 | 48/92 | 0.8846 | 0.916 | -0.11% | 0.9282 | 94% | **FAIL** |
+| H7b-earnings_reaction | us_broad | top_frac_vs_all | -0.24% | -2.8% | -0.55 | 36/92 | 0.5845 | 0.832 | -0.07% | 0.1838 | 36% | **FAIL** |
+| H8b-sue | us_broad | top_frac | -0.05% | -0.6% | -0.20 | 48/92 | 0.4867 | 0.817 | -0.03% | 0.1058 | 92% | **FAIL** |
 | H3b-earnings_yield_ttm | us_broad | top_frac | -0.11% | -1.3% | -0.25 | 48/92 | 0.8784 | – | -0.11% | 0.9342 | 94% | **WITHDRAWN** |
 | H7-earnings_reaction | us_broad | top_frac_vs_all | -0.24% | -2.9% | -0.56 | 34/92 | 0.6027 | – | -0.07% | 0.1704 | 35% | **WITHDRAWN** |
 | H8-sue | us_broad | top_frac | -0.06% | -0.7% | -0.23 | 48/92 | 0.5071 | – | -0.04% | 0.1378 | 92% | **WITHDRAWN** |
@@ -84,8 +84,8 @@ Gate (F1b, F1c; declared before running): mean size-neutral IC > 0 with a one-si
 | Test | h | Dates | Samples | IC | Size-neutral IC | p or 90% interval | BH q | Size IC | Momentum IC | Spread | Brier skill (within-date) | Placement | 68% band held | 90% band held | Verdict |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | F1a-w5-recent | 5 | 2026-08-18..2026-10-07 (8) | 5928 | +0.040 | +0.042 | 90% -0.099..+0.183 | – | -0.046 | +0.014 | +0.52% | +0.99% (+0.13%) | 50.9% | 69.0% (62.8%-75.2%) | 91.9% (88.1%-95.7%) | **REPORT** |
-| F1b-w5-test | 5 | 2019-01-03..2026-08-11 (383) | 283803 | +0.010 | +0.011 | p 0.0870 | 0.601 | +0.009 | +0.008 | -0.06% | -0.08% (+0.00%) | 50.4% | 67.8% (66.5%-69.1%) | 89.9% (89.0%-90.7%) | **FAIL** |
-| F1c-m21-test | 21 | 2019-01-07..2026-09-15 (93) | 68913 | +0.008 | +0.014 | p 0.2096 | 0.601 | +0.020 | -0.001 | +0.23% | -0.42% (-0.01%) | 50.2% | 69.3% (67.0%-71.5%) | 90.9% (89.4%-92.4%) | **FAIL** |
+| F1b-w5-test | 5 | 2019-01-03..2026-08-11 (383) | 283803 | +0.010 | +0.011 | p 0.0870 | 0.505 | +0.009 | +0.008 | -0.06% | -0.08% (+0.00%) | 50.4% | 67.8% (66.5%-69.1%) | 89.9% (89.0%-90.7%) | **FAIL** |
+| F1c-m21-test | 21 | 2019-01-07..2026-09-15 (93) | 68913 | +0.008 | +0.014 | p 0.2096 | 0.577 | +0.020 | -0.001 | +0.23% | -0.42% (-0.01%) | 50.2% | 69.3% (67.0%-71.5%) | 90.9% (89.4%-92.4%) | **FAIL** |
 | F1d-llm-w5-recent | 5 | 2026-08-18..2026-10-07 (8) | 96 | -0.003 | -0.011 | 90% -0.169..+0.147; Brier F1 - model +0.0097 (p 0.352) | – | +0.017 | -0.145 | -0.17% | +0.19% (+0.20%) | 37.5% | 76.0% (67.3%-84.8%) | 92.7% (82.5%-100.0%) | **REPORT** |
 
 IC: Spearman correlation of the chance to beat SPY with what each stock then did beyond SPY. Size-neutral IC: the same after the forecast's rank is cleared of its fit on market value, since the universe holds today's survivors and small-then predicts rose-later. Size IC and Momentum IC: the same samples ranked by size alone (smaller first) and by 12-1 momentum alone. Spread: top fifth minus bottom fifth by forecast, mean excess per date (F1d: halves of 12). Brier skill: against the training base rate as a constant; the within-date part is the only one that speaks to ranking. Placement: share placed on the right side of the date's median. Bands: share of stocks whose close at the exit fell inside, per date (interval).
@@ -93,8 +93,8 @@ IC: Spearman correlation of the chance to beat SPY with what each stock then did
 ### What the range and the chance showed
 
 - F1a-w5-recent (2026-08-18 to 2026-10-07, 8 dates): the 68% band held 69.0% of the time per date (date-level 90% interval 62.8% to 75.2%) and the 90% band 91.9% (88.1% to 95.7%), against 68% and 90% aimed for; its pinball loss was 1% above a naive normal band's. Then the chance to beat SPY had mean size-neutral IC +0.042 (90% interval -0.099..+0.183); retest (descriptive): inconclusive; it can detect mean IC >= 0.15 at 80% power.
-- F1b-w5-test (2019-01-03 to 2026-08-11, 383 dates): the 68% band held 67.8% of the time per date (date-level 90% interval 66.5% to 69.1%) and the 90% band 89.9% (89.0% to 90.7%), against 68% and 90% aimed for; its pinball loss was 2% below a naive normal band's. Then the chance to beat SPY ranked stocks beyond size with mean IC +0.011 (date-level p 0.0870, q 0.601): FAIL. Controls passed: the oracle reached p 0.00005 (smallest possible 0.00005), so the test can reject, and 3.0% of 200 coin-flipped placebos passed (1%-10% expected): a check of the sign-flip test itself, not of the forecaster, since coin-flipped signs pass about 5% of the time for any series, a look-ahead leak included (the features' leak tests are what check for one). Within-date permutation p 0.0010 (a diagnostic: too narrow, since stocks move together).
-- F1c-m21-test (2019-01-07 to 2026-09-15, 93 dates): the 68% band held 69.3% of the time per date (date-level 90% interval 67.0% to 71.5%) and the 90% band 90.9% (89.4% to 92.4%), against 68% and 90% aimed for; its pinball loss was 1% below a naive normal band's. Then the chance to beat SPY ranked stocks beyond size with mean IC +0.014 (date-level p 0.2096, q 0.601): FAIL. Controls passed: the oracle reached p 0.00005 (smallest possible 0.00005), so the test can reject, and 5.0% of 200 coin-flipped placebos passed (1%-10% expected): a check of the sign-flip test itself, not of the forecaster, since coin-flipped signs pass about 5% of the time for any series, a look-ahead leak included (the features' leak tests are what check for one). Within-date permutation p 0.0010 (a diagnostic: too narrow, since stocks move together).
+- F1b-w5-test (2019-01-03 to 2026-08-11, 383 dates): the 68% band held 67.8% of the time per date (date-level 90% interval 66.5% to 69.1%) and the 90% band 89.9% (89.0% to 90.7%), against 68% and 90% aimed for; its pinball loss was 2% below a naive normal band's. Then the chance to beat SPY ranked stocks beyond size with mean IC +0.011 (date-level p 0.0870, q 0.505): FAIL. Controls passed: the oracle reached p 0.00005 (smallest possible 0.00005), so the test can reject, and 3.0% of 200 coin-flipped placebos passed (1%-10% expected): a check of the sign-flip test itself, not of the forecaster, since coin-flipped signs pass about 5% of the time for any series, a look-ahead leak included (the features' leak tests are what check for one). Within-date permutation p 0.0010 (a diagnostic: too narrow, since stocks move together).
+- F1c-m21-test (2019-01-07 to 2026-09-15, 93 dates): the 68% band held 69.3% of the time per date (date-level 90% interval 67.0% to 71.5%) and the 90% band 90.9% (89.4% to 92.4%), against 68% and 90% aimed for; its pinball loss was 1% below a naive normal band's. Then the chance to beat SPY ranked stocks beyond size with mean IC +0.014 (date-level p 0.2096, q 0.577): FAIL. Controls passed: the oracle reached p 0.00005 (smallest possible 0.00005), so the test can reject, and 5.0% of 200 coin-flipped placebos passed (1%-10% expected): a check of the sign-flip test itself, not of the forecaster, since coin-flipped signs pass about 5% of the time for any series, a look-ahead leak included (the features' leak tests are what check for one). Within-date permutation p 0.0010 (a diagnostic: too narrow, since stocks move together).
 - F1d-llm-w5-recent (2026-08-18 to 2026-10-07, 8 dates): the 68% band held 76.0% of the time per date (date-level 90% interval 67.3% to 84.8%) and the 90% band 92.7% (82.5% to 100.0%), against 68% and 90% aimed for; its pinball loss was 2% above a naive normal band's. Then the local model's Brier score against F1's on the same stocks: F1 minus model +0.0097 per date (90% interval -0.0245..+0.0440, exact sign-flip p 0.352); 0 of 96 answers failed and count as F1's; retest (descriptive): LLM vs F1 inconclusive.
 
 ### Calibration
@@ -163,15 +163,15 @@ Tests of the chain engine's cause → effect links (`knowledge/links.json`, `doc
 | Test | Cause → effect | Timing | TEST months | Effect per move, points (TEST) | 90% interval | p | BH q | TRAIN effect | Verdict |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | L1-oil-airlines-same | oil_price_up → airline_stocks_down | same month | 93 (2019-01..2026-09) | +0.44% per +10% oil | -0.95%..+2.36% | 0.7417 | – | -3.13% | **REPORT** |
-| L1-oil-airlines-next | oil_price_up → airline_stocks_down | next month | 93 (2019-01..2026-09) | -0.49% per +10% oil | -2.28%..+0.45% | 0.2190 | 0.601 | -1.76% | **FAIL** |
+| L1-oil-airlines-next | oil_price_up → airline_stocks_down | next month | 93 (2019-01..2026-09) | -0.49% per +10% oil | -2.28%..+0.45% | 0.2190 | 0.577 | -1.76% | **FAIL** |
 | L1-oil-producers-same | oil_price_up → oil_producer_stocks_up | same month | 93 (2019-01..2026-09) | +2.96% per +10% oil | +1.19%..+5.81% | 0.0002 | – | +2.90% | **REPORT** |
-| L1-oil-producers-next | oil_price_up → oil_producer_stocks_up | next month | 93 (2019-01..2026-09) | -0.41% per +10% oil | -1.83%..+0.93% | 0.7489 | 0.912 | +0.20% | **FAIL** |
+| L1-oil-producers-next | oil_price_up → oil_producer_stocks_up | next month | 93 (2019-01..2026-09) | -0.41% per +10% oil | -1.83%..+0.93% | 0.7489 | 0.905 | +0.20% | **FAIL** |
 | L1-rates-homebuilders-same | interest_rates_up → homebuilder_stocks_down | same month | 93 (2019-01..2026-09) | -2.29% per +0.25 pt 10-year | -3.70%..-0.95% | 0.0018 | – | -0.50% | **REPORT** |
-| L1-rates-homebuilders-next | interest_rates_up → homebuilder_stocks_down | next month | 93 (2019-01..2026-09) | +0.48% per +0.25 pt 10-year | -0.70%..+1.80% | 0.7395 | 0.912 | -0.26% | **FAIL** |
+| L1-rates-homebuilders-next | interest_rates_up → homebuilder_stocks_down | next month | 93 (2019-01..2026-09) | +0.48% per +0.25 pt 10-year | -0.70%..+1.80% | 0.7395 | 0.905 | -0.26% | **FAIL** |
 | L1-rates-banks-same | interest_rates_up → bank_stocks_up | same month | 93 (2019-01..2026-09) | +1.05% per +0.25 pt 10-year | +0.03%..+2.10% | 0.0266 | – | +3.44% | **REPORT** |
-| L1-rates-banks-next | interest_rates_up → bank_stocks_up | next month | 93 (2019-01..2026-09) | +0.44% per +0.25 pt 10-year | -0.52%..+1.35% | 0.2088 | 0.601 | +0.15% | **FAIL** |
+| L1-rates-banks-next | interest_rates_up → bank_stocks_up | next month | 93 (2019-01..2026-09) | +0.44% per +0.25 pt 10-year | -0.52%..+1.35% | 0.2088 | 0.577 | +0.15% | **FAIL** |
 | L1-rates-tech-same | interest_rates_up → tech_stocks_down | same month | 93 (2019-01..2026-09) | -1.08% per +0.25 pt 10-year | -1.77%..-0.27% | 0.0180 | – | +0.42% | **REPORT** |
-| L1-rates-tech-next | interest_rates_up → tech_stocks_down | next month | 93 (2019-01..2026-09) | -0.33% per +0.25 pt 10-year | -1.07%..+0.42% | 0.2587 | 0.601 | -0.24% | **FAIL** |
+| L1-rates-tech-next | interest_rates_up → tech_stocks_down | next month | 93 (2019-01..2026-09) | -0.33% per +0.25 pt 10-year | -1.07%..+0.42% | 0.2587 | 0.578 | -0.24% | **FAIL** |
 
 - **L1-oil-airlines-same**: for each month with oil up 10%, the airline stocks' return over SPY that month was 0.44 points higher (90% interval -0.95% to +2.36%; TRAIN -3.13%). The links say lower. REPORT.
 - **L1-oil-airlines-next**: for each month with oil up 10%, the airline stocks' return over SPY the next month was 0.49 points lower (90% interval -2.28% to +0.45%; TRAIN -1.76%). The links say lower. FAIL.
@@ -198,13 +198,13 @@ Tests of corporate events named in earnings press releases (SEC 8-K exhibit 99; 
 | E1-guidance_raised-reaction | guidance_raised | -1..+1 | 174 (59) | +1.41% | -0.08%..+2.92% | 0.0579 | – | +2.28% | +1.28% | **REPORT** |
 | E1-guidance_raised-drift | guidance_raised | +2..+21 | 174 (59) | -2.15% | -3.27%..-1.14% | 0.9997 | 1.000 | -1.10% | -0.51% | **FAIL** |
 | E2-small-guidance_raised-reaction | guidance_raised | -1..+1 | 1071 (90) | +3.74% | +2.86%..+4.60% | 0.0000 | – | +3.97% | +3.35% | **REPORT** |
-| E2-small-guidance_raised-drift | guidance_raised | +2..+21 | 1071 (90) | -0.35% | -1.15%..+0.41% | 0.4570 | 0.835 | -0.37% | -1.25% | **FAIL** |
+| E2-small-guidance_raised-drift | guidance_raised | +2..+21 | 1071 (90) | -0.35% | -1.15%..+0.41% | 0.4570 | 0.817 | -0.37% | -1.25% | **FAIL** |
 | E2-small-guidance_cut-reaction | guidance_cut | -1..+1 | 91 (48) | -7.13% | -9.55%..-4.90% | 0.0000 | – | -6.68% | -5.33% | **REPORT** |
-| E2-small-guidance_cut-drift | guidance_cut | +2..+21 | 91 (48) | +0.90% | -1.00%..+2.84% | 0.4749 | 0.835 | +0.71% | +1.02% | **FAIL** |
+| E2-small-guidance_cut-drift | guidance_cut | +2..+21 | 91 (48) | +0.90% | -1.00%..+2.84% | 0.4749 | 0.817 | +0.71% | +1.02% | **FAIL** |
 | E2-micro-guidance_raised-reaction | guidance_raised | -1..+1 | 319 (81) | +6.78% | +4.99%..+8.52% | 0.0000 | – | +6.72% | +4.29% | **REPORT** |
-| E2-micro-guidance_raised-drift | guidance_raised | +2..+21 | 319 (81) | -1.25% | -2.77%..+0.20% | 0.1779 | 0.601 | -1.29% | -2.05% | **FAIL** |
+| E2-micro-guidance_raised-drift | guidance_raised | +2..+21 | 319 (81) | -1.25% | -2.77%..+0.20% | 0.1779 | 0.577 | -1.29% | -2.05% | **FAIL** |
 | E2-micro-guidance_cut-reaction | guidance_cut | -1..+1 | 59 (38) | -9.20% | -12.32%..-6.07% | 0.0000 | – | -8.74% | -5.36% | **REPORT** |
-| E2-micro-guidance_cut-drift | guidance_cut | +2..+21 | 59 (38) | -1.66% | -4.06%..+0.64% | 0.2717 | 0.601 | -1.47% | +0.14% | **FAIL** |
+| E2-micro-guidance_cut-drift | guidance_cut | +2..+21 | 59 (38) | -1.66% | -4.06%..+0.64% | 0.2717 | 0.578 | -1.47% | +0.14% | **FAIL** |
 
 - **E1-guidance_raised-reaction**: over days -1..+1, releases tagged guidance_raised did +1.41% against the month's other releases (90% interval -0.08% to +2.92%) and +2.28% against SPY, over 174 releases in 59 months. The event implies up. REPORT.
 - **E1-guidance_raised-drift**: over days +2..+21, releases tagged guidance_raised did -2.15% against the month's other releases (90% interval -3.27% to -1.14%) and -1.10% against SPY, over 174 releases in 59 months. The event implies up. FAIL.
@@ -247,12 +247,25 @@ Tests of what follows a shock: an up-shock episode opens on a session 20%+ above
 
 | Test | Statistic | TEST episodes (months) | Mean of monthly values | 90% interval | p | BH q | Verdict |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| S2a | percentile | 423 (33) | +0.0041 | -0.0281..+0.0347 | 0.5833 | 0.844 | **FAIL** |
-| S2b | abnormal | 423 (33) | +0.0439 | -0.0223..+0.1133 | 0.8406 | 0.917 | **FAIL (controls)** |
+| S2a | percentile | 423 (33) | +0.0041 | -0.0281..+0.0347 | 0.5833 | 0.832 | **FAIL** |
+| S2b | abnormal | 423 (33) | +0.0439 | -0.0223..+0.1133 | 0.8406 | 0.916 | **FAIL (controls)** |
 
 - **S1a**: over 224166 stock-weeks of 1568 stocks from 2024-01 to 2026-09, 0.72% of stock-weeks had a 20%+ session (68% of those were up). S1's chances averaged 0.58% (the baseline's 0.72%) and beat the baseline's log loss in 31 of 33 months; AUC 0.905 against 0.857. Each week's top 1%, 5% and 10% by S1 held 22%, 52% and 68% of all shocks (the baseline's 21%, 45% and 59%); in S1's top 5% a shock came 7.5% of the time against a predicted 6.2%. Controls: shuffled chances reached p < 0.05 in 0.0% of 200 draws; an oracle reached p 0.0001. PASS.
 - **S2a** (percentile): 423 episodes of 191 stocks from 2024-01 to 2026-09. Over the next 21 sessions their median excess return was -1.7% and their mean +10.1%, against +3.9% for their peers: +6.26 points on average, beating 50.6% of peers (51% fell behind the middle one). Negative in 15 of 33 months. Jumps of 50%+: 42, -6.4 points; drug and biotech: 95, +1.1; under $5: 158, +15.2. Controls: a random peer in each episode's place reached p < 0.05 in 5.5% of 200 draws; an oracle reached p 0.0001. FAIL.
 - **S2b** (abnormal): 423 episodes of 191 stocks from 2024-01 to 2026-09. Over the next 21 sessions their median excess return was -1.7% and their mean +10.1%, against +3.9% for their peers: +6.26 points on average, beating 50.6% of peers (51% fell behind the middle one). Negative in 13 of 33 months. Jumps of 50%+: 42, -6.4 points; drug and biotech: 95, +1.1; under $5: 158, +15.2. Controls: a random peer in each episode's place reached p < 0.05 in 19.5% of 200 draws; an oracle reached p 0.0001. FAIL (controls).
 
 Reading this: a chance of a shock is a size, not a direction, and a fade measured against peers is not a trade: shorting a stock that just jumped costs borrow fees and risks a squeeze. The universe is chosen today (survivorship: companies bought out or delisted are missing, so shocks are undercounted and post-shock returns flattered).
+
+
+## Weekly ranges
+
+Tests of the scan's weekly range W1 (`brain/scan.py`, `docs/SCAN.md`): the range of a stock's return over the next five sessions, from what was known at a week's last close, on tradable stock-weeks. Per stock-week the score is the mean pinball loss of the log return over the 5/16/50/84/95% quantiles; each month the baseline's mean loss (the range its 60-session volatility alone gives) minus W1's, and the statistic is the mean of those monthly differences with a one-sided sign-flip p. The gate, declared before running: positive, p < 0.05, W1's 68% range holding 63%-73% of TEST stock-weeks and its 90% range 86%-94%, the controls passing, and Benjamini–Hochberg q < 0.10 across every gated test in the ledger.
+
+| Test | TEST stock-weeks (months) | Loss W1 | Loss baseline | Monthly difference | 90% interval | p | BH q | 68% range held | 90% range held | Verdict |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| W1a | 209939 (33) | 1.148 | 1.164 | +0.016 | +0.011..+0.021 | 0.0001 | 0.001 | 68.1% | 89.7% | **PASS** |
+
+- **W1a**: over 209939 stock-weeks of 1550 stocks from 2024-01 to 2026-09, W1's ranges scored 1.148 points of pinball loss against the baseline's 1.164 (better in 30 of 33 months). Its 68% range held 68.1% of the moves and its 90% range 89.7% (the baseline's 70.4% and 91.6%); 5.0% fell below the 90% range and 5.3% rose above it. By list (68% and 90%): broad 68.1% and 89.9% (105890); micro 68.2% and 89.3% (33981); small 67.9% and 89.5% (70068). With a report due: 64.7% and 87.1% (16642); without: 68.3% and 89.9%. The typical move was 2.7% either way, against a typical 68% range of ±4.0%. Within a week, W1's size ranked the stocks' actual moves with a rank correlation of 0.347 (the baseline's 0.300). Direction, reported and not tested: 51.9% of stock-weeks rose (the training years' share for stocks of the same size of move: 52.7%), and 49.1% ended above the range's middle. Controls: shuffled ranges reached p < 0.05 in 0.0% of 200 draws; a range that knows the outcome reached p 0.0001. PASS.
+
+Reading this: a range is a size, not a direction; its middle sits near zero for every stock. The universe is chosen today (survivorship: companies bought out or delisted are missing, so the largest moves are undercounted), and the pinball loss is in points of log return.
 
