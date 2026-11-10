@@ -301,6 +301,29 @@ before it ran, and it runs once:
   - the ranges read after every close against the week's fixed reading on the same five sessions;
   - how often stocks broke their ranges on the days the market checks fired.
 
+**Results** (2026-11-10, 500 sessions from 2024-11-11 to 2026-11-09, 2,537 stocks;
+`research/SCAN-TRADER-2026-11.md`). $1, after costs:
+
+| Book | Fixed | The trader | Worst fall, fixed / trader |
+|---|---|---|---|
+| The S&P 500 (SPY) | $1.28 | $1.21 | -19% / -14% |
+| Every tradable stock | $1.38 | $1.10 | -24% / -18% |
+| The 25 widest ranges | $5.30 | $2.83 | -50% / -52% |
+
+- **The trader ended with less in every book.** It made falls smaller where the book was spread out, but gave
+  up more return than risk: its Sharpe ratio was lower in every book.
+- **Sizing by risk cost the most:** $1.15 against $1.39 on every stock.
+- **The market checks fired on 27 sessions.** They tended to sell just before rebounds: SPY rose 0.69% in the
+  five sessions after a cut, against 0.28% after any session.
+- **Reading the ranges after every close barely changed their accuracy:** Monday to Thursday, the 2-in-3
+  range held 67.9% against the week's fixed reading's 67.5%.
+- **A stock already outside its 2-in-3 range at the open ended its five sessions outside its 9-in-10 range
+  45.0% of the time,** against 10.7% for every stock. That is what `scan watch` flags: a size, not a
+  direction.
+- **The lists were chosen in 2026.** They hold stocks that later soared (two-thirds of the movers bought came
+  from the newer listings), and the every-stock book's $1.38 beat every real fund, for example IWM's $1.21.
+  Compare within a book; the S&P 500 book has no picking.
+
 ## Limits
 
 - **No direction.** The middle of every range sits near zero. It is a little above zero because the list holds
