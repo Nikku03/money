@@ -170,6 +170,13 @@ class LiveHelpersTest(TempHome):
         with mock.patch.object(earnradar, "load_index", side_effect=FileNotFoundError):
             self.assertEqual(scan.report_dates("2026-11-09", ["DUE"]), {})
 
+    def test_a_results_filing_in_the_bank_means_the_report_is_out(self):
+        due = {"date": "2026-11-11", "timing": "after close"}
+        self.assertEqual(scan.report_note({"date": "2026-11-09", "last_report": "2026-11-05"}, due), {"out": "2026-11-05"})
+        self.assertEqual(scan.report_note({"date": "2026-11-09", "last_report": "2026-08-06"}, due), due)
+        self.assertEqual(scan.report_note({"date": "2026-11-09"}, due), due)
+        self.assertIsNone(scan.report_note({"date": "2026-11-09", "last_report": None}, None))
+
     def test_refresh_reads_prices_then_filings_and_counts_outages(self):
         from unittest import mock
 

@@ -355,6 +355,9 @@ def live(bank: Bank, tickers: list[str], log=None) -> dict:
             if not all(np.isfinite(x) for x in row.values()):
                 skipped.append({"t": t, "why": "too little history for its features"})
                 continue
+            if row["earn_win"] > 0:                     # is this season's report already in the bank?
+                reps = shocks.filings(v, t, mk[0])[0]
+                row["last_report"] = reps[-1] if reps else None
             rows.append({"t": t, "date": asof, **row})
         if log:
             log(f"{min(c + CHUNK, len(tickers))}/{len(tickers)} tickers")
@@ -402,6 +405,16 @@ def report_dates(asof: str, tickers: list[str]) -> dict[str, dict]:
         elif nr := earnradar.next_report(row, day + timedelta(days=1), 8):
             out[t] = nr
     return out
+
+
+def report_note(r: dict, known: dict | None) -> dict | None:
+    """What to say of a row's report: out already when the bank holds a results 8-K from the last RECENT_REPORT
+    days (the row's own filings, then the index), else the index's estimate of the date."""
+    from datetime import date
+    last = r.get("last_report")
+    if last and 0 <= (date.fromisoformat(r["date"]) - date.fromisoformat(last)).days <= RECENT_REPORT:
+        return {"out": last}
+    return known
 
 
 def refresh(bank: Bank, tickers: list[str], log=print) -> dict:
@@ -560,7 +573,7 @@ def _cmd(a) -> int:
               f"training years stocks like these rose in {ups * 100:.0f}% of weeks, whatever the scan said.")
     shown = rows if named else sorted(rows, key=lambda r: -(r["shock"] or 0))[:a.top] if a.sort == "shock" else rows[:a.top]
     for r in shown:
-        print(line(part, r, reports.get(r["t"])))
+        print(line(part, r, report_note(r, reports.get(r["t"]))))
     if named:
         for s in res["skipped"]:
             print(f"  {s['t']:6} left out: {s['why']}")
