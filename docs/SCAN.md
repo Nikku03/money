@@ -128,6 +128,21 @@ stocks, January 2024 to September 2026.
 - **No direction, as expected:** 51.9% of stock-weeks rose, and 49.1% ended above the range's middle.
 - **Controls passed:** shuffled ranges never reached p < 0.05 in 200 draws.
 
+**W1b: PASS, a little narrow** (2026-11-10). The same model, gate and years on the newer listings, which W1 was
+not fitted on: 120,721 tradable stock-weeks of 934 stocks.
+
+| | Aimed for | Held |
+|---|---|---|
+| The 2-in-3 range | 68% | 65.5% |
+| The 9-in-10 range | 90% | 87.9% |
+
+- **Narrow, but inside the declared bands.** It still beat volatility alone: 1.597 against 1.611, better in 29 of
+  33 months (p 0.0001, BH q 0.001).
+- **For these stocks, a move outside the 9-in-10 range comes about one week in eight,** not one in ten (5.9% below
+  it, 6.3% above it).
+- **With a report due, the ranges held 60.5% and 84.4%.** Read a newer listing's report week as wider than printed.
+- **No direction:** 48.8% of stock-weeks ended above the range's middle.
+
 **Looked at after the fact** (the same TEST stock-weeks cut other ways; descriptive, not verdicts):
 
 | Cut | 2-in-3 held | 9-in-10 held |
@@ -163,8 +178,10 @@ python -m brain scan fit                 # 2011-2023 only; a refit is a new mode
 
 - Quote a line as printed. A range is a size: never present its middle, or the share of weeks that rose, as a
   call.
-- A scan is recorded before any of its five sessions trades, once, and never rewritten. `scan score` judges it
-  against the bank's prices: how often each range held, and the 20%+ days against their chances.
+- A scan is recorded before any of its five sessions trades, and a recorded row is never changed. A later run
+  may add stocks the record lacks until 13:30 UTC on the next weekday (before the US open), listed under `added`
+  with their time. `scan score` judges it against the bank's prices: how often each range held, and the 20%+
+  days against their chances.
 - One week's stocks move together, so a week is one reading. Under 30 judged scans the record says little; the
   tested evidence is W1a and S1a.
 

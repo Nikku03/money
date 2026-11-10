@@ -288,9 +288,20 @@ class TrialTest(ModelHome):
 
         # recorded once, then judged when its five sessions are in the bank
         early = scan.live(scan.Bank(self.bank.root), tickers)
-        p = scan.record(early)
+        self.assertEqual(scan.opens_after(early["asof"]), "2026-10-19T13:30:00Z")   # a Friday's scan: Monday's open
+        self.assertIsNone(scan.record(early, now="2026-10-19T13:30:00Z"))          # too late: nothing written
+        part = {**early, "rows": early["rows"][:5]}
+        p = scan.record(part, now="2026-10-17T10:00:00Z")
         self.assertTrue(p.exists())
-        self.assertIsNone(scan.record(early))
+        first = json.loads(p.read_text())
+        self.assertEqual(len(first["rows"]), 5)
+        self.assertIsNone(scan.record(part, now="2026-10-17T11:00:00Z"))           # nothing new to add
+        self.assertEqual(scan.record(early, now="2026-10-18T09:00:00Z"), p)        # the rest, added before the open
+        both = json.loads(p.read_text())
+        self.assertEqual(len(both["rows"]), len(tickers))
+        self.assertEqual({t: both["rows"][t] for t in first["rows"]}, first["rows"])  # recorded rows unchanged
+        self.assertEqual(both["added"][0]["at"], "2026-10-18T09:00:00Z")
+        self.assertEqual(len(both["added"][0]["tickers"]), len(tickers) - 5)
         self.assertEqual([x["judged"] for x in scan.score(self.bank)], [False])
         (p.parent / "notes.json").write_text("{}")                         # anything else in the folder is not a scan
         self.assertEqual(len(scan.score(self.bank)), 1)

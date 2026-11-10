@@ -481,18 +481,42 @@ def scans_dir() -> Path:
     return Path(os.environ.get("BRAIN_SCANS") or config.ROOT / "research" / "scans")
 
 
-def record(res: dict) -> Path | None:
-    """Write the scan for its close, once: each stock's range (log returns) and shock chance, before any of its
-    five sessions has traded. A close already recorded is left as it is."""
+OPEN_UTC = "13:30"           # no record after this on the next weekday: before the US open in winter and summer
+
+
+def opens_after(asof: str) -> str:
+    """The moment after which the scan of ``asof`` may no longer be written to: the next weekday at OPEN_UTC."""
+    from datetime import date, timedelta
+    d = date.fromisoformat(asof) + timedelta(days=1)
+    while d.weekday() >= 5:
+        d += timedelta(days=1)
+    return f"{d.isoformat()}T{OPEN_UTC}:00Z"
+
+
+def record(res: dict, now: str | None = None) -> Path | None:
+    """Write the scan for its close: each stock's range (log returns) and shock chance, before any of its five
+    sessions has traded. A recorded row is never changed. Before the next session opens, a later run may add the
+    stocks the record lacks (``added`` says when); after it, nothing is written. None when nothing was written."""
     from brain.timeutil import now_iso
-    p = scans_dir() / f"{res['asof']}.json"
-    if p.exists():
+    now = now or now_iso()
+    if now >= opens_after(res["asof"]):
         return None
-    p.parent.mkdir(parents=True, exist_ok=True)
+    p = scans_dir() / f"{res['asof']}.json"
     rows = {r["t"]: [round(float(np.log1p(r[k])), 4) for k in ("lo90", "lo68", "hi68", "hi90")]
             + [None if r["shock"] is None else round(r["shock"], 4)] for r in sorted(res["rows"], key=lambda r: r["t"])}
     watch = set(watch_tickers()) - set(shocks.universe_tickers())
-    p.write_text(canon({"asof": res["asof"], "made_at": now_iso(), "h": H, "w1_sha": res["w1_sha"],
+    if p.exists():
+        old = json.loads(p.read_text())
+        new = {t: v for t, v in rows.items() if t not in old["rows"]}
+        if not new:
+            return None
+        old["rows"].update(new)
+        old["added"] = [*old.get("added", []), {"at": now, "tickers": sorted(new), "skipped": len(res["skipped"])}]
+        old["newer_listings"] = sorted(set(old.get("newer_listings", [])) | {t for t in new if t in watch})
+        p.write_text(canon(old) + "\n")
+        return p
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(canon({"asof": res["asof"], "made_at": now, "h": H, "w1_sha": res["w1_sha"],
                         "s1_sha": res["s1_sha"], "skipped": len(res["skipped"]), "rows": rows,
                         "newer_listings": sorted(t for t in rows if t in watch)}) + "\n")
     return p
@@ -628,7 +652,8 @@ def _cmd(a) -> int:
     if a.record:
         p = record(res)
         print(f"recorded {p}; commit it before the next session opens" if p
-              else f"the scan of {res['asof']} was already recorded; left as it is")
+              else f"nothing written: the scan of {res['asof']} already holds these stocks, or its next session "
+                   f"has opened ({opens_after(res['asof'])})")
     return 0
 
 
