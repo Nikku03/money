@@ -54,6 +54,7 @@ FLOOR = 4e-6                # the least realized variance counted: a 0.2% week
 TRADE_DAYS, MIN_DV = 20, 500_000.0
 ERROR_DAYS = 250
 DEFAULT_MODEL = config.ROOT / "knowledge" / "scan_w1.json"
+WATCH = "us_watch"          # the scan's newer listings: SEC ranks 1-3000 that listed after 2010 (universe/us_watch.json)
 CHUNK = shocks.CHUNK
 
 
@@ -331,6 +332,28 @@ def reasons(part: dict, row: dict, report: dict | None = None, top: int = 3) -> 
     return out
 
 
+def watch_tickers() -> list[str]:
+    p = config.ROOT / "universe" / f"{WATCH}.json"
+    return json.loads(p.read_text())["tickers"] if p.exists() else []
+
+
+def scan_tickers() -> list[str]:
+    """What the scan watches: the research universe (W1's fitting and W1a's test), then the newer listings."""
+    out = shocks.universe_tickers()
+    have = set(out)
+    return out + [t for t in watch_tickers() if t not in have]
+
+
+def watch_status() -> str:
+    """How far the ranges are tested on the newer listings: W1b's verdict as the ledger records it."""
+    try:
+        from brain.research import run
+        v = next((r["verdict"] for r in run.verdicts() if r.get("kind") == "range" and r.get("id") == "W1b"), None)
+    except Exception:  # noqa: BLE001 - a missing or unreadable ledger says untested
+        v = None
+    return f"W1b {v.split(':')[0]}" if v else "untested until W1b runs"
+
+
 def live(bank: Bank, tickers: list[str], log=None) -> dict:
     """The scan at the bank's latest market close: one row per tradable stock, widest range first, and the stocks
     left out with the reason."""
@@ -468,8 +491,10 @@ def record(res: dict) -> Path | None:
     p.parent.mkdir(parents=True, exist_ok=True)
     rows = {r["t"]: [round(float(np.log1p(r[k])), 4) for k in ("lo90", "lo68", "hi68", "hi90")]
             + [None if r["shock"] is None else round(r["shock"], 4)] for r in sorted(res["rows"], key=lambda r: r["t"])}
+    watch = set(watch_tickers()) - set(shocks.universe_tickers())
     p.write_text(canon({"asof": res["asof"], "made_at": now_iso(), "h": H, "w1_sha": res["w1_sha"],
-                        "s1_sha": res["s1_sha"], "skipped": len(res["skipped"]), "rows": rows}) + "\n")
+                        "s1_sha": res["s1_sha"], "skipped": len(res["skipped"]), "rows": rows,
+                        "newer_listings": sorted(t for t in rows if t in watch)}) + "\n")
     return p
 
 
@@ -563,29 +588,33 @@ def _cmd(a) -> int:
               "little. The tested evidence is W1a and S1a in research/RESULTS.md.")
         return 0
     if a.refresh:
-        r = refresh(bank, a.tickers or shocks.universe_tickers(), log=lambda m: print(m, flush=True))
+        r = refresh(bank, a.tickers or scan_tickers(), log=lambda m: print(m, flush=True))
         print(f"re-read {r['symbols']} symbols; not read: {r['failed']['prices']} prices, {r['failed']['filings']} "
               "filing lists")
         bank = Bank()
     named = [t.upper() for t in a.tickers]
-    res = live(bank, named or shocks.universe_tickers())
+    res = live(bank, named or scan_tickers())
     model = load()
     part = model["w1"]
     rows = res["rows"]
     reports = report_dates(res["asof"], [r["t"] for r in rows])
+    listed, watch = set(shocks.universe_tickers()), set(watch_tickers())
+    newer = sum(r["t"] in watch and r["t"] not in listed for r in rows)
+    status = watch_status()
     print(f"Market scan at the close of {res['asof']} (W1 ranges, fitted {model['train'][0]}..{model['train'][1]}; "
-          f"S1 shock chances). {len(rows)} tradable stocks; {len(res['skipped'])} left out.")
+          f"S1 shock chances). {len(rows)} tradable stocks"
+          + (f", {newer} of them listed after 2010 (ranges {status})" if newer else "")
+          + f"; {len(res['skipped'])} left out.")
     print(HEAD.format(h=H))
     if rows:
         ups = np.mean([r["up"] for r in rows])
         print(f"Typical stock here: 2 in 3 within ±{np.median([r['half'] for r in rows]) * 100:.1f}%. In the "
               f"training years stocks like these rose in {ups * 100:.0f}% of weeks, whatever the scan said.")
     shown = rows if named else sorted(rows, key=lambda r: -(r["shock"] or 0))[:a.top] if a.sort == "shock" else rows[:a.top]
-    listed = set(shocks.universe_tickers())
     for r in shown:
-        print(line(part, r, report_note(r, reports.get(r["t"])))
-              + ("" if r["t"] in listed else "  [outside the tested list: W1 and S1 were fitted and tested on the "
-                                           "research universe]"))
+        mark = ("" if r["t"] in listed else f"  [listed after 2010: ranges {status}]" if r["t"] in watch
+                else "  [outside the scan's lists: W1 and S1 were neither fitted nor tested on it]")
+        print(line(part, r, report_note(r, reports.get(r["t"]))) + mark)
     if named:
         for s in res["skipped"]:
             print(f"  {s['t']:6} left out: {s['why']}")

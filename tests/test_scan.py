@@ -316,10 +316,12 @@ class TrialTest(ModelHome):
 
         # the declared test, as a trial
         self.assertTrue(rangetest.is_trial(False))
-        decl = rangetest.declare(log=None)
-        self.assertEqual(decl["id"], "W1a")
-        self.assertIsNone(rangetest.declare(log=None))                     # declared once
+        decl = rangetest.declare(log=None, ids=["W1a"])
+        self.assertEqual([x["id"] for x in decl], ["W1a"])
+        self.assertEqual(rangetest.declare(log=None, ids=["W1a"]), [])      # declared once
         out = rangetest.test(self.bank, log=None, tickers=tickers)
+        self.assertEqual([x["id"] for x in out], ["W1a"])                   # W1b was not declared here
+        out = out[0]
         m = out["metrics"]
         self.assertGreater(m["stock_weeks"], 1000)
         self.assertEqual(m["first"][:4], "2024")
@@ -335,6 +337,11 @@ class TrialTest(ModelHome):
         self.assertEqual([json.loads(x)["op"] for x in led.read_text().splitlines()], ["declare", "result"])
         with self.assertRaises(SystemExit):
             rangetest.test(self.bank, log=None, tickers=tickers)           # one result
+        self.assertEqual([x["id"] for x in rangetest.declare(log=None)], ["W1b"])   # the other test, declared apart
+        self.assertEqual(rangetest.spec("W1b")["universes"], rangetest.universe_shas(("us_watch",)))
+        w1b = rangetest.test(self.bank, log=None, tickers=tickers)
+        self.assertEqual([x["id"] for x in w1b], ["W1b"])
+        self.assertIn("| W1b |", res_path.read_text())
 
 
 class PinballTest(TempHome):
@@ -392,3 +399,18 @@ class ReplayTest(ModelHome):
         q = scanreplay.by_quarter(weeks)
         self.assertEqual(sum(x["weeks"] for x in q), s["weeks"])
         self.assertEqual(q[0]["quarter"], "2026Q1")
+
+
+class WatchListTest(TempHome):
+    def test_the_scan_watches_the_research_lists_then_the_newer_listings(self):
+        listed = shocks.universe_tickers()
+        both = scan.scan_tickers()
+        self.assertEqual(both[:len(listed)], listed)
+        self.assertEqual(len(both), len(set(both)))
+        newer = scan.watch_tickers()
+        self.assertTrue(set(newer).isdisjoint(listed))                     # no research stock is a newer listing
+        self.assertEqual(set(both), set(listed) | set(newer))
+        d = json.loads((scan.config.ROOT / "universe" / "us_watch.json").read_text())
+        self.assertEqual(d["n"], len(d["tickers"]))
+        self.assertEqual(set(d["bands"]), set(d["tickers"]))
+        self.assertTrue(scan.watch_status().startswith("W1b ") or scan.watch_status() == "untested until W1b runs")

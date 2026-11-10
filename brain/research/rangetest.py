@@ -1,9 +1,13 @@
-"""Declared test of the scan's weekly range, W1 (docs/SCAN.md).
+"""Declared tests of the scan's weekly range, W1 (docs/SCAN.md).
 
 **W1a** asks whether W1's range for a stock's next five sessions (``brain/scan.py``) is honest and beats the range
 its 60-session volatility alone gives, on stock-weeks neither has seen. Both were fitted on the research universe's
 tradable stock-weeks of 2011-2023 and saved in ``knowledge/scan_w1.json``, pinned here by its sha. TEST is every
 tradable research-universe stock-week ending in 2024-01-01..2026-09-30 whose five sessions have closed.
+
+**W1b** asks the same, with the same model, gate and TEST years, of the scan's newer listings
+(``universe/us_watch.json``: companies of SEC ranks 1-3000 that listed after 2010, so no research list holds them).
+The model was fitted on none of them.
 
 Per stock-week the score is the mean pinball loss of the five-session log return over the quantiles 0.05, 0.16,
 0.5, 0.84 and 0.95 (lower is better: it rewards a range that is both right and tight); per month, the baseline's
@@ -35,7 +39,7 @@ from brain.research.eventtest import boot_interval, flip_p
 from brain.research.forecast_tests import Refused, is_trial, paths
 from brain.timeutil import now_iso
 
-ID = "W1a"
+IDS = {"W1a": shocks.UNIVERSES, "W1b": ("us_watch",)}     # each test and the lists it reads
 KIND = "range"
 VERSION = 1
 TEST = ("2024-01-01", "2026-09-30")
@@ -66,16 +70,25 @@ def code_sha() -> str:
     return h.hexdigest()[:16]
 
 
-def universe_shas() -> dict[str, str]:
-    return {n: hashlib.sha256((config.ROOT / "universe" / f"{n}.json").read_bytes()).hexdigest()[:16]
-            for n in shocks.UNIVERSES}
+def universe_shas(names=shocks.UNIVERSES) -> dict[str, str]:
+    return {n: hashlib.sha256((config.ROOT / "universe" / f"{n}.json").read_bytes()).hexdigest()[:16] for n in names}
 
 
-def spec() -> dict:
+def tickers_of(tid: str) -> list[str]:
+    out: list[str] = []
+    for n in IDS[tid]:
+        for t in json.loads((config.ROOT / "universe" / f"{n}.json").read_text())["tickers"]:
+            if t not in out:
+                out.append(t)
+    return out
+
+
+def spec(tid: str = "W1a") -> dict:
     model = scan.load()
     if model is None:
         raise Refused(f"no fitted model: run python -m brain scan fit, and commit {MODEL_FILE}")
-    return {"id": ID, "version": VERSION, "test": list(TEST), "universes": universe_shas(), "code_sha": code_sha(),
+    return {"id": tid, "version": VERSION, "test": list(TEST), "universes": universe_shas(IDS[tid]),
+            "code_sha": code_sha(),
             "model": MODEL_FILE, "model_sha": scan.model_sha(), "train": model["train"], "h": scan.H,
             "feats": list(scan.FEATS), "baseline": list(scan.BASELINE), "split": scan.SPLIT, "qs": list(scan.QS),
             "tradable": {"days": scan.TRADE_DAYS, "min_dollar_volume": scan.MIN_DV, "error_days": scan.ERROR_DAYS},
@@ -110,7 +123,7 @@ def lineage_problem(commit: str | None) -> str | None:
     return f"code or model changed since the declare commit {commit[:12]}: {', '.join(changed)}" if changed else None
 
 
-def committed_declaration(sha: str) -> bool:
+def committed_declaration(tid: str, sha: str) -> bool:
     r = _git("show", "HEAD:research/ledger.jsonl")
     for line in r.stdout.splitlines() if r.returncode == 0 else []:
         try:
@@ -118,36 +131,39 @@ def committed_declaration(sha: str) -> bool:
         except ValueError:
             continue
         if isinstance(rec, dict) and rec.get("op") == "declare" and rec.get("kind") == KIND \
-                and rec.get("id") == ID and rec.get("spec_sha") == sha:
+                and rec.get("id") == tid and rec.get("spec_sha") == sha:
             return True
     return False
 
 
-def _declared(recs: list[dict]) -> dict | None:
-    return next((r for r in recs if r["op"] == "declare" and r.get("kind") == KIND and r["id"] == ID), None)
+def _declared(recs: list[dict], tid: str) -> dict | None:
+    return next((r for r in recs if r["op"] == "declare" and r.get("kind") == KIND and r["id"] == tid), None)
 
 
-def declare(*, trial: bool = False, log=print) -> dict | None:
-    """Declare W1a (once; a changed spec is refused: a change is a new id)."""
+def declare(*, trial: bool = False, log=print, ids=None) -> list[dict]:
+    """Declare each test of ``ids`` (default all) not declared yet. A declared one is left as it is: its spec, as
+    recorded, is what its run is held to, and a change is a new id."""
     trial = is_trial(trial)
     led, _ = paths(trial)
     if not trial and (dirty := tree_dirty()):
         raise Refused("commit brain/, knowledge/ and universe/ first; a declaration pins the committed code and "
                       "model: " + "; ".join(dirty))
-    s = spec()
-    have = _declared(ledger.read(led))
-    if have:
-        if have["spec_sha"] != spec_sha(s):
-            raise Refused(f"{ID} was declared with a different spec; a change is a new id")
+    out = []
+    for tid in ids or IDS:
+        have = _declared(ledger.read(led), tid)
+        if have:
+            if log:
+                log(f"{tid} is already declared ({have['spec_sha']})")
+            continue
+        s = spec(tid)
+        rec = {"op": "declare", "kind": KIND, "id": tid, "spec_sha": spec_sha(s), "spec": s, "at": now_iso(),
+               **ledger.git_state()}
+        ledger.append(rec, led)
+        out.append(rec)
         if log:
-            log(f"{ID} is already declared ({have['spec_sha']})")
-        return None
-    rec = {"op": "declare", "kind": KIND, "id": ID, "spec_sha": spec_sha(s), "spec": s, "at": now_iso(),
-           **ledger.git_state()}
-    ledger.append(rec, led)
-    if log:
-        log(f"declared {ID} ({rec['spec_sha']}): TEST {TEST[0]}..{TEST[1]}; commit the ledger before running it")
-    return rec
+            log(f"declared {tid} ({rec['spec_sha']}): TEST {TEST[0]}..{TEST[1]} on {', '.join(IDS[tid])}; commit the "
+                "ledger before running it")
+    return out
 
 
 # ---------- scoring ----------
@@ -207,10 +223,15 @@ def controls(sc: dict, rng) -> dict:
 
 
 def _bands() -> dict[str, str]:
+    """Each ticker's list; for the newer listings, their SEC rank band."""
     out: dict[str, str] = {}
-    for n in shocks.UNIVERSES:
-        for t in json.loads((config.ROOT / "universe" / f"{n}.json").read_text())["tickers"]:
-            out.setdefault(t, n)
+    for n in (*shocks.UNIVERSES, "us_watch"):
+        p = config.ROOT / "universe" / f"{n}.json"
+        if not p.exists():
+            continue
+        d = json.loads(p.read_text())
+        for t in d["tickers"]:
+            out.setdefault(t, f"{n} {d['bands'][t]}" if n == "us_watch" and "bands" in d else n)
     return out
 
 
@@ -258,48 +279,61 @@ def evaluate(d: dict, model: dict, bands: dict[str, str] | None = None) -> dict:
 
 
 # ---------- running ----------
-def test(bank: Bank, *, trial: bool = False, log=print, tickers=None) -> dict | None:
-    """Run W1a once, if it is declared and has no result yet."""
+def test(bank: Bank, *, trial: bool = False, log=print, tickers=None, ids=None) -> list[dict]:
+    """Run each declared test of ``ids`` (default all) that has no result yet, once. ``tickers`` replaces every
+    test's lists (trials)."""
     from brain.research import run
     trial = is_trial(trial)
     led, res = paths(trial)
     recs = ledger.read(led)
-    decl = _declared(recs)
-    if decl is None:
-        raise Refused(f"{ID} is not declared")
-    if any(r["op"] == "result" and r.get("kind") == KIND and r["id"] == ID for r in recs):
-        raise Refused(f"{ID} already has a result; a rerun needs research withdraw and a new id")
-    s = decl["spec"]
-    if spec_sha(s) != decl["spec_sha"]:
-        raise Refused(f"{ID}: its declared spec does not match its spec_sha")
-    if s["model_sha"] != scan.model_sha():
-        raise Refused(f"{ID}: {MODEL_FILE} is not the declared model")
-    if not trial:
-        if dirty := tree_dirty():
-            raise Refused("the working tree has changes under brain/, knowledge/ or universe/: " + "; ".join(dirty))
-        if why := lineage_problem(decl.get("commit")):
-            raise Refused(f"{ID}: {why}")
-        if s["code_sha"] != code_sha():
-            raise Refused(f"{ID}: the code is not the declared code")
-        if s["universes"] != universe_shas():
-            raise Refused(f"{ID}: a universe file changed since the declaration; declare a new id")
-        if not committed_declaration(decl["spec_sha"]):
-            raise Refused(f"{ID}: commit the ledger with its declaration before running it")
-    d = scan.dataset(bank, tickers or shocks.universe_tickers(), TEST[0], TEST[1], log=log)
-    r = evaluate(d, scan.load())
-    rec = {"op": "result", "kind": KIND, "id": ID, "spec_sha": decl["spec_sha"], "gate_type": "pinball", **r,
-           "at": now_iso(), **ledger.git_state()}
-    ledger.append(rec, led)
-    if log:
-        m = r["metrics"]
-        log(f"{ID}: {m['stock_weeks']} stock-weeks in {m['months']} months; pinball loss W1 {m['loss_w1'] * 100:.3f} "
-            f"vs baseline {m['loss_base'] * 100:.3f} (monthly difference {m['diff'] * 100:+.3f}, p {m['p']:.4f}); "
-            f"68% range held {m['cover68'] * 100:.1f}%, 90% range {m['cover90'] * 100:.1f}%. "
-            f"Gate {'met' if r['gate']['pass'] else 'not met'}")
+    todo = []
+    for tid in ids or IDS:
+        decl = _declared(recs, tid)
+        if decl is None:
+            if ids:
+                raise Refused(f"{tid} is not declared")
+            continue
+        if any(r["op"] == "result" and r.get("kind") == KIND and r["id"] == tid for r in recs):
+            continue
+        s = decl["spec"]
+        if spec_sha(s) != decl["spec_sha"]:
+            raise Refused(f"{tid}: its declared spec does not match its spec_sha")
+        if s["model_sha"] != scan.model_sha():
+            raise Refused(f"{tid}: {MODEL_FILE} is not the declared model")
+        if not trial:
+            if dirty := tree_dirty():
+                raise Refused("the working tree has changes under brain/, knowledge/ or universe/: " + "; ".join(dirty))
+            if why := lineage_problem(decl.get("commit")):
+                raise Refused(f"{tid}: {why}")
+            if s["code_sha"] != code_sha():
+                raise Refused(f"{tid}: the code is not the declared code")
+            if s["universes"] != universe_shas(IDS[tid]):
+                raise Refused(f"{tid}: a universe file changed since the declaration; declare a new id")
+            if not committed_declaration(tid, decl["spec_sha"]):
+                raise Refused(f"{tid}: commit the ledger with its declaration before running it")
+        todo.append(decl)
+    if not todo:
+        raise Refused("every declared weekly-range test already has a result; a rerun needs research withdraw and a "
+                      "new id")
+    out = []
+    for decl in todo:
+        tid = decl["id"]
+        d = scan.dataset(bank, tickers or tickers_of(tid), TEST[0], TEST[1], log=log)
+        r = evaluate(d, scan.load())
+        rec = {"op": "result", "kind": KIND, "id": tid, "spec_sha": decl["spec_sha"], "gate_type": "pinball", **r,
+               "at": now_iso(), **ledger.git_state()}
+        ledger.append(rec, led)
+        out.append(rec)
+        if log:
+            m = r["metrics"]
+            log(f"{tid}: {m['stock_weeks']} stock-weeks in {m['months']} months; pinball loss W1 "
+                f"{m['loss_w1'] * 100:.3f} vs baseline {m['loss_base'] * 100:.3f} (monthly difference "
+                f"{m['diff'] * 100:+.3f}, p {m['p']:.4f}); 68% range held {m['cover68'] * 100:.1f}%, 90% range "
+                f"{m['cover90'] * 100:.1f}%. Gate {'met' if r['gate']['pass'] else 'not met'}")
     run.report(led, res)
     if log:
         log(f"wrote {res}" + ("" if trial else "; commit the ledger and RESULTS.md, whatever they say"))
-    return rec
+    return out
 
 
 def _cmd(a) -> int:
@@ -311,7 +345,7 @@ def _cmd(a) -> int:
 
 
 def add_cli(sub) -> None:
-    p = sub.add_parser("rangetest", help="declare or run W1a, the test of the scan's weekly range (docs/SCAN.md)")
+    p = sub.add_parser("rangetest", help="declare or run W1a and W1b, the tests of the scan's weekly range (docs/SCAN.md)")
     p.add_argument("action", choices=["declare", "test"])
     p.add_argument("--trial", action="store_true", help="a trial run: a scratch ledger, no git checks")
     p.set_defaults(fn=_cmd)

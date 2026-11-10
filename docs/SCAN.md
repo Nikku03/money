@@ -64,6 +64,15 @@ A row is one stock at one close. Everything in it was known at that close.
 - **The baseline it must beat:** the same method on the 60-session volatility alone.
 - **Fitted once** on the research universe's tradable stock-weeks of 2011-2023 (`knowledge/scan_w1.json`).
 
+**What the scan watches** (`scan_tickers`):
+- **The research universe:** 1,565 US stocks with prices since 2010 (`us_broad`, `us_small`, `us_micro`). W1 was
+  fitted on them, and W1a tested it on them.
+- **The newer listings:** 965 companies of SEC ranks 1-3000 that the research lists left out only because they
+  listed after 2010 (`universe/us_watch.json`).
+  - 392 are large and mid caps (Meta, Tesla, Palantir, CrowdStrike, Uber); 573 are small caps.
+  - W1 was not fitted on them. W1b tests its ranges on them, with W1a's gate and years.
+  - Until W1b has a result, each line of theirs says so.
+
 **Tradable** means, at that close: a bar that day, trades on each of the last 20 sessions, at least $500,000 a day
 over them (the paper trader's rule, P3b), and no data error in the last 250 sessions (a day beyond +500% or -95%,
 or a close under $0.05). The same rule decides which rows the model learns from, which it is tested on, and which
@@ -186,9 +195,11 @@ Over the 104 weeks from November 2024 to October 2026 (`research/SCAN-REPLAY-202
   only companies that survived to today.
 - **Survivorship.** The universe is chosen today: companies bought out or delisted are missing, and so are their
   largest moves.
-- **Not the whole market.** The research universe is 1,565 US stocks with prices since 2010. A company listed
-  after that is not in it, and those are often the wildest. A named ticker outside it (Tesla, Meta, Coinbase) gets
-  a line marked "outside the tested list": W1 and S1 were neither fitted nor tested on it.
+- **Not the whole market.** The scan watches the research universe and the newer listings of SEC ranks 1-3000.
+  - Micro caps that listed after 2010 are not watched, and neither are foreign companies filing 20-Fs.
+  - A named ticker outside both lists gets a line marked "outside the scan's lists": W1 and S1 were neither
+    fitted nor tested on it.
+  - S1's shock chances were fitted and tested on the research universe only.
 - **Report dates are estimates:** last year's date moved on 52 weeks.
 - **A range is not a trade.** Options already charge for the move they expect. Whether a size forecast beats that
   price is unproven (`docs/MOVES.md`).
