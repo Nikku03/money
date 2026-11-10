@@ -9,6 +9,9 @@ tradable research-universe stock-week ending in 2024-01-01..2026-09-30 whose fiv
 (``universe/us_watch.json``: companies of SEC ranks 1-3000 that listed after 2010, so no research list holds them).
 The model was fitted on none of them.
 
+**W1c** asks it of the scan as it runs every day: both lists, read at every session's close of the TEST years, not
+only each week's last. Its five-session windows overlap from day to day; the month is the unit, as for the others.
+
 Per stock-week the score is the mean pinball loss of the five-session log return over the quantiles 0.05, 0.16,
 0.5, 0.84 and 0.95 (lower is better: it rewards a range that is both right and tight); per month, the baseline's
 mean loss minus W1's (calendar time: a busy month counts once). The statistic is the mean of those monthly
@@ -39,7 +42,9 @@ from brain.research.eventtest import boot_interval, flip_p
 from brain.research.forecast_tests import Refused, is_trial, paths
 from brain.timeutil import now_iso
 
-IDS = {"W1a": shocks.UNIVERSES, "W1b": ("us_watch",)}     # each test and the lists it reads
+IDS = {"W1a": {"lists": shocks.UNIVERSES, "step": "week"},     # each test, the lists it reads and its readings
+       "W1b": {"lists": ("us_watch",), "step": "week"},
+       "W1c": {"lists": (*shocks.UNIVERSES, "us_watch"), "step": "day"}}
 KIND = "range"
 VERSION = 1
 TEST = ("2024-01-01", "2026-09-30")
@@ -76,7 +81,7 @@ def universe_shas(names=shocks.UNIVERSES) -> dict[str, str]:
 
 def tickers_of(tid: str) -> list[str]:
     out: list[str] = []
-    for n in IDS[tid]:
+    for n in IDS[tid]["lists"]:
         for t in json.loads((config.ROOT / "universe" / f"{n}.json").read_text())["tickers"]:
             if t not in out:
                 out.append(t)
@@ -87,8 +92,9 @@ def spec(tid: str = "W1a") -> dict:
     model = scan.load()
     if model is None:
         raise Refused(f"no fitted model: run python -m brain scan fit, and commit {MODEL_FILE}")
-    return {"id": tid, "version": VERSION, "test": list(TEST), "universes": universe_shas(IDS[tid]),
-            "code_sha": code_sha(),
+    readings = {"readings": "every session's close"} if IDS[tid]["step"] == "day" else {}
+    return {"id": tid, "version": VERSION, "test": list(TEST), "universes": universe_shas(IDS[tid]["lists"]),
+            **readings, "code_sha": code_sha(),
             "model": MODEL_FILE, "model_sha": scan.model_sha(), "train": model["train"], "h": scan.H,
             "feats": list(scan.FEATS), "baseline": list(scan.BASELINE), "split": scan.SPLIT, "qs": list(scan.QS),
             "tradable": {"days": scan.TRADE_DAYS, "min_dollar_volume": scan.MIN_DV, "error_days": scan.ERROR_DAYS},
@@ -161,8 +167,8 @@ def declare(*, trial: bool = False, log=print, ids=None) -> list[dict]:
         ledger.append(rec, led)
         out.append(rec)
         if log:
-            log(f"declared {tid} ({rec['spec_sha']}): TEST {TEST[0]}..{TEST[1]} on {', '.join(IDS[tid])}; commit the "
-                "ledger before running it")
+            log(f"declared {tid} ({rec['spec_sha']}): TEST {TEST[0]}..{TEST[1]} on {', '.join(IDS[tid]['lists'])}, "
+                f"read each {IDS[tid]['step']}; commit the ledger before running it")
     return out
 
 
@@ -307,7 +313,7 @@ def test(bank: Bank, *, trial: bool = False, log=print, tickers=None, ids=None) 
                 raise Refused(f"{tid}: {why}")
             if s["code_sha"] != code_sha():
                 raise Refused(f"{tid}: the code is not the declared code")
-            if s["universes"] != universe_shas(IDS[tid]):
+            if s["universes"] != universe_shas(IDS[tid]["lists"]):
                 raise Refused(f"{tid}: a universe file changed since the declaration; declare a new id")
             if not committed_declaration(tid, decl["spec_sha"]):
                 raise Refused(f"{tid}: commit the ledger with its declaration before running it")
@@ -318,7 +324,7 @@ def test(bank: Bank, *, trial: bool = False, log=print, tickers=None, ids=None) 
     out = []
     for decl in todo:
         tid = decl["id"]
-        d = scan.dataset(bank, tickers or tickers_of(tid), TEST[0], TEST[1], log=log)
+        d = scan.dataset(bank, tickers or tickers_of(tid), TEST[0], TEST[1], log=log, step=IDS[tid]["step"])
         r = evaluate(d, scan.load())
         rec = {"op": "result", "kind": KIND, "id": tid, "spec_sha": decl["spec_sha"], "gate_type": "pinball", **r,
                "at": now_iso(), **ledger.git_state()}
@@ -345,7 +351,7 @@ def _cmd(a) -> int:
 
 
 def add_cli(sub) -> None:
-    p = sub.add_parser("rangetest", help="declare or run W1a and W1b, the tests of the scan's weekly range (docs/SCAN.md)")
+    p = sub.add_parser("rangetest", help="declare or run W1a-W1c, the tests of the scan's weekly range (docs/SCAN.md)")
     p.add_argument("action", choices=["declare", "test"])
     p.add_argument("--trial", action="store_true", help="a trial run: a scratch ledger, no git checks")
     p.set_defaults(fn=_cmd)

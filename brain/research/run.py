@@ -877,7 +877,7 @@ def _range_section(rows: list[dict]) -> list[str]:
         "## Weekly ranges",
         "",
         ("Tests of the scan's weekly range W1 (`brain/scan.py`, `docs/SCAN.md`): the range of a stock's return over "
-         "the next five sessions, from what was known at a week's last close, on tradable stock-weeks. Per stock-week "
+         "the next five sessions, from what was known at a close (each week's last for W1a and W1b, every session's for W1c), on tradable stocks. Per stock-week "
          "the score is the mean pinball loss of the log return over the 5/16/50/84/95% quantiles; each month the "
          "baseline's mean loss (the range its 60-session volatility alone gives) minus W1's, and the statistic is the "
          "mean of those monthly differences with a one-sided sign-flip p. The gate, declared before running: "

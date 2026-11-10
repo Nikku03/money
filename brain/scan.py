@@ -123,10 +123,10 @@ def ticker_frame(view, t: str, mk) -> tuple[np.ndarray, dict] | None:
     return cal, f
 
 
-def dataset(bank: Bank, tickers: list[str], first: str, last: str, log=print) -> dict:
+def dataset(bank: Bank, tickers: list[str], first: str, last: str, log=print, step: str = "week") -> dict:
     """Tradable stock-weeks whose week ends in [first, last] and whose five sessions have closed, as arrays:
-    ``t`` and ``date`` (lists), ``X`` (one column per FEATS), ``l5``, ``rv``. A fresh bank per CHUNK tickers keeps
-    memory flat."""
+    ``t`` and ``date`` (lists), ``X`` (one column per FEATS), ``l5``, ``rv``. ``step="day"`` reads every session's
+    close instead of each week's last. A fresh bank per CHUNK tickers keeps memory flat."""
     T, D, X, L, R = [], [], [], [], []
     for c in range(0, len(tickers), CHUNK):
         b = Bank(bank.root)
@@ -135,7 +135,7 @@ def dataset(bank: Bank, tickers: list[str], first: str, last: str, log=print) ->
         if mk is None:
             raise SystemExit(f"no {shocks.BENCH} or {shocks.VIX} prices in the bank: "
                              f"python -m brain ingest {shocks.BENCH} {shocks.VIX}")
-        ends = shocks.week_ends(mk[0])
+        ends = np.arange(len(mk[0])) if step == "day" else shocks.week_ends(mk[0])
         ends = ends[(mk[0][ends] >= first) & (mk[0][ends] <= last)]
         for t in tickers[c:c + CHUNK]:
             got = ticker_frame(v, t, mk)

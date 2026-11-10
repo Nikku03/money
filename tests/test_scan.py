@@ -348,11 +348,16 @@ class TrialTest(ModelHome):
         self.assertEqual([json.loads(x)["op"] for x in led.read_text().splitlines()], ["declare", "result"])
         with self.assertRaises(SystemExit):
             rangetest.test(self.bank, log=None, tickers=tickers)           # one result
-        self.assertEqual([x["id"] for x in rangetest.declare(log=None)], ["W1b"])   # the other test, declared apart
-        self.assertEqual(rangetest.spec("W1b")["universes"], rangetest.universe_shas(("us_watch",)))
+        self.assertEqual([x["id"] for x in rangetest.declare(log=None, ids=["W1b"])], ["W1b"])  # the other test,
+        self.assertEqual(rangetest.spec("W1b")["universes"], rangetest.universe_shas(("us_watch",)))  # declared apart
         w1b = rangetest.test(self.bank, log=None, tickers=tickers)
         self.assertEqual([x["id"] for x in w1b], ["W1b"])
         self.assertIn("| W1b |", res_path.read_text())
+        self.assertEqual([x["id"] for x in rangetest.declare(log=None)], ["W1c"])   # every session's close
+        self.assertEqual(rangetest.spec("W1c")["readings"], "every session's close")
+        w1c = rangetest.test(self.bank, log=None, tickers=tickers)[0]["metrics"]
+        self.assertGreater(w1c["stock_weeks"], 4 * m["stock_weeks"])          # about five readings a week
+        self.assertAlmostEqual(w1c["cover68"], 0.68, delta=0.05)
 
 
 class PinballTest(TempHome):
