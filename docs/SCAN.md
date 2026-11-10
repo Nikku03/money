@@ -267,6 +267,40 @@ Over the 104 weeks from November 2024 to October 2026 (`research/SCAN-REPLAY-202
 - **As a buy list the top movers were a lottery.** Five of 2,600 picks (SBET, CAPR, QUBT, QMCO, SLNH) carried
   the gains; without the three best weeks it lost after costs.
 
+## The trader replay: every close, the open and midday
+
+`brain scan trader` (`brain/scantrader.py`) replays the same two years the way a trader would work, session by
+session, with the frozen W1 model and only what was known at each moment. Its rules were fixed and committed
+before it ran, and it runs once:
+
+| When | What the trader does |
+|---|---|
+| After every close | reads the scan: each stock's range for the next five sessions |
+| At the open | checks the market: SPY 1.5% or more below the last close, or the VIX 15% or more above it, cuts the book to half for the day; sells stocks that open through their floor; then trades to the new book |
+| At midday (12:30 New York) | the same market check with the midday prices (Yahoo's hourly chart) |
+| All day | a standing stop at each stock's 9-in-10 floor (the scan's 5% quantile from the last close); a stock stopped out is not bought for five sessions, and one already through its floor at the open is not bought |
+| At the close | marks everything; cash earns the 13-week Treasury bill rate (^IRX) |
+
+- **Books:** the scan's 25 widest ranges (the weekly replay's buy list, a misuse: a range is a size, not a
+  direction); every tradable stock; and the S&P 500 (SPY).
+- **Each book runs fixed (read once a week, fully invested) and as the trader,** with each step in between,
+  so each change shows on its own:
+
+  | Step | Adds |
+  |---|---|
+  | 0 | the fixed weekly reading (SPY: bought and held) |
+  | 1 | the scan read after every close (a mover already held stays while among the 50 widest) |
+  | 2 | sizing by risk: each stock's money in proportion to one over its range, and the whole book cut in proportion when its ranges run wider than their median over the last 250 sessions (never borrowing) |
+  | 3 | the standing stops |
+  | 4 | the market checks at the open and at midday: the trader |
+
+- **Costs, a side:** 0.05% for stocks trading $100 million a day or more, 0.1% from $20 million, 0.2% from
+  $5 million, 0.4% below; SPY 0.01%. A stop fills 0.5% under its level, never under the day's low.
+- **The first session is November 11, 2024,** the first with Yahoo's hourly prices (they reach back two years).
+- **What else it reports:**
+  - the ranges read after every close against the week's fixed reading on the same five sessions;
+  - how often stocks broke their ranges on the days the market checks fired.
+
 ## Limits
 
 - **No direction.** The middle of every range sits near zero. It is a little above zero because the list holds

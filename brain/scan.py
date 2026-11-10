@@ -589,6 +589,9 @@ def _cmd(a) -> int:
     if a.action == "watch":
         from brain import scanwatch
         return scanwatch.cmd(a)
+    if a.action == "trader":
+        from brain import scantrader
+        return scantrader.cmd(a)
     bank = Bank()
     if a.action == "fit":
         fit_and_save(bank)
@@ -662,16 +665,18 @@ def _cmd(a) -> int:
 
 def add_cli(sub) -> None:
     p = sub.add_parser("scan", help="the market scan: each stock's likely move over five sessions, and why (docs/SCAN.md)")
-    p.add_argument("action", choices=["run", "fit", "score", "replay", "watch"])
+    p.add_argument("action", choices=["run", "fit", "score", "replay", "watch", "trader"])
     p.add_argument("tickers", nargs="*", help="run: only these tickers, in full (they need prices in the bank)")
     p.add_argument("--top", type=int, default=25, help="run: how many of the widest ranges to list")
     p.add_argument("--sort", choices=["move", "shock"], default="move", help="run: widest range first, or likeliest 20%+ day")
     p.add_argument("--refresh", action="store_true", help="run: re-read the daily prices and latest filings first (about 20 minutes for the whole list)")
     p.add_argument("--record", action="store_true", help="run: write the scan to research/scans/ so it can be scored; "
                    "watch: write the check to research/scans/updates/<close>/")
-    p.add_argument("--from", dest="first", default="2024-11-04", help="replay: the first week's end on or after this")
-    p.add_argument("--to", dest="last", default="2026-12-31", help="replay: the last week's end on or before this")
-    p.add_argument("--save", action="store_true", help="replay: write research/scans/replays/replay-<from>_<to>.json")
+    p.add_argument("--from", dest="first", default="2024-11-04", help="replay: the first week's end on or after this; "
+                   "trader: the first session (never before 2024-11-11, the first with midday prices)")
+    p.add_argument("--to", dest="last", default="2026-12-31", help="replay, trader: the last session on or before this")
+    p.add_argument("--save", action="store_true", help="replay: write research/scans/replays/replay-<from>_<to>.json; "
+                   "trader: write research/scans/replays/trader-<from>_<to>.json")
     p.add_argument("--only-top", dest="only_top", type=int, help="watch: only the N widest ranges and N likeliest 20%%+ days")
     p.add_argument("--every", type=int, help="watch: check again every N minutes (at least 15) until Ctrl+C")
     p.set_defaults(fn=_cmd)
