@@ -500,7 +500,9 @@ class BetweenScansTest(TempHome):
                                                                 "session": "in session"}), \
                 mock.patch.object(scanwatch, "market_close_on", lambda s, day: 20.0 if s == "^VIX" else 100.0), \
                 mock.patch.object(scanwatch, "filings_since", lambda t, asof: ["results report (8-K 2.02) at x"] if t == "AAA" else []), \
-                mock.patch.object(scanwatch, "TOP_SHOCKS", 1):                # the scan's single likeliest 20%+ day
+                mock.patch.object(scanwatch, "TOP_SHOCKS", 1), \
+                mock.patch("brain.why.headlines_since", lambda t, since: []), \
+                mock.patch("brain.why.link_records", dict):            # the scan's single likeliest 20%+ day
             res = scanwatch.watch(self.bank)
         self.assertEqual((res["asof"], res["checked"], res["outside68"], res["outside90"]), ("2026-11-09", 3, 1, 1))
         self.assertTrue(res["market_wide"])                                   # futures -2.1% since the close
@@ -509,6 +511,9 @@ class BetweenScansTest(TempHome):
         self.assertEqual((top["t"], top["outside90"], top["filings"]), ("AAA", True, ["results report (8-K 2.02) at x"]))
         self.assertIn("BBB", [f["t"] for f in res["flags"]])                 # the scan's likeliest 20%+ day, inside
         self.assertNotIn("CCC", [f["t"] for f in res["flags"]])              # inside, nothing to say
+        self.assertEqual(top["why"], "its own news")                        # +20% on a filing, the market -2%
+        self.assertEqual(res["why_counts"], {"its own news": 1})
+        self.assertEqual(res["drivers"], [])                                 # no quotes for oil, rates, ... here
         out = scanwatch.record(res)
         self.assertEqual(out.parent.name, "2026-11-09")
         self.assertEqual(json.loads(out.read_text())["outside90"], 1)

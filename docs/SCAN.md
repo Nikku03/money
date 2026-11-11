@@ -226,6 +226,33 @@ happened since its close:
 A check forecasts nothing. A flag says where a range is already used up, or where news came in; the next close's
 scan re-reads every range from the new facts.
 
+**Why it moved** (`brain/why.py`). Prices move on the market, on their industry, on what drives their industry and on
+their own news, not on their charts alone. Each check splits every flagged stock's move since the close into those
+parts:
+
+| Part | How it is read |
+|---|---|
+| The market | SPY's move |
+| Its industry | the median move of the other checked stocks with its SEC industry code (four digits, else three, else two, with at least 8 of them) |
+| Its own part | its move beyond that median |
+| Drivers | oil, the 10-year Treasury yield, the dollar, gold and bitcoin since their last close |
+| Its chain link | for the industries the chain engine links to a driver (oil producers and airlines to oil; banks, homebuilders and tech to the 10-year yield), the link as recorded |
+| Its own news | SEC filings and Yahoo Finance headlines since the close |
+| The day | scheduled macro releases (the Fed's decision, CPI, the jobs report) |
+
+- **Each flag gets one verdict:** its own news, its industry, the market, or its own move with no news found.
+- **The check also counts the verdicts,** and flags industries whose median moved 3% or more. Those
+  industries' ranges, like a market-wide move's, are likely too narrow until the next scan.
+- **What these parts have shown in this repo's tests:**
+  - **Chain links moved stocks in the same month:** oil producers +2.96% for each +10% in oil, homebuilders
+    -2.29% for each +0.25 point on the 10-year yield. None of them predicted the next month (L1).
+  - **Results-day news moved stocks on the day:** raised guidance +1.4% to +6.8%, cut guidance -7.1% to
+    -9.2%. No drift followed (E1, E2).
+  - **So the parts explain a move; they do not forecast the next one.** A new idea built on them (an industry's
+    laggards catching up, say) is a hypothesis to declare and test first.
+- **Industry codes come from SEC's company records.** The scan's refresh keeps them, and it now stores them when
+  missing or changed, so a rebuilt bank has them.
+
 | Command | What it does |
 |---|---|
 | `scan watch` | one check of every stock in the latest scan (about 20 minutes: Yahoo is read at most twice a second) |

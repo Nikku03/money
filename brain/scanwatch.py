@@ -162,7 +162,7 @@ def watch(bank: Bank, tickers: list[str] | None = None, top: int | None = None, 
             market.append({"symbol": sym, "name": name, "move": q["price"] / c - 1, "at": q["at"], "session": q["session"]})
     view = bank.view()
     likeliest = set(sorted(rows, key=lambda t: -(rows[t][4] or 0.0))[:TOP_SHOCKS])
-    checked, flags = 0, []
+    checked, flags, moves = 0, [], {}
     for k, t in enumerate(names):
         if t not in rows:
             continue
@@ -173,6 +173,7 @@ def watch(bank: Bank, tickers: list[str] | None = None, top: int | None = None, 
         if abs(move) > BAD_MOVE:
             continue
         checked += 1
+        moves[t] = math.expm1(move)
         j = judge(move, rows[t][:4])
         if j["outside68"] or t in likeliest:
             flags.append({"t": t, "move": math.expm1(move), "at": q["at"], "session": q["session"], **j,
@@ -181,16 +182,36 @@ def watch(bank: Bank, tickers: list[str] | None = None, top: int | None = None, 
                           "shock": rows[t][4], "likeliest": t in likeliest})
         if log and (k + 1) % 200 == 0:
             log(f"  {k + 1}/{len(names)} checked")
+    # why each flagged stock moved: the market, its industry, a linked driver, or its own news (brain/why.py)
+    from collections import Counter
+
+    from brain import why
+    ind = why.industry_map(view, list(moves))
+    ctx = why.industry_context(moves, ind)
+    spy_move = next((m["move"] for m in market if m["symbol"] == "SPY"), 0.0)
+    drv = why.drivers(asof)
+    records = why.link_records()
+    since = why.close_utc(asof)
     for f in flags:
         if f["outside68"] or f["likeliest"]:
             f["filings"] = filings_since(f["t"], asof)
+            f["headlines"] = why.headlines_since(f["t"], since)
+        c = ctx.get(f["t"])
+        f["industry"] = c
+        f["own"] = f["move"] - (c["median"] if c else spy_move)
+        f["link"] = why.link_note(ind.get(f["t"]), drv, records)
+        f["why"] = why.attribute(f["move"], spy_move, c["median"] if c else None,
+                                 bool(f.get("filings") or f.get("headlines")))
     flags.sort(key=lambda f: (-f["outside90"], -f["outside68"], -(f["used"] if f["used"] == f["used"] else 0)))
     spy = next((m for m in market if m["symbol"] in ("ES=F", "SPY") and abs(m["move"]) >= MARKET_MOVE), None)
     vix = next((m for m in market if m["symbol"] == "^VIX"), None)
+    today = datetime.now(UTC).astimezone(why.NY).date().isoformat()
     return {"asof": asof, "scan": path.name, "at": now_iso(), "market": market, "checked": checked,
             "listed": len(rows), "outside68": sum(f["outside68"] for f in flags),
             "outside90": sum(f["outside90"] for f in flags),
-            "market_wide": bool(spy), "fear_up": bool(vix and vix["move"] >= VIX_JUMP), "flags": flags}
+            "market_wide": bool(spy), "fear_up": bool(vix and vix["move"] >= VIX_JUMP), "flags": flags,
+            "drivers": drv, "macro_today": why.macro_today(today), "sectors": why.sector_moves(moves, ind),
+            "why_counts": dict(Counter(f["why"] for f in flags if f["outside68"])), "industries_known": len(ind)}
 
 
 def updates_dir(asof: str) -> Path:
@@ -219,10 +240,22 @@ def show(res: dict, top: int = 25) -> None:
               "worst weeks were market-wide.")
     if res["fear_up"]:
         print("  Fear is rising (the VIX is up 15% or more): the next scan's ranges will widen.")
+    if res.get("drivers"):
+        print("  Drivers: " + ", ".join(f"{d['name']} {d['move']:+.2f} pt" if d["unit"] == "points" else
+                                        f"{d['name']} {_pct(d['move'])}" for d in res["drivers"]))
+    if res.get("macro_today"):
+        print("  Scheduled today: " + ", ".join(res["macro_today"]))
+    if res.get("sectors"):
+        print("  Industries moving together (median of their checked stocks): " + "; ".join(
+            f"{x['name']} {_pct(x['median'])} ({x['n']})" for x in res["sectors"][:8])
+            + ". Their ranges are likely too narrow until the next scan.")
     n = max(res["checked"], 1)
     print(f"  {res['checked']} stocks checked: {res['outside90']} already outside their 9-in-10 range "
           f"({res['outside90'] / n * 100:.1f}%), {res['outside68']} outside their 2-in-3 range "
           f"({res['outside68'] / n * 100:.1f}%). Over a full five sessions about 10% and 32% end outside.")
+    if res.get("why_counts"):
+        print("  What carried the moves outside a 2-in-3 range: " + ", ".join(
+            f"{k} {v}" for k, v in sorted(res["why_counts"].items(), key=lambda kv: -kv[1])))
     shown = [f for f in res["flags"] if f["outside68"]][:top]
     for f in shown:
         tag = "OUTSIDE 9-in-10" if f["outside90"] else "outside 2-in-3"
@@ -230,6 +263,17 @@ def show(res: dict, top: int = 25) -> None:
         print(f"  {f['t']:6} {_pct(f['move']):>8} since the close ({f['session']})  2 in 3: {_pct(f['range68'][0], 0)}.."
               f"{_pct(f['range68'][1], 0)}  9 in 10: {_pct(f['range90'][0], 0)}..{_pct(f['range90'][1], 0)}  {tag}  "
               f"news: {news}")
+        if f.get("why"):
+            c = f.get("industry")
+            parts = [f"why: {f['why']}"]
+            if c:
+                parts.append(f"its industry ({c['name'] or 'SEC ' + c['code']}, {c['n']} stocks) {_pct(c['median'])}, "
+                             f"its own {_pct(f['own'])}")
+            if f.get("link"):
+                parts.append(f["link"])
+            if f.get("headlines"):
+                parts.append("headline: " + f["headlines"][0])
+            print("         " + "; ".join(parts))
     likely = [f for f in res["flags"] if f["likeliest"] and not f["outside68"] and f.get("filings")]
     if likely:
         print("  Among the scan's likeliest 20%+ days, new filings: " + "; ".join(

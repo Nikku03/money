@@ -448,7 +448,9 @@ def report_note(r: dict, known: dict | None) -> dict | None:
 
 def refresh(bank: Bank, tickers: list[str], log=print) -> dict:
     """Re-read what the scan stands on: the market's and each ticker's daily prices, then each company's latest
-    filings (SEC's recent page), so a new 8-K or share-sale filing counts. One symbol's outage does not stop it."""
+    filings (SEC's recent page), so a new 8-K or share-sale filing counts, and its identity (the SEC industry code
+    S1's drug flag and the industry context read), stored only when new or changed. One symbol's outage does not
+    stop it."""
     from brain.sources import prices, sec
     todo = [shocks.BENCH, shocks.VIX, *[t.upper() for t in tickers]]
     bad = {"prices": 0, "filings": 0}
@@ -459,9 +461,12 @@ def refresh(bank: Bank, tickers: list[str], log=print) -> dict:
             bad["prices"] += 1
         if log and (k + 1) % 200 == 0:
             log(f"  prices: {k + 1}/{len(todo)}")
+    view = bank.view()
     for k, t in enumerate(todo[2:]):
         try:
-            bank.add_many(sec.filings_for(t, all_pages=False, ttl=6 * 3600)[0])
+            facts, ident = sec.filings_for(t, all_pages=False, ttl=6 * 3600)
+            known = {a: view.latest(t, a) for a in {i.attr for i in ident}}
+            bank.add_many(facts + [i for i in ident if known[i.attr] is None or known[i.attr].value != i.value])
         except Exception:  # noqa: BLE001
             bad["filings"] += 1
         if log and (k + 1) % 200 == 0:
