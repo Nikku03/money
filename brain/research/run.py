@@ -206,7 +206,7 @@ def is_shock(r: dict) -> bool:
 
 
 def is_gated_shock(r: dict) -> bool:
-    return is_shock(r) and r.get("gate_type") in ("logloss", "fade")
+    return is_shock(r) and r.get("gate_type") in ("logloss", "fade", "logloss_report")
 
 
 def is_range(r: dict) -> bool:
@@ -789,7 +789,8 @@ def _shock_section(rows: list[dict]) -> list[str]:
     """The shock tests (brain/research/shocktest.py, docs/SHOCKS.md): the radar S1a, then what follows a shock."""
     radar = [r for r in rows if r.get("gate_type") == "logloss"]
     fade = [r for r in rows if r.get("gate_type") == "fade"]
-    if not (radar or fade):
+    due = [r for r in rows if r.get("gate_type") == "logloss_report"]
+    if not (radar or fade or due):
         return []
     lines, words = ["## Shocks", ""], []
     if radar:
@@ -828,9 +829,49 @@ def _shock_section(rows: list[dict]) -> list[str]:
             f"against a predicted {m['top_chance'] * 100:.1f}%. Controls: shuffled chances reached p < 0.05 in "
             f"{c.get('placebo_fpr', float('nan')) * 100:.1f}% of {c.get('n_placebo', 0)} draws; an oracle reached p "
             f"{c.get('oracle_p', float('nan')):.4f}. {verdict}.")
-    if fade:
+    if due:
         lines += [
             *([""] if radar else []),
+            ("Tests of the earnings-aware radar S3 (`brain/catalysts.py`, `docs/SHOCKS.md`, Catalysts): S1 plus a "
+             "report expected a quarter after the last one and the stock's earnings habit (the median move against "
+             "SPY on its last eight report sessions), judged against S1 on the stock-weeks whose report is expected "
+             "1-8 days ahead. Per stock-week the score is the log loss of the chance; each month S1's mean loss minus "
+             "S3's, and the statistic is the mean of those monthly differences with a one-sided sign-flip p. The gate, "
+             "declared before running: positive, p < 0.05, S3's chances calibrated overall and in each week's top "
+             "twentieth, the controls passing, and Benjamini–Hochberg q < 0.10 across every gated test in the ledger."),
+            "",
+            ("| Test | TEST report-weeks (months) | Loss S3 | Loss S1 | Monthly difference | 90% interval | p | BH q | "
+             "Actual / predicted (all, top 5%) | Top 5% caught (S3, S1) | Verdict |"),
+            "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+        ]
+    for r in due:
+        m = r["metrics"]
+        lo, hi = m["interval90"]
+        q = f"{r['bh_q']:.3f}" if isinstance(r.get("bh_q"), float) and math.isfinite(r["bh_q"]) else "–"
+        verdict = r["verdict"].split(":")[0]
+        c3, c1, aw = m["capture_s3"], m["capture_s1"], m["all_weeks"]
+        lines.append(f"| {r['id']} | {m['stock_weeks']} ({m['months']}) | {m['loss_s3']:.5f} | {m['loss_s1']:.5f} | "
+                     f"{m['diff']:+.5f} | {lo:+.5f}..{hi:+.5f} | {m['p']:.4f} | {q} | {m['cal_ratio']:.2f}, "
+                     f"{m['top_ratio']:.2f} | {c3['top5'] * 100:.0f}%, {c1['top5'] * 100:.0f}% | **{verdict}** |")
+        c = r.get("controls") or {}
+        words.append(
+            f"- **{r['id']}**: over {m['stock_weeks']} report-week stock-weeks of {m['stocks']} stocks from {m['first']} "
+            f"to {m['last']}, {m['rate'] * 100:.2f}% had a 20%+ session ({m['up_share'] * 100:.0f}% of those were "
+            f"up). S3's chances averaged {m['mean_s3'] * 100:.2f}% (S1's {m['mean_s1'] * 100:.2f}%) and beat S1's log "
+            f"loss in {m['months_better']} of {m['months']} months; AUC {m['auc_s3']:.3f} against {m['auc_s1']:.3f}. "
+            f"Each week's top 5% and 10% of report weeks by S3 held {c3['top5'] * 100:.0f}% and "
+            f"{c3['top10'] * 100:.0f}% of their shocks (S1's {c1['top5'] * 100:.0f}% and {c1['top10'] * 100:.0f}%); "
+            f"in S3's top 5% a shock came {m['top_rate'] * 100:.1f}% of the time against a predicted "
+            f"{m['top_chance'] * 100:.1f}%. On every stock-week ({aw['stock_weeks']}; report weeks were "
+            f"{aw['due_share'] * 100:.0f}% of them and held {aw['due_shock_share'] * 100:.0f}% of the shocks), S3's "
+            f"loss was {aw['loss_s3']:.5f} against S1's {aw['loss_s1']:.5f}, better in {aw['months_better']} of "
+            f"{aw['months']} months (p {aw['p']:.4f}, not gated); each week's top 5% held {aw['top5_s3'] * 100:.0f}% "
+            f"of all shocks (S1's {aw['top5_s1'] * 100:.0f}%). Controls: shuffled chances reached p < 0.05 in "
+            f"{c.get('placebo_fpr', float('nan')) * 100:.1f}% of {c.get('n_placebo', 0)} draws; an oracle reached p "
+            f"{c.get('oracle_p', float('nan')):.4f}. {verdict}.")
+    if fade:
+        lines += [
+            *([""] if radar or due else []),
             ("Tests of what follows a shock: an up-shock episode opens on a session 20%+ above SPY without a results "
              "report and with no up-shock in the 30 days before. Its outcome is its excess return over the next 21 "
              "sessions, against the stocks in its 60-session volatility decile that did not shock that day. Per month, "

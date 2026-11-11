@@ -71,6 +71,42 @@ python -m brain shocktest declare   # S1a, S2a, S2b; commit the ledger
 python -m brain shocktest test      # commit the ledger and research/RESULTS.md, whatever they say
 ```
 
+## Catalysts: what comes with a surprise, and S3
+
+`research/CATALYSTS-2026-11.md` (2011-2023 only) sorted every 20%+ session by what the company filed that session:
+
+| Filed that session | 2011-2019 | 2020-2023 |
+|---|---|---|
+| Nothing at all | 79% | 73% |
+| Results report (8-K 2.02) | 12% | 17% |
+| Other filings | 9% | 10% |
+
+- Most surprises come with nothing filed: the news came through press wires or social media, or there was none.
+- Deals, distress filings, executive changes, press releases, merger filings, activist stakes, reverse splits and
+  lockups added nothing to S1.
+- **Results reports are the one large catalyst known in advance, and S1 is weakest there.** It had only a third of
+  earnings-day surprises in its week's top 5%.
+- **What helps is each stock's earnings habit:** the median move against SPY on its last eight report sessions.
+
+**S3** (`brain/catalysts.py`, `knowledge/shocks_s3.json`) is S1 plus:
+- `earnq`: a report expected 1-8 days ahead, a quarter after the last one;
+- the habit (`ehab_known`, `ehab_l`);
+- the habit when a report is due (`ehab_win`).
+
+It is fitted on the same stock-weeks of 2011-2023:
+```
+python -m brain catalysts fit
+python -m brain catalysttest declare      # commit the code, both models and the ledger first
+python -m brain catalysttest test         # once; commit the ledger and RESULTS.md whatever they say
+```
+
+**S3a**, declared before it ran, asks whether S3 beats S1 in the weeks a stock's report is expected:
+- **Test period:** 2024-01 to 2026-09, research universe.
+- **Score:** monthly log loss, one-sided sign-flip p < 0.05.
+- **Calibration:** S3's chances must match the actual rate within 0.67-1.5, overall and in each week's top 5%.
+- **Controls** and the false-discovery correction as for S1a.
+- **Reported, not gated:** every stock-week.
+
 ## Using it
 
 ```
