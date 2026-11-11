@@ -241,7 +241,7 @@ sits under `/cgi-bin`, which SEC's robots.txt disallows, so the checks read each
 |---|---|
 | 8:07 | a check: overnight news and trading before the open |
 | 12:13 | a check: the session so far |
-| 20:23 | a scan: prices and filings re-read, the day's scan recorded, scans whose five sessions closed judged; then a check of trading and filings after the close |
+| 22:23 | a scan: prices and filings re-read, the day's scan recorded, scans whose five sessions closed judged; then a check of trading and filings after the close. (At 20:31 on Nov 10 Yahoo had not yet posted the day's stock bars, only the VIX's, so the scan read the day before; by 21:25 they were there.) |
 
 Each run is committed (`research/scans/` and `research/scans/updates/`). If the session's machine is reset, its
 bank is empty: a check then finds no closes, and the next `scan run --refresh` re-reads the prices.
