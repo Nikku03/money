@@ -501,7 +501,7 @@ class BetweenScansTest(TempHome):
                 mock.patch.object(scanwatch, "market_close_on", lambda s, day: 20.0 if s == "^VIX" else 100.0), \
                 mock.patch.object(scanwatch, "filings_since", lambda t, asof: ["results report (8-K 2.02) at x"] if t == "AAA" else []), \
                 mock.patch.object(scanwatch, "TOP_SHOCKS", 1), \
-                mock.patch("brain.why.headlines_since", lambda t, since: []), \
+                mock.patch("brain.why.headlines_since", lambda t, since, **k: []), \
                 mock.patch("brain.why.link_records", dict):            # the scan's single likeliest 20%+ day
             res = scanwatch.watch(self.bank)
         self.assertEqual((res["asof"], res["checked"], res["outside68"], res["outside90"]), ("2026-11-09", 3, 1, 1))

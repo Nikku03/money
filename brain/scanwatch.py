@@ -195,7 +195,7 @@ def watch(bank: Bank, tickers: list[str] | None = None, top: int | None = None, 
     for f in flags:
         if f["outside68"] or f["likeliest"]:
             f["filings"] = filings_since(f["t"], asof)
-            f["headlines"] = why.headlines_since(f["t"], since)
+            f["headlines"] = why.headlines_since(f["t"], since, company=(ind.get(f["t"]) or {}).get("company"))
         c = ctx.get(f["t"])
         f["industry"] = c
         f["own"] = f["move"] - (c["median"] if c else spy_move)

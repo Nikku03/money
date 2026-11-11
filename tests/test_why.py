@@ -21,7 +21,13 @@ class IndustryTest(unittest.TestCase):
         self.assertEqual((ctx["S0"]["level"], ctx["S0"]["code"], ctx["S0"]["n"]), (4, "3674", 8))
         self.assertAlmostEqual(ctx["S0"]["median"], 0.08)                 # its own +30% left out
         self.assertEqual((ctx["C0"]["level"], ctx["C0"]["code"], ctx["C0"]["n"]), (3, "367", 11))
-        self.assertEqual(ctx["C0"]["name"], "industry 3674")             # the group's most common description
+        self.assertEqual(ctx["C0"]["name"], "Electronic equipment, group 367")   # named by its SIC major group
+        self.assertEqual(ctx["S0"]["name"], "industry 3674")             # its own industry by its own description
+
+    def test_broad_groups_are_named_truthfully(self):
+        self.assertEqual(why.group_name("3873", "Watches, Clocks"), "Watches, Clocks")
+        self.assertEqual(why.group_name("38"), "Instruments, medical and optical goods, watches (broad)")
+        self.assertEqual(why.group_name("737"), "Business services and software, group 737")
 
     def test_an_industry_moving_together_is_flagged(self):
         codes = {f"S{k}": "3674" for k in range(8)}
@@ -47,11 +53,13 @@ class LinksTest(unittest.TestCase):
         self.assertEqual(why.link_for("3674")[0], "tech")                # by the three-digit prefix 367
         self.assertEqual(why.link_for("6022")[0], "banks")
         self.assertIsNone(why.link_for("2834"))
-        note = why.link_note({"sic": "1311"}, [{"symbol": "CL=F", "name": "oil", "unit": "pct", "move": 0.031}],
-                             {"L1-oil-producers": {"per_move": 0.0296, "move_label": "+10% oil", "same": "REPORT",
-                                                   "next": "FAIL"}})
-        self.assertEqual(note, "chain: oil producers; oil +3.1% since the close; recorded link +2.96% per +10% oil in "
-                               "the same month (REPORT); the next month FAIL")
+        rec = {"L1-oil-producers": {"per_move": 0.0296, "move_label": "+10% oil", "move": 0.1, "same": "REPORT",
+                                    "next": "FAIL"}}
+        note = why.link_note({"sic": "1311"}, [{"symbol": "CL=F", "name": "oil", "unit": "pct", "move": 0.031}], rec)
+        self.assertEqual(note, "chain: oil producers; oil +3.1% since the close, about +0.9% for oil producers at the "
+                               "recorded same-month rate (+2.96% per +10% oil, REPORT); the next month FAIL")
+        quiet = why.link_note({"sic": "1311"}, [{"symbol": "CL=F", "name": "oil", "unit": "pct", "move": 0.005}], rec)
+        self.assertIsNone(quiet)                                         # +0.5% oil implies too little to show
 
 
 class DayAndNewsTest(unittest.TestCase):
@@ -61,13 +69,24 @@ class DayAndNewsTest(unittest.TestCase):
         self.assertIn("the jobs report", why.macro_today("2026-11-06"))
         self.assertEqual(why.macro_today("2026-11-11"), [])
 
-    def test_headlines_since_the_close_newest_first(self):
+    def test_headlines_about_the_company_since_the_close_newest_first(self):
         def fake(t):
-            return [SimpleNamespace(value="old", known_at="2026-11-10T15:00:00Z", source={"name": "a"}),
-                    SimpleNamespace(value="new", known_at="2026-11-11T12:00:00Z", source={"name": "b"}),
-                    SimpleNamespace(value="newer", known_at="2026-11-11T13:00:00Z", source={"name": "c"})]
-        got = why.headlines_since("X", "2026-11-10T21:00:00Z", ingest=fake)
-        self.assertEqual(got, ["newer (c, 2026-11-11T13:00Z)", "new (b, 2026-11-11T12:00Z)"])
+            return [SimpleNamespace(value="Sonos beats", known_at="2026-11-10T15:00:00Z", source={"name": "a"}),
+                    SimpleNamespace(value="Sonos (SONO) raises guidance", known_at="2026-11-11T12:00:00Z",
+                                    source={"name": "b"}),
+                    SimpleNamespace(value="Stock Market Today: indexes higher", known_at="2026-11-11T12:30:00Z",
+                                    source={"name": "x"}),
+                    SimpleNamespace(value="SONOS shares jump", known_at="2026-11-11T13:00:00Z", source={"name": "c"})]
+        got = why.headlines_since("SONO", "2026-11-10T21:00:00Z", ingest=fake, company="SONOS INC")
+        self.assertEqual(got, ["SONOS shares jump (c, 2026-11-11T13:00Z)",
+                               "Sonos (SONO) raises guidance (b, 2026-11-11T12:00Z)"])   # the market wrap left out
+
+    def test_a_headline_names_the_company_by_ticker_or_name(self):
+        self.assertTrue(why.about("Why REGN stock rose", "REGN", "REGENERON PHARMACEUTICALS, INC."))
+        self.assertTrue(why.about("Regeneron wins approval", "REGN", "REGENERON PHARMACEUTICALS, INC."))
+        self.assertFalse(why.about("What will decide Vertex stock", "REGN", "REGENERON PHARMACEUTICALS, INC."))
+        self.assertEqual(why.company_word("TRUMP MEDIA & TECHNOLOGY GROUP CORP."), "TRUMP")
+        self.assertEqual(why.company_word("THE GROUP, INC."), None)
 
     def test_drivers_in_percent_and_the_yield_in_points(self):
         px = {"CL=F": (61.2, 60.0), "^TNX": (4.10, 4.15), "DX-Y.NYB": (99.0, 100.0)}
