@@ -107,6 +107,26 @@ python -m brain catalysttest test         # once; commit the ledger and RESULTS.
 - **Controls** and the false-discovery correction as for S1a.
 - **Reported, not gated:** every stock-week.
 
+**Result: S3a FAIL (calibration)** (2026-11-11, `research/RESULTS.md`). On 22,732 report-week stock-weeks of
+2024-2026, 2.63% had a 20%+ session.
+
+| | S3 | S1 |
+|---|---|---|
+| Log loss | 0.10694 | 0.11409 |
+| Better in | 23 of 33 months (p 0.0003) | |
+| AUC | 0.835 | 0.818 |
+| Average chance | 1.65% | 1.17% |
+
+- **Its chances ran 1.6 times too low** (actual over predicted 1.59), outside the declared band. S1's ran 2.25
+  times too low.
+- **Report weeks became a far bigger source of surprises:** they were 10% of stock-weeks and held 37% of all
+  20%+ sessions, against 18% in 2020-2023.
+- **S3 ranked them better** (not gated): its top 5% of all stocks held 51% of report-week surprises, against S1's
+  42%.
+- **In its own top 5%, its chances held:** a surprise came 11.9% of the time against 13.1% predicted.
+- **The verdict stands.** A fix to its level is a new model and needs a new test on sessions after 2026-09 (live).
+  Until then S1 is the tested radar, and S3's chances are not to be quoted as calibrated.
+
 ## Using it
 
 ```

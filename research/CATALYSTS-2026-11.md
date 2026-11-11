@@ -110,6 +110,29 @@ there is each stock's own **earnings habit**: the median move against SPY on its
 - **Controls** and the false-discovery correction as for S1a.
 - **Code:** `brain/catalysts.py` and `brain/research/catalysttest.py`.
 
+## Result (run once, 2026-11-11)
+
+**S3a: FAIL (calibration)** (`research/RESULTS.md`).
+
+| 22,732 report-week stock-weeks, 2024-01 to 2026-09 | S3 | S1 |
+|---|---|---|
+| A 20%+ session (actual) | 2.63% | 2.63% |
+| Average chance | 1.65% | 1.17% |
+| Log loss | 0.10694 | 0.11409 |
+| Better in | 23 of 33 months (p 0.0003; BH q 0.002) | |
+| AUC | 0.835 | 0.818 |
+| In each week's top 5% of report weeks: shock rate, said | 11.9%, 13.1% | |
+
+- **The gate needed actual over predicted within 0.67-1.5. It was 1.59, so S3a fails.** The rest of the gate
+  passed: the loss, the p, the top 5% (0.91) and the controls.
+- **Earnings surprises grew.** In 2024-2026 report weeks were 10% of stock-weeks and held 37% of all 20%+
+  sessions, twice their 2020-2023 share. Both models had learned a calmer past.
+- **Ranking (not gated):** S3's top 5% of all stocks held 51% of report-week surprises (S1's 42%). On every
+  stock-week, S3's loss was 0.03120 against S1's 0.03190, better in 24 of 33 months.
+- **What it means:** knowing a stock's earnings habit helps rank who will make a big report-week move. The chances
+  it printed were too low for these years. A recalibrated S3 is a new model; it can only be tested on sessions after
+  this one, live.
+
 ## Limits
 
 - **Survivorship**, as for S1: the universe is chosen today, so takeovers and collapses are undercounted.
