@@ -22,7 +22,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from urllib.parse import quote as urlquote
 
-from brain import scan, shocks
+from brain import config, scan, shocks
 from brain.bank import Bank, canon
 from brain.net import fetch
 from brain.timeutil import now_iso
@@ -211,17 +211,33 @@ def watch(bank: Bank, tickers: list[str] | None = None, top: int | None = None, 
             "outside90": sum(f["outside90"] for f in flags),
             "market_wide": bool(spy), "fear_up": bool(vix and vix["move"] >= VIX_JUMP), "flags": flags,
             "drivers": drv, "macro_today": why.macro_today(today), "sectors": why.sector_moves(moves, ind),
-            "why_counts": dict(Counter(f["why"] for f in flags if f["outside68"])), "industries_known": len(ind)}
+            "why_counts": dict(Counter(f["why"] for f in flags if f["outside68"])), "industries_known": len(ind),
+            "moves": {t: round(v, 5) for t, v in moves.items()}}
 
 
 def updates_dir(asof: str) -> Path:
     return scan.scans_dir() / "updates" / asof
 
 
+def stamp(res: dict) -> str:
+    return f"{res['at'][:16].replace(':', '')}Z"
+
+
+def moves_path(asof: str, name: str) -> Path:
+    """Where a check's full list of moves is kept: the local home, not the repo (they are Yahoo's prices)."""
+    return config.home() / "scanwatch" / asof / f"{name}.moves.json"
+
+
 def record(res: dict) -> Path:
-    p = updates_dir(res["asof"]) / f"{res['at'][:16].replace(':', '')}Z.json"
+    """The check as the repo keeps it (the market, the counts, the flagged stocks), and every checked stock's move
+    beside it in the local home for the desk (brain/desk.py)."""
+    p = updates_dir(res["asof"]) / f"{stamp(res)}.json"
     p.parent.mkdir(parents=True, exist_ok=True)
-    p.write_text(canon(res) + "\n")
+    p.write_text(canon({k: v for k, v in res.items() if k != "moves"}) + "\n")
+    if res.get("moves"):
+        mp = moves_path(res["asof"], stamp(res))
+        mp.parent.mkdir(parents=True, exist_ok=True)
+        mp.write_text(json.dumps(res["moves"]))
     return p
 
 

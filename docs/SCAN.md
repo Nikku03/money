@@ -252,6 +252,10 @@ parts:
     laggards catching up, say) is a hypothesis to declare and test first.
 - **Industry codes come from SEC's company records.** The scan's refresh keeps them, and it now stores them when
   missing or changed, so a rebuilt bank has them.
+- **A verdict is one word, not an explanation.** "Its own news" means a headline names the stock; it does not say
+  the headline is why. The desk (`docs/DESK.md`, `python -m brain desk build`) takes each check further: a case
+  file with every mover's partners, drivers, stories, filings and accounts, and a note that must cite its causes.
+  Each check keeps every checked stock's move for it in the local home (`var/scanwatch/`), not in the repo.
 
 | Command | What it does |
 |---|---|
