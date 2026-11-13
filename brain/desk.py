@@ -8,7 +8,7 @@ each. That is a list, not an explanation. The desk takes the next two steps.
    mover's move split into the market's part, its drivers' part and what is left; its partners (the stocks it has
    moved with for a year, whatever their industry) and how they moved today; the stories in its news feed with
    their summaries, and which other movers each story names; the opening text of its filings since the close; its
-   size, cash and losses from its own accounts; its last sessions; the checks that already flagged it; clusters of
+   size, cash and losses from its own accounts; its last sessions; the checks that already flagged it; every checked stock's move (`q:TICKER`); clusters of
    movers tied by a story or by a year of moving together; and the last note's themes and open questions.
 2. **The note** (``record_note``). A reasoner reads the case file, and what it points to, and writes down what
    happened and why: the backdrop, the themes that tie movers together (the cause, the mechanism, what lies beneath,
@@ -367,6 +367,11 @@ def load_case(stamp: str | None = None) -> dict:
 
 
 # ---------- evidence: every item of a case file a note can cite ----------
+def case_moves(case: dict) -> dict[str, float]:
+    """Every stock's move since the close that a case file holds: all the check read, when the check kept them."""
+    return case.get("moves") or {}
+
+
 def _mover_line(m: dict) -> str:
     tag = "OUTSIDE its 9-in-10 range" if m["outside90"] else "outside its 2-in-3 range"
     return (f"{m['t']} ({m['company'] or 'name unknown'}; {m['industry'] or 'industry unknown'}) {_pct(m['move'])} since "
@@ -448,6 +453,8 @@ def evidence(case: dict) -> dict[str, dict]:
                        + "; ".join(f"{x['a']}~{x['b']} by {x['by']}" for x in c["ties"]) + ")"}
     for k, th in enumerate((case.get("memory") or {}).get("themes") or []):
         ev[f"t{k + 1}"] = {"text": f"the last note ({case['memory']['check']}), theme {th['name']!r}: {th['cause']}"}
+    for t, v in case_moves(case).items():      # any checked stock's move can be cited, mover or not
+        ev[f"q:{t}"] = {"text": f"{t} {_pct(v)} since the close of {case['asof']}, as the check read it"}
     return ev
 
 
@@ -524,11 +531,6 @@ def render(case: dict, detail: list[str] | None = None) -> str:
 
 
 # ---------- the note ----------
-def case_moves(case: dict) -> dict[str, float]:
-    """Every stock's move since the close that a case file holds: all the check read, when the check kept them."""
-    return case.get("moves") or {}
-
-
 def _cited(ids, ev: dict, pages: set[str], where: str, need_source: bool, problems: list[str]) -> None:
     ids = list(ids or [])
     if not ids:

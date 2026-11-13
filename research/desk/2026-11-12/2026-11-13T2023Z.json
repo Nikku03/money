@@ -1,0 +1,639 @@
+{
+ "asof": "2026-11-12",
+ "at": "2026-11-13T20:23:38Z",
+ "calls": [
+  "5e71c3df",
+  "d97d1c58",
+  "3a547673"
+ ],
+ "case_sha": "a0ef9b96d1b19e1c",
+ "check": "2026-11-13T2023Z",
+ "claims_noted": 4,
+ "evidence": {
+  "c1": {
+   "text": "movers tied together: CADL, VIR (CADL~VIR by p:CADL~VIR)"
+  },
+  "d:10-year yield": {
+   "text": "10-year yield +0.05 pt since the close (its usual day: 0.04 pt)"
+  },
+  "d:bitcoin": {
+   "text": "bitcoin -3.3% since the close (its usual day: 2.7%)"
+  },
+  "d:gold": {
+   "text": "gold -0.1% since the close (its usual day: 1.8%)"
+  },
+  "d:oil": {
+   "text": "oil +0.1% since the close (its usual day: 3.6%)"
+  },
+  "f:CADL:1": {
+   "text": "CADL share-sale filing (424B5) at 2026-11-12T21:22Z: Table of Contents -- Table of Contents Filed Pursuant to Rule 424(b)(5) Registration No. 333-289595 PROSPECTUS SUPPLEMENT (To Prospectus Dated August 22, 2025) Up to $50,000,000 Common Stock We previously entered into an Amended and Restated Open Market Sale AgreementSM (the \u201cprior sale agreement\u201d) with Jefferies LLC (\u201cJefferies\u201d), dated August 14, 2025, relating to the sale of shares of our common stock, $0.01 par value per share. We amended and restated the prior sale agreement on November 12, 2026 by entering into a Second Amended and Restated Open Market Sale AgreementSM (the \u201csale agreement\u201d) with Jefferies. We previously filed a prospectus dated August 22, 2025, relating to the offer and sale of shares of our common stock having an aggregate offering price of up to $50,000,000 from time to time through Jefferies, acting as our sales agent or principal (the \u201cprior prospectus\u201d). As of the date of this prospectus supplement, we have sold an aggregate amount of $50,000,000 of shares of our common stock under the prior prospectus pursuant to the prior sale agreement. Accordingly, the offering pursuant to the prior prospectus has been terminated and we will not make any further offer or sale of shares of our common stock pursuant to the prior prospectus. The sale agreement provides for the offer and sale of shares of our common stock having an aggregate offering price of up to $50,000,000 from time to time through Jefferies, acting as our sales agent or principal. We are filing this prospectus supplement, in accordance with the terms of the sale agreement, relating to the offer and sale of such shares. Our common stock is listed on The Nasdaq Global Market under the symbol \u201cCADL.\u201d On November 11, 2026, the closing sale price of our common stock on The Nasdaq Global Market was $9.22 per shar",
+   "url": "https://www.sec.gov/Archives/edgar/data/1841387/000119312526458505/d195871d424b5.htm"
+  },
+  "f:CADL:2": {
+   "text": "CADL 8-K 8.01 at 2026-11-12T21:26Z: false 0001841387 0001841387 2026-11-12 2026-11-12 -- Item 8.01 Other Events. On November 12, 2026, Candel Therapeutics, Inc. (the \u201cCompany\u201d) entered into a Second Amended and Restated Open Market Sale AgreementSM (the \u201c2026 Sales Agreement\u201d), with Jefferies LLC (\u201cJefferies\u201d), to sell shares of the Company\u2019s common stock, par value $0.01 per share (\u201cCommon Stock\u201d), from time to time through Jefferies acting as sales agent, having an aggregate offering price of up to $50,000,000 (such amount to be in addition to the aggregate gross sales proceeds received by the Company from the sale of Common Stock prior to the date hereof pursuant to the 2025 Sale Agreement (as defined below)) (the \u201cATM Shares\u201d). The 2026 Sales Agreement amends and restates that certain Amended and Restated Open Market Sale AgreementSM, dated as of August 14, 2025 (the \u201c2025 Sales Agreement\u201d), between the Company and Jefferies, which had a maximum aggregate offering price of up to $50,000,000. As of November 12, 2026, the Company had sold an aggregate of approximately $50,000,000 of ATM Shares under the 2025 Sales Agreement. In connection with the 2026 Sales Agreement, on November 12, 2026, the Company has filed with the Securities and Exchange Commission (the \u201cSEC\u201d) a prospectus supplement to the base prospectus included in the Company\u2019s registration statement on Form S-3 (File No. 333-289595) filed with the SEC on August 14, 2025 (the \u201cRegistration Statement\u201d), which became effective on August 22, 2025. Sales of the ATM Shares, if any, as contemplated by the 2026 Sales Agreement, will be made by any method permitted that is deemed to be an \u201cat the market offering\u201d as defined in Rule 415(a)(4) under the Securities Act of 1933, as amended (the \u201cSecurities Act\u201d). Jefferies is not required to sell any specific number or dollar amount of shares of the Common",
+   "url": "https://www.sec.gov/Archives/edgar/data/1841387/000119312526458522/d177170d8k.htm"
+  },
+  "f:CSCO:1": {
+   "text": "CSCO results report (8-K 2.02) at 2026-11-12T21:06Z: Investor Relations Contact: -- Press Contact: Investor Relations Contact: Britt Stagnaro Sami Badri Cisco Cisco 1 (408) 761-1821 1 (469) 420-4834 media_pr@external.cisco.com sambadri@cisco.com CISCO REPORTS FIRST QUARTER EARNINGS News Summary: \u2022Record revenue of $18.5 billion, up 24% year over year, record GAAP earnings per share of $1.14, up 58% year over year, and record non-GAAP earnings per share of $1.40, up 40% year over year \u2013 Cisco\u2019s strongest revenue and non-GAAP earnings per share growth rates in over 15 years \u2022Record non-GAAP operating margin, reflecting focused execution and operating efficiency \u2022Broad-based high demand for Cisco technology with double-digit growth across all geographies and customer markets \u2022Raised FY27 revenue and non-GAAP EPS guidance \u2022Raised expectation for AI infrastructure revenue from hyperscalers to $9B in FY27, more than double the total for FY26 \u2022Q1 FY 2027 Results: \u25e6Revenue: $18.5 billion \u25aaIncrease of 24% year over year \u25e6Operating Margin: GAAP: 30.2%; Non-GAAP: 37.8% \u25e6Earnings per Share: GAAP: $1.14; Non-GAAP: $1.40 \u25aaGAAP EPS increased 58% year over year \u25aaNon-GAAP EPS increased 40% year over year \u2022Q2 FY 2027 Guidance: \u25e6Revenue: $18.0 billion to $18.2 billion \u25e6Earnings per Share: GAAP: $1.07 to $1.09; Non-GAAP: $1.34 to $1.36 \u2022FY 2027 Guidance: \u25e6Revenue: $74.8 billion to $75.8 billion \u25e6Earnings per Share: GAAP: $4.38 to $4.44; Non-GAAP: $5.47 to $5.53 SAN JOSE, Calif. -- November 12, 2026 -- Cisco (NASDAQ: CSCO) today reported first quarter results for the period ended October 24, 2026. Cisco reported first quarter revenue of $18.5 billion, net income on a generally accepted accounting principles (GAAP) basis of $4.6 billion or $1.14 per share, and non-GAAP net income of $5.6 billion or $1.40 per share. \u201cIn Q1, we delivered the strongest revenue and non-GAAP ear",
+   "url": "https://www.sec.gov/Archives/edgar/data/858877/000085887726000170/exhibit991pressrelease-q1f.htm"
+  },
+  "f:CVLT:1": {
+   "text": "CVLT 8-K 5.02, 7.01 at 2026-11-13T13:30Z: Investor Relations Contact: -- Media Contact: Investor Relations Contact: Andrea Duffy Michael J. Melnyk, CFA Commvault Commvault 646-295-5241 andreaduffy@commvault.com 646-522-6160 mmelnyk@commvault.com Commvault Announces CFO Transition Danielle Abrahamsen Appointed Interim Chief Financial Officer Stan Zlotsky appointed SVP, Finance Current CFO Gary Merrill to Join Another Publicly Traded Company Outside of Industry Company Reaffirms Third Quarter and Fiscal Year 2027 Guidance TINTON FALLS, N.J. \u2013 November 13, 2026 \u2013 Commvault (NASDAQ: CVLT), delivering continuous recovery for the AI era, today announced that Danielle Abrahamsen, Chief Accounting Officer, has been appointed Interim Chief Financial Officer, effective December 1, 2026. Abrahamsen succeeds Gary Merrill, who is leaving the Company to pursue an opportunity at another company outside the industry. Merrill will serve as an advisor to Commvault through the end of its fiscal year. Commvault has engaged Spencer Stuart to assist with the search to identify its next CFO. Abrahamsen has been with Commvault for more than eight years, serving as Chief Accounting Officer since 2023. She brings extensive experience in financial reporting, accounting operations and public-company finance. Commvault has also appointed Stan Zlotsky as Senior Vice President, Finance. Zlotsky brings experience from Pendo.io, Morgan Stanley and Deutsche Bank, and will work closely with Abrahamsen and the broader finance team to oversee financial strategy and operations, supporting the company\u2019s growth and long-term performance. \u201cDanielle brings a deep understanding of Commvault\u2019s business and financial operations to the interim CFO role, having served as Chief Accounting Officer for the past three years,\u201d said Sanjay Mirchandani, President and CEO, Commvault. \u201cI\u2019m confid",
+   "url": "https://www.sec.gov/Archives/edgar/data/1169561/000116956126000041/pressrelease-merrillresign.htm"
+  },
+  "f:FLO:1": {
+   "text": "FLO results report (8-K 2.02) at 2026-11-12T21:15Z: FLOWERS FOODS, INC. REPORTS THIRD QUARTER 2026 RESULTS -- Exhibit 99.1 FLOWERS FOODS, INC. REPORTS THIRD QUARTER 2026 RESULTS THOMASVILLE, Ga., November 12, 2026 \u2013 Flowers Foods, Inc. (NYSE: FLO) today reported financial results for the company\u2019s 12-week third quarter ended October 10, 2026. Third Quarter Summary: Compared to the prior year third quarter where applicable \u2022 Net sales(1) decreased 4.7% to $1.169 billion as favorable price/mix was more than offset by lower volume. \u2022 Net income decreased 63.6% to $14.4 million, representing 1.2% of sales, a 200-basis point decrease, primarily due to lower sales volume, increased marketing investment, higher logistics costs, and greater outside purchases of product. These factors were partially offset by lower incentive compensation, lower ingredient costs, and lower distributor distribution fees. Adjusted net income(2) decreased 56.0% to $21.4 million. \u2022 Adjusted EBITDA(2) decreased 33.2% to $78.9 million, representing 6.8% of net sales, a 280-basis point decrease. \u2022 Diluted EPS decreased $0.12 to $0.07. Adjusted diluted EPS(2) decreased $0.13 to $0.10. Chairman and CEO Remarks: \u201cOur third-quarter results reflect a continued challenging operating environment, driven by pressure on household budgets, evolving consumer behavior and heightened promotional activity, as well as areas where we need to move faster with focused execution,\u201d said Ryals McMullian, chairman and CEO of Flowers Foods. \u201cFollowing the second quarter, we expected our earlier pricing actions and the relaunch of Nature's Own with fewer, simpler ingredients to help stabilize performance as we worked to introduce new innovation to market. We are seeing encouraging signs for Nature\u2019s Own, including improving sequential trends and growing awareness of the relaunch, although the pace of improvement has been slower than a",
+   "url": "https://www.sec.gov/Archives/edgar/data/1128928/000119312526458445/flo-ex99_1.htm"
+  },
+  "f:HTFL:1": {
+   "text": "HTFL results report (8-K 2.02) at 2026-11-12T21:02Z: Heartflow Reports Third Quarter 2026 Financial Results and Raises Full Year 2026 Guidance -- Exhibit 99.1 Heartflow Reports Third Quarter 2026 Financial Results and Raises Full Year 2026 Guidance SAN FRANCISCO \u2014 November 12, 2026 \u2013 Heartflow, Inc. (Heartflow) (Nasdaq: HTFL), the leader in AI technology for diagnosing and managing coronary artery disease (CAD), today reported financial results for the third quarter ended September 30, 2026. \ufeff Third Quarter 2026 Highlights \u00cf Total revenue of $72.9 million, a 57% increase year-over-year \u00cf Gross margin of 83.6%, non-GAAP gross margin of 83.8% \u00cf Net operating loss of $13.8 million; non-GAAP net operating loss of $5.0 million \ufeff 2026 Annual Guidance \u00cf Total revenue of $262 million to $264 million (approximately 49% to 50% growth year-over-year), compared to previous guidance of $246 million to $250 million (approximately 40% to 42% growth year-over-year) \u00cf Non-GAAP gross margin of approximately 82.5%, compared to previous guidance of approximately 82% \ufeff \u201cOur third quarter was excellent, with revenue accelerating for the third consecutive quarter and U.S. revenue growing at its fastest pace in 11 quarters,\u201d said John Farquhar, President and CEO of Heartflow. \u201cOur core FFRCT business remains durable, our installed base continues to expand rapidly, and activations of Heartflow Plaque Analysis are ramping ahead of plan, with utilization broadening across a wider share of applicable CCTAs. The CCTA market continues to grow rapidly and remains significantly underpenetrated. Strong performance across our diagnostic platform, along with disciplined execution of our commercial, innovation and clinical initiatives, gives us the confidence to raise our 2026 guidance once again. With continued momentum and a scaling business, we believe we are well-positioned to extend our market leadership, and we have increased confidence in ou",
+   "url": "https://www.sec.gov/Archives/edgar/data/1464521/000146452126000171/htfl-20261112xex99_1.htm"
+  },
+  "f:NMAX:1": {
+   "text": "NMAX results report (8-K 2.02) at 2026-11-12T21:05Z: Newsmax Announces Third Quarter 2026 -- Newsmax Announces Third Quarter 2026 Financial Results Company Reports Record Quarterly Revenues of $69.0 million, a 52.5% Year-Over-Year Increase Company Reports Net Income of $15.2 million and Adjusted EBITDA of $19.0 million Company Updates Full-Year 2026 Outlook BOCA RATON, FL \u2013 November 12, 2026 \u2013 Newsmax Inc. (NYSE: NMAX) (\u201cNewsmax\u201d or the \u201cCompany\u201d) today announced its financial results for the third quarter ended September 30, 2026. Third Quarter 2026 Business and Operational Highlights \u2022Delivered third quarter audience reach of 22.5 million total viewers, including 9.1 million Adults 35-64, reinforcing Newsmax\u2019s position as the fourth highest-rated cable news channel and #2 in cable news audience engagement among Adults 35-64. \u2022Grew total social media followers 13% year-over-year to 26.8 million as of September 30, 2026, further strengthening the Company\u2019s multi-platform audience ecosystem. \u2022Broadened the availability of Newsmax with the launch on AFN Now, the streaming service of the American Forces Network, and additional carriage agreements with independent cable operators, while the Newsmax+ library grew to more than 700 licensed and original documentaries and specials. \u2022Advanced previously signed international brand license agreements toward launch, with Newsmax Ukraine going live on November 1, 2026 and Newsmax en Espa\u00f1ol expanding its streaming distribution in the United States, while 2026 international licensing revenues remain on track to increase 344% year-over-year to approximately $16 million, strengthening the Newsmax brand, which is available in more than 100 countries worldwide. Management Commentary \u201cThe third quarter was the strongest in our history as a public company. Setting aside the one-time revenue item, we delivered our fastest revenue g",
+   "url": "https://www.sec.gov/Archives/edgar/data/2026478/000202647826000070/nmax_q32026earningsrelease.htm"
+  },
+  "f:TNDM:1": {
+   "text": "TNDM 8-K 8.01 at 2026-11-13T13:35Z: 0001438133FALSE00014381332026-11-122026-11-12 -- Item 8.01 Other Events. On November 12, 2026, Tandem Diabetes Care, Inc. (the \u201cCompany\u201d) received 510(k) clearance from the U.S. Food and Drug Administration for Tandem Mobi, the world\u2019s first and only tubeless automated insulin delivery system with up to 7 days of wear (1). A new Tandem Mobi tubeless cartridge and infusion set converts the current Tandem Mobi pump into a tubeless device that can help simplify diabetes management with less frequent site changes, while offering the life-changing benefits of Control-IQ+ advanced hybrid closed-loop technology. The Tandem Mobi insulin pump is now cleared for tubeless and tubed insulin infusion options, making it the only pump that offers users the flexibility to choose the wear option that best meets their needs. Full commercial launch of the new tubeless cartridge and infusion set for Tandem Mobi is planned for the first half of 2027 in the United States. (1) Tubeless infusion set is cleared for up to 7 days of wear. Cartridge is cleared for 3 days of use. Forward-Looking Statements This report contains \u201cforward-looking statements\u201d within the meaning of Section 27A of the Securities Act of 1933, as amended, and Section 21E of the Securities Exchange Act of 1934, as amended, regarding the Company\u2019s plans and timing for launching Tandem Mobi Tubeless. These forward-looking statements are subject to numerous risks and uncertainties, including risks related to the potential safety and other complications from the Company\u2019s pumps and associated technologies; the ability to maintain regulatory clearance for the Company\u2019s products; supply and manufacturing risks, including those associated with scale-up activities; the scope, progress and expansion of developing and commercializing the Company\u2019s products; the size and growth of t",
+   "url": "https://www.sec.gov/Archives/edgar/data/1438133/000143813326000148/tndm-20261112.htm"
+  },
+  "f:VIR:2": {
+   "text": "VIR share-sale filing (424B5) at 2026-11-12T21:16Z: Table of Contents -- Table of Contents Filed pursuant to Rule 424(b)(5) Registration No. 333-299995 The information in this preliminary prospectus supplement and the accompanying base prospectus is not complete and may be changed. A registration statement relating to these securities has become effective under the Securities Act of 1933, as amended. This preliminary prospectus supplement and the accompanying base prospectus are not an offer to sell these securities and are not soliciting an offer to buy these securities in any jurisdiction where the offer or sale is not permitted. Subject to Completion, dated November 12, 2026 PRELIMINARY PROSPECTUS SUPPLEMENT (To Prospectus dated November 12, 2026) Shares of Common Stock We are offering shares of our common stock. The public offering price for each share of common stock is $ . Our common stock is listed on The Nasdaq Global Select Market (Nasdaq) under the symbol \u201cVIR.\u201d On November 11, 2026, the last reported sale price of our common stock on Nasdaq was $13.13 per share. Per Share Total Public offering price $ $ Underwriting discounts and commissions(1) $ $ Proceeds, before expenses, to us $ $ (1) See \u201cUnderwriting\u201d for a description of the compensation payable to the underwriters. Investing in our common stock involves a high degree of risk. You should review carefully the risks and uncertainties described under the heading \u201cRISK FACTORS\u201d beginning on page S-8 of this prospectus supplement, and in the documents incorporated by reference into this prospectus supplement and the accompanying base prospectus. Neither the Securities and Exchange Commission nor any state securities commission has approved or disapproved of these securities or passed upon the adequacy or accuracy of this prospectus supplement. Any representation to the contrary ",
+   "url": "https://www.sec.gov/Archives/edgar/data/1706431/000119312526458462/d178815d424b5.htm"
+  },
+  "g:3674": {
+   "text": "Semiconductors & Related Devices: the median of its 59 checked stocks moved -3.6%"
+  },
+  "h:AEVA": {
+   "text": "AEVA against the market, last sessions: 11-06 +18.4%, 11-09 +2.7%, 11-10 +1.1%, 11-11 -0.5%, 11-12 -6.8%; flagged before: 11-13 17:38Z -10.6%"
+  },
+  "h:AMD": {
+   "text": "AMD against the market, last sessions: 11-06 +9.7%, 11-09 +4.9%, 11-10 +2.3%, 11-11 +2.5%, 11-12 +6.8%; flagged before: 11-13 17:38Z -10.7%"
+  },
+  "h:AOSL": {
+   "text": "AOSL against the market, last sessions: 11-06 +26.5%, 11-09 +15.1%, 11-10 -1.9%, 11-11 +4.3%, 11-12 +0.0%"
+  },
+  "h:CADL": {
+   "text": "CADL against the market, last sessions: 11-06 +8.0%, 11-09 +3.3%, 11-10 -0.9%, 11-11 -4.3%, 11-12 -8.5%; flagged before: 11-13 04:35Z -39.1%; 11-13 14:10Z -35.8%; 11-13 17:38Z -22.5%"
+  },
+  "h:FLO": {
+   "text": "FLO against the market, last sessions: 11-06 -5.3%, 11-09 -4.3%, 11-10 +0.9%, 11-11 -2.9%, 11-12 -3.7%; flagged before: 11-13 04:35Z -7.8%; 11-13 14:10Z -10.1%; 11-13 17:38Z -8.7%"
+  },
+  "h:OPRX": {
+   "text": "OPRX against the market, last sessions: 11-06 +0.7%, 11-09 +3.6%, 11-10 -0.3%, 11-11 -6.7%, 11-12 +0.1%; flagged before: 11-12 04:32Z -20.1%; 11-12 13:38Z -20.4%; 11-12 17:38Z -17.7%; 11-13 17:38Z -17.6%"
+  },
+  "h:RELL": {
+   "text": "RELL against the market, last sessions: 11-06 +5.5%, 11-09 +4.2%, 11-10 -0.1%, 11-11 +0.7%, 11-12 -1.2%; flagged before: 11-13 04:35Z -6.8%; 11-13 14:10Z -6.8%; 11-13 17:38Z -6.8%"
+  },
+  "k": {
+   "text": "Market: S&P 500 (SPY) -0.4%, Nasdaq 100 (QQQ) -1.2%, Russell 2000 (IWM) -0.4%, S&P 500 futures -0.6%, VIX +1.9% (in session)"
+  },
+  "m:OPRX": {
+   "text": "OPRX (OptimizeRx Corp; Services-Business Services, NEC) -12.0% since the close (in session), outside its 2-in-3 range (-7%..+9%)"
+  },
+  "m:VIR": {
+   "text": "VIR (Vir Biotechnology, Inc.; Biological Products, (No Diagnostic Substances)) -18.9% since the close (in session), OUTSIDE its 9-in-10 range (-7%..+9%)"
+  },
+  "n:CADL": {
+   "text": "CADL accounts: market value $649.3 m; cash and equivalents $203.1 m (2026-09-30; investments not counted); net income $-99.1 m over the four quarters to 2026-09-30; that cash alone covers about 8.2 quarters of such losses"
+  },
+  "n:HTFL": {
+   "text": "HTFL accounts: market value $5.2 bn; cash and equivalents $31.6 m (2026-09-30; investments not counted); revenue $238.7 m over the four quarters to 2026-09-30; net income $-79.0 m over the four quarters to 2026-09-30; that cash alone covers about 1.6 quarters of such losses"
+  },
+  "n:MOD": {
+   "text": "MOD accounts: market value $5.7 bn; cash and equivalents $150.6 m (2026-09-30; investments not counted); revenue $3.6 bn over the four quarters to 2026-09-30; net income $129.8 m over the four quarters to 2026-09-30"
+  },
+  "n:NMAX": {
+   "text": "NMAX accounts: market value $942.1 m; cash and equivalents $26.7 m (2026-09-30; investments not counted); revenue $227.0 m over the four quarters to 2026-09-30; net income $12.9 m over the four quarters to 2026-09-30"
+  },
+  "n:TNDM": {
+   "text": "TNDM accounts: market value $1.2 bn; cash and equivalents $72.8 m (2026-09-30; investments not counted); long-term debt $603.4 m (2026-09-30); revenue $1.1 bn over the four quarters to 2026-09-30; net income $-49.2 m over the four quarters to 2026-09-30; that cash alone covers about 5.9 quarters of such losses"
+  },
+  "n:VIR": {
+   "text": "VIR accounts: market value $2.1 bn; cash and equivalents $218.9 m (2026-09-30; investments not counted); revenue $302.8 m over the four quarters to 2026-09-30; net income $-184.8 m over the four quarters to 2026-09-30; that cash alone covers about 4.7 quarters of such losses"
+  },
+  "p:AEVA~OUST": {
+   "text": "AEVA and OUST: market-adjusted daily returns correlated 0.65 over the last 250 sessions; OUST -7.8% since the close"
+  },
+  "p:AMD~INTC": {
+   "text": "AMD and INTC: market-adjusted daily returns correlated 0.58 over the last 250 sessions; INTC -2.8% since the close"
+  },
+  "p:AOSL~DIOD": {
+   "text": "AOSL and DIOD: market-adjusted daily returns correlated 0.67 over the last 250 sessions; DIOD -4.3% since the close"
+  },
+  "p:CSCO~ANET": {
+   "text": "CSCO and ANET: market-adjusted daily returns correlated 0.39 over the last 250 sessions; ANET -4.9% since the close"
+  },
+  "p:CSCO~COHR": {
+   "text": "CSCO and COHR: market-adjusted daily returns correlated 0.35 over the last 250 sessions; COHR -5.9% since the close"
+  },
+  "p:CSCO~HPE": {
+   "text": "CSCO and HPE: market-adjusted daily returns correlated 0.46 over the last 250 sessions; HPE -4.0% since the close"
+  },
+  "p:CVLT~RBRK": {
+   "text": "CVLT and RBRK: market-adjusted daily returns correlated 0.51 over the last 250 sessions; RBRK -0.0% since the close"
+  },
+  "p:CVLT~ZS": {
+   "text": "CVLT and ZS: market-adjusted daily returns correlated 0.45 over the last 250 sessions; ZS +0.2% since the close"
+  },
+  "p:FLO~CPB": {
+   "text": "FLO and CPB: market-adjusted daily returns correlated 0.60 over the last 250 sessions; CPB +2.1% since the close"
+  },
+  "p:FLO~GIS": {
+   "text": "FLO and GIS: market-adjusted daily returns correlated 0.60 over the last 250 sessions; GIS +2.2% since the close"
+  },
+  "p:MOD~NVT": {
+   "text": "MOD and NVT: market-adjusted daily returns correlated 0.60 over the last 250 sessions; NVT -1.1% since the close"
+  },
+  "p:RELL~AEIS": {
+   "text": "RELL and AEIS: market-adjusted daily returns correlated 0.45 over the last 250 sessions; AEIS -4.2% since the close"
+  },
+  "p:TNDM~PODD": {
+   "text": "TNDM and PODD: market-adjusted daily returns correlated 0.40 over the last 250 sessions; PODD +2.9% since the close"
+  },
+  "q:AMD": {
+   "text": "AMD -9.0% since the close of 2026-11-12, as the check read it"
+  },
+  "q:AVGO": {
+   "text": "AVGO -5.1% since the close of 2026-11-12, as the check read it"
+  },
+  "q:CRWV": {
+   "text": "CRWV -6.0% since the close of 2026-11-12, as the check read it"
+  },
+  "q:DELL": {
+   "text": "DELL -7.6% since the close of 2026-11-12, as the check read it"
+  },
+  "q:NVDA": {
+   "text": "NVDA -2.0% since the close of 2026-11-12, as the check read it"
+  },
+  "q:SMCI": {
+   "text": "SMCI -1.2% since the close of 2026-11-12, as the check read it"
+  },
+  "s1": {
+   "text": "2026-11-13T07:46Z www.fool.com: HeartFlow (HTFL) Q3 2026 Earnings Call Transcript -- Plaque Analysis drove growth, but management flagged a flat Q4 pricing outlook.",
+   "url": "https://www.fool.com/earnings/call-transcripts/2026/11/13/heartflow-htfl-q3-2026-earnings-call-transcript/?.tsrc=rss"
+  },
+  "s10": {
+   "text": "2026-11-13T15:42Z finance.yahoo.com: Samsung Eyeing Deal To Buy Data Center Supplier Modine; Stock Soars 35% -- Samsung is exploring a deal to buy Modine Manufacturing, which makes cooling systems for AI data centers.",
+   "url": "https://finance.yahoo.com/m/f79eb722-fe3d-3493-8014-c031251ef048/samsung-eyeing-deal-to-buy.html?.tsrc=rss"
+  },
+  "s12": {
+   "text": "2026-11-13T11:41Z finance.yahoo.com: Modine Stock Gets a Potential $5.6 Billion Takeover Catalyst From Samsung -- Samsung Eyes $5.6 Billion Deal for Data Center Cooling Firm Modine as AI Demand Surges",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/modine-stock-gets-potential-5-114103515.html?.tsrc=rss"
+  },
+  "s13": {
+   "text": "2026-11-13T17:14Z finance.yahoo.com: Vir Biotechnology Shares Drop as Biotech Firm Moves Ahead With Stock Sale -- Vir Biotechnology Stock Falls After Pricing 15 Million Shares at $10 Each",
+   "url": "https://finance.yahoo.com/healthcare/articles/vir-biotechnology-shares-drop-biotech-171412800.html?.tsrc=rss"
+  },
+  "s14": {
+   "text": "2026-11-13T14:57Z finance.yahoo.com: Vir Biotechnology stock tumbles on $150M share offering -- Investing.com -- Vir Biotechnology Inc (NASDAQ:VIR) shares fell 15% in premarket trade Friday following the company's announcement of a $150 million public stock offering priced at $10 per share.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/vir-biotechnology-stock-tumbles-150m-145743749.html?.tsrc=rss"
+  },
+  "s17": {
+   "text": "2026-11-13T10:14Z www.marketbeat.com: Newsmax Q3 Earnings Call Highlights -- Newsmax (NYSE:NMAX) reported third-quarter revenue of $69 million, boosted by a $14 million one-time payment, as higher affiliate fees and licensing revenue helped the company post its second consecutive quarter of positive adjusted EBITDA excluding the payment. Revenue rose 52.5% from a year earli",
+   "url": "https://www.marketbeat.com/instant-alerts/transcript-newsmax-q3-earnings-call-highlights-2026-11-13/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss"
+  },
+  "s19": {
+   "text": "2026-11-13T05:02Z finance.yahoo.com: Newsmax Inc (NMAX) (Q3 2026) Earnings Call Highlights: Record Revenue, Second Straight Positive ... -- Newsmax Inc (NMAX) posted record underlying revenue of $55 million, up 21.6%, with affiliate fees jumping 77% and licensing up 343%, even as digital subscriptions and product sales declined.",
+   "url": "https://finance.yahoo.com/media-advertising/articles/newsmax-inc-nmax-q3-2026-050250055.html?.tsrc=rss"
+  },
+  "s2": {
+   "text": "2026-11-13T03:14Z www.marketbeat.com: What Heartflow (HTFL) Said on Its Q3 Earnings Call -- Heartflow (NASDAQ:HTFL) raised its 2026 revenue forecast after reporting third-quarter sales growth of 57%, citing wider adoption of its Plaque Analysis product, durable demand for FFRct and growth in coronary CT angiography. The company reported revenue of $72.9 million for the quarter ended Sept.",
+   "url": "https://www.marketbeat.com/instant-alerts/transcript-what-heartflow-htfl-said-on-its-q3-earnings-call-2026-11-12/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss"
+  },
+  "s21": {
+   "text": "2026-11-13T13:30Z finance.yahoo.com: Commvault Announces CFO Transition -- Commvault (NASDAQ: CVLT), delivering continuous recovery for the AI era, today announced that Danielle Abrahamsen, Chief Accounting Officer, has been appointed Interim Chief Financial Officer, effective December 1, 2026. Abrahamsen succeeds Gary Merrill, who is leaving the Company to pursue an opportunity at another company outside the industry. Merrill will serve as an advisor to Commvault throug",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/commvault-announces-cfo-transition-133000953.html?.tsrc=rss"
+  },
+  "s22": {
+   "text": "2026-11-13T15:11Z finance.yahoo.com: Tandem Diabetes stock jumps 8% on FDA clearance for tubeless pump -- Investing.com -- Shares of Tandem Diabetes Care, Inc. (NASDAQ:TNDM) rose 8% after the company announced U.S. Food and Drug Administration clearance for its Tandem Mobi insulin pump to operate as a tubeless automated insulin delivery system with up to seven days of wear.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/tandem-diabetes-stock-jumps-8-151136631.html?.tsrc=rss"
+  },
+  "s23": {
+   "text": "2026-11-13T13:30Z finance.yahoo.com: Tandem Mobi Now FDA Cleared as World\u2019s First and Only Tubeless AID System with up to Seven Days of Wear -- SAN DIEGO, November 13, 2026--Tandem Diabetes Care, Inc. (Nasdaq: TNDM), a global insulin delivery and diabetes technology company, today announced U.S. Food and Drug Administration (FDA) clearance of Tandem Mobi for use as the world\u2019s first and only tubeless automated insulin delivery system with up to 7 days of wear.1 A new Tandem Mobi tubeless cartridge and infusion set converts the current Tan",
+   "url": "https://finance.yahoo.com/healthcare/articles/tandem-mobi-now-fda-cleared-133000019.html?.tsrc=rss"
+  },
+  "s25": {
+   "text": "2026-11-13T17:34Z finance.yahoo.com: Cisco Stocks Fall 5.29% as AI Networking Mix Squeezes Gross Margins -- Record $18.5 billion revenue and a doubled AI outlook were overshadowed by a 2.5-point drop in non-GAAP gross margin.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/cisco-stocks-fall-5-29-173456905.html?.tsrc=rss"
+  },
+  "s39": {
+   "text": "2026-11-13T18:45Z www.fool.com: Why Advanced Micro Devices Stock Is Down Today -- AMD stock is sinking as the chip sector sells off amid the Nvidia scandal, giving back part of the gains it picked up when Jensen Huang resigned. I think the fallout could last longer than many investors hope.",
+   "url": "https://www.fool.com/investing/2026/11/13/why-advanced-micro-devices-is-down-today/?.tsrc=rss"
+  },
+  "s40": {
+   "text": "2026-11-13T17:22Z finance.yahoo.com: AMD Stocks Fall 6.46% After 30% Weekly Surge on Nvidia Leadership Shock -- The pullback trims a rally of roughly 30% this week, while Michael Burry publicly doubled his bet against the Nasdaq 100.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/amd-stocks-fall-6-46-172243555.html?.tsrc=rss"
+  },
+  "s41": {
+   "text": "2026-11-13T16:56Z 247wallst.com: AMD Tumbles 11%, Broadcom and Intel Slide 6% as Chip Rally Reverses -- One day after NVIDIA's CEO shake-up handed its rivals a windfall, the winners are giving it back fast. Analysts and a famed skeptic disagree on what comes next, and the answer may hinge on who sold first.",
+   "url": "https://247wallst.com/investing/2026/11/13/amd-tumbles-11-broadcom-and-intel-slide-6-as-chip-rally-reverses/?.tsrc=rss"
+  },
+  "s44": {
+   "text": "2026-11-13T14:14Z www.marketbeat.com: Flowers Foods Q3 Earnings Call Highlights -- Flowers Foods (NYSE:FLO) reported a 4.7% decline in third-quarter sales and revised its full-year outlook as lower bread volumes, heightened promotional activity and pressure on household budgets weighed on results. Net sales fell to approximately $1.17 billion, while volume declined 7%, with the g",
+   "url": "https://www.marketbeat.com/instant-alerts/transcript-flowers-foods-q3-earnings-call-highlights-2026-11-13/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss"
+  },
+  "s45": {
+   "text": "2026-11-13T14:08Z finance.yahoo.com: Flowers Foods Q3 Earnings Miss on Weak Volumes, 2026 Outlook Cut -- FLO's Q3 fiscal 2026 earnings and sales miss estimates as weak volumes and rising costs hurt margins, prompting a cut in its full-year outlook.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/flowers-foods-q3-earnings-miss-140800072.html?.tsrc=rss"
+  },
+  "s49": {
+   "text": "2026-11-13T18:10Z finance.yahoo.com: Stock Market Today: Nasdaq In Red As Nvidia Wipes Out $650 Billion; Applied Materials Sinks (Live Coverage) -- The Dow Jones index fell Friday despite cooler-than-expected inflation data. AI giant Nvidia continued to fall.",
+   "url": "https://finance.yahoo.com/m/59c1380c-6194-35f8-be3b-4a6a3148bfa4/stock-market-today%3A-nasdaq-in.html?.tsrc=rss"
+  },
+  "s5": {
+   "text": "2026-11-13T14:41Z stocktwits.com: CADL Stock Heads For Worst Ever Session \u2014 Stifel Expects Prostate Cancer Drug Launch To Be Pushed to Mid-2028 -- Wall Street weighed the impact of a delayed regulatory filing, with Canaccord stating that the delay could be due to differences between the drug used in Phase 3 trials and the version intended for commercial production.",
+   "url": "https://stocktwits.com/news-articles/markets/equity/cadl-stock-heads-for-worst-ever-session-stifel-prostate-cancer-drug-launch-delay-mid-2028/cNbRdHgR9fS?.tsrc=rss"
+  },
+  "s51": {
+   "text": "2026-11-13T17:03Z 247wallst.com: NVIDIA Trades at 13 Times Forward Earnings After a 27% Slide. Wall Street Still Sees $325+ -- NVIDIA doubled its revenue while its stock fell toward a 52-week low, and even the pessimistic scenario in our model sits above today's price. What does the market fear that the numbers do not show?",
+   "url": "https://247wallst.com/investing/2026/11/13/nvidia-trades-at-13-times-forward-earnings-after-a-27-slide-wall-street-still-sees-325/?.tsrc=rss"
+  },
+  "s53": {
+   "text": "2026-11-13T15:13Z 247wallst.com: Cisco Slides 5% Despite Raising AI Outlook to $9 Billion as Citi Says Growth May Have Peaked; Hewlett Packard Enterprise Retreats 5%, Arista Falls 3% -- Cisco posted record revenue and handed investors a bigger AI forecast, yet the shares still sold off hard. One number in the next quarter's guide has analysts asking whether the best growth is already behind the networking giant.",
+   "url": "https://247wallst.com/investing/2026/11/13/cisco-slides-5-despite-raising-ai-outlook-to-9-billion-as-citi-says-growth-may-have-peaked-hewlett-packard-enterprise-retreats-5-arista-falls-3/?.tsrc=rss"
+  },
+  "s54": {
+   "text": "2026-11-13T11:01Z stocktwits.com: Futures Edge Lower As NVDA Fallout Unsettles Tech Stocks \u2014 SLS, AMAT, CSCO, CADL Stocks In Focus -- Investors head into Friday amid uncertainty around tech stocks, mixed earnings reactions and concerns over Middle East tensions, with October\u2019s PPI inflation data also in focus.",
+   "url": "https://stocktwits.com/news-articles/markets/equity/futures-edge-lower-as-nvda-fallout-unsettles-tech-stocks-sls-amat-csco-cadl-stocks-in-focus/cNbRGG3R9fP?.tsrc=rss"
+  },
+  "s7": {
+   "text": "2026-11-12T23:13Z stocktwits.com: CADL Stock Tumbles 38% After-Hours As Candel Pushes Prostate Cancer FDA Application Timeline To Mid-2027 -- Candel said it is in continuing dialogue with the FDA regarding the Biologics License Application (BLA) submission for aglatimagene in intermediate- to high-risk localized prostate cancer.",
+   "url": "https://stocktwits.com/news-articles/markets/equity/cadl-stock-tumbles-43-after-hours-as-candel-pushes-prostate-cancer-fda-application-timeline-to-mid-2027/cNGCOgCR9O3?.tsrc=rss"
+  },
+  "s9": {
+   "text": "2026-11-13T17:25Z www.ibtimes.com: Samsung in Talks to Buy Modine as Data Center Cooling Stock Surges 29% -- No deal has been finalized, but a potential multibillion-dollar transaction sent Modine shares sharply higher as investors assessed Samsung's push into data center thermal infrastructure.",
+   "url": "https://www.ibtimes.com/samsung-talks-acquire-modine-data-center-cooling-3809734?.tsrc=rss"
+  },
+  "x:AEVA": {
+   "text": "AEVA: the market carried -1.6% (beta 3.56); its industry (Motor Vehicle Parts & Accessories, 22 stocks) moved +0.4%; left over after the market and its drivers -7.9%"
+  },
+  "x:AMD": {
+   "text": "AMD: the market carried -1.5% (beta 3.42); 10-year yield carried +0.7% (+15.32% per point, t 3.0); its industry (Semiconductors & Related Devices, 58 stocks) moved -3.6%; left over after the market and its drivers -8.2%"
+  },
+  "x:AOSL": {
+   "text": "AOSL: the market carried -1.7% (beta 3.88); its industry (Semiconductors & Related Devices, 58 stocks) moved -3.6%; left over after the market and its drivers -7.6%"
+  },
+  "x:CVLT": {
+   "text": "CVLT: the market carried -0.4% (beta 0.99); its industry (Services-Prepackaged Software, 104 stocks) moved +0.3%; left over after the market and its drivers -7.7%"
+  },
+  "x:HTFL": {
+   "text": "HTFL: the market carried -0.7% (beta 1.55); its industry (Surgical & Medical Instruments & Apparatus, 43 stocks) moved +0.4%; left over after the market and its drivers -16.4%"
+  },
+  "x:MOD": {
+   "text": "MOD: the market carried -1.4% (beta 3.27); its industry (Motor Vehicle Parts & Accessories, 22 stocks) moved +0.2%; left over after the market and its drivers +31.1%"
+  },
+  "x:OPRX": {
+   "text": "OPRX: the market carried -0.8% (beta 1.71); its industry (Services-Business Services, NEC, 46 stocks) moved +0.7%; left over after the market and its drivers -11.2%"
+  },
+  "x:RELL": {
+   "text": "RELL: the market carried -1.2% (beta 2.74); its industry (Wholesale, durable goods (broad), 33 stocks) moved -0.6%; left over after the market and its drivers -6.0%"
+  }
+ },
+ "note": {
+  "backdrop": "Late in Friday's session the S&P 500 is down 0.4% and the Nasdaq 100 down 1.2% (they were down 0.8% and 1.7% at midday). It is a fall led by AI hardware, not a market-wide one: no market-wide move or fear flag, oil, gold and the dollar are flat, and the 10-year yield is up about one usual day's worth. The median chip stock is down 3.6%. Producer-price inflation came in cooler than expected and the market fell anyway, so the selling is not about interest rates. Bitcoin is down 3.3%, a little more than its usual day.",
+  "backdrop_evidence": [
+   "k",
+   "d:oil",
+   "d:10-year yield",
+   "d:gold",
+   "d:bitcoin",
+   "g:3674",
+   "s49",
+   "s54"
+  ],
+  "by": "agent",
+  "calls": [
+   {
+    "by": "2026-11-20",
+    "call": "move",
+    "from": "AI hardware marked down after Nvidia's chief resigned",
+    "prob": 0.5,
+    "thesis": "results are reported as due Tuesday with no chief executive and open export-control questions; the scan's 2-in-3 range from Thursday's close is -6.1%..+7.4%, which about 1 stock in 3 ends outside",
+    "threshold": 7.5,
+    "ticker": "NVDA"
+   },
+   {
+    "by": "2026-11-20",
+    "call": "move",
+    "from": "AI hardware marked down after Nvidia's chief resigned",
+    "prob": 0.42,
+    "thesis": "it gained about 29% against the market in five sessions on Nvidia's trouble and lost 9% in one; it trades on Nvidia's news both ways; the scan's 2-in-3 range is -7.3%..+8.8% (about 1 in 3 end outside)",
+    "threshold": 9.0,
+    "ticker": "AMD"
+   },
+   {
+    "by": "2026-11-20",
+    "call": "move",
+    "from": "AI hardware marked down after Nvidia's chief resigned",
+    "prob": 0.4,
+    "thesis": "it builds mostly around Nvidia hardware, so Nvidia's report on Tuesday speaks to Dell's order outlook a week before Dell's own; the scan's 2-in-3 range is -7.6%..+9.3% (about 1 in 3 end outside)",
+    "threshold": 9.5,
+    "ticker": "DELL"
+   }
+  ],
+  "check": "2026-11-13T2023Z",
+  "read": [
+   {
+    "direction": "down",
+    "published": "2026-11-13T09:06:45Z",
+    "says": "Truist cut Nvidia to Hold and its target to $174 from $346, saying the risks outweigh the valuation after the chief executive's resignation, including possible shipments to China; Craig-Hallum also cut it to Hold; William Blair and Oppenheimer upgraded AMD.",
+    "ticker": "NVDA",
+    "tier": "opinion",
+    "url": "https://stocktwits.com/news-articles/markets/equity/nvda-stock-downgrade-amd-mp-materials-riot-platform-draftkings/cNbbxybR9Oy"
+   },
+   {
+    "direction": "down",
+    "published": "2026-11-13T16:03:34Z",
+    "says": "Bloomberg reported on Nov 12 that the Justice Department is investigating whether Super Micro servers were smuggled into China; Super Micro denies the reseller named was a customer; Dell fell 8% in the same session while Super Micro fell 3%.",
+    "ticker": "SMCI",
+    "tier": "reported",
+    "url": "https://247wallst.com/investing/2026/11/13/super-micro-slides-3-as-reported-doj-smuggling-probe-weighs-for-a-second-day-dell-sinks-8-nvidia-falls-4/"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-13T17:41:38Z",
+    "says": "Dell fell 8% as the AI server sell-off deepened after the Nvidia chief executive's resignation; it builds mostly around Nvidia hardware; its shares are down more than 35% in a month despite a $95 billion AI server backlog; it reports on Nov 24.",
+    "ticker": "DELL",
+    "tier": "reported",
+    "url": "https://finance.yahoo.com/markets/stocks/articles/dell-stocks-fall-8-16-174138939.html"
+   },
+   {
+    "direction": "down",
+    "published": "2026-11-13T18:00:06Z",
+    "says": "Rothschild & Co Redburn cut Broadcom to neutral and its target to $398 from $595, citing its reliance on OpenAI and Anthropic, which cannot yet pay their own way, and Broadcom's backstopping of customer financing.",
+    "ticker": "AVGO",
+    "tier": "opinion",
+    "url": "https://www.fool.com/investing/2026/11/13/why-broadcom-stock-dove-today/"
+   }
+  ],
+  "singles": [
+   {
+    "beneath": "Modine was worth about $5.6 billion before the report, so the jump adds about $1.7 billion: the market is pricing a takeover premium with real odds of no deal, not an agreed price. Its partners are down 1% to 5% today, so this is read as one company's event, not a re-rating of data-center suppliers. A strategic buyer is paying up for AI data-center equipment in the same week the stock market is marking it down.",
+    "cause": "Samsung Electronics is in talks to buy Modine, a maker of data-center cooling systems, Bloomberg reported; no deal is final and talks could fail. The stock is up 29.7%.",
+    "evidence": [
+     "s9",
+     "s10",
+     "s12",
+     "n:MOD",
+     "p:MOD~NVT",
+     "x:MOD"
+    ],
+    "kind": "reported",
+    "t": "MOD"
+   },
+   {
+    "beneath": "It closed on Thursday at $12.12, so $10 is a 17.5% discount: the fall is the stock moving to the price of its own share sale, not a judgment on anything new. The base deal is about 7% of its $2.1 billion market value, sold at that discount, by a company whose cash and equivalents covered under five quarters of its losses. Candel fell on the same day and the two have moved together for a year, but the causes are separate.",
+    "cause": "Vir priced a sale of 15 million new shares at $10 each, $150 million before an option for 2.25 million more. The stock is down 18.9%.",
+    "evidence": [
+     "s13",
+     "s14",
+     "f:VIR:2",
+     "n:VIR",
+     "m:VIR",
+     "c1"
+    ],
+    "kind": "reported",
+    "t": "VIR"
+   },
+   {
+    "beneath": "Stifel now expects the launch in mid-2028. Candel's $203.1 million of cash funds it into the second quarter of 2028 by its own account, so the cash now runs out about when sales would begin. The delay turns a company funded to its launch into one that must raise money before it, which is what the new share-sale agreement is for. Canaccord cut its target to $13 from $25 and kept its buy rating, and the stock has recovered a third of its overnight fall.",
+    "cause": "Candel pushed the filing of its prostate-cancer drug application with the FDA from the fourth quarter of 2026 to mid-2027, and the same evening filed to sell up to $50 million of stock at the market. The stock is down 25.8%, after being down 39% overnight.",
+    "evidence": [
+     "s7",
+     "s5",
+     "f:CADL:1",
+     "f:CADL:2",
+     "n:CADL",
+     "h:CADL"
+    ],
+    "kind": "reported",
+    "t": "CADL"
+   },
+   {
+    "beneath": "Its three filed quarters of 2026 add up to $189.6 million ($52.6, $64.1 and $72.9 million), so the raised guidance implies a fourth quarter of $72.5-74.5 million: flat against the third quarter, after growth of 22% and 14% in the two quarters before. At about 22 times the last four quarters' revenue ($5.2 billion against $238.7 million), a stock priced for acceleration fell on guidance that says it stops. The fourth-quarter figure is my arithmetic from the guidance and the filed quarters, not a number the company gave.",
+    "cause": "Heartflow reported third-quarter revenue up 57% and raised its 2026 revenue guidance to $262-264 million from $246-250 million, and fell 17.1%. Management flagged a flat fourth-quarter pricing outlook on the call.",
+    "evidence": [
+     "f:HTFL:1",
+     "s1",
+     "s2",
+     "n:HTFL",
+     "x:HTFL"
+    ],
+    "kind": "inferred",
+    "t": "HTFL"
+   },
+   {
+    "beneath": "$14 million of that revenue is a one-time payment. Without it revenue was about $55 million, up 21.6%, and most of the quarter's profit is the size of that one payment. The headline growth is more than twice the underlying growth.",
+    "cause": "Newsmax reported record quarterly revenue of $69.0 million, up 52.5%, net income of $15.2 million and an updated full-year outlook. The stock is up 27.1%.",
+    "evidence": [
+     "f:NMAX:1",
+     "s17",
+     "s19",
+     "n:NMAX"
+    ],
+    "kind": "reported",
+    "t": "NMAX"
+   },
+   {
+    "beneath": "Guidance was reaffirmed and the stock still lost 8%, while its software partners are flat: the market is pricing the exit itself. No successor was ready, so the person who signs the numbers leaves before a replacement exists.",
+    "cause": "Commvault's chief financial officer is leaving for another company; the chief accounting officer becomes interim CFO on Dec 1 and a search firm has been hired. The company reaffirmed its guidance. The stock is down 8.1%.",
+    "evidence": [
+     "f:CVLT:1",
+     "s21",
+     "p:CVLT~RBRK",
+     "p:CVLT~ZS",
+     "x:CVLT"
+    ],
+    "kind": "reported",
+    "t": "CVLT"
+   },
+   {
+    "beneath": "AI networking sells at lower margins and memory costs are rising, so more AI revenue means less profit per dollar of sales. That is a statement about the whole AI hardware business, not only Cisco: Hewlett Packard Enterprise and Arista fell with it.",
+    "cause": "Cisco reported record revenue of $18.5 billion, up 24%, and doubled its AI revenue outlook, and fell 6.3%: its non-GAAP gross margin dropped to 65.6% from 68.1% and its next-quarter revenue guidance is below the quarter just reported.",
+    "evidence": [
+     "s25",
+     "s53",
+     "f:CSCO:1",
+     "p:CSCO~HPE",
+     "p:CSCO~ANET"
+    ],
+    "kind": "reported",
+    "t": "CSCO"
+   },
+   {
+    "beneath": "The checks on Thursday found it 17% to 20% below Wednesday's close for most of the day after its results, yet Thursday's close was flat against the market: it rose back late that day. It is now back near where it traded through Thursday. Today's fall is that late rise reversing, not new information.",
+    "cause": "No filing and no story today; it is down 12.0% from Thursday's close.",
+    "evidence": [
+     "h:OPRX",
+     "m:OPRX",
+     "x:OPRX"
+    ],
+    "kind": "inferred",
+    "t": "OPRX"
+   },
+   {
+    "beneath": "Tubeless pumps have been Insulet's ground, and Insulet is up 2.9% today, so the market is not reading the clearance as a threat to it. For Tandem it matters more than usual: it is losing money and carries $603.4 million of long-term debt against $72.8 million of cash and equivalents.",
+    "cause": "Tandem received FDA clearance for Tandem Mobi as a tubeless automated insulin pump with up to seven days of wear. The stock is up 15.1%.",
+    "evidence": [
+     "f:TNDM:1",
+     "s22",
+     "s23",
+     "n:TNDM",
+     "p:TNDM~PODD"
+    ],
+    "kind": "reported",
+    "t": "TNDM"
+   },
+   {
+    "beneath": "The other packaged-food companies it moves with are up about 2% today, so this is about bread and Flowers, not the food group. It had already fallen against the market in four of the five sessions before the report.",
+    "cause": "Flowers Foods missed on third-quarter earnings and sales (sales down 4.7%) and cut its full-year outlook on weaker bread volumes. The stock is down 8.6%.",
+    "evidence": [
+     "s44",
+     "s45",
+     "f:FLO:1",
+     "p:FLO~GIS",
+     "p:FLO~CPB",
+     "h:FLO"
+    ],
+    "kind": "reported",
+    "t": "FLO"
+   }
+  ],
+  "themes": [
+   {
+    "beneath": "The two companies actually named in the scandal are falling least today: Nvidia -2.0% and Super Micro -1.2%, against 5% to 9% for the rivals and dependents. So Friday's selling is not about the scandal's direct damage. What is being marked down is the AI build-out as a trade, for three reasons that arrived in the same week. One: export-control enforcement is a risk to every seller of AI hardware, not to one. Two: the quality of AI revenue was questioned twice, by Cisco's results (record sales and a doubled AI outlook, but a gross margin 2.5 points lower on AI networking mix and memory costs) and by a downgrade of Broadcom that rests on customers that cannot yet pay their own way and on Broadcom backstopping their financing. Three: the stocks falling most are the ones that rose most and have the highest market betas (AMD 3.4), which is what an unwinding of crowded positions looks like. Nvidia now trades at about 13 times forward earnings after a 27% slide: the fear is priced less in Nvidia than in what depends on it.",
+    "cause": "Nvidia's chief executive resigned, effective immediately, on Thursday Nov 12, amid a scandal that includes reports of Nvidia chips diverted to China in breach of export controls. On Thursday money moved out of Nvidia and into its rivals. On Friday that reversed and the whole group was sold: AMD -9.0%, Dell -7.6%, CoreWeave -6.0%, Broadcom -5.1%, the median chip stock -3.6%.",
+    "evidence": [
+     "s39",
+     "s41",
+     "s40",
+     "s51",
+     "s25",
+     "g:3674",
+     "q:NVDA",
+     "q:AMD",
+     "q:DELL",
+     "q:AVGO",
+     "q:SMCI",
+     "q:CRWV",
+     "x:AMD",
+     "h:AMD",
+     "https://stocktwits.com/news-articles/markets/equity/nvda-stock-downgrade-amd-mp-materials-riot-platform-draftkings/cNbbxybR9Oy",
+     "https://247wallst.com/investing/2026/11/13/super-micro-slides-3-as-reported-doj-smuggling-probe-weighs-for-a-second-day-dell-sinks-8-nvidia-falls-4/",
+     "https://finance.yahoo.com/markets/stocks/articles/dell-stocks-fall-8-16-174138939.html",
+     "https://www.fool.com/investing/2026/11/13/why-broadcom-stock-dove-today/"
+    ],
+    "kind": "reported",
+    "mechanism": "Three routes. Rivals: AMD and Broadcom were bought on Thursday on the idea that Nvidia's customers would shift orders to them, so they had the most to give back; AMD had gained about 29% against the market in the five sessions before today. Dependents: Dell builds mostly around Nvidia hardware and CoreWeave rents out Nvidia chips, so doubt about Nvidia's leadership reaches their order outlook. The law: the Justice Department is reported to be investigating whether Super Micro servers reached China, so export-control enforcement now touches the server makers as well as the chip designer.",
+    "members": [
+     "NVDA",
+     "AMD",
+     "AVGO",
+     "DELL",
+     "SMCI",
+     "CRWV"
+    ],
+    "name": "AI hardware marked down after Nvidia's chief resigned",
+    "read_through": [
+     {
+      "evidence": [
+       "p:CSCO~HPE",
+       "s53"
+      ],
+      "t": "HPE",
+      "why": "it sells servers and networking to the same customers and has moved with Cisco for a year; it is down 4.0% and still inside its range"
+     },
+     {
+      "evidence": [
+       "p:CSCO~ANET",
+       "s53",
+       "s25"
+      ],
+      "t": "ANET",
+      "why": "AI networking, the product whose margins Cisco said are thinner; down 4.9%"
+     },
+     {
+      "evidence": [
+       "p:CSCO~COHR"
+      ],
+      "t": "COHR",
+      "why": "optical parts for the same data centers; down 5.9%"
+     },
+     {
+      "evidence": [
+       "p:AMD~INTC"
+      ],
+      "t": "INTC",
+      "why": "AMD's closest partner over the year; down 2.8%, much less than AMD"
+     }
+    ],
+    "watch": "Nvidia's results, reported as due on Tuesday Nov 17, and what it says about leadership and China; a named successor; any official statement on the export-control investigations; Dell's results on Nov 24. If AMD and Broadcom stop moving opposite to Nvidia, the market has stopped treating this as one company's problem."
+   },
+   {
+    "beneath": "The market's fall carries 1 to 2 points of each move. The other 6 to 8 points have no company cause: it is last week's gain being given back, the AMD pattern one size down.",
+    "cause": "None of the three has a filing or a story since the close. Each rose sharply in the past week against the market (Alpha & Omega +26.5% and +15.1% on Nov 6 and 9, Aeva +18.4% on Nov 6, Richardson +5.5% and +4.2%), each has a market beta of 2.7 to 3.9, and most of each one's partners (chips, lidar, quantum computing) are down 2% to 8% today.",
+    "evidence": [
+     "x:AOSL",
+     "h:AOSL",
+     "x:AEVA",
+     "h:AEVA",
+     "x:RELL",
+     "h:RELL",
+     "p:AEVA~OUST",
+     "p:AOSL~DIOD",
+     "p:RELL~AEIS",
+     "g:3674"
+    ],
+    "kind": "inferred",
+    "mechanism": "They are held as part of the same AI and momentum trade as AMD. When that trade is cut, the high-beta recent winners are sold with it, whatever their own business news.",
+    "members": [
+     "AOSL",
+     "AEVA",
+     "RELL"
+    ],
+    "name": "Last week's fastest risers, falling with no news of their own",
+    "watch": "Whether they recover with the group. A filing from any of them would replace this explanation."
+   }
+  ],
+  "threads": [
+   "Does Nvidia's report on Tuesday move its dependents (Dell, CoreWeave) more than Nvidia itself?",
+   "Was Friday's selling in AMD and Broadcom a one-day give-back, or the start of the group being marked down together?",
+   "CD fell 22% with no filing and no story: look for a filing over the weekend.",
+   "Does Vir hold its $10 deal price once the offering closes on Nov 16?",
+   "Modine: a confirmed bid from Samsung, or a denial.",
+   "Global Payments fell 10% on Thursday with no cause found and is up 4.1% today: still unexplained."
+  ],
+  "unexplained": [
+   {
+    "t": "CD",
+    "tried": "no filing since the close and no story in its feed; too little price history for partners or drivers; its industry is down 1.6% and bitcoin 3.3%, which cannot carry a 21.8% fall; it had fallen against the market in four of the last five sessions"
+   },
+   {
+    "t": "TXO",
+    "tried": "no filing, no story; its oil-producer partners are up about 1%; its last distribution went ex on Aug 14, so an ex-distribution day is possible but not confirmed"
+   },
+   {
+    "t": "PNNT",
+    "tried": "no filing, no story; the other lenders it moves with are flat"
+   },
+   {
+    "t": "COLD",
+    "tried": "no filing, no story; its closest partner Lineage is up 2.1%, so cold-storage landlords are moving together, cause not found"
+   },
+   {
+    "t": "PUBM",
+    "tried": "no filing, no story; its ad-technology partners are flat"
+   },
+   {
+    "t": "CLNE",
+    "tried": "no filing, no story"
+   },
+   {
+    "t": "HURC",
+    "tried": "no filing, no story"
+   }
+  ]
+ },
+ "recorded_at": "2026-11-13T20:28:05Z"
+}

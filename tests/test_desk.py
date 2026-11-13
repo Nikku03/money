@@ -144,8 +144,9 @@ class CaseFileTest(DeskCase):
     def test_every_item_has_an_id_and_the_text_shows_it(self):
         case = self.build()
         ev = desk.evidence(case)
-        for i in ("k", "d:bitcoin", "m:AAA", "x:EEE", "h:AAA", "p:AAA~BBB", "s1", "c1", "r:bitcoin"):
+        for i in ("k", "d:bitcoin", "m:AAA", "x:EEE", "h:AAA", "p:AAA~BBB", "s1", "c1", "r:bitcoin", "q:CCC"):
             self.assertIn(i, ev)
+        self.assertIn("CCC +0.2% since the close", ev["q:CCC"]["text"])   # a stock that is no mover can be cited
         self.assertIn("bitcoin carried", ev["x:EEE"]["text"])
         self.assertEqual(ev["s1"]["url"], "https://news.test/a")
         text = desk.render(case)
