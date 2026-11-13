@@ -224,6 +224,9 @@ class NoteTest(DeskCase):
         self.assertIn("'by' is the date", wrong(calls=[{**call, "by": "next week"}]))
         self.assertIn("'from' names no theme", wrong(calls=[{**call, "from": "a hunch"}]))
         self.assertIn("'call' is one of", wrong(calls=[{**call, "call": "buy"}]))
+        self.assertIn("the case file has no move for CCC", " ".join(desk.check(
+            self.note(), {**case, "moves": {t: v for t, v in case["moves"].items() if t != "CCC"}})))
+        self.assertEqual(wrong(calls=[{**call, "ticker": "SPY", "price": 512.5}]), "")   # a price given at the call
         # a page the reasoner read is evidence once it is listed, and it can report a cause
         page = "https://news.test/brazil"
         self.assertIn("neither in the case file nor a page", wrong(themes=[{**theme, "evidence": [page]}]))
@@ -249,6 +252,8 @@ class NoteTest(DeskCase):
         calls = [json.loads(x) for x in desk.calls_path().read_text().splitlines()]
         self.assertEqual([(c["ticker"], c["call"], c["prob"], c["by"], c["threshold_pct"]) for c in calls],
                          [("CCC", "move", 0.3, FAR, 5.0)])
+        close = scanwatch.close_on(self.bank.view(), "CCC", ASOF)
+        self.assertAlmostEqual(calls[0]["start_price"], close * 1.002, places=3)   # the price at the check, not the close
         self.assertIn(f"desk {STAMP}, from Brazil demand", calls[0]["thesis"])
         self.assertEqual(calls[0]["sources"], ["https://news.test/a"])
         self.assertEqual(rec["calls"], [calls[0]["id"]])

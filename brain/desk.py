@@ -16,7 +16,8 @@ each. That is a list, not an explanation. The desk takes the next two steps.
    items of the case file or pages the reasoner read; a cause is marked reported (a source states it) or inferred
    (the reasoner's own); every stock outside its 9-in-10 range is explained or listed as unexplained; and every
    forward-looking statement is a call, recorded with its chance before its outcome (``brain/predict.py``, in
-   ``research/desk_calls.jsonl``) and scored after.
+   ``research/desk_calls.jsonl``) and scored after. A call starts from the stock's price at the check, not from the
+   last close, so none of its outcome is known when it is made.
 
 The engine does not reason, and the reasoner does not get to assert. The reasoner is the agent working in this repo
 (CLAUDE.md), or a model given the same case file. A note is an explanation. It is not evidence, and its calls carry
@@ -344,7 +345,7 @@ def build(bank: Bank, rec: dict | None = None, moves: dict | None = None, stamp:
             "counts": {"checked": rec["checked"], "outside68": rec["outside68"], "outside90": rec["outside90"],
                        "why": rec.get("why_counts") or {}, "beyond": max(0, len(flags) - len(movers))},
             "movers": movers, "stories": stories, "wraps": wraps, "clusters": clusters, "reach": reach,
-            "memory": memory((asof, stamp))}
+            "memory": memory((asof, stamp)), "moves": {t: v for t, v in moves.items() if v is not None}}
     return json.loads(canon(case))
 
 
@@ -523,6 +524,11 @@ def render(case: dict, detail: list[str] | None = None) -> str:
 
 
 # ---------- the note ----------
+def case_moves(case: dict) -> dict[str, float]:
+    """Every stock's move since the close that a case file holds: all the check read, when the check kept them."""
+    return case.get("moves") or {}
+
+
 def _cited(ids, ev: dict, pages: set[str], where: str, need_source: bool, problems: list[str]) -> None:
     ids = list(ids or [])
     if not ids:
@@ -603,6 +609,7 @@ def check(note: dict, case: dict) -> list[str]:
         if m["outside90"] and m["t"] not in covered:
             problems.append(f"{m['t']} is outside its 9-in-10 range and the note neither explains it nor lists it as "
                             "unexplained")
+    at_check = case_moves(case)
     for k, c in enumerate(note.get("calls") or []):
         where = f"call {k + 1} ({c.get('ticker')})"
         if c.get("call") not in CALLS:
@@ -615,8 +622,12 @@ def check(note: dict, case: dict) -> list[str]:
             problems.append(f"{where}: 'thesis' is empty")
         if c.get("from") not in names and str(c.get("from") or "").upper() not in covered:
             problems.append(f"{where}: 'from' names no theme or stock of this note")
-        if str(c.get("ticker") or "").upper() not in known and str(c.get("ticker") or "").upper() != predict.BENCH:
+        t = str(c.get("ticker") or "").upper()
+        if t not in known and t != predict.BENCH:
             problems.append(f"{where}: not a stock of the scan")
+        if t not in at_check and not (isinstance(c.get("price"), (int, float)) and c["price"] > 0):
+            problems.append(f"{where}: the case file has no move for {t}, so give 'price': its price as the call is "
+                            "made (a call starts from now, not from the last close)")
     return problems
 
 
@@ -637,11 +648,18 @@ def record_note(bank: Bank, case: dict, note: dict, *, calls_file: Path | None =
             cited |= set(x.get("evidence") or [])
     for s in note.get("singles") or []:
         cited |= set(s.get("evidence") or [])
-    calls = []
+    calls, at_check, view = [], case_moves(case), bank.view()
     for c in note.get("calls") or []:
-        made = predict.add(bank, c["ticker"], c["call"], float(c["prob"]), c["by"],
+        t = str(c["ticker"]).upper()
+        price = c.get("price")
+        if price is None:               # the stock's price at the check: its close, moved by what the check read
+            close = scanwatch.close_on(view, t, case["asof"])
+            if close is None:
+                raise ValueError(f"call on {t}: the bank has no close for it on {case['asof']}; give 'price'")
+            price = round(close * (1 + at_check[t]), 4)
+        made = predict.add(bank, t, c["call"], float(c["prob"]), c["by"],
                            f"desk {case['check']}, from {c['from']}: {c['thesis']}",
-                           threshold=float(c.get("threshold") or 0.0),
+                           threshold=float(c.get("threshold") or 0.0), price=float(price),
                            sources=[ev[i]["url"] for i in sorted(cited) if i in ev and ev[i].get("url")][:6],
                            path=calls_file or calls_path())
         calls.append(made["id"])
@@ -712,7 +730,8 @@ TEMPLATE = {
                  "evidence": ["f:DDD:1"]}],
     "unexplained": [{"t": "EEE", "tried": "what was looked at"}],
     "calls": [{"ticker": "CCC", "call": "move|up|down|shock", "threshold": 5.0, "prob": 0.35, "by": "YYYY-MM-DD",
-               "thesis": "one line", "from": "the theme's name, or a stock of the note"}],
+               "thesis": "one line", "from": "the theme's name, or a stock of the note",
+               "price": "only for a stock the case file has no move for: its price now"}],
     "threads": ["an open question for the next check"]}
 
 
