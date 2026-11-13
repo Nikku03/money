@@ -49,6 +49,7 @@ LAST = 5                # sessions of each mover's own history shown
 EXPOSED = 6             # stocks shown for a driver that moved
 DRIVER_BIG = 1.5        # a driver's move this many times its usual day is shown with the stocks it reaches
 CLUSTER_CORR = 0.40     # two movers that moved the same way today are tied when their year's correlation is this
+EVIDENCE_CHARS = 500    # characters of a cited item's text kept in the recorded note
 KINDS = ("reported", "inferred")
 CALLS = ("up", "down", "move", "shock")
 _ITEM = re.compile(r"Item\s+\d\.\d\d", re.IGNORECASE)
@@ -679,7 +680,8 @@ def record_note(bank: Bank, case: dict, note: dict, *, calls_file: Path | None =
                 pass            # a page with a bad date is still listed in the note; it is just not kept as a claim
     rec = {"check": case["check"], "asof": case["asof"], "at": case["at"], "recorded_at": now_iso(),
            "case_sha": hashlib.sha256(canon(case).encode()).hexdigest()[:16], "note": note,
-           "evidence": {i: ev[i] for i in sorted(cited) if i in ev}, "calls": calls, "claims_noted": noted}
+           "evidence": {i: {**ev[i], "text": ev[i]["text"][:EVIDENCE_CHARS]} for i in sorted(cited) if i in ev},
+           "calls": calls, "claims_noted": noted}
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(rec, indent=1, sort_keys=True) + "\n")
     return {**rec, "path": str(path)}

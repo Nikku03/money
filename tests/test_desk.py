@@ -261,6 +261,7 @@ class NoteTest(DeskCase):
         kept = json.loads((desk.notes_dir() / ASOF / f"{STAMP}.json").read_text())
         self.assertEqual(sorted(kept["evidence"]), ["d:bitcoin", "k", "m:AAA", "p:AAA~BBB", "s1", "x:EEE"])
         self.assertIn("Brazil", kept["evidence"]["s1"]["text"])           # the note stands without its case file
+        self.assertTrue(all(len(x["text"]) <= desk.EVIDENCE_CHARS for x in kept["evidence"].values()))
         with self.assertRaisesRegex(ValueError, "already recorded"):
             desk.record_note(self.bank, case, self.note(calls=[]), claim=claim)
         text = desk.show_note(kept)
