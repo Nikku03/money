@@ -204,6 +204,19 @@ class TableTest(TempHome):
         self.assertTrue((tab["y_sale"][tab["t"] == "BBB"] == 0).all())
         self.assertLessEqual(max(tab["date"]), d[899 - mosaic.H])              # later windows have not closed
 
+    def test_accounts_are_read_again_only_after_a_new_report(self):
+        d = bank_with(self, ["AAA", "BBB"])
+        from brain.bank import Fact
+        src = {"name": "test", "url": "https://example.test/f"}
+        report = lambda t, day: Fact(entity=t, attr="filing", value="10-Q", as_of=day, known_at=day + "T21:00:00Z",
+                                     tier="filed", source=src, context={"accn": "q" + day})
+        self.assertFalse(mosaic.stale_accounts(self.bank.view(), "BBB"))       # it files no reports
+        self.bank.add_many([report("AAA", d[695])])
+        self.assertFalse(mosaic.stale_accounts(self.bank.view(), "AAA"))       # its accounts came with that report
+        self.bank.add_many([report("AAA", d[760]), report("BBB", d[760])])
+        self.assertTrue(mosaic.stale_accounts(self.bank.view(), "AAA"))        # a newer report than its accounts
+        self.assertTrue(mosaic.stale_accounts(self.bank.view(), "BBB"))        # a report and no accounts at all
+
     def test_the_card_and_the_radar_speak_from_a_fitted_model(self):
         import os
         d = bank_with(self, ["AAA", "BBB", "CCC"])
@@ -228,6 +241,15 @@ class TableTest(TempHome):
             self.assertIn("P1a not run yet", text)
             self.assertIn("Not offered: a takeover or a failure", text)
             self.assertIn("not enough price history", mosaic.card(self.bank, "ZZZ")[0])
+            calls = os.path.join(self._tmp.name, "calls.jsonl")
+            early = mosaic.radar(self.bank, ["AAA", "BBB"], asof=d[705])       # fifteen sessions before AAA's sale
+            self.assertEqual(mosaic.record(early, calls), 6)                  # two stocks, three pictures
+            self.assertEqual(mosaic.record(early, calls), 0)                  # a close is recorded once
+            self.assertEqual(mosaic.record(rows, calls), 6)                   # the latest close: still open
+            sc = mosaic.score(self.bank, calls)
+            self.assertEqual((sc["sale"]["judged"], sc["sale"]["came"], sc["sale"]["open"]), (2, 1, 2))
+            self.assertEqual((sc["books"]["came"], sc["cuts"]["came"]), (0, 0))
+            self.assertIn("Under 30 judged calls this says nothing yet", mosaic.score_lines(sc)[0])
             before = mosaic.radar(self.bank, ["AAA"], asof=d[710])[0]         # ten sessions before the sale
             self.assertEqual((before["date"], before["sale_never"], before["shelf3y"]), (d[710], 1.0, 1.0))
             self.assertEqual(mosaic.radar(self.bank, ["AAA"], asof=d[725])[0]["sale_never"], 0.0)

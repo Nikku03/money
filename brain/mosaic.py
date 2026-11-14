@@ -209,6 +209,34 @@ def read_offerings(bank: Bank, tickers: list[str], log=print, limit: int | None 
     return {"read": done, "failed": failed}
 
 
+def stale_accounts(view, t: str) -> bool:
+    """A quarterly or annual report was filed on a later day than the latest account figure the bank holds."""
+    filed_ = [f.known_at[:10] for f in view.facts(t, "filing") if str(f.value).upper() in PERIODIC]
+    if not filed_:
+        return False
+    have = [f.known_at[:10] for a in (CASH, "us-gaap:Assets", OP_CF) for f in view.facts(t, a)]
+    return not have or max(filed_) > max(have)
+
+
+def refresh_accounts(bank: Bank, tickers: list[str], log=print) -> dict:
+    """Read the SEC accounts again for every company that has reported since the bank last read them, so the cash
+    pieces are current. One request a company; a company with nothing new is not asked for."""
+    from brain.sources import sec
+    done = failed = 0
+    for t in tickers:
+        b = Bank(bank.root)
+        if not stale_accounts(b.view(), t):
+            continue
+        try:
+            b.add_many(sec.facts_for(t))
+            done += 1
+        except Exception:  # noqa: BLE001 - a company with no XBRL accounts, or an outage: tried again next run
+            failed += 1
+    if log:
+        log(f"accounts read again for {done} companies that reported since; {failed} could not be read")
+    return {"read": done, "failed": failed}
+
+
 def _try_read(f: Fact) -> Fact | None:
     try:
         return read_offering(f)
@@ -652,6 +680,82 @@ def radar(bank: Bank, tickers: list[str], log=None, asof: str | None = None) -> 
     return out
 
 
+# ---------- live calls, recorded before their outcome ----------
+RECORD_TOP = 25
+DEFAULT_CALLS = config.ROOT / "research" / "mosaic_calls.jsonl"
+
+
+def calls_path() -> Path:
+    """The radar's recorded calls: ``research/mosaic_calls.jsonl``, or BRAIN_MOSAIC_CALLS (tests, trials)."""
+    return Path(os.environ.get("BRAIN_MOSAIC_CALLS") or DEFAULT_CALLS)
+
+
+def read_calls(path: Path | None = None) -> list[dict]:
+    p = Path(path or calls_path())
+    return [json.loads(ln) for ln in p.read_text().splitlines() if ln.strip()] if p.exists() else []
+
+
+def record(rows: list[dict], path: Path | None = None, top: int = RECORD_TOP) -> int:
+    """Write each picture's ``top`` stocks at the radar's close, with their chances, before the next H sessions
+    trade. Only rows read at the close most rows share are taken, and a close already recorded for a picture is
+    not written again."""
+    if not rows:
+        return 0
+    p = Path(path or calls_path())
+    dates = [r["date"] for r in rows]
+    asof = max(set(dates), key=dates.count)
+    have = {(c["asof"], c["picture"]) for c in read_calls(p)}
+    new = []
+    for pic in PICTURES:
+        if (asof, pic) in have:
+            continue
+        for r in sorted((r for r in rows if r["date"] == asof), key=lambda r: -r[pic])[:top]:
+            new.append({"asof": asof, "picture": pic, "t": r["t"], "chance": round(r[pic], 5),
+                        "habit": round(r[pic + "_habit"], 5), "h": H, "model_sha": model_sha(), "at": now_iso()})
+    if new:
+        p.parent.mkdir(parents=True, exist_ok=True)
+        with p.open("a") as fh:
+            fh.writelines(canon(c) + "\n" for c in new)
+    return len(new)
+
+
+def score(bank: Bank, path: Path | None = None) -> dict:
+    """Each picture's recorded calls whose H sessions have closed: how many, for how many the filing came, and
+    the mean chance they were given. A call is open until its H sessions have closed."""
+    v = bank.view()
+    cal = shocks.market(v)[0]
+    seen: dict[str, dict] = {}
+    out = {pic: {"judged": 0, "came": 0, "chance": 0.0, "open": 0} for pic in PICTURES}
+    for c in read_calls(path):
+        o = out[c["picture"]]
+        i = int(np.searchsorted(cal, c["asof"]))
+        if i + c["h"] > len(cal) - 1:
+            o["open"] += 1
+            continue
+        mk = seen.setdefault(c["t"], marks(v, c["t"], cal))
+        idx = {"sale": mk.get("sale", []), "books": [*mk.get("nt", []), *mk.get("nonrel", [])],
+               "cuts": mk.get("cut", [])}[c["picture"]]
+        o["judged"] += 1
+        o["came"] += int(any(i < k <= i + c["h"] for k in fresh(idx)))
+        o["chance"] += c["chance"]
+    for o in out.values():
+        o["chance"] = o["chance"] / o["judged"] if o["judged"] else None
+    return out
+
+
+def score_lines(sc: dict) -> list[str]:
+    out = []
+    for pic, o in sc.items():
+        if o["judged"]:
+            out.append(f"{PICTURES[pic]['name'].capitalize()}: {o['judged']} judged calls; the filing came for "
+                       f"{o['came']} ({o['came'] / o['judged'] * 100:.1f}%); their chances averaged "
+                       f"{o['chance'] * 100:.1f}%. {o['open']} open."
+                       + (" Under 30 judged calls this says nothing yet." if o["judged"] < 30 else ""))
+        else:
+            out.append(f"{PICTURES[pic]['name'].capitalize()}: no judged calls yet; {o['open']} open.")
+    return out
+
+
 # ---------- in words ----------
 def _pct(x: float) -> str:
     return f"{x * 100:+.0f}%"
@@ -897,11 +1001,18 @@ def _cmd(a) -> int:
         fit_and_save(bank)
         return 0
     if a.action == "read":
-        read_offerings(bank, [t.upper() for t in a.tickers] or universe_tickers())
+        names = [t.upper() for t in a.tickers] or universe_tickers()
+        read_offerings(bank, names)
+        refresh_accounts(bank, names)
         return 0
     if a.action == "show":
         for t in a.tickers:
             print("\n".join(card(bank, t)), end="\n\n")
+        return 0
+    if a.action == "score":
+        print("The mosaic radar's recorded calls (research/mosaic_calls.jsonl), judged once their 20 sessions closed. "
+              "The tested evidence is P1a-P3b in research/RESULTS.md.")
+        print("\n".join(score_lines(score(bank))))
         return 0
     model = load()
     if model is None:
@@ -918,13 +1029,19 @@ def _cmd(a) -> int:
         for r in sorted(rows, key=lambda r: -r[pic])[:a.top]:
             print(f"  {r['t']:6} {r[pic] * 100:5.1f}%  (habit alone {r[pic + '_habit'] * 100:4.1f}%)  "
                   + "; ".join(why(part["model"], r)))
+    if a.record:
+        n = record(rows)
+        print(f"\nrecorded {n} calls in {calls_path()}" + ("; commit it before the next session opens" if n else
+                                                           " (this close was already recorded)"))
     return 0
 
 
 def add_cli(sub) -> None:
     p = sub.add_parser("mosaic", help="what a company's public pieces point to: a share sale, late accounts, "
                                       "cuts (docs/MOSAIC.md)")
-    p.add_argument("action", choices=["read", "fit", "radar", "show"])
+    p.add_argument("action", choices=["read", "fit", "radar", "show", "score"])
     p.add_argument("tickers", nargs="*")
     p.add_argument("--top", type=int, default=15)
+    p.add_argument("--record", action="store_true",
+                   help="radar: write each picture's top 25 to research/mosaic_calls.jsonl before their sessions trade")
     p.set_defaults(fn=_cmd)

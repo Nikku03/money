@@ -6,10 +6,12 @@ each of those things becomes public later through a dated SEC filing, and before
 pieces that bear on it. A mosaic sets the pieces side by side and asks what they point to.
 
 ```
-python -m brain mosaic read             # read each prospectus's first page: shares, bonds, or a resale (resumes)
+python -m brain mosaic read             # read new prospectuses' first pages (shares, bonds or a resale) and the
+                                        # accounts of companies that have reported since; resumes if re-run
 python -m brain mosaic fit              # fit the pictures on 2011-2023
 python -m brain mosaic show VIR CADL    # one stock's pieces, each with its filing, and each picture's chance
-python -m brain mosaic radar            # the stocks each picture points to most, with the pieces that say so
+python -m brain mosaic radar [--record] # the stocks each picture points to most, with the pieces that say so
+python -m brain mosaic score            # how the radar's recorded calls did, once their 20 sessions closed
 python -m brain mosaictest declare      # the declared tests (commit, then: mosaictest test)
 ```
 
@@ -87,6 +89,36 @@ least 20 sessions apart so that no two outcomes overlap. The fit read nothing af
 
 All six also need Benjamini-Hochberg q < 0.10 across every gated test in the ledger. The results are in
 `research/RESULTS.md`, under Mosaic.
+
+## What the tests showed
+
+On 2024-01-05 to 2026-09-04: 31 periods, 75,141 stock-periods of 2,500 stocks (`research/RESULTS.md`, Mosaic).
+
+| | A sale of new shares | Late or unreliable accounts | A restructuring or a write-off |
+|---|---|---|---|
+| The event came within 20 sessions | 1.37% | 0.38% | 0.48% |
+| ... in the mosaic's top 5% | 10.6% | 4.1% | 3.3% |
+| ... in the habit's top 5% | 8.8% | 4.1% | 3.0% |
+| Events held by the mosaic's top 5% (the habit's) | 38% (32%) | 54% (54%) | 34% (31%) |
+| Events held by the mosaic's top 10% (the habit's) | 59% (54%) | 64% (60%) | 52% (47%) |
+| Companies with no such event in three years: the usual rate, then the mosaic's top 5% | 0.33%, 1.7% | 0.16%, 0.7% | 0.27%, 1.1% |
+| Does the chance see it coming? | **P1a PASS** | **P2a PASS** | **P3a PASS** |
+| Do the flagged stocks then lag? | **P1b FAIL** | **P2b FAIL** | **P3b FAIL** |
+| Flagged stocks against their peers over 20 sessions | +0.89% | +2.17% | -0.31% |
+
+- **The pieces see each event coming.** Each model beat the habit-only baseline (p 0.0001, 0.0001 and 0.0004) and
+  its chances were calibrated: a stock given 11.5% had a sale 10.6% of the time.
+- **The habit is most of it, and the pieces add to it.** For late accounts the top 5% is the same size either
+  way; what the pieces add is a better order (the top 1% held 35% of the events against the habit's 27%) and a
+  4 to 5 times lift among companies with no record of the event.
+- **Knowing it did not pay.** The typical flagged stock beat about 49% of its peers, too close to half to tell
+  apart, and on average the flagged stocks returned +0.89%, +2.17% and -0.31% against their peers. A coming share
+  sale does not make a stock a short.
+- So the mosaic says where a filing is likely. It does not say which way the stock goes.
+
+`mosaic radar --record` writes each picture's top 25 to `research/mosaic_calls.jsonl` before their sessions trade,
+and `mosaic score` judges them afterwards. Under 30 judged calls that record says nothing yet; the tested evidence
+is the table above.
 
 ## What it is, and what it is not
 

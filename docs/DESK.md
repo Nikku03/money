@@ -51,6 +51,10 @@ writes it.
 - **Its filings.** The opening text of each 8-K's press release and of each share-sale filing since the close.
 - **Its accounts.** Market value, cash, long-term debt, the last four quarters' revenue and net income, and for a
   company losing money how many quarters its cash covers (SEC XBRL).
+- **Its mosaic** (`docs/MOSAIC.md`): what its public pieces pointed to at the scan's close, before the move. For
+  each picture (a sale of new shares, late or unreliable accounts, a restructuring or a write-off) the chance
+  that the filing comes in the next 20 sessions, the usual chance, and the pieces that raise it most. A chance
+  that a filing comes is not a direction.
 - **Its last sessions,** and the earlier checks that flagged it.
 - **Clusters.** Movers tied by a story that names one of them, or by a year of moving together and the same
   direction today. A tie is a lead. Whether the cause is shared is for the note.
