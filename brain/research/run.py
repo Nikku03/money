@@ -218,13 +218,22 @@ def is_gated_range(r: dict) -> bool:
     return is_range(r) and r.get("gate_type") == "pinball"
 
 
+def is_mosaic(r: dict) -> bool:
+    """A test of the mosaic (brain/research/mosaictest.py)."""
+    return r.get("kind") == "mosaic"
+
+
+def is_gated_mosaic(r: dict) -> bool:
+    return is_mosaic(r) and r.get("gate_type") in ("event", "lag")
+
+
 def is_gated_forecast(r: dict) -> bool:
     """A forecast result with a declared gate (F1b, F1c); descriptive ones (F1a, F1d) are not."""
     return is_forecast(r) and (r.get("gate_type") == "ic" or (r.get("gate_type") is None and "p" in r))
 
 
 def _bh_p(r: dict) -> float:
-    if is_forecast(r) or is_link(r) or is_event(r) or is_move(r) or is_shock(r) or is_range(r):
+    if is_forecast(r) or is_link(r) or is_event(r) or is_move(r) or is_shock(r) or is_range(r) or is_mosaic(r):
         p = r.get("p")
         return float(p) if isinstance(p, (int, float)) and math.isfinite(p) else 1.0  # no p counts as 1
     return r["test"]["perm_p"]
@@ -251,7 +260,7 @@ def _link_verdict(r: dict, q: float) -> str:
 
 
 def _move_verdict(r: dict, q: float) -> str:
-    if not (is_gated_move(r) or is_gated_shock(r) or is_gated_range(r)):
+    if not (is_gated_move(r) or is_gated_shock(r) or is_gated_range(r) or is_gated_mosaic(r)):
         return "REPORT"
     if not (r.get("controls") or {}).get("pass"):
         return "FAIL (controls)"
@@ -269,7 +278,7 @@ def verdicts(path=None) -> list[dict]:
     gone = ledger.withdrawn(path)
     tested = {k: r for k, r in res.items()
               if is_hypothesis(r) or is_gated_forecast(r) or is_gated_link(r) or is_gated_event(r)
-              or is_gated_move(r) or is_gated_shock(r) or is_gated_range(r)}
+              or is_gated_move(r) or is_gated_shock(r) or is_gated_range(r) or is_gated_mosaic(r)}
     q_of = dict(zip(tested, bh_adjust([_bh_p(r) for r in tested.values()])))
     rows = []
     for k, r in res.items():
@@ -282,7 +291,7 @@ def verdicts(path=None) -> list[dict]:
         if is_link(r) or is_event(r):
             rows.append({**r, "bh_q": q, "verdict": _link_verdict(r, q)})
             continue
-        if is_move(r) or is_shock(r) or is_range(r):
+        if is_move(r) or is_shock(r) or is_range(r) or is_mosaic(r):
             rows.append({**r, "bh_q": q, "verdict": _move_verdict(r, q)})
             continue
         te = r["test"]
@@ -346,6 +355,7 @@ def report(ledger_path=None, results_path=None) -> str:
     mvs = [r for r in every if is_move(r)]
     shk = [r for r in every if is_shock(r)]
     rng = [r for r in every if is_range(r)]
+    msc = [r for r in every if is_mosaic(r)]
     led = Path(ledger_path or config.LEDGER)
     try:
         led_name = led.resolve().relative_to(config.ROOT.resolve()).as_posix()
@@ -356,7 +366,7 @@ def report(ledger_path=None, results_path=None) -> str:
                           f"Generated {now_iso()} from `{led_name}`. Every number below is copied from the ledger.",
                           "", *_forecast_section(forecasts), *_link_section(links, ledger_path),
                           *_event_section(evts, ledger_path), *_move_section(mvs), *_shock_section(shk),
-                          *_range_section(rng)]) + "\n"
+                          *_range_section(rng), *_mosaic_section(msc)]) + "\n"
         Path(results_path or config.RESULTS).write_text(text)
         return text
     by_uni: dict[str, list[dict]] = {}
@@ -385,6 +395,7 @@ def report(ledger_path=None, results_path=None) -> str:
         + (" and every gated move-size test (see Move sizes)" if any(is_gated_move(r) for r in mvs) else "")
         + (" and every gated shock test (see Shocks)" if any(is_gated_shock(r) for r in shk) else "")
         + (" and every gated weekly-range test (see Weekly ranges)" if any(is_gated_range(r) for r in rng) else "")
+        + (" and every gated mosaic test (see Mosaic)" if any(is_gated_mosaic(r) for r in msc) else "")
         + ".",
         "",
         "| Hypothesis | Universe | Select | TEST net excess / mo | Annualised | Info ratio | Months won | Perm p | BH q | TRAIN net excess / mo | TRAIN p | TEST coverage | Verdict |",
@@ -463,6 +474,8 @@ def report(ledger_path=None, results_path=None) -> str:
         lines += ["", *_shock_section(shk)]
     if rng:
         lines += ["", *_range_section(rng)]
+    if msc:
+        lines += ["", *_mosaic_section(msc)]
     text = "\n".join(lines) + "\n"
     Path(results_path or config.RESULTS).write_text(text)
     return text
@@ -963,3 +976,101 @@ def _range_section(rows: list[dict]) -> list[str]:
                     ("Reading this: a range is a size, not a direction; its middle sits near zero for every stock. The "
                      "universe is chosen today (survivorship: companies bought out or delisted are missing, so the "
                      "largest moves are undercounted), and the pinball loss is in points of log return."), ""]
+
+
+def _mosaic_section(rows: list[dict]) -> list[str]:
+    """The mosaic's tests (brain/research/mosaictest.py, docs/MOSAIC.md): does each picture see its event coming,
+    and do the stocks it flags then lag."""
+    seen = [r for r in rows if r.get("gate_type") == "event"]
+    lag = [r for r in rows if r.get("gate_type") == "lag"]
+    if not (seen or lag):
+        return []
+    names = {"sale": "a sale of new shares", "books": "late or unreliable accounts",
+             "cuts": "a restructuring or a write-off"}
+    lines, words = ["## Mosaic", ""], []
+    if seen:
+        lines += [
+            ("Tests of the mosaic's pictures (`brain/mosaic.py`, `docs/MOSAIC.md`): the chance that a filing revealing "
+             "a hidden event (a prospectus that opens a sale of new shares; a late-filing notice or a notice that "
+             "earlier accounts cannot be relied on; an 8-K reporting a restructuring or an impairment) comes in the "
+             "next 20 sessions, from the public pieces known at a "
+             "week's last close. TEST is read at periods at least 20 sessions apart, so no two outcomes overlap. Per "
+             "stock the score is the log loss of the chance; each period the habit-only baseline's mean loss minus "
+             "the model's, and the statistic is the mean of those period differences with a one-sided sign-flip p. "
+             "The gate, declared before running: positive, p < 0.05, the chances calibrated overall and in each "
+             "period's top twentieth (actual over predicted within the declared band), the controls passing, and "
+             "Benjamini–Hochberg q < 0.10 across every gated test in the ledger."),
+            "",
+            ("| Test | Picture | TEST stock-periods (periods) | Events | Loss | Loss habit | Period difference | 90% "
+             "interval | p | BH q | Actual / predicted (all, top 5%) | Top 5% held | Verdict |"),
+            "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+        ]
+    for r in seen:
+        m = r["metrics"]
+        lo, hi = m["interval90"]
+        q = f"{r['bh_q']:.3f}" if isinstance(r.get("bh_q"), float) and math.isfinite(r["bh_q"]) else "–"
+        verdict = r["verdict"].split(":")[0]
+        cap, capb = m["capture"], m["capture_base"]
+        lines.append(f"| {r['id']} | {r.get('picture')} | {m['rows']} ({m['periods']}) | {m['events']} | "
+                     f"{m['loss']:.5f} | {m['loss_base']:.5f} | {m['diff']:+.5f} | {lo:+.5f}..{hi:+.5f} | {m['p']:.4f} | "
+                     f"{q} | {m['cal_ratio']:.2f}, {m['top_ratio']:.2f} | {cap['top5'] * 100:.0f}% | **{verdict}** |")
+        c = r.get("controls") or {}
+        words.append(
+            f"- **{r['id']}** ({names.get(r.get('picture'), r.get('picture'))}): over {m['rows']} stock-periods of "
+            f"{m['stocks']} stocks from {m['first']} to {m['last']}, the event came within 20 sessions in "
+            f"{m['rate'] * 100:.2f}% of them ({m['events']}). The model's chances averaged "
+            f"{m['mean_chance'] * 100:.2f}% (the habit's {m['mean_base'] * 100:.2f}%) and beat the habit's log loss "
+            f"in {m['periods_better']} of {m['periods']} periods; AUC {m['auc']:.3f} against {m['auc_base']:.3f}. "
+            f"Each period's top 1%, 5% and 10% by the model held {cap['top1'] * 100:.0f}%, {cap['top5'] * 100:.0f}% "
+            f"and {cap['top10'] * 100:.0f}% of the events (the habit's {capb['top1'] * 100:.0f}%, "
+            f"{capb['top5'] * 100:.0f}% and {capb['top10'] * 100:.0f}%); in the model's top 5% the event came "
+            f"{m['top_rate'] * 100:.1f}% of the time against a predicted {m['top_chance'] * 100:.1f}% (in the "
+            f"habit's top 5%: {m['top_rate_base'] * 100:.1f}%)."
+            + (f" Where the company had no such event in three years ({ft['rows']} stock-periods, {ft['events']} "
+               f"events, {ft['rate'] * 100:.2f}%), the model's top 5% there had the event {ft['top_rate'] * 100:.1f}% "
+               f"of the time and held {ft['top_held'] * 100:.0f}% of those events (AUC {ft['auc']:.3f}; reported, "
+               f"not gated)." if (ft := m.get("silent")) else "")
+            + f" Controls: shuffled chances reached p < 0.05 in "
+            f"{c.get('placebo_fpr', float('nan')) * 100:.1f}% of {c.get('n_placebo', 0)} draws; an oracle reached p "
+            f"{c.get('oracle_p', float('nan')):.4f}. {verdict}.")
+    if lag:
+        lines += [
+            *([""] if seen else []),
+            ("Tests of whether the flagged stocks lag: each period's top twentieth by a picture's chance, each "
+             "stock's return over SPY's across the next 20 sessions set against the period's unflagged stocks in "
+             "its 60-session volatility decile. Per period, the share of peers each flagged stock beat less one "
+             "half is averaged (the typical flagged stock). The gate, declared before running: the mean of the "
+             "period values negative with a one-sided sign-flip p < 0.05, the controls passing, and "
+             "Benjamini–Hochberg q < 0.10 across every gated test. The mean return against peers, which a trade "
+             "would earn before costs, is reported beside it and is not gated."),
+            "",
+            ("| Test | Picture | Flagged (periods) | Mean of period values | 90% interval | p | BH q | Return against "
+             "peers | Verdict |"),
+            "| --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+        ]
+    for r in lag:
+        m = r["metrics"]
+        lo, hi = m["interval90"]
+        alo, ahi = m["abnormal_interval90"]
+        q = f"{r['bh_q']:.3f}" if isinstance(r.get("bh_q"), float) and math.isfinite(r["bh_q"]) else "–"
+        verdict = r["verdict"].split(":")[0]
+        lines.append(f"| {r['id']} | {r.get('picture')} | {m['flagged']} ({m['periods']}) | {m['stat']:+.4f} | "
+                     f"{lo:+.4f}..{hi:+.4f} | {m['p']:.4f} | {q} | {m['abnormal'] * 100:+.2f}% | **{verdict}** |")
+        c = r.get("controls") or {}
+        words.append(
+            f"- **{r['id']}** ({names.get(r.get('picture'), r.get('picture'))}): {m['flagged']} flagged stock-periods "
+            f"of {m['stocks']} stocks from {m['first']} to {m['last']}, with a mean chance of "
+            f"{m['mean_chance'] * 100:.1f}%. Over the next 20 sessions their median return over SPY's was "
+            f"{m['median_outcome'] * 100:+.1f}% and their mean {m['mean_outcome'] * 100:+.1f}%, against "
+            f"{m['peer_mean'] * 100:+.1f}% for their peers. They beat {m['percentile'] * 100:.1f}% of peers "
+            f"({m['share_behind'] * 100:.0f}% fell behind the middle one), negative in {m['periods_negative']} of "
+            f"{m['periods']} periods. Against peers they returned {m['abnormal'] * 100:+.2f}% a period on average "
+            f"(90% interval {alo * 100:+.2f}%..{ahi * 100:+.2f}%, one-sided p {m['abnormal_p']:.4f}; reported, not "
+            f"gated). Controls: a random peer in each flagged stock's place reached p < 0.05 in "
+            f"{c.get('placebo_fpr', float('nan')) * 100:.1f}% of {c.get('n_placebo', 0)} draws; an oracle reached p "
+            f"{c.get('oracle_p', float('nan')):.4f}. {verdict}.")
+    return lines + ["", *words, "",
+                    ("Reading this: a chance that a filing comes is not a direction, and a lag measured against peers "
+                     "is not a trade: shorting costs borrow fees and the flagged stocks are volatile. The universe is "
+                     "chosen today (survivorship: companies that failed or were bought are missing, so the events of "
+                     "the weakest companies are undercounted and the flagged stocks' returns flattered)."), ""]

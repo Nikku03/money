@@ -185,6 +185,25 @@ def numbers(bank: Bank, t: str) -> dict | None:
     return out or None
 
 
+def mosaic_of(bank: Bank, tickers: list[str], asof: str) -> dict[str, dict]:
+    """Each stock's mosaic at the close of ``asof`` (brain/mosaic.py, docs/MOSAIC.md): for each picture the chance
+    that the filing revealing it comes in the next 20 sessions, what the company's habit alone says, the usual
+    chance, and the pieces that raise it most. It reads nothing filed after that close, so it is what the pieces
+    pointed to before the move. Empty when no model is fitted."""
+    from brain import mosaic
+    model = mosaic.load()
+    if model is None or not tickers:
+        return {}
+    try:
+        rows = mosaic.radar(bank, tickers, asof=asof)
+    except (Exception, SystemExit):  # noqa: BLE001 - a case file without the mosaic is still a case file
+        return {}
+    return {r["t"]: {"date": r["date"], "pictures": {
+        pic: {"name": mosaic.PICTURES[pic]["name"], "chance": r[pic], "habit": r[pic + "_habit"],
+              "usual": model[pic]["model"]["rate"], "why": mosaic.why(model[pic]["model"], r)}
+        for pic in mosaic.PICTURES}} for r in rows}
+
+
 def memory(before: tuple[str, str] | None = None) -> dict | None:
     """The last recorded note (before the check ``before``: its scan date and stamp): its themes, threads and when."""
     files = sorted(notes_dir().glob("????-??-??/*.json"), key=lambda p: (p.parent.name, p.name))
@@ -201,7 +220,7 @@ def memory(before: tuple[str, str] | None = None) -> dict | None:
 
 # ---------- the case file ----------
 def build(bank: Bank, rec: dict | None = None, moves: dict | None = None, stamp: str | None = None, *,
-          texts: bool = True, accounts: bool = True, log=None, feed=None, quote=None) -> dict:
+          texts: bool = True, accounts: bool = True, pictures: bool = True, log=None, feed=None, quote=None) -> dict:
     """The case file for one check (the latest recorded one when none is given)."""
     if rec is None:
         rec, moves, stamp = latest_watch()
@@ -339,6 +358,11 @@ def build(bank: Bank, rec: dict | None = None, moves: dict | None = None, stamp:
                 m["numbers"] = numbers(bank, m["t"])
             except Exception:  # noqa: BLE001 - one company's accounts must not stop the case file
                 m["numbers"] = None
+    if pictures:
+        say("  the mosaic of the movers")
+        got = mosaic_of(bank, [m["t"] for m in movers], asof)
+        for m in movers:
+            m["mosaic"] = got.get(m["t"])
 
     case = {"check": stamp, "asof": asof, "at": rec["at"], "built_at": now_iso(), "scan": rec["scan"],
             "market": rec["market"], "market_wide": rec["market_wide"], "fear_up": rec["fear_up"], "drivers": drivers,
@@ -413,6 +437,19 @@ def _numbers_line(m: dict) -> str | None:
     return "; ".join(out)
 
 
+def _mosaic_line(m: dict) -> str | None:
+    z = m.get("mosaic")
+    if not z:
+        return None
+    parts = []
+    for p in z["pictures"].values():
+        raised = p["chance"] >= 2 * p["usual"] and p["why"]
+        parts.append(f"{p['name']} {p['chance'] * 100:.1f}% (the usual stock: {p['usual'] * 100:.1f}%"
+                     + (f"; raised most by {', '.join(p['why'][:2])}" if raised else "") + ")")
+    return (f"at the close of {z['date']}, before this move, the chance of the filing in the next 20 sessions: "
+            + "; ".join(parts) + ". A chance that a filing comes, not a direction (tests P1a-P3b, research/RESULTS.md)")
+
+
 def evidence(case: dict) -> dict[str, dict]:
     """Every citable item of a case file by its id: its one-line text, and its page when it has one."""
     ev: dict[str, dict] = {}
@@ -446,6 +483,8 @@ def evidence(case: dict) -> dict[str, dict]:
                                      f"over the last {connect.LOOKBACK} sessions; {p['t']} {_pct(p['move'])} since the close"}
         if (line := _numbers_line(m)):
             ev[f"n:{t}"] = {"text": f"{t} accounts: {line}"}
+        if (line := _mosaic_line(m)):
+            ev[f"z:{t}"] = {"text": f"{t} mosaic: {line}"}
         for f in m["filings"]:
             ev[f["id"]] = {"text": f"{t} {f['what']} at {f['at'][:16]}Z: {f['title']}"
                            + (f" -- {f['text']}" if f["text"] else ""), "url": f["url"]}
@@ -507,6 +546,8 @@ def render(case: dict, detail: list[str] | None = None) -> str:
                 f"{p['t']} {p['corr']:.2f} {_pct(p['move'])}" + ("*" if p["mover"] else "") for p in m["partners"]))
         if f"n:{t}" in ev:
             L.append(f"     [n:{t}] " + ev[f"n:{t}"]["text"].split(": ", 1)[1])
+        if f"z:{t}" in ev:
+            L.append(f"     [z:{t}] " + ev[f"z:{t}"]["text"].split(": ", 1)[1])
         full = bool(detail) and t in detail
         for f in m["filings"]:
             body = f["text"] if full else f["text"][:260]
