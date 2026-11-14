@@ -1,0 +1,293 @@
+{
+ "asof": "2026-11-13",
+ "at": "2026-11-14T04:44:57Z",
+ "calls": [],
+ "case_sha": "99d8f35df7d3dad9",
+ "check": "2026-11-14T0444Z",
+ "claims_noted": 5,
+ "evidence": {
+  "d:10-year yield": {
+   "text": "10-year yield +0.00 pt since the close (its usual day: 0.04 pt)"
+  },
+  "d:bitcoin": {
+   "text": "bitcoin -6.0% since the close (its usual day: 2.7%)"
+  },
+  "k": {
+   "text": "Market: S&P 500 (SPY) -0.6%, Nasdaq 100 (QQQ) -0.8%, Russell 2000 (IWM) -0.7%, S&P 500 futures -0.7%, VIX +0.0% (after the close)"
+  },
+  "m:SAR": {
+   "text": "SAR (name unknown; industry unknown) +6.5% since the close (after the close), outside its 2-in-3 range (-4%..+5%)"
+  },
+  "p:SAR~ARCC": {
+   "text": "SAR and ARCC: market-adjusted daily returns correlated 0.49 over the last 250 sessions; ARCC -0.4% since the close"
+  },
+  "p:SAR~BBDC": {
+   "text": "SAR and BBDC: market-adjusted daily returns correlated 0.50 over the last 250 sessions; BBDC -0.1% since the close"
+  },
+  "p:SAR~GSBD": {
+   "text": "SAR and GSBD: market-adjusted daily returns correlated 0.53 over the last 250 sessions; GSBD +0.1% since the close"
+  },
+  "q:AMD": {
+   "text": "AMD -2.4% since the close of 2026-11-13, as the check read it"
+  },
+  "q:ASST": {
+   "text": "ASST -1.7% since the close of 2026-11-13, as the check read it"
+  },
+  "q:AVGO": {
+   "text": "AVGO -1.9% since the close of 2026-11-13, as the check read it"
+  },
+  "q:BMNR": {
+   "text": "BMNR -1.8% since the close of 2026-11-13, as the check read it"
+  },
+  "q:COIN": {
+   "text": "COIN -1.3% since the close of 2026-11-13, as the check read it"
+  },
+  "q:CRWV": {
+   "text": "CRWV -2.6% since the close of 2026-11-13, as the check read it"
+  },
+  "q:DELL": {
+   "text": "DELL -1.6% since the close of 2026-11-13, as the check read it"
+  },
+  "q:FWDI": {
+   "text": "FWDI -3.8% since the close of 2026-11-13, as the check read it"
+  },
+  "q:INBX": {
+   "text": "INBX -2.5% since the close of 2026-11-13, as the check read it"
+  },
+  "q:INTC": {
+   "text": "INTC -1.7% since the close of 2026-11-13, as the check read it"
+  },
+  "q:MOD": {
+   "text": "MOD -1.2% since the close of 2026-11-13, as the check read it"
+  },
+  "q:MRVL": {
+   "text": "MRVL -2.7% since the close of 2026-11-13, as the check read it"
+  },
+  "q:MSTR": {
+   "text": "MSTR -1.7% since the close of 2026-11-13, as the check read it"
+  },
+  "q:NVDA": {
+   "text": "NVDA -1.1% since the close of 2026-11-13, as the check read it"
+  },
+  "q:SBET": {
+   "text": "SBET -2.0% since the close of 2026-11-13, as the check read it"
+  },
+  "q:SMCI": {
+   "text": "SMCI -2.1% since the close of 2026-11-13, as the check read it"
+  },
+  "r:bitcoin": {
+   "text": "the stocks that moved most with bitcoin over the year, today: MSTR -1.7% (its rate implies -8.1%), SBET -2.0% (its rate implies -7.6%), BMNR -1.8% (its rate implies -8.3%), COIN -1.3% (its rate implies -6.5%), ASST -1.7% (its rate implies -9.2%), FWDI -3.8% (its rate implies -7.4%)"
+  },
+  "t1": {
+   "text": "the last note (2026-11-13T2023Z), theme \"AI hardware marked down after Nvidia's chief resigned\": Nvidia's chief executive resigned, effective immediately, on Thursday Nov 12, amid a scandal that includes reports of Nvidia chips diverted to China in breach of export controls. On Thursday money moved out of Nvidia and into its rivals. On Friday that reversed and the whole group was sold: AMD -9.0%, Dell -7.6%, CoreWeave -6.0%, Broadcom -5.1%, the median chip stock -3.6%."
+  },
+  "x:SAR": {
+   "text": "SAR: the market carried -0.3% (beta 0.53); left over after the market and its drivers +6.9%"
+  }
+ },
+ "note": {
+  "backdrop": "After Friday's close prices kept slipping in thin after-hours trading: the S&P 500 fund -0.6%, the Nasdaq 100 fund -0.8%, and no stock outside its 9-in-10 range. In the session the S&P 500 fell 0.4% to 7,561 and the Nasdaq Composite 0.9%, though all three indexes ended the week up (Kiplinger). Beneath it is rates. Wholesale prices rose 6.5% from a year earlier, the highest since November 2022; futures traders put the chance of a Fed rate rise in December at 90% (Kiplinger); the 10-year yield reached 5.17% (TIKR); the dollar reached its highest against the euro since April 2025, and AFP ties the stubborn inflation partly to energy costs from the US-Iran war. Crypto sold off across the board on Friday evening (Business Upturn: bitcoin -4.21% to $68,369 at 5:55pm ET). The check's own bitcoin line (-6.0%) and futures line (-0.7%) are measured from Thursday, not from Friday's close: Yahoo's Nov 13 daily bar for bitcoin has no close, and the futures' Nov 13 bar is held back while their session counts as open. On Yahoo's 15-minute chart bitcoin was $68,526 at Friday's 4pm close and about $67,000 at the check: about -2% since the close.",
+  "backdrop_evidence": [
+   "k",
+   "d:bitcoin",
+   "d:10-year yield",
+   "https://www.kiplinger.com/investing/stocks/nasdaq-drops-friday-on-nvidia-fallout-but-ends-the-week-up-stock-market-today",
+   "https://finance.yahoo.com/markets/stocks/articles/wall-street-stocks-mostly-lower-230704278.html",
+   "https://www.tikr.com/blog/amd-sinks-9-marvell-down-5-as-chip-rally-reverses-and-treasury-yields-hit-5?ref=yahoofinance",
+   "https://businessupturn.com/usa/money/cryptocurrency/crypto-markets-plunge-across-the-board-in-friday-evening-sell-off/",
+   "https://query1.finance.yahoo.com/v8/finance/chart/BTC-USD?range=5d&interval=15m&includePrePost=true"
+  ],
+  "by": "agent",
+  "calls": [],
+  "check": "2026-11-14T0444Z",
+  "read": [
+   {
+    "direction": "none",
+    "published": "2026-11-13T21:10:46Z",
+    "says": "Nasdaq -0.9% to 25,136 and S&P 500 -0.4% to 7,561 on Friday, both up on the week; October PPI +0.3% on the month, +6.5% on the year (highest since Nov 2022); 90% odds of a December Fed hike",
+    "tier": "reported",
+    "url": "https://www.kiplinger.com/investing/stocks/nasdaq-drops-friday-on-nvidia-fallout-but-ends-the-week-up-stock-market-today"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-13T23:07:04Z",
+    "says": "AFP: Nvidia fell another 2% Friday after its chief's downfall; AMD -8.8% and Broadcom nearly -5% after rallying Thursday, which Edward Jones called profit-taking; the dollar rose on persistent inflation and Fed hike expectations",
+    "tier": "reported",
+    "url": "https://finance.yahoo.com/markets/stocks/articles/wall-street-stocks-mostly-lower-230704278.html"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-13T22:05:39Z",
+    "says": "AMD fell 9% Friday, giving back part of a ~30% week, with no news of its own; Marvell -5%, Intel -3%, Arm -5%; Nvidia -2% after HSBC cut it to Hold; the 10-year yield hit 5.17% after the wholesale inflation reading; AMD at about 35 times forward earnings after the drop",
+    "ticker": "AMD",
+    "tier": "reported",
+    "url": "https://www.tikr.com/blog/amd-sinks-9-marvell-down-5-as-chip-rally-reverses-and-treasury-yields-hit-5?ref=yahoofinance"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-13T23:48:45Z",
+    "says": "Fortune: Super Micro says Megaspeed, the Singapore company at the center of the scandal around Nvidia's former chief, was never its customer; Singapore said it got only limited cooperation from Super Micro; US prosecutors are reportedly examining whether Super Micro hardware with Nvidia GPUs was smuggled to China; no one has been charged",
+    "ticker": "SMCI",
+    "tier": "reported",
+    "url": "https://finance.yahoo.com/technology/articles/super-micro-run-jensen-huang-234845498.html"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-13T22:55:09Z",
+    "says": "Friday evening crypto sell-off: bitcoin -4.21% to $68,369, ether -4.34%, solana -4.18%, every major coin down; the page reads it as broad de-risking, not one coin's news",
+    "tier": "reported",
+    "url": "https://businessupturn.com/usa/money/cryptocurrency/crypto-markets-plunge-across-the-board-in-friday-evening-sell-off/"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-14T04:30:00Z",
+    "says": "bitcoin's 15-minute prices: $71,398 at Thursday's 4pm ET close, $68,526 at Friday's 4pm ET close, $67,019 at 11:30pm ET Friday",
+    "tier": "reported",
+    "url": "https://query1.finance.yahoo.com/v8/finance/chart/BTC-USD?range=5d&interval=15m&includePrePost=true"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-13T21:01:00Z",
+    "says": "SAR's last regular-session trades near $11.45 to $11.50 and a $11.47 close; its only after-hours print is $12.219 at 4:00 to 4:01pm ET, with no volume reported",
+    "tier": "reported",
+    "url": "https://query1.finance.yahoo.com/v8/finance/chart/SAR?range=5d&interval=15m&includePrePost=true"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-13T21:02:00Z",
+    "says": "Inhibrx's third-quarter release: cash $199.5m on Sept 30; updated Ewing sarcoma data for ozekibart due at CTOS on Nov 19-20; ozekibart in chondrosarcoma under regulatory review",
+    "ticker": "INBX",
+    "tier": "reported",
+    "url": "https://finance.yahoo.com/healthcare/articles/inhibrx-reports-third-quarter-2026-210200645.html"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-13T21:25:32Z",
+    "says": "Inhibrx's automatic shelf (S-3ASR) includes a $150m at-the-market sales agreement with Stifel and LifeSci Capital dated Nov 13, 2026; 14,759,126 shares outstanding; last sale $87.745 on Nov 12",
+    "ticker": "INBX",
+    "tier": "reported",
+    "url": "https://www.sec.gov/Archives/edgar/data/2007919/000200791926000061/inbxs-3asrxnovember2026atm.htm"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-14T01:18:51Z",
+    "says": "Simply Wall St: Modine is reported to be in acquisition talks with Samsung Electronics over its data center cooling division, which has a sizeable order backlog",
+    "ticker": "MOD",
+    "tier": "reported",
+    "url": "https://finance.yahoo.com/markets/stocks/articles/modine-manufacturing-mod-reported-talks-011851223.html"
+   }
+  ],
+  "singles": [
+   {
+    "beneath": "At Thursday's $87.75 and 14.76m shares the company was worth about $1.3bn, so $150m is about 12% of it. Shares can be sold into the market gradually, whenever the company chooses. Its updated Ewing sarcoma data are due at CTOS on Nov 19-20. The sale is public and filed, so this is not hidden information. Whether such sales weigh on the price afterward has not been tested here.",
+    "cause": "Inhibrx reported its third quarter at 4:02pm ET on Friday (cash $199.5m on Sept 30). Twenty-three minutes later it filed an automatic shelf that includes a $150m at-the-market share-sale agreement, dated the same day, with Stifel and LifeSci Capital. The stock fell 5.1% in the session and 2.5% after the close.",
+    "evidence": [
+     "q:INBX",
+     "https://finance.yahoo.com/healthcare/articles/inhibrx-reports-third-quarter-2026-210200645.html",
+     "https://www.sec.gov/Archives/edgar/data/2007919/000200791926000061/inbxs-3asrxnovember2026atm.htm"
+    ],
+    "kind": "reported",
+    "t": "INBX"
+   },
+   {
+    "beneath": "The division is the part of Modine that is priced as AI infrastructure. No price, and no confirmation or denial from either company, has been reported.",
+    "cause": "Modine rose 27.9% on Friday on a reported Samsung approach. The evening's report says the talks concern its data center cooling division, which has a sizeable order backlog, not the whole company. After the close it slipped 1.2%.",
+    "evidence": [
+     "q:MOD",
+     "https://finance.yahoo.com/markets/stocks/articles/modine-manufacturing-mod-reported-talks-011851223.html"
+    ],
+    "kind": "reported",
+    "t": "MOD"
+   },
+   {
+    "beneath": "Its partners (other business development companies) were flat, it has no filing and no story, and the market moved it -0.3%. A stray print, not a move. The check reads the latest print whatever its volume.",
+    "cause": "SAR's +6.5% rests on one after-hours print at $12.219 at 4:00 to 4:01pm ET, with no volume reported, against an $11.47 close.",
+    "evidence": [
+     "m:SAR",
+     "x:SAR",
+     "p:SAR~GSBD",
+     "p:SAR~BBDC",
+     "p:SAR~ARCC",
+     "https://query1.finance.yahoo.com/v8/finance/chart/SAR?range=5d&interval=15m&includePrePost=true"
+    ],
+    "kind": "inferred",
+    "t": "SAR"
+   }
+  ],
+  "themes": [
+   {
+    "beneath": "Rates. The 10-year yield reached 5.17% after wholesale inflation came in at 6.5% for the year, and traders price a December Fed hike at 90%. A higher yield lowers what stocks priced on profits years away are worth (inferred), which is why the chip group fell with yields and not only with Nvidia. AMD's valuation fell from 39 to about 35 times next year's earnings, near its five-year average (TIKR).",
+    "cause": "Nvidia's chief executive resigned this week amid a scandal that includes export-control probes. On Friday Nvidia fell 2.0% after HSBC cut it to Hold, and the rivals that had risen on Thursday fell harder: AMD -8.8%, Broadcom -4.8%. After the close the whole group kept slipping together: Marvell -2.7%, CoreWeave -2.6%, AMD -2.4%, Super Micro -2.1%, Broadcom -1.9%, Intel -1.7%, Dell -1.6%, Nvidia -1.1%.",
+    "evidence": [
+     "t1",
+     "q:NVDA",
+     "q:AMD",
+     "q:AVGO",
+     "q:MRVL",
+     "q:INTC",
+     "q:DELL",
+     "q:SMCI",
+     "q:CRWV",
+     "https://finance.yahoo.com/markets/stocks/articles/wall-street-stocks-mostly-lower-230704278.html",
+     "https://www.tikr.com/blog/amd-sinks-9-marvell-down-5-as-chip-rally-reverses-and-treasury-yields-hit-5?ref=yahoofinance",
+     "https://finance.yahoo.com/technology/articles/super-micro-run-jensen-huang-234845498.html",
+     "https://www.kiplinger.com/investing/stocks/nasdaq-drops-friday-on-nvidia-fallout-but-ends-the-week-up-stock-market-today"
+    ],
+    "kind": "reported",
+    "mechanism": "Two things reach the group at once. The money that moved from Nvidia into its rivals on Thursday is leaving again: Edward Jones called it profit-taking, and TIKR says AMD gave back part of a 30% week with no news of its own. And the scandal's probes reach the server makers that ship Nvidia's chips: Singapore is investigating Megaspeed and says Super Micro gave limited cooperation, and US prosecutors are reportedly looking at whether Super Micro hardware with Nvidia GPUs reached China. Super Micro says Megaspeed was never its customer, and no one has been charged.",
+    "members": [
+     "NVDA",
+     "AMD",
+     "AVGO",
+     "MRVL",
+     "INTC",
+     "DELL",
+     "SMCI",
+     "CRWV"
+    ],
+    "name": "AI hardware: Friday's selling carried past the close",
+    "watch": "Nvidia's results on Tuesday Nov 17, its first without Huang. Whether AMD and Broadcom move with Nvidia (one group being marked down) or against it (money rotating between rivals). Any charge, or any official statement, in the Megaspeed probes, and Super Micro's answer to Singapore."
+   },
+   {
+    "beneath": "The page calls it broad de-risking, not one coin's news. That it shares a cause with the rate-hike odds and the strong dollar is my inference, not the page's.",
+    "cause": "Crypto sold off across the board on Friday evening: bitcoin -4.21%, ether -4.34%, solana -4.18% (Business Upturn).",
+    "evidence": [
+     "r:bitcoin",
+     "d:bitcoin",
+     "q:MSTR",
+     "q:SBET",
+     "q:BMNR",
+     "q:COIN",
+     "q:ASST",
+     "q:FWDI",
+     "https://businessupturn.com/usa/money/cryptocurrency/crypto-markets-plunge-across-the-board-in-friday-evening-sell-off/",
+     "https://query1.finance.yahoo.com/v8/finance/chart/BTC-USD?range=5d&interval=15m&includePrePost=true"
+    ],
+    "kind": "inferred",
+    "mechanism": "These are the stocks that moved most with bitcoin over the past year, at about 1.1 to 1.5 times its move. After the close they fell 1.3% to 3.8%. The case file's implied falls (-6.5% to -9.2%) use the check's -6.0% bitcoin line, which is measured from Thursday. On bitcoin's -2% since Friday's close the same rates imply about -2.4% to -3.4%, close to what they did.",
+    "members": [
+     "MSTR",
+     "SBET",
+     "BMNR",
+     "COIN",
+     "ASST",
+     "FWDI"
+    ],
+    "name": "Crypto-heavy stocks followed bitcoin's evening slide, at their usual rates",
+    "watch": "Bitcoin's weekend. These stocks reopen Monday at roughly their rate times whatever bitcoin does by then; a much larger or smaller gap would mean something of their own."
+   }
+  ],
+  "threads": [
+   "Does Nvidia's report on Tuesday move its dependents (Dell, CoreWeave, Super Micro) more than Nvidia itself?",
+   "On Monday, do AMD and Broadcom fall with Nvidia (one group marked down) or rise against it (money rotating between rivals)?",
+   "CD fell 18.7% on Friday with no filing and no story; no filing came out that evening either. Look again on Monday.",
+   "Vir's offering at $10 closes on Nov 16; it closed Friday at $9.96 and slipped 0.4% after the close. Does it hold?",
+   "Modine: what price for the cooling division, and what stays with Modine?",
+   "Global Payments: its 12.0% fall on Thursday is still unexplained, and there was no filing that evening.",
+   "Inhibrx: does it report sales under the new at-the-market agreement before or after its Ewing sarcoma data on Nov 19-20?",
+   "Do the crypto-heavy stocks open Monday at their usual rate times bitcoin's weekend move?"
+  ],
+  "unexplained": []
+ },
+ "recorded_at": "2026-11-14T04:51:54Z"
+}
