@@ -190,8 +190,15 @@ def capture(log=None) -> int:
 
 
 def merge_talk(path: Path) -> int:
-    """Merge a packed talk (``save``'s ``talk.jsonl.gz``, downloaded from Drive) into this home's talk."""
+    """Merge a packed talk (``save``'s ``talk.jsonl.gz``, downloaded from Drive) into this home's talk. Drive's
+    download tool may save it as JSON with the file base64-encoded under ``content``; that is read too."""
     raw = Path(path).read_bytes()
+    if raw[:1] == b"{":
+        try:
+            import base64
+            raw = base64.b64decode(json.loads(raw)["content"])
+        except (ValueError, KeyError):
+            pass
     text = gzip.decompress(raw).decode() if raw[:2] == b"\x1f\x8b" else raw.decode()
     have = {c["id"] for c in read_talk()}
     new = [c for c in (json.loads(ln) for ln in text.splitlines() if ln.strip()) if c["id"] not in have]

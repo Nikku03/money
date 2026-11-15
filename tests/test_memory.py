@@ -137,6 +137,12 @@ class TalkTest(MemoryTest):
         self.assertEqual(memory.merge_talk(packed), 1)
         self.assertEqual(memory.merge_talk(packed), 0)
         self.assertEqual(memory.read_talk()[0]["text"], "make an all around mosaic")
+        import base64                                                     # Drive's download: JSON, base64 inside
+        wrapped = memory.talk_dir() / "download.txt"
+        wrapped.write_text(json.dumps({"id": "x", "title": "talk.jsonl.gz",
+                                       "content": base64.b64encode(packed.read_bytes()).decode()}))
+        os.remove(memory.talk_dir() / memory.TALK)
+        self.assertEqual(memory.merge_talk(wrapped), 1)
 
     def test_markdown_is_cut_by_heading_and_carries_its_headings(self):
         text = "# Top\n\nintro\n\n## Part\n\n" + "\n\n".join(f"paragraph {i} " + "word " * 80 for i in range(12))
