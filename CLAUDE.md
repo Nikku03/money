@@ -43,9 +43,10 @@ bank (`docs/MEMORY.md`) keeps everything said and done, searchable, with a copy 
 (folder `money-brain memory`).
 
 - **Start of every session:** `python -m brain memory start` (where the work stands, the person's latest
-  messages, whether the local home was reset). If it says `memory/` or the talk is missing, download the newest
-  `MEMORY`, `JOURNAL` and `talk` files from the Drive folder (the download saves a file), put the notes in
-  `memory/` and run `python -m brain memory load --talk FILE`.
+  messages, whether the local home was reset). If it says `memory/` or the talk is missing, `pip install
+  fastembed` (the meaning model; the person approved it on 2026-11-15), download the newest `MEMORY`, `JOURNAL`,
+  `talk` and `vectors` files from the Drive folder (the download saves a file), put the notes in `memory/` and run
+  `python -m brain memory load --talk FILE --vectors FILE`.
 - **Before answering anything that may have come up before** (a decision, a number, an earlier request, why
   something was built a way), run `python -m brain memory recall "..."` with concrete words, and `memory show ID`
   for the full passage. Do this whenever the conversation summary lacks the detail, rather than guessing. Search

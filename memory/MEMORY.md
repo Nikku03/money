@@ -9,9 +9,11 @@ Updated 2026-11-15 (memory bank added). The log of what happened, by date, is `m
 - This file is the always-read page of the memory bank (`docs/MEMORY.md`). The rest is searched:
   `python -m brain memory recall "..."` over every turn of the conversation since 2026-11-10 (the person's
   messages, replies, reasoning, tool calls and results, compaction summaries), the journal, kept facts, the docs,
-  the research notes and the desk notes. Start a session with `python -m brain memory start`.
+  the research notes and the desk notes, ranked by words and by meaning (a small embedding model, `pip install
+  fastembed`, approved by the person 2026-11-15). Start a session with `python -m brain memory start`.
 - Copies live in the Google Drive folder `money-brain memory`, one file per save, named with the date; the newest
-  is current. After a reset, download the newest `talk` file and run `memory load --talk FILE`.
+  is current. After a reset, download the newest `talk` and `vectors` files and run
+  `memory load --talk FILE --vectors FILE`.
 - After meaningful work: rewrite what changed here, add to `JOURNAL.md`, `memory save`, commit, push, upload.
 - The local home's market data (2.7 GB of SEC data, 3.1 GB of prices) is public and rebuilt by commands
   (`memory status` lists them). Yahoo prices are never committed or uploaded.

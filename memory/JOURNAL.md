@@ -46,3 +46,9 @@ FAIL); "the market runs on chains of cause and effect, news and catalysts": the 
   docs against a question (BM25 with a short synonym list), `memory show` gives a passage in full, `memory
   remember` keeps a fact, `memory start` opens a session. Installing a meaning-based search model was refused by
   the permission system; not worked around; recall works without it. The packed talk goes to Drive with the notes.
+- Then: "yes, install the smarter search; how many tokens can it save in 2-3 GB?" Installed fastembed with the
+  model `BAAI/bge-small-en-v1.5` (65 MB). Recall now fuses a ranking by words with a ranking by meaning. Long
+  messages are kept in pieces of about 900 characters so each has one meaning. Vectors are saved to Drive with the
+  talk. Measured: 2-3 GB holds about 210-320 million tokens locally with vectors, 340-520 million packed on Drive,
+  1.4-2.1 billion as packed text alone; at five days' pace, 3 GB is over ten years. Embedding runs at about two
+  passages a second, so the vectors are worth keeping; past about 100,000 passages search needs an index.

@@ -5,6 +5,8 @@ import json
 import os
 import tempfile
 
+import numpy as np
+
 from brain import memory
 from brain.bank import Bank
 from tests.util import TempHome, filed
@@ -66,8 +68,10 @@ class TalkTest(MemoryTest):
         self._tx = tempfile.TemporaryDirectory()
         self.tx = os.path.join(self._tx.name, "session.jsonl")
         os.environ["BRAIN_TRANSCRIPTS"] = os.path.join(self._tx.name, "*.jsonl")
+        memory._model = False                                            # words alone here; MeaningTest brings one
 
     def tearDown(self):
+        memory._model = None
         os.environ.pop("BRAIN_TRANSCRIPTS", None)
         self._tx.cleanup()
         super().tearDown()
@@ -90,18 +94,21 @@ class TalkTest(MemoryTest):
             line("user", "u3", "2026-11-14T16:27:05Z", [{"type": "tool_result", "tool_use_id": "t1",
                                                           "content": "x" * 5000}]),
         ])
-        self.assertEqual(memory.capture(), 6)
+        self.assertEqual(memory.capture(), 8)                            # the long result is kept in 3 pieces
         talk = memory.read_talk()
-        self.assertEqual([c["kind"] for c in talk], ["summary", "you", "thought", "me", "tool", "result"])
+        self.assertEqual(list(dict.fromkeys(c["kind"] for c in talk)), ["summary", "you", "thought", "me", "tool",
+                                                                        "result"])
         you = next(c for c in talk if c["kind"] == "you")
         self.assertIn("[email]", you["text"])
         self.assertNotIn("example.com", you["text"])
         tool = next(c for c in talk if c["kind"] == "tool")
         self.assertIn("api_key=[secret]", tool["text"])
         result = next(c for c in talk if c["kind"] == "result")
-        self.assertLess(len(result["text"]), 2700)                      # head and tail of a long result
-        self.assertIn("characters left out", result["text"])
-        self.assertEqual([x["kind"] for x in memory.find(result["id"])], ["tool", "result"])   # a result and its call
+        whole = memory.find(result["id"])                                # a result comes with its call
+        self.assertEqual([x["kind"] for x in whole], ["tool", "result", "result", "result"])
+        kept = "".join(x["text"] for x in whole[1:])
+        self.assertLess(len(kept), 2700)                                 # head and tail of a long result
+        self.assertIn("characters left out", kept)
         self.assertEqual(memory.capture(), 0)                            # nothing new: nothing kept twice
         self.write([line("user", "u4", "2026-11-15T20:08:00Z", "save it to my drive", origin={"kind": "human"})], "a")
         self.assertEqual(memory.capture(), 1)                            # only the new line is read
@@ -151,3 +158,90 @@ class TalkTest(MemoryTest):
         self.assertTrue(all(p["head"] == "Top > Part" for p in parts[1:]))
         self.assertGreater(len(parts), 3)
         self.assertTrue(all(p["text"].startswith(p["head"]) for p in parts))
+
+
+class FakeModel:
+    """Meaning, made up: each text is a count of the groups its words fall in, so 'wants' and 'prefer' are close."""
+    GROUPS = (("prefer", "want", "wants", "like"), ("short", "plain", "simple", "brief"), ("bitcoin", "crypto"),
+              ("mistake", "flaw", "wrong", "error"), ("measured", "counted", "read"))
+
+    def __init__(self):
+        self.calls = 0
+
+    def _vec(self, text):
+        low = text.lower()
+        v = np.array([sum(low.count(w) for w in g) for g in self.GROUPS] + [0.01], float)
+        return v / np.linalg.norm(v)
+
+    def embed(self, texts, batch_size=32):
+        texts = list(texts)
+        self.calls += len(texts)
+        return [self._vec(t) for t in texts]
+
+    def query_embed(self, texts):
+        return [self._vec(t) for t in texts]
+
+
+class MeaningTest(TalkTest):
+    def setUp(self):
+        super().setUp()
+        self.model = FakeModel()
+        memory._model = self.model
+
+    def tearDown(self):
+        memory._model = None
+        super().tearDown()
+
+    def test_meaning_finds_what_shares_no_words_and_vectors_are_kept(self):
+        self.write([
+            line("assistant", "a1", "2026-11-14T04:47:00Z", [{"type": "text", "text":
+                 "I found a flaw: bitcoin's -6% was measured from Thursday evening."}]),
+            line("assistant", "a2", "2026-11-14T05:00:00Z", [{"type": "text", "text": "The scan covered 2450 stocks."}]),
+        ])
+        talk = {"me"}
+        by_words = memory.recall("how was crypto counted", kinds=talk, meaning=False)
+        self.assertEqual(by_words, [])                                   # not one word in common
+        hits = memory.recall("how was crypto counted", kinds=talk)
+        self.assertEqual(hits[0]["text"][:15], "I found a flaw:")
+        self.assertEqual(hits[0]["by"], "words and meaning")
+        first = self.model.calls
+        memory.recall("bitcoin", kinds=talk)
+        self.assertEqual(self.model.calls, first)                        # nothing new: nothing embedded again
+        self.write([line("user", "u9", "2026-11-15T20:00:00Z", "keep answers short", origin={"kind": "human"})], "a")
+        memory.recall("bitcoin", kinds=talk)
+        self.assertEqual(self.model.calls, first + 1)                    # only the new passage
+
+    def test_without_a_model_recall_ranks_by_words(self):
+        memory._model = False
+        self.write([line("user", "u1", "2026-11-14T16:26:00Z", "make an all around mosaic", origin={"kind": "human"})])
+        hits = memory.recall("mosaic", kinds={"you"})
+        self.assertEqual((hits[0]["by"], hits[0]["text"]), ("words", "make an all around mosaic"))
+
+    def test_fusion_puts_a_passage_high_in_both_rankings_first(self):
+        a, b, c = ({"id": i, "kind": "me", "text": i} for i in "abc")
+        got = [x["id"] for _, x in memory.fuse([(3, a), (2, b), (1, c)], [(0.9, b), (0.8, c), (0.7, a)], 3)]
+        self.assertEqual(got, ["b", "a", "c"])
+
+    def test_a_long_message_is_kept_in_pieces_and_shown_whole(self):
+        long = "\n\n".join(f"paragraph {i}: " + "detail " * 60 for i in range(8))
+        self.write([line("assistant", "a1", "2026-11-14T16:27:00Z", [{"type": "text", "text": long}])])
+        memory.capture()
+        parts = memory.read_talk()
+        self.assertGreater(len(parts), 3)
+        self.assertTrue(all(len(p["text"]) <= memory.PART_CHARS * 1.5 for p in parts))
+        self.assertEqual(len({p["of"] for p in parts}), 1)
+        whole = memory.find(parts[2]["id"])
+        self.assertEqual([p["part"] for p in whole], list(range(len(parts))))
+        self.assertEqual(" ".join(p["text"] for p in whole).count("paragraph"), 8)
+
+    def test_vectors_come_back_from_their_saved_copy(self):
+        memory._model = FakeModel()
+        self.write([line("user", "u1", "2026-11-14T16:26:00Z", "keep it plain and short", origin={"kind": "human"})])
+        memory.recall("plain", kinds={"you"})
+        saved = memory.talk_dir() / "saved.npz"
+        os.replace(memory.talk_dir() / memory.VECTORS, saved)            # the machine was reset
+        self.assertGreater(memory.merge_vectors(saved), 0)
+        self.assertEqual(memory.merge_vectors(saved), 0)
+        before = memory._model.calls
+        memory.recall("plain", kinds={"you"})
+        self.assertEqual(memory._model.calls, before)                    # nothing had to be embedded again

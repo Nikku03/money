@@ -35,6 +35,8 @@ from collections import Counter
 from datetime import UTC, datetime
 from pathlib import Path
 
+import numpy as np
+
 from brain import config
 from brain.bank import Bank, Fact, canon
 
@@ -49,8 +51,9 @@ REBUILD = (
     ("the mosaic's model is committed; only its data needs reading", "python -m brain mosaic radar", "a few minutes"),
 )
 RESULT_HEAD, RESULT_TAIL = 1800, 700     # characters of a tool's result kept: its start and its end
+PART_CHARS = 900                          # a long message is kept as pieces of about this size
 TOOL_CHARS, THOUGHT_CHARS = 1500, 4000
-CHUNK_CHARS = 1800                        # a document is cut into passages of about this size, at paragraph breaks
+CHUNK_CHARS = 1200                        # a document is cut into passages of about this size, at paragraph breaks
 WEIGHT = {"you": 1.3, "note": 1.3, "summary": 1.2, "me": 1.2, "doc": 1.0, "result": 0.9, "tool": 0.6,
           "thought": 0.8}
 K1, B = 1.2, 0.75
@@ -117,9 +120,14 @@ def chunks_of(line: dict) -> list[dict]:
 
     def add(i: int, kind: str, text: str, **extra) -> None:
         text = mask(text).strip()
-        if text:
-            out.append({"id": hashlib.sha1(f"{uid}:{i}".encode()).hexdigest()[:16], **base, "kind": kind,
-                        "text": text, **extra})
+        if not text:
+            return
+        whole = hashlib.sha1(f"{uid}:{i}".encode()).hexdigest()[:16]
+        parts = pieces(text)
+        for p, piece in enumerate(parts):
+            pid = whole if p == 0 else hashlib.sha1(f"{uid}:{i}:{p}".encode()).hexdigest()[:16]
+            out.append({"id": pid, **base, "kind": kind, "text": piece, **extra,
+                        **({"of": whole, "part": p} if len(parts) > 1 else {})})
 
     if kind_of == "user":
         if line.get("isCompactSummary"):
@@ -144,6 +152,26 @@ def chunks_of(line: dict) -> list[dict]:
                 what = inp.get("description") or ""
                 body = inp.get("command") or inp.get("query") or inp.get("prompt") or canon(inp)
                 add(i, "tool", _clip(f"{b.get('name')}: {what}\n{body}", TOOL_CHARS), tid=b.get("id"))
+    return out
+
+
+def pieces(text: str, size: int = PART_CHARS) -> list[str]:
+    """A long text cut into pieces of about ``size`` characters, at paragraph or line breaks where it can be, so
+    that each piece has one meaning to rank by (a long summary read as one block blurs). A short text is one piece."""
+    if len(text) <= size * 1.3:
+        return [text]
+    out, buf = [], ""
+    for para in re.split(r"(\n\s*\n|\n)", text):
+        if len(buf) + len(para) > size and buf.strip():
+            out.append(buf.strip())
+            buf = ""
+        buf += para
+        while len(buf) > size * 1.5:                     # one long line: cut at a space
+            cut = buf.rfind(" ", 0, size) if buf.rfind(" ", 0, size) > size // 2 else size
+            out.append(buf[:cut].strip())
+            buf = buf[cut:]
+    if buf.strip():
+        out.append(buf.strip())
     return out
 
 
@@ -189,16 +217,39 @@ def capture(log=None) -> int:
     return len(new)
 
 
-def merge_talk(path: Path) -> int:
-    """Merge a packed talk (``save``'s ``talk.jsonl.gz``, downloaded from Drive) into this home's talk. Drive's
-    download tool may save it as JSON with the file base64-encoded under ``content``; that is read too."""
+def _unwrap(path: Path) -> bytes:
+    """A file's bytes. Drive's download tool may save a file as JSON with its bytes base64-encoded under
+    ``content``; that is unwrapped."""
     raw = Path(path).read_bytes()
     if raw[:1] == b"{":
         try:
             import base64
-            raw = base64.b64decode(json.loads(raw)["content"])
+            return base64.b64decode(json.loads(raw)["content"])
         except (ValueError, KeyError):
             pass
+    return raw
+
+
+def merge_vectors(path: Path) -> int:
+    """Merge a vector file (``save``'s ``vectors.npz``, downloaded from Drive) into this home's cache, so a reset
+    does not mean embedding everything again. Returns how many vectors were new here."""
+    import io
+    z = np.load(io.BytesIO(_unwrap(path)))
+    p = talk_dir() / VECTORS
+    have: dict = {}
+    if p.exists():
+        y = np.load(p)
+        have = dict(zip(y["keys"].tolist(), y["vecs"]))
+    new = {k: v for k, v in zip(z["keys"].tolist(), z["vecs"]) if k not in have}
+    have.update(new)
+    if have:
+        np.savez(p, keys=np.array(list(have)), vecs=np.stack(list(have.values())))
+    return len(new)
+
+
+def merge_talk(path: Path) -> int:
+    """Merge a packed talk (``save``'s ``talk.jsonl.gz``, downloaded from Drive) into this home's talk."""
+    raw = _unwrap(path)
     text = gzip.decompress(raw).decode() if raw[:2] == b"\x1f\x8b" else raw.decode()
     have = {c["id"] for c in read_talk()}
     new = [c for c in (json.loads(ln) for ln in text.splitlines() if ln.strip()) if c["id"] not in have]
@@ -384,16 +435,114 @@ def snippet(text: str, query: str, width: int = 500) -> str:
     return ("... " if at else "") + text[at:at + width].strip() + (" ..." if at + width < len(text) else "")
 
 
-def recall(query: str, k: int = 8, kinds: set[str] | None = None, since: str | None = None) -> list[dict]:
-    return [{**x, "score": s} for s, x in rank(library(kinds), widen(query), k, since)]
+# ---------- meaning: a small embedding model, when it is installed ----------
+MODEL = "BAAI/bge-small-en-v1.5"   # 384 numbers per passage; about 65 MB; runs on the CPU (pip install fastembed)
+VECTORS = "vectors.npz"
+EMBED_CHARS = 2000                 # the model reads about 512 tokens; a passage's start is what it embeds
+POOL, RRF_K = 100, 60              # each ranking's top POOL meet; a passage scores 1/(RRF_K + its place) in each
+_model = None
+
+
+def embedder():
+    """The embedding model, loaded once; None when fastembed is not installed or the model cannot be had (then
+    recall ranks by words alone)."""
+    global _model
+    if _model is None:
+        os.environ.setdefault("HF_HUB_DISABLE_PROGRESS_BARS", "1")
+        os.environ.setdefault("HF_HUB_VERBOSITY", "error")
+        try:
+            from fastembed import TextEmbedding
+            _model = TextEmbedding(MODEL, cache_dir=str(talk_dir() / "model"))
+        except Exception:  # noqa: BLE001 - not installed, or no network for the first download: words alone
+            _model = False
+    return _model or None
+
+
+def _vkey(x: dict) -> str:
+    return x["id"] + ":" + hashlib.sha1(x["text"][:EMBED_CHARS].encode()).hexdigest()[:10]
+
+
+def vectors(items: list[dict], log=None) -> np.ndarray | None:
+    """A unit vector per passage, from the cache in the local home; passages new or changed since are embedded and
+    the cache rewritten with exactly the current ones. None when there is no model."""
+    p = talk_dir() / VECTORS
+    keys = [_vkey(x) for x in items]
+    cache: dict[str, np.ndarray] = {}
+    if p.exists():
+        z = np.load(p)
+        cache = dict(zip(z["keys"].tolist(), z["vecs"]))
+    todo = [i for i, k in enumerate(keys) if k not in cache]
+    if todo:
+        model = embedder()
+        if model is None:
+            return None
+        if log:
+            log(f"embedding {len(todo)} new passages")
+        got = model.embed([items[i]["text"][:EMBED_CHARS] for i in todo], batch_size=32)
+        for i, v in zip(todo, got):
+            v = np.asarray(v, np.float32)
+            cache[keys[i]] = (v / (np.linalg.norm(v) or 1.0)).astype(np.float16)
+    if todo or len(cache) != len(set(keys)):
+        live = dict.fromkeys(keys)
+        np.savez(p, keys=np.array(list(live)), vecs=np.stack([cache[k] for k in live]) if live else
+                 np.zeros((0, 384), np.float16))
+    return np.stack([cache[k] for k in keys]).astype(np.float32) if keys else np.zeros((0, 384), np.float32)
+
+
+def by_meaning(items: list[dict], vecs: np.ndarray, query: str, k: int) -> list[tuple[float, dict]]:
+    """The ``k`` passages whose meaning is closest to the question's (cosine of their vectors)."""
+    model = embedder()
+    if model is None or not len(items):
+        return []
+    q = np.asarray(next(iter(model.query_embed([query]))), np.float32)
+    s = vecs @ (q / (np.linalg.norm(q) or 1.0))
+    top = np.argsort(-s)[:k]
+    return [(float(s[i]), items[i]) for i in top]
+
+
+def fuse(by_words: list[tuple[float, dict]], by_sense: list[tuple[float, dict]], k: int) -> list[tuple[float, dict]]:
+    """One ranking from two (reciprocal rank fusion): a passage near the top of either comes near the top, and one
+    near the top of both comes first. The kind of passage weighs as in BM25."""
+    score: dict[str, float] = {}
+    item: dict[str, dict] = {}
+    for ranking in (by_words, by_sense):
+        for place, (_, x) in enumerate(ranking):
+            score[x["id"]] = score.get(x["id"], 0.0) + WEIGHT.get(x["kind"], 1.0) / (RRF_K + place + 1)
+            item[x["id"]] = x
+    return sorted(((s, item[i]) for i, s in score.items()), key=lambda p: -p[0])[:k]
+
+
+def recall(query: str, k: int = 8, kinds: set[str] | None = None, since: str | None = None,
+           meaning: bool = True) -> list[dict]:
+    """The passages that best answer ``query``: by words (BM25) and, when the model is there, by meaning, fused.
+    A question of nothing but common words asks nothing."""
+    if not words(query):
+        return []
+    every = library()
+    keep = [x for x in every if (not kinds or x["kind"] in kinds) and (not since or (x.get("at") or "") >= since)]
+    words_ = rank(keep, widen(query), POOL)
+    vecs = vectors(every) if meaning else None
+    if vecs is None:
+        return [{**x, "score": s, "by": "words"} for s, x in words_[:k]]
+    mask_ = np.array([(not kinds or x["kind"] in kinds) and (not since or (x.get("at") or "") >= since)
+                      for x in every], bool)
+    sense = by_meaning([x for x, m in zip(every, mask_) if m], vecs[mask_], query, POOL)
+    return [{**x, "score": s, "by": "words and meaning"} for s, x in fuse(words_, sense, k)]
 
 
 def find(pid: str) -> list[dict]:
-    """One passage by its id; a tool call comes with its result, and a result with its call."""
+    """One passage by its id, whole: a piece comes with the rest of its message, a tool call with its result and a
+    result with its call."""
     talk = read_talk()
     hit = [x for x in talk if x["id"] == pid] or [x for x in documents() if x["id"] == pid]
-    if hit and hit[0].get("tid"):
-        return sorted([x for x in talk if x.get("tid") == hit[0]["tid"]], key=lambda x: x["kind"] != "tool")
+    if not hit:
+        return []
+    x = hit[0]
+    if x.get("tid"):
+        group = [y for y in talk if y.get("tid") == x["tid"]]
+        return sorted(group, key=lambda y: (y["kind"] != "tool", y.get("part", 0)))
+    if x.get("of"):
+        return sorted([y for y in talk if y.get("of") == x["of"]], key=lambda y: y["part"])
     return hit
 
 
@@ -472,9 +621,11 @@ def _print_status(bank: Bank) -> None:
 def _cmd(a) -> int:
     if a.action == "recall":
         q = " ".join(a.words)
-        hits = recall(q, a.k, set(a.kind) if a.kind else None, a.since)
+        hits = recall(q, a.k, set(a.kind) if a.kind else None, a.since, meaning=not a.words_only)
         if not hits:
             print("nothing in the memory bank matches")
+        elif hits[0].get("by") == "words":
+            print("(ranked by words only: pip install fastembed for ranking by meaning too)")
         for i, h in enumerate(hits, 1):
             where = h.get("src") or f"talk {h.get('session', '')[:8]}"
             print(f"[{i}] {_when(h) or '-':16} {h['kind']:7} {where}  (show {h['id']})")
@@ -492,6 +643,12 @@ def _cmd(a) -> int:
     if a.action == "capture":
         capture(log=print)
         return 0
+    if a.action == "index":
+        every = library()
+        v = vectors(every, log=print)
+        print(f"{len(every)} passages" + (f", each with a vector ({v.nbytes // 1024} KB in memory)" if v is not None
+                                          else "; no model, so words only (pip install fastembed)"))
+        return 0
     bank = Bank()
     if a.action == "start":
         capture()
@@ -505,15 +662,19 @@ def _cmd(a) -> int:
         return 0
     if a.action == "save":
         capture()
+        vectors(library(), log=print)
         n = export_claims(bank)
         print(f"wrote {n} claims to {memory_dir() / CLAIMS}; packed {len(read_talk())} passages of talk")
         print(f"Files to keep on Google Drive (folder '{DRIVE_FOLDER}'), with the sha256 an upload names each by:")
-        for f in [*files(), describe(pack_talk())]:
+        packed = [describe(pack_talk())] + ([describe(talk_dir() / VECTORS)] if (talk_dir() / VECTORS).exists() else [])
+        for f in [*files(), *packed]:
             print(f"  {f['name']:16} {f['bytes']:>9} bytes  sha256:{f['sha256']}:{f['path']}")
         return 0
     if a.action == "load":
         if a.talk:
             print(f"merged {merge_talk(Path(a.talk))} passages of talk from {a.talk}")
+        if a.vectors:
+            print(f"merged {merge_vectors(Path(a.vectors))} vectors from {a.vectors}")
         print(f"put {import_claims(bank)} claims back into the bank from {memory_dir() / CLAIMS}")
     _print_status(bank)
     print(f"Read {memory_dir() / 'MEMORY.md'} first: it says where the work stands.")
@@ -523,7 +684,8 @@ def _cmd(a) -> int:
 def add_cli(sub) -> None:
     p = sub.add_parser("memory", help="the agent's memory bank: recall what was said and done, keep it across "
                                       "resets (docs/MEMORY.md)")
-    p.add_argument("action", choices=["recall", "show", "remember", "start", "capture", "save", "load", "status"])
+    p.add_argument("action", choices=["recall", "show", "remember", "start", "capture", "index", "save", "load",
+                                      "status"])
     p.add_argument("words", nargs="*", help="recall: the question; show: passage ids; remember: the fact")
     p.add_argument("--k", type=int, default=8, help="recall: how many passages; start: how many messages")
     p.add_argument("--kind", action="append", choices=sorted(WEIGHT), help="recall only these kinds of passage")
@@ -531,4 +693,6 @@ def add_cli(sub) -> None:
     p.add_argument("--width", type=int, default=500, help="recall: characters shown of each passage")
     p.add_argument("--topic", help="remember: a word to file the fact under")
     p.add_argument("--talk", help="load: a talk file downloaded from Drive, to merge in")
+    p.add_argument("--vectors", help="load: a vectors file downloaded from Drive, to merge in")
+    p.add_argument("--words-only", action="store_true", help="recall: rank by words alone (no model)")
     p.set_defaults(fn=_cmd)
