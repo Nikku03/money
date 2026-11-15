@@ -52,3 +52,7 @@ FAIL); "the market runs on chains of cause and effect, news and catalysts": the 
   talk. Measured: 2-3 GB holds about 210-320 million tokens locally with vectors, 340-520 million packed on Drive,
   1.4-2.1 billion as packed text alone; at five days' pace, 3 GB is over ten years. Embedding runs at about two
   passages a second, so the vectors are worth keeping; past about 100,000 passages search needs an index.
+- Then: "do we have this conversation in the memory bank? Add that session too." Yes for this one (since
+  2026-11-10 word for word). Imported the other trading session, `session_01MSaQVTPoBwSsjdSBSk9kdd`, through the
+  remote-session tools: 38 saved pages, 2,277 passages, 2026-11-04 to 11-09, with the person's 34 messages there
+  (its reasoning is not shared). Built `memory import --session`.

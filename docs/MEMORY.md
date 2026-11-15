@@ -13,6 +13,7 @@ python -m brain memory remember "a fact" --topic drive   # keep a fact no file s
 python -m brain memory index                    # embed passages not embedded yet (recall does it too)
 python -m brain memory save                     # pack it all for Drive (and save the bank's claims)
 python -m brain memory load [--talk F] [--vectors F]     # after a reset: merge the Drive copies back
+python -m brain memory import --session ID PAGES...       # another session's history, from saved event pages
 python -m brain memory status                   # what the local home holds, and whether it was reset
 ```
 
@@ -46,6 +47,22 @@ Two rankings, fused:
 - `--since 2026-11-14` keeps only what happened from that date; `--kind you` only the person's messages;
   `--words-only` skips the model. Without the model installed, recall ranks by words alone and says so.
 - Recall leaves out its own calls and output, so asking twice does not find the first asking.
+
+## Other sessions
+
+The person works in more than one session. Another session's history comes through the remote-session tools,
+not the transcripts on this machine:
+
+1. `list_sessions` (mine) finds it; `list_events` with `kinds: ["user", "assistant"]` and `limit: 100` reads its
+   newest page, and `before_id` set to a page's `first_id` reads the page before, until `has_more` is false or
+   missing. Each page is too large to show and is saved to a file.
+2. `python -m brain memory import --session SESSION_ID FILE ...` adds every page to the talk, each passage
+   labelled with the session's name. A page imported twice adds nothing.
+
+That session's messages, replies, tool calls, results and summaries come through; its reasoning does not (it is
+not shared between sessions). System notices (hook messages, image notes, notifications) are not taken for the
+person's words. Imported so far: `session_01MSaQVTPoBwSsjdSBSk9kdd` (2026-11-04 to 11-09, the paper traders
+F1-F5 and the options checks V1/O1 on branch `claude/sleepy-goldberg-2ma18z`).
 
 ## Keeping it across resets
 

@@ -259,6 +259,9 @@ def merge_talk(path: Path) -> int:
     return len(new)
 
 
+NOT_A_PERSON = ("<", "Stop hook feedback", "[Image", "[Request interrupted", "Caveat:")
+
+
 def event_lines(path: Path) -> list[dict]:
     """Transcript lines from one saved page of another session's events (the remote-session tool's list_events,
     as saved to a file), oldest first, in the shape ``chunks_of`` reads. That session's own reasoning is not shared
@@ -285,7 +288,7 @@ def event_lines(path: Path) -> list[dict]:
             said = _text_of(content).lstrip()
             if said.startswith("This session is being continued"):
                 line["isCompactSummary"] = True
-            elif not said.startswith("<"):                  # tags mark notifications and system text, not a person
+            elif not said.startswith(NOT_A_PERSON):        # notifications, hook messages, image notes
                 line["origin"] = {"kind": "human"}
         out.append(line)
     return out
