@@ -2,19 +2,19 @@
 
 Read this first in every session. It is the agent's notebook for this repo: what the person wants, what exists, what
 was found, what is running and what is open. Details live in the files it points to; search them when needed.
-Updated 2026-11-15. The log of what happened, by date, is `memory/JOURNAL.md`.
+Updated 2026-11-15 (memory bank added). The log of what happened, by date, is `memory/JOURNAL.md`.
 
 ## Keeping this alive
 
-- **Start of a session:** read this file. If `memory/` is missing (a fresh checkout of another branch), find the
-  newest `MEMORY.md` in the Google Drive folder `money-brain memory` (search Drive by title), read it and
-  `JOURNAL.md`, and save `claims.jsonl` back to `memory/`. Then run `python -m brain memory load`: it puts the
-  claims back into the bank and says whether the local home (`var/`) was reset and how to rebuild it.
-- **After meaningful work:** update this file (rewrite what changed), add a dated entry to `JOURNAL.md`, run
-  `python -m brain memory save`, commit `memory/` and push. Then upload the changed files to the Drive folder,
-  each as a new file named with the date (`MEMORY 2026-11-15.md`); the newest by date is the current one.
-- The local home is not kept across resets: 2.7 GB of SEC data and 3.1 GB of prices, all public and rebuilt by
-  commands (`python -m brain memory status` lists them). Yahoo prices are never committed or uploaded.
+- This file is the always-read page of the memory bank (`docs/MEMORY.md`). The rest is searched:
+  `python -m brain memory recall "..."` over every turn of the conversation since 2026-11-10 (the person's
+  messages, replies, reasoning, tool calls and results, compaction summaries), the journal, kept facts, the docs,
+  the research notes and the desk notes. Start a session with `python -m brain memory start`.
+- Copies live in the Google Drive folder `money-brain memory`, one file per save, named with the date; the newest
+  is current. After a reset, download the newest `talk` file and run `memory load --talk FILE`.
+- After meaningful work: rewrite what changed here, add to `JOURNAL.md`, `memory save`, commit, push, upload.
+- The local home's market data (2.7 GB of SEC data, 3.1 GB of prices) is public and rebuilt by commands
+  (`memory status` lists them). Yahoo prices are never committed or uploaded.
 
 ## The person
 
@@ -49,7 +49,7 @@ Updated 2026-11-15. The log of what happened, by date, is `memory/JOURNAL.md`.
 | Partners, drivers, stories (connections) | used by the desk | `brain/connect.py` |
 | Mosaic: share sale, late accounts, cuts | `mosaic read`, `mosaic show`, `mosaic radar --record`, `mosaic score` | `docs/MOSAIC.md` |
 | Trader replays | `scan trader [--one-trade]` | `research/SCAN-TRADER-2026-11.md` |
-| This memory | `memory save`, `memory load`, `memory status` | `docs/MEMORY.md` |
+| Memory bank: recall anything said or done | `memory start`, `memory recall`, `memory remember`, `memory save`, `memory load` | `docs/MEMORY.md` |
 
 ## What was found (verdicts in `research/RESULTS.md`)
 

@@ -1,45 +1,400 @@
-"""Memory between sessions (docs/MEMORY.md): what the agent needs to pick up where it left off after a reset.
+"""The agent's memory bank (docs/MEMORY.md): everything said and done, kept outside the model and searched on demand.
 
-The machine this runs on is reset now and then. The repository comes back from git; the local home (``var/``) does
-not. Most of the home is public data that can be read again: SEC filings and accounts, prices, prospectuses. What
-cannot be read again is what the agent added itself: the claims it noted from pages it read. The agent's own notes
-on the work are files in ``memory/``: ``MEMORY.md`` (where things stand) and ``JOURNAL.md`` (what happened, by
-date). They are committed, and the agent keeps a copy of ``memory/`` on the person's Google Drive.
+A model's context window is fixed. Long conversations are summarized and the details drop out, and the machine is
+reset now and then. So nothing here makes the window larger. It works like a library beside a desk: the window is
+the desk, this is the library, and the agent fetches the pages it needs.
 
-- ``save``: write the bank's claims to ``memory/claims.jsonl``, and list ``memory/``'s files with their sha256, which
-  the agent's Drive upload names each file by.
-- ``load``: put ``memory/claims.jsonl`` back into the bank, then say what the home lacks and the commands that
-  rebuild it.
-- ``status``: what the home holds and lacks, without changing anything.
+What the library holds:
 
-The agent's working memory is not made larger by any of this. It is a notebook the agent reads at the start of a
-session and searches when it needs something it no longer holds.
+- **talk**: every turn of the conversation, from the session transcripts on this machine (``capture``): the person's
+  messages, the agent's replies, its reasoning, each tool call and the head and tail of its result, and the
+  summaries written when the context was compacted. Kept in the local home (``var/memory/talk.jsonl``), with email
+  addresses and keys masked, and on the person's Google Drive (``save`` packs it; ``load --talk`` merges it back).
+- **notes**: ``memory/MEMORY.md`` (where the work stands, read first in every session), ``memory/JOURNAL.md``
+  (what happened, by date) and ``memory/notes.jsonl`` (facts the agent chose to keep, ``remember``). Committed.
+- **docs**: everything the repo writes down: ``CLAUDE.md``, ``README.md``, ``docs/``, ``research/`` notes and
+  results, the desk's recorded notes, and each module's opening docstring. Read in place.
+- **claims**: the claims the agent noted from pages it read, the one part of the bank that cannot be downloaded
+  again (``memory/claims.jsonl``).
+
+``recall`` ranks every passage of the library against a question (BM25, with no model and no network) and prints
+the best ones with their date and source. ``show`` prints one passage in full, a tool call with its result.
+``start`` prints what a new session needs first: where the work stands, the person's latest messages, and whether
+the local home was reset.
 """
 from __future__ import annotations
 
+import glob
+import gzip
 import hashlib
 import json
+import math
 import os
+import re
+from collections import Counter
+from datetime import UTC, datetime
 from pathlib import Path
 
 from brain import config
 from brain.bank import Bank, Fact, canon
 
 CLAIMS = "claims.jsonl"
+NOTES_FILE = "notes.jsonl"
 NOTES = ("MEMORY.md", "JOURNAL.md")
+TALK = "talk.jsonl"
 DRIVE_FOLDER = "money-brain memory"
 REBUILD = (
     ("prices and the latest filings of every scan stock", "python -m brain scan run --refresh", "about 40 minutes"),
     ("company accounts and what each prospectus sells", "python -m brain mosaic read", "about 1-2 hours from empty"),
     ("the mosaic's model is committed; only its data needs reading", "python -m brain mosaic radar", "a few minutes"),
 )
+RESULT_HEAD, RESULT_TAIL = 1800, 700     # characters of a tool's result kept: its start and its end
+TOOL_CHARS, THOUGHT_CHARS = 1500, 4000
+CHUNK_CHARS = 1800                        # a document is cut into passages of about this size, at paragraph breaks
+WEIGHT = {"you": 1.3, "note": 1.3, "summary": 1.2, "me": 1.2, "doc": 1.0, "result": 0.9, "tool": 0.6,
+          "thought": 0.8}
+K1, B = 1.2, 0.75
+_EMAIL = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
+_SECRET = re.compile(r"\b(sk-[A-Za-z0-9_-]{16,}|gh[pousr]_[A-Za-z0-9]{20,}|xox[abp]-[A-Za-z0-9-]{10,}|"
+                     r"AKIA[0-9A-Z]{16})\b|((?:api_?key|token|password|secret)=)[^&\s\"']+", re.IGNORECASE)
+_WORD = re.compile(r"[a-z0-9][a-z0-9_]*")
+_SHOWN = re.compile(r"\(show d?[0-9a-f]{15,16}\)")      # a line of recall's own output
+STOP = frozenset(["a", "an", "and", "are", "as", "at", "be", "but", "by", "for", "from", "has", "have", "i", "if", "in", "into", "is", "it", "its", "of", "on", "or", "so", "that", "the", "their", "then", "there", "these", "this", "to", "was", "were", "what", "when", "which", "who", "will", "with", "you", "your", "we", "our", "not", "no", "do", "does", "did", "can", "could", "would", "should"])
 
 
+# ---------- where things are ----------
 def memory_dir() -> Path:
     """``memory/`` in the repository, or BRAIN_MEMORY (tests, trials)."""
     return Path(os.environ.get("BRAIN_MEMORY") or config.ROOT / "memory")
 
 
+def talk_dir() -> Path:
+    """The local home's ``memory/``: the captured conversation and the capture's place in each transcript."""
+    p = config.home() / "memory"
+    p.mkdir(parents=True, exist_ok=True)
+    return p
+
+
+def transcripts() -> list[Path]:
+    """This repository's session transcripts on this machine (BRAIN_TRANSCRIPTS: a glob, for tests)."""
+    pattern = os.environ.get("BRAIN_TRANSCRIPTS")
+    if not pattern:
+        project = "-" + str(config.ROOT.resolve()).strip("/").replace("/", "-")
+        pattern = str(Path.home() / ".claude" / "projects" / project / "*.jsonl")
+    return [Path(p) for p in sorted(glob.glob(pattern))]
+
+
+# ---------- talk: the conversation, captured ----------
+def mask(text: str) -> str:
+    """Email addresses and keys out of a text before it is kept."""
+    text = _EMAIL.sub("[email]", text)
+    return _SECRET.sub(lambda m: (m.group(2) or "") + "[secret]", text)
+
+
+def _clip(text: str, head: int, tail: int = 0) -> str:
+    if len(text) <= head + tail + 20:
+        return text
+    return text[:head] + f"\n[... {len(text) - head - tail} characters left out ...]\n" + (text[-tail:] if tail else "")
+
+
+def _text_of(content) -> str:
+    if isinstance(content, str):
+        return content
+    if isinstance(content, list):
+        return "\n".join(b.get("text", "") for b in content if isinstance(b, dict) and b.get("type") == "text")
+    return ""
+
+
+def chunks_of(line: dict) -> list[dict]:
+    """The passages one transcript line holds. Kept: the person's messages, compaction summaries, the agent's replies,
+    reasoning and tool calls, and tool results (clipped). Left out: system reminders, notifications, bookkeeping."""
+    kind_of = line.get("type")
+    msg = line.get("message") or {}
+    content = msg.get("content")
+    base = {"at": line.get("timestamp") or "", "session": line.get("sessionId") or ""}
+    uid = line.get("uuid") or hashlib.sha1(canon(line).encode()).hexdigest()
+    out = []
+
+    def add(i: int, kind: str, text: str, **extra) -> None:
+        text = mask(text).strip()
+        if text:
+            out.append({"id": hashlib.sha1(f"{uid}:{i}".encode()).hexdigest()[:16], **base, "kind": kind,
+                        "text": text, **extra})
+
+    if kind_of == "user":
+        if line.get("isCompactSummary"):
+            add(0, "summary", _text_of(content))
+        elif (line.get("origin") or {}).get("kind") == "human" and not line.get("isMeta"):
+            add(0, "you", _text_of(content))
+        elif isinstance(content, list):
+            for i, b in enumerate(content):
+                if isinstance(b, dict) and b.get("type") == "tool_result":
+                    add(i, "result", _clip(_text_of(b.get("content")) or str(b.get("content") or ""),
+                                           RESULT_HEAD, RESULT_TAIL), tid=b.get("tool_use_id"))
+    elif kind_of == "assistant" and isinstance(content, list):
+        for i, b in enumerate(content):
+            if not isinstance(b, dict):
+                continue
+            if b.get("type") == "text":
+                add(i, "me", b.get("text", ""))
+            elif b.get("type") == "thinking":
+                add(i, "thought", _clip(b.get("thinking", ""), THOUGHT_CHARS))
+            elif b.get("type") == "tool_use":
+                inp = b.get("input") or {}
+                what = inp.get("description") or ""
+                body = inp.get("command") or inp.get("query") or inp.get("prompt") or canon(inp)
+                add(i, "tool", _clip(f"{b.get('name')}: {what}\n{body}", TOOL_CHARS), tid=b.get("id"))
+    return out
+
+
+def read_talk(path: Path | None = None) -> list[dict]:
+    p = Path(path or talk_dir() / TALK)
+    if not p.exists():
+        return []
+    return [json.loads(ln) for ln in p.read_text().splitlines() if ln.strip()]
+
+
+def capture(log=None) -> int:
+    """Add every transcript line not read yet to the talk. Each transcript is read from where the last capture
+    stopped; a passage already kept is not kept twice. Returns how many passages were added."""
+    state_p = talk_dir() / "capture.json"
+    state = json.loads(state_p.read_text()) if state_p.exists() else {}
+    have = {c["id"] for c in read_talk()}
+    new = []
+    for t in transcripts():
+        start = state.get(str(t), 0)
+        size = t.stat().st_size
+        if size < start:                         # a transcript rewritten from the start: read it again
+            start = 0
+        with t.open("rb") as fh:
+            fh.seek(start)
+            data = fh.read()
+        end = data.rfind(b"\n") + 1               # a line still being written waits for the next capture
+        for raw in data[:end].splitlines():
+            try:
+                line = json.loads(raw)
+            except ValueError:
+                continue
+            for c in chunks_of(line):
+                if c["id"] not in have:
+                    have.add(c["id"])
+                    new.append(c)
+        state[str(t)] = start + end
+    if new:
+        with (talk_dir() / TALK).open("a") as fh:
+            fh.writelines(canon(c) + "\n" for c in new)
+    state_p.write_text(canon(state))
+    if log:
+        log(f"captured {len(new)} new passages from {len(transcripts())} transcripts")
+    return len(new)
+
+
+def merge_talk(path: Path) -> int:
+    """Merge a packed talk (``save``'s ``talk.jsonl.gz``, downloaded from Drive) into this home's talk."""
+    raw = Path(path).read_bytes()
+    text = gzip.decompress(raw).decode() if raw[:2] == b"\x1f\x8b" else raw.decode()
+    have = {c["id"] for c in read_talk()}
+    new = [c for c in (json.loads(ln) for ln in text.splitlines() if ln.strip()) if c["id"] not in have]
+    if new:
+        with (talk_dir() / TALK).open("a") as fh:
+            fh.writelines(canon(c) + "\n" for c in sorted(new, key=lambda c: c["at"]))
+    return len(new)
+
+
+def pack_talk() -> Path:
+    """The talk, compressed, for the Drive copy."""
+    p = talk_dir() / (TALK + ".gz")
+    src = talk_dir() / TALK
+    p.write_bytes(gzip.compress(src.read_bytes() if src.exists() else b"", mtime=0))
+    return p
+
+
+# ---------- notes and docs ----------
+def remember(text: str, topic: str = "") -> dict:
+    """Keep one fact in ``memory/notes.jsonl``: something the agent will want later and that no file states."""
+    rec = {"at": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"), "topic": topic, "text": mask(text)}
+    p = memory_dir() / NOTES_FILE
+    p.parent.mkdir(parents=True, exist_ok=True)
+    with p.open("a") as fh:
+        fh.write(canon(rec) + "\n")
+    return rec
+
+
+def split_markdown(text: str, src: str, limit: int = CHUNK_CHARS) -> list[dict]:
+    """Passages of a markdown text: by heading, then at paragraph breaks under ``limit`` characters. Each passage
+    starts with the headings it sits under."""
+    out, heads, buf = [], [], []
+
+    def flush() -> None:
+        body = "\n".join(buf).strip()
+        if body:
+            title = " > ".join(heads)
+            out.append({"src": src, "head": title, "text": (title + "\n" if title else "") + body})
+        buf.clear()
+
+    for ln in text.splitlines():
+        m = re.match(r"^(#{1,4})\s+(.*)", ln)
+        if m:
+            flush()
+            heads[:] = heads[:len(m.group(1)) - 1] + [m.group(2).strip()]
+            continue
+        if not ln.strip() and sum(len(x) for x in buf) > limit:
+            flush()
+        buf.append(ln)
+        if sum(len(x) for x in buf) > 2 * limit:     # one long paragraph or table: cut it anyway
+            flush()
+    flush()
+    return out
+
+
+def _desk_passages(p: Path, src: str) -> list[dict]:
+    try:
+        n = json.loads(p.read_text())
+    except ValueError:
+        return []
+    note = n.get("note") or n
+    out = [{"src": src, "head": "backdrop", "text": f"desk note {n.get('check', '')}: {note.get('backdrop', '')}"}]
+    for th in note.get("themes") or []:
+        out.append({"src": src, "head": th.get("name", ""), "text": " ".join(
+            str(th.get(k, "")) for k in ("name", "cause", "mechanism", "beneath", "watch")) + " members: "
+            + ", ".join(th.get("members") or [])})
+    for s in note.get("singles") or []:
+        out.append({"src": src, "head": s.get("t", ""), "text": f"{s.get('t')}: {s.get('cause', '')} {s.get('beneath', '')}"})
+    if note.get("threads"):
+        out.append({"src": src, "head": "open questions", "text": "open questions: " + " | ".join(note["threads"])})
+    return out
+
+
+def documents() -> list[dict]:
+    """Every passage of the repo's written record, with where it is."""
+    root, mem = config.ROOT, memory_dir()
+    files = [root / "CLAUDE.md", root / "README.md", *sorted((root / "docs").glob("*.md")),
+             *sorted((root / "research").glob("*.md")), *sorted(mem.glob("*.md"))]
+    out = []
+    for f in files:
+        if f.exists():
+            rel = f.relative_to(root) if f.is_relative_to(root) else f
+            out += [{**p, "kind": "note" if f.parent == mem else "doc"} for p in split_markdown(f.read_text(), str(rel))]
+    for f in sorted((root / "research" / "desk").glob("*/*.json")):
+        out += [{**p, "kind": "doc"} for p in _desk_passages(f, str(f.relative_to(root)))]
+    notes = mem / NOTES_FILE
+    if notes.exists():
+        for ln in notes.read_text().splitlines():
+            if ln.strip():
+                n = json.loads(ln)
+                out.append({"src": str(notes.relative_to(root)) if notes.is_relative_to(root) else str(notes),
+                            "head": n.get("topic", ""), "kind": "note", "at": n["at"],
+                            "text": (f"[{n['topic']}] " if n.get("topic") else "") + n["text"]})
+    for f in sorted((root / "brain").rglob("*.py")):
+        m = re.match(r'\s*(?:"""|\'\'\')(.*?)(?:"""|\'\'\')', f.read_text(), re.DOTALL)
+        if m and len(m.group(1)) > 80:
+            out.append({"src": str(f.relative_to(root)), "head": "module", "kind": "doc",
+                        "text": f"{f.relative_to(root)}: {m.group(1).strip()[:3000]}"})
+    for i, p in enumerate(out):
+        p.setdefault("id", "d" + hashlib.sha1(f"{p['src']}:{p['head']}:{i}".encode()).hexdigest()[:15])
+    return out
+
+
+# ---------- recall ----------
+# A few words people and the agent use for the same thing; a question is widened by them before it is ranked.
+SAME = [{"prefer", "want", "like", "wish"}, {"explain", "explanation", "simple", "plain", "simply"},
+        {"fail", "failed", "failure"}, {"pass", "passed"}, {"result", "verdict", "outcome"},
+        {"bug", "flaw", "error", "mistake", "wrong"}, {"fix", "fixed", "repair"},
+        {"user", "person", "asked", "asks"}, {"stock", "share", "ticker"}, {"sale", "sell", "offering", "raise"},
+        {"plan", "next", "todo", "pending", "open"}, {"decide", "decided", "decision", "chose", "agreed"},
+        {"schedule", "scheduled", "trigger", "cron"}, {"memory", "remember", "recall", "context"}]
+
+
+def widen(query: str) -> str:
+    """The question with the other words of each group in SAME that it uses."""
+    ws = set(words(query))
+    extra = [w for group in SAME if ws & {words(x)[0] for x in group if words(x)} for w in sorted(group)]
+    return query + (" " + " ".join(extra) if extra else "")
+
+
+def words(text: str) -> list[str]:
+    out = []
+    for w in _WORD.findall(text.lower()):
+        if w in STOP or len(w) < 2:
+            continue
+        if len(w) > 4 and w.endswith("s") and not w.endswith("ss"):
+            w = w[:-1]
+        out.append(w)
+    return out
+
+
+def _about_memory(x: dict) -> bool:
+    """A call of this command, or its output: the library reading itself."""
+    return x["kind"] in ("tool", "result") and any(m in x["text"] for m in ("brain memory", "brain.memory",
+                                                                            "memory.py", "from brain import memory")) \
+        or x["kind"] == "result" and (x["text"].startswith("captured ") or _SHOWN.search(x["text"]) is not None)
+
+
+def library(kinds: set[str] | None = None) -> list[dict]:
+    """Everything recall can read: the talk (captured first) and the written record."""
+    capture()
+    items = [x for x in read_talk() if not _about_memory(x)] + documents()
+    return [x for x in items if not kinds or x["kind"] in kinds]
+
+
+def rank(items: list[dict], query: str, k: int = 8, since: str | None = None) -> list[tuple[float, dict]]:
+    """The ``k`` passages that best answer ``query`` (BM25 over words, weighted by kind of passage)."""
+    q = Counter(words(query))
+    if not q:
+        return []
+    items = [x for x in items if not since or (x.get("at") or "") >= since]   # with a date asked for, undated docs drop out
+    toks = [words(x["text"]) for x in items]
+    n = len(items)
+    if not n:
+        return []
+    avg = sum(len(t) for t in toks) / n
+    df = Counter(w for t in toks for w in set(t) if w in q)
+    idf = {w: math.log(1 + (n - df[w] + 0.5) / (df[w] + 0.5)) for w in q if df[w]}
+    scored = []
+    for x, t in zip(items, toks):
+        if not t:
+            continue
+        tf = Counter(w for w in t if w in idf)
+        if not tf:
+            continue
+        s = sum(idf[w] * tf[w] * (K1 + 1) / (tf[w] + K1 * (1 - B + B * len(t) / avg)) for w in tf)
+        scored.append((s * WEIGHT.get(x["kind"], 1.0), x))
+    scored.sort(key=lambda p: -p[0])
+    return scored[:k]
+
+
+def snippet(text: str, query: str, width: int = 500) -> str:
+    """The part of a passage where the query's words cluster most."""
+    if len(text) <= width:
+        return text
+    q = set(words(query))
+    low = text.lower()
+    best, at = -1, 0
+    for start in range(0, len(text) - width + 1, max(width // 5, 1)):
+        hits = sum(1 for w in q if w in low[start:start + width])
+        if hits > best:
+            best, at = hits, start
+    return ("... " if at else "") + text[at:at + width].strip() + (" ..." if at + width < len(text) else "")
+
+
+def recall(query: str, k: int = 8, kinds: set[str] | None = None, since: str | None = None) -> list[dict]:
+    return [{**x, "score": s} for s, x in rank(library(kinds), widen(query), k, since)]
+
+
+def find(pid: str) -> list[dict]:
+    """One passage by its id; a tool call comes with its result, and a result with its call."""
+    talk = read_talk()
+    hit = [x for x in talk if x["id"] == pid] or [x for x in documents() if x["id"] == pid]
+    if hit and hit[0].get("tid"):
+        return sorted([x for x in talk if x.get("tid") == hit[0]["tid"]], key=lambda x: x["kind"] != "tool")
+    return hit
+
+
+def _when(x: dict) -> str:
+    return (x.get("at") or "")[:16].replace("T", " ")
+
+
+# ---------- the bank's claims ----------
 def claims(bank: Bank) -> list[Fact]:
     """Every claim the bank holds (``brain note``, a desk note's pages), oldest first."""
     out = [f for e in bank.entities() for f in bank.facts(e, "claim")]
@@ -70,9 +425,12 @@ def files(path: Path | None = None) -> list[dict]:
     d = Path(path or memory_dir())
     if not d.exists():
         return []
-    return [{"name": f.name, "path": str(f.resolve()), "bytes": f.stat().st_size,
-             "sha256": hashlib.sha256(f.read_bytes()).hexdigest()}
-            for f in sorted(d.iterdir()) if f.is_file()]
+    return [describe(f) for f in sorted(d.iterdir()) if f.is_file()]
+
+
+def describe(f: Path) -> dict:
+    return {"name": f.name, "path": str(f.resolve()), "bytes": f.stat().st_size,
+            "sha256": hashlib.sha256(f.read_bytes()).hexdigest()}
 
 
 def status(bank: Bank) -> dict:
@@ -90,30 +448,80 @@ def status(bank: Bank) -> dict:
     return {"have": have, "spy_last": spy.as_of if spy else None, "empty": have["stocks with prices"] < 100}
 
 
-def _cmd(a) -> int:
-    bank = Bank()
-    if a.action == "save":
-        n = export_claims(bank)
-        print(f"wrote {n} claims to {memory_dir() / CLAIMS}")
-        print(f"Files to keep on Google Drive (folder '{DRIVE_FOLDER}'), with the sha256 an upload names each by:")
-        for f in files():
-            print(f"  {f['name']:14} {f['bytes']:>8} bytes  sha256:{f['sha256']}:{f['path']}")
-        return 0
-    if a.action == "load":
-        print(f"put {import_claims(bank)} claims back into the bank from {memory_dir() / CLAIMS}")
+# ---------- the command ----------
+def _print_status(bank: Bank) -> None:
     st = status(bank)
     print("The local home holds: " + ", ".join(f"{v} {k}" for k, v in st["have"].items())
-          + f"; SPY's prices to {st['spy_last'] or 'none'}.")
+          + f"; SPY's prices to {st['spy_last'] or 'none'}; {len(read_talk())} passages of talk.")
     if st["empty"]:
         print("The home looks reset. Rebuild it from public sources, in this order:")
         for what, cmd, took in REBUILD:
             print(f"  {cmd:40} {what} ({took})")
+    if not read_talk():
+        print(f"No talk in this home: download the newest 'talk' file from the Drive folder '{DRIVE_FOLDER}' and "
+              "run python -m brain memory load --talk PATH")
+
+
+def _cmd(a) -> int:
+    if a.action == "recall":
+        q = " ".join(a.words)
+        hits = recall(q, a.k, set(a.kind) if a.kind else None, a.since)
+        if not hits:
+            print("nothing in the memory bank matches")
+        for i, h in enumerate(hits, 1):
+            where = h.get("src") or f"talk {h.get('session', '')[:8]}"
+            print(f"[{i}] {_when(h) or '-':16} {h['kind']:7} {where}  (show {h['id']})")
+            print("    " + snippet(h["text"], q, a.width).replace("\n", "\n    "))
+        return 0
+    if a.action == "show":
+        for pid in a.words:
+            for x in find(pid) or [{"kind": "-", "text": f"no passage {pid}"}]:
+                print(f"--- {_when(x)} {x['kind']} {x.get('src') or x.get('session', '')}\n{x['text']}")
+        return 0
+    if a.action == "remember":
+        rec = remember(" ".join(a.words), a.topic or "")
+        print(f"kept in {memory_dir() / NOTES_FILE}: {rec['text']}")
+        return 0
+    if a.action == "capture":
+        capture(log=print)
+        return 0
+    bank = Bank()
+    if a.action == "start":
+        capture()
+        mem = memory_dir() / "MEMORY.md"
+        print(mem.read_text() if mem.exists() else f"no {mem}: load it from the Drive folder '{DRIVE_FOLDER}'")
+        mine = [x for x in read_talk() if x["kind"] == "you"][-a.k:]
+        print("\nThe person's latest messages:")
+        for x in mine:
+            print(f"  {_when(x)}  {x['text'][:300]}")
+        _print_status(bank)
+        return 0
+    if a.action == "save":
+        capture()
+        n = export_claims(bank)
+        print(f"wrote {n} claims to {memory_dir() / CLAIMS}; packed {len(read_talk())} passages of talk")
+        print(f"Files to keep on Google Drive (folder '{DRIVE_FOLDER}'), with the sha256 an upload names each by:")
+        for f in [*files(), describe(pack_talk())]:
+            print(f"  {f['name']:16} {f['bytes']:>9} bytes  sha256:{f['sha256']}:{f['path']}")
+        return 0
+    if a.action == "load":
+        if a.talk:
+            print(f"merged {merge_talk(Path(a.talk))} passages of talk from {a.talk}")
+        print(f"put {import_claims(bank)} claims back into the bank from {memory_dir() / CLAIMS}")
+    _print_status(bank)
     print(f"Read {memory_dir() / 'MEMORY.md'} first: it says where the work stands.")
     return 0
 
 
 def add_cli(sub) -> None:
-    p = sub.add_parser("memory", help="memory between sessions: save the agent's own records, load them after a "
-                                      "reset (docs/MEMORY.md)")
-    p.add_argument("action", choices=["save", "load", "status"])
+    p = sub.add_parser("memory", help="the agent's memory bank: recall what was said and done, keep it across "
+                                      "resets (docs/MEMORY.md)")
+    p.add_argument("action", choices=["recall", "show", "remember", "start", "capture", "save", "load", "status"])
+    p.add_argument("words", nargs="*", help="recall: the question; show: passage ids; remember: the fact")
+    p.add_argument("--k", type=int, default=8, help="recall: how many passages; start: how many messages")
+    p.add_argument("--kind", action="append", choices=sorted(WEIGHT), help="recall only these kinds of passage")
+    p.add_argument("--since", help="recall only passages from this date (YYYY-MM-DD) on")
+    p.add_argument("--width", type=int, default=500, help="recall: characters shown of each passage")
+    p.add_argument("--topic", help="remember: a word to file the fact under")
+    p.add_argument("--talk", help="load: a talk file downloaded from Drive, to merge in")
     p.set_defaults(fn=_cmd)

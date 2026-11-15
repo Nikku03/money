@@ -40,3 +40,9 @@ FAIL); "the market runs on chains of cause and effect, news and catalysts": the 
 - Asked: use the memory bank as an extended context, saved to Google Drive, so nothing is lost when the machine
   resets. Built `memory/` (this journal, `MEMORY.md`, the claims the agent noted) and `brain/memory.py`
   (`memory save`, `memory load`, `memory status`), and a copy on Drive in the folder `money-brain memory`.
+- Then: "I want a memory bank that replaces your context window, so you can remember more." Explained that the
+  window itself is fixed and built a library beside it: `memory capture` keeps every turn of the conversation
+  (1,712 passages since 2026-11-10, emails and keys masked), `memory recall` ranks the conversation, notes and
+  docs against a question (BM25 with a short synonym list), `memory show` gives a passage in full, `memory
+  remember` keeps a fact, `memory start` opens a session. Installing a meaning-based search model was refused by
+  the permission system; not worked around; recall works without it. The packed talk goes to Drive with the notes.
