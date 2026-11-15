@@ -440,6 +440,8 @@ MODEL = "BAAI/bge-small-en-v1.5"   # 384 numbers per passage; about 65 MB; runs 
 VECTORS = "vectors.npz"
 EMBED_CHARS = 2000                 # the model reads about 512 tokens; a passage's start is what it embeds
 POOL, RRF_K = 100, 60              # each ranking's top POOL meet; a passage scores 1/(RRF_K + its place) in each
+DIM = 384
+RECALL_EMBEDS = 60                 # passages a recall embeds before answering; index and save embed the rest
 _model = None
 
 
@@ -462,9 +464,11 @@ def _vkey(x: dict) -> str:
     return x["id"] + ":" + hashlib.sha1(x["text"][:EMBED_CHARS].encode()).hexdigest()[:10]
 
 
-def vectors(items: list[dict], log=None) -> np.ndarray | None:
+def vectors(items: list[dict], log=None, limit: int | None = None) -> np.ndarray | None:
     """A unit vector per passage, from the cache in the local home; passages new or changed since are embedded and
-    the cache rewritten with exactly the current ones. None when there is no model."""
+    the cache rewritten with exactly the current ones. With ``limit``, at most that many are embedded now (the
+    newest first) and the rest get a zero vector, which ranks them last by meaning until ``index`` or ``save``
+    embeds them. None when there is no model."""
     p = talk_dir() / VECTORS
     keys = [_vkey(x) for x in items]
     cache: dict[str, np.ndarray] = {}
@@ -472,6 +476,8 @@ def vectors(items: list[dict], log=None) -> np.ndarray | None:
         z = np.load(p)
         cache = dict(zip(z["keys"].tolist(), z["vecs"]))
     todo = [i for i, k in enumerate(keys) if k not in cache]
+    if limit is not None and len(todo) > limit:
+        todo = sorted(todo, key=lambda i: items[i].get("at") or "", reverse=True)[:limit]
     if todo:
         model = embedder()
         if model is None:
@@ -482,11 +488,12 @@ def vectors(items: list[dict], log=None) -> np.ndarray | None:
         for i, v in zip(todo, got):
             v = np.asarray(v, np.float32)
             cache[keys[i]] = (v / (np.linalg.norm(v) or 1.0)).astype(np.float16)
-    if todo or len(cache) != len(set(keys)):
-        live = dict.fromkeys(keys)
-        np.savez(p, keys=np.array(list(live)), vecs=np.stack([cache[k] for k in live]) if live else
-                 np.zeros((0, 384), np.float16))
-    return np.stack([cache[k] for k in keys]).astype(np.float32) if keys else np.zeros((0, 384), np.float32)
+    live = [k for k in dict.fromkeys(keys) if k in cache]
+    if todo or len(cache) != len(live):
+        np.savez(p, keys=np.array(live), vecs=np.stack([cache[k] for k in live]) if live else
+                 np.zeros((0, DIM), np.float16))
+    zero = np.zeros(len(next(iter(cache.values()))) if cache else DIM, np.float16)
+    return np.stack([cache.get(k, zero) for k in keys]).astype(np.float32) if keys else np.zeros((0, DIM), np.float32)
 
 
 def by_meaning(items: list[dict], vecs: np.ndarray, query: str, k: int) -> list[tuple[float, dict]]:
@@ -521,7 +528,7 @@ def recall(query: str, k: int = 8, kinds: set[str] | None = None, since: str | N
     every = library()
     keep = [x for x in every if (not kinds or x["kind"] in kinds) and (not since or (x.get("at") or "") >= since)]
     words_ = rank(keep, widen(query), POOL)
-    vecs = vectors(every) if meaning else None
+    vecs = vectors(every, limit=RECALL_EMBEDS) if meaning else None
     if vecs is None:
         return [{**x, "score": s, "by": "words"} for s, x in words_[:k]]
     mask_ = np.array([(not kinds or x["kind"] in kinds) and (not since or (x.get("at") or "") >= since)

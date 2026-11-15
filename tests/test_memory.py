@@ -201,6 +201,7 @@ class MeaningTest(TalkTest):
         talk = {"me"}
         by_words = memory.recall("how was crypto counted", kinds=talk, meaning=False)
         self.assertEqual(by_words, [])                                   # not one word in common
+        memory.vectors(memory.library())                                 # index: every passage embedded once
         hits = memory.recall("how was crypto counted", kinds=talk)
         self.assertEqual(hits[0]["text"][:15], "I found a flaw:")
         self.assertEqual(hits[0]["by"], "words and meaning")
@@ -237,7 +238,7 @@ class MeaningTest(TalkTest):
     def test_vectors_come_back_from_their_saved_copy(self):
         memory._model = FakeModel()
         self.write([line("user", "u1", "2026-11-14T16:26:00Z", "keep it plain and short", origin={"kind": "human"})])
-        memory.recall("plain", kinds={"you"})
+        memory.vectors(memory.library())
         saved = memory.talk_dir() / "saved.npz"
         os.replace(memory.talk_dir() / memory.VECTORS, saved)            # the machine was reset
         self.assertGreater(memory.merge_vectors(saved), 0)
@@ -245,3 +246,16 @@ class MeaningTest(TalkTest):
         before = memory._model.calls
         memory.recall("plain", kinds={"you"})
         self.assertEqual(memory._model.calls, before)                    # nothing had to be embedded again
+
+    def test_recall_embeds_a_few_new_passages_and_leaves_the_rest_for_index(self):
+        memory._model = FakeModel()
+        self.write([line("user", f"u{i}", f"2026-11-14T16:{i:02d}:00Z", f"plain note {i}", origin={"kind": "human"})
+                    for i in range(5)])
+        memory.capture()
+        every = memory.library({"you"})
+        v = memory.vectors(every, limit=2)
+        self.assertEqual(memory._model.calls, 2)
+        self.assertEqual(int((np.abs(v).sum(1) > 0).sum()), 2)            # the two newest; the rest wait
+        self.assertEqual([x["text"] for x, row in zip(every, v) if np.abs(row).sum() > 0], ["plain note 3", "plain note 4"])
+        memory.vectors(every)
+        self.assertEqual(memory._model.calls, 5)                           # index embeds the rest, once
