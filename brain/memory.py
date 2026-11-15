@@ -259,6 +259,57 @@ def merge_talk(path: Path) -> int:
     return len(new)
 
 
+def event_lines(path: Path) -> list[dict]:
+    """Transcript lines from one saved page of another session's events (the remote-session tool's list_events,
+    as saved to a file), oldest first, in the shape ``chunks_of`` reads. That session's own reasoning is not shared
+    (it comes back empty) and is left out; its messages, replies, tool calls, results and summaries are kept."""
+    text = Path(path).read_text()
+    body = next((ln for ln in text.split("\n") if ln.lstrip().startswith(("{\"ccr\"", "{\"data\""))), None)
+    if body is None:
+        return []
+    page = json.loads(body)
+    out = []
+    for e in (page.get("ccr") or page).get("data") or []:
+        kind = next((k for k in e if k in ("user", "assistant")), None)
+        if kind is None:
+            continue
+        inner = e[kind]
+        ia = inner.get("internal_anthropic_catchall") or {}
+        msg = ia.get("message") or inner.get("message") or {}
+        line = {"type": kind, "uuid": inner.get("uuid") or ia.get("uuid"), "message": msg,
+                "timestamp": ia.get("timestamp") or inner.get("timestamp") or e.get("created_at") or "",
+                "sessionId": ia.get("session_id") or inner.get("session_id") or ""}
+        content = msg.get("content")
+        if kind == "user" and (isinstance(content, str) or (isinstance(content, list) and content
+                                                             and all(b.get("type") == "text" for b in content))):
+            said = _text_of(content).lstrip()
+            if said.startswith("This session is being continued"):
+                line["isCompactSummary"] = True
+            elif not said.startswith("<"):                  # tags mark notifications and system text, not a person
+                line["origin"] = {"kind": "human"}
+        out.append(line)
+    return out
+
+
+def import_events(paths: list[Path], session: str | None = None) -> int:
+    """Add another session's saved event pages to the talk, each passage labelled with ``session`` (its name in
+    the session list) when given. A passage already kept is not kept twice. Returns how many were added."""
+    have = {c["id"] for c in read_talk()}
+    new = []
+    for p in paths:
+        for line in event_lines(Path(p)):
+            if session:
+                line["sessionId"] = session
+            for c in chunks_of(line):
+                if c["id"] not in have:
+                    have.add(c["id"])
+                    new.append(c)
+    if new:
+        with (talk_dir() / TALK).open("a") as fh:
+            fh.writelines(canon(c) + "\n" for c in sorted(new, key=lambda c: c["at"]))
+    return len(new)
+
+
 def pack_talk() -> Path:
     """The talk, compressed, for the Drive copy."""
     p = talk_dir() / (TALK + ".gz")
@@ -634,7 +685,7 @@ def _cmd(a) -> int:
         elif hits[0].get("by") == "words":
             print("(ranked by words only: pip install fastembed for ranking by meaning too)")
         for i, h in enumerate(hits, 1):
-            where = h.get("src") or f"talk {h.get('session', '')[:8]}"
+            where = h.get("src") or f"talk {h.get('session', '').removeprefix('session_')[:8]}"
             print(f"[{i}] {_when(h) or '-':16} {h['kind']:7} {where}  (show {h['id']})")
             print("    " + snippet(h["text"], q, a.width).replace("\n", "\n    "))
         return 0
@@ -649,6 +700,11 @@ def _cmd(a) -> int:
         return 0
     if a.action == "capture":
         capture(log=print)
+        return 0
+    if a.action == "import":
+        n = import_events([Path(x) for x in a.words], a.session)
+        sessions = sorted({c["session"] for c in read_talk()})
+        print(f"imported {n} passages from {len(a.words)} saved pages; the talk now holds {len(sessions)} sessions")
         return 0
     if a.action == "index":
         every = library()
@@ -691,15 +747,17 @@ def _cmd(a) -> int:
 def add_cli(sub) -> None:
     p = sub.add_parser("memory", help="the agent's memory bank: recall what was said and done, keep it across "
                                       "resets (docs/MEMORY.md)")
-    p.add_argument("action", choices=["recall", "show", "remember", "start", "capture", "index", "save", "load",
-                                      "status"])
-    p.add_argument("words", nargs="*", help="recall: the question; show: passage ids; remember: the fact")
+    p.add_argument("action", choices=["recall", "show", "remember", "start", "capture", "import", "index", "save",
+                                      "load", "status"])
+    p.add_argument("words", nargs="*", help="recall: the question; show: passage ids; remember: the fact; import: "
+                                            "saved pages of another session's events")
     p.add_argument("--k", type=int, default=8, help="recall: how many passages; start: how many messages")
     p.add_argument("--kind", action="append", choices=sorted(WEIGHT), help="recall only these kinds of passage")
     p.add_argument("--since", help="recall only passages from this date (YYYY-MM-DD) on")
     p.add_argument("--width", type=int, default=500, help="recall: characters shown of each passage")
     p.add_argument("--topic", help="remember: a word to file the fact under")
     p.add_argument("--talk", help="load: a talk file downloaded from Drive, to merge in")
+    p.add_argument("--session", help="import: the session's name, to label its passages")
     p.add_argument("--vectors", help="load: a vectors file downloaded from Drive, to merge in")
     p.add_argument("--words-only", action="store_true", help="recall: rank by words alone (no model)")
     p.set_defaults(fn=_cmd)

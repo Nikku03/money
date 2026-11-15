@@ -259,3 +259,27 @@ class MeaningTest(TalkTest):
         self.assertEqual([x["text"] for x, row in zip(every, v) if np.abs(row).sum() > 0], ["plain note 3", "plain note 4"])
         memory.vectors(every)
         self.assertEqual(memory._model.calls, 5)                           # index embeds the rest, once
+
+    def test_another_session_s_saved_pages_join_the_talk(self):
+        def ev(kind, uid, at, content):
+            return {"created_at": at, kind: {"uuid": uid, "internal_anthropic_catchall": {
+                "message": {"content": content}, "session_id": "session_other", "timestamp": at}}}
+        page = {"ccr": {"data": [
+            ev("user", "o1", "2026-11-05T10:00:00Z", "run the paper traders every evening"),
+            ev("user", "o2", "2026-11-05T10:00:01Z", "<task-notification>done</task-notification>"),
+            ev("user", "o3", "2026-11-05T09:00:00Z", "This session is being continued from a previous conversation."),
+            ev("assistant", "o4", "2026-11-05T10:01:00Z", [
+                {"type": "thinking", "thinking": "", "signature": "x"},
+                {"type": "text", "text": "F1-F5 step nightly at 5:47pm New York."}]),
+            {"created_at": "2026-11-05T10:02:00Z", "system": {"uuid": "o5"}}], "has_more": False}}
+        path = os.path.join(self._tx.name, "page-001.txt")
+        with open(path, "w") as fh:
+            fh.write('<other-session nonce="n" untrusted="true">\nAnother session\'s record:\n    '
+                     + json.dumps(page) + '\n</other-session nonce="n">')
+        self.assertEqual(memory.import_events([path]), 3)               # the person, a summary, a reply
+        self.assertEqual(memory.import_events([path]), 0)
+        talk = memory.read_talk()
+        self.assertEqual([c["kind"] for c in talk], ["summary", "you", "me"])
+        self.assertTrue(all(c["session"] == "session_other" for c in talk))
+        hit = memory.recall("when do the paper traders run", kinds={"me"})[0]
+        self.assertIn("5:47pm", hit["text"])
