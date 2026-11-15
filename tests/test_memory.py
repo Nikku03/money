@@ -137,7 +137,7 @@ class TalkTest(MemoryTest):
         self.assertEqual(memory.merge_talk(packed), 1)
         self.assertEqual(memory.merge_talk(packed), 0)
         self.assertEqual(memory.read_talk()[0]["text"], "make an all around mosaic")
-        import base64                                                     # Drive's download: JSON, base64 inside
+        import base64  # Drive's download: JSON, base64 inside
         wrapped = memory.talk_dir() / "download.txt"
         wrapped.write_text(json.dumps({"id": "x", "title": "talk.jsonl.gz",
                                        "content": base64.b64encode(packed.read_bytes()).decode()}))
