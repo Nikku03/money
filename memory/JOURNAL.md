@@ -1,0 +1,42 @@
+# Journal
+
+What was asked and what was done, newest last. One entry per working day; details are in the commits and the files
+named. `memory/MEMORY.md` says where things stand now.
+
+## Before 2026-11-13
+
+Asked and done, in order: an analysis of CATX; whether its options were expensive; a review of the robot traders;
+predictions of move sizes (M1); a scan of the whole market (W1 ranges, S1 shock chances); a two-year backtest;
+small and mid caps added (`universe/us_small.json`, `us_micro.json`, `us_watch.json`); the scan run all the time
+(three scheduled checks a day); a dynamic trader replay, then one trade a day (both below the fixed weekly reading);
+plain explanations of how trades and move sizes work; a catalyst model S3 (ranked better, failed calibration, S3a
+FAIL); "the market runs on chains of cause and effect, news and catalysts": the why-layer for each flagged move
+(`brain/why.py`).
+
+## 2026-11-13
+
+- Asked: "it is only scratching the surface: seeing news, filings, charts, not reasoning or connecting them."
+  Built the desk (`brain/desk.py`, `brain/connect.py`, `docs/DESK.md`): a case file per check and a reasoned note
+  held to rules. Wrote the first note (Nvidia chief's resignation and the AI hardware markdown). The three
+  scheduled checks now end in a note.
+- Asked: "knowing reports are coming and stocks will move is nothing special; where is the surprise?" Agreed: my
+  NVDA, AMD, DELL size calls matched what options priced. Promised to make size calls only when they disagree.
+- Asked: "so our target is using public information to find things only someone with insider info can." Explained
+  the legal mosaic and proposed testing cash runway + a shelf on file + a recent jump.
+
+## 2026-11-14
+
+- After-close check and desk note (`research/desk/2026-11-13/2026-11-14T0444Z.json`). Found the check's bitcoin
+  and futures lines were measured from Thursday; offered a fix.
+- Asked: "make an all around mosaic." Built `brain/mosaic.py`: 40-odd public pieces per stock, the first page of
+  12,783 prospectuses read (most sell bonds), accounts for 2,514 companies. Three pictures: a share sale, late or
+  unreliable accounts, a restructuring or write-off. Declared P1a-P3b, ran them on 2024-2026: the chances beat
+  each company's habit and were calibrated (P1a, P2a, P3a PASS); the flagged stocks did not lag (P1b, P2b, P3b
+  FAIL). Recorded 75 live calls. Asked whether to add the mosaic to the nightly check: no answer yet.
+- Asked: "in simple." Explained: it predicts what a company will announce, not which way the stock goes.
+
+## 2026-11-15
+
+- Asked: use the memory bank as an extended context, saved to Google Drive, so nothing is lost when the machine
+  resets. Built `memory/` (this journal, `MEMORY.md`, the claims the agent noted) and `brain/memory.py`
+  (`memory save`, `memory load`, `memory status`), and a copy on Drive in the folder `money-brain memory`.

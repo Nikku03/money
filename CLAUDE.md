@@ -36,6 +36,21 @@ python -m brain check                              # bank invariants; exit 0 = O
 
 12. `python -m brain mosaic show TICKER` and `python -m brain mosaic radar`: the mosaic (`docs/MOSAIC.md`). It sets a company's public pieces side by side (quarters of cash left, a registration to sell on file, past share sales, a jump, late-filing notices, a change of auditor, officer changes, letters from the SEC's staff, past cuts) and gives the chance that a filing revealing something insiders already know comes in the next 20 sessions: a sale of new shares, late or unreliable accounts, a restructuring or a write-off. Run `python -m brain mosaic read` first, so new prospectuses are read (most sell bonds, not shares). Quote a chance, the usual chance and the test verdicts as the card prints them. `mosaic radar --record` writes the radar's top calls to `research/mosaic_calls.jsonl` before their sessions trade; quote `python -m brain mosaic score` before claiming any live record. On 2024-2026 each chance beat the company's habit alone and was calibrated (P1a, P2a, P3a PASS in `research/RESULTS.md`): the top 5% for a share sale had one 10.6% of the time against 1.37% for all stocks. The habit is most of that. The flagged stocks did not lag their peers (P1b, P2b, P3b FAIL): a chance that a filing comes is not a direction, and a coming share sale is not a short. Every piece is public and cites its filing; if something looks leaked, it is not a piece. A takeover or a failure is not offered: bought and failed companies are missing from the universe. Reading a company's quarter from its partners' results, or from a late report, showed almost nothing on 2011-2023 and was not declared (`research/MOSAIC-2026-11.md`): do not present it as a signal.
 
+## Memory between sessions
+
+The machine is reset now and then, and long conversations are summarized. The agent's notebook is `memory/`
+(`docs/MEMORY.md`), with a copy in the person's Google Drive folder `money-brain memory`.
+
+- **At the start of every session, read `memory/MEMORY.md`.** If `memory/` is missing, find the newest `MEMORY`
+  file in that Drive folder and read it and the newest `JOURNAL`. Then run `python -m brain memory load`: it puts
+  the agent's claims back into the bank and says whether the local home was reset and how to rebuild it.
+- **After meaningful work:** update `memory/MEMORY.md` (rewrite what changed), add a dated entry to
+  `memory/JOURNAL.md`, run `python -m brain memory save`, commit and push `memory/`, and upload the changed files to
+  the Drive folder as new files named with the date.
+- Drive's download tool saves a file locally and names the path; copy it into `memory/` (compare its sha256
+  with the size and hash `memory save` printed when it was uploaded).
+- Search `memory/`, `research/` and `docs/` before saying something is not known.
+
 ## Turning an idea into a tested claim
 
 1. Write it as a signal in `brain/research/signals.py` (point-in-time: it may only use `ctx.adj` and `ctx.view`).
