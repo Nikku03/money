@@ -60,3 +60,15 @@ FAIL); "the market runs on chains of cause and effect, news and catalysts": the 
   `session_018ANuE3nDWJsR8htWjJDJhG`: 251 saved pages, 9,212 passages, 2026-07-29 to 10-21, 160 of the person's
   messages. Found that documents and skills loaded into a session looked like the person's words; now only
   messages sent from the person's app count as theirs (both imported sessions re-read with that rule).
+
+## 2026-11-16
+
+- Asked: "now that you have the full context in the memory bank, analyse why we keep failing and how to make it
+  an absolute best strategy." Read the three sessions' summaries and reports through the memory bank and wrote
+  `research/POSTMORTEM-2026-11.md`: about seventy ideas, eight passes (all size or events), five causes, what
+  survived, the best design. Proposed next: one declared test of "quality tilt plus buying after fear" against SPY,
+  and a graveyard check before any new idea.
+- Found the older session's data-provider API key in plain text in the imported talk. Strengthened the mask
+  (named keys, NAME_KEY=value, a key seen once is masked everywhere), rewrote the stored talk (none left),
+  uploaded a clean copy to Drive and moved the earlier upload to Drive's trash. Told the person; rotating the key
+  is their call.

@@ -2,7 +2,7 @@
 
 Read this first in every session. It is the agent's notebook for this repo: what the person wants, what exists, what
 was found, what is running and what is open. Details live in the files it points to; search them when needed.
-Updated 2026-11-15 (memory bank added). The log of what happened, by date, is `memory/JOURNAL.md`.
+Updated 2026-11-16 (three sessions in the memory bank; the diagnosis). The log of what happened, by date, is `memory/JOURNAL.md`.
 
 ## Keeping this alive
 
@@ -75,6 +75,20 @@ Updated 2026-11-15 (memory bank added). The log of what happened, by date, is `m
   (`research/HISTORY-SMART-MONEY-2026-11.md`, `research/PRECURSORS-2026-11.md`); dynamic trading and trading less
   did not beat a fixed weekly reading (`research/SCAN-TRADER-2026-11.md`).
 - **Options:** my size calls on NVDA, AMD, DELL matched what options already priced: no edge.
+
+## The diagnosis (2026-11-16, `research/POSTMORTEM-2026-11.md`)
+
+Asked: "why do we keep failing and how do we make it the best strategy?" Read all three sessions. About seventy
+ideas run to a verdict; the eight that passed are all about size or which filing comes; every direction or profit
+test failed. Five causes: (1) the question itself, direction of liquid stocks from public news; (2) the bet is
+priced too (options, spreads and binary odds charge what we know; costs take the rest); (3) each win was an
+artifact (survivor lists, look-ahead, small samples, best-of-many, no costs); (4) hunting where odds are worst
+(moonshots, the most volatile stocks, weekly options); (5) hopping between ideas before any forward test matures.
+What survived: sizes, events, "boring beats exciting", buying after fear spikes, expensive stocks reversing into
+earnings (55.5%, weak), size forecast against option prices (V1/O1 running), and one researched drug readout
+entered before it (KOD +174%, n=1). Best design: index core; tilt only with what held, declared once against SPY;
+size engine for risk and option choice; one specialist line of binary events entered before, small and many; one
+idea at a time, checked against the memory bank first.
 
 ## Running now
 
