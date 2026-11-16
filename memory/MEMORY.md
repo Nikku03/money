@@ -123,24 +123,29 @@ idea at a time, checked against the memory bank first.
   an industry lead-lag test; the earnings radar in the 8:07 check; S3 recalibrated going forward; the trader
   replayed on 2022; a better headline picker.
 
-## The market thread (last desk note: `research/desk/2026-11-13/2026-11-16T1339Z.json`, before Monday's open)
+## The market thread (last desk note: `research/desk/2026-11-13/2026-11-16T1738Z.json`, Monday midday)
 
-- AI hardware is being marked down as one group before Nvidia reports (Tue 2026-11-17 after the close, under an
-  interim chief): before Monday's open the median chip stock was -4.0%, memory and storage and CoreWeave fell most,
-  AMD and Broadcom fell with Nvidia (last week's rotation into rivals is gone), the buyers (Microsoft, Alphabet,
-  Amazon, Meta) were flat. Anthropic's IPO and the Fed's October minutes are also this week.
-- Bitcoin fell 6.2% over the weekend ($68,526 Friday 4pm to about $64,300; low $62,040 Saturday evening);
-  crypto-heavy stocks reopened at their usual rates. Strategy: MSCI deletes it at month-end; in the week of Nov
-  9-15 84% of its new-share money bought back its STRC preferred, not bitcoin (cost $75,452 a coin).
-- CG Oncology +29% on a Phase 3 result in intermediate-risk bladder cancer; UroGen -10% beside it (my inference:
-  same disease; no page says so). Summit -13% on an FDA complete response letter (it had fallen 21% in the three
-  sessions before).
-- Rates were quiet Monday morning (10-year flat); last week: 10-year ~5.17%, wholesale inflation 6.5% a year,
-  December Fed hike priced near 90%.
+- Monday 2026-11-16 midday: S&P 500 -1.3%, Nasdaq 100 -1.9%, median stock -0.8%, 71% lower. The AI markdown spread
+  from chips (median -4.9%) to the whole build-out (capacity sellers, optics, memory, power, equipment) and to the
+  buyers except Microsoft and Apple. Reported new element: fear that Congress tightens limits on chips that may
+  reach China (XTB via Dow Jones). Nvidia reports Tue 2026-11-17 after the close under an interim chief;
+  Anthropic's IPO is expected to price at $70-78 (about $1.4 trillion). Money moved into software, health
+  insurers and food.
+- Bitcoin about $64,900 (-4.9% from Friday; weekend low $62,040). Trump Media must repay up to $1bn of
+  convertible bonds by Nov 30 and may have to sell bitcoin (FT); DJT -12%, Rumble -13%. Strategy: MSCI deletes it
+  at month-end; last week 84% of its new-share money bought back its STRC preferred.
+- Medicaid insurers up (Molina +9.1%, Centene +4.9%) after Friday evening's CMS transition period for the work
+  rules to June 30, 2027 (the Monday link is my inference).
+- Summit -15% on the FDA's complete response letter; Capricor -12.5% before its own FDA decision due by Nov 22.
+- CG Oncology kept part of its jump (+12% to +17%); UroGen reversed from -9% at the open to +8%: my morning
+  inference (it fell because of CG Oncology's result) did not hold. Of seven thin pre-market moves only Molina's
+  held: do not reason from a few pre-market prints.
+- Icahn Enterprises -23.6%: 10.5% is its $0.50 distribution; about half of the remaining 14% matches CVR Energy's
+  -5.6% by arithmetic; the rest has no source. Oxford Square -23% and Chaince Digital (-34% in two sessions) are
+  unexplained. T1 Energy -20% on a $100m at-the-market share sale filed before the open (mosaic chance 3.7%
+  against 0.9% usual; not among the recorded calls).
 - Check flaws known (fix offered, not made): bitcoin and futures measured from Thursday when Friday's bar is
-  missing; zero-volume after-hours prints; and (found 2026-11-16) a dividend leaving the price is read as a move
-  (IEP -11.8% was its $0.50 distribution, GNK -4.4% its $1.05 dividend).
-- Threads to settle: Nvidia's report and whether the fall spreads to the buyers; bitcoin against $62,040; UroGen
-  in the session; the thin pre-market moves (Dianthus, Immunocore, Corsair, Molina, Ideaya); Vir at $9.81 against
-  its $10 offering closing today; CD's Friday fall (its low came 24 minutes before its 10-Q; still unexplained);
-  Global Payments' -12% still unexplained; Inhibrx's data on 2026-11-19/20.
+  missing; zero-volume after-hours prints; a dividend leaving the price is read as a move (IEP, GNK).
+- Threads: Nvidia's report; is there a real chip-limits bill; Trump Media's notes; IEP, OXSQ, CD unexplained;
+  why UroGen reversed; Capricor and Savara by Nov 22; Vir at $9.94 against its $10 offering closing today;
+  Inhibrx's data on 2026-11-19/20; the mining group -5.8% (not read).

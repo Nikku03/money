@@ -1,0 +1,1064 @@
+{
+ "asof": "2026-11-13",
+ "at": "2026-11-16T17:38:04Z",
+ "calls": [],
+ "case_sha": "80f2bf27fa10ed87",
+ "check": "2026-11-16T1738Z",
+ "claims_noted": 13,
+ "evidence": {
+  "c1": {
+   "text": "movers tied together: RUM, DJT (DJT~RUM by s12)"
+  },
+  "c2": {
+   "text": "movers tied together: SMMT, CAPR (CAPR~SMMT by s28; CAPR~SMMT by s29; CAPR~SMMT by s30)"
+  },
+  "d:10-year yield": {
+   "text": "10-year yield -0.02 pt since the close (its usual day: 0.04 pt)"
+  },
+  "d:bitcoin": {
+   "text": "bitcoin -4.9% since the close (its usual day: 2.7%)"
+  },
+  "d:dollar": {
+   "text": "dollar +0.1% since the close (its usual day: 0.3%)"
+  },
+  "d:gold": {
+   "text": "gold -0.4% since the close (its usual day: 1.8%)"
+  },
+  "d:oil": {
+   "text": "oil -2.6% since the close (its usual day: 3.6%)"
+  },
+  "f:CGON:1": {
+   "text": "CGON 8-K 7.01, 8.01 at 2026-11-16T13:15Z: PIVOT-006 Phase 3 Registrational Trial Demonstrates Unprecedented Improvement in Recurrence-Free Survival (RFS) for Intermediate-Risk and High-Grade Ta Non-Muscle Invasive Bladder Cancer (NMIBC) -- Exhibit 99.1 PIVOT-006 Phase 3 Registrational Trial Demonstrates Unprecedented Improvement in Recurrence-Free Survival (RFS) for Intermediate-Risk and High-Grade Ta Non-Muscle Invasive Bladder Cancer (NMIBC) - Cretostimogene reduced the risk of recurrence by 6",
+   "url": "https://www.sec.gov/Archives/edgar/data/1991792/000119312526462199/ck0001991792-ex99_1.htm"
+  },
+  "f:CLW:1": {
+   "text": "CLW 8-K 5.02, 7.01 at 2026-11-16T14:03Z: Clearwater Paper Announces Leadership Appointments and Provides Business Update -- Clearwater Paper Announces Leadership Appointments and Provides Business Update Appoints Matt Passarello as Chief Financial Officer and Rebecca Barckley as Chief Accounting Officer SPOKANE, Wash.--(BUSINESS WIRE) -- Clearwater Paper Corporation (NYSE: CLW) (\u201cClearwater Paper\u201d or the \u201cCompany\u201d) today announced new leadership appointments. In advance of management\u2019s participa",
+   "url": "https://www.sec.gov/Archives/edgar/data/1441236/000162828026074019/pressrelease.htm"
+  },
+  "f:GXO:1": {
+   "text": "GXO results report (8-K 2.02) at 2026-11-16T13:57Z: GXO Announces 2030 Financial Targets at Investor Day -- Exhibit 99.1 GXO Announces 2030 Financial Targets at Investor Day GREENWICH, Conn., November 16, 2026 \u2013 Today, GXO Logistics, Inc. (NYSE: GXO), the world\u2019s largest pure-play contract logistics provider, will host its 2026 Investor Day at the New York Stock Exchange. CEO Patrick Kelleher and members of GXO\u2019s executive leadership team will present the Company\u2019s strategy for value creation, i",
+   "url": "https://www.sec.gov/Archives/edgar/data/1852244/000185224426000058/gxo2026investordaypressrel.htm"
+  },
+  "f:NSIT:1": {
+   "text": "NSIT 8-K 8.01 at 2026-11-16T11:45Z: 0000932696false00009326962026-11-162026-11-16 -- Item 8.01. Other Events. On November 13, 2026, the Board of Directors of Insight Enterprises, Inc. (the \u201cCompany\u201d) approved the authorization of a stock repurchase program pursuant to which the Company may purchase up to $400.0 million of our common stock, par value $0.01, in addition to approximately $36.5 million that remained available under prior authorizations as of November 4, 2026. SIGNATURES Pursuant to ",
+   "url": "https://www.sec.gov/Archives/edgar/data/932696/000093269626000085/nsit-20261116.htm"
+  },
+  "f:SMMT:1": {
+   "text": "SMMT 8-K 8.01 at 2026-11-16T11:08Z: 1 Summit Therapeutics Provides Update Regarding Ivonescimab Biologics License Application Complete Response Letter Received from FDA for BLA Application Based on HARMONi Study Miami, Florida, November 15, 2026 \u2013 Summit Therapeutics Inc. (NASDAQ: SMMT) today announced that the U.S. Food and Drug Admi -- 1 Summit Therapeutics Provides Update Regarding Ivonescimab Biologics License Application Complete Response Letter Received from FDA for BLA Application Based o",
+   "url": "https://www.sec.gov/Archives/edgar/data/1599298/000159929826000092/ivonescimabcrlscenariopr.htm"
+  },
+  "f:TE:1": {
+   "text": "TE share-sale filing (424B5) at 2026-11-16T11:53Z: Filed Pursuant to Rule 424(b)(5) -- Filed Pursuant to Rule 424(b)(5) Registration No. 333-292857 PROSPECTUS SUPPLEMENT (To Prospectus Dated January 21, 2026) T1 Energy Inc. Up to $100,000,000 Common Stock We have entered into an equity distribution agreement, dated November 16, 2026 (the \u201cSales Agreement\u201d), with Roth Capital Partners, LLC, as sales agent (the \u201cAgent\u201d), relating to the shares of our common stock, $0.01 par value per share (the \u201cc",
+   "url": "https://www.sec.gov/Archives/edgar/data/1992243/000121390026120098/ea0311901-424b5_t1energy.htm"
+  },
+  "f:TE:2": {
+   "text": "TE 8-K 8.01 at 2026-11-16T11:58Z: SECURITIES AND EXCHANGE COMMISSION -- Item 8.01. Other Events. At-the-Market Offering On November 16, 2026, T1 Energy Inc. (the \u201cCompany\u201d) entered into an equity distribution agreement (the \u201cSales Agreement\u201d) with Roth Capital Partners, LLC (the \u201cAgent\u201d). Pursuant to the terms of the Sales Agreement, the Company may sell, from time to time through or to the Agent, as the Company\u2019s sales agent and/or as principal, shares of its common stock, par value $0.01 per s",
+   "url": "https://www.sec.gov/Archives/edgar/data/1992243/000121390026120101/ea0312116-8k_t1energy.htm"
+  },
+  "f:TSN:1": {
+   "text": "TSN results report (8-K 2.02) at 2026-11-16T12:41Z: TYSON FOODS REPORTS FOURTH QUARTER AND FISCAL 2026 RESULTS -- TYSON FOODS REPORTS FOURTH QUARTER AND FISCAL 2026 RESULTS Prepared Foods Growth and Chicken Resilience Bolster Performance Springdale, Arkansas \u2013 November 16, 2026 \u2013 Tyson Foods, Inc. (NYSE: TSN), one of the world\u2019s largest food companies and a recognized leader in protein with leading brands including Tyson, Jimmy Dean, Hillshire Farm, Ball Park, Wright, State Fair, aidells and ibp",
+   "url": "https://www.sec.gov/Archives/edgar/data/100493/000010049326000077/tsn2026q4exh-991.htm"
+  },
+  "g:1000": {
+   "text": "Metal Mining: the median of its 9 checked stocks moved -5.8%"
+  },
+  "g:3559": {
+   "text": "Special Industry Machinery, NEC: the median of its 8 checked stocks moved -3.4%"
+  },
+  "g:3576": {
+   "text": "Computer Communications Equipment: the median of its 8 checked stocks moved -3.3%"
+  },
+  "g:3663": {
+   "text": "Radio & Tv Broadcasting & Communications Equipment: the median of its 11 checked stocks moved -4.1%"
+  },
+  "g:3674": {
+   "text": "Semiconductors & Related Devices: the median of its 59 checked stocks moved -4.9%"
+  },
+  "g:3690": {
+   "text": "Miscellaneous Electrical Machinery, Equipment & Supplies: the median of its 9 checked stocks moved -5.0%"
+  },
+  "g:3825": {
+   "text": "Instruments For Meas & Testing of  Electricity & Elec Signals: the median of its 8 checked stocks moved -5.6%"
+  },
+  "g:6199": {
+   "text": "Finance Services: the median of its 34 checked stocks moved -4.9%"
+  },
+  "k": {
+   "text": "Market: S&P 500 (SPY) -1.3%, Nasdaq 100 (QQQ) -1.9%, Russell 2000 (IWM) -1.2%, S&P 500 futures -1.3%, VIX +8.9% (in session)"
+  },
+  "m:BILL": {
+   "text": "BILL (BILL Holdings, Inc.; Services-Prepackaged Software) +5.9% since the close (in session), outside its 2-in-3 range (-4%..+4%)"
+  },
+  "m:CAPR": {
+   "text": "CAPR (CAPRICOR THERAPEUTICS, INC.; Pharmaceutical Preparations) -12.5% since the close (in session), outside its 2-in-3 range (-10%..+12%)"
+  },
+  "m:CD": {
+   "text": "CD (Chaince Digital Holdings Inc.; Finance Services) -19.2% since the close (in session), outside its 2-in-3 range (-14%..+18%)"
+  },
+  "m:CGON": {
+   "text": "CGON (CG Oncology, Inc.; Biological Products, (No Diagnostic Substances)) +12.2% since the close (in session), OUTSIDE its 9-in-10 range (-6%..+7%)"
+  },
+  "m:CLW": {
+   "text": "CLW (Clearwater Paper Corp; Paperboard Mills) +11.2% since the close (in session), outside its 2-in-3 range (-7%..+8%)"
+  },
+  "m:DJT": {
+   "text": "DJT (Trump Media & Technology Group Corp.; Services-Computer Programming, Data Processing, Etc.) -12.2% since the close (in session), outside its 2-in-3 range (-10%..+12%)"
+  },
+  "m:ESP": {
+   "text": "ESP (ESPEY MFG & ELECTRONICS CORP; Electronic Components, NEC) -12.2% since the close (in session), OUTSIDE its 9-in-10 range (-6%..+7%)"
+  },
+  "m:FWDI": {
+   "text": "FWDI (Forward Industries, Inc.; Finance Services) -11.2% since the close (in session), outside its 2-in-3 range (-8%..+10%)"
+  },
+  "m:GNK": {
+   "text": "GNK (GENCO SHIPPING & TRADING LTD; Deep Sea Foreign Transportation of  Freight) -5.7% since the close (in session), outside its 2-in-3 range (-4%..+4%)"
+  },
+  "m:GXO": {
+   "text": "GXO (GXO Logistics, Inc.; Transportation Services) +5.1% since the close (in session), outside its 2-in-3 range (-4%..+4%)"
+  },
+  "m:IEP": {
+   "text": "IEP (ICAHN ENTERPRISES L.P.; Petroleum Refining) -23.6% since the close (in session), OUTSIDE its 9-in-10 range (-5%..+6%)"
+  },
+  "m:MOH": {
+   "text": "MOH (MOLINA HEALTHCARE, INC.; Hospital & Medical Service Plans) +9.1% since the close (in session), OUTSIDE its 9-in-10 range (-4%..+4%)"
+  },
+  "m:NSIT": {
+   "text": "NSIT (INSIGHT ENTERPRISES INC; Retail-Catalog & Mail-Order Houses) -7.3% since the close (in session), outside its 2-in-3 range (-5%..+5%)"
+  },
+  "m:PSIX": {
+   "text": "PSIX (POWER SOLUTIONS INTERNATIONAL, INC.; Engines & Turbines) -11.9% since the close (in session), outside its 2-in-3 range (-8%..+10%)"
+  },
+  "m:RUM": {
+   "text": "RUM (RUM Group Inc.; Services-Computer Programming, Data Processing, Etc.) -13.3% since the close (in session), outside its 2-in-3 range (-8%..+10%)"
+  },
+  "m:SMMT": {
+   "text": "SMMT (Summit Therapeutics Inc.; Pharmaceutical Preparations) -14.9% since the close (in session), outside its 2-in-3 range (-9%..+11%)"
+  },
+  "m:TE": {
+   "text": "TE (T1 Energy Inc.; Semiconductors & Related Devices) -19.9% since the close (in session), outside its 2-in-3 range (-12%..+15%)"
+  },
+  "m:TSN": {
+   "text": "TSN (TYSON FOODS, INC.; Poultry Slaughtering and Processing) +7.3% since the close (in session), OUTSIDE its 9-in-10 range (-3%..+4%)"
+  },
+  "n:ESP": {
+   "text": "ESP accounts: market value $134.5 m; revenue $47.6 m over the four quarters to 2026-09-30; net income $11.2 m over the four quarters to 2026-09-30"
+  },
+  "n:IEP": {
+   "text": "IEP accounts: cash and equivalents $2.3 bn (2026-09-30; investments not counted); revenue $11.0 bn over the four quarters to 2026-09-30; net income $-1.0 bn over the four quarters to 2026-09-30; that cash alone covers about 8.8 quarters of such losses"
+  },
+  "n:TE": {
+   "text": "TE accounts: market value $556.1 m; cash and equivalents $59.5 m (2026-09-30; investments not counted); long-term debt $703.5 m (2026-09-30); revenue $982.9 m over the four quarters to 2026-09-30; net income $-293.6 m over the four quarters to 2026-09-30; that cash alone covers about 0.8 quarters of such losses"
+  },
+  "q:AAPL": {
+   "text": "AAPL -0.8% since the close of 2026-11-13, as the check read it"
+  },
+  "q:ADBE": {
+   "text": "ADBE +2.9% since the close of 2026-11-13, as the check read it"
+  },
+  "q:AMD": {
+   "text": "AMD -4.8% since the close of 2026-11-13, as the check read it"
+  },
+  "q:AMZN": {
+   "text": "AMZN -2.9% since the close of 2026-11-13, as the check read it"
+  },
+  "q:ANET": {
+   "text": "ANET -5.3% since the close of 2026-11-13, as the check read it"
+  },
+  "q:APLD": {
+   "text": "APLD -8.5% since the close of 2026-11-13, as the check read it"
+  },
+  "q:ARMK": {
+   "text": "ARMK +0.9% since the close of 2026-11-13, as the check read it"
+  },
+  "q:ASST": {
+   "text": "ASST -10.5% since the close of 2026-11-13, as the check read it"
+  },
+  "q:AVGO": {
+   "text": "AVGO -3.7% since the close of 2026-11-13, as the check read it"
+  },
+  "q:BE": {
+   "text": "BE -6.8% since the close of 2026-11-13, as the check read it"
+  },
+  "q:BMNR": {
+   "text": "BMNR -5.3% since the close of 2026-11-13, as the check read it"
+  },
+  "q:CAG": {
+   "text": "CAG +2.4% since the close of 2026-11-13, as the check read it"
+  },
+  "q:CI": {
+   "text": "CI +1.0% since the close of 2026-11-13, as the check read it"
+  },
+  "q:CIEN": {
+   "text": "CIEN -5.9% since the close of 2026-11-13, as the check read it"
+  },
+  "q:CNC": {
+   "text": "CNC +4.9% since the close of 2026-11-13, as the check read it"
+  },
+  "q:COHR": {
+   "text": "COHR -6.0% since the close of 2026-11-13, as the check read it"
+  },
+  "q:COIN": {
+   "text": "COIN -6.0% since the close of 2026-11-13, as the check read it"
+  },
+  "q:CRCL": {
+   "text": "CRCL -6.6% since the close of 2026-11-13, as the check read it"
+  },
+  "q:CRSR": {
+   "text": "CRSR -4.1% since the close of 2026-11-13, as the check read it"
+  },
+  "q:CRWV": {
+   "text": "CRWV -6.2% since the close of 2026-11-13, as the check read it"
+  },
+  "q:CVI": {
+   "text": "CVI -5.8% since the close of 2026-11-13, as the check read it"
+  },
+  "q:DELL": {
+   "text": "DELL -6.4% since the close of 2026-11-13, as the check read it"
+  },
+  "q:DNTH": {
+   "text": "DNTH -2.6% since the close of 2026-11-13, as the check read it"
+  },
+  "q:ELV": {
+   "text": "ELV +3.6% since the close of 2026-11-13, as the check read it"
+  },
+  "q:GLXY": {
+   "text": "GLXY -7.3% since the close of 2026-11-13, as the check read it"
+  },
+  "q:GOOGL": {
+   "text": "GOOGL -3.0% since the close of 2026-11-13, as the check read it"
+  },
+  "q:HOOD": {
+   "text": "HOOD -6.8% since the close of 2026-11-13, as the check read it"
+  },
+  "q:HRL": {
+   "text": "HRL +2.9% since the close of 2026-11-13, as the check read it"
+  },
+  "q:HSY": {
+   "text": "HSY +2.2% since the close of 2026-11-13, as the check read it"
+  },
+  "q:HUM": {
+   "text": "HUM +2.1% since the close of 2026-11-13, as the check read it"
+  },
+  "q:IDYA": {
+   "text": "IDYA -1.3% since the close of 2026-11-13, as the check read it"
+  },
+  "q:IMCR": {
+   "text": "IMCR -1.8% since the close of 2026-11-13, as the check read it"
+  },
+  "q:INTC": {
+   "text": "INTC -7.0% since the close of 2026-11-13, as the check read it"
+  },
+  "q:INTU": {
+   "text": "INTU +2.5% since the close of 2026-11-13, as the check read it"
+  },
+  "q:IREN": {
+   "text": "IREN -9.8% since the close of 2026-11-13, as the check read it"
+  },
+  "q:LITE": {
+   "text": "LITE -7.8% since the close of 2026-11-13, as the check read it"
+  },
+  "q:LRCX": {
+   "text": "LRCX -5.5% since the close of 2026-11-13, as the check read it"
+  },
+  "q:MARA": {
+   "text": "MARA -6.7% since the close of 2026-11-13, as the check read it"
+  },
+  "q:META": {
+   "text": "META -2.2% since the close of 2026-11-13, as the check read it"
+  },
+  "q:MOH": {
+   "text": "MOH +9.1% since the close of 2026-11-13, as the check read it"
+  },
+  "q:MP": {
+   "text": "MP -5.8% since the close of 2026-11-13, as the check read it"
+  },
+  "q:MRVL": {
+   "text": "MRVL -6.3% since the close of 2026-11-13, as the check read it"
+  },
+  "q:MSFT": {
+   "text": "MSFT -0.2% since the close of 2026-11-13, as the check read it"
+  },
+  "q:MSTR": {
+   "text": "MSTR -7.6% since the close of 2026-11-13, as the check read it"
+  },
+  "q:MU": {
+   "text": "MU -6.3% since the close of 2026-11-13, as the check read it"
+  },
+  "q:NVDA": {
+   "text": "NVDA -3.5% since the close of 2026-11-13, as the check read it"
+  },
+  "q:ORCL": {
+   "text": "ORCL -4.7% since the close of 2026-11-13, as the check read it"
+  },
+  "q:SBET": {
+   "text": "SBET -4.6% since the close of 2026-11-13, as the check read it"
+  },
+  "q:SCCO": {
+   "text": "SCCO -4.5% since the close of 2026-11-13, as the check read it"
+  },
+  "q:SMCI": {
+   "text": "SMCI -5.7% since the close of 2026-11-13, as the check read it"
+  },
+  "q:SNDK": {
+   "text": "SNDK -7.3% since the close of 2026-11-13, as the check read it"
+  },
+  "q:STX": {
+   "text": "STX -5.6% since the close of 2026-11-13, as the check read it"
+  },
+  "q:SVRA": {
+   "text": "SVRA -2.5% since the close of 2026-11-13, as the check read it"
+  },
+  "q:TER": {
+   "text": "TER -6.3% since the close of 2026-11-13, as the check read it"
+  },
+  "q:UNH": {
+   "text": "UNH +0.9% since the close of 2026-11-13, as the check read it"
+  },
+  "q:URGN": {
+   "text": "URGN +8.4% since the close of 2026-11-13, as the check read it"
+  },
+  "q:USAR": {
+   "text": "USAR -10.7% since the close of 2026-11-13, as the check read it"
+  },
+  "q:VRT": {
+   "text": "VRT -6.5% since the close of 2026-11-13, as the check read it"
+  },
+  "q:WDAY": {
+   "text": "WDAY +1.5% since the close of 2026-11-13, as the check read it"
+  },
+  "q:XXI": {
+   "text": "XXI -6.7% since the close of 2026-11-13, as the check read it"
+  },
+  "r:bitcoin": {
+   "text": "the stocks that moved most with bitcoin over the year, today: MSTR -7.6% (its rate implies -6.4%), SBET -4.6% (its rate implies -6.1%), BMNR -5.3% (its rate implies -6.7%), COIN -6.0% (its rate implies -5.2%), ASST -10.5% (its rate implies -7.4%), FWDI -11.2% (its rate implies -5.9%)"
+  },
+  "s1": {
+   "text": "2026-11-13T21:05Z finance.yahoo.com: Espey Mfg. & Electronics Corp. reports first quarter results -- SARATOGA SPRINGS, N.Y., Nov. 13, 2026 (GLOBE NEWSWIRE) -- Espey Mfg. & Electronics Corp. (NYSE American: ESP) announces results for the first three months of fiscal year 2027. Net sales for the three months ended September 30, 2026 and 2025 were $10,608,945 and $9,092,876, respectively. Net income for the three months ended September 30, 2026 was $2,189,509 or $0.77 and $0.75 per share, basic and",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/espey-mfg-electronics-corp-reports-210500150.html?.tsrc=rss"
+  },
+  "s11": {
+   "text": "2026-11-13T23:16Z finance.yahoo.com: T1 Energy (TE) Stock Faces Cash Pressure After Q3 Earnings -- T1 Energy walked into its Q3 2026 release with the stock already under pressure, down sharply over the past three months. The initial verdict was more selling, with the share price slipping another 3.3% today to US$1.91. The headline result is simple. The business is still loss making, with Q3 basic earnings per share at a loss of US$0.12 and net income from ongoing operations also in the red. Yet",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/t1-energy-te-stock-faces-231635727.html?.tsrc=rss"
+  },
+  "s12": {
+   "text": "2026-11-16T17:02Z 247wallst.com: Trump Media Sinks 12% Ahead of Convertible-Note Deadline and TAE Merger Vote; Rumble Tumbles 11%, Meta Declines 2% -- A nine-figure note obligation could drain the very cash Trump Media needs for its fusion-energy merger. A record quarterly profit hides a stranger story, and shareholders must soon decide what comes next.",
+   "url": "https://247wallst.com/investing/2026/11/16/trump-media-sinks-12-ahead-of-convertible-note-deadline-and-tae-merger-vote-rumble-tumbles-11-meta-declines-2/?.tsrc=rss"
+  },
+  "s13": {
+   "text": "2026-11-16T17:14Z finance.yahoo.com: Summit Therapeutics (SMMT) Faces An FDA Reset, Is The Downside Already Priced In? -- FDA decision on ivonescimab resets expectations for Summit Therapeutics Summit Therapeutics (SMMT) is back in focus after the FDA issued a Complete Response Letter for ivonescimab in advanced non small cell lung cancer. The decision is reframing how investors think about the company\u2019s lead program and cash needs. The FDA setback has fed directly into price action, with Summit",
+   "url": "https://finance.yahoo.com/healthcare/articles/summit-therapeutics-smmt-faces-fda-171447262.html?.tsrc=rss"
+  },
+  "s14": {
+   "text": "2026-11-16T16:09Z finance.yahoo.com: Why Is Summit Therapeutics (SMMT) Facing An FDA Setback For Ivonescimab? -- Summit Therapeutics (NasdaqGM:SMMT) received a Complete Response Letter from the FDA for ivonescimab in lung cancer. The FDA decision means Summit\u2019s Biologics License Application for ivonescimab is not approved in its current form. Summit now needs to address the FDA\u2019s concerns before any potential resubmission of ivonescimab for lung cancer treatment. The FDA\u2019s Complete Response Lett",
+   "url": "https://finance.yahoo.com/healthcare/articles/why-summit-therapeutics-smmt-facing-160938872.html?.tsrc=rss"
+  },
+  "s15": {
+   "text": "2026-11-16T15:48Z stocktwits.com: SMMT Stock Sees Price Target Reductions \u2013 A Look At What Analysts Said About FDA\u2019s Complete Response Letter -- Barclays lowered its price target on Summit Therapeutics to $18 from $20 while maintaining an 'Equal Weight' rating, according to The Fly.",
+   "url": "https://stocktwits.com/news-articles/markets/equity/smmt-stock-sees-price-target-reductions-a-look-at-what-analysts-said-about-fda-s-complete-response-letter/cNb7scoR9gI?.tsrc=rss"
+  },
+  "s16": {
+   "text": "2026-11-16T15:38Z www.proactiveinvestors.com: Summit Therapeutics tumbles 13% after FDA rejects lung cancer drug application -- Summit Therapeutics PLC (NASDAQ:SMMT) shares fell 12.69% to $12.35 on Monday morning after the company said the US Food and Drug Administration (FDA) had issued a complete response letter rejecting its application for ivonescimab combined with chemotherapy in second-line EGFR-mutated non-small...",
+   "url": "https://www.proactiveinvestors.com/companies/news/1101854/summit-therapeutics-tumbles-13-after-fda-rejects-lung-cancer-drug-application-1101854.html?.tsrc=rss"
+  },
+  "s19": {
+   "text": "2026-11-16T16:30Z finance.yahoo.com: Insight Enterprises stock falls on $650M debt offering plan -- Investing.com -- Insight Enterprises Inc (NASDAQ:NSIT) shares fell 7.8% in Monday trading after the company announced plans to offer $650 million in convertible senior notes due 2031.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/insight-enterprises-stock-falls-650m-163003352.html?.tsrc=rss"
+  },
+  "s2": {
+   "text": "2026-11-16T14:23Z finance.yahoo.com: Can Medicaid Rate Improvements Drive Elevance's 2027 Margin Recovery? -- ELV eyes a Medicaid margin recovery in 2027 as reimbursement rates improve, but elevated medical costs and uneven state adjustments remain key hurdles.",
+   "url": "https://finance.yahoo.com/healthcare/articles/medicaid-rate-improvements-drive-elevances-142300424.html?.tsrc=rss"
+  },
+  "s20": {
+   "text": "2026-11-16T12:47Z finance.yahoo.com: Insight Enterprises Plans $650 Million Convertible Notes Offering -- Insight Enterprises (NSIT) said Monday it plans to offer $650 million in convertible senior notes du",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/insight-enterprises-plans-650-million-124742698.html?.tsrc=rss"
+  },
+  "s21": {
+   "text": "2026-11-16T12:00Z finance.yahoo.com: Insight Announces Offering of Convertible Senior Notes -- CHANDLER, Ariz., November 16, 2026--Insight Enterprises, Inc. (NASDAQ: NSIT) (\"Insight\" or the \"Company,\" \"we\" or \"our\"), today announced that it intends to offer, subject to market and other conditions, $650.0 million aggregate principal amount of convertible senior notes due 2031 (the \"Notes\") in a private offering to persons reasonably believed to be qualified institutional buyers pursuant to R",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/insight-announces-offering-convertible-senior-120000284.html?.tsrc=rss"
+  },
+  "s23": {
+   "text": "2026-11-16T11:30Z finance.yahoo.com: Clearwater Paper Announces Leadership Appointments and Provides Business Update -- SPOKANE, Wash., November 16, 2026--Clearwater Paper Corporation (NYSE: CLW) (\"Clearwater Paper\" or the \"Company\") today announced new leadership appointments. In advance of management\u2019s participation in the RBC Capital Markets Global Industrials Conference on November 16, 2026, the Company is also providing an update on certain business matters.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/clearwater-paper-announces-leadership-appointments-113000570.html?.tsrc=rss"
+  },
+  "s24": {
+   "text": "2026-11-16T16:40Z finance.yahoo.com: William Blair upgrades Bill Holdings on margin and monetization tailwinds -- Investing.com -- Shares of BILL Holdings, Inc (NYSE:BILL) rose 5.2% in Monday trade following an upgrade from William Blair, which cited improving monetization trends and greater-than-expected margin expansion potential. Analyst Andrew Jeffrey raised his rating on the business-to-business payments provider from Market Perform to Outperform, stating that \"the 12-month risk/reward has ",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/william-blair-upgrades-bill-holdings-164003908.html?.tsrc=rss"
+  },
+  "s28": {
+   "text": "2026-11-16T10:09Z stocktwits.com: FDA Decision Watch: Capricor\u2019s DMD Therapy Faces Make-Or-Break Decision, Savara\u2019s Lung Disease Drug In The Spotlight This Week -- Wall Street is divided on Capricor\u2019s FDA approval prospects, with Oppenheimer betting on a favorable decision and significant upside in the stock price, while Roth Capital sees only a 25% chance of approval.",
+   "url": "https://stocktwits.com/news-articles/markets/equity/fda-decision-watch-capricor-s-dmd-therapy-faces-make-or-break-decision-savara-s-lung-disease-drug-in-the-spotlight-this-week/cNb7lT0R9X8?.tsrc=rss"
+  },
+  "s29": {
+   "text": "2026-11-16T02:25Z stocktwits.com: Three FDA Decisions Loom After Summit\u2019s Rejection \u2014 Capricor, Savara, Alzheimer\u2019s Data Top Biotech\u2019s Watchlist -- Capricor and Savara face Nov.22 FDA deadlines, while Beren Therapeutics awaits a Tuesday decision on Adrabetadex.",
+   "url": "https://stocktwits.com/news-articles/markets/equity/three-fda-decisions-summit-rejection-capricor-savara-alzheimer-data-biotech-watchlist/cNb7eF1R9XR?.tsrc=rss"
+  },
+  "s3": {
+   "text": "2026-11-16T17:15Z www.marketbeat.com: What Tyson Foods (TSN) Said on Its Q4 Earnings Call -- Tyson Foods (NYSE:TSN) expects sales to decline in fiscal 2027 as tight cattle supplies and a restructured beef network reduce volume, even as the company projects a substantial improvement in its beef business. The meat processor forecast adjusted operating income of $1.7 billion to $2.15 billion",
+   "url": "https://www.marketbeat.com/instant-alerts/transcript-what-tyson-foods-tsn-said-on-its-q4-earnings-call-2026-11-16/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss"
+  },
+  "s30": {
+   "text": "2026-11-16T01:49Z stocktwits.com: SMMT Stock Plunges Overnight On FDA Rejection \u2014 CAPR Holders Feel The Jitters Ahead Of Their Own FDA Test -- SMMT shares plunged 20% overnight late Sunday after the FDA rejected its Ivonescimab-plus-chemotherapy application for a lung cancer indication.",
+   "url": "https://stocktwits.com/news-articles/markets/equity/smmt-stock-fda-rejection-capr-holders-jitters-ahead-own-fda-test/cNb748ZR9XG?.tsrc=rss"
+  },
+  "s31": {
+   "text": "2026-11-14T13:00Z finance.yahoo.com: Trump Media group stares down $1bn debt crunch as bitcoin bet fades -- The Trump family's media group may soon be forced to sell hundreds of millions' worth of assets, including some of its crypto holdings, or take...",
+   "url": "https://finance.yahoo.com/markets/crypto/articles/trump-media-group-stares-down-130009593.html?.tsrc=rss"
+  },
+  "s33": {
+   "text": "2026-11-16T12:00Z finance.yahoo.com: GXO Announces 2030 Financial Targets at Investor Day -- GREENWICH, Conn., Nov. 16, 2026 (GLOBE NEWSWIRE) -- Today, GXO Logistics, Inc. (NYSE: GXO), the world\u2019s largest pure-play contract logistics provider, will host its 2026 Investor Day at the New York Stock Exchange. CEO Patrick Kelleher and members of GXO\u2019s executive leadership team will present the Company\u2019s strategy for value creation, its capital allocation framework and 2030 financial targets. ",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/gxo-announces-2030-financial-targets-120000211.html?.tsrc=rss"
+  },
+  "s39": {
+   "text": "2026-11-16T14:16Z finance.yahoo.com: Sector Update: Healthcare Stocks Advance Premarket Monday -- Healthcare stocks were advancing premarket Monday, with the State Street Health Care Select Sector S",
+   "url": "https://finance.yahoo.com/healthcare/articles/sector-healthcare-stocks-advance-premarket-141651684.html?.tsrc=rss"
+  },
+  "s4": {
+   "text": "2026-11-16T16:26Z finance.yahoo.com: Tyson Foods Tops Fourth-Quarter Views Despite Beef Segment Weakness; Shares Jump -- Tyson Foods' (TSN) shares jumped in Monday trading as the company's fourth-quarter results exceeded",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/tyson-foods-tops-fourth-quarter-162638186.html?.tsrc=rss"
+  },
+  "s40": {
+   "text": "2026-11-16T14:02Z finance.yahoo.com: Nvidia, Sandisk, SpaceX, L3Harris, Strategy, Summit Therapeutics, and More Stocks That Explain Today\u2019s Market -- Nvidia falls, extending a 25% decline over the past month following the resignation of former CEO Jensen Huang.",
+   "url": "https://finance.yahoo.com/m/a7938ba3-f917-3e6f-b865-2195ea15d9d5/nvidia%2C-sandisk%2C-spacex%2C.html?.tsrc=rss"
+  },
+  "s5": {
+   "text": "2026-11-16T15:18Z finance.yahoo.com: Tyson Foods Stock Surges After Earnings. Beef, Though, Remains a Problem. -- Tyson Foods expects its beef business to improve next year after losses widened in fiscal 2026.",
+   "url": "https://finance.yahoo.com/m/30fb8db6-4b04-3f93-83f2-7e97d7fedb91/tyson-foods-stock-surges.html?.tsrc=rss"
+  },
+  "s7": {
+   "text": "2026-11-16T17:00Z www.biopharmadive.com: CG Oncology drug delivers \u2018exceptional\u2019 results in key bladder cancer trial -- CG\u2019s therapy cretostimogene cut the risk of recurrence by 68% when administered after surgery, far surpassing Wall Street\u2019s expectations and lifting company shares.",
+   "url": "https://www.biopharmadive.com/news/cg-oncology-cretostimogene-adjuvant-bladder-cancer-results-pivot/874740/?.tsrc=rss"
+  },
+  "s8": {
+   "text": "2026-11-16T16:07Z finance.yahoo.com: CG Oncology Exceeds Even The 'Most Bullish Conversations;' Shares Break Out -- CG Oncology said Monday its experimental bladder cancer treatment cut the risk of recurrence by 68%. The biotech stock broke out.",
+   "url": "https://finance.yahoo.com/m/a9bbde04-d18d-37b0-bb80-0a948068666d/cg-oncology-exceeds-even-the.html?.tsrc=rss"
+  },
+  "s9": {
+   "text": "2026-11-16T16:03Z www.clinicaltrialsarena.com: CG Oncology\u2019s stock up as gene therapy gains second win in NMIBC -- The second pivotal trial win will broaden the BLA that CG Oncology is submitting for the gene therapy in NMIBC.",
+   "url": "https://www.clinicaltrialsarena.com/news/cg-oncologys-stock-up-as-gene-therapy-gains-second-win-in-nmibc/?.tsrc=rss"
+  },
+  "t1": {
+   "text": "the last note (2026-11-16T1339Z), theme 'AI hardware marked down again before Nvidia reports': Before the open the whole AI hardware group is lower: CoreWeave -6.9%, Sandisk -6.6%, Micron -6.4%, Marvell -6.2%, Super Micro -5.5%, Western Digital -5.5%, Seagate -5.5%, Intel -5.4%, AMD -5.2%, Dell -4.6%, Nvidia -3.8%, Broadcom -3.3%; the median of 59 chip stocks is -4.0%. Commerzbank Research, quoted by Invezz, calls the fallout from the leadership turmoil at Nvidia the dominant driver: investors f"
+  },
+  "t2": {
+   "text": "the last note (2026-11-16T1339Z), theme \"Crypto-heavy stocks reopened at their usual rates times bitcoin's weekend fall\": Bitcoin fell over the weekend: $68,526 at Friday's 4pm close, a low of $62,040 on Saturday evening, about $64,300 before Monday's open, down 6.2% and near a three-month low. Reports tie it to expectations of a Fed rate rise in December, with some traders pricing a half-point move, and to uncertainty over crypto rules (InvestorsHub)."
+  },
+  "t3": {
+   "text": "the last note (2026-11-16T1339Z), theme \"Bladder cancer: CG Oncology's trial result, and UroGen falling beside it\": CG Oncology rose 29.0% before the open after reporting that its Phase 3 trial PIVOT-006 met its main goal: its drug cretostimogene cut the risk of the cancer returning by 68% (hazard ratio 0.32, 95% interval 0.23 to 0.45, p below 0.0001) in intermediate-risk and high-grade Ta bladder cancer, with no severe treatment-related side effects. The company puts this group at about 50,000 "
+  },
+  "x:BILL": {
+   "text": "BILL: the market carried -0.9% (beta 0.71); its industry (Services-Prepackaged Software, 104 stocks) moved +0.1%; left over after the market and its drivers +6.9%"
+  },
+  "x:CAPR": {
+   "text": "CAPR: the market carried -1.0% (beta 0.78); its industry (Pharmaceutical Preparations, 146 stocks) moved -1.3%; left over after the market and its drivers -11.5%"
+  },
+  "x:CD": {
+   "text": "CD: the market carried -2.5% (beta 1.89); its industry (Finance Services, 33 stocks) moved -4.6%; left over after the market and its drivers -16.8%"
+  },
+  "x:CGON": {
+   "text": "CGON: the market carried -0.9% (beta 0.67); its industry (Biological Products, (No Diagnostic Substances), 49 stocks) moved -1.5%; left over after the market and its drivers +13.1%"
+  },
+  "x:CLW": {
+   "text": "CLW: the market carried -0.7% (beta 0.57); 10-year yield carried +0.4% (-18.06% per point, t -4.0); its industry (Paper (broad), 11 stocks) moved -0.3%; left over after the market and its drivers +11.5%"
+  },
+  "x:DJT": {
+   "text": "DJT: the market carried -1.8% (beta 1.39); bitcoin carried -1.9% (+0.39% per 1%, t 4.1); its industry (Services-Computer Programming, Data Processing, Etc., 28 stocks) moved -2.3%; left over after the market and its drivers -8.5%"
+  },
+  "x:ESP": {
+   "text": "ESP: the market carried -1.4% (beta 1.04); its industry (Electronic equipment, group 367, 80 stocks) moved -4.2%; left over after the market and its drivers -10.9%"
+  },
+  "x:FWDI": {
+   "text": "FWDI: the market carried -1.9% (beta 1.45); bitcoin carried -5.9% (+1.22% per 1%, t 12.1); its industry (Finance Services, 33 stocks) moved -4.6%; left over after the market and its drivers -3.4%"
+  },
+  "x:GNK": {
+   "text": "GNK: the market carried -0.9% (beta 0.66); its industry (Water transportation (broad), 8 stocks) moved -1.9%; left over after the market and its drivers -4.8%"
+  },
+  "x:GXO": {
+   "text": "GXO: the market carried -1.5% (beta 1.17); 10-year yield carried +0.2% (-11.81% per point, t -4.2); its industry (Transportation services (broad), 12 stocks) moved -0.2%; left over after the market and its drivers +6.4%"
+  },
+  "x:IEP": {
+   "text": "IEP: the market carried -0.5% (beta 0.41); its industry (Petroleum Refining, 11 stocks) moved -2.0%; left over after the market and its drivers -23.1%"
+  },
+  "x:MOH": {
+   "text": "MOH: the market carried -0.4% (beta 0.28); its industry (Hospital & Medical Service Plans, 9 stocks) moved +1.0%; left over after the market and its drivers +9.5%"
+  },
+  "x:PSIX": {
+   "text": "PSIX: the market carried -3.9% (beta 2.93); its industry (Machinery and computer equipment (broad), 116 stocks) moved -2.2%; left over after the market and its drivers -8.1%"
+  },
+  "x:RUM": {
+   "text": "RUM: the market carried -3.2% (beta 2.43); its industry (Services-Computer Programming, Data Processing, Etc., 28 stocks) moved -2.3%; left over after the market and its drivers -10.1%"
+  },
+  "x:TE": {
+   "text": "TE: the market carried -4.2% (beta 3.21); its industry (Semiconductors & Related Devices, 58 stocks) moved -4.9%; left over after the market and its drivers -15.7%"
+  },
+  "x:TSN": {
+   "text": "TSN: the market carried +0.2% (beta -0.14); its industry (Food products (broad), 43 stocks) moved +0.8%; left over after the market and its drivers +7.1%"
+  },
+  "z:TE": {
+   "text": "TE mosaic: at the close of 2026-11-13, before this move, the chance of the filing in the next 20 sessions: late or unreliable accounts 0.6% (the usual stock: 0.4%); a restructuring or a write-off 0.7% (the usual stock: 0.3%; raised most by 84% below its 52-week high, -55% against the market over 60 sessions); a sale of new shares 3.7% (the usual stock: 0.9%; raised most by 2 sales of new shares opened in three years, a registration to sell securities on file). A chance that a filing comes, not a"
+  }
+ },
+ "note": {
+  "backdrop": "At midday the fall is wider and deeper than before the open: the S&P 500 fund -1.3% (it was -0.7%), the Nasdaq 100 fund -1.9% (-1.3%), small caps -1.2% (-0.5%), the VIX +8.9%. No market-wide flag and no fear flag. The median of the 2,450 stocks is -0.8% and 71% of them are lower. AI stocks led a broader sell-off (Dow Jones): Asian technology indexes closed sharply lower, and a strategist at XTB ties today's selling to fears that Congress will tighten limits on chips that may reach China, cutting spending on chips and data centers. Nvidia reports on Tuesday after the close; Anthropic's shares are expected to price at $70 to $78, a valuation near $1.4 trillion (Invezz). Rates are not the cause today: Treasuries strengthened and the 10-year yield is down 0.02 point, near 5.13% (Dow Jones). Oil is -2.6%, gold -0.4%, the dollar +0.1%. Bitcoin is -4.9% from Friday's close, about $64,900, little changed since the morning. Money is moving as well as leaving: health insurers, food makers and some software are up. Six stocks are outside their 9-in-10 range and 48 outside their 2-in-3 range.",
+  "backdrop_evidence": [
+   "k",
+   "d:oil",
+   "d:10-year yield",
+   "d:dollar",
+   "d:gold",
+   "d:bitcoin",
+   "g:3674",
+   "g:1000",
+   "g:6199",
+   "s39",
+   "s40",
+   "https://www.marketscreener.com/news/ai-stocks-slide-at-start-of-pivotal-week-with-nvidia-anthropic-in-focus-update-ce785edfd88fff20",
+   "https://finwire.io/news/stock-markets-news/nasdaq-opens-15-lower-as-nvidia-earnings-and-anthropic-ipo-weigh-on-ai-stocks"
+  ],
+  "by": "agent",
+  "calls": [],
+  "check": "2026-11-16T1738Z",
+  "read": [
+   {
+    "direction": "none",
+    "published": "2026-11-16T13:28:22Z",
+    "says": "Dow Jones: AI stocks led a broader sell-off before Nvidia's results on Tuesday and the pricing of Anthropic's offering; Asian technology indexes closed sharply lower; XTB's strategist ties the selling to fears that Republicans and Democrats will combine to tighten limits on chips that may go to China, cutting spending on chips and data centers; the 10-year yield fell to about 5.13%; Brent fell 1% to below $95.",
+    "ticker": "NVDA",
+    "tier": "reported",
+    "url": "https://www.marketscreener.com/news/ai-stocks-slide-at-start-of-pivotal-week-with-nvidia-anthropic-in-focus-update-ce785edfd88fff20"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-16T14:42:20Z",
+    "says": "The Nasdaq opened 1.5% lower and the S&P 500 about 1%; Nvidia lost 13% last week; the weakness reached AI infrastructure (CoreWeave -5.2%, Nebius -8%, IREN, Applied Digital, Core Scientific); Anthropic is reported to target a valuation of about $1.4 trillion with shares priced between $70 and $78; a Financial Times report says Nvidia's former chief is considering a return.",
+    "ticker": "NVDA",
+    "tier": "reported",
+    "url": "https://finwire.io/news/stock-markets-news/nasdaq-opens-15-lower-as-nvidia-earnings-and-anthropic-ipo-weigh-on-ai-stocks"
+   },
+   {
+    "direction": "up",
+    "published": "2026-11-13T22:20:54Z",
+    "says": "After Friday's close the federal Medicaid agency offered states an optional transition period to June 30, 2027 for the new Medicaid work rules, during which states will not deny or drop otherwise eligible people solely for failing them; Centene rose 2.5% and Molina 2.6% in extended trading.",
+    "ticker": "MOH",
+    "tier": "reported",
+    "url": "https://rallies.ai/news/health-insurers-rise-as-us-temporarily-eases-medicaid-work-rule-enforcement-e044ee4c22483229"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-16T15:53:18Z",
+    "says": "Molina rose just over 8% on Monday morning to $226.47 as managed-care peers also gained: Centene just over 5%, Elevance almost 4%; the report gives no cause.",
+    "ticker": "MOH",
+    "tier": "reported",
+    "url": "https://www.tokenpost.com/news/investing/58573"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-04T17:40:21Z",
+    "says": "On Nov 4 Molina rose 7.5% to $223.36 and Centene 8.9% after brokerages said the election result lowered policy risk for Medicaid-focused insurers and hospitals.",
+    "ticker": "CNC",
+    "tier": "reported",
+    "url": "https://rallies.ai/news/health-insurers-hospitals-rise-on-lower-policy-risk-outlook-4a3b48c5a1d20cc4"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-16T17:02:54Z",
+    "says": "Trump Media fell 12% to $4.10 ahead of a $976.8 million convertible-note obligation with a near-term demand feature and a shareholder vote on its TAE merger; it is down 43% in a month; Rumble fell almost as hard as speculative and AI-linked stocks sold off, with funding needs and softer guidance weighing on it.",
+    "ticker": "DJT",
+    "tier": "reported",
+    "url": "https://247wallst.com/investing/2026/11/16/trump-media-sinks-12-ahead-of-convertible-note-deadline-and-tae-merger-vote-rumble-tumbles-11-meta-declines-2/"
+   },
+   {
+    "direction": "down",
+    "published": "2026-11-14T13:00:09Z",
+    "says": "Financial Times: Trump Media faces a Nov 30 deadline to repay up to $1 billion of convertible bonds that convert at $34.72 against a share price of $4.64; it may have to sell assets including crypto holdings worth about $1.36 billion at the end of the third quarter, or borrow at high cost; it lost $234 million in nine months.",
+    "ticker": "DJT",
+    "tier": "reported",
+    "url": "https://finance.yahoo.com/markets/crypto/articles/trump-media-group-stares-down-130009593.html"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-16T15:48:50Z",
+    "says": "After the FDA's letter Barclays cut its Summit target to $18 from $20 (Equal Weight) and Citi to $42 from $43 (Buy), Jefferies kept Buy at $30; Barclays sees limited direct effect on value but what seems a higher FDA bar for the lung cancer program.",
+    "ticker": "SMMT",
+    "tier": "opinion",
+    "url": "https://stocktwits.com/news-articles/markets/equity/smmt-stock-sees-price-target-reductions-a-look-at-what-analysts-said-about-fda-s-complete-response-letter/cNb7scoR9gI"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-13T21:05:00Z",
+    "says": "Espey's first fiscal quarter: sales $10.6 million against $9.1 million, net income $2.19 million against $2.17 million, new orders $2.6 million against $10.5 million a year earlier, backlog $126.7 million against $141.1 million.",
+    "ticker": "ESP",
+    "tier": "reported",
+    "url": "https://finance.yahoo.com/markets/stocks/articles/espey-mfg-electronics-corp-reports-210500150.html"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-16T11:30:00Z",
+    "says": "Clearwater Paper named a new finance chief and said repairs at its Augusta mill after disruptions in late September and October are largely complete, with the mill returning to normal operations.",
+    "ticker": "CLW",
+    "tier": "reported",
+    "url": "https://finance.yahoo.com/markets/stocks/articles/clearwater-paper-announces-leadership-appointments-113000570.html"
+   },
+   {
+    "direction": "none",
+    "published": "2026-10-30T12:30:00Z",
+    "says": "Oxford Square Capital reported net asset value of $1.21 a share at Sept 30 (from $1.29) and declared monthly distributions of $0.015 a share for January to March 2027.",
+    "ticker": "OXSQ",
+    "tier": "reported",
+    "url": "https://www.sec.gov/Archives/edgar/data/1259429/000121390026114080/ea031027601_ex99-1.htm"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-03T13:11:00Z",
+    "says": "Icahn Enterprises: a $0.50 distribution to holders of record on Nov 16, 2026; indicative net asset value about $3.5 billion at Sept 30; its stake in CVR Energy valued at $4.2 billion; $522 million of losses on refining hedges in its funds in the third quarter.",
+    "ticker": "IEP",
+    "tier": "reported",
+    "url": "https://www.sec.gov/Archives/edgar/data/813762/000110465926121660/tm2628850d1_ex99-1.htm"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-04T22:22:35Z",
+    "says": "Genco's $1.05 per share dividend goes to holders of record on Nov 16, 2026.",
+    "ticker": "GNK",
+    "tier": "reported",
+    "url": "https://www.sec.gov/Archives/edgar/data/1326200/000114036126041978/ef20084815_ex99-1.htm"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-16T17:40:00Z",
+    "says": "Icahn Enterprises on the 5-minute chart: $3.95 at the open, a low of $3.54, $3.59 at 12:39pm New York time, on 3.26 million units by midday against 3.21 million all Friday; CVR Energy $38.62 against Friday's $40.93.",
+    "tier": "reported",
+    "url": "https://query1.finance.yahoo.com/v8/finance/chart/IEP?range=2d&interval=5m&includePrePost=true"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-16T17:40:00Z",
+    "says": "UroGen on the 5-minute chart: $23.81 at the open (Friday's close $26.18), a high of $28.84, $28.06 at 12:39pm New York time, on 1.79 million shares against 0.70 million all Friday.",
+    "tier": "reported",
+    "url": "https://query1.finance.yahoo.com/v8/finance/chart/URGN?range=2d&interval=5m&includePrePost=true"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-16T17:40:00Z",
+    "says": "CG Oncology on the 5-minute chart: $89.30 at the open (Friday's close $74.40), a low of $78.78 fifteen minutes later, $87.08 at 12:39pm New York time, on 7.85 million shares against 3.31 million all Friday.",
+    "tier": "reported",
+    "url": "https://query1.finance.yahoo.com/v8/finance/chart/CGON?range=2d&interval=5m&includePrePost=true"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-16T17:40:00Z",
+    "says": "Oxford Square on the 5-minute chart: $0.59 at 12:40pm New York time against Friday's $0.76, on 3.47 million shares against 1.58 million all Friday.",
+    "tier": "reported",
+    "url": "https://query1.finance.yahoo.com/v8/finance/chart/OXSQ?range=2d&interval=5m&includePrePost=true"
+   }
+  ],
+  "singles": [
+   {
+    "beneath": "Part of it has a visible source. Its largest holding, CVR Energy, is down 5.6% today as oil falls 2.6%. The Nov 3 release valued that stake at $4.2 billion, while the whole of Icahn Enterprises was worth about $3.6 billion at Friday's close (its net asset value was about $3.5 billion at Sept 30). So CVR's fall alone is worth roughly 6 to 7 points of the 14 by arithmetic; that is my inference. Its funds also hold hedges against refiners, which lost $522 million last quarter when refiners rose and should gain when they fall; I cannot size that. About half the net fall has no source I can find. This morning I called the flag an artifact of the distribution: that was right for the 10.5%, and is no longer the whole story.",
+    "cause": "Icahn Enterprises is -23.6% on the check, at about $3.59 against Friday's $4.74. Of that, $0.50 is the distribution that left the price today (10.5%). Net of it the units are down about 14%, on 3.26 million units by midday, as many as all of Friday. No filing and no story explains it.",
+    "evidence": [
+     "m:IEP",
+     "x:IEP",
+     "n:IEP",
+     "q:CVI",
+     "d:oil",
+     "https://www.sec.gov/Archives/edgar/data/813762/000110465926121660/tm2628850d1_ex99-1.htm",
+     "https://query1.finance.yahoo.com/v8/finance/chart/IEP?range=2d&interval=5m&includePrePost=true"
+    ],
+    "kind": "inferred",
+    "t": "IEP"
+   },
+   {
+    "beneath": "A maker of military power supplies worth about $135 million, trading thinly (58,000 shares by midday). That the fall is about the orders is my inference; the release states the numbers, not the reaction.",
+    "cause": "Espey fell 12.2%, outside its 9-in-10 range, in its first session after Friday evening's quarterly report: sales rose 17% to $10.6 million and profit was flat at $2.2 million, but new orders were $2.6 million against $10.5 million a year earlier and the backlog fell to $126.7 million from $141.1 million.",
+    "evidence": [
+     "m:ESP",
+     "x:ESP",
+     "n:ESP",
+     "s1",
+     "https://finance.yahoo.com/markets/stocks/articles/espey-mfg-electronics-corp-reports-210500150.html"
+    ],
+    "kind": "inferred",
+    "t": "ESP"
+   },
+   {
+    "beneath": "Other food makers are up with it on a falling day (Hormel +2.9%, Conagra +2.4%, Hershey +2.2%), so part of the rise is the day's move into defensive groups; the market carried +0.2% of it and the rest is its own.",
+    "cause": "Tyson rose 7.3%, outside its 9-in-10 range, after its fourth-quarter results beat expectations despite weakness in beef; it expects the beef business to improve next year (headlines in its feed; the articles themselves were paywalled or refused).",
+    "evidence": [
+     "m:TSN",
+     "x:TSN",
+     "f:TSN:1",
+     "s3",
+     "s4",
+     "s5",
+     "q:HRL",
+     "q:CAG",
+     "q:HSY"
+    ],
+    "kind": "reported",
+    "t": "TSN"
+   },
+   {
+    "beneath": "In proportion: $100 million is 18% of its $556 million market value. It had $59.5 million of cash at Sept 30 against losses of $293.6 million over four quarters and $703.5 million of long-term debt. Its beta is above 3 and the stocks it moves with are the AI-power names falling today, so the market carried -4.2% of the move. The mosaic had put a share-sale filing at 3.7% in 20 sessions against 0.9% for the usual stock: raised, but not singled out, and it was not among the 25 recorded calls.",
+    "cause": "T1 Energy fell 19.9%. Before the open it filed to sell up to $100 million of new shares at the market, three days after results that a story said left it under cash pressure.",
+    "evidence": [
+     "m:TE",
+     "x:TE",
+     "n:TE",
+     "z:TE",
+     "f:TE:1",
+     "f:TE:2",
+     "s11"
+    ],
+    "kind": "reported",
+    "t": "TE"
+   },
+   {
+    "beneath": "A headline ties the fall to the debt offering. Convertible notes can become shares later, which dilutes holders.",
+    "cause": "Insight Enterprises fell 7.3% after announcing a plan to sell $650 million of convertible notes; the same morning its board authorized a $400 million share buyback.",
+    "evidence": [
+     "m:NSIT",
+     "f:NSIT:1",
+     "s19",
+     "s20",
+     "s21"
+    ],
+    "kind": "reported",
+    "t": "NSIT"
+   },
+   {
+    "beneath": "The mill's disruptions in late September and October were the open problem; the update says it is closing.",
+    "cause": "Clearwater Paper rose 11.2% after a business update before an investor conference: repairs at its Augusta mill are largely complete and the mill is returning to normal; it also named a new finance chief.",
+    "evidence": [
+     "m:CLW",
+     "x:CLW",
+     "f:CLW:1",
+     "s23",
+     "https://finance.yahoo.com/markets/stocks/articles/clearwater-paper-announces-leadership-appointments-113000570.html"
+    ],
+    "kind": "reported",
+    "t": "CLW"
+   },
+   {
+    "beneath": "The check still reads a dividend leaving the price as a move.",
+    "cause": "Genco is flagged at -5.7%. Of that, 4.0% is the $1.05 dividend that left the price today; net of it the stock is down about 1.7%, in line with its group (-1.9%).",
+    "evidence": [
+     "m:GNK",
+     "x:GNK",
+     "https://www.sec.gov/Archives/edgar/data/1326200/000114036126041978/ef20084815_ex99-1.htm"
+    ],
+    "kind": "inferred",
+    "t": "GNK"
+   },
+   {
+    "beneath": "Software is one of the groups rising today (Intuit +2.5%), so the upgrade landed on a favorable day.",
+    "cause": "BILL rose 5.9% after William Blair upgraded it, citing margins and monetization (headline in its feed).",
+    "evidence": [
+     "m:BILL",
+     "x:BILL",
+     "s24",
+     "q:INTU"
+    ],
+    "kind": "reported",
+    "t": "BILL"
+   },
+   {
+    "beneath": "Its own news; the market and its group were lower.",
+    "cause": "GXO rose 5.1% after announcing financial targets for 2030 at its investor day.",
+    "evidence": [
+     "m:GXO",
+     "x:GXO",
+     "f:GXO:1",
+     "s33"
+    ],
+    "kind": "reported",
+    "t": "GXO"
+   }
+  ],
+  "themes": [
+   {
+    "beneath": "One element is new since the morning and is reported: the worry about a law limiting chip sales, on top of Nvidia's first report under an interim chief on Tuesday evening and Anthropic's offering, expected to price at $70 to $78 a share for a valuation near $1.4 trillion. None of these is a fact about orders: no page I read reports a customer cutting spending. Where the money went shows in what rose: software (Adobe +2.9%, Intuit +2.5%, Workday +1.5%), health insurers and food makers.",
+    "cause": "By midday the fall reaches every layer of AI spending. Sellers of computing capacity: IREN -9.8%, Applied Digital -8.5%, CoreWeave -6.2%. Networking and optics: Lumentum -7.8%, Coherent -6.0%, Ciena -5.9%, Arista -5.3%. Memory and storage: Sandisk -7.3%, Micron -6.3%, Seagate -5.6%. Power and cooling: Bloom -6.8%, Vertiv -6.5%. Chip equipment: Teradyne -6.3%, Lam -5.5%. Chips: Intel -7.0%, Marvell -6.3%, AMD -4.8%, Broadcom -3.7%, Nvidia -3.5%; the median of 59 chip stocks is -4.9% (it was -4.0% before the open). Buyers: Oracle -4.7%, Alphabet -3.0%, Amazon -2.9%, Meta -2.2%, while Microsoft is -0.2% and Apple -0.8%. Dow Jones reports AI stocks leading a broader sell-off and quotes XTB's strategist: the fear is that Congress tightens limits on chips that may reach China, which would cut spending on chips and data centers. Invezz reports the weakness reaching AI infrastructure companies.",
+    "evidence": [
+     "t1",
+     "g:3674",
+     "g:3825",
+     "g:3690",
+     "g:3663",
+     "g:3559",
+     "g:3576",
+     "s40",
+     "m:PSIX",
+     "x:PSIX",
+     "q:NVDA",
+     "q:AMD",
+     "q:AVGO",
+     "q:MRVL",
+     "q:INTC",
+     "q:DELL",
+     "q:SMCI",
+     "q:CRWV",
+     "q:MU",
+     "q:SNDK",
+     "q:STX",
+     "q:LRCX",
+     "q:TER",
+     "q:VRT",
+     "q:ANET",
+     "q:CIEN",
+     "q:COHR",
+     "q:LITE",
+     "q:IREN",
+     "q:APLD",
+     "q:BE",
+     "q:ORCL",
+     "q:GOOGL",
+     "q:AMZN",
+     "q:META",
+     "q:MSFT",
+     "q:AAPL",
+     "q:ADBE",
+     "q:INTU",
+     "q:WDAY",
+     "https://www.marketscreener.com/news/ai-stocks-slide-at-start-of-pivotal-week-with-nvidia-anthropic-in-focus-update-ce785edfd88fff20",
+     "https://finwire.io/news/stock-markets-news/nasdaq-opens-15-lower-as-nvidia-earnings-and-anthropic-ipo-weigh-on-ai-stocks"
+    ],
+    "kind": "reported",
+    "mechanism": "The morning's question is answered: the fall did spread to the buyers, all but Microsoft and Apple. The size of each fall follows how much a company depends on AI spending continuing: capacity sellers and optics most, then memory, power and equipment, then the chip makers, then the buyers. Nvidia itself is falling less than almost everything that sells into the build-out. My inference: the market is marking down the spending, not one company. Power Solutions (-11.9%, no news) has CoreWeave and IREN among the stocks it moved with over the year and a beta near 3, so I read it as part of this group; that too is inference.",
+    "members": [
+     "NVDA",
+     "AMD",
+     "AVGO",
+     "MRVL",
+     "INTC",
+     "DELL",
+     "SMCI",
+     "CRWV",
+     "MU",
+     "SNDK",
+     "STX",
+     "LRCX",
+     "TER",
+     "VRT",
+     "ANET",
+     "CIEN",
+     "COHR",
+     "LITE",
+     "IREN",
+     "APLD",
+     "BE",
+     "ORCL",
+     "GOOGL",
+     "AMZN",
+     "META",
+     "PSIX"
+    ],
+    "name": "The AI sell-off spread from chips to the whole build-out and to most of the buyers",
+    "read_through": [
+     {
+      "evidence": [
+       "g:1000",
+       "q:SCCO",
+       "q:MP",
+       "q:USAR"
+      ],
+      "t": "SCCO",
+      "why": "The metal mining group is down 5.8% at the median (Southern Copper -4.5%, MP Materials -5.8%, USA Rare Earth -10.7%). Copper and rare earths go into data centers and power equipment, so the same markdown may be reaching them, but I read no page today that says so."
+     }
+    ],
+    "watch": "Nvidia's results and outlook on Tuesday evening. Whether a bill on chip limits exists or it is only talk. The price Anthropic's shares are set at. Whether Microsoft and Apple keep holding."
+   },
+   {
+    "beneath": "Two stories now overlap in these stocks: bitcoin's fall, tied by reports to rate expectations, and the sell-off in speculative shares that the AI markdown set off. Chaince Digital (CD) fell another 19.2% with no filing and no story; after Friday's -18.7% that is about -34% in two sessions, and still unexplained.",
+    "cause": "Bitcoin is -4.9% from Friday's close, about $64,900, and has stayed between about $64,100 and $65,300 through the session. The large holders are near their usual rates: Strategy -7.6% (its rate implies -6.4%), Coinbase -6.0% (-5.2%), SBET -4.6% (-6.1%), BMNR -5.3% (-6.7%). Two small ones have fallen well past theirs: Forward Industries -11.2% (-5.9% implied) and ASST -10.5% (-7.4%). Trump Media is -12.2% and Rumble -13.3%. The Financial Times reported on Saturday that Trump Media must repay up to $1 billion of convertible bonds by Nov 30 and may have to sell assets, including some of its crypto; 24/7 Wall St puts the obligation at $976.8 million and adds a shareholder vote on its merger with TAE. The same report says Rumble is falling with speculative stocks, with funding needs and softer guidance weighing on it.",
+    "evidence": [
+     "t2",
+     "r:bitcoin",
+     "d:bitcoin",
+     "c1",
+     "g:6199",
+     "m:DJT",
+     "x:DJT",
+     "m:RUM",
+     "x:RUM",
+     "m:FWDI",
+     "x:FWDI",
+     "m:CD",
+     "x:CD",
+     "s12",
+     "s31",
+     "q:MSTR",
+     "q:COIN",
+     "q:CRCL",
+     "q:HOOD",
+     "q:MARA",
+     "q:GLXY",
+     "q:SBET",
+     "q:BMNR",
+     "q:ASST",
+     "q:XXI",
+     "https://247wallst.com/investing/2026/11/16/trump-media-sinks-12-ahead-of-convertible-note-deadline-and-tae-merger-vote-rumble-tumbles-11-meta-declines-2/",
+     "https://finance.yahoo.com/markets/crypto/articles/trump-media-group-stares-down-130009593.html"
+    ],
+    "kind": "reported",
+    "mechanism": "The bonds convert into stock at $34.72 and the stock is near $4.10, so holders have every reason to ask for cash instead (FT). Trump Media's most valuable asset is crypto worth about $1.36 billion at the end of September. Its own rate to bitcoin is low (0.39 per 1%), so bitcoin carried only -1.9% of today's -12.2%: this is mostly its own trouble. A company that may have to sell bitcoin within two weeks is also a reason for other holders of bitcoin to be marked down; that step is my inference, and it may be part of why the small treasuries fell past their rates.",
+    "members": [
+     "MSTR",
+     "COIN",
+     "CRCL",
+     "HOOD",
+     "MARA",
+     "GLXY",
+     "SBET",
+     "BMNR",
+     "ASST",
+     "XXI",
+     "FWDI",
+     "DJT",
+     "RUM",
+     "CD"
+    ],
+    "name": "Crypto: bitcoin steady since the morning; Trump Media's debt deadline adds a second pressure",
+    "watch": "Any filing by Trump Media about the notes before Nov 30, and whether it sells bitcoin. Bitcoin against its weekend low of $62,040. Whether the small treasuries keep falling past their usual rates."
+   },
+   {
+    "beneath": "This answers the morning's unexplained Molina move: the pre-market rise was real and has doubled, on 1.7 million shares by midday against 0.36 million all Friday. In proportion, Molina at about $228 is now above the $223.36 it reached in the rally after the Nov 4 election.",
+    "cause": "After Friday's close the federal Medicaid agency offered states an optional transition period to June 30, 2027 for the new work rules: during it, states will not deny or drop otherwise eligible people solely for failing them (Rallies, Nov 13). Centene and Molina rose 2.5% and 2.6% in extended trading that evening. Today Molina is +9.1%, outside its 9-in-10 range, Centene +4.9%, Elevance +3.6%, Humana +2.1%, Cigna +1.0%, UnitedHealth +0.9%.",
+    "evidence": [
+     "m:MOH",
+     "x:MOH",
+     "s2",
+     "s39",
+     "q:CNC",
+     "q:ELV",
+     "q:HUM",
+     "q:UNH",
+     "q:CI",
+     "https://rallies.ai/news/health-insurers-rise-as-us-temporarily-eases-medicaid-work-rule-enforcement-e044ee4c22483229",
+     "https://www.tokenpost.com/news/investing/58573",
+     "https://rallies.ai/news/health-insurers-hospitals-rise-on-lower-policy-risk-outlook-4a3b48c5a1d20cc4"
+    ],
+    "kind": "inferred",
+    "mechanism": "Fewer people losing Medicaid in the first half of 2027 means more members for the insurers that run Medicaid plans, and the two that reports call Medicaid-focused, Molina and Centene, are up the most. No page dated today states the cause of Monday's rise (TokenPost reports the move without one), so tying it to Friday's decision is my inference. It also fits the day's move out of AI and into defensive groups.",
+    "members": [
+     "MOH",
+     "CNC",
+     "ELV",
+     "HUM",
+     "UNH",
+     "CI"
+    ],
+    "name": "Medicaid insurers rise after enforcement of the work rules was eased",
+    "watch": "An analyst note or company statement that names the cause. Whether states take up the transition period. The insurers' guidance for 2027 membership."
+   },
+   {
+    "beneath": "Nov 22 is a Sunday, so Capricor's answer comes within the week. Summit's fall has not deepened much since the open (-13.1% before it, -14.9% now).",
+    "cause": "Summit is -14.9% in the session after Sunday's FDA letter. Barclays cut its target to $18 from $20 and Citi to $42 from $43, and Jefferies kept $30; Barclays sees little direct effect on value but what seems a higher FDA bar for the lung cancer program (Stocktwits, citing The Fly). Capricor is -12.5% with no filing of its own; headlines in its feed say its holders are nervous after Summit's rejection, with its own FDA decision due by Nov 22.",
+    "evidence": [
+     "c2",
+     "m:SMMT",
+     "f:SMMT:1",
+     "s13",
+     "s14",
+     "s15",
+     "s16",
+     "m:CAPR",
+     "x:CAPR",
+     "s28",
+     "s29",
+     "s30",
+     "https://stocktwits.com/news-articles/markets/equity/smmt-stock-sees-price-target-reductions-a-look-at-what-analysts-said-about-fda-s-complete-response-letter/cNb7scoR9gI"
+    ],
+    "kind": "reported",
+    "mechanism": "Summit was refused because a trial that slowed the disease did not show a significant survival benefit. Investors in other companies waiting on the FDA read that as a stricter agency; the headlines report that reading for Capricor.",
+    "members": [
+     "SMMT",
+     "CAPR"
+    ],
+    "name": "After Summit's rejection, nerves about the next FDA decisions",
+    "read_through": [
+     {
+      "evidence": [
+       "s29",
+       "q:SVRA"
+      ],
+      "t": "SVRA",
+      "why": "A headline says Savara has an FDA deadline on the same date; it is -2.5% today. Whether a rejection at one company moves others waiting on the FDA has not been tested here."
+     }
+    ],
+    "watch": "Capricor's decision by Nov 22; what Summit says about its next step with the FDA."
+   },
+   {
+    "beneath": "The wider lesson is about pre-market prints. Of this morning's seven moves that rested on a few pre-market trades, only Molina's held and grew. Dianthus went from -6.7% to -2.6%, Immunocore from +6.9% to -1.8%, Ideaya from +6.6% to -1.3%, Aramark from -5.5% to +0.9%, UroGen from -10.2% to +8.4%; Corsair kept part (-6.5% to -4.1%).",
+    "cause": "CG Oncology opened at $89.30 (+20%), fell to $78.78 within fifteen minutes and was +12.2% on the check's reading (about $87 a little later), on 7.85 million shares against 3.31 million all Friday. UroGen opened 9.1% lower at $23.81, then rose to about $28 (+8.4% on the check's reading), on 1.79 million shares against 0.70 million all Friday.",
+    "evidence": [
+     "t3",
+     "m:CGON",
+     "x:CGON",
+     "f:CGON:1",
+     "s7",
+     "s8",
+     "s9",
+     "q:URGN",
+     "q:DNTH",
+     "q:IMCR",
+     "q:IDYA",
+     "q:ARMK",
+     "q:CRSR",
+     "q:MOH",
+     "https://query1.finance.yahoo.com/v8/finance/chart/URGN?range=2d&interval=5m&includePrePost=true",
+     "https://query1.finance.yahoo.com/v8/finance/chart/CGON?range=2d&interval=5m&includePrePost=true"
+    ],
+    "kind": "inferred",
+    "mechanism": "This morning I inferred that UroGen fell before the open because CG Oncology's result threatens it. That did not hold: the stock is up on the day. Either buyers read the result as proof that this disease is a large market for more than one drug, or the pre-market fall was thin trading that the session corrected. I found no page that explains UroGen's move in either direction, and the article on CG Oncology I tried to read was refused.",
+    "members": [
+     "CGON",
+     "URGN"
+    ],
+    "name": "Bladder cancer: CG Oncology kept part of its jump; UroGen reversed and my morning inference did not hold",
+    "watch": "Any analyst note on what the result means for UroGen. CG Oncology's full data on Dec 2."
+   }
+  ],
+  "threads": [
+   "Nvidia reports on Tuesday Nov 17 after the close. Is there an actual bill on chip limits, or only talk of one?",
+   "Do Microsoft and Apple keep holding while the other buyers fall, and does software keep rising?",
+   "Trump Media: any filing about its notes before Nov 30; does it sell bitcoin?",
+   "Icahn Enterprises: about half of its net fall (14% after the distribution) has no source; look for a filing tonight.",
+   "Oxford Square: -23% on double volume with no news.",
+   "Chaince Digital (CD): about -34% in two sessions with no news.",
+   "UroGen: why it reversed from -9% at the open to +8%.",
+   "Capricor and Savara: FDA decisions due by Nov 22.",
+   "Medicaid insurers: does a source name Friday's decision as the cause of Monday's rise?",
+   "Vir is at $9.94 against its $10 offering, which closes today.",
+   "Inhibrx is -6.5% before its data on Nov 19-20.",
+   "The mining group is -5.8%: copper, rare earths or the AI markdown? Not read today.",
+   "Known flaws in the check: a dividend leaving the price is read as a move (Icahn Enterprises, Genco). Fix offered, not made."
+  ],
+  "unexplained": [
+   {
+    "t": "OXSQ",
+    "tried": "Outside its 9-in-10 range at -23.3% ($0.59 against $0.76) on twice Friday's whole-day volume. No filing since Nov 4, no story, nothing found by search. On Oct 30 it reported net asset value of $1.21 a share and set monthly distributions of $0.015 for early 2027. Other lenders of its kind are flat today (Ares Capital -0.1%, Main Street -0.2%), so it is not the group."
+   },
+   {
+    "t": "CD",
+    "tried": "Another -19.2% with no filing and no story; about -34% in two sessions. Its group (crypto-linked finance) is down 4.6% and the market carried -2.5%."
+   },
+   {
+    "t": "EMAT",
+    "tried": "-18.8% with no filing since Nov 13 and no story; its partner Idaho Strategic is -7.4% and the mining group -5.8%, which may be part of it."
+   },
+   {
+    "t": "FLWS",
+    "tried": "-11.4% with no filing and no story; retailers of its kind are down 2.3%."
+   },
+   {
+    "t": "LWAY",
+    "tried": "-8.2% with no filing and no story, on a day food makers are up."
+   },
+   {
+    "t": "NTRA",
+    "tried": "-7.8% with the medical-lab group down 3.4% at the median (BillionToOne -8.0%, Grail -7.6%, Caris -6.6%). Its feed has only last week's conference remarks. I found no cause for the group."
+   }
+  ]
+ },
+ "recorded_at": "2026-11-16T17:46:31Z"
+}

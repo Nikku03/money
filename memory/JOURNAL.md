@@ -80,3 +80,6 @@ FAIL); "the market runs on chains of cause and effect, news and catalysts": the 
 - Before-the-open check and desk note (`research/desk/2026-11-13/2026-11-16T1339Z.json`): AI hardware marked down
   again before Nvidia reports; crypto stocks at their usual rates after bitcoin's weekend fall; CG Oncology's
   result and UroGen beside it; two flags were dividends leaving the price (a third flaw in the check). No calls.
+- Midday check and desk note (`research/desk/2026-11-13/2026-11-16T1738Z.json`): the AI sell-off spread to the
+  whole build-out and most buyers; Trump Media's debt deadline; Medicaid insurers up; UroGen reversed, so the
+  morning's inference did not hold; IEP's fall is more than its distribution. No calls.
