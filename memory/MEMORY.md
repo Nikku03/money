@@ -2,7 +2,7 @@
 
 Read this first in every session. It is the agent's notebook for this repo: what the person wants, what exists, what
 was found, what is running and what is open. Details live in the files it points to; search them when needed.
-Updated 2026-11-16 (three sessions in the memory bank; the diagnosis). The log of what happened, by date, is `memory/JOURNAL.md`.
+Updated 2026-11-16 (three sessions in the memory bank; the diagnosis; step 2 tested and failed). The log of what happened, by date, is `memory/JOURNAL.md`.
 
 ## Keeping this alive
 
@@ -95,6 +95,20 @@ earnings (55.5%, weak), size forecast against option prices (V1/O1 running), and
 entered before it (KOD +174%, n=1). Best design: index core; tilt only with what held, declared once against SPY;
 size engine for risk and option choice; one specialist line of binary events entered before, small and many; one
 idea at a time, checked against the memory bank first.
+
+## Step 2 tested (2026-11-16, `docs/TILT.md`): both FAILED
+
+- The person said "start with step 2". Declared once each and run: T1a, the quality tilt (profitable, not diluting,
+  calm, near its high; top third of the 500 largest by market value known each month) lost to its own list on
+  2019-2026 (-0.095% a month, p 0.85) after winning on 2011-2018 (p 0.006). T1b, SPY at 100% for 13 weeks after a
+  VIX spike (1.25x its 63-day mean) and 70% otherwise, lost on 1993-2010, never looked at before (p 0.88); it won
+  only on 2011-2026, the years the lesson came from. Neither beat SPY (2019-2026: SPY +15.8% a year; the best
+  variant, the index by market value without its bottom third, +15.6%).
+- "Boring beats exciting" and "buy after fear" were features of their era. What is left of the plan: index core,
+  size engine, the binary-event line, forward records. One lead, not a finding: "not diluting" alone +0.17% a
+  month (p 0.001), one of four traits looked at after the run; it needs its own forward test.
+- Known gap in our lists: companies with several share classes (Berkshire, Visa, Alphabet before its count is read)
+  get no market value, and Exxon's accounts are never read, so a list by market value is not the S&P 500.
 
 ## Running now
 

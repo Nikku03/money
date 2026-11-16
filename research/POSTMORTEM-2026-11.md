@@ -79,3 +79,14 @@ design it supports:
 5. **One idea at a time.** Search the memory bank before testing; require a repeat on a second period; wait for
    thirty forward bets; buy the two missing data sets (option quotes, prices of delisted stocks) if it is to go
    further.
+
+## Step 2, tested (2026-11-16)
+
+Declared once each and run (`docs/TILT.md`, `research/RESULTS.md`): **both failed.** The quality tilt (T1a) lost to
+its own list on 2019-2026 after winning on 2011-2018; buying after fear (T1b) lost on 1993-2010, the years no session
+had seen, and won only on 2011-2026, the years the lesson came from. Neither beat SPY. "Boring beats exciting" and
+"buy after fear" join the list of ideas that belonged to the period they were found in. What is left of the plan:
+the index core (step 1), the size engine (step 3), the binary-event line (step 4), and forward records. The one lead
+from the run, companies not issuing shares, was one of four traits looked at after the fact and needs its own
+forward test.
+

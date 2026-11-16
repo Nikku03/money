@@ -83,3 +83,8 @@ FAIL); "the market runs on chains of cause and effect, news and catalysts": the 
 - Midday check and desk note (`research/desk/2026-11-13/2026-11-16T1738Z.json`): the AI sell-off spread to the
   whole build-out and most buyers; Trump Media's debt deadline; Medicaid insurers up; UroGen reversed, so the
   morning's inference did not hold; IEP's fall is more than its distribution. No calls.
+- Asked: "yes upload them, and start with step 2". Uploaded the five vector parts, the talk in two parts and the
+  claims to Drive. Built `brain/research/tilttest.py` (T1a the quality tilt, T1b buying after fear), checked the
+  memory bank for earlier tries (never declared alone), counted the data without returns, declared, committed, ran
+  once: both FAILED, controls passed. Corrected one misleading label in RESULTS.md after the run (the list's gap to
+  SPY is mostly companies the list leaves out, not survivorship) with a ledger note.

@@ -1127,8 +1127,9 @@ def _tilt_section(rows: list[dict]) -> list[str]:
             f"{_pct(wj['mean_net_excess'], 3)} a month (reported). A year over TEST: the tilt {_pct(a['tilt'], 1)}, the "
             f"list at equal weight {_pct(a['list_ew'], 1)}, the list by market value {_pct(a['list_cw'], 1)}, the list "
             f"without its junk {_pct(a['without_junk'], 1)}, SPY {_pct(a['SPY'], 1)}, RSP (the S&P 500 at equal weight) "
-            f"{_pct(a['RSP'], 1)}. What the survivor-only data adds: the list at equal weight against RSP "
-            f"{_pct(sv['list_ew_minus_rsp'], 1)} a year, by market value against SPY {_pct(sv['list_cw_minus_spy'], 1)}. "
+            f"{_pct(a['RSP'], 1)}. The list's own gap, which is survivorship plus what the list leaves out: at equal "
+            f"weight against RSP {_pct(sv['list_ew_minus_rsp'], 1)} a year, by market value against SPY "
+            f"{_pct(sv['list_cw_minus_spy'], 1)}. "
             f"Controls: an oracle reached p {c.get('oracle_test_perm_p', float('nan')):.4f}; random signals redrawn "
             f"monthly reached p < 0.05 in {c.get('random_false_positive_rate', float('nan')) * 100:.1f}% of draws, held "
             f"fixed per stock in {c.get('persistent_random_false_positive_rate', float('nan')) * 100:.1f}% (not gated: "
@@ -1152,8 +1153,10 @@ def _tilt_section(rows: list[dict]) -> list[str]:
             f"{r['verdict'].split(':')[0]}.")
     return lines + ["", *words, "",
                     ("Reading this: the list is chosen month by month by what was known then, but it holds only "
-                     "companies still filing today; RSP held the ones that failed or were bought, so the gap to it is "
-                     "what the missing companies add. The traits came from published research and from looks at "
+                     "companies still filing today; RSP held the ones that failed or were bought. It also leaves out "
+                     "companies whose share count could not be read from their filings (several share classes: "
+                     "Berkshire, Visa, Alphabet at the start of TEST) or whose accounts were not read at all (Exxon), "
+                     "so by market value it is not the S&P 500, and its gap to SPY is mostly that. The traits came from published research and from looks at "
                      "2011-2026 on other lists, so T1a's TEST is not unseen: a PASS is an upper bound. T1b's TEST "
                      "(1993-2010) had not been looked at. Paper only; nothing here places orders."), ""]
 

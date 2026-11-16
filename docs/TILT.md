@@ -70,6 +70,44 @@ knows each week's outcome must be seen; random spike weeks must pass about 5% of
 which is what a person would actually compare with: holding 30% in bills most of the time costs return in a rising
 market.
 
-## Results
+## Results (run once, 2026-11-16; `research/RESULTS.md`, section Step 2)
 
-Written after the run, whatever it says.
+**Both failed.**
+
+| Test | Result | p | Verdict |
+|---|---|---|---|
+| T1a, the quality tilt, 93 months 2019-2026 | the top third trailed the list by 0.095% a month after costs | 0.85 | FAIL |
+| T1b, buying after fear, 935 weeks 1993-2010 | the timing trailed the constant mix by 0.012% a week | 0.88 | FAIL |
+
+Both had controls that passed: each could have seen a real edge.
+
+**T1a.** On TRAIN (2011-2018) the same score had beaten the list by 0.075% a month (p 0.006); on TEST it lost. A
+year over TEST: the tilt +12.8%, the list +13.5%, RSP +12.6%, SPY +15.8%. Reported beside it, not gated:
+
+| Over TEST, not gated | A month against the list | p |
+|---|---|---|
+| Not diluting alone | +0.166% | 0.001 |
+| Profitable alone | +0.032% | 0.24 |
+| Near its high alone | -0.144% | 0.91 |
+| Calm alone | -0.348% | 1.00 |
+| The list by market value without its bottom third | +0.310% | not computed |
+
+The calmest stocks lost most; my reading (not tested) is that 2019-2026's gains came from large, volatile technology companies, which also put SPY ahead of RSP. The
+one trait that stood out, *not diluting* (share counts flat or shrinking), was one of four looked at after the fact;
+it is a lead for a forward test, not a finding. The list without its junk, by market value, made +15.6% a year,
+still below SPY's +15.8%.
+
+The list by market value trailed SPY by 5.8% a year. That is mostly what the list leaves out, not survivorship:
+companies whose share count is not read from their filings because they have several share classes (Berkshire and
+Visa throughout, Alphabet at the start of TEST), and Exxon, whose accounts were never read. At equal weight the
+list beat RSP by 1.0% a year, an upper bound on what the missing failed companies add there.
+
+**T1b.** In 1993-2010, the 13 weeks after a fear spike earned nothing over bills (-0.001% a week) and the other
+weeks +0.171% a week: buying after fear lost. Ten of the 16 fear episodes ended with SPY ahead of bills, but the losers were large, when fear came before more falls: July 2008 to February 2009 (-39%), June to October 2002 (-12%) and July 2007 to January 2008 (-10%). In
+2011-2026, the years the lesson came from, it was the opposite: +0.378% a week after fear against +0.053% (p 0.003,
+seen before, not gated). The lesson belonged to one era, the post-2009 market that always bounced back. Even there,
+holding 30% in bills most of the time left the timed portfolio below SPY (+13.4% a year against +13.7%).
+
+**What it means.** Step 2 does not hold. On a list a trader could have held, neither tilt nor timing beat holding
+the index, and the two lessons that looked solid were features of the years they were learned on. The index core
+(step 1) stands on its own.
