@@ -123,13 +123,24 @@ idea at a time, checked against the memory bank first.
   an industry lead-lag test; the earnings radar in the 8:07 check; S3 recalibrated going forward; the trader
   replayed on 2022; a better headline picker.
 
-## The market thread (last desk note: `research/desk/2026-11-13/2026-11-14T0444Z.json`)
+## The market thread (last desk note: `research/desk/2026-11-13/2026-11-16T1339Z.json`, before Monday's open)
 
-- Nvidia's chief resigned (week of 2026-11-09) amid a scandal with export-control probes (Megaspeed, Singapore);
-  AI hardware sold off together; Nvidia reports Tue 2026-11-17, its first without him.
-- Rates: 10-year yield ~5.17%, wholesale inflation 6.5% a year, December Fed hike priced near 90%; dollar strong.
-- Crypto sold off Friday evening; crypto-heavy stocks followed at their usual rates.
-- Threads to settle: Nvidia's report and its dependents (Dell, CoreWeave, Super Micro); AMD and Broadcom with or
-  against Nvidia; CD -18.7% unexplained; Vir's $10 offering closes 2026-11-16; Modine's cooling division talks
-  with Samsung; Global Payments' -12% unexplained; Inhibrx's $150m at-the-market sale before its data on
-  2026-11-19/20.
+- AI hardware is being marked down as one group before Nvidia reports (Tue 2026-11-17 after the close, under an
+  interim chief): before Monday's open the median chip stock was -4.0%, memory and storage and CoreWeave fell most,
+  AMD and Broadcom fell with Nvidia (last week's rotation into rivals is gone), the buyers (Microsoft, Alphabet,
+  Amazon, Meta) were flat. Anthropic's IPO and the Fed's October minutes are also this week.
+- Bitcoin fell 6.2% over the weekend ($68,526 Friday 4pm to about $64,300; low $62,040 Saturday evening);
+  crypto-heavy stocks reopened at their usual rates. Strategy: MSCI deletes it at month-end; in the week of Nov
+  9-15 84% of its new-share money bought back its STRC preferred, not bitcoin (cost $75,452 a coin).
+- CG Oncology +29% on a Phase 3 result in intermediate-risk bladder cancer; UroGen -10% beside it (my inference:
+  same disease; no page says so). Summit -13% on an FDA complete response letter (it had fallen 21% in the three
+  sessions before).
+- Rates were quiet Monday morning (10-year flat); last week: 10-year ~5.17%, wholesale inflation 6.5% a year,
+  December Fed hike priced near 90%.
+- Check flaws known (fix offered, not made): bitcoin and futures measured from Thursday when Friday's bar is
+  missing; zero-volume after-hours prints; and (found 2026-11-16) a dividend leaving the price is read as a move
+  (IEP -11.8% was its $0.50 distribution, GNK -4.4% its $1.05 dividend).
+- Threads to settle: Nvidia's report and whether the fall spreads to the buyers; bitcoin against $62,040; UroGen
+  in the session; the thin pre-market moves (Dianthus, Immunocore, Corsair, Molina, Ideaya); Vir at $9.81 against
+  its $10 offering closing today; CD's Friday fall (its low came 24 minutes before its 10-Q; still unexplained);
+  Global Payments' -12% still unexplained; Inhibrx's data on 2026-11-19/20.

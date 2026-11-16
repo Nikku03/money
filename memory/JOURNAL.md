@@ -77,3 +77,6 @@ FAIL); "the market runs on chains of cause and effect, news and catalysts": the 
   3 MB. `memory save` now writes a large file in parts under 2.8 MB and `memory load` takes several files. The
   talk of all three sessions is on Drive; the five vector parts are not, and the person was asked whether to
   send them.
+- Before-the-open check and desk note (`research/desk/2026-11-13/2026-11-16T1339Z.json`): AI hardware marked down
+  again before Nvidia reports; crypto stocks at their usual rates after bitcoin's weekend fall; CG Oncology's
+  result and UroGen beside it; two flags were dividends leaving the price (a third flaw in the check). No calls.
