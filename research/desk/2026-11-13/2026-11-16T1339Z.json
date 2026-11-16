@@ -1,0 +1,625 @@
+{
+ "asof": "2026-11-13",
+ "at": "2026-11-16T13:39:55Z",
+ "calls": [],
+ "case_sha": "1c202219737810db",
+ "check": "2026-11-16T1339Z",
+ "claims_noted": 12,
+ "evidence": {
+  "c1": {
+   "text": "movers tied together: MSTR, PURR, CRCL, FWDI (CRCL~PURR by s8; CRCL~MSTR by p:CRCL~MSTR; CRCL~FWDI by p:CRCL~FWDI; FWDI~MSTR by p:FWDI~MSTR)"
+  },
+  "c2": {
+   "text": "movers tied together: CGON, IDYA (CGON~IDYA by p:CGON~IDYA)"
+  },
+  "d:10-year yield": {
+   "text": "10-year yield -0.01 pt since the close (its usual day: 0.04 pt)"
+  },
+  "d:bitcoin": {
+   "text": "bitcoin -5.8% since the close (its usual day: 2.7%)"
+  },
+  "d:dollar": {
+   "text": "dollar +0.1% since the close (its usual day: 0.3%)"
+  },
+  "d:gold": {
+   "text": "gold -0.3% since the close (its usual day: 1.8%)"
+  },
+  "d:oil": {
+   "text": "oil -0.9% since the close (its usual day: 3.6%)"
+  },
+  "f:ARMK:1": {
+   "text": "ARMK results report (8-K 2.02) at 2026-11-16T11:31Z: For Immediate Release -- Inquiries: For Immediate Release Felise Glantz Kissell (215) 409-7287 Kissell-Felise@aramark.com Jameson Ondrof (215) 238-6297 Ondrof-Jameson@aramark.com Aramark Reports Earnings Results for Fiscal 2026 Company Delivers on 2026 Financial Outlook Board Authorizes New $1 Billion Share Repurchase Program and Raises Quarterly Dividend by 17% FISCAL 2026 YEAR-OVER-YEAR SUMMARY \u2022Record Annualized Gross New Business of $1.9 B",
+   "url": "https://www.sec.gov/Archives/edgar/data/1584509/000158450926000152/ex991armkq4fy2026.htm"
+  },
+  "f:CGON:1": {
+   "text": "CGON 8-K 7.01, 8.01 at 2026-11-16T13:15Z: PIVOT-006 Phase 3 Registrational Trial Demonstrates Unprecedented Improvement in Recurrence-Free Survival (RFS) for Intermediate-Risk and High-Grade Ta Non-Muscle Invasive Bladder Cancer (NMIBC) -- Exhibit 99.1 PIVOT-006 Phase 3 Registrational Trial Demonstrates Unprecedented Improvement in Recurrence-Free Survival (RFS) for Intermediate-Risk and High-Grade Ta Non-Muscle Invasive Bladder Cancer (NMIBC) - Cretostimogene reduced the risk of recurrence by 6",
+   "url": "https://www.sec.gov/Archives/edgar/data/1991792/000119312526462199/ck0001991792-ex99_1.htm"
+  },
+  "f:MSTR:1": {
+   "text": "MSTR 8-K 7.01, 8.01 at 2026-11-16T13:00Z: false000105044600010504462026-11-162026-11-160001050446mstr:M800SeriesAPerpetualStrikePreferredStock0001ParValuePerShareMember2026-02-232026-02-230001050446us-gaap:CommonStockMember2026-02-232026-02-230001050446mstr:M1000SeriesAPerpetualStridePreferredStock0001ParValuePerShareMember2026-02-232026-02 -- Item 8.01 Other Events. ATM Update On November 16, 2026, Strategy Inc (\"Strategy\" or the \"Company\") announced an update with respect to sales made under i",
+   "url": "https://www.sec.gov/Archives/edgar/data/1050446/000119312526462151/mstr-20261116.htm"
+  },
+  "f:SMMT:1": {
+   "text": "SMMT 8-K 8.01 at 2026-11-16T11:08Z: 1 Summit Therapeutics Provides Update Regarding Ivonescimab Biologics License Application Complete Response Letter Received from FDA for BLA Application Based on HARMONi Study Miami, Florida, November 15, 2026 \u2013 Summit Therapeutics Inc. (NASDAQ: SMMT) today announced that the U.S. Food and Drug Admi -- 1 Summit Therapeutics Provides Update Regarding Ivonescimab Biologics License Application Complete Response Letter Received from FDA for BLA Application Based o",
+   "url": "https://www.sec.gov/Archives/edgar/data/1599298/000159929826000092/ivonescimabcrlscenariopr.htm"
+  },
+  "g:3672": {
+   "text": "Printed Circuit Boards: the median of its 8 checked stocks moved -3.8%"
+  },
+  "g:3674": {
+   "text": "Semiconductors & Related Devices: the median of its 59 checked stocks moved -4.0%"
+  },
+  "g:6199": {
+   "text": "Finance Services: the median of its 34 checked stocks moved -5.5%"
+  },
+  "h:SMMT": {
+   "text": "SMMT against the market, last sessions: 11-09 +4.9%, 11-10 +0.7%, 11-11 -9.1%, 11-12 -8.6%, 11-13 -5.4%"
+  },
+  "k": {
+   "text": "Market: S&P 500 (SPY) -0.7%, Nasdaq 100 (QQQ) -1.3%, Russell 2000 (IWM) -0.5%, S&P 500 futures -0.6%, VIX +6.9% (before the open)"
+  },
+  "m:ARMK": {
+   "text": "ARMK (Aramark; Retail-Eating  Places) -5.5% since the close (before the open), outside its 2-in-3 range (-5%..+6%)"
+  },
+  "m:CGON": {
+   "text": "CGON (CG Oncology, Inc.; Biological Products, (No Diagnostic Substances)) +29.0% since the close (before the open), OUTSIDE its 9-in-10 range (-6%..+7%)"
+  },
+  "m:GNK": {
+   "text": "GNK (GENCO SHIPPING & TRADING LTD; Deep Sea Foreign Transportation of  Freight) -4.4% since the close (before the open), outside its 2-in-3 range (-4%..+4%)"
+  },
+  "m:IDYA": {
+   "text": "IDYA (IDEAYA Biosciences, Inc.; Pharmaceutical Preparations) +6.6% since the close (before the open), outside its 2-in-3 range (-5%..+6%)"
+  },
+  "m:IEP": {
+   "text": "IEP (ICAHN ENTERPRISES L.P.; Petroleum Refining) -11.8% since the close (before the open), OUTSIDE its 9-in-10 range (-5%..+6%)"
+  },
+  "m:SMMT": {
+   "text": "SMMT (Summit Therapeutics Inc.; Pharmaceutical Preparations) -13.1% since the close (before the open), outside its 2-in-3 range (-9%..+11%)"
+  },
+  "m:URGN": {
+   "text": "URGN (UroGen Pharma Ltd.; Pharmaceutical Preparations) -10.2% since the close (before the open), outside its 2-in-3 range (-8%..+9%)"
+  },
+  "n:CGON": {
+   "text": "CGON accounts: market value $6.6 bn; cash and equivalents $28.2 m (2026-09-30; investments not counted); long-term debt $3.0 m (2026-09-30); net income $-237.5 m over the four quarters to 2026-09-30; that cash alone covers about 0.5 quarters of such losses"
+  },
+  "n:IEP": {
+   "text": "IEP accounts: cash and equivalents $2.3 bn (2026-09-30; investments not counted); revenue $11.0 bn over the four quarters to 2026-09-30; net income $-1.0 bn over the four quarters to 2026-09-30; that cash alone covers about 8.8 quarters of such losses"
+  },
+  "n:SMMT": {
+   "text": "SMMT accounts: market value $11.3 bn; cash and equivalents $150.8 m (2026-09-30; investments not counted); net income $-832.7 m over the four quarters to 2026-09-30; that cash alone covers about 0.7 quarters of such losses"
+  },
+  "n:URGN": {
+   "text": "URGN accounts: market value $1.3 bn; cash and equivalents $85.6 m (2026-09-30; investments not counted); long-term debt $200.0 m (2026-09-30); revenue $250.3 m over the four quarters to 2026-09-30; net income $-65.8 m over the four quarters to 2026-09-30; that cash alone covers about 5.2 quarters of such losses"
+  },
+  "p:CGON~IDYA": {
+   "text": "CGON and IDYA: market-adjusted daily returns correlated 0.44 over the last 250 sessions; IDYA +6.6% since the close"
+  },
+  "q:AAPL": {
+   "text": "AAPL +0.3% since the close of 2026-11-13, as the check read it"
+  },
+  "q:AMD": {
+   "text": "AMD -5.2% since the close of 2026-11-13, as the check read it"
+  },
+  "q:AMZN": {
+   "text": "AMZN -0.6% since the close of 2026-11-13, as the check read it"
+  },
+  "q:ASST": {
+   "text": "ASST -9.2% since the close of 2026-11-13, as the check read it"
+  },
+  "q:AVGO": {
+   "text": "AVGO -3.3% since the close of 2026-11-13, as the check read it"
+  },
+  "q:BMNR": {
+   "text": "BMNR -7.3% since the close of 2026-11-13, as the check read it"
+  },
+  "q:COIN": {
+   "text": "COIN -7.2% since the close of 2026-11-13, as the check read it"
+  },
+  "q:CRWV": {
+   "text": "CRWV -6.9% since the close of 2026-11-13, as the check read it"
+  },
+  "q:DELL": {
+   "text": "DELL -4.6% since the close of 2026-11-13, as the check read it"
+  },
+  "q:GLXY": {
+   "text": "GLXY -8.2% since the close of 2026-11-13, as the check read it"
+  },
+  "q:GOOGL": {
+   "text": "GOOGL -0.6% since the close of 2026-11-13, as the check read it"
+  },
+  "q:HOOD": {
+   "text": "HOOD -6.2% since the close of 2026-11-13, as the check read it"
+  },
+  "q:INTC": {
+   "text": "INTC -5.4% since the close of 2026-11-13, as the check read it"
+  },
+  "q:MARA": {
+   "text": "MARA -7.1% since the close of 2026-11-13, as the check read it"
+  },
+  "q:META": {
+   "text": "META -0.6% since the close of 2026-11-13, as the check read it"
+  },
+  "q:MRVL": {
+   "text": "MRVL -6.2% since the close of 2026-11-13, as the check read it"
+  },
+  "q:MSFT": {
+   "text": "MSFT +0.1% since the close of 2026-11-13, as the check read it"
+  },
+  "q:MU": {
+   "text": "MU -6.4% since the close of 2026-11-13, as the check read it"
+  },
+  "q:NVDA": {
+   "text": "NVDA -3.8% since the close of 2026-11-13, as the check read it"
+  },
+  "q:SBET": {
+   "text": "SBET -7.1% since the close of 2026-11-13, as the check read it"
+  },
+  "q:SMCI": {
+   "text": "SMCI -5.5% since the close of 2026-11-13, as the check read it"
+  },
+  "q:SNDK": {
+   "text": "SNDK -6.6% since the close of 2026-11-13, as the check read it"
+  },
+  "q:STX": {
+   "text": "STX -5.5% since the close of 2026-11-13, as the check read it"
+  },
+  "q:WDC": {
+   "text": "WDC -5.5% since the close of 2026-11-13, as the check read it"
+  },
+  "q:XXI": {
+   "text": "XXI -6.3% since the close of 2026-11-13, as the check read it"
+  },
+  "r:bitcoin": {
+   "text": "the stocks that moved most with bitcoin over the year, today: MSTR -8.4% (its rate implies -7.8%), SBET -7.1% (its rate implies -7.4%), BMNR -7.3% (its rate implies -8.0%), COIN -7.2% (its rate implies -6.3%), ASST -9.2% (its rate implies -8.9%), FWDI -9.1% (its rate implies -7.1%)"
+  },
+  "s1": {
+   "text": "2026-11-16T13:00Z finance.yahoo.com: PIVOT-006 Phase 3 Registrational Trial Demonstrates Unprecedented Improvement in Recurrence-Free Survival (RFS) for Intermediate-Risk and High-Grade Ta Non-Muscle Invasive Bladder Cancer (NMIBC) -- \u2013 Cretostimogene reduced the risk of recurrence by 68%, demonstrating a statistically significant and clinically meaningful benefit with a hazard ratio of 0.32 (95% CI: 0.23, 0.45; p<0.0001) \u2013 Compelling safety and tolerability results, no Grade 3 or higher TRAEs a",
+   "url": "https://finance.yahoo.com/healthcare/articles/pivot-006-phase-3-registrational-130000992.html?.tsrc=rss"
+  },
+  "s10": {
+   "text": "2026-11-15T20:00Z finance.yahoo.com: IDEAYA Biosciences Announces Development Candidate Nomination of IDE101, a Potential First-In-Class Inhibitor Targeting CDKN2A-Deficiency in Solid Tumors -- IDEAYA Biosciences, Inc. (Nasdaq: IDYA), a leading precision medicine oncology company, today announced development candidate nomination of IDE101, a potential first-in-class dual cyclin-dependent kinase (CDK) inhibitor designed to address the loss of CDKN2A-mediated tumor suppressor function in cancer. C",
+   "url": "https://finance.yahoo.com/healthcare/articles/ideaya-biosciences-announces-development-candidate-200000736.html?.tsrc=rss"
+  },
+  "s11": {
+   "text": "2026-11-16T11:51Z finance.yahoo.com: Aramark: Fiscal Q4 Earnings Snapshot -- PHILADELPHIA (AP) \u2014 PHILADELPHIA (AP) \u2014 Aramark Holdings Corp. (ARMK) on Monday reported fiscal fourth-quarter net income of $137.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/aramark-fiscal-q4-earnings-snapshot-115142048.html?.tsrc=rss"
+  },
+  "s12": {
+   "text": "2026-11-16T11:45Z finance.yahoo.com: Aramark (ARMK) Q4 Earnings and Revenues Beat Estimates -- Aramark (ARMK) delivered earnings and revenue surprises of +4.00% and +0.50%, respectively, for the quarter ended September 2026. Do the numbers hold clues to what lies ahead for the stock?",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/aramark-armk-q4-earnings-revenues-114501157.html?.tsrc=rss"
+  },
+  "s13": {
+   "text": "2026-11-16T11:30Z finance.yahoo.com: Aramark Reports Earnings Results for Fiscal 2026 -- PHILADELPHIA, November 16, 2026--Aramark (NYSE: ARMK) today reported results for the fourth quarter and full year of fiscal 2026.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/aramark-reports-earnings-results-fiscal-113000324.html?.tsrc=rss"
+  },
+  "s14": {
+   "text": "2026-11-16T12:11Z finance.yahoo.com: Nvidia, Intel, Sandisk, SpaceX, Strategy, and More Stocks That Explain Today\u2019s Market -- AI stocks are struggling as the market mood turns cautious ahead of Nvidia\u2019s earnings and Anthropic\u2019s IPO.",
+   "url": "https://finance.yahoo.com/m/a7938ba3-f917-3e6f-b865-2195ea15d9d5/nvidia%2C-intel%2C-sandisk%2C.html?.tsrc=rss"
+  },
+  "s15": {
+   "text": "2026-11-16T11:25Z investorshub.advfn.com: Cryptocurrency Stocks Fall in Premarket Trading as Bitcoin Drops Towards $64,600 -- Shares of cryptocurrency-related companies declined in US premarket trading on Monday as Bitcoin (COIN:BTCUSD) extended its recent losses, trading near its lowest level in three months amid concerns about US interest rates and the regulatory outlook for digital assets. Bitcoin was trading at approximately $64,600.",
+   "url": "https://investorshub.advfn.com/market-news/article/40076/cryptocurrency-stocks-fall-in-premarket-trading-as-bitcoin-drops-towards-64600?.tsrc=rss"
+  },
+  "s16": {
+   "text": "2026-11-16T10:57Z finance.yahoo.com: Crypto stocks slide premarket as Bitcoin selloff continues -- Investing.com -- Shares of crypto-related companies fell sharply in premarket trading Monday as Bitcoin slipped to about $64,600.50, staying close to its lowest level in three months.",
+   "url": "https://finance.yahoo.com/markets/crypto/articles/crypto-stocks-slide-premarket-bitcoin-105729561.html?.tsrc=rss"
+  },
+  "s17": {
+   "text": "2026-11-16T02:04Z stocktwits.com: Dow, S&P 500, Nasdaq Futures Edge Lower As Markets Brace For Nvidia Earnings, Anthropic IPO, Fed Minutes: SMMT, NBIS, HELP, MSTR In Focus -- Nvidia remains on track to post its third-quarter results under interim CEO Colette Kress on Nov. 17.",
+   "url": "https://stocktwits.com/news-articles/markets/equity/dow-s-and-p-500-nasdaq-futures-edge-lower-as-markets-brace-for-nvidia-earnings-anthropic-ipo-fed-minutes-smmt-nbis-help-mstr-in-focus/cNb7ePKR9Xb?.tsrc=rss"
+  },
+  "s2": {
+   "text": "2026-11-16T12:16Z finance.yahoo.com: Summit Therapeutics Faces FDA Hurdle For Lead Lung Cancer Drug, Stock Tumbles -- Summit Therapeutics Inc. (NASDAQ:SMMT) is trading at a 52-week low on Monday after the FDA rejected the company\u2019s lead cancer drug application. On Sunday, the U.S. Food and Drug Administration (FDA) issued a Complete Response Letter (CRL) stating it cannot approve the Biologics License Application (BLA) for ivonescimab in its current form. Summit seeks approval to combine the nov",
+   "url": "https://finance.yahoo.com/healthcare/articles/summit-therapeutics-faces-fda-hurdle-121607687.html?.tsrc=rss"
+  },
+  "s4": {
+   "text": "2026-11-16T01:49Z stocktwits.com: SMMT Stock Plunges Overnight On FDA Rejection \u2014 CAPR Holders Feel The Jitters Ahead Of Their Own FDA Test -- SMMT shares plunged 20% overnight late Sunday after the FDA rejected its Ivonescimab-plus-chemotherapy application for a lung cancer indication.",
+   "url": "https://stocktwits.com/news-articles/markets/equity/smmt-stock-fda-rejection-capr-holders-jitters-ahead-own-fda-test/cNb748ZR9XG?.tsrc=rss"
+  },
+  "s5": {
+   "text": "2026-11-15T12:00Z finance.yahoo.com: Summit Therapeutics Provides Update Regarding Ivonescimab Biologics License Application -- MIAMI, November 15, 2026--Summit Therapeutics Inc. (NASDAQ: SMMT) today announced that the U.S. Food and Drug Administration (FDA) has issued a Complete Response Letter (CRL) regarding the Biologics License Application (BLA) for ivonescimab in combination with platinum-containing chemotherapy for the treatment of patients with locally advanced or metastatic non-small ce",
+   "url": "https://finance.yahoo.com/healthcare/articles/summit-therapeutics-provides-regarding-ivonescimab-120000578.html?.tsrc=rss"
+  },
+  "s7": {
+   "text": "2026-11-15T17:28Z 247wallst.com: Michael Saylor\u2019s Strategy Just Lost Its MSCI Index Spot as Bitcoin Plunges. Is MSTR Stock a Sell? -- With an index provider cutting it loose and bitcoin sitting below its purchase price, Saylor's funding machine faces its toughest test yet. A cash cushion buys time, but one signal could decide whether patience pays off.",
+   "url": "https://247wallst.com/investing/2026/11/15/michael-saylors-strategy-just-lost-its-msci-index-spot-as-bitcoin-plunges-is-mstr-stock-a-sell/?.tsrc=rss"
+  },
+  "t1": {
+   "text": "the last note (2026-11-14T0444Z), theme \"AI hardware: Friday's selling carried past the close\": Nvidia's chief executive resigned this week amid a scandal that includes export-control probes. On Friday Nvidia fell 2.0% after HSBC cut it to Hold, and the rivals that had risen on Thursday fell harder: AMD -8.8%, Broadcom -4.8%. After the close the whole group kept slipping together: Marvell -2.7%, CoreWeave -2.6%, AMD -2.4%, Super Micro -2.1%, Broadcom -1.9%, Intel -1.7%, Dell -1.6%, Nvidia -1.1%."
+  },
+  "t2": {
+   "text": "the last note (2026-11-14T0444Z), theme \"Crypto-heavy stocks followed bitcoin's evening slide, at their usual rates\": Crypto sold off across the board on Friday evening: bitcoin -4.21%, ether -4.34%, solana -4.18% (Business Upturn)."
+  },
+  "x:CGON": {
+   "text": "CGON: the market carried -0.4% (beta 0.67); its industry (Biological Products, (No Diagnostic Substances), 49 stocks) moved -0.5%; left over after the market and its drivers +29.5%"
+  },
+  "x:CRCL": {
+   "text": "CRCL: the market carried -0.7% (beta 0.99); bitcoin carried -6.7% (+1.14% per 1%, t 10.0); its industry (Finance Services, 33 stocks) moved -5.0%; left over after the market and its drivers -0.9%"
+  },
+  "x:FWDI": {
+   "text": "FWDI: the market carried -1.0% (beta 1.45); bitcoin carried -7.1% (+1.22% per 1%, t 12.1); its industry (Finance Services, 33 stocks) moved -5.0%; left over after the market and its drivers -1.1%"
+  },
+  "x:GNK": {
+   "text": "GNK: the market carried -0.4% (beta 0.66); its industry (Water transportation (broad), 8 stocks) moved -0.4%; left over after the market and its drivers -4.0%"
+  },
+  "x:IEP": {
+   "text": "IEP: the market carried -0.3% (beta 0.41); its industry (Petroleum Refining, 11 stocks) moved -0.4%; left over after the market and its drivers -11.5%"
+  },
+  "x:MSTR": {
+   "text": "MSTR: the market carried -0.6% (beta 0.91); bitcoin carried -7.8% (+1.33% per 1%, t 17.8); its industry (Finance Services, 33 stocks) moved -5.0%; left over after the market and its drivers -0.1%"
+  },
+  "x:PURR": {
+   "text": "PURR: the market carried -1.4% (beta 2.17); bitcoin carried -4.3% (+0.74% per 1%, t 4.8); its industry (Finance Services, 33 stocks) moved -5.0%; left over after the market and its drivers -3.9%"
+  },
+  "x:URGN": {
+   "text": "URGN: the market carried -1.0% (beta 1.57); its industry (Pharmaceutical Preparations, 146 stocks) moved +0.0%; left over after the market and its drivers -9.2%"
+  },
+  "z:CGON": {
+   "text": "CGON mosaic: at the close of 2026-11-13, before this move, the chance of the filing in the next 20 sessions: late or unreliable accounts 0.1% (the usual stock: 0.4%); a restructuring or a write-off 0.2% (the usual stock: 0.3%); a sale of new shares 8.6% (the usual stock: 0.9%; raised most by 4 sales of new shares opened in three years, a registration to sell securities on file). A chance that a filing comes, not a direction (tests P1a-P3b, research/RESULTS.md)"
+  }
+ },
+ "note": {
+  "backdrop": "Before Monday's open the S&P 500 fund is down 0.7%, the Nasdaq 100 fund 1.3% and small caps 0.5%; S&P futures are down 0.6% and the VIX is up 6.9%. No market-wide move and no fear flag. The fall is narrow: AI hardware (the median of 59 chip stocks -4.0%, printed circuit boards -3.8%) and crypto-linked stocks (the median of 34 'Finance Services' stocks -5.5%). Rates are not what is moving this morning: the 10-year yield is flat, the dollar +0.1%, gold -0.3%. Oil is -0.9%; a report says it fell after the president signalled the US would not start an attack on Iran (Stocktwits). Bitcoin is the driver that moved: -5.8% on the check's line, and on the 15-minute chart $68,526 at Friday's 4pm close against about $64,300 now, -6.2%, with most of the fall on Saturday. This time the check's bitcoin line is measured from Friday's close, unlike the last check. The week's known events are Nvidia's results on Tuesday Nov 17 after the close, Anthropic's public offering, and the Fed's October minutes (Stocktwits). Of the two stocks outside their 9-in-10 range, one is a real move (CG Oncology) and one is a distribution leaving the price (Icahn Enterprises).",
+  "backdrop_evidence": [
+   "k",
+   "d:oil",
+   "d:10-year yield",
+   "d:dollar",
+   "d:gold",
+   "d:bitcoin",
+   "g:6199",
+   "g:3674",
+   "g:3672",
+   "s14",
+   "s17",
+   "https://stocktwits.com/news-articles/markets/equity/dow-s-and-p-500-nasdaq-futures-edge-lower-as-markets-brace-for-nvidia-earnings-anthropic-ipo-fed-minutes-smmt-nbis-help-mstr-in-focus/cNb7ePKR9Xb",
+   "https://query1.finance.yahoo.com/v8/finance/chart/BTC-USD?range=5d&interval=15m&includePrePost=true"
+  ],
+  "by": "agent",
+  "calls": [],
+  "check": "2026-11-16T1339Z",
+  "read": [
+   {
+    "direction": "none",
+    "published": "2026-11-16T10:56:47Z",
+    "says": "AMD and Broadcom fell before the open in a wider chip sell-off; Commerzbank Research called the fallout from the leadership turmoil at Nvidia the dominant driver of risk sentiment, with investors moving into rival chip makers and then unwinding those positions too; reports that the former chief may return have not lifted Nvidia; AMD and Broadcom were still about 13% higher over five sessions and the Philadelphia chip index about 7%.",
+    "ticker": "AMD",
+    "tier": "reported",
+    "url": "https://finwire.io/news/stock-markets-news/why-are-amd-and-broadcom-stocks-falling-in-premarket-trading-on-monday"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-16T09:43:06Z",
+    "says": "AI-linked stocks extended losses before the open on concern about the sector's growth and financing risks: Nvidia -1.8% ahead of Tuesday's results, AMD -4%, Micron -5%, Sandisk -5.3%, Western Digital -4.4%, CoreWeave -4.7% with peers IREN and Nebius; Capital.com called Nvidia the biggest immediate source of uncertainty.",
+    "ticker": "NVDA",
+    "tier": "reported",
+    "url": "https://rallies.ai/news/ai-linked-stocks-fall-further-as-nvidia-worries-persist-fb2931609dafa253"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-16T02:04:21Z",
+    "says": "Futures edged lower on Sunday night ahead of Nvidia's results on Nov 17 under its interim chief, Anthropic's public offering at a valuation of about $1.4 trillion, and the Fed's October minutes; oil fell after the president signalled the US would not start an attack on Iran; the three indexes ended last week more than 2% higher.",
+    "tier": "reported",
+    "url": "https://stocktwits.com/news-articles/markets/equity/dow-s-and-p-500-nasdaq-futures-edge-lower-as-markets-brace-for-nvidia-earnings-anthropic-ipo-fed-minutes-smmt-nbis-help-mstr-in-focus/cNb7ePKR9Xb"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-16T11:25:47Z",
+    "says": "Crypto stocks fell before the open as bitcoin traded near $64,600, close to a three-month low, on expectations of a Fed rate rise in December (some traders pricing a half-point move) and uncertainty over crypto rules; Strategy fell more than 7%, Circle 7.6%, Coinbase 6.4%.",
+    "ticker": "COIN",
+    "tier": "reported",
+    "url": "https://investorshub.advfn.com/market-news/article/40076/cryptocurrency-stocks-fall-in-premarket-trading-as-bitcoin-drops-towards-64600"
+   },
+   {
+    "direction": "down",
+    "published": "2026-11-15T17:28:50Z",
+    "says": "MSCI will delete Strategy from its equity indexes at month-end under new rules for companies that mostly hold financial assets; JPMorgan estimates up to $8.8 billion of outflows if other index providers follow, against Strategy's earlier estimate of about $2.8 billion; Strategy's $5.07 billion of dollar assets cover 3.4 years of dividends and interest.",
+    "ticker": "MSTR",
+    "tier": "reported",
+    "url": "https://247wallst.com/investing/2026/11/15/michael-saylors-strategy-just-lost-its-msci-index-spot-as-bitcoin-plunges-is-mstr-stock-a-sell/"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-16T13:00:18Z",
+    "says": "In the week of Nov 9-15 Strategy sold 2,087,040 common shares for $244.7 million net: $206.3 million went to buying back its STRC preferred stock, $33.4 million to 485 bitcoin at $68,887 each and $5.0 million to cash; it holds 850,849 bitcoin at an average cost of $75,452.",
+    "ticker": "MSTR",
+    "tier": "reported",
+    "url": "https://www.sec.gov/Archives/edgar/data/1050446/000119312526462151/mstr-20261116.htm"
+   },
+   {
+    "direction": "down",
+    "published": "2026-11-16T11:08:00Z",
+    "says": "The FDA's complete response letter says ivonescimab's application cannot be approved in its present form: effectiveness is not established without a statistically significant improvement in overall survival; the HARMONi trial met its progression-free survival goal and showed a survival trend short of significance (hazard ratio 0.76 in a later analysis).",
+    "ticker": "SMMT",
+    "tier": "reported",
+    "url": "https://www.sec.gov/Archives/edgar/data/1599298/000159929826000092/ivonescimabcrlscenariopr.htm"
+   },
+   {
+    "direction": "up",
+    "published": "2026-11-16T13:15:21Z",
+    "says": "CG Oncology's Phase 3 trial PIVOT-006 met its main goal: cretostimogene cut the risk of recurrence by 68% (hazard ratio 0.32, 95% interval 0.23-0.45, p<0.0001) in intermediate-risk and high-grade Ta bladder cancer with no grade 3 or higher treatment-related side effects; about 50,000 patients have no approved treatment of this kind; a second FDA application is planned for the second quarter of 2027.",
+    "ticker": "CGON",
+    "tier": "reported",
+    "url": "https://www.sec.gov/Archives/edgar/data/1991792/000119312526462199/ck0001991792-ex99_1.htm"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-04T13:08:03Z",
+    "says": "UroGen's Zusduri made $68.0 million in the third quarter, up 35% on the quarter; its next formulation UGN-103 is under FDA review for low-grade intermediate-risk bladder cancer (goal date June 14, 2027), and it plans a 2027 trial of UGN-103 as adjuvant therapy in newly diagnosed intermediate-risk disease.",
+    "ticker": "URGN",
+    "tier": "reported",
+    "url": "https://www.sec.gov/Archives/edgar/data/1668243/000143774926034769/ex_1036873.htm"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-03T13:11:00Z",
+    "says": "Icahn Enterprises declared a quarterly distribution of $0.50 per depositary unit, payable about Dec 23, 2026 to holders of record at the close of Nov 16, 2026, in cash or units at the holder's choice; its third-quarter net loss was $225 million.",
+    "ticker": "IEP",
+    "tier": "reported",
+    "url": "https://www.sec.gov/Archives/edgar/data/813762/000110465926121660/tm2628850d1_ex99-1.htm"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-04T22:22:35Z",
+    "says": "Genco declared a record dividend of $1.05 per share for the third quarter, payable about Nov 23, 2026 to holders of record on Nov 16, 2026.",
+    "ticker": "GNK",
+    "tier": "reported",
+    "url": "https://www.sec.gov/Archives/edgar/data/1326200/000114036126041978/ef20084815_ex99-1.htm"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-16T11:31:44Z",
+    "says": "Aramark's outlook for fiscal 2027: organic revenue growth of 9% to 10%, adjusted operating income growth of 15% to 19% and adjusted earnings per share growth of 20% to 25%; a new $1 billion buyback and a 17% higher dividend; incentive pay tied to outperformance took $0.07 off fourth-quarter earnings per share.",
+    "ticker": "ARMK",
+    "tier": "reported",
+    "url": "https://www.sec.gov/Archives/edgar/data/1584509/000158450926000152/ex991armkq4fy2026.htm"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-13T19:24:51Z",
+    "says": "Chaince Digital's quarterly report: about $34 million of cash and $14 million of short-term investments at Sept 30, a net loss of about $2.2 million over nine months, and conditions that at first raised substantial doubt about continuing as a going concern, which management says its plans and cash alleviate.",
+    "ticker": "CD",
+    "tier": "reported",
+    "url": "https://www.sec.gov/Archives/edgar/data/1527762/000149315226051646/form10-q.htm"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-16T13:45:00Z",
+    "says": "Bitcoin on the 15-minute chart: $68,526 at Friday's 4pm New York close, a low of $62,040 on Saturday evening New York time, $64,297 at 8:45am on Monday.",
+    "tier": "reported",
+    "url": "https://query1.finance.yahoo.com/v8/finance/chart/BTC-USD?range=5d&interval=15m&includePrePost=true"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-16T13:45:00Z",
+    "says": "Chaince Digital on Friday's 5-minute chart: $5.26 at the open, a low of $3.69 at 2:00pm New York time, $4.27 near the close; no trade before Monday's open.",
+    "tier": "reported",
+    "url": "https://query1.finance.yahoo.com/v8/finance/chart/CD?range=2d&interval=5m&includePrePost=true"
+   }
+  ],
+  "singles": [
+   {
+    "beneath": "The stock had already fallen about 21% over the three sessions before the letter (-9.1%, -8.6%, -5.4%); I have not found why. A headline says it was down 20% in Sunday-night trading, so part of that has come back. It was worth about $11.3 billion at Friday's close, with $150.8 million of cash at Sept 30 (investments not counted) against losses of $832.7 million over four quarters. The company says its wider program continues and cites five positive Phase 3 studies between it and Akeso.",
+    "cause": "Summit fell 13.1% before the open. On Sunday Nov 15 it said the FDA had issued a complete response letter for ivonescimab with chemotherapy in a form of lung cancer: the application cannot be approved in its present form because, in the FDA's view, effectiveness is not established without a statistically significant improvement in overall survival. The trial (HARMONi) met its other main goal, slowing the disease, and showed a survival trend that did not reach significance.",
+    "evidence": [
+     "m:SMMT",
+     "f:SMMT:1",
+     "h:SMMT",
+     "n:SMMT",
+     "s2",
+     "s4",
+     "s5",
+     "https://www.sec.gov/Archives/edgar/data/1599298/000159929826000092/ivonescimabcrlscenariopr.htm"
+    ],
+    "kind": "reported",
+    "t": "SMMT"
+   },
+   {
+    "beneath": "With one-day settlement a buyer today no longer receives the distribution, so the price steps down by about that amount; that step is my inference, since the release gives only the record date. The scan's ranges are built on prices adjusted for distributions, but the check compares the latest trade with Friday's close without taking a distribution off. So this flag is the check's artifact, not a move. The yield is the thing to know: $2.00 a year on a $4.74 unit is 42%, from a company that lost $1.0 billion over four quarters; holders may take units instead of cash.",
+    "cause": "Icahn Enterprises is flagged at -11.8%, outside its 9-in-10 range, with no news. It is the distribution leaving the price: $0.50 per unit goes to holders of record at the close of Monday Nov 16 (its Nov 3 release), and $0.50 is 10.5% of Friday's $4.74 close. Net of it the units are down about 1%.",
+    "evidence": [
+     "m:IEP",
+     "x:IEP",
+     "n:IEP",
+     "https://www.sec.gov/Archives/edgar/data/813762/000110465926121660/tm2628850d1_ex99-1.htm"
+    ],
+    "kind": "inferred",
+    "t": "IEP"
+   },
+   {
+    "beneath": "The same artifact as Icahn Enterprises: a dividend leaving the price, read by the check as a move.",
+    "cause": "Genco is flagged at -4.4% with no news. Its record $1.05 dividend goes to holders of record on Nov 16 (its Nov 4 release); $1.05 is 4.0% of Friday's $26.14 close. Net of the dividend it is about flat.",
+    "evidence": [
+     "m:GNK",
+     "x:GNK",
+     "https://www.sec.gov/Archives/edgar/data/1326200/000114036126041978/ef20084815_ex99-1.htm"
+    ],
+    "kind": "inferred",
+    "t": "GNK"
+   },
+   {
+    "beneath": "No page I read says why a beat was sold. The stock had risen 46% this year (AP), and the release says incentive pay tied to the outperformance took $0.07 off earnings per share. The direction is not explained; the move rests on seven pre-market prints.",
+    "cause": "Aramark fell 5.5% before the open after reporting its fiscal fourth quarter. The results beat analysts' estimates (AP and Zacks: adjusted earnings of 78 cents against 75 expected, revenue of $5.29 billion against $5.27 billion). Its outlook for fiscal 2027 is organic revenue growth of 9% to 10%, adjusted operating income growth of 15% to 19% and adjusted earnings per share growth of 20% to 25%, with a new $1 billion buyback and a 17% higher dividend.",
+    "evidence": [
+     "m:ARMK",
+     "f:ARMK:1",
+     "s11",
+     "s12",
+     "s13",
+     "https://www.sec.gov/Archives/edgar/data/1584509/000158450926000152/ex991armkq4fy2026.htm"
+    ],
+    "kind": "reported",
+    "t": "ARMK"
+   },
+   {
+    "beneath": "Naming a candidate is an early step, before trials in people. The move rests on three pre-market prints, the last at 7:00am New York time, and Ideaya is one of CG Oncology's partners (they moved together over the past year) on a morning when CG Oncology jumped. Which of these carried it I cannot tell.",
+    "cause": "Ideaya rose 6.6% before the open. On Sunday it named a new development candidate, IDE101, aimed at tumors that have lost the CDKN2A gene, which it puts at about 10% to 15% of solid tumors.",
+    "evidence": [
+     "m:IDYA",
+     "s10",
+     "c2",
+     "p:CGON~IDYA"
+    ],
+    "kind": "reported",
+    "t": "IDYA"
+   }
+  ],
+  "themes": [
+   {
+    "beneath": "Three known events sit just ahead (Stocktwits): Nvidia's results on Tuesday Nov 17 after the close, its first under an interim chief; Anthropic's public offering this week at a reported valuation of about $1.4 trillion; and the Fed's October minutes. In proportion, AMD and Broadcom were still about 13% higher over the last five sessions and the chip index about 7% (Invezz), so this morning takes back part of last week's rise. No page I read reports a new fact about demand, so I read the selling as caution ahead of the report; that reading is my inference.",
+    "cause": "Before the open the whole AI hardware group is lower: CoreWeave -6.9%, Sandisk -6.6%, Micron -6.4%, Marvell -6.2%, Super Micro -5.5%, Western Digital -5.5%, Seagate -5.5%, Intel -5.4%, AMD -5.2%, Dell -4.6%, Nvidia -3.8%, Broadcom -3.3%; the median of 59 chip stocks is -4.0%. Commerzbank Research, quoted by Invezz, calls the fallout from the leadership turmoil at Nvidia the dominant driver: investors first moved from Nvidia into its rivals, then sold those too. Reports that the former chief may return have not lifted Nvidia (Invezz). A second report cites concern about the sector's growth and how it is financed (Rallies).",
+    "evidence": [
+     "t1",
+     "g:3674",
+     "g:3672",
+     "s14",
+     "s17",
+     "q:NVDA",
+     "q:AMD",
+     "q:AVGO",
+     "q:MRVL",
+     "q:INTC",
+     "q:DELL",
+     "q:SMCI",
+     "q:CRWV",
+     "q:MU",
+     "q:SNDK",
+     "q:WDC",
+     "q:STX",
+     "q:MSFT",
+     "q:AAPL",
+     "q:GOOGL",
+     "q:META",
+     "q:AMZN",
+     "https://finwire.io/news/stock-markets-news/why-are-amd-and-broadcom-stocks-falling-in-premarket-trading-on-monday",
+     "https://rallies.ai/news/ai-linked-stocks-fall-further-as-nvidia-worries-persist-fb2931609dafa253",
+     "https://stocktwits.com/news-articles/markets/equity/dow-s-and-p-500-nasdaq-futures-edge-lower-as-markets-brace-for-nvidia-earnings-anthropic-ipo-fed-minutes-smmt-nbis-help-mstr-in-focus/cNb7ePKR9Xb"
+    ],
+    "kind": "reported",
+    "mechanism": "Last note's question is answered: AMD and Broadcom are falling with Nvidia, and AMD by more, so this is one group being marked down, not money moving between rivals. The largest falls are not Nvidia's. They are in memory and storage (Sandisk, Micron, Western Digital, Seagate) and in CoreWeave, which the report groups with other sellers of AI computing capacity. The buyers of the hardware barely move: Microsoft +0.1%, Apple +0.3%, Alphabet, Meta and Amazon -0.6% each. My inference: the worry has shifted from who runs Nvidia to how much hardware gets bought, which reaches the suppliers and not their customers.",
+    "members": [
+     "NVDA",
+     "AMD",
+     "AVGO",
+     "MRVL",
+     "INTC",
+     "DELL",
+     "SMCI",
+     "CRWV",
+     "MU",
+     "SNDK",
+     "WDC",
+     "STX"
+    ],
+    "name": "AI hardware marked down again before Nvidia reports",
+    "watch": "Nvidia's numbers and outlook on Tuesday evening. Whether the fall spreads to the buyers (Microsoft, Alphabet, Amazon, Meta). Whether memory and storage keep falling more than Nvidia. Any statement from Nvidia's board about the chief's post."
+   },
+   {
+    "beneath": "Strategy has two things of its own under the bitcoin move. MSCI will delete it from its equity indexes at month-end under new rules for companies that mostly hold financial assets; JPMorgan estimates up to $8.8 billion of selling if other index providers follow, against Strategy's own earlier estimate of $2.8 billion (24/7 Wall St). And its weekly filing shows what its share sales now pay for: of $244.7 million raised from 2,087,040 new shares in the week of Nov 9-15, $206.3 million (84%) went to buying back its own STRC preferred stock and $33.4 million to 485 bitcoin. It holds 850,849 bitcoin at an average cost of $75,452; at about $64,300 bitcoin is 15% below that. One week of new shares going mainly to shrink its preferred stock is what the filing shows; whether that is a lasting change is not known.",
+    "cause": "Bitcoin fell over the weekend: $68,526 at Friday's 4pm close, a low of $62,040 on Saturday evening, about $64,300 before Monday's open, down 6.2% and near a three-month low. Reports tie it to expectations of a Fed rate rise in December, with some traders pricing a half-point move, and to uncertainty over crypto rules (InvestorsHub).",
+    "evidence": [
+     "t2",
+     "r:bitcoin",
+     "d:bitcoin",
+     "c1",
+     "g:6199",
+     "x:MSTR",
+     "x:CRCL",
+     "x:FWDI",
+     "x:PURR",
+     "f:MSTR:1",
+     "s7",
+     "s15",
+     "s16",
+     "q:COIN",
+     "q:SBET",
+     "q:BMNR",
+     "q:ASST",
+     "q:XXI",
+     "q:MARA",
+     "q:GLXY",
+     "q:HOOD",
+     "https://investorshub.advfn.com/market-news/article/40076/cryptocurrency-stocks-fall-in-premarket-trading-as-bitcoin-drops-towards-64600",
+     "https://247wallst.com/investing/2026/11/15/michael-saylors-strategy-just-lost-its-msci-index-spot-as-bitcoin-plunges-is-mstr-stock-a-sell/",
+     "https://www.sec.gov/Archives/edgar/data/1050446/000119312526462151/mstr-20261116.htm",
+     "https://query1.finance.yahoo.com/v8/finance/chart/BTC-USD?range=5d&interval=15m&includePrePost=true"
+    ],
+    "kind": "reported",
+    "mechanism": "The stocks that moved most with bitcoin over the past year fell at close to their usual rates: MSTR -8.4% (its rate implies -7.8%), SBET -7.1% (-7.4%), BMNR -7.3% (-8.0%), COIN -7.2% (-6.3%), ASST -9.2% (-8.9%), FWDI -9.1% (-7.1%). With the market and bitcoin taken out, Strategy's leftover is -0.1%, Circle's -0.9%, Forward's -1.1%. That answers last note's question: they opened where bitcoin put them, with nothing of their own in the gap. It is also why the 'Finance Services' group shows -5.5%: the group's movers are crypto companies (my reading of its members).",
+    "members": [
+     "MSTR",
+     "PURR",
+     "CRCL",
+     "FWDI",
+     "COIN",
+     "SBET",
+     "BMNR",
+     "ASST",
+     "XXI",
+     "MARA",
+     "GLXY",
+     "HOOD"
+    ],
+    "name": "Crypto-heavy stocks reopened at their usual rates times bitcoin's weekend fall",
+    "watch": "Bitcoin against its weekend low of $62,040. Strategy's next weekly filing: does the split between buying back preferred stock and buying bitcoin persist? The index deletion at month-end. A gap between these stocks and their usual rate would mean news of their own."
+   },
+   {
+    "beneath": "In proportion: CG Oncology was worth about $6.6 billion at Friday's close, so the rise adds about $1.9 billion. UroGen was worth about $1.3 billion, so its fall takes off about $0.13 billion. CG Oncology had $28.2 million of cash at Sept 30 with investments not counted, and has sold new shares four times in three years; the mosaic put its chance of a share-sale filing in the next 20 sessions at 8.6% before this move, against 0.9% for the usual stock. That is a chance that a filing comes, measured before the result, and not a direction.",
+    "cause": "CG Oncology rose 29.0% before the open after reporting that its Phase 3 trial PIVOT-006 met its main goal: its drug cretostimogene cut the risk of the cancer returning by 68% (hazard ratio 0.32, 95% interval 0.23 to 0.45, p below 0.0001) in intermediate-risk and high-grade Ta bladder cancer, with no severe treatment-related side effects. The company puts this group at about 50,000 patients with no approved treatment of this kind and plans a second application to the FDA in the second quarter of 2027 (reported, its filing). UroGen fell 10.2% in the same hours with no filing and no story of its own.",
+    "evidence": [
+     "m:CGON",
+     "f:CGON:1",
+     "s1",
+     "x:CGON",
+     "n:CGON",
+     "z:CGON",
+     "m:URGN",
+     "x:URGN",
+     "n:URGN",
+     "https://www.sec.gov/Archives/edgar/data/1991792/000119312526462199/ck0001991792-ex99_1.htm",
+     "https://www.sec.gov/Archives/edgar/data/1668243/000143774926034769/ex_1036873.htm"
+    ],
+    "kind": "inferred",
+    "mechanism": "UroGen sells in the same disease. Its drug Zusduri made $68.0 million last quarter, its next version UGN-103 is under FDA review for low-grade intermediate-risk bladder cancer, and it plans a 2027 trial of UGN-103 as an add-on treatment in newly diagnosed intermediate-risk patients (its Nov 4 results release). That is the use CG Oncology has now shown a Phase 3 result in. That UroGen fell because of CG Oncology's result is my inference: no page I could read says so. The two did not move together over the past year (neither is among the other's partners), so the link is the disease, not a habit of moving together.",
+    "members": [
+     "CGON",
+     "URGN"
+    ],
+    "name": "Bladder cancer: CG Oncology's trial result, and UroGen falling beside it",
+    "watch": "Whether UroGen's fall holds once the session opens (it rests on seven pre-market prints) and whether the company or an analyst answers the result. The full data on Dec 2 at the urologic oncology meeting. A share sale by CG Oncology after the jump would fit its habit; that says nothing about the price."
+   }
+  ],
+  "threads": [
+   "Nvidia reports on Tuesday Nov 17 after the close: does the group steady into it or keep falling, and do memory and storage keep falling more than Nvidia?",
+   "Does the AI hardware fall spread to the buyers (Microsoft, Alphabet, Amazon, Meta), which were flat before the open?",
+   "Bitcoin against its weekend low of $62,040, and whether the crypto-heavy stocks keep to their usual rates in the session.",
+   "UroGen: does its fall hold in the session, and does the company or an analyst answer CG Oncology's result?",
+   "Summit: what it does next with the FDA, and why the stock fell 21% in the three sessions before the letter.",
+   "Do the thin pre-market moves (Dianthus, Immunocore, Corsair, Molina, Ideaya) hold once the session opens?",
+   "Vir traded at about $9.81 before the open against its $10 offering, which closes today.",
+   "Chaince Digital (CD): Friday's low came at 2:00pm New York time, 24 minutes before its quarterly report was filed, and it rose after; the fall is still unexplained and it has not traded before Monday's open. Correction to the last note: a filing did come out during Friday's session.",
+   "Global Payments and Modine: no new information before the open.",
+   "Inhibrx: data on Nov 19-20; any sale under its new at-the-market agreement before then?",
+   "A third known flaw in the check: it reads a dividend leaving the price as a move (Icahn Enterprises, Genco today). Fix offered, not made."
+  ],
+  "unexplained": [
+   {
+    "t": "DNTH",
+    "tried": "No filing since the close, no story in its feed, nothing dated today found by search. The -6.7% rests on a single pre-market print at 7:00am New York time ($85.62 against Friday's $91.81) and its partners are flat. Look again in the session."
+   },
+   {
+    "t": "IMCR",
+    "tried": "No filing, no story, nothing dated today found by search. The +6.9% rests on two pre-market prints, the last at 6:11am New York time ($32.00 against Friday's $29.94)."
+   },
+   {
+    "t": "CRSR",
+    "tried": "No filing, no story, nothing found by search. It printed in nineteen pre-market intervals, so it is trading; the market carried -1.4% of the -6.5% (beta 2.09) and its partners HP and Logitech are down 2.2% and 1.2%."
+   },
+   {
+    "t": "MOH",
+    "tried": "No filing but officers' ownership forms on Friday evening, no story today. It rose with the other health insurers (Centene +2.8%, Humana +1.9%, Elevance +1.2%, UnitedHealth +1.1%) on a falling morning, so the cause is probably the group's and not Molina's, but I found no page dated today that states one."
+   }
+  ]
+ },
+ "recorded_at": "2026-11-16T13:51:17Z"
+}
