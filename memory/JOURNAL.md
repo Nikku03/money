@@ -56,3 +56,7 @@ FAIL); "the market runs on chains of cause and effect, news and catalysts": the 
   2026-11-10 word for word). Imported the other trading session, `session_01MSaQVTPoBwSsjdSBSk9kdd`, through the
   remote-session tools: 38 saved pages, 2,277 passages, 2026-11-04 to 11-09, with the person's 34 messages there
   (its reasoning is not shared). Built `memory import --session`.
+- Then: "there's also another session named High variability trading ML model; add that too." Imported
+  `session_018ANuE3nDWJsR8htWjJDJhG`: 251 saved pages, 9,212 passages, 2026-07-29 to 10-21, 160 of the person's
+  messages. Found that documents and skills loaded into a session looked like the person's words; now only
+  messages sent from the person's app count as theirs (both imported sessions re-read with that rule).

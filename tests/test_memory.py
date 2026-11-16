@@ -261,11 +261,13 @@ class MeaningTest(TalkTest):
         self.assertEqual(memory._model.calls, 5)                           # index embeds the rest, once
 
     def test_another_session_s_saved_pages_join_the_talk(self):
-        def ev(kind, uid, at, content):
-            return {"created_at": at, kind: {"uuid": uid, "internal_anthropic_catchall": {
+        def ev(kind, uid, at, content, **flags):
+            return {"created_at": at, kind: {"uuid": uid, **flags, "internal_anthropic_catchall": {
                 "message": {"content": content}, "session_id": "session_other", "timestamp": at}}}
         page = {"ccr": {"data": [
-            ev("user", "o1", "2026-11-05T10:00:00Z", "run the paper traders every evening"),
+            ev("user", "o1", "2026-11-05T10:00:00Z", "run the paper traders every evening", client_platform="ios"),
+            ev("user", "o6", "2026-11-05T10:00:02Z", "Base directory for this skill: ...", isSynthetic=True),
+            ev("user", "o7", "2026-11-05T10:00:03Z", "a document pasted by the system"),
             ev("user", "o2", "2026-11-05T10:00:01Z", "<task-notification>done</task-notification>"),
             ev("user", "o3", "2026-11-05T09:00:00Z", "This session is being continued from a previous conversation."),
             ev("assistant", "o4", "2026-11-05T10:01:00Z", [

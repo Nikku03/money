@@ -265,12 +265,16 @@ NOT_A_PERSON = ("<", "Stop hook feedback", "[Image", "[Request interrupted", "Ca
 def event_lines(path: Path) -> list[dict]:
     """Transcript lines from one saved page of another session's events (the remote-session tool's list_events,
     as saved to a file), oldest first, in the shape ``chunks_of`` reads. That session's own reasoning is not shared
-    (it comes back empty) and is left out; its messages, replies, tool calls, results and summaries are kept."""
+    (it comes back empty) and is left out; its messages, replies, tool calls, results and summaries are kept. A
+    message counts as the person's when it was sent from their app (it carries ``client_platform``); documents and
+    skills loaded into the session, notifications and hook messages do not."""
     text = Path(path).read_text()
-    body = next((ln for ln in text.split("\n") if ln.lstrip().startswith(("{\"ccr\"", "{\"data\""))), None)
-    if body is None:
+    starts = [i for i in (text.find('{"ccr"'), text.find('{"data"')) if i >= 0]
+    if not starts:
         return []
-    page = json.loads(body)
+    end = text.rfind("</other-session")
+    body = text[min(starts):end if end > min(starts) else len(text)].strip()
+    page = json.loads(body, strict=False)          # a page can hold raw line breaks inside its strings
     out = []
     for e in (page.get("ccr") or page).get("data") or []:
         kind = next((k for k in e if k in ("user", "assistant")), None)
@@ -286,10 +290,12 @@ def event_lines(path: Path) -> list[dict]:
         if kind == "user" and (isinstance(content, str) or (isinstance(content, list) and content
                                                              and all(b.get("type") == "text" for b in content))):
             said = _text_of(content).lstrip()
+            typed = ("client_platform" in inner or "client_platform" in ia) and not (inner.get("isSynthetic")
+                                                                                   or ia.get("isSynthetic"))
             if said.startswith("This session is being continued"):
                 line["isCompactSummary"] = True
-            elif not said.startswith(NOT_A_PERSON):        # notifications, hook messages, image notes
-                line["origin"] = {"kind": "human"}
+            elif typed and not said.startswith(NOT_A_PERSON):
+                line["origin"] = {"kind": "human"}         # sent from the person's app; loaded skills are synthetic
         out.append(line)
     return out
 
@@ -685,7 +691,7 @@ def _cmd(a) -> int:
         hits = recall(q, a.k, set(a.kind) if a.kind else None, a.since, meaning=not a.words_only)
         if not hits:
             print("nothing in the memory bank matches")
-        elif hits[0].get("by") == "words":
+        elif hits[0].get("by") == "words" and not a.words_only:
             print("(ranked by words only: pip install fastembed for ranking by meaning too)")
         for i, h in enumerate(hits, 1):
             where = h.get("src") or f"talk {h.get('session', '').removeprefix('session_')[:8]}"

@@ -61,8 +61,14 @@ not the transcripts on this machine:
 
 That session's messages, replies, tool calls, results and summaries come through; its reasoning does not (it is
 not shared between sessions). System notices (hook messages, image notes, notifications) are not taken for the
-person's words. Imported so far: `session_01MSaQVTPoBwSsjdSBSk9kdd` (2026-11-04 to 11-09, the paper traders
-F1-F5 and the options checks V1/O1 on branch `claude/sleepy-goldberg-2ma18z`).
+person's words: a message is the person's when it was sent from their app (it carries `client_platform`), and
+documents or skills loaded into a session are marked synthetic. Pages with raw line breaks inside their text are
+read too. Imported so far:
+
+| Session | Dates | Passages | The person's messages |
+|---|---|---|---|
+| `session_01MSaQVTPoBwSsjdSBSk9kdd` "Biological neuron game with dimensional connections": the paper traders F1-F5 and the options checks V1/O1 (branch `claude/sleepy-goldberg-2ma18z`) | 2026-11-04 to 11-09 | 2,277 | 32 |
+| `session_018ANuE3nDWJsR8htWjJDJhG` "High variability trading ML model": the first catalyst and moonshot models | 2026-07-29 to 10-21 | 9,212 | 160 |
 
 ## Keeping it across resets
 
