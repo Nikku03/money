@@ -69,9 +69,11 @@ class TalkTest(MemoryTest):
         self.tx = os.path.join(self._tx.name, "session.jsonl")
         os.environ["BRAIN_TRANSCRIPTS"] = os.path.join(self._tx.name, "*.jsonl")
         memory._model = False                                            # words alone here; MeaningTest brings one
+        memory._seen = None
 
     def tearDown(self):
         memory._model = None
+        memory._seen = None
         os.environ.pop("BRAIN_TRANSCRIPTS", None)
         self._tx.cleanup()
         super().tearDown()
@@ -103,6 +105,13 @@ class TalkTest(MemoryTest):
         self.assertNotIn("example.com", you["text"])
         tool = next(c for c in talk if c["kind"] == "tool")
         self.assertIn("api_key=[secret]", tool["text"])
+        said = memory.mask("the Polygon API key `o6Nvj90jzHEo9fcpEXAMPLEq6jKnSNTUZ` and a short key `abc`")
+        self.assertEqual(said, "the Polygon API key `[secret]` and a short key `abc`")
+        self.assertEqual(memory.mask("export PKEY=abcDEF123456ghiJKL789012mnoPQR34; max_tokens=16000"),
+                         "export PKEY=[secret]; max_tokens=16000")
+        self.assertEqual(memory.mask("whose api key is abcDEF123456ghiJKL789012mnoPQR99"), "whose api key is [secret]")
+        self.assertEqual(memory.mask("curl https://x.test/v2/abcDEF123456ghiJKL789012mnoPQR99/bars"),
+                         "curl https://x.test/v2/[secret]/bars")           # seen as a key once: masked anywhere
         result = next(c for c in talk if c["kind"] == "result")
         whole = memory.find(result["id"])                                # a result comes with its call
         self.assertEqual([x["kind"] for x in whole], ["tool", "result", "result", "result"])

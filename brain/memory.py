@@ -60,6 +60,13 @@ K1, B = 1.2, 0.75
 _EMAIL = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
 _SECRET = re.compile(r"\b(sk-[A-Za-z0-9_-]{16,}|gh[pousr]_[A-Za-z0-9]{20,}|xox[abp]-[A-Za-z0-9-]{10,}|"
                      r"AKIA[0-9A-Z]{16})\b|((?:api_?key|token|password|secret)=)[^&\s\"']+", re.IGNORECASE)
+_ASSIGN_SECRET = re.compile(r"\b([A-Za-z0-9_]*(?:key|token|secret|password|passwd)[A-Za-z0-9_]*\s*[=:]\s*[\"'`]?)"
+                            r"([A-Za-z0-9_\-]{20,})", re.IGNORECASE)
+_NEAR_SECRET = re.compile(r"\b((?:api[ _-]?)?key|token|secret|password)\b([^\n]{0,24}?[\s`'\"(:])"
+                          r"(?=[A-Za-z0-9]*\d)(?=[A-Za-z0-9]*[A-Za-z])([A-Za-z0-9]{24,})\b", re.IGNORECASE)
+SEEN_SECRETS = "secrets.local"
+_NAMED_SECRET = re.compile(r"\b(api[ _-]?key|key|token|secret|password|passwd)\b(\W{1,6})([A-Za-z0-9_\-]{20,})",
+                           re.IGNORECASE)
 _WORD = re.compile(r"[a-z0-9][a-z0-9_]*")
 _SHOWN = re.compile(r"\(show d?[0-9a-f]{15,16}\)")      # a line of recall's own output
 STOP = frozenset(["a", "an", "and", "are", "as", "at", "be", "but", "by", "for", "from", "has", "have", "i", "if", "in", "into", "is", "it", "its", "of", "on", "or", "so", "that", "the", "their", "then", "there", "these", "this", "to", "was", "were", "what", "when", "which", "who", "will", "with", "you", "your", "we", "our", "not", "no", "do", "does", "did", "can", "could", "would", "should"])
@@ -88,10 +95,42 @@ def transcripts() -> list[Path]:
 
 
 # ---------- talk: the conversation, captured ----------
+_seen: set[str] | None = None
+
+
+def _seen_secrets() -> set[str]:
+    """Strings once found to be a key. They are kept in the local home only (never packed, uploaded or
+    committed), so that the same key is masked wherever it turns up later, with or without the word key near it."""
+    global _seen
+    if _seen is None:
+        p = talk_dir() / SEEN_SECRETS
+        _seen = {ln for ln in p.read_text().splitlines() if ln} if p.exists() else set()
+    return _seen
+
+
+def _hide(m: re.Match) -> str:
+    found = m.group(m.lastindex)
+    random_looking = (re.search(r"\d", found) and re.search(r"[A-Za-z]", found) and "_" not in found
+                      and not re.fullmatch(r"[0-9a-f]+", found))
+    if random_looking and found not in _seen_secrets():
+        _seen_secrets().add(found)
+        with (talk_dir() / SEEN_SECRETS).open("a") as fh:
+            fh.write(found + "\n")
+    return m.string[m.start():m.start(m.lastindex)] + "[secret]"
+
+
 def mask(text: str) -> str:
-    """Email addresses and keys out of a text before it is kept."""
+    """Email addresses and keys out of a text before it is kept: known key shapes; ``NAME_KEY=value`` and
+    ``key: value`` pairs; a long unbroken token right after, or within a few words of, the word key, token, secret
+    or password ("the API key is ..."); and any string found to be a key before, wherever it appears."""
     text = _EMAIL.sub("[email]", text)
-    return _SECRET.sub(lambda m: (m.group(2) or "") + "[secret]", text)
+    text = _SECRET.sub(lambda m: (m.group(2) or "") + "[secret]", text)
+    for rx in (_ASSIGN_SECRET, _NEAR_SECRET, _NAMED_SECRET):
+        text = rx.sub(_hide, text)
+    for known in _seen_secrets():
+        if known in text:
+            text = text.replace(known, "[secret]")
+    return text
 
 
 def _clip(text: str, head: int, tail: int = 0) -> str:
