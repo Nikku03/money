@@ -227,13 +227,23 @@ def is_gated_mosaic(r: dict) -> bool:
     return is_mosaic(r) and r.get("gate_type") in ("event", "lag")
 
 
+def is_tilt(r: dict) -> bool:
+    """A step-2 test: the quality tilt or buying after fear (brain/research/tilttest.py, docs/TILT.md)."""
+    return r.get("kind") == "tilt"
+
+
+def is_gated_tilt(r: dict) -> bool:
+    return is_tilt(r) and r.get("gate_type") in ("tilt", "timing")
+
+
 def is_gated_forecast(r: dict) -> bool:
     """A forecast result with a declared gate (F1b, F1c); descriptive ones (F1a, F1d) are not."""
     return is_forecast(r) and (r.get("gate_type") == "ic" or (r.get("gate_type") is None and "p" in r))
 
 
 def _bh_p(r: dict) -> float:
-    if is_forecast(r) or is_link(r) or is_event(r) or is_move(r) or is_shock(r) or is_range(r) or is_mosaic(r):
+    if (is_forecast(r) or is_link(r) or is_event(r) or is_move(r) or is_shock(r) or is_range(r) or is_mosaic(r)
+            or is_tilt(r)):
         p = r.get("p")
         return float(p) if isinstance(p, (int, float)) and math.isfinite(p) else 1.0  # no p counts as 1
     return r["test"]["perm_p"]
@@ -260,7 +270,7 @@ def _link_verdict(r: dict, q: float) -> str:
 
 
 def _move_verdict(r: dict, q: float) -> str:
-    if not (is_gated_move(r) or is_gated_shock(r) or is_gated_range(r) or is_gated_mosaic(r)):
+    if not (is_gated_move(r) or is_gated_shock(r) or is_gated_range(r) or is_gated_mosaic(r) or is_gated_tilt(r)):
         return "REPORT"
     if not (r.get("controls") or {}).get("pass"):
         return "FAIL (controls)"
@@ -278,7 +288,8 @@ def verdicts(path=None) -> list[dict]:
     gone = ledger.withdrawn(path)
     tested = {k: r for k, r in res.items()
               if is_hypothesis(r) or is_gated_forecast(r) or is_gated_link(r) or is_gated_event(r)
-              or is_gated_move(r) or is_gated_shock(r) or is_gated_range(r) or is_gated_mosaic(r)}
+              or is_gated_move(r) or is_gated_shock(r) or is_gated_range(r) or is_gated_mosaic(r)
+              or is_gated_tilt(r)}
     q_of = dict(zip(tested, bh_adjust([_bh_p(r) for r in tested.values()])))
     rows = []
     for k, r in res.items():
@@ -291,7 +302,7 @@ def verdicts(path=None) -> list[dict]:
         if is_link(r) or is_event(r):
             rows.append({**r, "bh_q": q, "verdict": _link_verdict(r, q)})
             continue
-        if is_move(r) or is_shock(r) or is_range(r) or is_mosaic(r):
+        if is_move(r) or is_shock(r) or is_range(r) or is_mosaic(r) or is_tilt(r):
             rows.append({**r, "bh_q": q, "verdict": _move_verdict(r, q)})
             continue
         te = r["test"]
@@ -356,6 +367,7 @@ def report(ledger_path=None, results_path=None) -> str:
     shk = [r for r in every if is_shock(r)]
     rng = [r for r in every if is_range(r)]
     msc = [r for r in every if is_mosaic(r)]
+    tlt = [r for r in every if is_tilt(r)]
     led = Path(ledger_path or config.LEDGER)
     try:
         led_name = led.resolve().relative_to(config.ROOT.resolve()).as_posix()
@@ -366,7 +378,7 @@ def report(ledger_path=None, results_path=None) -> str:
                           f"Generated {now_iso()} from `{led_name}`. Every number below is copied from the ledger.",
                           "", *_forecast_section(forecasts), *_link_section(links, ledger_path),
                           *_event_section(evts, ledger_path), *_move_section(mvs), *_shock_section(shk),
-                          *_range_section(rng), *_mosaic_section(msc)]) + "\n"
+                          *_range_section(rng), *_mosaic_section(msc), *_tilt_section(tlt)]) + "\n"
         Path(results_path or config.RESULTS).write_text(text)
         return text
     by_uni: dict[str, list[dict]] = {}
@@ -396,6 +408,7 @@ def report(ledger_path=None, results_path=None) -> str:
         + (" and every gated shock test (see Shocks)" if any(is_gated_shock(r) for r in shk) else "")
         + (" and every gated weekly-range test (see Weekly ranges)" if any(is_gated_range(r) for r in rng) else "")
         + (" and every gated mosaic test (see Mosaic)" if any(is_gated_mosaic(r) for r in msc) else "")
+        + (" and every gated step-2 test (see Step 2)" if any(is_gated_tilt(r) for r in tlt) else "")
         + ".",
         "",
         "| Hypothesis | Universe | Select | TEST net excess / mo | Annualised | Info ratio | Months won | Perm p | BH q | TRAIN net excess / mo | TRAIN p | TEST coverage | Verdict |",
@@ -476,6 +489,8 @@ def report(ledger_path=None, results_path=None) -> str:
         lines += ["", *_range_section(rng)]
     if msc:
         lines += ["", *_mosaic_section(msc)]
+    if tlt:
+        lines += ["", *_tilt_section(tlt)]
     text = "\n".join(lines) + "\n"
     Path(results_path or config.RESULTS).write_text(text)
     return text
@@ -1074,3 +1089,71 @@ def _mosaic_section(rows: list[dict]) -> list[str]:
                      "is not a trade: shorting costs borrow fees and the flagged stocks are volatile. The universe is "
                      "chosen today (survivorship: companies that failed or were bought are missing, so the events of "
                      "the weakest companies are undercounted and the flagged stocks' returns flattered)."), ""]
+
+
+def _tilt_section(rows: list[dict]) -> list[str]:
+    """Step 2 of research/POSTMORTEM-2026-11.md (brain/research/tilttest.py, docs/TILT.md): the quality tilt on a
+    list chosen month by month, and buying after fear."""
+    tilt = [r for r in rows if r.get("gate_type") == "tilt"]
+    timing = [r for r in rows if r.get("gate_type") == "timing"]
+    if not (tilt or timing):
+        return []
+    lines = ["## Step 2: the quality tilt and buying after fear", "",
+             ("Declared once each before running (`brain/research/tilttest.py`, `docs/TILT.md`). The gate: the "
+              "statistic positive, p < 0.05, the controls passing, and Benjamini–Hochberg q < 0.10 across every gated "
+              "test in the ledger."), "",
+             "| Test | What | Statistic | p | BH q | Controls | Verdict |", "| --- | --- | --- | --- | --- | --- | --- |"]
+    words = []
+    for r in tilt + timing:
+        q = f"{r['bh_q']:.3f}" if isinstance(r.get("bh_q"), float) and math.isfinite(r["bh_q"]) else "–"
+        g, c = r.get("gate") or {}, r.get("controls") or {}
+        what = ("top third by quality against the list, a month" if r["gate_type"] == "tilt"
+                else "SPY timed after fear against a constant mix, a week")
+        lines.append(f"| {r['id']} | {what} | {_pct(g.get('stat'), 3)} | {g.get('p', float('nan')):.4f} | {q} | "
+                     f"{'passed' if c.get('pass') else 'FAILED'} | **{r['verdict'].split(':')[0]}** |")
+    for r in tilt:
+        m, c = r["metrics"], r.get("controls") or {}
+        te, tr, a, al = m["test"], m["train"], m["annual"], m["traits_alone"]
+        wj, sv = m["without_junk"], m["survivorship"]
+        words.append(
+            f"- **{r['id']}** (the quality tilt): {m['months']} TEST months from {m['first']} to {m['last']}, a list of "
+            f"{m['list_size_median']:.0f} stocks a month chosen by market value as known each month from "
+            f"{m['tickers']} candidates. The top third by quality beat the list by {_pct(te['mean_net_excess'], 3)} a "
+            f"month after costs (permutation p {te['perm_p']:.4f}; {te['months_beating_benchmark']} of "
+            f"{te['n_months']} months won; turnover {te['avg_turnover'] * 100:.0f}% a month). TRAIN (2011-2018): "
+            f"{_pct(tr['mean_net_excess'], 3)} a month, p {tr['perm_p']:.4f}. Each trait alone over TEST (reported): "
+            + ", ".join(f"{k} {_pct(v['mean_net_excess'], 3)} (p {v['perm_p']:.3f})" for k, v in al.items())
+            + f". By market value, the list without its bottom third beat the list by market value by "
+            f"{_pct(wj['mean_net_excess'], 3)} a month (reported). A year over TEST: the tilt {_pct(a['tilt'], 1)}, the "
+            f"list at equal weight {_pct(a['list_ew'], 1)}, the list by market value {_pct(a['list_cw'], 1)}, the list "
+            f"without its junk {_pct(a['without_junk'], 1)}, SPY {_pct(a['SPY'], 1)}, RSP (the S&P 500 at equal weight) "
+            f"{_pct(a['RSP'], 1)}. What the survivor-only data adds: the list at equal weight against RSP "
+            f"{_pct(sv['list_ew_minus_rsp'], 1)} a year, by market value against SPY {_pct(sv['list_cw_minus_spy'], 1)}. "
+            f"Controls: an oracle reached p {c.get('oracle_test_perm_p', float('nan')):.4f}; random signals redrawn "
+            f"monthly reached p < 0.05 in {c.get('random_false_positive_rate', float('nan')) * 100:.1f}% of draws, held "
+            f"fixed per stock in {c.get('persistent_random_false_positive_rate', float('nan')) * 100:.1f}% (not gated: "
+            f"above about 5%, the null is too narrow for a slow signal by that much). {r['verdict'].split(':')[0]}.")
+    for r in timing:
+        t, s, c = r["metrics"]["test"], r["metrics"]["seen"], r.get("controls") or {}
+        words.append(
+            f"- **{r['id']}** (buying after fear): {t['weeks']} TEST weeks from {t['first']} to {t['last']}, "
+            f"{t['spike_weeks']} spike weeks in {t['episodes']} episodes, {t['share_after'] * 100:.0f}% of weeks after "
+            f"fear. SPY beat bills by {_pct(t['spy_excess_after'], 3)} a week after fear and {_pct(t['spy_excess_calm'], 3)} "
+            f"otherwise. The timed portfolio beat the constant mix by {_pct(t['mean_excess'], 4)} a week (p "
+            f"{t['p']:.4f}). A year: timed {_pct(t['annual']['timed'], 1)}, constant mix "
+            f"{_pct(t['annual']['constant_mix'], 1)}, SPY held at 100% {_pct(t['annual']['spy'], 1)}; worst fall "
+            f"{_pct(t['window']['timed']['worst_fall'], 0)} against SPY's {_pct(t['window']['spy']['worst_fall'], 0)}. "
+            f"Seen before, not gated ({s['first']} to {s['last']}, {s['weeks']} weeks): SPY beat bills by "
+            f"{_pct(s['spy_excess_after'], 3)} a week after fear and {_pct(s['spy_excess_calm'], 3)} otherwise; the timed "
+            f"portfolio against the constant mix {_pct(s['mean_excess'], 4)} a week (p {s['p']:.4f}); a year timed "
+            f"{_pct(s['annual']['timed'], 1)}, SPY {_pct(s['annual']['spy'], 1)}. Controls: an oracle reached p "
+            f"{c.get('oracle_p', float('nan')):.4f}; random spike weeks reached p < 0.05 in "
+            f"{c.get('random_fpr', float('nan')) * 100:.1f}% of {c.get('n_random', 0)} draws. "
+            f"{r['verdict'].split(':')[0]}.")
+    return lines + ["", *words, "",
+                    ("Reading this: the list is chosen month by month by what was known then, but it holds only "
+                     "companies still filing today; RSP held the ones that failed or were bought, so the gap to it is "
+                     "what the missing companies add. The traits came from published research and from looks at "
+                     "2011-2026 on other lists, so T1a's TEST is not unseen: a PASS is an upper bound. T1b's TEST "
+                     "(1993-2010) had not been looked at. Paper only; nothing here places orders."), ""]
+
