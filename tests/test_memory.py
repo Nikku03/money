@@ -147,7 +147,7 @@ class TalkTest(MemoryTest):
         self.write([line("user", "u1", "2026-11-14T16:26:00Z", "make an all around mosaic",
                          origin={"kind": "human"})])
         memory.capture()
-        packed = memory.pack_talk()
+        packed, = memory.pack_talk()
         os.remove(memory.talk_dir() / memory.TALK)                       # the machine was reset
         self.assertEqual(memory.read_talk(), [])
         self.assertEqual(memory.merge_talk(packed), 1)
@@ -255,6 +255,30 @@ class MeaningTest(TalkTest):
         before = memory._model.calls
         memory.recall("plain", kinds={"you"})
         self.assertEqual(memory._model.calls, before)                    # nothing had to be embedded again
+
+    def test_a_save_too_large_for_one_upload_is_kept_in_parts_that_load_back(self):
+        memory._model = FakeModel()
+        self.write([line("user", f"u{i}", f"2026-11-14T16:{i:02d}:00Z", f"message {i}: " + os.urandom(300).hex(),
+                         origin={"kind": "human"}) for i in range(12)])
+        memory.capture()
+        memory.vectors(memory.library())
+        self.assertEqual([p.name for p in memory.pack_talk()], ["talk.jsonl.gz"])       # small: one file each
+        self.assertEqual([p.name for p in memory.pack_vectors()], [memory.VECTORS])
+        talk, vecs = memory.pack_talk(limit=1500), memory.pack_vectors(limit=6000)
+        self.assertGreater(len(talk), 2)
+        self.assertGreater(len(vecs), 1)
+        self.assertEqual(talk[0].name, f"talk-1of{len(talk)}.jsonl.gz")
+        self.assertEqual(vecs[-1].name, f"vectors-{len(vecs)}of{len(vecs)}.npz")
+        self.assertTrue(all(p.stat().st_size <= 1500 for p in talk))
+        self.assertTrue(all(p.stat().st_size <= 6000 for p in vecs))
+        had = np.load(memory.talk_dir() / memory.VECTORS)["keys"].tolist()
+        os.remove(memory.talk_dir() / memory.TALK)                       # the machine was reset
+        os.remove(memory.talk_dir() / memory.VECTORS)
+        self.assertEqual(sum(memory.merge_talk(p) for p in reversed(talk)), 12)         # in any order
+        self.assertEqual(sum(memory.merge_vectors(p) for p in reversed(vecs)), len(had))
+        self.assertEqual(sorted(np.load(memory.talk_dir() / memory.VECTORS)["keys"].tolist()), sorted(had))
+        self.assertEqual([p.name for p in memory.pack_talk()], ["talk.jsonl.gz"])       # old parts are cleared
+        self.assertEqual(list(memory.talk_dir().glob("talk-*")), [])
 
     def test_recall_embeds_a_few_new_passages_and_leaves_the_rest_for_index(self):
         memory._model = FakeModel()

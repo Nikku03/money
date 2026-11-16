@@ -45,8 +45,8 @@ bank (`docs/MEMORY.md`) keeps everything said and done, searchable, with a copy 
 - **Start of every session:** `python -m brain memory start` (where the work stands, the person's latest
   messages, whether the local home was reset). If it says `memory/` or the talk is missing, `pip install
   fastembed` (the meaning model; the person approved it on 2026-11-15), download the newest `MEMORY`, `JOURNAL`,
-  `talk` and `vectors` files from the Drive folder (the download saves a file), put the notes in `memory/` and run
-  `python -m brain memory load --talk FILE --vectors FILE`.
+  `talk` and `vectors` files from the Drive folder, every part of each (the download saves a file), put the notes
+  in `memory/` and run `python -m brain memory load --talk FILE ... --vectors FILE ...`.
 - **Before answering anything that may have come up before** (a decision, a number, an earlier request, why
   something was built a way), run `python -m brain memory recall "..."` with concrete words, and `memory show ID`
   for the full passage. Do this whenever the conversation summary lacks the detail, rather than guessing. Search
@@ -54,7 +54,8 @@ bank (`docs/MEMORY.md`) keeps everything said and done, searchable, with a copy 
 - **Keep facts no file states** with `python -m brain memory remember "..." --topic X`.
 - **After meaningful work:** update `memory/MEMORY.md` (rewrite what changed) and add a dated entry to
   `memory/JOURNAL.md`; run `python -m brain memory save`; commit and push `memory/`; upload what `save` lists to
-  the Drive folder as new files named with the date (file reference uploads by the sha256 it prints).
+  the Drive folder as new files named with the date (file reference uploads by the sha256 it prints; a file too
+  large for one upload is listed in parts).
 
 ## Turning an idea into a tested claim
 

@@ -12,7 +12,7 @@ python -m brain memory show ID                  # one passage in full; a tool ca
 python -m brain memory remember "a fact" --topic drive   # keep a fact no file states
 python -m brain memory index                    # embed passages not embedded yet (recall does it too)
 python -m brain memory save                     # pack it all for Drive (and save the bank's claims)
-python -m brain memory load [--talk F] [--vectors F]     # after a reset: merge the Drive copies back
+python -m brain memory load [--talk F ...] [--vectors F ...]   # after a reset: merge the Drive copies back
 python -m brain memory import --session ID PAGES...       # another session's history, from saved event pages
 python -m brain memory status                   # what the local home holds, and whether it was reset
 ```
@@ -76,10 +76,14 @@ read too. Imported so far:
   home and, packed, on Drive.
 - After meaningful work: update `MEMORY.md` and `JOURNAL.md`, run `memory save`, commit `memory/`, and upload what
   it lists to the Drive folder `money-brain memory`, each as a new file named with the date. The newest is current.
+- One upload to Drive from a session carries about 3 MB (measured 2026-11-16: a 6.5 MB file was refused, a
+  2.7 MB one went through), so `save` writes a file past 2.8 MB in parts (`vectors-1of5.npz` ...; the talk
+  likewise as `talk-1of2.jsonl.gz` once it is that large). Each part is a whole file of its own kind; upload
+  every part, one call each.
 - After a reset: `memory start` says whether the home was reset. `pip install fastembed`. Download the newest
-  `talk` and `vectors` files from the Drive folder (Drive's download saves each as a file) and run
-  `memory load --talk FILE --vectors FILE`: embedding everything again would take half an hour now, and days at
-  the scale below. Then rebuild the market data:
+  `talk` and `vectors` files from the Drive folder, every part of each (Drive's download saves each as a file),
+  and run `memory load --talk FILE ... --vectors FILE ...`: embedding everything again takes about two hours now
+  (14,800 passages at two a second), and days at the scale below. Then rebuild the market data:
 
 1. `python -m brain scan run --refresh`: prices and the latest filings of every scan stock (about 40 minutes).
 2. `python -m brain mosaic read`: company accounts and what each prospectus sells (1-2 hours from empty).
@@ -104,7 +108,7 @@ Space is not what limits it. At that size:
   or two, but embedding a whole 3 GB library from nothing would take weeks. That is why the vectors are kept on
   Drive.
 - **Search** reads every passage for each question. Under about 100,000 passages that takes a second or two; past
-  that it needs an index built once and updated (not built yet; the library holds a few thousand passages).
+  that it needs an index built once and updated (not built yet; the library holds about 14,800 passages).
 
 ## What it is not
 

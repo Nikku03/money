@@ -11,7 +11,8 @@ Updated 2026-11-16 (three sessions in the memory bank; the diagnosis). The log o
   messages, replies, reasoning, tool calls and results, compaction summaries), the journal, kept facts, the docs,
   the research notes and the desk notes, ranked by words and by meaning (a small embedding model, `pip install
   fastembed`, approved by the person 2026-11-15). Start a session with `python -m brain memory start`.
-- The talk holds three sessions (14,282 passages). This one (`session_018E1bTF9g2P9K8brvhcocRv`, word for word since 2026-11-10,
+- The talk holds three sessions (about 14,450 passages, every one embedded for search by meaning since
+  2026-11-16). This one (`session_018E1bTF9g2P9K8brvhcocRv`, word for word since 2026-11-10,
   summaries before) and `session_01MSaQVTPoBwSsjdSBSk9kdd` ("Biological neuron game with dimensional
   connections", 2026-11-04 to 11-09, imported 2026-11-15). That one began with a game for grown neurons and became
   the self-improving paper traders F1-F5 (with memory and attention, "start the account from $1000", "don't
@@ -21,8 +22,13 @@ Updated 2026-11-16 (three sessions in the memory bank; the diagnosis). The log o
   safe high variability trading ML model" following catalysts; moonshots of 10%+, about 5 trades a week; options;
   a Markov chain as a mass-emotion detector; trial results calendars). `memory recall` searches all three.
 - Copies live in the Google Drive folder `money-brain memory`, one file per save, named with the date; the newest
-  is current. After a reset, download the newest `talk` and `vectors` files and run
-  `memory load --talk FILE --vectors FILE`.
+  is current. One upload from here carries about 3 MB, so `save` writes larger files in parts. On Drive now: the
+  talk of all three sessions (`talk 2026-11-16d`, keys masked) and the vectors of this session only
+  (`vectors 2026-11-15c.npz`). The vectors of all three sessions (13 MB, five parts) are NOT on Drive: the upload
+  was refused for size and the person was asked (2026-11-16) whether to send the five parts. After a reset,
+  download the newest `talk` and every `vectors` part there is and run `memory load --talk FILE --vectors FILE
+  ...`; whatever has no vector is embedded again by `memory index` (about two hours for everything), and recall
+  by words works meanwhile.
 - After meaningful work: rewrite what changed here, add to `JOURNAL.md`, `memory save`, commit, push, upload.
 - The local home's market data (2.7 GB of SEC data, 3.1 GB of prices) is public and rebuilt by commands
   (`memory status` lists them). Yahoo prices are never committed or uploaded.

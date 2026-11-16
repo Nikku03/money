@@ -72,3 +72,8 @@ FAIL); "the market runs on chains of cause and effect, news and catalysts": the 
   (named keys, NAME_KEY=value, a key seen once is masked everywhere), rewrote the stored talk (none left),
   uploaded a clean copy to Drive and moved the earlier upload to Drive's trash. Told the person; rotating the key
   is their call.
+- The embedding of the two imported sessions finished (9,505 passages, about an hour and a half): recall by
+  meaning now covers all three sessions. Drive refused the vectors (13 MB): one upload from here carries about
+  3 MB. `memory save` now writes a large file in parts under 2.8 MB and `memory load` takes several files. The
+  talk of all three sessions is on Drive; the five vector parts are not, and the person was asked whether to
+  send them.

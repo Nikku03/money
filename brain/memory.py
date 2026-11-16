@@ -358,12 +358,58 @@ def import_events(paths: list[Path], session: str | None = None) -> int:
     return len(new)
 
 
-def pack_talk() -> Path:
-    """The talk, compressed, for the Drive copy."""
-    p = talk_dir() / (TALK + ".gz")
-    src = talk_dir() / TALK
-    p.write_bytes(gzip.compress(src.read_bytes() if src.exists() else b"", mtime=0))
-    return p
+PART_BYTES = 2_800_000   # one upload to Drive from a session carries about 3 MB; a larger file is saved in parts
+
+
+def pack_talk(limit: int = PART_BYTES) -> list[Path]:
+    """The talk, compressed, for the Drive copy: one file, or several when one would pass ``limit`` bytes. Each
+    part is a talk of its own, so ``load`` merges them in any order."""
+    d = talk_dir()
+    d.mkdir(parents=True, exist_ok=True)
+    for old in d.glob("talk*.jsonl.gz"):
+        old.unlink()
+    src = d / TALK
+    lines = src.read_bytes().splitlines(keepends=True) if src.exists() else []
+    n = 1
+    while True:
+        size = max(1, -(-len(lines) // n))
+        blobs = [gzip.compress(b"".join(lines[i:i + size]), mtime=0) for i in range(0, len(lines), size)]
+        if size == 1 or max(map(len, blobs), default=0) <= limit:
+            break
+        n += 1
+    blobs = blobs or [gzip.compress(b"", mtime=0)]
+    out = [d / (TALK + ".gz" if len(blobs) == 1 else f"talk-{i}of{len(blobs)}.jsonl.gz")
+           for i in range(1, len(blobs) + 1)]
+    for q, blob in zip(out, blobs):
+        q.write_bytes(blob)
+    return out
+
+
+def pack_vectors(limit: int = PART_BYTES) -> list[Path]:
+    """The vectors for the Drive copy: the cache itself, or parts of it when it would pass ``limit`` bytes. Each
+    part is a vector file of its own, so ``load`` merges them in any order."""
+    d = talk_dir()
+    for old in d.glob("vectors-*of*.npz"):
+        old.unlink()
+    p = d / VECTORS
+    if not p.exists():
+        return []
+    if p.stat().st_size <= limit:
+        return [p]
+    z = np.load(p)
+    keys, vecs = z["keys"], z["vecs"]
+    n = -(-p.stat().st_size // limit)
+    while True:
+        size = max(1, -(-len(keys) // n))
+        starts = range(0, len(keys), size)
+        out = [d / f"vectors-{j}of{len(starts)}.npz" for j in range(1, len(starts) + 1)]
+        for q, i in zip(out, starts):
+            np.savez(q, keys=keys[i:i + size], vecs=vecs[i:i + size])
+        if size == 1 or max(q.stat().st_size for q in out) <= limit:
+            return out
+        for q in out:
+            q.unlink()
+        n += 1
 
 
 # ---------- notes and docs ----------
@@ -777,15 +823,18 @@ def _cmd(a) -> int:
         n = export_claims(bank)
         print(f"wrote {n} claims to {memory_dir() / CLAIMS}; packed {len(read_talk())} passages of talk")
         print(f"Files to keep on Google Drive (folder '{DRIVE_FOLDER}'), with the sha256 an upload names each by:")
-        packed = [describe(pack_talk())] + ([describe(talk_dir() / VECTORS)] if (talk_dir() / VECTORS).exists() else [])
+        packed = [describe(f) for f in [*pack_talk(), *pack_vectors()]]
         for f in [*files(), *packed]:
-            print(f"  {f['name']:16} {f['bytes']:>9} bytes  sha256:{f['sha256']}:{f['path']}")
+            print(f"  {f['name']:22} {f['bytes']:>9} bytes  sha256:{f['sha256']}:{f['path']}")
+        if any("of" in f["name"] for f in packed):
+            print(f"A file past {PART_BYTES / 1e6:.1f} MB is saved in parts (one upload carries about 3 MB): keep "
+                  f"every part, and give them all to 'memory load'.")
         return 0
     if a.action == "load":
-        if a.talk:
-            print(f"merged {merge_talk(Path(a.talk))} passages of talk from {a.talk}")
-        if a.vectors:
-            print(f"merged {merge_vectors(Path(a.vectors))} vectors from {a.vectors}")
+        for f in a.talk or []:
+            print(f"merged {merge_talk(Path(f))} passages of talk from {f}")
+        for f in a.vectors or []:
+            print(f"merged {merge_vectors(Path(f))} vectors from {f}")
         print(f"put {import_claims(bank)} claims back into the bank from {memory_dir() / CLAIMS}")
     _print_status(bank)
     print(f"Read {memory_dir() / 'MEMORY.md'} first: it says where the work stands.")
@@ -804,8 +853,9 @@ def add_cli(sub) -> None:
     p.add_argument("--since", help="recall only passages from this date (YYYY-MM-DD) on")
     p.add_argument("--width", type=int, default=500, help="recall: characters shown of each passage")
     p.add_argument("--topic", help="remember: a word to file the fact under")
-    p.add_argument("--talk", help="load: a talk file downloaded from Drive, to merge in")
+    p.add_argument("--talk", nargs="+", help="load: the talk file (or its parts) downloaded from Drive, to merge in")
     p.add_argument("--session", help="import: the session's name, to label its passages")
-    p.add_argument("--vectors", help="load: a vectors file downloaded from Drive, to merge in")
+    p.add_argument("--vectors", nargs="+", help="load: the vectors file (or its parts) downloaded from Drive, to "
+                                                "merge in")
     p.add_argument("--words-only", action="store_true", help="recall: rank by words alone (no model)")
     p.set_defaults(fn=_cmd)
