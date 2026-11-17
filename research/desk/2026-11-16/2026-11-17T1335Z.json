@@ -1,0 +1,333 @@
+{
+ "asof": "2026-11-16",
+ "at": "2026-11-17T13:35:44Z",
+ "calls": [],
+ "case_sha": "6990b70d846d5f46",
+ "check": "2026-11-17T1335Z",
+ "claims_noted": 5,
+ "evidence": {
+  "d:10-year yield": {
+   "text": "10-year yield +0.01 pt since the close (its usual day: 0.04 pt)"
+  },
+  "d:bitcoin": {
+   "text": "bitcoin +0.1% since the close (its usual day: 2.7%)"
+  },
+  "d:oil": {
+   "text": "oil +1.1% since the close (its usual day: 3.6%)"
+  },
+  "f:OMER:1": {
+   "text": "OMER results report (8-K 2.02) at 2026-11-16T21:10Z: Omeros Corporation Reports Third Quarter 2026 Financial Results -- Exhibit 99.1 Omeros Corporation Reports Third Quarter 2026 Financial Results \u2013 Conference Call Today at 4:30 p.m. ET SEATTLE, WA \u2013 November 16, 2026 \u2013 Omeros Corporation (Nasdaq: OMER) today announced recent highlights and developments as well as financial results for the third quarter ended September 30, 2026, which include: Third Quarter and Recent Highlights \u25cf YARTEMLEA\u00ae (na",
+   "url": "https://www.sec.gov/Archives/edgar/data/1285819/000143774926037166/ex_1011405.htm"
+  },
+  "f:RCAT:1": {
+   "text": "RCAT results report (8-K 2.02) at 2026-11-16T21:06Z: RED CAT REPORTS Q3 2026 REVENUE GROWTH OF 22% Y/Y; YTD Q3 2026 REVENUE GROWTH OF 227% Y/Y; ANNOUNCED PUBLIC PURCHASE TO ACQUIRE STEYR MOTORS AG; AND ADVANCEMENT TO DOW SWARM FORGE CRUCIBLE 4 -- Exhibit 99.1 RED CAT REPORTS Q3 2026 REVENUE GROWTH OF 22% Y/Y; YTD Q3 2026 REVENUE GROWTH OF 227% Y/Y; ANNOUNCED PUBLIC PURCHASE TO ACQUIRE STEYR MOTORS AG; AND ADVANCEMENT TO DOW SWARM FORGE CRUCIBLE 4 SALT LAKE CITY, UT., November 16, 2026 (GLOBE NEW",
+   "url": "https://www.sec.gov/Archives/edgar/data/748268/000162828026074169/rcat-20261116xexx991a.htm"
+  },
+  "f:SLS:1": {
+   "text": "SLS 8-K 7.01, 8.01 at 2026-11-17T12:14Z: SELLAS Life Sciences -- Exhibit 99.1 SELLAS Life Sciences Announces Positive Pivotal Phase 3 REGAL Trial Data Showing Immunotherapeutic Cancer Vaccine, Galinpepimut-S (GPS), Demonstrated a Statistically Significant and Clinically Meaningful Improvement in Overall Survival in Patients with Acute Myeloid Leukemia - REGAL trial met its primary endpoint with GPS demonstrating statistically significant and clinically meaningful reduction in risk of death by 41",
+   "url": "https://www.sec.gov/Archives/edgar/data/1390478/000110465926128825/tm2629947d1_ex99-1.htm"
+  },
+  "f:SR:1": {
+   "text": "SR results report (8-K 2.02) at 2026-11-17T12:05Z: Investor Contact: -- Exhibit 99.1 Investor Contact: Megan L. McPhail 314-309-6563 Megan.McPhail@SpireEnergy.com Media Contact: Jason Merrill 314-342-3300 Jason.Merrill@SpireEnergy.com For Immediate Release Spire reports fiscal 2026 results ST. LOUIS (November 17, 2026) \u2013 Spire Inc. (NYSE: SR) today reported results for its fiscal 2026 year ended September 30. Highlights include: \u2022 Completed acquisition of the Piedmont Natural Gas Tennessee busin",
+   "url": "https://www.sec.gov/Archives/edgar/data/1126956/000119312526464751/sr-ex99_1.htm"
+  },
+  "k": {
+   "text": "Market: S&P 500 (SPY) -0.0%, Nasdaq 100 (QQQ) +0.4%, Russell 2000 (IWM) -0.3%, S&P 500 futures -0.1%, VIX -0.7% (before the open)"
+  },
+  "m:OMER": {
+   "text": "OMER (OMEROS CORP; Pharmaceutical Preparations) -8.9% since the close (before the open), outside its 2-in-3 range (-6%..+7%)"
+  },
+  "m:RCAT": {
+   "text": "RCAT (Red Cat Holdings, Inc.; Services-Prepackaged Software) -34.3% since the close (before the open), OUTSIDE its 9-in-10 range (-12%..+16%)"
+  },
+  "m:SLS": {
+   "text": "SLS (SELLAS Life Sciences Group, Inc.; Pharmaceutical Preparations) +294.9% since the close (before the open), OUTSIDE its 9-in-10 range (-14%..+19%)"
+  },
+  "m:SR": {
+   "text": "SR (SPIRE INC; Natural Gas Distribution) -4.4% since the close (before the open), outside its 2-in-3 range (-3%..+3%)"
+  },
+  "n:SLS": {
+   "text": "SLS accounts: market value $1.5 bn; cash and equivalents $134.7 m (2026-09-30; investments not counted); net income $-35.8 m over the four quarters to 2026-09-30; that cash alone covers about 15.1 quarters of such losses"
+  },
+  "q:AMD": {
+   "text": "AMD +2.0% since the close of 2026-11-16, as the check read it"
+  },
+  "q:AVGO": {
+   "text": "AVGO +1.1% since the close of 2026-11-16, as the check read it"
+  },
+  "q:CRWV": {
+   "text": "CRWV +1.6% since the close of 2026-11-16, as the check read it"
+  },
+  "q:DELL": {
+   "text": "DELL +1.5% since the close of 2026-11-16, as the check read it"
+  },
+  "q:INTC": {
+   "text": "INTC -1.0% since the close of 2026-11-16, as the check read it"
+  },
+  "q:MU": {
+   "text": "MU +1.2% since the close of 2026-11-16, as the check read it"
+  },
+  "q:NVDA": {
+   "text": "NVDA +1.1% since the close of 2026-11-16, as the check read it"
+  },
+  "q:SMCI": {
+   "text": "SMCI +1.7% since the close of 2026-11-16, as the check read it"
+  },
+  "s1": {
+   "text": "2026-11-17T12:59Z stocktwits.com: Sellas\u2019 GPS Cuts Death Risk By 41% In Pivotal AML Trial \u2013 Firm Eyes FDA Filing In First Half Of 2027 -- The trial also showed a median overall survival of 24 months compared with 14.7 months for patients receiving the best available treatment.",
+   "url": "https://stocktwits.com/news-articles/markets/equity/sellas-gps-cuts-death-risk-by-41-in-pivotal-aml-trial-fda-filing-in-first-half-2027/cNbaHYbR9WZ?.tsrc=rss"
+  },
+  "s10": {
+   "text": "2026-11-16T21:50Z finance.yahoo.com: Omeros falls 10% despite revenue beat -- Investing.com -- Omeros Corporation (NASDAQ:OMER) reported third-quarter results that exceeded analyst expectations for both revenue and earnings, but shares tumbled 10% in after-hours trading Monday as the company posted a widened GAAP net loss.",
+   "url": "https://finance.yahoo.com/healthcare/articles/omeros-falls-10-despite-revenue-215047103.html?.tsrc=rss"
+  },
+  "s11": {
+   "text": "2026-11-16T21:15Z finance.yahoo.com: Omeros (OMER) Surpasses Q3 Earnings and Revenue Estimates -- Omeros (OMER) delivered earnings and revenue surprises of +220.00% and +16.29%, respectively, for the quarter ended September 2026. Do the numbers hold clues to what lies ahead for the stock?",
+   "url": "https://finance.yahoo.com/healthcare/articles/omeros-omer-surpasses-q3-earnings-211502495.html?.tsrc=rss"
+  },
+  "s12": {
+   "text": "2026-11-17T12:15Z finance.yahoo.com: Spire (SR) Reports Q4 Loss, Beats Revenue Estimates -- Spire (SR) delivered earnings and revenue surprises of +1.98% and +8.40%, respectively, for the quarter ended September 2026. Do the numbers hold clues to what lies ahead for the stock?",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/spire-sr-reports-q4-loss-121502885.html?.tsrc=rss"
+  },
+  "s13": {
+   "text": "2026-11-17T12:10Z finance.yahoo.com: Spire: Fiscal Q4 Earnings Snapshot -- ST LOUIS (AP) \u2014 ST LOUIS (AP) \u2014 Spire Inc. (SR) on Tuesday reported a loss of $94.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/spire-fiscal-q4-earnings-snapshot-121014007.html?.tsrc=rss"
+  },
+  "s14": {
+   "text": "2026-11-17T12:00Z finance.yahoo.com: Spire reports fiscal 2026 results -- Spire Inc. (NYSE: SR) today reported results for its fiscal 2026 year ended September 30. Highlights include:",
+   "url": "https://finance.yahoo.com/energy/articles/spire-reports-fiscal-2026-results-120000989.html?.tsrc=rss"
+  },
+  "s16": {
+   "text": "2026-11-17T11:28Z investorshub.advfn.com: Why Is Red Cat Holdings Stock Falling 25.8% in Pre-Market Trading? -- Red Cat Holdings (NASDAQ:RCAT) shares declined 25. 8% in pre-market trading on Tuesday after the defence drone manufacturer reported third-quarter revenue substantially below analyst expectations, withdrew its full-year 2026 revenue target and declined to provide guidance for the final quarter.",
+   "url": "https://investorshub.advfn.com/market-news/article/40188/why-is-red-cat-holdings-stock-falling-25-8-in-pre-market-trading?.tsrc=rss"
+  },
+  "s17": {
+   "text": "2026-11-17T10:24Z stocktwits.com: US Stock Futures Edge Lower After Tech Sell-Off \u2014 NVDA Earnings, AMD, SPCX, DIS In Focus -- Oil prices slipped and then recovered as recovering Middle East exports and expectations of a global supply surplus outweighed concerns over tanker attacks.",
+   "url": "https://stocktwits.com/news-articles/markets/equity/us-stock-futures-edge-lower-after-tech-sell-off-nvda-earnings-amd-spcx-dis-in-focus/cNbaAmCR9Wf?.tsrc=rss"
+  },
+  "s2": {
+   "text": "2026-11-17T12:00Z finance.yahoo.com: SELLAS Life Sciences Announces Positive Pivotal Phase 3 REGAL Trial Data Showing Immunotherapeutic Cancer Vaccine, Galinpepimut-S (GPS), Demonstrated a Statistically Significant and Clinically Meaningful Improvement in Overall Survival in Patients with Acute Myeloid Leukemia -- - REGAL trial met its primary endpoint with GPS demonstrating statistically significant and clinically meaningful reduction in risk of death by 41% with median overall survival of 24.0",
+   "url": "https://finance.yahoo.com/healthcare/articles/sellas-life-sciences-announces-positive-120000814.html?.tsrc=rss"
+  },
+  "s4": {
+   "text": "2026-11-17T05:50Z stocktwits.com: Why Is RCAT Stock Plunging More Than 24% Overnight? -- Red Cat\u2019s revenue rose 22% year-over-year to $11.77 million, but came in well below analysts\u2019 expectations of $40.68 million.",
+   "url": "https://stocktwits.com/news-articles/markets/equity/why-is-rcat-stock-plunging-more-than-24-overnight/cNbalBcR9gy?.tsrc=rss"
+  },
+  "s5": {
+   "text": "2026-11-17T01:15Z www.marketbeat.com: What Red Cat (RCAT) Said on Its Q3 Earnings Call -- Red Cat (NASDAQ:RCAT) withdrew its full-year 2026 revenue target after anticipated funding and contract awards failed to materialize on the expected timeline and its FANG drone was not selected as a finalist in the Drone Dominance II competition. The autonomous systems company reported third-quarte",
+   "url": "https://www.marketbeat.com/instant-alerts/transcript-what-red-cat-rcat-said-on-its-q3-earnings-call-2026-11-16/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss"
+  },
+  "s7": {
+   "text": "2026-11-16T22:15Z finance.yahoo.com: Red Cat Holdings, Inc. (RCAT) Reports Q3 Loss, Lags Revenue Estimates -- Red Cat (RCAT) delivered earnings and revenue surprises of -30.00% and -69.66%, respectively, for the quarter ended September 2026. Do the numbers hold clues to what lies ahead for the stock?",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/red-cat-holdings-inc-rcat-221502900.html?.tsrc=rss"
+  },
+  "s8": {
+   "text": "2026-11-17T05:01Z finance.yahoo.com: Omeros Corp (OMER) Q3 2026 Earnings Call Highlights: YARTEMLEA Sales Surge 30% as Operating ... -- Omeros Corp (OMER) posted $41.8 million in YARTEMLEA gross sales and $13.3 million in positive operating cash flow, though a $62 million non-cash charge drove a GAAP net loss.",
+   "url": "https://finance.yahoo.com/healthcare/articles/omeros-corp-omer-q3-2026-050127848.html?.tsrc=rss"
+  },
+  "t1": {
+   "text": "the last note (2026-11-17T0430Z), theme 'The AI markdown closed at its worst, with a new chip-export rule and a warning about AI debt': The selling deepened through the session and closed near its lows. From the bank's closes: Nvidia -4.1%, AMD -5.6%, Intel -7.0%, Micron -7.6%, Sandisk -8.6%, Lam -6.7%, Teradyne -7.1%, Dell -7.0%, Super Micro -6.8%, IREN -9.8%, Applied Digital -8.7%, Ciena -8.2%, Lumentum -8.5%, Bloom -7.7%; among the buyers Oracle -5.0%, Alphabet -4.1%, Amazon -3.3%, Meta -2.4%"
+  },
+  "x:RCAT": {
+   "text": "RCAT: the market carried -0.1% (beta 3.19); its industry (Services-Prepackaged Software, 104 stocks) moved -0.0%; left over after the market and its drivers -34.2%"
+  },
+  "x:SLS": {
+   "text": "SLS: the market carried -0.0% (beta 1.72); its industry (Pharmaceutical Preparations, 146 stocks) moved +0.0%; left over after the market and its drivers +295.0%"
+  },
+  "z:SLS": {
+   "text": "SLS mosaic: at the close of 2026-11-16, before this move, the chance of the filing in the next 20 sessions: late or unreliable accounts 0.2% (the usual stock: 0.4%); a restructuring or a write-off 0.2% (the usual stock: 0.3%); a sale of new shares 7.3% (the usual stock: 0.9%; raised most by 5 sales of new shares opened in three years, a registration to sell securities on file). A chance that a filing comes, not a direction (tests P1a-P3b, research/RESULTS.md)"
+  }
+ },
+ "note": {
+  "backdrop": "Before Tuesday's open the market is waiting: SPY -0.0%, QQQ +0.4%, IWM -0.3%, S&P futures -0.1%, VIX -0.7%; oil +1.1%, the 10-year flat, bitcoin +0.1%. No market-wide flag and no fear flag; this morning the futures line is measured from Monday's close (it moved -0.06% after the close last night), so last night's false market-wide flag is gone. Earlier reports had futures down about 0.3%-0.4% at 5am ET (Invezz, Investing.com). The day's event is Nvidia's third-quarter report after the close, its first under an interim chief: analysts expect revenue near $109 billion against the company's own guidance of $108 billion plus or minus 2%, with data-center revenue near $101.8 billion (TradingKey, Invezz). Anthropic is due to list on Nov 19. October retail sales and import prices are also due (Invezz). Three stocks are outside their 9-in-10 range: one on a trial result, one on results, one on a single thin print.",
+  "backdrop_evidence": [
+   "k",
+   "d:oil",
+   "d:10-year yield",
+   "d:bitcoin",
+   "s17",
+   "https://finance.yahoo.com/markets/stocks/articles/premarket-movers-nvidia-red-cat-124832112.html",
+   "https://invezz.com/news/2026/11/17/us-stock-futures-fall-ahead-of-nvidia-earnings-5-things-to-know-before-market-opens/",
+   "https://www.tradingkey.com/analysis/stocks/us-stocks/262308986-nvidia-earnings-ai-chip-remote-access-restrictions-tradingkey"
+  ],
+  "by": "agent",
+  "calls": [],
+  "check": "2026-11-17T1335Z",
+  "read": [
+   {
+    "direction": "none",
+    "published": "2026-11-17T12:48:32Z",
+    "says": "By 5:23am ET S&P 500 E-minis were -0.34%; Nvidia slipped 0.4% before its results; CNBC reported Nvidia told customers it would stop selling chips to data-center operators that rent more than half their GPUs to Chinese companies; Intel fell over 3% after Nvidia cut its stake in Intel in a portfolio reshuffle (also Nokia and Synopsys, while adding SpaceX); Home Depot named its finance chief as next chief executive and raised its sales outlook to the top of its range.",
+    "ticker": "NVDA",
+    "tier": "reported",
+    "url": "https://finance.yahoo.com/markets/stocks/articles/premarket-movers-nvidia-red-cat-124832112.html"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-17T11:34:28Z",
+    "says": "Futures about -0.4% before Nvidia's report and retail sales; analysts expect Nvidia revenue of about $109 billion; Nvidia closed Monday at $156.14 (-4.12%).",
+    "ticker": "NVDA",
+    "tier": "reported",
+    "url": "https://invezz.com/news/2026/11/17/us-stock-futures-fall-ahead-of-nvidia-earnings-5-things-to-know-before-market-opens/"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-17T12:33:46Z",
+    "says": "Nvidia's guidance was $108 billion plus or minus 2% with a 74% gross margin; Visible Alpha expects $109.3 billion and data-center revenue of about $101.8 billion; Anthropic plans to list on Nov 19; Red Cat fell over 30% before the open after withdrawing its 2026 revenue guidance.",
+    "ticker": "NVDA",
+    "tier": "reported",
+    "url": "https://www.tradingkey.com/analysis/stocks/us-stocks/262308986-nvidia-earnings-ai-chip-remote-access-restrictions-tradingkey"
+   },
+   {
+    "direction": "up",
+    "published": "2026-11-17T12:14:00Z",
+    "says": "Sellas' Phase 3 REGAL trial of its vaccine galinpepimut-S in acute myeloid leukemia met its main goal: 41% lower risk of death (hazard ratio 0.59, two-sided p 0.035), median survival 24.0 months against 14.7 with the best available treatment; it plans to meet the FDA and prepare an application.",
+    "ticker": "SLS",
+    "tier": "reported",
+    "url": "https://www.sec.gov/Archives/edgar/data/1390478/000110465926128825/tm2629947d1_ex99-1.htm"
+   },
+   {
+    "direction": "down",
+    "published": "2026-11-17T12:05:00Z",
+    "says": "Spire lowered its fiscal 2027 adjusted earnings guidance to $5.05-$5.25 a share, introduced fiscal 2028 guidance of $6.10-$6.30, raised its long-term growth target to 6%-8% and its dividend by 4.8%.",
+    "ticker": "SR",
+    "tier": "reported",
+    "url": "https://www.sec.gov/Archives/edgar/data/1126956/000119312526464751/sr-ex99_1.htm"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-17T13:36:00Z",
+    "says": "Knight-Swift's pre-market trading on the 5-minute chart: three bars, all at $58.40, between 7:00 and 7:17am ET.",
+    "tier": "reported",
+    "url": "https://query1.finance.yahoo.com/v8/finance/chart/KNX?range=2d&interval=5m&includePrePost=true"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-17T13:36:00Z",
+    "says": "Sellas on the 5-minute chart: $7.78 at 4am ET, $30.20 at 8:35am ET, 27 pre-market bars.",
+    "tier": "reported",
+    "url": "https://query1.finance.yahoo.com/v8/finance/chart/SLS?range=2d&interval=5m&includePrePost=true"
+   }
+  ],
+  "singles": [
+   {
+    "beneath": "It was worth about $1.5 billion at Monday's close, so the jump adds about $4.4 billion on 27 pre-market bars. The p-value of 0.035 is under 0.05 but not by much; the FDA's view of one trial at that level is the open question (inference). It had $134.7 million of cash at Sept 30 and has sold new shares five times in three years; the mosaic put a share-sale filing within 20 sessions at 7.3% against 0.9% for the usual stock, before this move. That is a chance that a filing comes, not a direction. This is the kind of binary readout the post-mortem's step 4 is about: no probability was written for it before.",
+    "cause": "Sellas rose 295% before the open after its Phase 3 REGAL trial in acute myeloid leukemia met its main goal: a 41% lower risk of death (hazard ratio 0.59, two-sided p 0.035), median survival 24.0 months against 14.7 with the best available treatment. It plans to meet the FDA about an application.",
+    "evidence": [
+     "m:SLS",
+     "x:SLS",
+     "n:SLS",
+     "z:SLS",
+     "f:SLS:1",
+     "s1",
+     "s2",
+     "https://www.sec.gov/Archives/edgar/data/1390478/000110465926128825/tm2629947d1_ex99-1.htm",
+     "https://query1.finance.yahoo.com/v8/finance/chart/SLS?range=2d&interval=5m&includePrePost=true"
+    ],
+    "kind": "reported",
+    "t": "SLS"
+   },
+   {
+    "beneath": "Its drone peers are flat (Unusual Machines -0.1%, Ondas -0.2%, Kratos +0.4%): so far the market treats it as Red Cat's own shortfall, not the sector's. At about $2.32 it is worth roughly $355 million against $242.7 million of cash at Sept 30.",
+    "cause": "Red Cat is -34.3% before the open, deeper than last night's -26.2%, after withdrawing its 2026 revenue target; third-quarter revenue was $11.77 million against an expected $40.68 million (Stocktwits).",
+    "evidence": [
+     "m:RCAT",
+     "x:RCAT",
+     "f:RCAT:1",
+     "s4",
+     "s5",
+     "s7",
+     "s16",
+     "https://www.tradingkey.com/analysis/stocks/us-stocks/262308986-nvidia-earnings-ai-chip-remote-access-restrictions-tradingkey"
+    ],
+    "kind": "reported",
+    "t": "RCAT"
+   },
+   {
+    "beneath": "A gas utility worth $5.3 billion; the move rests on six pre-market bars.",
+    "cause": "Spire is -4.4% before the open after cutting its fiscal 2027 earnings guidance to $5.05-$5.25 a share, while setting fiscal 2028 at $6.10-$6.30 and raising its dividend 4.8%.",
+    "evidence": [
+     "m:SR",
+     "f:SR:1",
+     "s12",
+     "s13",
+     "s14",
+     "https://www.sec.gov/Archives/edgar/data/1126956/000119312526464751/sr-ex99_1.htm"
+    ],
+    "kind": "reported",
+    "t": "SR"
+   },
+   {
+    "beneath": "Still no page I could read says why a beat is being sold.",
+    "cause": "Omeros is -8.9% before the open, extending last night's fall after results that beat estimates; the call summaries report Yartemlea gross sales of $41.8 million, up 30%.",
+    "evidence": [
+     "m:OMER",
+     "f:OMER:1",
+     "s8",
+     "s10",
+     "s11"
+    ],
+    "kind": "reported",
+    "t": "OMER"
+   }
+  ],
+  "themes": [
+   {
+    "beneath": "The bar: guidance was $108 billion plus or minus 2%, so $105.8-$110.2 billion, with a 74% gross margin; analysts sit near $109 billion (TradingKey). Nvidia has lost about $410 billion of market value since its chief resigned (Investing.com). The desk's open calls from Nov 13, judged Nov 20, are sizes, either way: Nvidia 7.5% or more (chance 0.50), AMD 9% or more (0.42), Dell 9.5% or more (0.40).",
+    "cause": "After Monday's falls the AI hardware group is slightly higher before the open: Nvidia +1.1%, AMD +2.0%, Broadcom +1.1%, Micron +1.2%, Dell +1.5%, Super Micro +1.7%, CoreWeave +1.6%. Intel is -1.0% on the check (over -3% in an earlier report) after Nvidia cut its stake in Intel in a portfolio reshuffle (Investing.com). CNBC reported, per the same article, that Nvidia told customers it will stop selling chips to data-center operators that rent more than half their GPUs to Chinese companies; I could not find that report itself, so it stands on one summary.",
+    "evidence": [
+     "t1",
+     "q:NVDA",
+     "q:AMD",
+     "q:AVGO",
+     "q:MU",
+     "q:DELL",
+     "q:SMCI",
+     "q:CRWV",
+     "q:INTC",
+     "https://finance.yahoo.com/markets/stocks/articles/premarket-movers-nvidia-red-cat-124832112.html",
+     "https://invezz.com/news/2026/11/17/us-stock-futures-fall-ahead-of-nvidia-earnings-5-things-to-know-before-market-opens/",
+     "https://www.tradingkey.com/analysis/stocks/us-stocks/262308986-nvidia-earnings-ai-chip-remote-access-restrictions-tradingkey"
+    ],
+    "kind": "reported",
+    "mechanism": "Nothing new reached the group overnight except Nvidia's own steps; the moves are small against Monday's falls (Nvidia +1.1% after -4.1%). The report tonight is the event that reaches all of them: Nvidia's data-center revenue is about 93% of the expected total (about $101.8 billion of $109 billion), and its customers' spending is the revenue of everyone else in this group. My inference: what Nvidia says about demand next quarter, and about the five-country license rule, carries more for the group than the quarter just ended.",
+    "members": [
+     "NVDA",
+     "AMD",
+     "AVGO",
+     "MU",
+     "DELL",
+     "SMCI",
+     "CRWV",
+     "INTC"
+    ],
+    "name": "AI hardware steadies a little before Nvidia reports tonight",
+    "watch": "Nvidia's revenue against $105.8-$110.2 billion, its next-quarter guidance, its gross margin against 74%, and anything it says about the five-country rule and renting customers."
+   }
+  ],
+  "threads": [
+   "Nvidia's results after the close: revenue against $105.8-$110.2 billion, guidance, margin, and the five-country rule. The desk's size calls on NVDA, AMD and DELL are judged Nov 20.",
+   "Is the report that Nvidia will stop selling to operators renting most of their GPUs to Chinese companies confirmed?",
+   "Sellas: what the FDA says about one trial at p 0.035; a share sale after the jump would fit its habit.",
+   "Red Cat: does the selling reach the other drone makers?",
+   "Knight-Swift, TE Connectivity, Alico: do the thin pre-market prints hold in the session?",
+   "Anthropic lists on Nov 19; Capricor and Savara FDA decisions by Sunday Nov 22; Inhibrx data Nov 19-20.",
+   "Unexplained from Monday: Icahn Enterprises beyond CVR, Oxford Square, Chaince Digital, Lifeway, 1-800-Flowers."
+  ],
+  "unexplained": [
+   {
+    "t": "KNX",
+    "tried": "Outside its 9-in-10 range at -8.5%, but on three pre-market bars all at $58.40 between 7:00 and 7:17am ET: one print. No filing, no story, nothing found by search; its trucking peers are flat except Heartland (-4.3%, also two thin bars). Likely a stray print; look again in the session."
+   },
+   {
+    "t": "TEL",
+    "tried": "+5.2% on two pre-market bars; no filing or story. Amphenol, its closest peer, is +1.8%."
+   },
+   {
+    "t": "ALCO",
+    "tried": "+9.1% on two pre-market bars; no filing or story."
+   }
+  ]
+ },
+ "recorded_at": "2026-11-17T13:37:39Z"
+}
