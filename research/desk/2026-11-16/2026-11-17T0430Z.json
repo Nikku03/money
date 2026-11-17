@@ -1,0 +1,318 @@
+{
+ "asof": "2026-11-16",
+ "at": "2026-11-17T04:30:42Z",
+ "calls": [],
+ "case_sha": "96948d42f9290554",
+ "check": "2026-11-17T0430Z",
+ "claims_noted": 5,
+ "evidence": {
+  "d:10-year yield": {
+   "text": "10-year yield +0.00 pt since the close (its usual day: 0.04 pt)"
+  },
+  "d:bitcoin": {
+   "text": "bitcoin -0.7% since the close (its usual day: 2.7%)"
+  },
+  "d:oil": {
+   "text": "oil -4.0% since the close (its usual day: 3.6%)"
+  },
+  "f:OMER:1": {
+   "text": "OMER results report (8-K 2.02) at 2026-11-16T21:10Z: Omeros Corporation Reports Third Quarter 2026 Financial Results -- Exhibit 99.1 Omeros Corporation Reports Third Quarter 2026 Financial Results \u2013 Conference Call Today at 4:30 p.m. ET SEATTLE, WA \u2013 November 16, 2026 \u2013 Omeros Corporation (Nasdaq: OMER) today announced recent highlights and developments as well as financial results for the third quarter ended September 30, 2026, which include: Third Quarter and Recent Highlights \u25cf YARTEMLEA\u00ae (na",
+   "url": "https://www.sec.gov/Archives/edgar/data/1285819/000143774926037166/ex_1011405.htm"
+  },
+  "f:RCAT:1": {
+   "text": "RCAT results report (8-K 2.02) at 2026-11-16T21:06Z: RED CAT REPORTS Q3 2026 REVENUE GROWTH OF 22% Y/Y; YTD Q3 2026 REVENUE GROWTH OF 227% Y/Y; ANNOUNCED PUBLIC PURCHASE TO ACQUIRE STEYR MOTORS AG; AND ADVANCEMENT TO DOW SWARM FORGE CRUCIBLE 4 -- Exhibit 99.1 RED CAT REPORTS Q3 2026 REVENUE GROWTH OF 22% Y/Y; YTD Q3 2026 REVENUE GROWTH OF 227% Y/Y; ANNOUNCED PUBLIC PURCHASE TO ACQUIRE STEYR MOTORS AG; AND ADVANCEMENT TO DOW SWARM FORGE CRUCIBLE 4 SALT LAKE CITY, UT., November 16, 2026 (GLOBE NEW",
+   "url": "https://www.sec.gov/Archives/edgar/data/748268/000162828026074169/rcat-20261116xexx991a.htm"
+  },
+  "k": {
+   "text": "Market: S&P 500 (SPY) +0.0%, Nasdaq 100 (QQQ) +0.1%, Russell 2000 (IWM) -0.2%, S&P 500 futures -1.9%, VIX +0.0% (after the close)"
+  },
+  "m:OMER": {
+   "text": "OMER (OMEROS CORP; Pharmaceutical Preparations) -7.7% since the close (after the close), outside its 2-in-3 range (-6%..+7%)"
+  },
+  "m:RCAT": {
+   "text": "RCAT (Red Cat Holdings, Inc.; Services-Prepackaged Software) -26.2% since the close (after the close), OUTSIDE its 9-in-10 range (-12%..+16%)"
+  },
+  "n:RCAT": {
+   "text": "RCAT accounts: market value $539.5 m; long-term debt $862,000 (2026-09-30); revenue $73.7 m over the four quarters to 2026-09-30; net income $-121.9 m over the four quarters to 2026-09-30"
+  },
+  "s1": {
+   "text": "2026-11-17T01:15Z www.marketbeat.com: What Red Cat (RCAT) Said on Its Q3 Earnings Call -- Red Cat (NASDAQ:RCAT) withdrew its full-year 2026 revenue target after anticipated funding and contract awards failed to materialize on the expected timeline and its FANG drone was not selected as a finalist in the Drone Dominance II competition. The autonomous systems company reported third-quarte",
+   "url": "https://www.marketbeat.com/instant-alerts/transcript-what-red-cat-rcat-said-on-its-q3-earnings-call-2026-11-16/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss"
+  },
+  "s3": {
+   "text": "2026-11-16T22:15Z finance.yahoo.com: Red Cat Holdings, Inc. (RCAT) Reports Q3 Loss, Lags Revenue Estimates -- Red Cat (RCAT) delivered earnings and revenue surprises of -30.00% and -69.66%, respectively, for the quarter ended September 2026. Do the numbers hold clues to what lies ahead for the stock?",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/red-cat-holdings-inc-rcat-221502900.html?.tsrc=rss"
+  },
+  "s5": {
+   "text": "2026-11-17T01:15Z www.marketbeat.com: Omeros Q3 Earnings Call Highlights -- Omeros (NASDAQ:OMER) reported higher third-quarter sales of its transplant complication treatment YARTEMLEA and a second consecutive quarter of positive operating cash flow, while a non-cash adjustment tied to its convertible notes pushed the company to a net loss. YARTEMLEA generated $35.9 million",
+   "url": "https://www.marketbeat.com/instant-alerts/transcript-omeros-q3-earnings-call-highlights-2026-11-16/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss"
+  },
+  "s6": {
+   "text": "2026-11-16T21:50Z finance.yahoo.com: Omeros falls 10% despite revenue beat -- Investing.com -- Omeros Corporation (NASDAQ:OMER) reported third-quarter results that exceeded analyst expectations for both revenue and earnings, but shares tumbled 10% in after-hours trading Monday as the company posted a widened GAAP net loss.",
+   "url": "https://finance.yahoo.com/healthcare/articles/omeros-falls-10-despite-revenue-215047103.html?.tsrc=rss"
+  },
+  "s7": {
+   "text": "2026-11-16T21:15Z finance.yahoo.com: Omeros (OMER) Surpasses Q3 Earnings and Revenue Estimates -- Omeros (OMER) delivered earnings and revenue surprises of +220.00% and +16.29%, respectively, for the quarter ended September 2026. Do the numbers hold clues to what lies ahead for the stock?",
+   "url": "https://finance.yahoo.com/healthcare/articles/omeros-omer-surpasses-q3-earnings-211502495.html?.tsrc=rss"
+  },
+  "t1": {
+   "text": "the last note (2026-11-16T1738Z), theme 'The AI sell-off spread from chips to the whole build-out and to most of the buyers': By midday the fall reaches every layer of AI spending. Sellers of computing capacity: IREN -9.8%, Applied Digital -8.5%, CoreWeave -6.2%. Networking and optics: Lumentum -7.8%, Coherent -6.0%, Ciena -5.9%, Arista -5.3%. Memory and storage: Sandisk -7.3%, Micron -6.3%, Seagate -5.6%. Power and cooling: Bloom -6.8%, Vertiv -6.5%. Chip equipment: Teradyne -6.3%, Lam -5.5%. C"
+  },
+  "t2": {
+   "text": "the last note (2026-11-16T1738Z), theme \"Crypto: bitcoin steady since the morning; Trump Media's debt deadline adds a second pressure\": Bitcoin is -4.9% from Friday's close, about $64,900, and has stayed between about $64,100 and $65,300 through the session. The large holders are near their usual rates: Strategy -7.6% (its rate implies -6.4%), Coinbase -6.0% (-5.2%), SBET -4.6% (-6.1%), BMNR -5.3% (-6.7%). Two small ones have fallen well past theirs: Forward Industries -11.2% (-5.9% implied) and"
+  },
+  "x:RCAT": {
+   "text": "RCAT: the market carried +0.1% (beta 3.20); its industry (Services-Prepackaged Software, 104 stocks) moved +0.0%; left over after the market and its drivers -26.3%"
+  }
+ },
+ "note": {
+  "backdrop": "Monday's session closed far lower than it opened: the S&P 500 -1.92% to 7,416, the Nasdaq Composite -2.49%, the Dow -1.41%, the 10-year yield up 0.05 point to 5.15% (Motley Fool wrap); QQQ -2.67%, SPY -1.91%, IWM -1.66% (StockTitan). The VIX closed 18.7% higher (the bank's close). After the close the market is flat: SPY +0.0%, QQQ +0.1%, IWM -0.2%, VIX +0.0%. The check flagged a market-wide move from S&P futures -1.9% and oil -4.0%, but both lines are measured from Friday: the futures' and oil's Monday daily bars are held back while their sessions are open, the flaw found last week. On the 5-minute charts, futures were 7,439.5 at Monday's 4pm close and 7,435.25 at 11:20pm ET (-0.06%), and oil $85.47 against $85.01 (-0.5%); bitcoin has moved -0.2% since the close. So the flag is the check's artifact, not a move. One stock is outside its 9-in-10 range after the close: Red Cat, on results.",
+  "backdrop_evidence": [
+   "k",
+   "d:oil",
+   "d:bitcoin",
+   "d:10-year yield",
+   "https://finance.yahoo.com/markets/stocks/articles/stock-market-today-nov-16-222502139.html",
+   "https://www.stocktitan.net/articles/stock-market-today-live-november-16-2026",
+   "https://query1.finance.yahoo.com/v8/finance/chart/ES=F?range=2d&interval=5m&includePrePost=true",
+   "https://query1.finance.yahoo.com/v8/finance/chart/CL=F?range=2d&interval=5m&includePrePost=true"
+  ],
+  "by": "agent",
+  "calls": [],
+  "check": "2026-11-17T0430Z",
+  "read": [
+   {
+    "direction": "none",
+    "published": "2026-11-16T22:25:02Z",
+    "says": "Monday: Nasdaq Composite -2.49% to 24,510, S&P 500 -1.92% to 7,416, Dow -1.41%, 10-year 5.15%; Nvidia -4.12%, Intel -7.02%, Dell -6.96%, AMD -5.58% on new export restrictions on advanced AI chips to Southeast Asia; a Fed governor's warning on corporate debt weighs on debt-financed AI build-outs; Tyson +8.72% on results; Nvidia reports Tuesday, Anthropic prices its offering Wednesday night and trades Thursday.",
+    "tier": "reported",
+    "url": "https://finance.yahoo.com/markets/stocks/articles/stock-market-today-nov-16-222502139.html"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-16T12:08:20Z",
+    "says": "At Monday's close QQQ -2.67%, SPY -1.91%, DIA -1.43%, IWM -1.66%; CG Oncology +13.95% at the close on its bladder cancer trial; Red Cat sank after hours.",
+    "tier": "reported",
+    "url": "https://www.stocktitan.net/articles/stock-market-today-live-november-16-2026"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-16T15:13:00Z",
+    "says": "Commerce's Bureau of Industry and Security issued an interim rule on Monday requiring licenses to export, re-export or transfer advanced AI chips to Brazil, Indonesia, Malaysia, Singapore and Thailand, to stop restricted countries reaching US chips by renting computing in third-country data centers.",
+    "ticker": "NVDA",
+    "tier": "reported",
+    "url": "https://www.cbsnews.com/news/nvidia-jensen-huang-commerce-department-limit-remote-access-ai-chips/"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-16T08:10:02Z",
+    "says": "A Fed governor said last week there is a risk of a large correction in stocks if AI investment does not pay off, citing more than $800 billion of AI capital spending in 2026, much of it financed with corporate bonds, and what looks like circular financing among AI companies.",
+    "tier": "opinion",
+    "url": "https://www.fool.com/investing/2026/11/16/fed-governor-michelle-bowman-risk-of-large-correction-in-stocks-if-ai-doesn-t-pan-out/"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-10T14:27:19Z",
+    "says": "The Senate's defense bill carries three chip measures (congressional review of AI chip licenses, chip tracking abroad, allied limits on chipmaking tools); no vote has been taken; Nvidia's $108 billion third-quarter guidance excludes China data-center sales.",
+    "ticker": "NVDA",
+    "tier": "reported",
+    "url": "https://finance.yahoo.com/technology/ai/articles/congress-wants-china-chip-limits-142719076.html"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-12T20:28:17Z",
+    "says": "The House Speaker said on Nov 12 there is a developing consensus in Congress on limiting chip exports to China; Nvidia billed $7.9 billion to customers in China including Hong Kong in the quarter to July 26, 8.2% of its total.",
+    "ticker": "NVDA",
+    "tier": "reported",
+    "url": "https://mlq.ai/news/speaker-johnson-sees-a-developing-consensus-in-congress-on-limiting-chip-exports-to-china-the-bills-and-rules-in-play/"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-17T02:16:50Z",
+    "says": "Icahn Enterprises closed at $3.60 on Monday, down 15.09%, after its units went ex-distribution for the $0.50 distribution to holders of record on Nov 16.",
+    "ticker": "IEP",
+    "tier": "reported",
+    "url": "https://www.insidermonkey.com/news/icahn-enterprises-iep-is-getting-hammered-heres-whats-behind-the-selloff-1866364/"
+   },
+   {
+    "direction": "down",
+    "published": "2026-11-16T21:06:00Z",
+    "says": "Red Cat withdrew its full-year 2026 revenue target: funding and contract awards have come more slowly than expected and the outcome of the Drone Dominance program's Gauntlet II removed an expected contributor; third-quarter revenue $11.8 million (+22%), nine months $47.4 million; cash $242.7 million.",
+    "ticker": "RCAT",
+    "tier": "reported",
+    "url": "https://www.sec.gov/Archives/edgar/data/748268/000162828026074169/rcat-20261116xexx991a.htm"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-17T04:20:00Z",
+    "says": "S&P 500 futures on the 5-minute chart: 7,439.5 at Monday's 4pm ET close, 7,435.25 at 11:20pm ET.",
+    "tier": "reported",
+    "url": "https://query1.finance.yahoo.com/v8/finance/chart/ES=F?range=2d&interval=5m&includePrePost=true"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-17T04:20:00Z",
+    "says": "Oil futures on the 5-minute chart: $85.47 at Monday's 4pm ET close, $85.01 at 11:20pm ET.",
+    "tier": "reported",
+    "url": "https://query1.finance.yahoo.com/v8/finance/chart/CL=F?range=2d&interval=5m&includePrePost=true"
+   }
+  ],
+  "singles": [
+   {
+    "beneath": "It was worth about $540 million at the close, with $242.7 million of cash and nine months' revenue of $47.4 million: the price leaned on the target. It also proposes to buy Steyr Motors. The drone stocks it moved with over the year (Unusual Machines, Ondas, Kratos) barely moved after the close.",
+    "cause": "Red Cat fell 26.2% after the close on its results: it withdrew its full-year 2026 revenue target, saying funding and contract awards have come more slowly than expected and that the outcome of the Drone Dominance program's Gauntlet II removed an expected contributor. Third-quarter revenue was $11.8 million (+22% on the year); Zacks puts it 70% below estimates.",
+    "evidence": [
+     "m:RCAT",
+     "x:RCAT",
+     "n:RCAT",
+     "f:RCAT:1",
+     "s1",
+     "s3",
+     "https://www.sec.gov/Archives/edgar/data/748268/000162828026074169/rcat-20261116xexx991a.htm"
+    ],
+    "kind": "reported",
+    "t": "RCAT"
+   },
+   {
+    "beneath": "None of what I could read says why a beat was sold; the move is within its 9-in-10 range.",
+    "cause": "Omeros fell 7.7% after the close on third-quarter results that beat estimates on revenue and earnings (Zacks), with higher sales of its transplant treatment; a headline says it fell despite the beat.",
+    "evidence": [
+     "m:OMER",
+     "f:OMER:1",
+     "s5",
+     "s6",
+     "s7"
+    ],
+    "kind": "reported",
+    "t": "OMER"
+   },
+   {
+    "beneath": "Its largest holding, CVR Energy, closed -4.2% as oil fell; by the midday arithmetic (its CVR stake valued at $4.2 billion against a whole worth about $3.6 billion on Friday) CVR explains roughly a third of the net fall. The rest still has no source.",
+    "cause": "Icahn Enterprises closed at $3.60 against Friday's $4.74 (Insider Monkey reports -15.09% after the units went ex-distribution). Net of the $0.50 distribution it fell about 13.5% on the day.",
+    "evidence": [
+     "k",
+     "https://www.insidermonkey.com/news/icahn-enterprises-iep-is-getting-hammered-heres-whats-behind-the-selloff-1866364/"
+    ],
+    "kind": "reported",
+    "t": "IEP"
+   }
+  ],
+  "themes": [
+   {
+    "beneath": "Nvidia's own direct China exposure is small: its $108 billion third-quarter guidance already excludes China data-center sales, and China including Hong Kong was $7.9 billion, 8.2% of revenue, in the quarter to July 26 (Yahoo; MLQ). The rule's reach through Southeast Asian data centers is the part no one has sized. Nvidia reports on Tuesday after the close, under an interim chief; Anthropic prices its offering on Wednesday night. The desk's open calls (made on Nov 13, due Nov 20) put Nvidia's move by Friday at 7.5% or more with chance 0.50, AMD's at 9% or more at 0.42, Dell's at 9.5% or more at 0.40; they are sizes, either way.",
+    "cause": "The selling deepened through the session and closed near its lows. From the bank's closes: Nvidia -4.1%, AMD -5.6%, Intel -7.0%, Micron -7.6%, Sandisk -8.6%, Lam -6.7%, Teradyne -7.1%, Dell -7.0%, Super Micro -6.8%, IREN -9.8%, Applied Digital -8.7%, Ciena -8.2%, Lumentum -8.5%, Bloom -7.7%; among the buyers Oracle -5.0%, Alphabet -4.1%, Amazon -3.3%, Meta -2.4%, Microsoft -1.1%, Apple -1.0%. Two things were reported on the day. Commerce issued an interim rule requiring licenses for advanced AI chips sent to Brazil, Indonesia, Malaysia, Singapore and Thailand, to stop restricted countries renting computing in data centers there (CBS); the Motley Fool wrap ties AMD's fall to it. And a Fed governor's warning from last week was back in the news: a large correction is possible if AI spending does not pay off, with over $800 billion of it in 2026, much financed with bonds; the wrap ties Dell's fall to warnings about debt.",
+    "evidence": [
+     "t1",
+     "k",
+     "https://finance.yahoo.com/markets/stocks/articles/stock-market-today-nov-16-222502139.html",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-16-2026",
+     "https://www.cbsnews.com/news/nvidia-jensen-huang-commerce-department-limit-remote-access-ai-chips/",
+     "https://www.fool.com/investing/2026/11/16/fed-governor-michelle-bowman-risk-of-large-correction-in-stocks-if-ai-doesn-t-pan-out/",
+     "https://finance.yahoo.com/technology/ai/articles/congress-wants-china-chip-limits-142719076.html",
+     "https://mlq.ai/news/speaker-johnson-sees-a-developing-consensus-in-congress-on-limiting-chip-exports-to-china-the-bills-and-rules-in-play/"
+    ],
+    "kind": "reported",
+    "mechanism": "The rule reaches the chip sellers through the data centers of those five countries, a fast-growing market for US chips; how much of their sales go there is not reported in what I read. Congress's bills (review of chip licenses, tracking chips abroad) remain unvoted (Yahoo, Nov 10), but the Speaker spoke of a developing consensus on Nov 12 (MLQ). The debt warning reaches the buyers that borrow to build (Oracle and Alphabet fell most of them) and everyone they buy from. My inference: the market is marking down how much AI hardware gets bought and on what money, not one company's trouble. Microsoft and Apple fell least; that this is because they borrow less to build is my guess, not something I read.",
+    "members": [
+     "NVDA",
+     "AMD",
+     "INTC",
+     "MU",
+     "SNDK",
+     "LRCX",
+     "TER",
+     "DELL",
+     "SMCI",
+     "IREN",
+     "APLD",
+     "CIEN",
+     "LITE",
+     "BE",
+     "GOOGL",
+     "ORCL",
+     "AMZN",
+     "META",
+     "MSFT",
+     "AAPL"
+    ],
+    "name": "The AI markdown closed at its worst, with a new chip-export rule and a warning about AI debt",
+    "watch": "Nvidia's results and outlook on Tuesday evening, and what it says about Southeast Asia. The rule's text in the Federal Register (one report gives operators 90 days; not confirmed). Whether Microsoft and Apple keep falling less than the other buyers."
+   },
+   {
+    "beneath": "The market's fall on Monday was broad and led by speculative stocks; crypto stocks sit at the far end of that. Chaince Digital is now about -29% in two sessions (-18.7%, then -12.4%) with no filing or story found.",
+    "cause": "From the bank's closes: Strategy -7.7%, Coinbase -6.1%, Circle -7.3%, Robinhood -7.4%, Galaxy -8.6%, ASST -11.9%, Forward Industries -13.6%, Trump Media -12.1%, Rumble -11.4%, Chaince Digital -12.4%. Bitcoin was about $64,900 at Monday's 4pm close against $68,526 at Friday's (about -5%), and has barely moved since the close.",
+    "evidence": [
+     "t2",
+     "d:bitcoin",
+     "k"
+    ],
+    "kind": "inferred",
+    "mechanism": "The large holders ended close to their usual rates times bitcoin's fall, as they did before the open; the small ones and Trump Media fell further. Trump Media's own trouble was reported over the weekend: up to $1 billion of convertible bonds it may have to repay by Nov 30, possibly by selling crypto (the midday note's sources). That it also drags the small treasuries is my inference, untested.",
+    "members": [
+     "MSTR",
+     "COIN",
+     "CRCL",
+     "HOOD",
+     "GLXY",
+     "ASST",
+     "FWDI",
+     "DJT",
+     "RUM",
+     "CD"
+    ],
+    "name": "Crypto stocks and Trump Media closed at their lows of the day",
+    "watch": "Bitcoin overnight; any Trump Media filing about its notes; whether the small treasuries keep falling past their rates."
+   },
+   {
+    "beneath": "Molina's +11.3% on a day the S&P 500 fell 1.9% is a large move for a stock whose 9-in-10 weekly range was about \u00b18%.",
+    "cause": "From the bank's closes: Molina +11.3%, Centene +4.9%, Elevance +3.9%, Tyson +8.7% (results that beat expectations with a better outlook for beef, per the Motley Fool wrap), Hormel +2.8%, Conagra +2.9%, Procter & Gamble +1.9%.",
+    "evidence": [
+     "k",
+     "https://finance.yahoo.com/markets/stocks/articles/stock-market-today-nov-16-222502139.html"
+    ],
+    "kind": "inferred",
+    "mechanism": "Tyson's rise is its own results. The insurers' rise follows Friday evening's federal decision to let states phase in Medicaid's new work rules until June 2027 without dropping members (the midday note); no page dated Monday names it as the cause, so that link is my inference. Food makers rising on a falling day fits money leaving AI for steadier businesses, also my inference.",
+    "members": [
+     "MOH",
+     "CNC",
+     "ELV",
+     "TSN",
+     "HRL",
+     "CAG",
+     "PG"
+    ],
+    "name": "Money moved to Medicaid insurers and food makers",
+    "watch": "An analyst or company statement naming the cause for the insurers; whether the food makers hold if AI steadies."
+   }
+  ],
+  "threads": [
+   "Nvidia's results on Tuesday after the close: the desk's open size calls (NVDA 7.5%+ at 0.50, AMD 9%+ at 0.42, DELL 9.5%+ at 0.40) are judged on Nov 20.",
+   "The five-country chip rule: its text, any grace period, and whether the companies size their exposure.",
+   "Anthropic prices on Wednesday night and trades Thursday.",
+   "Capricor and Savara: FDA decisions due by Sunday Nov 22.",
+   "Medicaid insurers: a source naming the cause of Monday's rise.",
+   "Unexplained: Icahn Enterprises' net fall beyond CVR, Oxford Square, Chaince Digital, Lifeway, 1-800-Flowers.",
+   "The check's futures and oil lines are measured from Friday when Monday's bar is held back: tonight's market-wide flag is that artifact. Fix offered, not made.",
+   "Red Cat: does the selling reach the other drone makers in the session?"
+  ],
+  "unexplained": [
+   {
+    "t": "OXSQ",
+    "tried": "Closed -14.5% on Monday (bank close), after -23% at midday; no filing since Nov 4, no story, nothing found by search."
+   },
+   {
+    "t": "LWAY",
+    "tried": "Closed -16.9% with no filing and no story, on a day other food makers rose."
+   },
+   {
+    "t": "FLWS",
+    "tried": "Closed -14.3% with no filing and no story."
+   },
+   {
+    "t": "EMAT",
+    "tried": "Closed -25.8%; an 8-K (item 7.01) came after the close and it is +6.1% after hours; the filing was not read."
+   }
+  ]
+ },
+ "recorded_at": "2026-11-17T04:34:00Z"
+}

@@ -137,29 +137,20 @@ idea at a time, checked against the memory bank first.
   an industry lead-lag test; the earnings radar in the 8:07 check; S3 recalibrated going forward; the trader
   replayed on 2022; a better headline picker.
 
-## The market thread (last desk note: `research/desk/2026-11-13/2026-11-16T1738Z.json`, Monday midday)
+## The market thread (last desk note: `research/desk/2026-11-16/2026-11-17T0430Z.json`, after Monday's close)
 
-- Monday 2026-11-16 midday: S&P 500 -1.3%, Nasdaq 100 -1.9%, median stock -0.8%, 71% lower. The AI markdown spread
-  from chips (median -4.9%) to the whole build-out (capacity sellers, optics, memory, power, equipment) and to the
-  buyers except Microsoft and Apple. Reported new element: fear that Congress tightens limits on chips that may
-  reach China (XTB via Dow Jones). Nvidia reports Tue 2026-11-17 after the close under an interim chief;
-  Anthropic's IPO is expected to price at $70-78 (about $1.4 trillion). Money moved into software, health
-  insurers and food.
-- Bitcoin about $64,900 (-4.9% from Friday; weekend low $62,040). Trump Media must repay up to $1bn of
-  convertible bonds by Nov 30 and may have to sell bitcoin (FT); DJT -12%, Rumble -13%. Strategy: MSCI deletes it
-  at month-end; last week 84% of its new-share money bought back its STRC preferred.
-- Medicaid insurers up (Molina +9.1%, Centene +4.9%) after Friday evening's CMS transition period for the work
-  rules to June 30, 2027 (the Monday link is my inference).
-- Summit -15% on the FDA's complete response letter; Capricor -12.5% before its own FDA decision due by Nov 22.
-- CG Oncology kept part of its jump (+12% to +17%); UroGen reversed from -9% at the open to +8%: my morning
-  inference (it fell because of CG Oncology's result) did not hold. Of seven thin pre-market moves only Molina's
-  held: do not reason from a few pre-market prints.
-- Icahn Enterprises -23.6%: 10.5% is its $0.50 distribution; about half of the remaining 14% matches CVR Energy's
-  -5.6% by arithmetic; the rest has no source. Oxford Square -23% and Chaince Digital (-34% in two sessions) are
-  unexplained. T1 Energy -20% on a $100m at-the-market share sale filed before the open (mosaic chance 3.7%
-  against 0.9% usual; not among the recorded calls).
-- Check flaws known (fix offered, not made): bitcoin and futures measured from Thursday when Friday's bar is
-  missing; zero-volume after-hours prints; a dividend leaving the price is read as a move (IEP, GNK).
-- Threads: Nvidia's report; is there a real chip-limits bill; Trump Media's notes; IEP, OXSQ, CD unexplained;
-  why UroGen reversed; Capricor and Savara by Nov 22; Vir at $9.94 against its $10 offering closing today;
-  Inhibrx's data on 2026-11-19/20; the mining group -5.8% (not read).
+- Monday 2026-11-16 closed at its lows: S&P 500 -1.92% (7,416), Nasdaq -2.49%, 10-year 5.15%, VIX +18.7%. The AI
+  markdown reached the whole build-out and the buyers (Oracle -5.0%, Alphabet -4.1%; Microsoft and Apple about -1%).
+  Reported on the day: Commerce's interim rule requiring licenses for advanced AI chips to Brazil, Indonesia,
+  Malaysia, Singapore and Thailand (CBS); a Fed governor's warning about $800bn of AI spending financed with debt.
+  Nvidia reports Tue 2026-11-17 after the close; Anthropic prices Wed night, trades Thu. Desk calls NVDA 7.5%+
+  (0.50), AMD 9%+ (0.42), DELL 9.5%+ (0.40) judged Nov 20.
+- Crypto stocks and Trump Media closed at their lows (bitcoin about $64,900, -5% from Friday). Medicaid insurers
+  (Molina +11.3%) and food makers (Tyson +8.7% on results) rose.
+- After the close: Red Cat -26% (withdrew its 2026 revenue target), Omeros -8% despite a beat. The check flagged a
+  market-wide move from futures -1.9% and oil -4.0%, measured from Friday; since Monday's close futures were -0.06%.
+- Check flaws known (fix offered, not made): futures, oil and bitcoin measured from the previous day when the
+  latest daily bar is held back (it raised a false market-wide flag on 2026-11-16); zero-volume after-hours prints;
+  a dividend leaving the price is read as a move (IEP, GNK).
+- Unexplained: Icahn Enterprises' net fall beyond CVR (closed $3.60), Oxford Square, Chaince Digital (-29% in two
+  sessions), Lifeway, 1-800-Flowers. Capricor and Savara FDA decisions by Sun Nov 22. Inhibrx data Nov 19-20.

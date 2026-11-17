@@ -88,3 +88,7 @@ FAIL); "the market runs on chains of cause and effect, news and catalysts": the 
   memory bank for earlier tries (never declared alone), counted the data without returns, declared, committed, ran
   once: both FAILED, controls passed. Corrected one misleading label in RESULTS.md after the run (the list's gap to
   SPY is mostly companies the list leaves out, not survivorship) with a ledger note.
+- After-close scan of 2026-11-16 (2,452 stocks, 85 left out), the after-hours check and a desk note
+  (`research/desk/2026-11-16/2026-11-17T0430Z.json`): the AI markdown closed at its lows with a new chip-export rule
+  for five countries; the check's market-wide flag was its stale-baseline flaw again. No calls.
+
