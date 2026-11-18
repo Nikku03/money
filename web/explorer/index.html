@@ -1,0 +1,299 @@
+<title>Scan Explorer</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap">
+<link rel="stylesheet" href="lib/viewer/dist/css/pro.css">
+<link rel="stylesheet" href="lib/viewer/dist/css/pro-dark.css">
+<style>
+/* Layout: a desk sheet. Vital signs in a strip, preset views as tabs, the desk's themes as filters, the grid,
+   and a drawer that draws the clicked stock's ranges to scale. */
+:root {
+  --bg: #eef2f5; --surface: #ffffff; --ink: #14202b; --muted: #566472; --line: #d3dbe2;
+  --accent: #0b6e78; --accent-ink: #ffffff; --band90: #d9e6ea; --band68: #9cc3c9;
+  --out90: #b4361c; --out68: #a86b0c; --inside: #2d7a4f;
+  --display: "Space Grotesk", "IBM Plex Sans", system-ui, sans-serif;
+  --body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d141b; --surface: #151f29; --ink: #e3eaf0; --muted: #96a4b2; --line: #273543;
+    --accent: #48b6c0; --accent-ink: #06222a; --band90: #1f3540; --band68: #2f6670;
+    --out90: #f07a5c; --out68: #e0a83c; --inside: #5cc28a; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d141b; --surface: #151f29; --ink: #e3eaf0; --muted: #96a4b2; --line: #273543;
+  --accent: #48b6c0; --accent-ink: #06222a; --band90: #1f3540; --band68: #2f6670;
+  --out90: #f07a5c; --out68: #e0a83c; --inside: #5cc28a; color-scheme: dark;
+}
+html, body { background: var(--bg); color: var(--ink); }
+body {
+  font-family: var(--body); font-size: 14px; line-height: 1.45;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 32px;
+}
+.wrap { max-width: 1400px; margin: 0 auto; display: grid; gap: 14px; }
+header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 18px; }
+h1 { font-family: var(--display); font-weight: 600; font-size: 1.6rem; letter-spacing: -0.01em; margin: 0; text-wrap: balance; }
+.asof { font-family: var(--mono); color: var(--muted); font-size: 0.85rem; }
+.vitals { display: flex; flex-wrap: wrap; gap: 8px; }
+.vital { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 8px 12px; display: grid; gap: 2px; min-width: 0; }
+.vital .k { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.vital .v { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 0.95rem; overflow-wrap: anywhere; }
+.flag { display: inline-block; font-size: 0.72rem; font-weight: 600; border-radius: 999px; padding: 1px 8px; margin-left: 6px; border: 1px solid currentColor; }
+.flag.warn { color: var(--out68); } .flag.alert { color: var(--out90); }
+nav.views { display: flex; flex-wrap: wrap; gap: 6px; }
+button { font: inherit; cursor: pointer; }
+.tab { background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; font-weight: 500; }
+.tab[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.tab:focus-visible, .chip:focus-visible, .close:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.themes { display: grid; gap: 6px; }
+.themes .lbl { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { background: transparent; color: var(--ink); border: 1px dashed var(--line); border-radius: 6px; padding: 4px 10px; text-align: left; max-width: 100%; }
+.chip small { color: var(--muted); margin-left: 6px; font-family: var(--mono); }
+.chip[aria-pressed="true"] { border-style: solid; border-color: var(--accent); color: var(--accent); }
+.stage { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+@media (min-width: 1100px) { .stage.has-detail { grid-template-columns: minmax(0, 1fr) 340px; } }
+.gridbox { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; min-width: 0; }
+perspective-viewer { display: block; height: 68vh; min-height: 440px; width: 100%; }
+.status { padding: 14px 16px; color: var(--muted); font-size: 0.9rem; }
+.detail { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.detail h2 { font-family: var(--display); font-size: 1.15rem; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.detail .co { color: var(--muted); font-size: 0.85rem; }
+.close { background: none; border: 1px solid var(--line); color: var(--muted); border-radius: 6px; padding: 0 8px; }
+.detail svg { width: 100%; height: auto; display: block; }
+.detail dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 0; font-size: 0.88rem; }
+.detail dt { color: var(--muted); }
+.detail dd { margin: 0; font-family: var(--mono); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.detail p { margin: 0; font-size: 0.88rem; }
+.detail p b { font-weight: 600; }
+.where { font-weight: 600; }
+.where.out90 { color: var(--out90); } .where.out68 { color: var(--out68); } .where.inside { color: var(--inside); }
+.fallback { padding: 10px 12px; display: grid; gap: 10px; }
+.fallback input { font: inherit; padding: 6px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--ink); width: min(360px, 100%); }
+.scroller { overflow-x: auto; max-height: 64vh; }
+table.plain { border-collapse: collapse; width: 100%; font-size: 0.85rem; }
+table.plain th, table.plain td { padding: 5px 8px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; }
+table.plain td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
+table.plain th { position: sticky; top: 0; background: var(--surface); font-weight: 600; color: var(--muted); }
+table.plain tr { cursor: pointer; }
+table.plain tr:hover td { background: var(--bg); }
+footer { color: var(--muted); font-size: 0.82rem; display: grid; gap: 6px; max-width: 75ch; }
+footer code { font-family: var(--mono); font-size: 0.78rem; overflow-wrap: anywhere; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Scan Explorer</h1>
+    <span class="asof" id="asof">Loading the scan…</span>
+  </header>
+
+  <section class="vitals" id="vitals" aria-label="The scan and the latest check"></section>
+
+  <nav class="views" id="views" aria-label="Views"></nav>
+
+  <section class="themes" id="themes" hidden>
+    <span class="lbl" id="themes-lbl">The desk's latest note: tap a theme to see its stocks</span>
+    <div class="chips" id="chips"></div>
+  </section>
+
+  <div class="stage" id="stage">
+    <div class="gridbox">
+      <perspective-viewer id="viewer" hidden></perspective-viewer>
+      <div class="status" id="status">Starting the grid…</div>
+      <div class="fallback" id="fallback" hidden>
+        <input id="search" type="search" placeholder="Find a ticker, company or industry" aria-label="Find a stock">
+        <div class="scroller"><table class="plain" id="plain"></table></div>
+      </div>
+    </div>
+    <aside class="detail" id="detail" hidden aria-live="polite"></aside>
+  </div>
+
+  <footer>
+    <p>A range is how far a stock is likely to move over the next five sessions, either way: two times in three it should stay inside the 2-in-3 range, nine times in ten inside the 9-in-10 range. It is a size, not a direction. No test of direction has passed in this research. The 20% day chance is the shock radar's chance of a session up or down 20% against the S&amp;P 500 within five. Paper research; nothing here is a trade.</p>
+    <p id="source"></p>
+  </footer>
+</div>
+
+<script type="module">
+const $ = (id) => document.getElementById(id);
+const NUM = new Set(["Move now %", "2-in-3 low %", "2-in-3 high %", "9-in-10 low %", "9-in-10 high %", "Typical move %", "20% day chance %"]);
+const BASE = { group_by: [], split_by: [], filter: [], expressions: {}, aggregates: {} };
+const VIEWS = [
+  { id: "moving", label: "Moving now", cfg: { plugin: "Datagrid", columns: ["Ticker", "Company", "Move now %", "Where now", "2-in-3 low %", "2-in-3 high %", "9-in-10 low %", "9-in-10 high %", "Why it moved", "Industry"], sort: [["Move now %", "desc abs"]] } },
+  { id: "outside", label: "Outside its range", cfg: { plugin: "Datagrid", columns: ["Ticker", "Company", "Move now %", "Where now", "2-in-3 low %", "2-in-3 high %", "9-in-10 low %", "9-in-10 high %", "Why it moved", "Industry"], filter: [["Where now", "in", ["outside 2-in-3", "outside 9-in-10"]]], sort: [["Move now %", "desc abs"]] } },
+  { id: "widest", label: "Widest ranges", cfg: { plugin: "Datagrid", columns: ["Ticker", "Company", "Typical move %", "2-in-3 low %", "2-in-3 high %", "9-in-10 low %", "9-in-10 high %", "20% day chance %", "Why the range is wide"], sort: [["Typical move %", "desc"]] } },
+  { id: "shocks", label: "Likeliest 20% days", cfg: { plugin: "Datagrid", columns: ["Ticker", "Company", "20% day chance %", "Typical move %", "Move now %", "Why the range is wide", "Industry"], sort: [["20% day chance %", "desc"]] } },
+  { id: "industries", label: "By industry", cfg: { plugin: "Datagrid", group_by: ["Industry"], columns: ["Move now %", "Typical move %", "20% day chance %", "Ticker"], aggregates: { "Move now %": "avg", "Typical move %": "avg", "20% day chance %": "avg", "Ticker": "count" }, sort: [["Move now %", "desc"]] } },
+  { id: "map", label: "Market map", needs: "Treemap", cfg: { plugin: "Treemap", group_by: ["Sector", "Industry"], columns: ["Ticker", "Move now %"], aggregates: { "Ticker": "count", "Move now %": "avg" }, sort: [] } },
+  { id: "all", label: "All columns", cfg: { plugin: "Datagrid", columns: null, sort: [["Ticker", "asc"]] } },
+];
+let data = null, rows = [], byTicker = new Map(), viewer = null, current = "moving", chip = null, chartsOk = false;
+
+const fmt = (x, d = 1) => (x === null || x === undefined ? "–" : (x > 0 ? "+" : "") + x.toFixed(d) + "%");
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const dark = () => { const t = document.documentElement.getAttribute("data-theme"); return t ? t === "dark" : matchMedia("(prefers-color-scheme: dark)").matches; };
+const whereClass = (w) => (w === "outside 9-in-10" ? "out90" : w === "outside 2-in-3" ? "out68" : w === "inside both ranges" ? "inside" : "");
+
+function vitals() {
+  const s = data.scan, c = data.check;
+  $("asof").textContent = `the close of ${s.asof}`;
+  const v = [];
+  v.push(["Scanned", `${s.stocks.toLocaleString()} stocks · ${s.left_out} left out`]);
+  if (c) {
+    const when = c.at.slice(0, 16).replace("T", " ") + " UTC";
+    const flags = (c.market_wide ? '<span class="flag alert">market-wide move</span>' : "") + (c.fear_up ? '<span class="flag warn">fear rising</span>' : "");
+    v.push(["Latest check", `${esc(c.session || "")}, ${when}${flags}`]);
+    v.push(["Market since the close", esc(c.line)]);
+    v.push(["Outside their ranges now", `${c.outside90} outside 9-in-10 · ${c.outside68} outside 2-in-3 <span style="color:var(--muted)">(over five sessions about 10% and 32% end outside)</span>`]);
+  }
+  $("vitals").innerHTML = v.map(([k, val]) => `<div class="vital"><span class="k">${k}</span><span class="v">${val}</span></div>`).join("");
+  const n = data.note;
+  $("source").innerHTML = `Data: <code>${esc(s.file)}</code>` + (c ? `, the check of ${esc(c.at.slice(0, 16))}Z` : "") + (n ? `, the desk note <code>${esc(n.file)}</code>` : "") + `. Built ${esc(data.made_at.slice(0, 16))}Z. Ranges and chances come from the scan's tested models (W1, S1); "why it moved" is the check's own explanation, not a forecast.` + (c && c.session === "after the close" ? " After the close, the check's futures figure is measured from the previous day's bar, a known flaw: read SPY's after-hours move instead." : "");
+}
+
+function tabs() {
+  $("views").innerHTML = VIEWS.filter((v) => !v.needs || (viewer && chartsOk))
+    .map((v) => `<button class="tab" id="view-${v.id}" aria-pressed="${v.id === current}" data-view="${v.id}">${v.label}</button>`).join("");
+  $("views").onclick = (e) => { const b = e.target.closest("[data-view]"); if (b) show(b.dataset.view); };
+}
+
+function themeChips() {
+  const n = data.note;
+  if (!n || !(n.themes || []).length) return;
+  $("themes").hidden = false;
+  const items = n.themes.map((t, i) => ({ id: "t" + i, label: t.name, members: t.members.filter((m) => byTicker.has(m)) }));
+  if ((n.singles || []).length) items.push({ id: "singles", label: "Lone movers in the note", members: n.singles.filter((m) => byTicker.has(m)) });
+  $("chips").innerHTML = items.map((t) => `<button class="chip" id="chip-${t.id}" aria-pressed="false" data-chip="${t.id}">${esc(t.label)}<small>${t.members.length}</small></button>`).join("");
+  $("chips").onclick = (e) => {
+    const b = e.target.closest("[data-chip]"); if (!b) return;
+    const t = items.find((x) => x.id === b.dataset.chip);
+    chip = chip && chip.id === t.id ? null : t;
+    document.querySelectorAll(".chip").forEach((c) => c.setAttribute("aria-pressed", String(chip && c.dataset.chip === chip.id)));
+    show(chip ? "moving" : current);
+  };
+}
+
+async function show(id) {
+  current = id;
+  document.querySelectorAll(".tab").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.view === id)));
+  const v = VIEWS.find((x) => x.id === id);
+  const filter = [...(v.cfg.filter || []), ...(chip ? [["Ticker", "in", chip.members]] : [])];
+  if (viewer) {
+    const title = chip ? chip.label : v.label;
+    const cfg = { ...BASE, ...v.cfg, table: "scan", title, filter, columns: v.cfg.columns || data.columns, settings: false, theme: dark() ? "Pro Dark" : "Pro Light" };
+    try { await viewer.restore(cfg); }
+    catch (err) {
+      if (v.needs) { chartsOk = false; tabs(); return show("industries"); }
+      await viewer.restore({ ...cfg, sort: (cfg.sort || []).map(([c, d]) => [c, d.replace(" abs", "")]) });
+    }
+  } else {
+    plain(v, filter);
+  }
+}
+
+// ---------- the clicked stock, drawn to scale ----------
+function drawRange(r) {
+  const lo = Math.min(r["9-in-10 low %"], r["Move now %"] ?? 0, 0), hi = Math.max(r["9-in-10 high %"], r["Move now %"] ?? 0, 0);
+  const pad = (hi - lo) * 0.08 || 1, a = lo - pad, b = hi + pad, W = 300, x = (v) => 12 + ((v - a) / (b - a)) * (W - 24);
+  const mv = r["Move now %"];
+  const dot = mv === null ? "" : `<circle cx="${x(mv)}" cy="34" r="6" fill="var(--ink)"/><text x="${x(mv)}" y="16" text-anchor="middle" font-size="11" fill="var(--ink)" font-family="var(--mono)">now ${fmt(mv, 1)}</text>`;
+  return `<svg viewBox="0 0 ${W} 74" role="img" aria-label="Its ranges and its move since the close">
+    <rect x="${x(r["9-in-10 low %"])}" y="26" width="${x(r["9-in-10 high %"]) - x(r["9-in-10 low %"])}" height="16" rx="3" fill="var(--band90)"/>
+    <rect x="${x(r["2-in-3 low %"])}" y="26" width="${x(r["2-in-3 high %"]) - x(r["2-in-3 low %"])}" height="16" rx="3" fill="var(--band68)"/>
+    <line x1="${x(0)}" x2="${x(0)}" y1="20" y2="48" stroke="var(--muted)" stroke-width="1" stroke-dasharray="2 2"/>
+    ${dot}
+    <text x="${x(r["9-in-10 low %"])}" y="62" text-anchor="start" font-size="10" fill="var(--muted)" font-family="var(--mono)">${fmt(r["9-in-10 low %"])}</text>
+    <text x="${x(r["9-in-10 high %"])}" y="62" text-anchor="end" font-size="10" fill="var(--muted)" font-family="var(--mono)">${fmt(r["9-in-10 high %"])}</text>
+  </svg>`;
+}
+
+function detail(t) {
+  const r = byTicker.get(t);
+  if (!r) return;
+  const box = $("detail");
+  box.hidden = false;
+  $("stage").classList.add("has-detail");
+  box.innerHTML = `<h2>${esc(r.Ticker)} <button class="close" id="close-detail" aria-label="Close">×</button></h2>
+    <span class="co">${esc(r.Company)}${r.Industry ? " · " + esc(r.Industry) : ""}</span>
+    ${drawRange(r)}
+    <dl>
+      <dt>Move since the close</dt><dd>${fmt(r["Move now %"], 2)} <span class="where ${whereClass(r["Where now"])}">${esc(r["Where now"])}</span></dd>
+      <dt>2-in-3 range</dt><dd>${fmt(r["2-in-3 low %"])} to ${fmt(r["2-in-3 high %"])}</dd>
+      <dt>9-in-10 range</dt><dd>${fmt(r["9-in-10 low %"])} to ${fmt(r["9-in-10 high %"])}</dd>
+      <dt>20% day chance</dt><dd>${r["20% day chance %"] === null ? "–" : r["20% day chance %"].toFixed(1) + "%"}</dd>
+      <dt>Listed after 2010</dt><dd>${esc(r["Listed after 2010"])}</dd>
+    </dl>
+    <p><b>Why the range is wide:</b> ${esc(r["Why the range is wide"] || "–")}</p>
+    ${r["Why it moved"] ? `<p><b>Why it moved:</b> ${esc(r["Why it moved"])}</p>` : ""}`;
+  $("close-detail").onclick = () => { box.hidden = true; $("stage").classList.remove("has-detail"); };
+}
+
+// ---------- the plain table, when Perspective cannot start ----------
+function plain(v, filter) {
+  const cols = v.cfg.columns || data.columns;
+  let list = rows;
+  for (const [c, op, val] of filter) if (op === "in") list = list.filter((r) => val.includes(r[c]));
+  const q = $("search").value.trim().toLowerCase();
+  if (q) list = list.filter((r) => [r.Ticker, r.Company, r.Industry].some((s) => String(s).toLowerCase().includes(q)));
+  const [sc, dir] = (v.cfg.sort && v.cfg.sort[0]) || ["Ticker", "asc"];
+  const key = (r) => { const x = r[sc]; return x === null ? -Infinity : dir.includes("abs") ? Math.abs(x) : x; };
+  list = [...list].sort((a, b) => (dir.startsWith("desc") ? (key(b) > key(a) ? 1 : -1) : key(a) > key(b) ? 1 : -1));
+  const shown = v.cfg.group_by?.length ? ["Ticker", "Company", "Industry", "Move now %", "Typical move %"] : cols;
+  $("plain").innerHTML = `<thead><tr>${shown.map((c) => `<th scope="col">${esc(c)}</th>`).join("")}</tr></thead><tbody>` +
+    list.slice(0, 300).map((r) => `<tr data-t="${esc(r.Ticker)}">${shown.map((c) => NUM.has(c) ? `<td class="num">${r[c] === null ? "–" : r[c].toFixed(c === "Move now %" ? 2 : 1)}</td>` : `<td>${esc(String(r[c]).slice(0, 90))}</td>`).join("")}</tr>`).join("") +
+    `</tbody>` + (list.length > 300 ? `<caption style="caption-side:bottom;padding:8px;color:var(--muted)">Showing 300 of ${list.length}. Search to narrow.</caption>` : "");
+}
+
+async function startPerspective() {
+  const [{ default: perspective }] = await Promise.all([
+    import("./lib/client/dist/cdn/perspective.js"),
+    import("./lib/viewer/dist/cdn/perspective-viewer.js"),
+    import("./lib/viewer-datagrid/dist/cdn/perspective-viewer-datagrid.js"),
+  ]);
+  try { await import("./lib/viewer-charts/dist/cdn/perspective-viewer-charts.js"); chartsOk = true; } catch (e) { chartsOk = false; }
+  const worker = await perspective.worker();
+  await worker.table(data.rows, { name: "scan" });
+  const el = $("viewer");
+  el.hidden = false;
+  await el.load(worker);
+  await el.restore({ table: "scan", settings: false });
+  el.addEventListener("perspective-click", (e) => { const t = e.detail?.row?.Ticker; if (typeof t === "string") detail(t); });
+  viewer = el;
+}
+
+async function main() {
+  try {
+    data = await (await fetch("data.json", { cache: "no-store" })).json();
+  } catch (e) {
+    $("status").textContent = "The scan's data could not be loaded. Reload the page to try again.";
+    return;
+  }
+  const cols = data.columns;
+  const n = data.rows[cols[0]].length;
+  for (let i = 0; i < n; i++) { const r = {}; for (const c of cols) r[c] = data.rows[c][i]; rows.push(r); byTicker.set(r.Ticker, r); }
+  vitals();
+  themeChips();
+  try {
+    await Promise.race([startPerspective(), new Promise((_, no) => setTimeout(() => no(new Error("timed out")), 20000))]);
+    $("status").hidden = true;
+  } catch (e) {
+    viewer = null;
+    $("viewer").hidden = true;
+    $("status").textContent = "The interactive grid could not start here, so this is a plain table: tap a column view above, search, or tap a row.";
+    $("fallback").hidden = false;
+    $("search").oninput = () => show(current);
+    $("plain").onclick = (ev) => { const tr = ev.target.closest("tr[data-t]"); if (tr) detail(tr.dataset.t); };
+  }
+  tabs();
+  await show(current);
+  const retheme = () => viewer && viewer.restore({ theme: dark() ? "Pro Dark" : "Pro Light" });
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", retheme);
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+}
+main();
+</script>

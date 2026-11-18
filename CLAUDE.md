@@ -38,6 +38,8 @@ python -m brain check                              # bank invariants; exit 0 = O
 
 13. `python -m brain tilttest declare|test`: step 2 of `research/POSTMORTEM-2026-11.md` (`docs/TILT.md`). T1a, a quality tilt (profitable, not diluting, calm, near its high) on the 500 largest stocks by market value as known each month, FAILED on 2019-2026 (-0.095% a month against the list, p 0.85; it had worked on 2011-2018). T1b, holding SPY at 100% for 13 weeks after a VIX spike and 70% otherwise, FAILED on 1993-2010, weeks never looked at before (p 0.88); it worked only in 2011-2026, where the lesson came from. Neither beat SPY. "Not diluting" alone (+0.17% a month, p 0.001) was one of four traits looked at after the fact: a lead for a forward test, not a finding. Do not present a quality tilt or buying after fear as an edge.
 
+14. `python -m brain explorer build`, then republish `data.json` to the scan explorer page (https://claude.ai/artifact/EyLgFmNo5ZyYFsKt6Hoq3H; `docs/EXPLORER.md`): every scanned stock's ranges, its move since the latest check and why, in a Perspective grid. It displays what the engine records; it is not a forecast. Only ranges, chances and moves in percent are published, never prices.
+
 ## The memory bank (your library beside the context window)
 
 Your context window is fixed; long conversations are summarized and the machine is reset now and then. The memory
