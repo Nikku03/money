@@ -164,8 +164,11 @@ idea at a time, checked against the memory bank first.
   latest check, where it sits, why it moved, desk themes as filters. Only percents, never prices. If Perspective
   cannot start in the page it shows a plain table after 20 seconds.
 - Refresh: `python -m brain explorer build` (about 3 minutes the first time per scan), then publish with the
-  Artifact tool, file_path web/explorer/index.html, files {"data.json": "var/explorer/data.json"} (keeps the URL;
-  the vendored lib/ files stay). Do this after every check: the person accepted "refreshed after each check".
+  Artifact tool with url https://claude.ai/artifact/EyLgFmNo5ZyYFsKt6Hoq3H, file_path web/explorer/index.html, files
+  {"data.json": "var/explorer/data.json"} (the vendored lib/ files stay). Always pass `url`: on 2026-11-18 a publish
+  without it, after a summary, made a separate broken page (https://claude.ai/artifact/8vgPd7A27CAQwfknCor3d4, no
+  Perspective files; the person was told and asked whether to delete it). The tool may ask to read the published
+  data.json first. Do this after every check: the person accepted "refreshed after each check".
 - The before-the-open task's prompt now includes the refresh (step 6). Updating the midday and after-close tasks'
   prompts was refused by the permission check (2026-11-18); until the person allows it, refresh the page by hand
   at the end of those checks.

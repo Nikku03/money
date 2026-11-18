@@ -1,0 +1,466 @@
+{
+ "asof": "2026-11-17",
+ "at": "2026-11-18T13:34:35Z",
+ "calls": [],
+ "case_sha": "cc6da8055d65ed39",
+ "check": "2026-11-18T1334Z",
+ "claims_noted": 3,
+ "evidence": {
+  "d:dollar": {
+   "text": "dollar +0.3% since the close (its usual day: 0.3%)"
+  },
+  "d:gold": {
+   "text": "gold -2.4% since the close (its usual day: 1.8%)"
+  },
+  "d:oil": {
+   "text": "oil -2.4% since the close (its usual day: 3.6%)"
+  },
+  "f:ARDT:1": {
+   "text": "ARDT share-sale filing (424B5) at 2026-11-17T22:24Z: Table of Contents -- Table of Contents The information contained in this preliminary prospectus supplement is not complete and may be changed. This preliminary prospectus supplement and the accompanying prospectus are not an offer to sell and are not soliciting an offer to buy these securities in any jurisdiction where the offer or sale is not permitted. Filed Pursuant to Rule 424(b)(5)\u200b Registration No. 333-289763\u200b SUBJECT TO COMPLETION, DATE",
+   "url": "https://www.sec.gov/Archives/edgar/data/1756655/000110465926129160/tm2629812-2_424b5.htm"
+  },
+  "f:BRBR:1": {
+   "text": "BRBR results report (8-K 2.02) at 2026-11-18T12:01Z: BellRing Brands Reports Results for the Fourth Quarter and Fiscal Year 2026; Provides Fiscal Year 2027 Outlook -- Exhibit 99.1 BellRing Brands Reports Results for the Fourth Quarter and Fiscal Year 2026; Provides Fiscal Year 2027 Outlook St. Louis - November 18, 2026 - BellRing Brands, Inc. (NYSE:BRBR) (\u201cBellRing\u201d or the \u201cCompany\u201d), a holding company operating in the global proactive wellness category, today reported results for the fourth fis",
+   "url": "https://www.sec.gov/Archives/edgar/data/1772016/000162828026074645/brbrexh991-q42026earningsr.htm"
+  },
+  "f:ECVT:1": {
+   "text": "ECVT 8-K 5.02, 7.01 at 2026-11-18T11:12Z: Ecovyst Announces Chief Executive Officer Transition and Reaffirms Full-Year 2026 Guidance. -- Exhibit 99.1 Ecovyst Announces Chief Executive Officer Transition and Reaffirms Full-Year 2026 Guidance. WAYNE, PA, November 18, 2026 \u2014 Ecovyst Inc. (NYSE: ECVT) (\u201cEcovyst\u201d or the \u201cCompany\u201d), a leading provider of regenerated sulfuric acid, virgin sulfuric acid, and sulfur dioxide and related derivatives, today announced that the Board of Directors of the Compa",
+   "url": "https://www.sec.gov/Archives/edgar/data/1708035/000119312526466131/d46136dex991.htm"
+  },
+  "f:JJSF:1": {
+   "text": "JJSF results report (8-K 2.02) at 2026-11-18T12:02Z: J & J Snack Foods Reports Fiscal 2026 Fourth Quarter Results -- Exhibit 99.1 J & J Snack Foods Reports Fiscal 2026 Fourth Quarter Results Mount Laurel, NJ. November 18, 2026 \u2013 J & J Snack Foods Corp. (Nasdaq: JJSF) today reported financial results for the fourth quarter ended September 26, 2026. Fourth Quarter Full Year Actuals % vs. LY Actuals % vs. LY Net Sales $406.0M -1% $1,520.6M -4% Gross Profit $136.9M 5% $483.2M 3% Operating Income $44",
+   "url": "https://www.sec.gov/Archives/edgar/data/785956/000143774926037473/ex_1047530.htm"
+  },
+  "g:1040": {
+   "text": "Gold and Silver Ores: the median of its 10 checked stocks moved -4.0%"
+  },
+  "k": {
+   "text": "Market: S&P 500 (SPY) +0.2%, Nasdaq 100 (QQQ) +0.6%, Russell 2000 (IWM) -0.4%, S&P 500 futures +0.2%, VIX -3.3% (before the open)"
+  },
+  "m:ACIW": {
+   "text": "ACIW (ACI WORLDWIDE, INC.; Services-Prepackaged Software) -4.4% since the close (before the open), outside its 2-in-3 range (-4%..+5%)"
+  },
+  "m:ARDT": {
+   "text": "ARDT (Ardent Health, Inc.; Services-General Medical & Surgical Hospitals, NEC) -19.7% since the close (before the open), OUTSIDE its 9-in-10 range (-5%..+6%)"
+  },
+  "m:BRBR": {
+   "text": "BRBR (BELLRING BRANDS, INC.; Food and Kindred Products) +14.4% since the close (before the open), outside its 2-in-3 range (-9%..+11%)"
+  },
+  "m:ECVT": {
+   "text": "ECVT (Ecovyst Inc.; Chemicals & Allied Products) -10.0% since the close (before the open), OUTSIDE its 9-in-10 range (-5%..+6%)"
+  },
+  "m:JJSF": {
+   "text": "JJSF (J&J SNACK FOODS CORP; Cookies & Crackers) +4.9% since the close (before the open), outside its 2-in-3 range (-4%..+5%)"
+  },
+  "n:ARDT": {
+   "text": "ARDT accounts: market value $2.5 bn; cash and equivalents $766.2 m (2026-09-30; investments not counted); long-term debt $1.1 bn (2026-09-30); revenue $6.5 bn over the four quarters to 2026-09-30; net income $146.2 m over the four quarters to 2026-09-30"
+  },
+  "n:ECVT": {
+   "text": "ECVT accounts: market value $1.1 bn; cash and equivalents $71.2 m (2026-09-30; investments not counted); long-term debt $493.1 m (2026-09-30); revenue $973.0 m over the four quarters to 2026-09-30; net income $36.1 m over the four quarters to 2026-09-30"
+  },
+  "p:ACIW~MANH": {
+   "text": "ACIW and MANH: market-adjusted daily returns correlated 0.61 over the last 250 sessions; MANH +0.2% since the close"
+  },
+  "p:ACIW~QTWO": {
+   "text": "ACIW and QTWO: market-adjusted daily returns correlated 0.66 over the last 250 sessions; QTWO +0.0% since the close"
+  },
+  "p:ACIW~VERX": {
+   "text": "ACIW and VERX: market-adjusted daily returns correlated 0.63 over the last 250 sessions; VERX +0.0% since the close"
+  },
+  "p:ECVT~CE": {
+   "text": "ECVT and CE: market-adjusted daily returns correlated 0.43 over the last 250 sessions; CE +0.0% since the close"
+  },
+  "p:ECVT~LYB": {
+   "text": "ECVT and LYB: market-adjusted daily returns correlated 0.36 over the last 250 sessions; LYB -0.8% since the close"
+  },
+  "p:ECVT~OLN": {
+   "text": "ECVT and OLN: market-adjusted daily returns correlated 0.41 over the last 250 sessions; OLN +0.1% since the close"
+  },
+  "q:AAOI": {
+   "text": "AAOI -10.3% since the close of 2026-11-17, as the check read it"
+  },
+  "q:AMD": {
+   "text": "AMD +1.7% since the close of 2026-11-17, as the check read it"
+  },
+  "q:AVGO": {
+   "text": "AVGO +1.9% since the close of 2026-11-17, as the check read it"
+  },
+  "q:CDE": {
+   "text": "CDE -3.3% since the close of 2026-11-17, as the check read it"
+  },
+  "q:COHR": {
+   "text": "COHR +3.4% since the close of 2026-11-17, as the check read it"
+  },
+  "q:CRWV": {
+   "text": "CRWV +3.0% since the close of 2026-11-17, as the check read it"
+  },
+  "q:DELL": {
+   "text": "DELL +2.6% since the close of 2026-11-17, as the check read it"
+  },
+  "q:GOLD": {
+   "text": "GOLD -1.6% since the close of 2026-11-17, as the check read it"
+  },
+  "q:HL": {
+   "text": "HL -3.6% since the close of 2026-11-17, as the check read it"
+  },
+  "q:IREN": {
+   "text": "IREN +3.4% since the close of 2026-11-17, as the check read it"
+  },
+  "q:LITE": {
+   "text": "LITE +2.6% since the close of 2026-11-17, as the check read it"
+  },
+  "q:MRVL": {
+   "text": "MRVL +1.9% since the close of 2026-11-17, as the check read it"
+  },
+  "q:MU": {
+   "text": "MU +1.6% since the close of 2026-11-17, as the check read it"
+  },
+  "q:NEM": {
+   "text": "NEM -3.4% since the close of 2026-11-17, as the check read it"
+  },
+  "q:NVDA": {
+   "text": "NVDA +2.6% since the close of 2026-11-17, as the check read it"
+  },
+  "q:ORCL": {
+   "text": "ORCL +1.5% since the close of 2026-11-17, as the check read it"
+  },
+  "q:RGLD": {
+   "text": "RGLD -3.3% since the close of 2026-11-17, as the check read it"
+  },
+  "q:SMCI": {
+   "text": "SMCI +2.6% since the close of 2026-11-17, as the check read it"
+  },
+  "q:SNDK": {
+   "text": "SNDK +2.3% since the close of 2026-11-17, as the check read it"
+  },
+  "q:TGT": {
+   "text": "TGT -0.5% since the close of 2026-11-17, as the check read it"
+  },
+  "q:VRT": {
+   "text": "VRT +2.0% since the close of 2026-11-17, as the check read it"
+  },
+  "s1": {
+   "text": "2026-11-18T01:53Z finance.yahoo.com: Ardent Health Announces Pricing of Secondary Offering of Common Stock and Concurrent Share Repurchase -- BRENTWOOD, Tenn., November 18, 2026--Ardent Health, Inc. (NYSE: ARDT) (\"Ardent Health\" or the \"Company\") today announced the pricing of the previously announced secondary public offering (the \"Offering\") of 8,000,000 shares of its common stock, consisting of 7,136,719 shares of its common stock by an affiliate of Equity Group Investments and 863,281 shares",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/ardent-health-announces-pricing-secondary-015300137.html?.tsrc=rss"
+  },
+  "s10": {
+   "text": "2026-11-18T11:00Z finance.yahoo.com: ACI Worldwide Appoints Robert Leibrock as Interim Chief Executive Officer -- OMAHA, Neb., November 18, 2026--ACI Worldwide (NASDAQ: ACIW), an original innovator in global payments technology, today announced that its Board of Directors (the \"Board\") has appointed Robert (\"Bobby\") Leibrock, Chief Financial Officer, as Interim President and Chief Executive Officer, effective November 18, 2026. Mr. Leibrock will continue to serve as Chief Financial Officer while",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/aci-worldwide-appoints-robert-leibrock-110000268.html?.tsrc=rss"
+  },
+  "s11": {
+   "text": "2026-11-18T12:21Z finance.yahoo.com: J&J Snack Foods: Fiscal Q4 Earnings Snapshot -- (JJSF) on Wednesday reported earnings of $33.6 million in its fiscal fourth quarter.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/j-j-snack-foods-fiscal-122154363.html?.tsrc=rss"
+  },
+  "s2": {
+   "text": "2026-11-17T22:20Z finance.yahoo.com: Ardent Health stock tumbles on 7M share secondary offering -- Investing.com -- Ardent Health Inc (NYSE:ARDT) shares fell 13.9% in after-hours trading Tuesday after the company announced a secondary public offering of 7 million shares by existing stockholders.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/ardent-health-stock-tumbles-7m-222025368.html?.tsrc=rss"
+  },
+  "s3": {
+   "text": "2026-11-17T22:04Z finance.yahoo.com: CORRECTING and REPLACING Ardent Health Announces Proposed Secondary Offering of Common Stock and Concurrent Share Repurchase -- BRENTWOOD, Tenn., November 17, 2026--Please replace the release with the following corrected version due to multiple revisions.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/ardent-health-announces-proposed-secondary-210100707.html?.tsrc=rss"
+  },
+  "s4": {
+   "text": "2026-11-18T11:00Z finance.yahoo.com: Ecovyst Announces Chief Executive Officer Transition and Reaffirms Full-Year 2026 Guidance -- Ecovyst Inc. (NYSE: ECVT) (\"Ecovyst\" or the \"Company\"), a leading provider of regenerated sulfuric acid, virgin sulfuric acid, and sulfur dioxide and related derivatives, today announced that the Board of Directors of the Company has appointed current director David A. Bradley as Interim Chief Executive Officer effective November 17, 2026. Mr. Bradley replaces Kurt J",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/ecovyst-announces-chief-executive-officer-110000996.html?.tsrc=rss"
+  },
+  "s6": {
+   "text": "2026-11-18T12:16Z finance.yahoo.com: BellRing Brands: Fiscal Q4 Earnings Snapshot -- LOUIS (AP) \u2014 BellRing Brands Inc. (BRBR) on Wednesday reported fiscal fourth-quarter earnings of $35.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/bellring-brands-fiscal-q4-earnings-121655127.html?.tsrc=rss"
+  },
+  "s7": {
+   "text": "2026-11-18T12:10Z finance.yahoo.com: BellRing Brands (BRBR) Q4 Earnings and Revenues Beat Estimates -- BellRing Brands (BRBR) delivered earnings and revenue surprises of +4.76% and +5.95%, respectively, for the quarter ended September 2026. Do the numbers hold clues to what lies ahead for the stock?",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/bellring-brands-brbr-q4-earnings-121001589.html?.tsrc=rss"
+  },
+  "s8": {
+   "text": "2026-11-18T12:01Z finance.yahoo.com: BellRing Brands Announces CFO Transition -- ST. LOUIS, Nov. 18, 2026 (GLOBE NEWSWIRE) -- BellRing Brands, Inc. (NYSE:BRBR) (the \u201cCompany\u201d) today announced that Travis Leonard has been appointed to succeed Paul Rode as Chief Financial Officer (\u201cCFO\u201d), effective December 1, 2026. Mr. Rode is stepping down after a successful career of over 10 years leading the finance team at BellRing and will serve in an advisory capacity through February 28,",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/bellring-brands-announces-cfo-transition-120100028.html?.tsrc=rss"
+  },
+  "s9": {
+   "text": "2026-11-18T12:00Z finance.yahoo.com: BellRing Brands Reports Results for the\u00a0Fourth Quarter and Fiscal Year 2026; Provides Fiscal Year 2027 Outlook -- ST. LOUIS, Nov. 18, 2026 (GLOBE NEWSWIRE) -- BellRing Brands, Inc. (NYSE:BRBR) (\u201cBellRing\u201d or the \u201cCompany\u201d), a holding company operating in the global proactive wellness category, today reported results for the fourth fiscal quarter and fiscal year ended September 30, 2026 and provided its fiscal year 2027 outlook. Fourth Quarter 2026 Highlights:",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/bellring-brands-reports-results-fourth-120000227.html?.tsrc=rss"
+  },
+  "t1": {
+   "text": "the last note (2026-11-18T0432Z), theme 'Nvidia beat and raised; the AI build-out rallied after the close': Nvidia reported revenue of $115.8 billion against its own forecast of $108 billion plus or minus 2% and analysts' $109.1 billion, with data-center revenue of $107.6 billion, and guided the next quarter to $130 billion plus or minus 3% against an average estimate of $125.1 billion, assuming no data-center compute sales in China (Nvidia; MLQ citing CNBC). After the close: Nvidia +4.8%, CoreW"
+  },
+  "x:ACIW": {
+   "text": "ACIW: the market carried +0.0% (beta 0.15); 10-year yield carried +0.0% (-9.37% per point, t -3.1); its industry (Services-Prepackaged Software, 104 stocks) moved +0.0%; left over after the market and its drivers -4.4%"
+  },
+  "x:ARDT": {
+   "text": "ARDT: the market carried +0.1% (beta 0.30); 10-year yield carried +0.0% (-11.66% per point, t -3.0); its industry (Health services (broad), 50 stocks) moved +0.0%; left over after the market and its drivers -19.8%"
+  },
+  "x:BRBR": {
+   "text": "BRBR: the market carried +0.0% (beta 0.24); its industry (Food products (broad), 43 stocks) moved -0.2%; left over after the market and its drivers +14.4%"
+  },
+  "x:ECVT": {
+   "text": "ECVT: the market carried +0.1% (beta 0.49); its industry (Chemicals & Allied Products, 9 stocks) moved -0.0%; left over after the market and its drivers -10.1%"
+  },
+  "z:ARDT": {
+   "text": "ARDT mosaic: at the close of 2026-11-17, before this move, the chance of the filing in the next 20 sessions: late or unreliable accounts 0.2% (the usual stock: 0.4%); a restructuring or a write-off 0.2% (the usual stock: 0.3%); a sale of new shares 2.8% (the usual stock: 0.9%; raised most by a registration to sell securities on file, 1 sale of new shares opened in three years). A chance that a filing comes, not a direction (tests P1a-P3b, research/RESULTS.md)"
+  },
+  "z:BRBR": {
+   "text": "BRBR mosaic: at the close of 2026-11-17, before this move, the chance of the filing in the next 20 sessions: late or unreliable accounts 0.2% (the usual stock: 0.4%); a restructuring or a write-off 0.7% (the usual stock: 0.3%; raised most by 67% below its 52-week high, about $35.1 m traded a day); a sale of new shares 0.0% (the usual stock: 0.9%). A chance that a filing comes, not a direction (tests P1a-P3b, research/RESULTS.md)"
+  }
+ },
+ "note": {
+  "backdrop": "A quiet open after Nvidia's report. At 8:34 ET the S&P 500 fund was +0.2%, the Nasdaq 100 fund +0.6%, small companies -0.4% and the VIX -3.3%: big technology up, the rest flat. Oil -2.4% and gold -2.4% moved most; TradingKey puts gold below $3,800 an ounce and silver -3% to $45.73, and says signs of improving Middle East supply weighed on oil (WTI $83.24, Brent $92.39). The day's scheduled news: the Federal Reserve's October minutes this afternoon and Anthropic's offering price tonight, first trade Thursday (Yahoo Finance; TradingKey says Anthropic told investors to expect the top of its range or higher, citing Bloomberg). Only 3 of 2,449 stocks were outside their 9-in-10 range and 10 outside their 2-in-3 range, and four of those rest on one or two early prints (see unexplained).",
+  "backdrop_evidence": [
+   "k",
+   "d:oil",
+   "d:gold",
+   "d:dollar",
+   "https://www.tradingkey.com/analysis/stocks/us-stocks/262311015-us-pre-market-nvda-anthropic-tradingkey",
+   "https://finance.yahoo.com/markets/live/stock-market-today-wednesday-november-18-dow-sp-500-nasdaq-nvidia-anthropic-ipo-090613569.html"
+  ],
+  "by": "agent",
+  "calls": [],
+  "check": "2026-11-18T1334Z",
+  "read": [
+   {
+    "direction": "none",
+    "published": "2026-11-18T12:30:00Z",
+    "says": "Before the open: Nasdaq 100 futures +0.81%, S&P 500 futures +0.31%; gold down more than 2% below $3,800, silver -3% to $45.73, oil about -2% on signs of improving Middle East supply; Nvidia nearly +3%, Dell over +5%, Coherent over +6%; Applied Optoelectronics nearly -10% on an at-the-market plan to sell up to $550 million of stock; TSMC nearly +4% on reports of foundry price increases from early 2027, unconfirmed.",
+    "tier": "reported",
+    "url": "https://www.tradingkey.com/analysis/stocks/us-stocks/262311015-us-pre-market-nvda-anthropic-tradingkey"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-18T13:11:00Z",
+    "says": "S&P 500 futures +0.3%, Nasdaq 100 futures +0.8% after two days of falls; Anthropic expected to price tonight; Target's third quarter: sales +7.1% to $27.1 billion (estimate $26.5 billion), diluted EPS $2.65 (estimate $2.08) including a $0.50 benefit from tariff refunds, comparable sales +5.6%, shares lower before the open; Fed minutes today.",
+    "tier": "reported",
+    "url": "https://finance.yahoo.com/markets/live/stock-market-today-wednesday-november-18-dow-sp-500-nasdaq-nvidia-anthropic-ipo-090613569.html"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-18T01:53:00Z",
+    "says": "Ardent Health priced a secondary offering of 8,000,000 shares (7,136,719 from an affiliate of Equity Group Investments, 863,281 from an affiliate of Ventas) at $14.50, with a 1,200,000-share option; the company will buy back 1,500,000 of them from the underwriters at their price, from cash; it sells no shares and receives nothing.",
+    "ticker": "ARDT",
+    "tier": "reported",
+    "url": "https://finance.yahoo.com/markets/stocks/articles/ardent-health-announces-pricing-secondary-015300137.html"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-18T11:12:00Z",
+    "says": "Ecovyst's board appointed a director as interim chief executive effective November 17, replacing the chief executive, who is departing and will consult until February 5, 2027; no reason given; fourth-quarter and full-year 2026 guidance of November 5 reaffirmed; a search for a permanent chief has begun.",
+    "ticker": "ECVT",
+    "tier": "reported",
+    "url": "https://www.sec.gov/Archives/edgar/data/1708035/000119312526466131/d46136dex991.htm"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-18T12:01:00Z",
+    "says": "BellRing's fourth quarter: net sales $692.0 million (+7%), net earnings $35.6 million, adjusted EBITDA $66.4 million after a $16 million inventory charge; fiscal 2026 sales $2,398.4 million and adjusted EBITDA $288.8 million after $37 million of inventory headwinds; fiscal 2027 outlook: sales $2.32-$2.42 billion and adjusted EBITDA $310-$350 million.",
+    "ticker": "BRBR",
+    "tier": "reported",
+    "url": "https://www.sec.gov/Archives/edgar/data/1772016/000162828026074645/brbrexh991-q42026earningsr.htm"
+   }
+  ],
+  "singles": [
+   {
+    "beneath": "In proportion: $14.50 is 18.3% below Tuesday's close of $17.75, and the stock has moved to the offering price, as Vir did last week. At $17.75 the company was worth about $2.5 billion, about 141 million shares; 8 million is 5.7% of them, 4.6% net of the buyback, and 6.5% with the option. A discount that deep on a sale by holders, not the company, is unusual; my reading is that buyers asked a large concession for a large block, and the upsizing says the holders accepted it. The company receives nothing; the buyback costs about $21 million of its $766 million cash.",
+    "cause": "Ardent Health priced the secondary offering it announced after Tuesday's close at $14.50 a share, upsized to 8 million shares from 7 million, sold by affiliates of Equity Group Investments and Ventas; the company buys back 1.5 million of them at the underwriters' price (its pricing release; Investing.com). The stock is -19.7%.",
+    "evidence": [
+     "m:ARDT",
+     "x:ARDT",
+     "n:ARDT",
+     "z:ARDT",
+     "f:ARDT:1",
+     "s1",
+     "s2",
+     "s3",
+     "https://finance.yahoo.com/markets/stocks/articles/ardent-health-announces-pricing-secondary-015300137.html"
+    ],
+    "kind": "reported",
+    "t": "ARDT"
+   },
+   {
+    "beneath": "Reaffirming guidance in the same release says the change is not about this year's numbers, but a departure effective the day before the announcement, with no successor and no reason, leaves the reason open; my reading is that the market charges for that uncertainty. About $110 million of value on a $1.1 billion company. Its chemical partners did not move.",
+    "cause": "Ecovyst's chief executive is departing; a director became interim chief effective November 17, with no reason given, and the company reaffirmed its 2026 guidance (its 8-K). The stock is -10.0%.",
+    "evidence": [
+     "m:ECVT",
+     "x:ECVT",
+     "n:ECVT",
+     "f:ECVT:1",
+     "s4",
+     "https://www.sec.gov/Archives/edgar/data/1708035/000119312526466131/d46136dex991.htm",
+     "p:ECVT~CE",
+     "p:ECVT~OLN",
+     "p:ECVT~LYB"
+    ],
+    "kind": "reported",
+    "t": "ECVT"
+   },
+   {
+    "beneath": "In proportion: the sales guide's middle, $2.37 billion, is 1.2% below fiscal 2026's $2,398.4 million; the EBITDA guide's middle, $330 million, is 14% above $288.8 million, but fiscal 2026 carried $37 million of inventory charges, and without them it was $325.8 million, so the guide is about flat. The stock was 67% below its 52-week high, so a flat year with no new cut is better than what that price assumed; that is my reading. The company also named a new finance chief.",
+    "cause": "BellRing reported fourth-quarter sales of $692.0 million (+7%) and guided fiscal 2027 to sales of $2.32-$2.42 billion and adjusted EBITDA of $310-$350 million; Zacks counts a 4.8% earnings beat and 6.0% sales beat (its release; Zacks). The stock is +14.4%.",
+    "evidence": [
+     "m:BRBR",
+     "x:BRBR",
+     "z:BRBR",
+     "f:BRBR:1",
+     "s6",
+     "s7",
+     "s8",
+     "s9",
+     "https://www.sec.gov/Archives/edgar/data/1772016/000162828026074645/brbrexh991-q42026earningsr.htm"
+    ],
+    "kind": "reported",
+    "t": "BRBR"
+   },
+   {
+    "beneath": "A chief-executive change the same morning as Ecovyst's, in a different industry; the two are not connected. I did not read why the change was made. Its payments-software partners did not move.",
+    "cause": "ACI Worldwide appointed an interim chief executive (its release). The stock is -4.4%.",
+    "evidence": [
+     "m:ACIW",
+     "x:ACIW",
+     "s10",
+     "p:ACIW~QTWO",
+     "p:ACIW~VERX",
+     "p:ACIW~MANH"
+    ],
+    "kind": "reported",
+    "t": "ACIW"
+   },
+   {
+    "beneath": "A results report from a $1.7 billion company; I did not read past the headline figures, so what the market liked is not established here.",
+    "cause": "J&J Snack Foods reported fiscal fourth-quarter earnings of $33.6 million (its 8-K; AP). The stock is +4.9%.",
+    "evidence": [
+     "m:JJSF",
+     "f:JJSF:1",
+     "s11"
+    ],
+    "kind": "reported",
+    "t": "JJSF"
+   },
+   {
+    "beneath": "Without the refund, EPS was $2.15, 3% above the estimate: most of the headline beat is a one-time refund, which is why a 27% beat moved the stock so little. That the refund explains the muted reaction is my inference; the sales and comparable-sales beats are real.",
+    "cause": "Target reported sales of $27.1 billion (+7.1%, estimate $26.5 billion), comparable sales +5.6% and diluted EPS of $2.65 against an estimate of $2.08, including a $0.50 benefit from tariff refunds (Yahoo Finance). The stock is -0.5%.",
+    "evidence": [
+     "q:TGT",
+     "https://finance.yahoo.com/markets/live/stock-market-today-wednesday-november-18-dow-sp-500-nasdaq-nvidia-anthropic-ipo-090613569.html"
+    ],
+    "kind": "reported",
+    "t": "TGT"
+   },
+   {
+    "beneath": "An at-the-market program sells into the market over time, so the dilution arrives gradually; $550 million is a ceiling, not a sale. It filed at 4:06 ET, minutes before Nvidia reported, so the optics rally that followed did not prompt it. It was among the scan's likeliest 20%+ days before the filing.",
+    "cause": "Applied Optoelectronics filed to sell up to $550 million of stock over time through an at-the-market program (TradingKey; its 424B5 and 8-K after Tuesday's close). The stock is -10.3%.",
+    "evidence": [
+     "q:AAOI",
+     "https://www.tradingkey.com/analysis/stocks/us-stocks/262311015-us-pre-market-nvda-anthropic-tradingkey"
+    ],
+    "kind": "reported",
+    "t": "AAOI"
+   }
+  ],
+  "themes": [
+   {
+    "beneath": "In proportion: Nvidia at about $160.18 at 8:36 ET is 1.7% below its Nov 13 close of $162.89, where the desk's size call started; it needs a close at or above $175.11 or at or below $150.67 on Friday for that call. The report answered whether spending is still rising; it did not answer the questions the strategist names (returns on the spending, how it is financed, Nvidia's leadership). TradingKey adds that Nvidia has halted shipments of licensed Hopper products to China. TradingKey also reports foundry price increases from early 2027, unconfirmed: if they come, the chip designers here pay more for the same wafers (untested; TSMC is not in the scan).",
+    "cause": "Nvidia's beat and raise lifted the AI build-out after Tuesday's close; by 8:34 ET most of the group kept less than half of it. Nvidia +4.8% after hours, +2.6% now; CoreWeave +9.0% to +3.0%; IREN +10.1% to +3.4%; Coherent +7.2% to +3.4%; Lumentum +6.5% to +2.6%; Vertiv +6.4% to +2.0%; Dell +6.2% to +2.6%; Marvell +5.7% to +1.9%; Micron +4.7% to +1.6%; Oracle +4.1% to +1.5%; AMD +3.9% to +1.7%; Broadcom +2.9% to +1.9% (the last note's after-hours reads; this check's reads). TradingKey's figures at 7:30 ET (Dell over +5%, Coherent over +6%) sat between the two, so the fade ran through the morning.",
+    "evidence": [
+     "t1",
+     "k",
+     "q:NVDA",
+     "q:CRWV",
+     "q:IREN",
+     "q:COHR",
+     "q:LITE",
+     "q:VRT",
+     "q:DELL",
+     "q:MRVL",
+     "q:MU",
+     "q:ORCL",
+     "q:AMD",
+     "q:AVGO",
+     "q:SMCI",
+     "q:SNDK",
+     "https://www.tradingkey.com/analysis/stocks/us-stocks/262311015-us-pre-market-nvda-anthropic-tradingkey",
+     "https://finance.yahoo.com/markets/live/stock-market-today-wednesday-november-18-dow-sp-500-nasdaq-nvidia-anthropic-ipo-090613569.html"
+    ],
+    "kind": "inferred",
+    "mechanism": "Nothing new was reported against Nvidia overnight; the stocks gave back gains as more traders priced them. The same names had fallen most on the spending worry, so they swing most both ways. Yahoo Finance's Asia report quotes a strategist: an initial relief rally without the conviction for a sustained recovery (an opinion). That the fade is sellers using the bounce, not new information, is my inference.",
+    "members": [
+     "NVDA",
+     "CRWV",
+     "IREN",
+     "COHR",
+     "LITE",
+     "VRT",
+     "DELL",
+     "MRVL",
+     "MU",
+     "ORCL",
+     "AMD",
+     "AVGO",
+     "SMCI",
+     "SNDK"
+    ],
+    "name": "Half of the AI build-out's after-hours gains gone before the open",
+    "read_through": [],
+    "watch": "Whether the group closes above or below this morning's level. A close back near Tuesday's lows says the report changed little; a close at the after-hours highs says the morning was noise. Anthropic's price tonight is the next test of what investors pay for AI."
+   },
+   {
+    "beneath": "One root for both, which is my inference: easing Middle East risk takes the war premium out of oil and the safe-haven premium out of gold at once. The dollar's +0.3% is its usual day and does not explain a 2.4% gold fall on its own. Gold below $3,800 and Brent at $92.39 are the levels TradingKey reports.",
+    "cause": "Gold -2.4% and oil -2.4% since the close, each beyond its usual day for gold (1.8%) and inside it for oil (3.6%). TradingKey reports gold below $3,800 and silver -3%, and says improving Middle East supply weighed on oil. The gold and silver miners' median fell 4.0% (10 stocks): Newmont -3.4%, Hecla -3.6%, Coeur -3.3%, Royal Gold -3.3%, Barrick -1.6%.",
+    "evidence": [
+     "d:gold",
+     "d:oil",
+     "d:dollar",
+     "g:1040",
+     "q:NEM",
+     "q:HL",
+     "q:CDE",
+     "q:RGLD",
+     "q:GOLD",
+     "https://www.tradingkey.com/analysis/stocks/us-stocks/262311015-us-pre-market-nvda-anthropic-tradingkey"
+    ],
+    "kind": "inferred",
+    "mechanism": "A miner's costs barely move with the metal, so its profit moves more than the metal's price: a 2.4% fall in gold took about 4% off the median miner, about 1.7 times as much. Royalty companies such as Royal Gold have no mining costs but fell as much, so the pull is the metal itself.",
+    "members": [
+     "NEM",
+     "HL",
+     "CDE",
+     "RGLD",
+     "GOLD"
+    ],
+    "name": "Gold and oil fell together; gold miners fell more",
+    "read_through": [],
+    "watch": "If Middle East supply news reverses, both should rise together; if gold falls while oil holds, the common root is wrong."
+   }
+  ],
+  "threads": [
+   "Does the AI build-out close above or below this morning's level, after giving back half its after-hours gains?",
+   "The desk's size calls (NVDA 7.5%+, AMD 9%+, DELL 9.5%+ from Nov 13's close) are judged on Friday Nov 20; Nvidia is 1.7% below its start.",
+   "Anthropic prices tonight and trades Thursday: does software, which fell as a group on Tuesday, recover after it?",
+   "The Fed's October minutes this afternoon.",
+   "Gold and oil fell together: does the easing Middle East supply story hold?",
+   "Ardent Health at its $14.50 offering price: does it hold there once the offering closes on Thursday?",
+   "Primo Brands' fall: cause not found.",
+   "Four flags rested on one or two early prints (NWN, HEI, NEOG, WELL): the check counts a single pre-market print as a move. Fix not made; the open will settle them.",
+   "Health insurers: any company sizing its exposure to the proposed Medicare Advantage audit rule?",
+   "Capricor and Savara FDA decisions by Sunday Nov 22; Inhibrx data Nov 19-20."
+  ],
+  "unexplained": [
+   {
+    "t": "NWN",
+    "tried": "No filing since the close and no story in its feed; web searches found no bid or news. The +8.7% rests on one print at 7:00 ET; re-read at 8:36 ET, the latest print (8:10 ET) was $51.86, about 0.7% above Tuesday's $51.51 close. Most likely a bad print, not a move."
+   },
+   {
+    "t": "HEI",
+    "tried": "No filing and no story naming it; web searches found nothing new. The -6.7% rests on one print at 7:50 ET ($314.01); its partners did not move except Loar (-4.2%), another parts maker. Probably a thin print; the open will tell."
+   },
+   {
+    "t": "NEOG",
+    "tried": "No filing and no story. The -7.3% rests on one print at 4:21 ET ($10.10 against a $10.90 close). Web searches found only older items (an FDA warning letter on one product, a law firm's investigation notice of Nov 6)."
+   },
+   {
+    "t": "WELL",
+    "tried": "No filing and no story. Two prints: $243.45 at 7:55 ET (-0.9%) and $237.01 at 7:57 ET (-3.6%). Its partners did not move. A $185 billion REIT moving 3.6% on two prints is more likely a thin market than news."
+   },
+   {
+    "t": "PRMB",
+    "tried": "No filing and no story; web searches found the Nov 16 notes offering ($700 million at 7.625% due 2034, refinancing) and older analyst target changes, nothing today. Unlike the four above, it traded steadily all morning between $22.35 and $22.90 against Tuesday's $24.25: a real move, cause not found."
+   }
+  ]
+ },
+ "recorded_at": "2026-11-18T13:41:23Z"
+}

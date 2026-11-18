@@ -45,3 +45,8 @@ Each scheduled check (before the open, midday, after the close) ends by running 
 `data.json` to the same page. The first build after a new scan reads every stock's features for the reasons (about
 three minutes); later builds that day reuse them. On a fresh machine `explorer vendor` is needed only to republish
 Perspective's files, which the page already holds.
+
+Publish with the Artifact tool, passing the page's link as `url`, `file_path` `web/explorer/index.html` and `files`
+`{"data.json": "var/explorer/data.json"}`. Without `url`, a session that did not itself publish the page (after a
+reset or a summary) creates a separate page with no Perspective files. The tool may first ask for the published
+`data.json` to be read (`action: "read"`, `path: "data.json"`); that is the previous build, which the new one replaces.
