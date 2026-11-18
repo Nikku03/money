@@ -91,4 +91,8 @@ FAIL); "the market runs on chains of cause and effect, news and catalysts": the 
 - After-close scan of 2026-11-16 (2,452 stocks, 85 left out), the after-hours check and a desk note
   (`research/desk/2026-11-16/2026-11-17T0430Z.json`): the AI markdown closed at its lows with a new chip-export rule
   for five countries; the check's market-wide flag was its stale-baseline flaw again. No calls.
+- 2026-11-17: before-the-open, midday and after-close checks with desk notes. Midday: software sold as a group
+  before Anthropic's offering. After the close: Nvidia beat ($115.8bn) and guided $130bn; chips rallied after hours.
+  The person asked about Perspective (an open-source data grid and pivot table); explained it is a viewer, not an
+  edge, and offered a scan explorer; no answer yet.
 

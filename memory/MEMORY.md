@@ -137,20 +137,22 @@ idea at a time, checked against the memory bank first.
   an industry lead-lag test; the earnings radar in the 8:07 check; S3 recalibrated going forward; the trader
   replayed on 2022; a better headline picker.
 
-## The market thread (last desk note: `research/desk/2026-11-16/2026-11-17T0430Z.json`, after Monday's close)
+## The market thread (last desk note: `research/desk/2026-11-17/2026-11-18T0432Z.json`, after Tuesday's close)
 
-- Monday 2026-11-16 closed at its lows: S&P 500 -1.92% (7,416), Nasdaq -2.49%, 10-year 5.15%, VIX +18.7%. The AI
-  markdown reached the whole build-out and the buyers (Oracle -5.0%, Alphabet -4.1%; Microsoft and Apple about -1%).
-  Reported on the day: Commerce's interim rule requiring licenses for advanced AI chips to Brazil, Indonesia,
-  Malaysia, Singapore and Thailand (CBS); a Fed governor's warning about $800bn of AI spending financed with debt.
-  Nvidia reports Tue 2026-11-17 after the close; Anthropic prices Wed night, trades Thu. Desk calls NVDA 7.5%+
-  (0.50), AMD 9%+ (0.42), DELL 9.5%+ (0.40) judged Nov 20.
-- Crypto stocks and Trump Media closed at their lows (bitcoin about $64,900, -5% from Friday). Medicaid insurers
-  (Molina +11.3%) and food makers (Tyson +8.7% on results) rose.
-- After the close: Red Cat -26% (withdrew its 2026 revenue target), Omeros -8% despite a beat. The check flagged a
-  market-wide move from futures -1.9% and oil -4.0%, measured from Friday; since Monday's close futures were -0.06%.
-- Check flaws known (fix offered, not made): futures, oil and bitcoin measured from the previous day when the
-  latest daily bar is held back (it raised a false market-wide flag on 2026-11-16); zero-volume after-hours prints;
-  a dividend leaving the price is read as a move (IEP, GNK).
-- Unexplained: Icahn Enterprises' net fall beyond CVR (closed $3.60), Oxford Square, Chaince Digital (-29% in two
-  sessions), Lifeway, 1-800-Flowers. Capricor and Savara FDA decisions by Sun Nov 22. Inhibrx data Nov 19-20.
+- Tue 2026-11-17: S&P 500 -1.03% to 7,340.53 (lowest close since late July, fourth straight loss), VIX +11%.
+  Software sold as a group before Anthropic prices (Wed night; trades Thu): Salesforce -9.5%, Intuit -7.2%,
+  ServiceNow -6.5%; data providers too (Moody's, MSCI, S&P Global, FactSet about -4%). Health insurers fell on a
+  proposed Medicare Advantage audit rule (CRUSH; UnitedHealth -5.4%, Molina -5.1%).
+- Nvidia after the close: revenue $115.8bn (forecast $108bn +/-2%, consensus $109.1bn), Q4 guide $130bn +/-3% (no
+  China data-center compute; consensus $125.1bn), margin guide 71-72%; board does not intend to reinstate the former
+  chief. After hours Nvidia +4.8% (back to its Nov 13 level), CoreWeave +9%, IREN +10%, the chip median +3.1%;
+  software flat.
+- Desk calls judged Fri Nov 20 from Nov 13 prices: NVDA 7.5%+ (0.50; start $162.89), AMD 9%+ (0.42; $532.84),
+  DELL 9.5%+ (0.40; $342.98).
+- Sellas closed +156% on its Phase 3 result, then filed to sell shares (mosaic chance had been 7.3% vs 0.9%).
+- Unexplained: Abacus Global Management (-23%, ten times usual volume), Oxford Square (-30% in two sessions),
+  Icahn Enterprises (-22% since Friday net of its distribution).
+- Check flaws known (fix offered, not made): the futures line after the close is measured from the previous
+  day's bar (false -1.9% on Mon, -0.8% on Tue); zero-volume after-hours prints; dividends read as moves.
+- Open with the person: whether to build a Perspective scan explorer (private page or terminal screen), and the
+  next research step (drug-trial line, a forward record of companies not issuing shares, or no new tests).

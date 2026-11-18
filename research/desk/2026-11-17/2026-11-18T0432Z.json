@@ -1,0 +1,350 @@
+{
+ "asof": "2026-11-17",
+ "at": "2026-11-18T04:32:06Z",
+ "calls": [],
+ "case_sha": "c7f37d404b2cd3d3",
+ "check": "2026-11-18T0432Z",
+ "claims_noted": 3,
+ "evidence": {
+  "d:10-year yield": {
+   "text": "10-year yield +0.00 pt since the close (its usual day: 0.04 pt)"
+  },
+  "f:ARDT:1": {
+   "text": "ARDT share-sale filing (424B5) at 2026-11-17T22:24Z: Table of Contents -- Table of Contents The information contained in this preliminary prospectus supplement is not complete and may be changed. This preliminary prospectus supplement and the accompanying prospectus are not an offer to sell and are not soliciting an offer to buy these securities in any jurisdiction where the offer or sale is not permitted. Filed Pursuant to Rule 424(b)(5)\u200b Registration No. 333-289763\u200b SUBJECT TO COMPLETION, DATE",
+   "url": "https://www.sec.gov/Archives/edgar/data/1756655/000110465926129160/tm2629812-2_424b5.htm"
+  },
+  "g:3674": {
+   "text": "Semiconductors & Related Devices: the median of its 59 checked stocks moved +3.1%"
+  },
+  "k": {
+   "text": "Market: S&P 500 (SPY) +0.7%, Nasdaq 100 (QQQ) +1.4%, Russell 2000 (IWM) +0.4%, S&P 500 futures -0.8%, VIX +0.0% (after the close)"
+  },
+  "m:ARDT": {
+   "text": "ARDT (Ardent Health, Inc.; Services-General Medical & Surgical Hospitals, NEC) -14.6% since the close (after the close), OUTSIDE its 9-in-10 range (-5%..+6%)"
+  },
+  "m:SXI": {
+   "text": "SXI (STANDEX INTERNATIONAL CORP/DE/; Refrigeration & Service Industry Machinery) +6.6% since the close (after the close), outside its 2-in-3 range (-5%..+6%)"
+  },
+  "q:ADBE": {
+   "text": "ADBE +0.1% since the close of 2026-11-17, as the check read it"
+  },
+  "q:AMD": {
+   "text": "AMD +3.9% since the close of 2026-11-17, as the check read it"
+  },
+  "q:AVGO": {
+   "text": "AVGO +2.9% since the close of 2026-11-17, as the check read it"
+  },
+  "q:CNC": {
+   "text": "CNC +0.0% since the close of 2026-11-17, as the check read it"
+  },
+  "q:COHR": {
+   "text": "COHR +7.2% since the close of 2026-11-17, as the check read it"
+  },
+  "q:CRM": {
+   "text": "CRM +0.6% since the close of 2026-11-17, as the check read it"
+  },
+  "q:CRWV": {
+   "text": "CRWV +9.0% since the close of 2026-11-17, as the check read it"
+  },
+  "q:CVS": {
+   "text": "CVS -0.4% since the close of 2026-11-17, as the check read it"
+  },
+  "q:DELL": {
+   "text": "DELL +6.2% since the close of 2026-11-17, as the check read it"
+  },
+  "q:ELV": {
+   "text": "ELV -0.4% since the close of 2026-11-17, as the check read it"
+  },
+  "q:HUBS": {
+   "text": "HUBS -0.0% since the close of 2026-11-17, as the check read it"
+  },
+  "q:HUM": {
+   "text": "HUM +0.0% since the close of 2026-11-17, as the check read it"
+  },
+  "q:INTU": {
+   "text": "INTU +0.4% since the close of 2026-11-17, as the check read it"
+  },
+  "q:IREN": {
+   "text": "IREN +10.1% since the close of 2026-11-17, as the check read it"
+  },
+  "q:LITE": {
+   "text": "LITE +6.5% since the close of 2026-11-17, as the check read it"
+  },
+  "q:MOH": {
+   "text": "MOH -0.0% since the close of 2026-11-17, as the check read it"
+  },
+  "q:MRVL": {
+   "text": "MRVL +5.7% since the close of 2026-11-17, as the check read it"
+  },
+  "q:MU": {
+   "text": "MU +4.7% since the close of 2026-11-17, as the check read it"
+  },
+  "q:NOW": {
+   "text": "NOW +1.4% since the close of 2026-11-17, as the check read it"
+  },
+  "q:NVDA": {
+   "text": "NVDA +4.8% since the close of 2026-11-17, as the check read it"
+  },
+  "q:ORCL": {
+   "text": "ORCL +4.1% since the close of 2026-11-17, as the check read it"
+  },
+  "q:SLS": {
+   "text": "SLS -10.6% since the close of 2026-11-17, as the check read it"
+  },
+  "q:SMCI": {
+   "text": "SMCI +5.3% since the close of 2026-11-17, as the check read it"
+  },
+  "q:SNDK": {
+   "text": "SNDK +5.8% since the close of 2026-11-17, as the check read it"
+  },
+  "q:UNH": {
+   "text": "UNH -0.3% since the close of 2026-11-17, as the check read it"
+  },
+  "q:VRT": {
+   "text": "VRT +6.4% since the close of 2026-11-17, as the check read it"
+  },
+  "q:WDAY": {
+   "text": "WDAY +0.3% since the close of 2026-11-17, as the check read it"
+  },
+  "s1": {
+   "text": "2026-11-18T01:53Z finance.yahoo.com: Ardent Health Announces Pricing of Secondary Offering of Common Stock and Concurrent Share Repurchase -- BRENTWOOD, Tenn., November 18, 2026--Ardent Health, Inc. (NYSE: ARDT) (\"Ardent Health\" or the \"Company\") today announced the pricing of the previously announced secondary public offering (the \"Offering\") of 8,000,000 shares of its common stock, consisting of 7,136,719 shares of its common stock by an affiliate of Equity Group Investments and 863,281 shares",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/ardent-health-announces-pricing-secondary-015300137.html?.tsrc=rss"
+  },
+  "s2": {
+   "text": "2026-11-17T22:20Z finance.yahoo.com: Ardent Health stock tumbles on 7M share secondary offering -- Investing.com -- Ardent Health Inc (NYSE:ARDT) shares fell 13.9% in after-hours trading Tuesday after the company announced a secondary public offering of 7 million shares by existing stockholders.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/ardent-health-stock-tumbles-7m-222025368.html?.tsrc=rss"
+  },
+  "s3": {
+   "text": "2026-11-17T22:04Z finance.yahoo.com: CORRECTING and REPLACING Ardent Health Announces Proposed Secondary Offering of Common Stock and Concurrent Share Repurchase -- BRENTWOOD, Tenn., November 17, 2026--Please replace the release with the following corrected version due to multiple revisions.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/ardent-health-announces-proposed-secondary-210100707.html?.tsrc=rss"
+  },
+  "t1": {
+   "text": "the last note (2026-11-17T1738Z), theme 'Software sold as a group a day before Anthropic prices its offering': Software is the day's new selling: Salesforce -9.4%, ServiceNow -6.6%, Intuit -6.7%, MongoDB -5.6%, Atlassian -5.2%, HubSpot -5.1%, Datadog -5.0%, Workday -4.6%, Oracle -4.2%, Adobe -3.8%, Microsoft -2.9%; the median of 105 software stocks is -3.2%. Reported reasons: funds selling software to make room for Anthropic's offering, which could raise up to about $64 billion and whose product"
+  },
+  "x:ARDT": {
+   "text": "ARDT: the market carried +0.2% (beta 0.30); 10-year yield carried -0.0% (-11.65% per point, t -3.0); its industry (Health services (broad), 50 stocks) moved +0.0%; left over after the market and its drivers -14.8%"
+  },
+  "x:SXI": {
+   "text": "SXI: the market carried +1.2% (beta 1.80); its industry (Machinery and computer equipment, group 358, 9 stocks) moved +0.1%; left over after the market and its drivers +5.3%"
+  }
+ },
+ "note": {
+  "backdrop": "Tuesday closed lower for a fourth day: the S&P 500 -1.03% to 7,340.53, its lowest close since late July, the Dow -1.64%, the Nasdaq -0.74%; the 10-year yield eased to 5.11%; energy was about the only gainer (Motley Fool). The VIX closed 11.1% higher (the bank's close). Software and health insurers led the losses; the wrap also blames a run of technology outages (air travel, banks) for weighing on confidence. After the close Nvidia reported and the picture turned: SPY +0.7%, QQQ +1.4%, IWM +0.4%, the median chip stock +3.1%. The check's S&P futures line (-0.8%) is again measured from the previous day's bar; on the 5-minute chart futures were 7,366.75 at Tuesday's 4pm close and 7,379.75 at 11:22pm ET, +0.18%. One stock is outside its 9-in-10 range after the close (Ardent Health, on a share sale).",
+  "backdrop_evidence": [
+   "k",
+   "g:3674",
+   "d:10-year yield",
+   "https://www.fool.com/coverage/stock-market-today/2026/11/17/stock-market-today-nov-17-stocks-slide-on-ai-chip-and-tech-pressures-salesforce-plummets-9/",
+   "https://www.stocktitan.net/articles/stock-market-today-live-november-17-2026",
+   "https://query1.finance.yahoo.com/v8/finance/chart/ES=F?range=2d&interval=5m&includePrePost=true"
+  ],
+  "by": "agent",
+  "calls": [],
+  "check": "2026-11-18T0432Z",
+  "read": [
+   {
+    "direction": "up",
+    "published": "2026-11-17T21:20:00Z",
+    "says": "Nvidia's third quarter: revenue $115.8 billion (+103% on the year, +20% on the quarter), data-center revenue $107.6 billion (+110%), GAAP gross margin 74.8%; fourth-quarter outlook $130.0 billion plus or minus 3% with no China data-center compute revenue assumed and gross margin 71%-72%; Vera Rubin NVL72 has shipped.",
+    "ticker": "NVDA",
+    "tier": "reported",
+    "url": "https://nvidianews.nvidia.com/news/nvidia-announces-financial-results-for-third-quarter-fiscal-2027"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-18T02:23:01Z",
+    "says": "Revenue and adjusted EPS ($2.68) beat LSEG estimates of $109.10 billion and $2.48; the $130 billion outlook beat a $125.1 billion average; the interim chief raised the fiscal 2028 growth outlook to about 75% from 70%; the board's chair said it does not intend to reinstate the former chief; revenue from customers headquartered in China including Hong Kong was $11.1 billion; shares about +3.6% after hours at 5:48pm ET.",
+    "ticker": "NVDA",
+    "tier": "reported",
+    "url": "https://mlq.ai/news/nvidia-results-live-revenue-rises-103-to-1158-billion-and-it-guides-to-130-billion-in-its-first-report-since-jensen-huang-left"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-17T12:06:11Z",
+    "says": "SPY closed -1.01%, QQQ -0.73%, DIA -1.62%, IWM -1.43%; the S&P 500 had its lowest close since late July; Nvidia was +4.81% after hours at 7:59pm ET, back near its Friday close; Sellas closed +156% and fell after hours on the evening it proposed a share sale.",
+    "tier": "reported",
+    "url": "https://www.stocktitan.net/articles/stock-market-today-live-november-17-2026"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-17T22:23:56Z",
+    "says": "S&P 500 -1.03% to 7,341 (a fourth straight loss), Nasdaq -0.74%, Dow -1.64%; Salesforce -9.45% on security jitters and fears of AI replacing software; UnitedHealth -5.42% on sweeping anti-fraud proposals for Medicare and Medicaid; crypto stocks fell as bitcoin is down over 20% in a month; technology outages hitting air travel and banks weighed on stocks.",
+    "tier": "reported",
+    "url": "https://www.fool.com/coverage/stock-market-today/2026/11/17/stock-market-today-nov-17-stocks-slide-on-ai-chip-and-tech-pressures-salesforce-plummets-9/"
+   },
+   {
+    "direction": "down",
+    "published": "2026-11-17T18:37:58Z",
+    "says": "The federal Medicare agency proposed the CRUSH anti-fraud rule: risk-adjustment audits of Medicare Advantage plans without a fee-for-service adjuster, with findings extrapolated from payment year 2018; it estimates recovering about $9 billion per payment year and HHS about $90 billion over 2027-2036; comments are due Jan 19, 2027.",
+    "ticker": "UNH",
+    "tier": "reported",
+    "url": "https://www.tradingview.com/news/gurufocus:3ac55a47d094b:0-unitedhealth-stocks-fall-4-62-as-cms-proposes-wider-medicare-advantage-audits/"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-18T04:22:00Z",
+    "says": "S&P 500 futures on the 5-minute chart: 7,366.75 at Tuesday's 4pm ET close, 7,379.75 at 11:22pm ET.",
+    "tier": "reported",
+    "url": "https://query1.finance.yahoo.com/v8/finance/chart/ES=F?range=2d&interval=5m&includePrePost=true"
+   }
+  ],
+  "singles": [
+   {
+    "beneath": "A secondary offering sells existing holders' shares; the repurchase is the company buying some of them. Worth about $2.5 billion at the close, it is a hospital operator whose peers did not move.",
+    "cause": "Ardent Health fell 14.6% after the close: it announced and then priced a secondary offering of 7 million shares together with a share repurchase (its releases; Investing.com headline).",
+    "evidence": [
+     "m:ARDT",
+     "x:ARDT",
+     "f:ARDT:1",
+     "s1",
+     "s2",
+     "s3"
+    ],
+    "kind": "reported",
+    "t": "ARDT"
+   },
+   {
+    "beneath": "The mosaic had put a share-sale filing within 20 sessions at 7.3% on Monday's close, against 0.9% for the usual stock, because it had sold shares five times in three years; it came within one session. That is a chance a filing comes, and the mosaic's record says flagged stocks do not lag: it is not a direction.",
+    "cause": "Sellas closed +156% on its Phase 3 result, then fell 10.6% after the close when it filed to sell new shares (a 424B5 prospectus at 4:14pm ET).",
+    "evidence": [
+     "q:SLS",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-17-2026"
+    ],
+    "kind": "reported",
+    "t": "SLS"
+   },
+   {
+    "beneath": "No source found; it moved with industrial peers that also rose after hours (Caterpillar +2.0%).",
+    "cause": "Standex rose 6.6% after the close with no filing and no story; the market carried 1.2% of it (beta 1.8).",
+    "evidence": [
+     "m:SXI",
+     "x:SXI"
+    ],
+    "kind": "inferred",
+    "t": "SXI"
+   }
+  ],
+  "themes": [
+   {
+    "beneath": "In proportion: Nvidia at about $162.94 after hours is back to its Friday close ($162.85), so the report undid Monday's and Tuesday's falls and no more (StockTitan agrees: back near its Friday close). The quarter's growth came from AI clouds, industrial and enterprise (+195% to $47.5 billion) more than from the large cloud companies (+71% to $60.1 billion) (MLQ). The next quarter's margin guide of 71%-72% is below this quarter's 74.9% as the new Rubin systems ramp. China, including Hong Kong customers, was still $11.1 billion of revenue.",
+    "cause": "Nvidia reported revenue of $115.8 billion against its own forecast of $108 billion plus or minus 2% and analysts' $109.1 billion, with data-center revenue of $107.6 billion, and guided the next quarter to $130 billion plus or minus 3% against an average estimate of $125.1 billion, assuming no data-center compute sales in China (Nvidia; MLQ citing CNBC). After the close: Nvidia +4.8%, CoreWeave +9.0%, IREN +10.1%, Coherent +7.2%, Lumentum +6.5%, Vertiv +6.4%, Dell +6.2%, Sandisk +5.8%, Marvell +5.7%, Super Micro +5.3%, Micron +4.7%, Oracle +4.1%, AMD +3.9%, Broadcom +2.9%.",
+    "evidence": [
+     "t1",
+     "g:3674",
+     "q:NVDA",
+     "q:AMD",
+     "q:AVGO",
+     "q:MRVL",
+     "q:MU",
+     "q:SNDK",
+     "q:DELL",
+     "q:SMCI",
+     "q:CRWV",
+     "q:IREN",
+     "q:LITE",
+     "q:COHR",
+     "q:VRT",
+     "q:ORCL",
+     "https://nvidianews.nvidia.com/news/nvidia-announces-financial-results-for-third-quarter-fiscal-2027",
+     "https://mlq.ai/news/nvidia-results-live-revenue-rises-103-to-1158-billion-and-it-guides-to-130-billion-in-its-first-report-since-jensen-huang-left",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-17-2026"
+    ],
+    "kind": "reported",
+    "mechanism": "Nvidia's sales are its customers' spending; a quarter 7% above its own forecast midpoint and a next quarter guided 4% above estimates say the spending the market marked down on Monday was still rising. The stocks that fell most on that worry (the sellers of computing capacity, optics, memory, servers) rise most now. The chair's statement that the board does not intend to reinstate the former chief removes one question rather than adding one. That the rally reflects relief about spending, not about Nvidia's leadership, is my reading.",
+    "members": [
+     "NVDA",
+     "AMD",
+     "AVGO",
+     "MRVL",
+     "MU",
+     "SNDK",
+     "DELL",
+     "SMCI",
+     "CRWV",
+     "IREN",
+     "LITE",
+     "COHR",
+     "VRT",
+     "ORCL"
+    ],
+    "name": "Nvidia beat and raised; the AI build-out rallied after the close",
+    "watch": "Whether the after-hours gains hold in Wednesday's session. The desk's size calls are judged on Friday Nov 20 against Nov 13's close: Nvidia is near that level, so its 7.5% call now needs a move from here."
+   },
+   {
+    "beneath": "No company in this group reported news of its own today, by the pages I read.",
+    "cause": "Software closed near its midday lows: Salesforce -9.5% (its steepest fall since May 2024, per the close reports), Intuit -7.2%, HubSpot -6.8%, ServiceNow -6.5%, Workday -5.8%, Adobe -4.2% (the bank's closes). After the close they barely moved (Salesforce +0.6%, ServiceNow +1.4%) while chips rallied.",
+    "evidence": [
+     "q:CRM",
+     "q:NOW",
+     "q:INTU",
+     "q:WDAY",
+     "q:HUBS",
+     "q:ADBE",
+     "https://www.fool.com/coverage/stock-market-today/2026/11/17/stock-market-today-nov-17-stocks-slide-on-ai-chip-and-tech-pressures-salesforce-plummets-9/"
+    ],
+    "kind": "inferred",
+    "mechanism": "Nvidia's report answers the question about spending on hardware, not the question about whether AI replaces software sold by the seat; that is why the two groups split tonight (my inference). Anthropic prices its offering on Wednesday night.",
+    "members": [
+     "CRM",
+     "NOW",
+     "INTU",
+     "WDAY",
+     "HUBS",
+     "ADBE"
+    ],
+    "name": "Software and data providers stayed down after the close",
+    "watch": "Anthropic's price on Wednesday night and its first trade Thursday; whether software recovers after it."
+   },
+   {
+    "beneath": "Molina gave back about half of Monday's +11.3% on a rule mainly about Medicare, not Medicaid; that it fell with the group rather than on its own news is my inference. Comments on the rule are due Jan 19, 2027; it is a proposal.",
+    "cause": "The federal Medicare agency proposed an anti-fraud rule that would audit Medicare Advantage plans' risk coding without a fee-for-service adjuster and extrapolate findings back to payment year 2018; it estimates recoveries of about $9 billion a payment year (TradingView/GuruFocus). UnitedHealth -5.4%, Molina -5.1%, Humana -3.9%, CVS -3.1%, Centene -3.0%, Elevance -2.8% (the bank's closes).",
+    "evidence": [
+     "q:UNH",
+     "q:MOH",
+     "q:HUM",
+     "q:CVS",
+     "q:CNC",
+     "q:ELV",
+     "https://www.tradingview.com/news/gurufocus:3ac55a47d094b:0-unitedhealth-stocks-fall-4-62-as-cms-proposes-wider-medicare-advantage-audits/",
+     "https://www.fool.com/coverage/stock-market-today/2026/11/17/stock-market-today-nov-17-stocks-slide-on-ai-chip-and-tech-pressures-salesforce-plummets-9/"
+    ],
+    "kind": "reported",
+    "mechanism": "Extrapolation multiplies a coding error found in a sample across a whole contract, so it reaches the plans with the most Medicare Advantage members (the report names UnitedHealth, Humana and CVS).",
+    "members": [
+     "UNH",
+     "MOH",
+     "HUM",
+     "CVS",
+     "CNC",
+     "ELV"
+    ],
+    "name": "Health insurers fell on a proposed Medicare Advantage audit rule",
+    "watch": "Any company quantifying its exposure; the final rule's text after the comment period."
+   }
+  ],
+  "threads": [
+   "Do the AI build-out's after-hours gains hold in Wednesday's session?",
+   "The desk's size calls (NVDA 7.5%+, AMD 9%+, DELL 9.5%+ from Nov 13's close) are judged on Friday Nov 20.",
+   "Anthropic prices Wednesday night and trades Thursday: does software recover after it?",
+   "Health insurers: any company sizing its exposure to the proposed audit rule?",
+   "Unexplained: Abacus Global Management, Oxford Square, Icahn Enterprises.",
+   "The check's futures line is measured from the previous day's bar after the close (it read -0.8% tonight against +0.18%). Fix offered, not made.",
+   "Capricor and Savara FDA decisions by Sunday Nov 22; Inhibrx data Nov 19-20."
+  ],
+  "unexplained": [
+   {
+    "t": "ABX",
+    "tried": "Abacus Global Management closed -23.1% on 5.3 million shares (about ten times its usual volume) with no filing since Nov 5 and no story found."
+   },
+   {
+    "t": "OXSQ",
+    "tried": "Oxford Square fell again, to $0.53 from $0.76 on Friday (about -30% in two sessions), with no filing or story."
+   },
+   {
+    "t": "IEP",
+    "tried": "Icahn Enterprises closed at $3.19, about -22% since Friday after allowing for the $0.50 distribution; no new filing or story."
+   }
+  ]
+ },
+ "recorded_at": "2026-11-18T04:34:12Z"
+}
