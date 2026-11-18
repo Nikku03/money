@@ -154,5 +154,18 @@ idea at a time, checked against the memory bank first.
   Icahn Enterprises (-22% since Friday net of its distribution).
 - Check flaws known (fix offered, not made): the futures line after the close is measured from the previous
   day's bar (false -1.9% on Mon, -0.8% on Tue); zero-volume after-hours prints; dividends read as moves.
-- Open with the person: whether to build a Perspective scan explorer (private page or terminal screen), and the
-  next research step (drug-trial line, a forward record of companies not issuing shares, or no new tests).
+- Open with the person: the next research step (drug-trial line, a forward record of companies not issuing
+  shares, or no new tests), and whether to fix the check's stale-baseline flaw.
+
+## The scan explorer (built 2026-11-18 at the person's request)
+
+- A private page: https://claude.ai/artifact/EyLgFmNo5ZyYFsKt6Hoq3H (`docs/EXPLORER.md`, `brain/explorer.py`,
+  `web/explorer/index.html`). Perspective 5.6.1 grid of every scanned stock: ranges, 20% day chance, move since the
+  latest check, where it sits, why it moved, desk themes as filters. Only percents, never prices. If Perspective
+  cannot start in the page it shows a plain table after 20 seconds.
+- Refresh: `python -m brain explorer build` (about 3 minutes the first time per scan), then publish with the
+  Artifact tool, file_path web/explorer/index.html, files {"data.json": "var/explorer/data.json"} (keeps the URL;
+  the vendored lib/ files stay). Do this after every check: the person accepted "refreshed after each check".
+- The before-the-open task's prompt now includes the refresh (step 6). Updating the midday and after-close tasks'
+  prompts was refused by the permission check (2026-11-18); until the person allows it, refresh the page by hand
+  at the end of those checks.

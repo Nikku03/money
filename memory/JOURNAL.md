@@ -96,3 +96,12 @@ FAIL); "the market runs on chains of cause and effect, news and catalysts": the 
   The person asked about Perspective (an open-source data grid and pivot table); explained it is a viewer, not an
   edge, and offered a scan explorer; no answer yet.
 
+## 2026-11-18
+
+- Asked: "yes build the scan explorer page". Built `brain/explorer.py` (joins the latest scan, check, case file and
+  desk note into var/explorer/data.json; percents only), the page `web/explorer/index.html` (Perspective 5.6.1,
+  vendored with its wasm), tests and `docs/EXPLORER.md`; checked it in a local browser on desktop and phone; published
+  it privately at https://claude.ai/artifact/EyLgFmNo5ZyYFsKt6Hoq3H.
+- Added the page refresh to the before-the-open task's prompt. The same change to the midday and after-close tasks
+  was refused by the permission check; told the person, and the refresh is done by hand at those checks until
+  they allow it.
