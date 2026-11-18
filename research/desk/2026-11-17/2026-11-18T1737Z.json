@@ -1,0 +1,955 @@
+{
+ "asof": "2026-11-17",
+ "at": "2026-11-18T17:37:22Z",
+ "calls": [],
+ "case_sha": "86b1f2f0428161f8",
+ "check": "2026-11-18T1737Z",
+ "claims_noted": 4,
+ "evidence": {
+  "c1": {
+   "text": "movers tied together: FSLY, TENB, OKTA, ATEN (FSLY~OKTA by p:FSLY~OKTA; OKTA~TENB by p:OKTA~TENB; ATEN~OKTA by p:ATEN~OKTA)"
+  },
+  "c2": {
+   "text": "movers tied together: UNH, HUM, ELV, CNC (ELV~UNH by s10; CNC~ELV by s11; CNC~HUM by s11; CNC~UNH by s11; ELV~HUM by s11; ELV~UNH by s11; HUM~UNH by s11; HUM~UNH by s17; HUM~UNH by p:HUM~UNH; ELV~UNH by p:ELV~UNH; ELV~HUM by p:ELV~HUM; CNC~ELV by p:CNC~ELV; CNC~UNH by p:CNC~UNH; CNC~HUM by p:CNC~HUM)"
+  },
+  "c3": {
+   "text": "movers tied together: M, CAL (CAL~M by p:CAL~M)"
+  },
+  "c4": {
+   "text": "movers tied together: NEM, SSRM (NEM~SSRM by p:NEM~SSRM)"
+  },
+  "d:10-year yield": {
+   "text": "10-year yield -0.04 pt since the close (its usual day: 0.04 pt)"
+  },
+  "d:gold": {
+   "text": "gold -2.9% since the close (its usual day: 1.8%)"
+  },
+  "d:oil": {
+   "text": "oil -5.2% since the close (its usual day: 3.6%)"
+  },
+  "f:ACIW:1": {
+   "text": "ACIW 8-K 5.02 at 2026-11-18T14:00Z: ACI Worldwide Appoints Robert Leibrock as Interim Chief Executive Officer -- Exhibit 99.1 ACI Worldwide Appoints Robert Leibrock as Interim Chief Executive Officer OMAHA, Neb.\u2014(BUSINESS WIRE)\u2014ACI Worldwide (NASDAQ: ACIW), an original innovator in global payments technology, today announced that its Board of Directors (the \u201cBoard\u201d) has appointed Robert (\u201cBobby\u201d) Leibrock, Chief Financial Officer, as Interim President and Chief Executive Officer, effective Novem",
+   "url": "https://www.sec.gov/Archives/edgar/data/935036/000119312526466273/d197838dex991.htm"
+  },
+  "f:ARDT:1": {
+   "text": "ARDT share-sale filing (424B5) at 2026-11-17T22:24Z: Table of Contents -- Table of Contents The information contained in this preliminary prospectus supplement is not complete and may be changed. This preliminary prospectus supplement and the accompanying prospectus are not an offer to sell and are not soliciting an offer to buy these securities in any jurisdiction where the offer or sale is not permitted. Filed Pursuant to Rule 424(b)(5)\u200b Registration No. 333-289763\u200b SUBJECT TO COMPLETION, DATE",
+   "url": "https://www.sec.gov/Archives/edgar/data/1756655/000110465926129160/tm2629812-2_424b5.htm"
+  },
+  "f:BRBR:1": {
+   "text": "BRBR results report (8-K 2.02) at 2026-11-18T12:01Z: BellRing Brands Reports Results for the Fourth Quarter and Fiscal Year 2026; Provides Fiscal Year 2027 Outlook -- Exhibit 99.1 BellRing Brands Reports Results for the Fourth Quarter and Fiscal Year 2026; Provides Fiscal Year 2027 Outlook St. Louis - November 18, 2026 - BellRing Brands, Inc. (NYSE:BRBR) (\u201cBellRing\u201d or the \u201cCompany\u201d), a holding company operating in the global proactive wellness category, today reported results for the fourth fis",
+   "url": "https://www.sec.gov/Archives/edgar/data/1772016/000162828026074645/brbrexh991-q42026earningsr.htm"
+  },
+  "f:ECVT:1": {
+   "text": "ECVT 8-K 5.02, 7.01 at 2026-11-18T11:12Z: Ecovyst Announces Chief Executive Officer Transition and Reaffirms Full-Year 2026 Guidance. -- Exhibit 99.1 Ecovyst Announces Chief Executive Officer Transition and Reaffirms Full-Year 2026 Guidance. WAYNE, PA, November 18, 2026 \u2014 Ecovyst Inc. (NYSE: ECVT) (\u201cEcovyst\u201d or the \u201cCompany\u201d), a leading provider of regenerated sulfuric acid, virgin sulfuric acid, and sulfur dioxide and related derivatives, today announced that the Board of Directors of the Compa",
+   "url": "https://www.sec.gov/Archives/edgar/data/1708035/000119312526466131/d46136dex991.htm"
+  },
+  "f:JJSF:1": {
+   "text": "JJSF results report (8-K 2.02) at 2026-11-18T12:02Z: J & J Snack Foods Reports Fiscal 2026 Fourth Quarter Results -- Exhibit 99.1 J & J Snack Foods Reports Fiscal 2026 Fourth Quarter Results Mount Laurel, NJ. November 18, 2026 \u2013 J & J Snack Foods Corp. (Nasdaq: JJSF) today reported financial results for the fourth quarter ended September 26, 2026. Fourth Quarter Full Year Actuals % vs. LY Actuals % vs. LY Net Sales $406.0M -1% $1,520.6M -4% Gross Profit $136.9M 5% $483.2M 3% Operating Income $44",
+   "url": "https://www.sec.gov/Archives/edgar/data/785956/000143774926037473/ex_1047530.htm"
+  },
+  "f:TJX:1": {
+   "text": "TJX results report (8-K 2.02) at 2026-11-18T14:19Z: FOR IMMEDIATE RELEASE -- Exhibit 99.1 CONTACT: Debra McConnell FOR IMMEDIATE RELEASE Global Communications Wednesday, November 18, 2026 (508) 390-2323 THE TJX COMPANIES, INC. REPORTS Q3 FY27 RESULTS; COMP SALES GROWTH OF 4%, PRETAX PROFIT MARGIN, AND DILUTED EARNINGS PER SHARE ALL ABOVE PLAN Adjusted results throughout this press release exclude a benefit from International Emergency Economic Powers Act (\u201cIEEPA\u201d) tariff refunds that are partial",
+   "url": "https://www.sec.gov/Archives/edgar/data/109198/000010919826000058/tjxq3fy27earningspressrele.htm"
+  },
+  "g:1040": {
+   "text": "Gold and Silver Ores: the median of its 10 checked stocks moved -3.9%"
+  },
+  "g:2300": {
+   "text": "Apparel & Other Finishd Prods of  Fabrics & Similar Matl: the median of its 8 checked stocks moved +4.2%"
+  },
+  "g:2911": {
+   "text": "Petroleum Refining: the median of its 12 checked stocks moved -4.7%"
+  },
+  "g:6324": {
+   "text": "Hospital & Medical Service Plans: the median of its 10 checked stocks moved -6.1%"
+  },
+  "h:ACIW": {
+   "text": "ACIW against the market, last sessions: 11-11 +0.1%, 11-12 -0.9%, 11-13 -0.7%, 11-16 -0.1%, 11-17 -2.2%; flagged before: 11-18 13:34Z -4.4%"
+  },
+  "h:ARDT": {
+   "text": "ARDT against the market, last sessions: 11-11 +0.8%, 11-12 -3.0%, 11-13 +0.4%, 11-16 +1.8%, 11-17 -2.0%; flagged before: 11-18 04:32Z -14.6%; 11-18 13:34Z -19.7%"
+  },
+  "h:BRBR": {
+   "text": "BRBR against the market, last sessions: 11-11 -1.5%, 11-12 +2.6%, 11-13 +3.4%, 11-16 +0.3%, 11-17 +4.7%; flagged before: 11-18 13:34Z +14.4%"
+  },
+  "h:ECVT": {
+   "text": "ECVT against the market, last sessions: 11-11 +0.9%, 11-12 -0.5%, 11-13 +2.1%, 11-16 -2.9%, 11-17 -1.8%; flagged before: 11-18 13:34Z -10.0%"
+  },
+  "h:UNH": {
+   "text": "UNH against the market, last sessions: 11-11 -1.1%, 11-12 +0.6%, 11-13 +0.6%, 11-16 +1.7%, 11-17 -5.2%; flagged before: 11-17 17:38Z -3.6%"
+  },
+  "k": {
+   "text": "Market: S&P 500 (SPY) -0.4%, Nasdaq 100 (QQQ) -0.1%, Russell 2000 (IWM) +0.6%, S&P 500 futures -0.3%, VIX -0.8% (in session)"
+  },
+  "m:ACIW": {
+   "text": "ACIW (ACI WORLDWIDE, INC.; Services-Prepackaged Software) -8.2% since the close (in session), OUTSIDE its 9-in-10 range (-4%..+5%)"
+  },
+  "m:AGL": {
+   "text": "AGL (agilon health, inc.; Services-Misc Health & Allied Services, NEC) -15.5% since the close (in session), outside its 2-in-3 range (-10%..+13%)"
+  },
+  "m:ARDT": {
+   "text": "ARDT (Ardent Health, Inc.; Services-General Medical & Surgical Hospitals, NEC) -19.9% since the close (in session), OUTSIDE its 9-in-10 range (-5%..+6%)"
+  },
+  "m:ATEN": {
+   "text": "ATEN (A10 Networks, Inc.; Computer Communications Equipment) +8.0% since the close (in session), outside its 2-in-3 range (-6%..+7%)"
+  },
+  "m:BRBR": {
+   "text": "BRBR (BELLRING BRANDS, INC.; Food and Kindred Products) +23.1% since the close (in session), OUTSIDE its 9-in-10 range (-9%..+11%)"
+  },
+  "m:CAL": {
+   "text": "CAL (CALERES INC; Footwear, (No Rubber)) +7.5% since the close (in session), outside its 2-in-3 range (-5%..+6%)"
+  },
+  "m:CALM": {
+   "text": "CALM (CAL-MAINE FOODS INC; Agricultural Prod-Livestock & Animal Specialties) +8.6% since the close (in session), outside its 2-in-3 range (-5%..+6%)"
+  },
+  "m:CNC": {
+   "text": "CNC (CENTENE CORP; Hospital & Medical Service Plans) -6.1% since the close (in session), outside its 2-in-3 range (-5%..+6%)"
+  },
+  "m:ECVT": {
+   "text": "ECVT (Ecovyst Inc.; Chemicals & Allied Products) -6.6% since the close (in session), outside its 2-in-3 range (-5%..+6%)"
+  },
+  "m:ELV": {
+   "text": "ELV (Elevance Health, Inc.; Hospital & Medical Service Plans) -6.0% since the close (in session), outside its 2-in-3 range (-4%..+4%)"
+  },
+  "m:FSLY": {
+   "text": "FSLY (Fastly, Inc.; Services-Prepackaged Software) +14.4% since the close (in session), outside its 2-in-3 range (-8%..+10%)"
+  },
+  "m:HUM": {
+   "text": "HUM (HUMANA INC; Hospital & Medical Service Plans) -8.9% since the close (in session), OUTSIDE its 9-in-10 range (-5%..+6%)"
+  },
+  "m:JJSF": {
+   "text": "JJSF (J&J SNACK FOODS CORP; Cookies & Crackers) +7.7% since the close (in session), OUTSIDE its 9-in-10 range (-4%..+5%)"
+  },
+  "m:KTB": {
+   "text": "KTB (Kontoor Brands, Inc.; Men's & Boys' Furnishgs, Work Clothg, & Allied Garments) +7.7% since the close (in session), outside its 2-in-3 range (-5%..+5%)"
+  },
+  "m:M": {
+   "text": "M (Macy's, Inc.; Retail-Department Stores) +7.5% since the close (in session), outside its 2-in-3 range (-5%..+6%)"
+  },
+  "m:NEM": {
+   "text": "NEM (NEWMONT Corp /DE/; Gold and Silver Ores) -6.2% since the close (in session), outside its 2-in-3 range (-5%..+6%)"
+  },
+  "m:OKTA": {
+   "text": "OKTA (Okta, Inc.; Services-Prepackaged Software) +9.1% since the close (in session), outside its 2-in-3 range (-6%..+7%)"
+  },
+  "m:SHOO": {
+   "text": "SHOO (STEVEN MADDEN, LTD.; Footwear, (No Rubber)) +6.5% since the close (in session), outside its 2-in-3 range (-5%..+6%)"
+  },
+  "m:SSRM": {
+   "text": "SSRM (SSR MINING INC.; Mineral Royalty Traders) -7.7% since the close (in session), outside its 2-in-3 range (-7%..+8%)"
+  },
+  "m:TENB": {
+   "text": "TENB (Tenable Holdings, Inc.; Services-Prepackaged Software) +13.4% since the close (in session), outside its 2-in-3 range (-8%..+10%)"
+  },
+  "m:TJX": {
+   "text": "TJX (TJX COMPANIES INC /DE/; Retail-Family Clothing Stores) +11.1% since the close (in session), outside its 2-in-3 range (-5%..+6%)"
+  },
+  "m:UNH": {
+   "text": "UNH (UNITEDHEALTH GROUP INC; Hospital & Medical Service Plans) -8.1% since the close (in session), OUTSIDE its 9-in-10 range (-4%..+5%)"
+  },
+  "m:URBN": {
+   "text": "URBN (URBAN OUTFITTERS INC; Retail-Family Clothing Stores) +6.3% since the close (in session), outside its 2-in-3 range (-4%..+5%)"
+  },
+  "n:ACIW": {
+   "text": "ACIW accounts: market value $6.0 bn; cash and equivalents $218.8 m (2026-09-30; investments not counted); long-term debt $817.0 m (2026-09-30); revenue $1.8 bn over the four quarters to 2026-09-30; net income $167.0 m over the four quarters to 2026-09-30"
+  },
+  "n:HUM": {
+   "text": "HUM accounts: market value $54.0 bn; cash and equivalents $6.9 bn (2026-09-30; investments not counted); long-term debt $11.6 bn (2026-09-30); revenue $154.2 bn over the four quarters to 2026-09-30; net income $1.2 bn over the four quarters to 2026-09-30"
+  },
+  "n:UNH": {
+   "text": "UNH accounts: market value $351.5 bn; cash and equivalents $25.8 bn (2026-09-30; investments not counted); long-term debt $68.7 bn (2026-09-30); revenue $449.7 bn over the four quarters to 2026-09-30; net income $15.9 bn over the four quarters to 2026-09-30"
+  },
+  "p:ACIW~QTWO": {
+   "text": "ACIW and QTWO: market-adjusted daily returns correlated 0.66 over the last 250 sessions; QTWO -0.3% since the close"
+  },
+  "p:ARDT~HCA": {
+   "text": "ARDT and HCA: market-adjusted daily returns correlated 0.48 over the last 250 sessions; HCA -3.3% since the close"
+  },
+  "p:ARDT~THC": {
+   "text": "ARDT and THC: market-adjusted daily returns correlated 0.38 over the last 250 sessions; THC -2.3% since the close"
+  },
+  "p:FSLY~OKTA": {
+   "text": "FSLY and OKTA: market-adjusted daily returns correlated 0.40 over the last 250 sessions; OKTA +9.1% since the close"
+  },
+  "p:JJSF~FLO": {
+   "text": "JJSF and FLO: market-adjusted daily returns correlated 0.44 over the last 250 sessions; FLO +3.3% since the close"
+  },
+  "p:JJSF~MKC": {
+   "text": "JJSF and MKC: market-adjusted daily returns correlated 0.45 over the last 250 sessions; MKC +3.3% since the close"
+  },
+  "p:OKTA~CRWD": {
+   "text": "OKTA and CRWD: market-adjusted daily returns correlated 0.77 over the last 250 sessions; CRWD +5.3% since the close"
+  },
+  "p:TENB~QLYS": {
+   "text": "TENB and QLYS: market-adjusted daily returns correlated 0.79 over the last 250 sessions; QLYS +9.0% since the close"
+  },
+  "p:TJX~BURL": {
+   "text": "TJX and BURL: market-adjusted daily returns correlated 0.52 over the last 250 sessions; BURL +6.6% since the close"
+  },
+  "p:TJX~ROST": {
+   "text": "TJX and ROST: market-adjusted daily returns correlated 0.64 over the last 250 sessions; ROST +4.1% since the close"
+  },
+  "q:ADBE": {
+   "text": "ADBE -3.4% since the close of 2026-11-17, as the check read it"
+  },
+  "q:AEO": {
+   "text": "AEO +4.8% since the close of 2026-11-17, as the check read it"
+  },
+  "q:ALHC": {
+   "text": "ALHC -8.8% since the close of 2026-11-17, as the check read it"
+  },
+  "q:AMD": {
+   "text": "AMD +1.5% since the close of 2026-11-17, as the check read it"
+  },
+  "q:ANF": {
+   "text": "ANF +4.2% since the close of 2026-11-17, as the check read it"
+  },
+  "q:AVGO": {
+   "text": "AVGO +2.2% since the close of 2026-11-17, as the check read it"
+  },
+  "q:BURL": {
+   "text": "BURL +6.6% since the close of 2026-11-17, as the check read it"
+  },
+  "q:CDE": {
+   "text": "CDE -6.8% since the close of 2026-11-17, as the check read it"
+  },
+  "q:CI": {
+   "text": "CI -3.0% since the close of 2026-11-17, as the check read it"
+  },
+  "q:CLOV": {
+   "text": "CLOV -7.4% since the close of 2026-11-17, as the check read it"
+  },
+  "q:COP": {
+   "text": "COP -2.9% since the close of 2026-11-17, as the check read it"
+  },
+  "q:CRM": {
+   "text": "CRM -3.3% since the close of 2026-11-17, as the check read it"
+  },
+  "q:CRWD": {
+   "text": "CRWD +5.3% since the close of 2026-11-17, as the check read it"
+  },
+  "q:CRWV": {
+   "text": "CRWV -4.7% since the close of 2026-11-17, as the check read it"
+  },
+  "q:CVI": {
+   "text": "CVI -8.7% since the close of 2026-11-17, as the check read it"
+  },
+  "q:CVS": {
+   "text": "CVS -3.2% since the close of 2026-11-17, as the check read it"
+  },
+  "q:CVX": {
+   "text": "CVX -4.1% since the close of 2026-11-17, as the check read it"
+  },
+  "q:DELL": {
+   "text": "DELL -2.9% since the close of 2026-11-17, as the check read it"
+  },
+  "q:DINO": {
+   "text": "DINO -6.0% since the close of 2026-11-17, as the check read it"
+  },
+  "q:DK": {
+   "text": "DK -6.9% since the close of 2026-11-17, as the check read it"
+  },
+  "q:FTNT": {
+   "text": "FTNT +5.3% since the close of 2026-11-17, as the check read it"
+  },
+  "q:GAP": {
+   "text": "GAP +3.2% since the close of 2026-11-17, as the check read it"
+  },
+  "q:GOLD": {
+   "text": "GOLD +3.7% since the close of 2026-11-17, as the check read it"
+  },
+  "q:HEI": {
+   "text": "HEI +1.0% since the close of 2026-11-17, as the check read it"
+  },
+  "q:HL": {
+   "text": "HL -6.4% since the close of 2026-11-17, as the check read it"
+  },
+  "q:HUBS": {
+   "text": "HUBS -4.5% since the close of 2026-11-17, as the check read it"
+  },
+  "q:IREN": {
+   "text": "IREN -1.8% since the close of 2026-11-17, as the check read it"
+  },
+  "q:MOH": {
+   "text": "MOH -5.6% since the close of 2026-11-17, as the check read it"
+  },
+  "q:MPC": {
+   "text": "MPC -4.7% since the close of 2026-11-17, as the check read it"
+  },
+  "q:MRVL": {
+   "text": "MRVL -1.4% since the close of 2026-11-17, as the check read it"
+  },
+  "q:NEOG": {
+   "text": "NEOG -0.1% since the close of 2026-11-17, as the check read it"
+  },
+  "q:NET": {
+   "text": "NET +6.5% since the close of 2026-11-17, as the check read it"
+  },
+  "q:NOW": {
+   "text": "NOW -2.3% since the close of 2026-11-17, as the check read it"
+  },
+  "q:NVDA": {
+   "text": "NVDA -1.5% since the close of 2026-11-17, as the check read it"
+  },
+  "q:NWN": {
+   "text": "NWN +0.3% since the close of 2026-11-17, as the check read it"
+  },
+  "q:OSCR": {
+   "text": "OSCR -4.9% since the close of 2026-11-17, as the check read it"
+  },
+  "q:OXY": {
+   "text": "OXY -3.7% since the close of 2026-11-17, as the check read it"
+  },
+  "q:PANW": {
+   "text": "PANW +7.6% since the close of 2026-11-17, as the check read it"
+  },
+  "q:PARR": {
+   "text": "PARR -6.6% since the close of 2026-11-17, as the check read it"
+  },
+  "q:PBF": {
+   "text": "PBF -6.2% since the close of 2026-11-17, as the check read it"
+  },
+  "q:PSX": {
+   "text": "PSX -3.4% since the close of 2026-11-17, as the check read it"
+  },
+  "q:QLYS": {
+   "text": "QLYS +9.0% since the close of 2026-11-17, as the check read it"
+  },
+  "q:RBRK": {
+   "text": "RBRK +7.7% since the close of 2026-11-17, as the check read it"
+  },
+  "q:RGLD": {
+   "text": "RGLD -4.2% since the close of 2026-11-17, as the check read it"
+  },
+  "q:ROST": {
+   "text": "ROST +4.1% since the close of 2026-11-17, as the check read it"
+  },
+  "q:RPD": {
+   "text": "RPD +10.4% since the close of 2026-11-17, as the check read it"
+  },
+  "q:S": {
+   "text": "S +7.9% since the close of 2026-11-17, as the check read it"
+  },
+  "q:SMCI": {
+   "text": "SMCI +3.2% since the close of 2026-11-17, as the check read it"
+  },
+  "q:SNDK": {
+   "text": "SNDK -1.1% since the close of 2026-11-17, as the check read it"
+  },
+  "q:TEAM": {
+   "text": "TEAM -3.2% since the close of 2026-11-17, as the check read it"
+  },
+  "q:TGT": {
+   "text": "TGT +6.8% since the close of 2026-11-17, as the check read it"
+  },
+  "q:VLO": {
+   "text": "VLO -4.8% since the close of 2026-11-17, as the check read it"
+  },
+  "q:VRT": {
+   "text": "VRT +3.5% since the close of 2026-11-17, as the check read it"
+  },
+  "q:WELL": {
+   "text": "WELL +0.5% since the close of 2026-11-17, as the check read it"
+  },
+  "q:ZS": {
+   "text": "ZS +6.5% since the close of 2026-11-17, as the check read it"
+  },
+  "r:gold": {
+   "text": "the stocks that moved most with gold over the year, today: RGLD -4.2% (its rate implies -1.8%), NEM -6.2% (its rate implies -1.9%), MUX -4.6% (its rate implies -2.5%), HL -6.4% (its rate implies -2.8%), IAUX -5.3% (its rate implies -2.4%), CDE -6.8% (its rate implies -2.5%)"
+  },
+  "s1": {
+   "text": "2026-11-18T01:53Z finance.yahoo.com: Ardent Health Announces Pricing of Secondary Offering of Common Stock and Concurrent Share Repurchase -- BRENTWOOD, Tenn., November 18, 2026--Ardent Health, Inc. (NYSE: ARDT) (\"Ardent Health\" or the \"Company\") today announced the pricing of the previously announced secondary public offering (the \"Offering\") of 8,000,000 shares of its common stock, consisting of 7,136,719 shares of its common stock by an affiliate of Equity Group Investments and 863,281 shares",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/ardent-health-announces-pricing-secondary-015300137.html?.tsrc=rss"
+  },
+  "s11": {
+   "text": "2026-11-18T12:28Z www.trefis.com: Why Is UnitedHealth Stock Falling? -- Today's big story: Anthropic IPO: Priced For 2031, Or 2036.",
+   "url": "https://www.trefis.com/stock/unh/articles/626290/why-is-unitedhealth-stock-falling/2026-11-18?.tsrc=rss"
+  },
+  "s14": {
+   "text": "2026-11-18T14:10Z finance.yahoo.com: Medicare Overpayment Rule Could Be A Big Test For Humana Stock (HUM) -- Humana disclosed final results of its multi series debt tender offers, committing up to US$1.5b to repurchase specific senior notes and accepting varying amounts across maturities from 2027 to 2032, with some series fully taken and others, like the 2031 notes, only partially accepted through proration. The tender outcome, combined with a proposed Medicare Advantage overpayment recovery ru",
+   "url": "https://finance.yahoo.com/healthcare/articles/medicare-overpayment-rule-could-big-141034732.html?.tsrc=rss"
+  },
+  "s17": {
+   "text": "2026-11-17T23:21Z finance.yahoo.com: UnitedHealth (UNH) vs. Humana (HUM): Buy the Dip? -- Renewed regulatory scrutiny has interrupted the recent rallies in UnitedHealth and Humana stock, but is the pullback a buying opportunity?",
+   "url": "https://finance.yahoo.com/healthcare/articles/unitedhealth-unh-vs-humana-hum-232100909.html?.tsrc=rss"
+  },
+  "s18": {
+   "text": "2026-11-18T17:17Z www.marketbeat.com: What J & J Snack Foods (JJSF) Said on Its Q4 Earnings Call -- J & J Snack Foods (NASDAQ:JJSF) reported lower adjusted earnings and a 1% decline in sales for its fiscal fourth quarter, as higher freight and fuel costs offset gains from improved gross margins and growth in its retail and frozen beverage businesses. Net sales were $406 million, while adjuste",
+   "url": "https://www.marketbeat.com/instant-alerts/transcript-what-j-j-snack-foods-jjsf-said-on-its-q4-earnings-call-2026-11-18/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss"
+  },
+  "s19": {
+   "text": "2026-11-18T14:36Z investorshub.advfn.com: J&J Snack Foods Shares Rise 3.4% as Fourth-Quarter Earnings Beat Forecasts and Gross Margin Improves -- J&J Snack Foods Corp. (NASDAQ:JJSF) reported fourth-quarter earnings and revenue above analysts\u2019 expectations, supported by improved gross margins and cost savings from its Project Apollo restructuring programme, despite a modest decline in year-on-year sales.",
+   "url": "https://investorshub.advfn.com/market-news/article/40306/jj-snack-foods-shares-rise-3-4-as-fourth-quarter-earnings-beat-forecasts-and-gross-margin-improves?.tsrc=rss"
+  },
+  "s20": {
+   "text": "2026-11-18T12:21Z finance.yahoo.com: J&J Snack Foods: Fiscal Q4 Earnings Snapshot -- (JJSF) on Wednesday reported earnings of $33.6 million in its fiscal fourth quarter.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/j-j-snack-foods-fiscal-122154363.html?.tsrc=rss"
+  },
+  "s21": {
+   "text": "2026-11-18T17:19Z www.retaildive.com: Traffic recovery at T.J. Maxx, Marshalls boost TJX in Q3 as pressures mount -- But gains were somewhat tepid, and the off-price giant faces growing competition from resale, department store promotions and rival Ross.",
+   "url": "https://www.retaildive.com/news/traffic-recovery-tj-maxx-marshalls-boost-tjx-q3/875025/?.tsrc=rss"
+  },
+  "s22": {
+   "text": "2026-11-18T16:59Z www.ibtimes.com: TJ Maxx Parent TJX Raises Annual Sales Outlook as It Bets on Strong Holiday Demand -- The retailer expects comparable sales to grow 4% in fiscal 2027 after third-quarter revenue topped Wall Street expectations.",
+   "url": "https://www.ibtimes.com/tjx-raises-sales-outlook-off-price-shopping-3809911?.tsrc=rss"
+  },
+  "s23": {
+   "text": "2026-11-18T16:24Z www.tikr.com: TJX Soars 11% on Above-Plan Q3 as CEO Expects Holiday \u201cSales Momentum to Accelerate\u201d -- Key TakeawaysTJX shares jumped 11% after its third-quarter comparable sales rose 4% and its earnings beat the company\u2019s own plan. Marmaxx, its biggest unit, grew comparable sales 2%, and CEO Ernie Herrman expects further improvement there this holiday season.",
+   "url": "https://www.tikr.com/blog/tjx-soars-11-on-above-plan-q3-as-ceo-expects-holiday-sales-momentum-to-accelerate?ref=yahoofinance&tlnk=yf-261118-qj6qjx3m&.tsrc=rss"
+  },
+  "s24": {
+   "text": "2026-11-18T16:17Z www.fool.com: Why TJX Companies Stock Jumped 10% Today -- Is TJX ready for the crucial holiday shopping season? Management expects sales momentum to accelerate despite unseasonably warm weather.",
+   "url": "https://www.fool.com/investing/2026/11/18/why-tjx-companies-stock-jumped-10-today/?.tsrc=rss"
+  },
+  "s29": {
+   "text": "2026-11-18T14:39Z investorshub.advfn.com: Cal-Maine Foods Reports Avian Influenza Outbreak at Florida Facility Affecting 1.76 Million Birds -- Cal-Maine Foods, Inc. (NASDAQ:CALM) announced that one of its egg production facilities in Florida has tested positive for highly pathogenic avian influenza (HPAI), resulting in the planned removal of approximately 1.",
+   "url": "https://investorshub.advfn.com/market-news/article/40310/cal-maine-foods-reports-avian-influenza-outbreak-at-florida-facility-affecting-1-76-million-birds?.tsrc=rss"
+  },
+  "s30": {
+   "text": "2026-11-18T13:55Z finance.yahoo.com: Cal-Maine Foods Reports Positive Test Result for Avian Influenza at Florida Facility -- RIDGELAND, Miss., Nov. 18, 2026 (GLOBE NEWSWIRE) -- Cal-Maine Foods, Inc. (Nasdaq: CALM) (\u201cCal-Maine Foods,\u201d \u201cwe,\u201d \u201cus,\u201d \u201cour\u201d or the \u201cCompany\u201d), today reported that one of its facilities in Florida tested positive for highly pathogenic avian influenza (HPAI), which will result in the ultimate depopulation of approximately 1.4 million laying hens and 360,000 pullets, or 2.",
+   "url": "https://finance.yahoo.com/healthcare/articles/cal-maine-foods-reports-positive-135500518.html?.tsrc=rss"
+  },
+  "s4": {
+   "text": "2026-11-18T16:01Z www.paymentsdive.com: ACI Worldwide\u2019s CEO heads out -- Thomas Warsop is leaving the payments software company, with insiders taking over leadership until he\u2019s replaced.",
+   "url": "https://www.paymentsdive.com/news/aci-worldwides-ceo-heads-out/875047/?.tsrc=rss"
+  },
+  "s40": {
+   "text": "2026-11-18T17:07Z finance.yahoo.com: Ecovyst stock falls as CEO Kurt Bitting steps down -- Investing.com -- Ecovyst Inc (NYSE:ECVT) shares dropped 7.3% in Wednesday trading following the announcement that CEO Kurt Bitting is stepping down from his position.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/ecovyst-stock-falls-ceo-kurt-170709465.html?.tsrc=rss"
+  },
+  "s41": {
+   "text": "2026-11-18T11:00Z finance.yahoo.com: Ecovyst Announces Chief Executive Officer Transition and Reaffirms Full-Year 2026 Guidance -- Ecovyst Inc. (NYSE: ECVT) (\"Ecovyst\" or the \"Company\"), a leading provider of regenerated sulfuric acid, virgin sulfuric acid, and sulfur dioxide and related derivatives, today announced that the Board of Directors of the Company has appointed current director David A. Bradley as Interim Chief Executive Officer effective November 17, 2026. Mr. Bradley replaces Kurt J",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/ecovyst-announces-chief-executive-officer-110000996.html?.tsrc=rss"
+  },
+  "s42": {
+   "text": "2026-11-18T17:08Z finance.yahoo.com: Newmont Stocks Fall 5.13% as Gold Slides Below $3,800 on Fed Hike Bets -- Gold now sits about $550 below Newmont's third-quarter realized price, cutting the margin over its cost guide by roughly a fifth.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/newmont-stocks-fall-5-13-170805714.html?.tsrc=rss"
+  },
+  "s49": {
+   "text": "2026-11-18T16:06Z finance.yahoo.com: Nvidia Earnings Beat Fails to Rescue Wall Street as Dow Tumbles -- Wall Street Splits as Nvidia Struggles to Sustain Post-Earnings Gains",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/nvidia-earnings-beat-fails-rescue-160612628.html?.tsrc=rss"
+  },
+  "s5": {
+   "text": "2026-11-18T11:00Z finance.yahoo.com: ACI Worldwide Appoints Robert Leibrock as Interim Chief Executive Officer -- OMAHA, Neb., November 18, 2026--ACI Worldwide (NASDAQ: ACIW), an original innovator in global payments technology, today announced that its Board of Directors (the \"Board\") has appointed Robert (\"Bobby\") Leibrock, Chief Financial Officer, as Interim President and Chief Executive Officer, effective November 18, 2026. Mr. Leibrock will continue to serve as Chief Financial Officer while",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/aci-worldwide-appoints-robert-leibrock-110000268.html?.tsrc=rss"
+  },
+  "s52": {
+   "text": "2026-11-18T14:18Z finance.yahoo.com: Nvidia, Target, Take-Two, Applied Optoelectronics, Lowe\u2019s, and More Stocks That Explain Today\u2019s Market -- Nvidia rises after reporting rock-solid earnings, reassuring investors it will continue funding the AI buildout.",
+   "url": "https://finance.yahoo.com/m/415e4137-8850-333d-b848-d21e98bc6659/nvidia%2C-target%2C-take-two%2C.html?.tsrc=rss"
+  },
+  "s53": {
+   "text": "2026-11-18T14:15Z 247wallst.com: Stock Market Today: Nvidia Earnings Are Driving the Market, but Uncertainty Still Reigns -- One chipmaker is lifting the Nasdaq while the Dow and small caps barely budge. Behind the rally, a hidden catch in Lowe's beat and a still-elevated fear gauge hint at how fragile this bounce could be.",
+   "url": "https://247wallst.com/investing/2026/11/18/stock-market-today-nvidia-earnings-are-driving-the-market-but-uncertainty-still-reigns/?.tsrc=rss"
+  },
+  "s6": {
+   "text": "2026-11-18T17:17Z www.marketbeat.com: What BellRing Brands (BRBR) Said on Its Q4 Earnings Call -- BellRing Brands (NYSE:BRBR) expects fiscal 2027 sales to range from a 3% decline to 1% growth as price increases, retailer inventory adjustments and tougher distribution comparisons weigh on shipments, even as demand for protein shakes continues to rise. The outlook follows a fiscal fourth quarter",
+   "url": "https://www.marketbeat.com/instant-alerts/transcript-what-bellring-brands-brbr-said-on-its-q4-earnings-call-2026-11-18/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss"
+  },
+  "s8": {
+   "text": "2026-11-18T12:16Z finance.yahoo.com: BellRing Brands: Fiscal Q4 Earnings Snapshot -- LOUIS (AP) \u2014 BellRing Brands Inc. (BRBR) on Wednesday reported fiscal fourth-quarter earnings of $35.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/bellring-brands-fiscal-q4-earnings-121655127.html?.tsrc=rss"
+  },
+  "s9": {
+   "text": "2026-11-18T12:10Z finance.yahoo.com: BellRing Brands (BRBR) Q4 Earnings and Revenues Beat Estimates -- BellRing Brands (BRBR) delivered earnings and revenue surprises of +4.76% and +5.95%, respectively, for the quarter ended September 2026. Do the numbers hold clues to what lies ahead for the stock?",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/bellring-brands-brbr-q4-earnings-121001589.html?.tsrc=rss"
+  },
+  "t1": {
+   "text": "the last note (2026-11-18T1334Z), theme \"Half of the AI build-out's after-hours gains gone before the open\": Nvidia's beat and raise lifted the AI build-out after Tuesday's close; by 8:34 ET most of the group kept less than half of it. Nvidia +4.8% after hours, +2.6% now; CoreWeave +9.0% to +3.0%; IREN +10.1% to +3.4%; Coherent +7.2% to +3.4%; Lumentum +6.5% to +2.6%; Vertiv +6.4% to +2.0%; Dell +6.2% to +2.6%; Marvell +5.7% to +1.9%; Micron +4.7% to +1.6%; Oracle +4.1% to +1.5%; AMD +3.9% to +1"
+  },
+  "t2": {
+   "text": "the last note (2026-11-18T1334Z), theme 'Gold and oil fell together; gold miners fell more': Gold -2.4% and oil -2.4% since the close, each beyond its usual day for gold (1.8%) and inside it for oil (3.6%). TradingKey reports gold below $3,800 and silver -3%, and says improving Middle East supply weighed on oil. The gold and silver miners' median fell 4.0% (10 stocks): Newmont -3.4%, Hecla -3.6%, Coeur -3.3%, Royal Gold -3.3%, Barrick -1.6%."
+  },
+  "x:ARDT": {
+   "text": "ARDT: the market carried -0.1% (beta 0.30); 10-year yield carried +0.5% (-11.66% per point, t -3.0); its industry (Health services (broad), 50 stocks) moved -0.8%; left over after the market and its drivers -20.3%"
+  },
+  "z:BRBR": {
+   "text": "BRBR mosaic: at the close of 2026-11-17, before this move, the chance of the filing in the next 20 sessions: late or unreliable accounts 0.2% (the usual stock: 0.4%); a restructuring or a write-off 0.7% (the usual stock: 0.3%; raised most by 67% below its 52-week high, about $35.1 m traded a day); a sale of new shares 0.0% (the usual stock: 0.9%). A chance that a filing comes, not a direction (tests P1a-P3b, research/RESULTS.md)"
+  }
+ },
+ "note": {
+  "backdrop": "The morning's mild bounce has gone. At 12:37 ET the S&P 500 fund was -0.4%, the Nasdaq 100 fund -0.1%, small companies +0.6% and the VIX -0.8%. GuruFocus (on Yahoo) has the Dow down 420 points, with health insurers, energy and industrials doing the damage and Nvidia reversing its gains. The day split by industry, not by market: health insurers about -6%, refiners about -5%, gold miners about -4%, while clothing and discount retailers rose 4-11% and security software 5-14%. Oil fell 5.2% by the check's measure and gold 2.9%. 60 stocks are outside their 2-in-3 range and 7 outside their 9-in-10 range, from 10 and 3 this morning. The four flags that rested on single early prints all settled: Northwest Natural +0.3%, HEICO +1.0%, Neogen -0.1%, Welltower +0.5%.",
+  "backdrop_evidence": [
+   "k",
+   "d:oil",
+   "d:gold",
+   "d:10-year yield",
+   "g:6324",
+   "g:2911",
+   "g:2300",
+   "g:1040",
+   "s49",
+   "q:NWN",
+   "q:HEI",
+   "q:NEOG",
+   "q:WELL",
+   "https://finance.yahoo.com/markets/stocks/articles/nvidia-earnings-beat-fails-rescue-160612628.html"
+  ],
+  "by": "agent",
+  "calls": [],
+  "check": "2026-11-18T1737Z",
+  "read": [
+   {
+    "direction": "none",
+    "published": "2026-11-18T16:06:12Z",
+    "says": "Dow -420 points (-0.8%), S&P 500 -0.1%, Nasdaq +0.5% at mid-morning; Nvidia reversed earlier gains to trade under 1% lower despite beating and lifting its fiscal 2028 growth forecast to 75%; healthcare, energy and industrials weighed; Anthropic could price above its $70-$78 range.",
+    "tier": "reported",
+    "url": "https://finance.yahoo.com/markets/stocks/articles/nvidia-earnings-beat-fails-rescue-160612628.html"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-18T11:30:00Z",
+    "says": "UnitedHealth fell 5.42% to $389.68 on Nov 17 after CMS's Nov 16 CRUSH proposal: Medicare Advantage audits extrapolated from samples back to payment year 2018, the fee-for-service adjuster dropped, about $9 billion a payment year recovered industrywide; comments due Jan 19, 2027; a 2023 rule with the same features was vacated in Sept 2025 and is on appeal at the Fifth Circuit; UnitedHealth has not quantified its exposure.",
+    "ticker": "UNH",
+    "tier": "reported",
+    "url": "https://tradingkey.com/analysis/stocks/us-stocks/262310909-unitedhealth-falls-cms-crush-audit-rule-unh-385-23-support-november-18-2026-tradingkey"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-18T11:51:39Z",
+    "says": "UnitedHealth fell 5.4% on Nov 17 with no company announcement; all seven other managed-care companies worth $2 billion or more fell (median -3.9%); its net margin over the twelve months to September was 3.5%.",
+    "tier": "reported",
+    "url": "https://www.trefis.com/stock/unh/articles/626290/why-is-unitedhealth-stock-falling/2026-11-18"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-18T16:24:02Z",
+    "says": "Cybersecurity stocks rose after the Homeland Security Secretary's House testimony on AI-powered cyberattacks on US infrastructure, including Iranian activity since February: Palo Alto +6% (it reports after today's close; consensus EPS $0.97 on $3.31 billion), CrowdStrike +6%, Fortinet and Check Point +5%, Zscaler +4.8%, SentinelOne +9%, Rubrik +7.5%; ServiceNow and Workday -3.5%, Salesforce -3.7%.",
+    "tier": "reported",
+    "url": "https://www.tradingview.com/news/seekingalpha:16358579c094b:0-palo-alto-leads-cyber-stocks-higher-after-dhs-secretary-warns-of-ai-powered-attacks/"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-18T15:46:00Z",
+    "says": "EIA: US crude stocks +3.4 million barrels (poll +58,000), gasoline +5.2 million (poll +1.6 million), distillates +1.6 million; Brent -1.2% to $92.02 and WTI -1.9% to $84.38 at 10:46 ET, WTI at its lowest since late August; the US-Iran conflict (Iran struck US sites in Kuwait after a US strike on Qeshm Island) curbed the fall; both benchmarks on track for about -20% this month on rising Middle East exports.",
+    "tier": "reported",
+    "url": "https://www.brecorder.com/news/40449497/oil-down-1-as-us-oil-stocks-post-larger-than-expected-rise-eia-says"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-18T17:08:05Z",
+    "says": "Newmont -5.13% to $105.56 at 9:40 ET as December gold fell to about $3,767.60, tied by Yahoo Finance to a 96.7% FedWatch probability of a Fed rate increase; at that price its margin over a $1,520 cost guide is about $2,248 an ounce, about 20% less than at its third-quarter realized price of $4,317.",
+    "ticker": "NEM",
+    "tier": "reported",
+    "url": "https://finance.yahoo.com/markets/stocks/articles/newmont-stocks-fall-5-13-170805714.html"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-18T14:19:00Z",
+    "says": "TJX third quarter: comparable sales +4% (above plan), Marmaxx +2%; sales $16.0 billion (+6%); EPS $1.39, adjusted $1.34 (+5%) excluding a $0.05 net tariff-refund benefit; adjusted gross margin -0.5 point on freight and fuel; the chief executive expects sales momentum to accelerate through the holidays.",
+    "ticker": "TJX",
+    "tier": "reported",
+    "url": "https://www.sec.gov/Archives/edgar/data/109198/000010919826000058/tjxq3fy27earningspressrele.htm"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-18T13:55:00Z",
+    "says": "Cal-Maine: avian influenza at a Florida facility; about 1.4 million laying hens and 360,000 pullets, 2.7% of its flock, will be depopulated; production there has stopped.",
+    "ticker": "CALM",
+    "tier": "reported",
+    "url": "https://finance.yahoo.com/healthcare/articles/cal-maine-foods-reports-positive-135500518.html"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-18T12:30:00Z",
+    "says": "Before the open: markets priced a 96.8% probability of a 25-basis-point Fed rate increase in December; gold down more than 2% below $3,800; oil about -2%.",
+    "tier": "reported",
+    "url": "https://www.tradingkey.com/analysis/stocks/us-stocks/262311015-us-pre-market-nvda-anthropic-tradingkey"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-18T13:11:00Z",
+    "says": "Target's third quarter: sales $27.1 billion (+7.1%), comparable sales +5.6% against a 3.61% estimate, diluted EPS $2.65 including a $0.50 tariff-refund benefit.",
+    "tier": "reported",
+    "url": "https://finance.yahoo.com/markets/live/stock-market-today-wednesday-november-18-dow-sp-500-nasdaq-nvidia-anthropic-ipo-090613569.html"
+   }
+  ],
+  "singles": [
+   {
+    "beneath": "The stock has sat at the offering price all day. Its hospital partners fell too (HCA -3.3%, Tenet -2.3%) on the insurers' news, which makes it hard to tell how much of the last bit is the offering.",
+    "cause": "Ardent Health is -19.9%, at $14.38, just under the $14.50 its holders sold 8 million shares at last night (its pricing release).",
+    "evidence": [
+     "m:ARDT",
+     "x:ARDT",
+     "h:ARDT",
+     "s1",
+     "f:ARDT:1",
+     "p:ARDT~HCA",
+     "p:ARDT~THC"
+    ],
+    "kind": "reported",
+    "t": "ARDT"
+   },
+   {
+    "beneath": "The guide is about flat once fiscal 2026's $37 million of inventory charges are set aside. A stock 67% below its high rising 23% on a flat year says the price had assumed worse; my reading, unchanged from the morning.",
+    "cause": "BellRing is +23.1%, from +14.4% before the open, after results and a fiscal 2027 outlook of sales from a 3% decline to 1% growth (its release; MarketBeat on its call).",
+    "evidence": [
+     "m:BRBR",
+     "h:BRBR",
+     "z:BRBR",
+     "f:BRBR:1",
+     "s6",
+     "s8",
+     "s9"
+    ],
+    "kind": "reported",
+    "t": "BRBR"
+   },
+   {
+    "beneath": "The fall deepened as the session confirmed it, unlike Ecovyst's, which eased from -10.0% to -6.6%. Its payments-software partners are flat. About $490 million of value on a $6.0 billion company.",
+    "cause": "ACI Worldwide is -8.2%, from -4.4% before the open: its chief executive is leaving and insiders lead until a replacement is found (its 8-K; Payments Dive's summary).",
+    "evidence": [
+     "m:ACIW",
+     "h:ACIW",
+     "n:ACIW",
+     "f:ACIW:1",
+     "s4",
+     "s5",
+     "p:ACIW~QTWO"
+    ],
+    "kind": "reported",
+    "t": "ACIW"
+   },
+   {
+    "beneath": "Half the morning's fall came back once trading began: the reaffirmed guidance carried more weight in session than before it.",
+    "cause": "Ecovyst is -6.6%, from -10.0% before the open, after its chief executive's departure and reaffirmed guidance (its 8-K; Investing.com).",
+    "evidence": [
+     "m:ECVT",
+     "h:ECVT",
+     "f:ECVT:1",
+     "s40",
+     "s41"
+    ],
+    "kind": "reported",
+    "t": "ECVT"
+   },
+   {
+    "beneath": "A beat on lowered numbers with margins improving; the stock moves with McCormick and Flowers (+3.3% each today), so part of it is food stocks rising with the defensive rotation, my inference.",
+    "cause": "J&J Snack Foods is +7.7%: its quarter beat forecasts with a better gross margin, though adjusted earnings were lower and sales fell 1% (InvestorsHub; MarketBeat on its call).",
+    "evidence": [
+     "m:JJSF",
+     "f:JJSF:1",
+     "s18",
+     "s19",
+     "s20",
+     "p:JJSF~MKC",
+     "p:JJSF~FLO"
+    ],
+    "kind": "reported",
+    "t": "JJSF"
+   },
+   {
+    "beneath": "The largest US egg producer rose on losing birds: my inference is that the market reads a first outbreak of the migration season as the start of wider culls that cut national egg supply and raise prices, which pays the biggest producer more than the 2.7% of its flock it loses.",
+    "cause": "Cal-Maine is +8.6% after reporting avian influenza at a Florida facility: about 1.4 million laying hens and 360,000 pullets, 2.7% of its flock, will be culled (its release).",
+    "evidence": [
+     "m:CALM",
+     "s29",
+     "s30",
+     "https://finance.yahoo.com/healthcare/articles/cal-maine-foods-reports-positive-135500518.html"
+    ],
+    "kind": "reported",
+    "t": "CALM"
+   }
+  ],
+  "themes": [
+   {
+    "beneath": "In proportion: UnitedHealth was worth $351.5 billion at Tuesday's close, so today's 8.1% is about $28 billion, on top of Tuesday's 5.2%; Humana's 8.9% is about $4.8 billion. Together that is already several years of the industry's estimated $9 billion a year, for two companies alone; my inference is that the market is pricing lower margins ahead, not only repayments. UnitedHealth's net margin was 3.5% over the last year, so there is little room to absorb a cost like this. The rule is not final: comments close Jan 19, 2027, and an earlier rule with the same features was struck down in 2025 and is on appeal.",
+    "cause": "The CRUSH proposal of Nov 16 would extrapolate Medicare Advantage audit findings back to payment year 2018 without the fee-for-service adjuster; CMS estimates about $9 billion a payment year recovered across the industry (TradingKey; Trefis). On Tuesday the group's median fell 3.9%. Today it is down a further 6.1%: UnitedHealth -8.1%, Humana -8.9%, Centene -6.1%, Elevance -6.0%, Molina -5.6%, Oscar -4.9%, Cigna -3.0%, CVS -3.2%; the Medicare Advantage care groups agilon -15.5%, Alignment -8.8%, Clover -7.4%. I found no new report today; today's leg is unexplained by a source.",
+    "evidence": [
+     "c2",
+     "g:6324",
+     "m:UNH",
+     "m:HUM",
+     "m:ELV",
+     "m:CNC",
+     "m:AGL",
+     "n:UNH",
+     "n:HUM",
+     "h:UNH",
+     "q:MOH",
+     "q:OSCR",
+     "q:CI",
+     "q:CVS",
+     "q:ALHC",
+     "q:CLOV",
+     "s11",
+     "s14",
+     "s17",
+     "https://tradingkey.com/analysis/stocks/us-stocks/262310909-unitedhealth-falls-cms-crush-audit-rule-unh-385-23-support-november-18-2026-tradingkey",
+     "https://www.trefis.com/stock/unh/articles/626290/why-is-unitedhealth-stock-falling/2026-11-18"
+    ],
+    "kind": "inferred",
+    "mechanism": "The rule turns revenue already booked for 2018 onward into a possible repayment, and cuts what future coding earns. The fall lines up with exposure: the companies most tied to Medicare Advantage (Humana, UnitedHealth, agilon, Alignment, Clover) fell most, those with more commercial or pharmacy business (Cigna, CVS) least. That ranking is my reading of the moves, not a source's.",
+    "members": [
+     "UNH",
+     "HUM",
+     "ELV",
+     "CNC",
+     "MOH",
+     "OSCR",
+     "CI",
+     "CVS",
+     "AGL",
+     "ALHC",
+     "CLOV"
+    ],
+    "name": "Health insurers fell a second day, harder than the first",
+    "read_through": [
+     {
+      "evidence": [
+       "p:ARDT~HCA"
+      ],
+      "t": "ARDT",
+      "why": "hospitals are paid by these insurers; tighter Medicare Advantage money could slow payments to providers (untested; HCA -3.3% today, its partner)"
+     }
+    ],
+    "watch": "Any insurer sizing its exposure or reserving for 2018-2024; the Fifth Circuit's decision on the 2023 rule; whether the group steadies tomorrow without news."
+   },
+   {
+    "beneath": "The same morning, the application software that sold off on Tuesday kept falling: Salesforce -3.3%, HubSpot -4.5%, Adobe -3.4%, Atlassian -3.2%, ServiceNow -2.3%. My inference: investors are splitting software into what AI threatens (seats in business applications, a day before Anthropic trades) and what AI makes more needed (security). The cluster is tied by a year of moving together, not by any company news.",
+    "cause": "Cybersecurity stocks rose after the Homeland Security Secretary told a House committee about AI-powered attacks on US infrastructure, including Iranian activity since February (Seeking Alpha on TradingView). Fastly +14.4%, Tenable +13.4%, Rapid7 +10.4%, Okta +9.1%, Qualys +9.0%, SentinelOne +7.9%, Rubrik +7.7%, Palo Alto +7.6%, Zscaler +6.5%, Cloudflare +6.5%, CrowdStrike +5.3%, Fortinet +5.3%, A10 +8.0%. Palo Alto reports after today's close.",
+    "evidence": [
+     "c1",
+     "m:FSLY",
+     "m:TENB",
+     "m:OKTA",
+     "m:ATEN",
+     "p:TENB~QLYS",
+     "p:OKTA~CRWD",
+     "p:FSLY~OKTA",
+     "q:PANW",
+     "q:CRWD",
+     "q:ZS",
+     "q:FTNT",
+     "q:S",
+     "q:NET",
+     "q:RPD",
+     "q:QLYS",
+     "q:RBRK",
+     "q:CRM",
+     "q:HUBS",
+     "q:ADBE",
+     "q:TEAM",
+     "q:NOW",
+     "https://www.tradingview.com/news/seekingalpha:16358579c094b:0-palo-alto-leads-cyber-stocks-higher-after-dhs-secretary-warns-of-ai-powered-attacks/"
+    ],
+    "kind": "reported",
+    "mechanism": "Testimony changes no budget today; it reminds buyers that security spending is the part of IT that grows when threats rise, and the stocks that move together all year (Tenable with Qualys 0.79, Okta with CrowdStrike 0.77) moved together today. Palo Alto's report tonight is the first real number on demand. That the testimony is the trigger rather than positioning ahead of Palo Alto is the source's account; I cannot separate the two.",
+    "members": [
+     "FSLY",
+     "TENB",
+     "OKTA",
+     "ATEN",
+     "PANW",
+     "CRWD",
+     "ZS",
+     "FTNT",
+     "S",
+     "NET",
+     "RPD",
+     "QLYS",
+     "RBRK"
+    ],
+    "name": "Security software up on the Homeland Security testimony; application software down again",
+    "read_through": [],
+    "watch": "Palo Alto's results and guidance tonight; whether the group holds the gain tomorrow if they disappoint; whether application software recovers after Anthropic's first trade on Thursday."
+   },
+   {
+    "beneath": "The numbers are modest: TJX's adjusted earnings rose 5%, its core Marmaxx division's comparable sales 2%, and its adjusted margin fell 0.5 point on freight and fuel. What moved the stocks is my inference: relief that holiday demand is holding after a run of weak retail shares, plus Target's comparable sales of +5.6%. This morning I wrote that Target's tariff refund explained its muted reaction; that is wrong, as the stock is up 6.8%. TJX's refund was only $0.05 a share.",
+    "cause": "TJX reported comparable sales +4% (above plan) and adjusted EPS of $1.34 (+5%), and expects holiday sales momentum to accelerate (its release; Retail Dive; Tikr). TJX +11.1%. Target, -0.5% before the open, is +6.8%. Burlington +6.6%, Ross +4.1%, Macy's +7.5%, Caleres +7.5%, Steve Madden +6.5%, Urban Outfitters +6.3%, Kontoor +7.7%, American Eagle +4.8%, Abercrombie +4.2%, Gap +3.2%.",
+    "evidence": [
+     "m:TJX",
+     "f:TJX:1",
+     "s21",
+     "s22",
+     "s23",
+     "s24",
+     "q:TGT",
+     "q:BURL",
+     "q:ROST",
+     "m:M",
+     "m:CAL",
+     "m:SHOO",
+     "m:URBN",
+     "m:KTB",
+     "q:AEO",
+     "q:ANF",
+     "q:GAP",
+     "c3",
+     "g:2300",
+     "p:TJX~ROST",
+     "p:TJX~BURL",
+     "https://www.sec.gov/Archives/edgar/data/109198/000010919826000058/tjxq3fy27earningspressrele.htm",
+     "https://finance.yahoo.com/markets/live/stock-market-today-wednesday-november-18-dow-sp-500-nasdaq-nvidia-anthropic-ipo-090613569.html"
+    ],
+    "kind": "reported",
+    "mechanism": "TJX and Target are the first big readings on how shoppers enter the holidays; better than planned sales at the two lifts every chain that sells to the same households. The off-price peers (Burlington, Ross) and the mall apparel and shoe names that move with Macy's moved most.",
+    "members": [
+     "TJX",
+     "TGT",
+     "BURL",
+     "ROST",
+     "M",
+     "CAL",
+     "SHOO",
+     "URBN",
+     "KTB",
+     "AEO",
+     "ANF",
+     "GAP"
+    ],
+    "name": "Discount and apparel retail rallied on TJX and Target",
+    "read_through": [],
+    "watch": "Walmart and other big retailers' reports in the coming days; whether the apparel names hold the gain without their own news."
+   },
+   {
+    "beneath": "In proportion: the check reads oil -5.2% from Yahoo's front-month WTI, which rolled today from the December contract ($86.01 at Tuesday's close) to January ($81.73 now, against its own $84.65 close). December alone is about -3.9%, January -3.5%; the roll's December-to-January gap adds about 1 to 1.5 points. This morning I inferred that easing Middle East risk drove both oil and gold; the reports say the opposite: the Middle East fighting escalated overnight and held oil up, and the fall came from US stocks.",
+    "cause": "The EIA reported US crude stocks up 3.4 million barrels against a poll of 58,000, and gasoline up 5.2 million against 1.6 million; WTI hit its lowest since late August, while the US-Iran fighting (Iran struck US sites in Kuwait after a US strike on Qeshm Island) curbed the fall (Business Recorder). Refiners' median -4.7%: CVR -8.7%, Delek -6.9%, Par -6.6%, PBF -6.2%, HF Sinclair -6.0%, Valero -4.8%, Marathon -4.7%, Phillips 66 -3.4%; producers about -3% (Chevron -4.1%, Occidental -3.7%, ConocoPhillips -2.9%).",
+    "evidence": [
+     "d:oil",
+     "g:2911",
+     "q:VLO",
+     "q:MPC",
+     "q:PSX",
+     "q:DK",
+     "q:PBF",
+     "q:CVI",
+     "q:PARR",
+     "q:DINO",
+     "q:CVX",
+     "q:COP",
+     "q:OXY",
+     "t2",
+     "https://www.brecorder.com/news/40449497/oil-down-1-as-us-oil-stocks-post-larger-than-expected-rise-eia-says"
+    ],
+    "kind": "reported",
+    "mechanism": "Refiners earn the gap between fuel and crude. A gasoline build three times what was expected says fuel demand is weak, which narrows that gap even as crude falls, so refiners fell more than producers. That reading is mine.",
+    "members": [
+     "VLO",
+     "MPC",
+     "PSX",
+     "DK",
+     "PBF",
+     "CVI",
+     "PARR",
+     "DINO",
+     "CVX",
+     "COP",
+     "OXY"
+    ],
+    "name": "Oil fell on a US stock build, refiners fell most; the check overstates oil's fall",
+    "read_through": [],
+    "watch": "Whether refiners recover if gasoline demand data improves next week; the check's oil line is wrong whenever the front contract rolls (a flaw, like the after-close futures line)."
+   },
+   {
+    "beneath": "The reported cause is weak as an explanation of today: the hike probability was already about 97% before the open, and the 10-year yield fell 0.04 point today, which is not what fresh hike bets do. So the cause of gold's fall is not established; neither is this morning's common root with oil, which the oil reports contradict.",
+    "cause": "Gold -2.9%. Yahoo Finance and GuruFocus tie the slide to a 96.7% probability of a Fed rate increase on CME's FedWatch; Newmont -6.2%, Coeur -6.8%, Hecla -6.4%, SSR Mining -7.7%, Royal Gold -4.2%; the miners' median -3.9%. Barrick is +3.7%, against the group; I did not look into why.",
+    "evidence": [
+     "d:gold",
+     "d:10-year yield",
+     "r:gold",
+     "c4",
+     "g:1040",
+     "m:NEM",
+     "m:SSRM",
+     "q:CDE",
+     "q:HL",
+     "q:RGLD",
+     "q:GOLD",
+     "s42",
+     "t2",
+     "https://finance.yahoo.com/markets/stocks/articles/newmont-stocks-fall-5-13-170805714.html",
+     "https://www.tradingkey.com/analysis/stocks/us-stocks/262311015-us-pre-market-nvda-anthropic-tradingkey"
+    ],
+    "kind": "reported",
+    "mechanism": "A miner's margin is the gold price less its cost: at about $3,768, Newmont's margin over its $1,520 cost guide is about $2,248 an ounce, about 20% less than at its third-quarter realized price of $4,317 (GuruFocus). The stocks that move most with gold moved two to three times what their usual rate implies (Newmont -6.2% against -1.9%).",
+    "members": [
+     "NEM",
+     "CDE",
+     "HL",
+     "SSRM",
+     "RGLD"
+    ],
+    "name": "Gold miners fell further as gold dropped below $3,800",
+    "read_through": [],
+    "watch": "The Fed minutes this afternoon; whether gold steadies if yields keep falling."
+   },
+   {
+    "beneath": "In proportion, against the desk's calls from Nov 13's close: Nvidia at $152.13 is 6.6% below $162.89 (the call needs 7.5%, a close at or below $150.67 on Friday); Dell at $314.79 is 8.2% below $342.98 (needs 9.5%, at or below $310.40); AMD at $516.13 is 3.1% below $532.84 (needs 9%). My reading: the report settled whether spending grows but not who pays for it, and money moved to security software and retail today.",
+    "cause": "Nvidia reversed its gains despite beating and raising its fiscal 2028 growth outlook to 75% (GuruFocus on Yahoo). Nvidia -1.5%, CoreWeave -4.7%, Dell -2.9%, IREN -1.8%, Marvell -1.4%, Sandisk -1.1%; Super Micro +3.2%, Vertiv +3.5% and Broadcom +2.2% held up.",
+    "evidence": [
+     "t1",
+     "s49",
+     "s52",
+     "s53",
+     "q:NVDA",
+     "q:CRWV",
+     "q:DELL",
+     "q:IREN",
+     "q:MRVL",
+     "q:SNDK",
+     "q:AMD",
+     "q:SMCI",
+     "q:VRT",
+     "q:AVGO",
+     "https://finance.yahoo.com/markets/stocks/articles/nvidia-earnings-beat-fails-rescue-160612628.html"
+    ],
+    "kind": "reported",
+    "mechanism": "This morning's watch said a close back near Tuesday's lows would mean the report changed little; by midday most of the group is below Tuesday's close. The source says investors weighed the results against broader worries about the AI trade.",
+    "members": [
+     "NVDA",
+     "CRWV",
+     "DELL",
+     "IREN",
+     "MRVL",
+     "SNDK",
+     "AMD",
+     "SMCI",
+     "VRT",
+     "AVGO"
+    ],
+    "name": "The AI build-out gave back the whole post-report rally",
+    "read_through": [],
+    "watch": "Friday's close against the three call thresholds; Anthropic's price tonight."
+   }
+  ],
+  "threads": [
+   "Health insurers: did anything new come out today, and does the group steady tomorrow?",
+   "Palo Alto reports tonight: does security software keep today's gain?",
+   "Anthropic prices tonight and trades Thursday: does application software recover after it?",
+   "The desk's size calls are judged Friday against Nov 13's close: Nvidia is 6.6% below (needs 7.5%), Dell 8.2% below (needs 9.5%), AMD 3.1% below (needs 9%).",
+   "Retail: do the apparel and off-price names hold their gains?",
+   "The Fed's October minutes this afternoon, and gold.",
+   "The check's oil line includes today's WTI contract roll (about 1.3 points of the -5.2%): a flaw to fix, like the after-close futures line.",
+   "Primo Brands: two sessions outside its range with no cause found.",
+   "Barrick +3.7% against falling gold miners: not looked into.",
+   "Capricor and Savara FDA decisions by Sunday Nov 22 (both up today, +9.0% and +5.4%); Inhibrx data Nov 19-20."
+  ],
+  "unexplained": [
+   {
+    "t": "PRMB",
+    "tried": "-7.1%, outside its 9-in-10 range, after -6.6% before the open. No filing and no story; web searches found only the Nov 16 refinancing ($700 million of 7.625% notes) and older analyst changes. Its beverage partners rose (Celsius +5.8%), so it is not its industry."
+   },
+   {
+    "t": "COCO",
+    "tried": "+8.5%, no filing and no story; a beverage company rising while Primo Brands falls."
+   },
+   {
+    "t": "NXDT",
+    "tried": "+13.0%, no filing and no story; one weak partner only."
+   },
+   {
+    "t": "PRGO",
+    "tried": "+6.5%, no filing and no story naming it."
+   },
+   {
+    "t": "LYFT",
+    "tried": "+8.0%; the only story is DoorDash and Lyft's joint rewards program, published at 2:07 ET, before a morning in which Lyft did not flag."
+   },
+   {
+    "t": "SPOK",
+    "tried": "-4.9%, no filing and no story."
+   }
+  ]
+ },
+ "recorded_at": "2026-11-18T17:42:23Z"
+}
