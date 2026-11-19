@@ -105,3 +105,7 @@ FAIL); "the market runs on chains of cause and effect, news and catalysts": the 
 - Added the page refresh to the before-the-open task's prompt. The same change to the midday and after-close tasks
   was refused by the permission check; told the person, and the refresh is done by hand at those checks until
   they allow it.
+- Wednesday's three checks with desk notes (before the open, midday, after the close) and the close scan of
+  2026-11-18 (2,446 stocks, 91 left out). The explorer page was refreshed after each check, by hand for midday and
+  after the close (passing its url). A refresh without `url` made a separate broken page; told the person.
+  Two of the morning's inferences were wrong and were corrected in the later notes.

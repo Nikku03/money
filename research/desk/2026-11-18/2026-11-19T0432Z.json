@@ -1,0 +1,639 @@
+{
+ "asof": "2026-11-18",
+ "at": "2026-11-19T04:32:23Z",
+ "calls": [],
+ "case_sha": "8423e54ecfdb2e34",
+ "check": "2026-11-19T0432Z",
+ "claims_noted": 3,
+ "evidence": {
+  "d:gold": {
+   "text": "gold -3.6% since the close (its usual day: 1.8%)"
+  },
+  "d:oil": {
+   "text": "oil -4.5% since the close (its usual day: 3.6%)"
+  },
+  "f:RRGB:1": {
+   "text": "RRGB results report (8-K 2.02) at 2026-11-18T21:10Z: RED ROBIN GOURMET BURGERS, INC. REPORTS THIRD QUARTER OF FISCAL 2026 RESULTS -- Exhibit 99.1 RED ROBIN GOURMET BURGERS, INC. REPORTS THIRD QUARTER OF FISCAL 2026 RESULTS Englewood, CO \u2013 November 18, 2026 \u2013 Red Robin Gourmet Burgers, Inc. (NASDAQ: RRGB) (\"Red Robin\" or the \"Company\"), a casual dining restaurant chain serving an innovative selection of high-quality gourmet burgers in a family-friendly atmosphere, today reported financial results",
+   "url": "https://www.sec.gov/Archives/edgar/data/1171759/000162828026074799/exhibit991q3-2026.htm"
+  },
+  "f:UTI:1": {
+   "text": "UTI results report (8-K 2.02) at 2026-11-18T21:07Z: Universal Technical Institute Reports Fiscal Year 2026 Fourth Quarter and Year-End Results -- Exhibit 99.1 Universal Technical Institute Reports Fiscal Year 2026 Fourth Quarter and Year-End Results Company Unveils Next-Generation UTI Campus, Skilled Trades Max, and Details Plan for Up to 12 New Campuses and Approximately 45 New Programs for Fiscal 2027 Through Fiscal 2029 PHOENIX, ARIZ. - November 18, 2026 - Universal Technical Institute, Inc. ",
+   "url": "https://www.sec.gov/Archives/edgar/data/1261654/000126165426000021/exhibit991-q42026earningsp.htm"
+  },
+  "k": {
+   "text": "Market: S&P 500 (SPY) +0.7%, Nasdaq 100 (QQQ) +1.4%, Russell 2000 (IWM) +0.5%, S&P 500 futures +0.4%, VIX +0.0% (after the close)"
+  },
+  "m:MAGN": {
+   "text": "MAGN (Magnera Corp; Paper Mills) +15.0% since the close (after the close), OUTSIDE its 9-in-10 range (-6%..+8%)"
+  },
+  "m:RRGB": {
+   "text": "RRGB (RED ROBIN GOURMET BURGERS INC; Retail-Eating  Places) -17.5% since the close (after the close), OUTSIDE its 9-in-10 range (-7%..+9%)"
+  },
+  "m:UTI": {
+   "text": "UTI (UNIVERSAL TECHNICAL INSTITUTE INC; Services-Educational Services) -8.6% since the close (after the close), outside its 2-in-3 range (-8%..+10%)"
+  },
+  "n:MAGN": {
+   "text": "MAGN accounts: market value $427.6 m; cash and equivalents $280.0 m (2026-06-27; investments not counted); long-term debt $1.9 bn (2026-06-27); net income $-112.0 m over the four quarters to 2026-06-27; that cash alone covers about 10.0 quarters of such losses"
+  },
+  "n:RRGB": {
+   "text": "RRGB accounts: market value $150.2 m; cash and equivalents $23.8 m (2026-10-04; investments not counted); long-term debt $96.4 m (2026-10-04)"
+  },
+  "q:ADBE": {
+   "text": "ADBE +0.5% since the close of 2026-11-18, as the check read it"
+  },
+  "q:AGL": {
+   "text": "AGL +0.0% since the close of 2026-11-18, as the check read it"
+  },
+  "q:ALHC": {
+   "text": "ALHC +1.0% since the close of 2026-11-18, as the check read it"
+  },
+  "q:AMD": {
+   "text": "AMD +1.3% since the close of 2026-11-18, as the check read it"
+  },
+  "q:AMZN": {
+   "text": "AMZN +1.3% since the close of 2026-11-18, as the check read it"
+  },
+  "q:ARDT": {
+   "text": "ARDT +0.0% since the close of 2026-11-18, as the check read it"
+  },
+  "q:AVGO": {
+   "text": "AVGO +1.6% since the close of 2026-11-18, as the check read it"
+  },
+  "q:BRBR": {
+   "text": "BRBR +0.0% since the close of 2026-11-18, as the check read it"
+  },
+  "q:BURL": {
+   "text": "BURL -0.2% since the close of 2026-11-18, as the check read it"
+  },
+  "q:CAL": {
+   "text": "CAL +0.0% since the close of 2026-11-18, as the check read it"
+  },
+  "q:CDE": {
+   "text": "CDE +1.1% since the close of 2026-11-18, as the check read it"
+  },
+  "q:CI": {
+   "text": "CI +0.0% since the close of 2026-11-18, as the check read it"
+  },
+  "q:CLOV": {
+   "text": "CLOV +2.8% since the close of 2026-11-18, as the check read it"
+  },
+  "q:CNC": {
+   "text": "CNC +0.3% since the close of 2026-11-18, as the check read it"
+  },
+  "q:COHR": {
+   "text": "COHR +2.2% since the close of 2026-11-18, as the check read it"
+  },
+  "q:CRM": {
+   "text": "CRM +0.3% since the close of 2026-11-18, as the check read it"
+  },
+  "q:CRWD": {
+   "text": "CRWD +6.0% since the close of 2026-11-18, as the check read it"
+  },
+  "q:CRWV": {
+   "text": "CRWV +1.9% since the close of 2026-11-18, as the check read it"
+  },
+  "q:CVI": {
+   "text": "CVI +0.3% since the close of 2026-11-18, as the check read it"
+  },
+  "q:CVS": {
+   "text": "CVS +0.1% since the close of 2026-11-18, as the check read it"
+  },
+  "q:CVX": {
+   "text": "CVX +0.0% since the close of 2026-11-18, as the check read it"
+  },
+  "q:DELL": {
+   "text": "DELL +2.2% since the close of 2026-11-18, as the check read it"
+  },
+  "q:ELV": {
+   "text": "ELV -2.1% since the close of 2026-11-18, as the check read it"
+  },
+  "q:FSLY": {
+   "text": "FSLY +2.8% since the close of 2026-11-18, as the check read it"
+  },
+  "q:FTNT": {
+   "text": "FTNT +3.0% since the close of 2026-11-18, as the check read it"
+  },
+  "q:GOLD": {
+   "text": "GOLD +0.6% since the close of 2026-11-18, as the check read it"
+  },
+  "q:HL": {
+   "text": "HL +1.9% since the close of 2026-11-18, as the check read it"
+  },
+  "q:HUBS": {
+   "text": "HUBS +1.3% since the close of 2026-11-18, as the check read it"
+  },
+  "q:HUM": {
+   "text": "HUM -0.5% since the close of 2026-11-18, as the check read it"
+  },
+  "q:IREN": {
+   "text": "IREN +2.8% since the close of 2026-11-18, as the check read it"
+  },
+  "q:KTB": {
+   "text": "KTB -0.3% since the close of 2026-11-18, as the check read it"
+  },
+  "q:LITE": {
+   "text": "LITE +2.0% since the close of 2026-11-18, as the check read it"
+  },
+  "q:M": {
+   "text": "M +0.1% since the close of 2026-11-18, as the check read it"
+  },
+  "q:MOH": {
+   "text": "MOH +0.0% since the close of 2026-11-18, as the check read it"
+  },
+  "q:MPC": {
+   "text": "MPC -0.5% since the close of 2026-11-18, as the check read it"
+  },
+  "q:MRVL": {
+   "text": "MRVL +1.9% since the close of 2026-11-18, as the check read it"
+  },
+  "q:MU": {
+   "text": "MU +1.9% since the close of 2026-11-18, as the check read it"
+  },
+  "q:NEM": {
+   "text": "NEM -0.1% since the close of 2026-11-18, as the check read it"
+  },
+  "q:NET": {
+   "text": "NET +3.5% since the close of 2026-11-18, as the check read it"
+  },
+  "q:NOW": {
+   "text": "NOW +0.7% since the close of 2026-11-18, as the check read it"
+  },
+  "q:NVDA": {
+   "text": "NVDA +0.7% since the close of 2026-11-18, as the check read it"
+  },
+  "q:OKTA": {
+   "text": "OKTA +4.2% since the close of 2026-11-18, as the check read it"
+  },
+  "q:OSCR": {
+   "text": "OSCR +1.1% since the close of 2026-11-18, as the check read it"
+  },
+  "q:PANW": {
+   "text": "PANW +9.1% since the close of 2026-11-18, as the check read it"
+  },
+  "q:QLYS": {
+   "text": "QLYS +2.1% since the close of 2026-11-18, as the check read it"
+  },
+  "q:RBRK": {
+   "text": "RBRK +3.6% since the close of 2026-11-18, as the check read it"
+  },
+  "q:RGLD": {
+   "text": "RGLD -0.7% since the close of 2026-11-18, as the check read it"
+  },
+  "q:ROST": {
+   "text": "ROST +1.5% since the close of 2026-11-18, as the check read it"
+  },
+  "q:RPD": {
+   "text": "RPD +3.4% since the close of 2026-11-18, as the check read it"
+  },
+  "q:S": {
+   "text": "S +1.5% since the close of 2026-11-18, as the check read it"
+  },
+  "q:SHOO": {
+   "text": "SHOO -0.0% since the close of 2026-11-18, as the check read it"
+  },
+  "q:TEAM": {
+   "text": "TEAM -0.4% since the close of 2026-11-18, as the check read it"
+  },
+  "q:TENB": {
+   "text": "TENB +2.9% since the close of 2026-11-18, as the check read it"
+  },
+  "q:TGT": {
+   "text": "TGT +0.4% since the close of 2026-11-18, as the check read it"
+  },
+  "q:TJX": {
+   "text": "TJX -0.0% since the close of 2026-11-18, as the check read it"
+  },
+  "q:UNH": {
+   "text": "UNH -0.3% since the close of 2026-11-18, as the check read it"
+  },
+  "q:URBN": {
+   "text": "URBN -0.1% since the close of 2026-11-18, as the check read it"
+  },
+  "q:VLO": {
+   "text": "VLO -0.0% since the close of 2026-11-18, as the check read it"
+  },
+  "q:VRT": {
+   "text": "VRT +2.3% since the close of 2026-11-18, as the check read it"
+  },
+  "q:WDAY": {
+   "text": "WDAY -0.3% since the close of 2026-11-18, as the check read it"
+  },
+  "q:WMT": {
+   "text": "WMT +0.2% since the close of 2026-11-18, as the check read it"
+  },
+  "q:ZS": {
+   "text": "ZS +3.2% since the close of 2026-11-18, as the check read it"
+  },
+  "r:gold": {
+   "text": "the stocks that moved most with gold over the year, today: RGLD -0.7% (its rate implies -2.1%), NEM -0.1% (its rate implies -2.4%), MUX -1.5% (its rate implies -3.1%), HL +1.9% (its rate implies -3.4%), CDE +1.1% (its rate implies -3.0%), IAUX +0.8% (its rate implies -2.9%)"
+  },
+  "s1": {
+   "text": "2026-11-19T00:12Z www.marketbeat.com: Red Robin Gourmet Burgers Q3 Earnings Call Highlights -- Red Robin Gourmet Burgers (NASDAQ:RRGB) reported higher comparable sales and restaurant-level margins in the third quarter of 2026, while refranchising transactions reduced revenue and helped the company pay off its prior debt facility. Comparable sales, excluding deferred loyalty revenue, rose 3.9",
+   "url": "https://www.marketbeat.com/instant-alerts/transcript-red-robin-gourmet-burgers-q3-earnings-call-highlights-2026-11-18/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss"
+  },
+  "s2": {
+   "text": "2026-11-18T21:15Z finance.yahoo.com: Red Robin (RRGB) Reports Q3 Loss, Lags Revenue Estimates -- Red Robin (RRGB) delivered earnings and revenue surprises of +20.59% and -11.90%, respectively, for the quarter ended September 2026. Do the numbers hold clues to what lies ahead for the stock?",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/red-robin-rrgb-reports-q3-211502150.html?.tsrc=rss"
+  },
+  "s3": {
+   "text": "2026-11-18T21:10Z finance.yahoo.com: Red Robin: Q3 Earnings Snapshot -- (AP) \u2014 Red Robin Gourmet Burgers Inc. (RRGB) on Wednesday reported a loss of $21.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/red-robin-q3-earnings-snapshot-211012212.html?.tsrc=rss"
+  },
+  "s4": {
+   "text": "2026-11-18T21:05Z finance.yahoo.com: RED ROBIN GOURMET BURGERS, INC. REPORTS THIRD QUARTER OF FISCAL 2026 RESULTS -- Red Robin Gourmet Burgers, Inc. (NASDAQ: RRGB) (\"Red Robin\" or the \"Company\"), a casual dining restaurant chain serving an innovative selection of high-quality gourmet burgers in a family-friendly atmosphere, today reported financial results for the fiscal third quarter ended October 4, 2026.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/red-robin-gourmet-burgers-inc-210500331.html?.tsrc=rss"
+  },
+  "s5": {
+   "text": "2026-11-18T21:30Z finance.yahoo.com: Magnera Reports Fourth Quarter and Fiscal Year Results -- CHARLOTTE, N.C., Nov. 18, 2026 (GLOBE NEWSWIRE) -- Fourth Quarter Highlights GAAP: Net sales of $851 million; Operating loss of $90 million (includes $106 million of goodwill and other impairment)Non-GAAP: Adjusted EBITDA of $97 millionRecord cash flow with cash from operations of $99 million$57 million of debt repayments Fiscal Year Highlights GAAP: Net sales of $3.3 billion; Operating loss of $3",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/magnera-reports-fourth-quarter-fiscal-213000284.html?.tsrc=rss"
+  },
+  "s6": {
+   "text": "2026-11-19T01:13Z www.marketbeat.com: What Universal Technical Institute (UTI) Said on Its Q4 Earnings Call -- Universal Technical Institute (NYSE:UTI) reported higher fiscal 2026 revenue and enrollment, but a weaker-than-expected fourth-quarter student intake is expected to constrain revenue growth in fiscal 2027 as the company continues to spend heavily on new campuses and programs. The vocational educati",
+   "url": "https://www.marketbeat.com/instant-alerts/transcript-what-universal-technical-institute-uti-said-on-its-q4-earnings-call-2026-11-18/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss"
+  },
+  "s7": {
+   "text": "2026-11-18T21:54Z finance.yahoo.com: Universal Technical Institute falls on weak guidance -- Investing.com -- Universal Technical Institute Inc (NYSE:UTI) reported fourth quarter results that missed earnings expectations and issued fiscal 2027 guidance that disappointed investors, sending shares down 10% in after-hours trading Wednesday.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/universal-technical-institute-falls-weak-215420755.html?.tsrc=rss"
+  },
+  "s9": {
+   "text": "2026-11-18T21:25Z finance.yahoo.com: Universal Technical Institute (UTI) Q4 Earnings Miss Estimates -- Universal Technical (UTI) delivered earnings and revenue surprises of -3.03% and +0.10%, respectively, for the quarter ended September 2026. Do the numbers hold clues to what lies ahead for the stock?",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/universal-technical-institute-uti-q4-212502543.html?.tsrc=rss"
+  },
+  "t1": {
+   "text": "the last note (2026-11-18T1737Z), theme 'Health insurers fell a second day, harder than the first': The CRUSH proposal of Nov 16 would extrapolate Medicare Advantage audit findings back to payment year 2018 without the fee-for-service adjuster; CMS estimates about $9 billion a payment year recovered across the industry (TradingKey; Trefis). On Tuesday the group's median fell 3.9%. Today it is down a further 6.1%: UnitedHealth -8.1%, Humana -8.9%, Centene -6.1%, Elevance -6.0%, Molina -5.6%, Osca"
+  },
+  "t2": {
+   "text": "the last note (2026-11-18T1737Z), theme 'Security software up on the Homeland Security testimony; application software down again': Cybersecurity stocks rose after the Homeland Security Secretary told a House committee about AI-powered attacks on US infrastructure, including Iranian activity since February (Seeking Alpha on TradingView). Fastly +14.4%, Tenable +13.4%, Rapid7 +10.4%, Okta +9.1%, Qualys +9.0%, SentinelOne +7.9%, Rubrik +7.7%, Palo Alto +7.6%, Zscaler +6.5%, Cloudflare +6.5%, Crowd"
+  },
+  "t3": {
+   "text": "the last note (2026-11-18T1737Z), theme 'Discount and apparel retail rallied on TJX and Target': TJX reported comparable sales +4% (above plan) and adjusted EPS of $1.34 (+5%), and expects holiday sales momentum to accelerate (its release; Retail Dive; Tikr). TJX +11.1%. Target, -0.5% before the open, is +6.8%. Burlington +6.6%, Ross +4.1%, Macy's +7.5%, Caleres +7.5%, Steve Madden +6.5%, Urban Outfitters +6.3%, Kontoor +7.7%, American Eagle +4.8%, Abercrombie +4.2%, Gap +3.2%."
+  },
+  "t4": {
+   "text": "the last note (2026-11-18T1737Z), theme \"Oil fell on a US stock build, refiners fell most; the check overstates oil's fall\": The EIA reported US crude stocks up 3.4 million barrels against a poll of 58,000, and gasoline up 5.2 million against 1.6 million; WTI hit its lowest since late August, while the US-Iran fighting (Iran struck US sites in Kuwait after a US strike on Qeshm Island) curbed the fall (Business Recorder). Refiners' median -4.7%: CVR -8.7%, Delek -6.9%, Par -6.6%, PBF -6.2%, HF Si"
+  },
+  "t5": {
+   "text": "the last note (2026-11-18T1737Z), theme 'Gold miners fell further as gold dropped below $3,800': Gold -2.9%. Yahoo Finance and GuruFocus tie the slide to a 96.7% probability of a Fed rate increase on CME's FedWatch; Newmont -6.2%, Coeur -6.8%, Hecla -6.4%, SSR Mining -7.7%, Royal Gold -4.2%; the miners' median -3.9%. Barrick is +3.7%, against the group; I did not look into why."
+  },
+  "t6": {
+   "text": "the last note (2026-11-18T1737Z), theme 'The AI build-out gave back the whole post-report rally': Nvidia reversed its gains despite beating and raising its fiscal 2028 growth outlook to 75% (GuruFocus on Yahoo). Nvidia -1.5%, CoreWeave -4.7%, Dell -2.9%, IREN -1.8%, Marvell -1.4%, Sandisk -1.1%; Super Micro +3.2%, Vertiv +3.5% and Broadcom +2.2% held up."
+  },
+  "x:MAGN": {
+   "text": "MAGN: the market carried +1.0% (beta 1.35); 10-year yield carried -0.0% (-18.61% per point, t -4.5); its industry (Paper (broad), 11 stocks) moved +0.0%; left over after the market and its drivers +14.0%"
+  },
+  "x:RRGB": {
+   "text": "RRGB: the market carried +1.2% (beta 1.66); its industry (Retail-Eating  Places, 21 stocks) moved -0.0%; left over after the market and its drivers -18.7%"
+  }
+ },
+ "note": {
+  "backdrop": "Wednesday closed split: the S&P 500 -0.23% to 7,323.63, its fifth loss in a row and below its 200-day average; the Dow -1.11% (-561 points), dragged by UnitedHealth, Chevron and Caterpillar; the Nasdaq +0.42% (Motley Fool; StockTitan citing CNBC). The Fed's October minutes said nearly all officials judged further rate increases likely appropriate; the dollar reached a 19-month high and the 10-year yield eased two basis points to 5.10% (Motley Fool). After the close, Anthropic priced its offering at $83 a share, above its $70-$78 range: 980 million shares, about $81 billion raised, about $1.5 trillion in value, trading Thursday on Nasdaq as ANT (AP on Yahoo; StockTitan from its SEC filing). Stock funds rose after hours: SPY +0.7%, QQQ +1.4%. The check's driver lines after the close are wrong again: oil -4.5% and gold -3.6% are measured from Tuesday's bars, not Wednesday's. December WTI settled at $83.26 (-3.2% on the day) and January at $82.31; after hours January is $82.16, -0.2%. Gold's December contract closed at $3,741.90 (-3.2%) and is $3,727.00 after hours, -0.4%; the futures line's +0.4% is +0.7% from Wednesday's close. Only 2 stocks are outside their 9-in-10 range after hours. Outside the scan, Hyster-Yale fell 41.1% the day it proposed $125 million of convertible notes and amended its credit agreement to permit 'certain financing transactions' (its 8-K; StockTitan); a $125 million convertible does not by itself explain a fall that size, so the cause of its size is not established.",
+  "backdrop_evidence": [
+   "k",
+   "d:oil",
+   "d:gold",
+   "r:gold",
+   "https://www.fool.com/coverage/stock-market-today/2026/11/18/stock-market-today-nov-18-s-and-p-500-breaks-key-support-as-fed-minutes-signal-more-rate-hikes-ahead/",
+   "https://www.stocktitan.net/articles/stock-market-today-live-november-18-2026",
+   "https://finance.yahoo.com/markets/stocks/articles/anthropic-prices-ipo-83-per-222443646.html",
+   "https://www.sec.gov/Archives/edgar/data/1173514/000117351426000256/hy-20261118.htm"
+  ],
+  "by": "agent",
+  "calls": [],
+  "check": "2026-11-19T0432Z",
+  "read": [
+   {
+    "direction": "none",
+    "published": "2026-11-18T22:40:02Z",
+    "says": "S&P 500 -0.24% to 7,323, below its 200-day average; Nasdaq +0.42%; Dow -1.11%; gold -3.51% to $3,728.60; 10-year yield 5.10%; UnitedHealth -10.21%, Humana -12.98% on the Medicare Advantage audit proposal; TJX +8.05%; Amazon +3.82% on its Anthropic stake; Fed minutes: nearly all officials see further hikes as likely needed; dollar at a 19-month high; Walmart reports Thursday.",
+    "tier": "reported",
+    "url": "https://www.fool.com/coverage/stock-market-today/2026/11/18/stock-market-today-nov-18-s-and-p-500-breaks-key-support-as-fed-minutes-signal-more-rate-hikes-ahead/"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-19T01:00:00Z",
+    "says": "At the close SPY -0.31%, QQQ +0.39%, DIA -1.10%, IWM +0.40%; Nvidia closed -2.89%; BellRing +24.07%; Hyster-Yale -41.07% the day it proposed convertible notes; tariff refunds were $0.50 of Target's $2.65 EPS; after hours QQQ +1.38%, SPY +0.72%, Palo Alto +9.08% after raising its revenue forecast; Anthropic's filing gives an $83 price.",
+    "tier": "reported",
+    "url": "https://www.stocktitan.net/articles/stock-market-today-live-november-18-2026"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-18T22:24:43Z",
+    "says": "Anthropic priced its IPO at $83 a share, above a $70-$78 range, valuing it at about $1.5 trillion; 980 million shares (about 956 million sold by the company), about $81 billion raised, the largest IPO on record; trading Thursday on Nasdaq as ANT; it reports $6.2 billion of debt and commitments of about $900 billion for computing over coming years, $70 billion in the next 12 months.",
+    "tier": "reported",
+    "url": "https://finance.yahoo.com/markets/stocks/articles/anthropic-prices-ipo-83-per-222443646.html"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-18T11:54:33Z",
+    "says": "Hyster-Yale amended its credit agreement to permit certain financing transactions and announced a proposed private offering of $125 million of convertible senior notes due 2031.",
+    "ticker": "HY",
+    "tier": "reported",
+    "url": "https://www.sec.gov/Archives/edgar/data/1173514/000117351426000256/hy-20261118.htm"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-18T21:10:00Z",
+    "says": "Red Robin's third quarter: comparable restaurant revenue +3.9% (traffic -1.7%, check +5.6%), adjusted EBITDA $7.3 million; about $100 million borrowed and total liquidity of about $29.5 million ($23.8 million cash); fourth-quarter outlook: comparable revenue about +2.75%, adjusted EBITDA about $6.0 million, updated for refranchising.",
+    "ticker": "RRGB",
+    "tier": "reported",
+    "url": "https://www.sec.gov/Archives/edgar/data/1171759/000162828026074799/exhibit991q3-2026.htm"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-18T21:30:00Z",
+    "says": "Magnera's fourth quarter: net sales $851 million, operating loss $90 million including $106 million of impairments, adjusted EBITDA +8% on a better price-cost spread; volumes down 4%; fiscal 2026 adjusted EBITDA $378 million.",
+    "ticker": "MAGN",
+    "tier": "reported",
+    "url": "https://finance.yahoo.com/markets/stocks/articles/magnera-reports-fourth-quarter-fiscal-213000284.html"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-18T01:53:00Z",
+    "says": "Ardent Health priced a secondary offering of 8,000,000 shares by affiliates of Equity Group Investments and Ventas at $14.50, with a concurrent repurchase of 1,500,000 shares; expected to close on November 19, 2026.",
+    "tier": "reported",
+    "url": "https://finance.yahoo.com/markets/stocks/articles/ardent-health-announces-pricing-secondary-015300137.html"
+   }
+  ],
+  "singles": [
+   {
+    "beneath": "In proportion: a $150 million company with about $100 million borrowed and about $29.5 million of total liquidity, earning about $6-7 million of EBITDA a quarter before rent and interest. Thin liquidity is what a weak quarter threatens; my reading is that the fall prices that risk, not the quarter itself.",
+    "cause": "Red Robin fell 17.5% after hours on its third quarter: comparable restaurant revenue +3.9% but traffic -1.7%, adjusted EBITDA $7.3 million, and a fourth-quarter outlook of about $6.0 million of adjusted EBITDA (its release; Zacks counts an 11.9% revenue miss).",
+    "evidence": [
+     "m:RRGB",
+     "x:RRGB",
+     "n:RRGB",
+     "f:RRGB:1",
+     "s1",
+     "s2",
+     "s3",
+     "s4",
+     "https://www.sec.gov/Archives/edgar/data/1171759/000162828026074799/exhibit991q3-2026.htm"
+    ],
+    "kind": "reported",
+    "t": "RRGB"
+   },
+   {
+    "beneath": "In proportion: the equity is worth $428 million beside $1.9 billion of debt and $280 million of cash, so the business is worth about $2.05 billion. The guide's middle, $400 million, is 5.8% above $378 million; at the same multiple the business would gain about $120 million, all of it the equity's, about 28%. The +15% is about half of that: the leverage explains why a modest guide moves the stock this much (my arithmetic).",
+    "cause": "Magnera rose 15.0% after hours on fourth-quarter adjusted EBITDA up 8% and a fiscal 2027 guide of $390-$410 million against $378 million in fiscal 2026 (its release; StockTitan).",
+    "evidence": [
+     "m:MAGN",
+     "x:MAGN",
+     "n:MAGN",
+     "s5",
+     "https://finance.yahoo.com/markets/stocks/articles/magnera-reports-fourth-quarter-fiscal-213000284.html",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-18-2026"
+    ],
+    "kind": "reported",
+    "t": "MAGN"
+   },
+   {
+    "beneath": "The company is spending this year's profit growth on up to 12 new campuses; flat EBITDA for a year of building is the cost of that plan, and the market priced the wait.",
+    "cause": "Universal Technical Institute fell 8.6% after hours: fourth-quarter earnings missed and its fiscal 2027 adjusted EBITDA guide of $100-$106 million compares with $102.0 million in fiscal 2026, including about $35 million of costs for new campuses and programs (Investing.com; StockTitan).",
+    "evidence": [
+     "m:UTI",
+     "f:UTI:1",
+     "s6",
+     "s7",
+     "s9",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-18-2026"
+    ],
+    "kind": "reported",
+    "t": "UTI"
+   },
+   {
+    "beneath": "It ended the day where the block was sold, as Vir did last week.",
+    "cause": "Ardent Health closed -18.9% at $14.40, just under its holders' $14.50 offering price; the offering closes Thursday.",
+    "evidence": [
+     "q:ARDT",
+     "t1",
+     "https://finance.yahoo.com/markets/stocks/articles/ardent-health-announces-pricing-secondary-015300137.html"
+    ],
+    "kind": "reported",
+    "t": "ARDT"
+   },
+   {
+    "beneath": "It held the whole move into the close; unchanged reading: a flat year was better than its price assumed.",
+    "cause": "BellRing closed +24.1% on its results and fiscal 2027 outlook (StockTitan).",
+    "evidence": [
+     "q:BRBR",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-18-2026"
+    ],
+    "kind": "reported",
+    "t": "BRBR"
+   }
+  ],
+  "themes": [
+   {
+    "beneath": "In proportion: Humana closed 13.0% lower after -3.6% on Tuesday, about 16% in two days; UnitedHealth about 15% (-5.2% then -10.2%), about $55 billion of value on a $372 billion company before Tuesday. That is about six years of CMS's estimated $9 billion a year for the whole industry, lost by one company: the market is pricing a lasting cut to Medicare Advantage margins, not one repayment (my inference). The proposal is open for comment to Jan 19, 2027, and the earlier rule is on appeal.",
+    "cause": "The Medicare Advantage audit proposal (CRUSH, Nov 16) is the only reported cause (Motley Fool). Wednesday's closes (the bank's daily bars): Humana -13.0%, UnitedHealth -10.2%, Elevance -7.6%, Oscar -7.6%, Centene -7.0%, Molina -6.6%, CVS -5.2%, Cigna -3.0%; the Medicare Advantage care groups agilon -21.4%, Alignment -11.8%, Clover -11.8%. After hours they barely moved (UnitedHealth -0.3%, Humana -0.5%).",
+    "evidence": [
+     "t1",
+     "q:UNH",
+     "q:HUM",
+     "q:ELV",
+     "q:CNC",
+     "q:MOH",
+     "q:OSCR",
+     "q:CVS",
+     "q:CI",
+     "q:AGL",
+     "q:ALHC",
+     "q:CLOV",
+     "https://www.fool.com/coverage/stock-market-today/2026/11/18/stock-market-today-nov-18-s-and-p-500-breaks-key-support-as-fed-minutes-signal-more-rate-hikes-ahead/"
+    ],
+    "kind": "inferred",
+    "mechanism": "Same as at midday: the companies most tied to Medicare Advantage fell most, Cigna least. The midday fall deepened into the close with no new report I could find, so the last leg is selling, not news; that is my inference.",
+    "members": [
+     "UNH",
+     "HUM",
+     "ELV",
+     "CNC",
+     "MOH",
+     "OSCR",
+     "CVS",
+     "CI",
+     "AGL",
+     "ALHC",
+     "CLOV"
+    ],
+    "name": "Health insurers' third day: the worst so far, and nothing new reported",
+    "read_through": [],
+    "watch": "Whether any insurer quantifies its exposure; whether the group steadies Thursday without news. Three days of falls with no new information is where a reversal or a fourth leg tells whether the market overshot."
+   },
+   {
+    "beneath": "Two up days of 10-15% for the smaller names, before and after a number: the group moved first on a speech, then got the confirmation. Application software kept falling into the close (HubSpot -5.2%, Atlassian -4.2%, Adobe -4.0%, Workday -2.9%, ServiceNow -2.5%, Salesforce -2.1%) and rose under 1.5% after hours. The split between security and applications held a second session; my reading is unchanged.",
+    "cause": "Wednesday's closes (the bank's daily bars): Tenable +15.8%, Qualys +12.9%, Fastly +12.6%, Rapid7 +12.5%, Okta +12.1%, SentinelOne +10.4%, Palo Alto +9.9%, Rubrik +9.3%, CrowdStrike +7.9%, Zscaler +6.8%, Fortinet +5.9%, Cloudflare +5.7%. After the close Palo Alto beat and raised its fiscal 2027 revenue forecast and rose 9.1%; CrowdStrike +6.0%, Okta +4.2%, the rest +2-4% (StockTitan).",
+    "evidence": [
+     "t2",
+     "q:PANW",
+     "q:CRWD",
+     "q:OKTA",
+     "q:ZS",
+     "q:FTNT",
+     "q:NET",
+     "q:TENB",
+     "q:QLYS",
+     "q:RPD",
+     "q:FSLY",
+     "q:S",
+     "q:RBRK",
+     "q:HUBS",
+     "q:TEAM",
+     "q:ADBE",
+     "q:WDAY",
+     "q:NOW",
+     "q:CRM",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-18-2026"
+    ],
+    "kind": "reported",
+    "mechanism": "The midday rally ran on the Homeland Security testimony; Palo Alto's report is the first hard number behind it, and the largest company in the group lifts the rest after hours.",
+    "members": [
+     "PANW",
+     "CRWD",
+     "OKTA",
+     "ZS",
+     "FTNT",
+     "NET",
+     "TENB",
+     "QLYS",
+     "RPD",
+     "FSLY",
+     "S",
+     "RBRK"
+    ],
+    "name": "Security software: the rally held, and Palo Alto confirmed it after the close",
+    "read_through": [],
+    "watch": "Whether Thursday's session keeps the after-hours gains; whether application software moves on Anthropic's first trade."
+   },
+   {
+    "beneath": "In proportion, for the desk's calls judged at Friday's close against Nov 13's: Nvidia at $150.96 is 7.32% below $162.89, 0.18 points short of the 7.5% line ($150.67); its after-hours +0.7% moves it away. Dell at $313.11 is 8.71% below $342.98, 0.79 points short of the 9.5% line ($310.40). AMD at $530.14 is 0.51% below $532.84, far from either 9% line. The calls are sizes either way, so these distances say nothing about direction.",
+    "cause": "On the bank's daily bars Nvidia closed -2.9% at $150.96, Dell -3.0% at $313.11, CoreWeave -4.1%; AMD +5.3% and Broadcom +3.6% went the other way, and Amazon rose 3.8% on its Anthropic stake (Motley Fool). After Anthropic priced at $83, above its range, the group rose 1-3% after hours (IREN +2.8%, Vertiv +2.3%, Dell +2.2%, Coherent +2.2%, Lumentum +2.0%, Marvell +1.9%, Micron +1.9%, CoreWeave +1.9%, Broadcom +1.6%, AMD +1.3%, Nvidia +0.7%), with QQQ +1.4%.",
+    "evidence": [
+     "t6",
+     "q:NVDA",
+     "q:DELL",
+     "q:AMD",
+     "q:AVGO",
+     "q:CRWV",
+     "q:IREN",
+     "q:VRT",
+     "q:COHR",
+     "q:LITE",
+     "q:MRVL",
+     "q:MU",
+     "q:AMZN",
+     "k",
+     "https://finance.yahoo.com/markets/stocks/articles/anthropic-prices-ipo-83-per-222443646.html",
+     "https://www.fool.com/coverage/stock-market-today/2026/11/18/stock-market-today-nov-18-s-and-p-500-breaks-key-support-as-fed-minutes-signal-more-rate-hikes-ahead/"
+    ],
+    "kind": "inferred",
+    "mechanism": "Anthropic's buyers are paying for computing: it reports about $900 billion of computing commitments over coming years and $70 billion in the next 12 months (AP). A strong price reads as money available for that spending, which is these companies' revenue. That link is my inference.",
+    "members": [
+     "NVDA",
+     "DELL",
+     "AMD",
+     "AVGO",
+     "CRWV",
+     "IREN",
+     "VRT",
+     "COHR",
+     "LITE",
+     "MRVL",
+     "MU",
+     "AMZN"
+    ],
+    "name": "The AI build-out rose after hours on Anthropic's price",
+    "read_through": [],
+    "watch": "Anthropic's first trade Thursday; Friday's close against the three call lines."
+   },
+   {
+    "beneath": "The same mixed numbers underneath (TJX's adjusted margin down on freight and fuel; a fifth of Target's EPS from tariff refunds, StockTitan). The rally priced relief, not a stronger consumer; my reading.",
+    "cause": "Wednesday's closes (the bank's daily bars): TJX +8.0% (comparable sales +4%, raised guidance; Motley Fool), Caleres +8.0%, Macy's +6.4%, Kontoor +5.9%, Steve Madden +5.8%, Burlington +5.5%, Urban Outfitters +5.0%, Target +4.0%, Ross +3.3%. Flat after hours. Walmart reports Thursday before the open.",
+    "evidence": [
+     "t3",
+     "q:TJX",
+     "q:TGT",
+     "q:BURL",
+     "q:ROST",
+     "q:M",
+     "q:CAL",
+     "q:SHOO",
+     "q:URBN",
+     "q:KTB",
+     "q:WMT",
+     "https://www.fool.com/coverage/stock-market-today/2026/11/18/stock-market-today-nov-18-s-and-p-500-breaks-key-support-as-fed-minutes-signal-more-rate-hikes-ahead/",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-18-2026"
+    ],
+    "kind": "reported",
+    "mechanism": "The midday gains faded by a third or more into the close (TJX +11.1% to +8.0%, Target +6.8% to +4.0%) but held. Walmart is the next reading on the same shoppers.",
+    "members": [
+     "TJX",
+     "TGT",
+     "BURL",
+     "ROST",
+     "M",
+     "CAL",
+     "SHOO",
+     "URBN",
+     "KTB"
+    ],
+    "name": "Discount and apparel retail held most of the rally",
+    "read_through": [],
+    "watch": "Walmart's results Thursday morning."
+   },
+   {
+    "beneath": "The check's oil and gold lines after the close (-4.5% and -3.6%) are Wednesday's whole moves measured from Tuesday's bars; the real after-hours moves are about -0.2% and -0.4%, and the miners' after-hours numbers (Hecla +1.9%, Coeur +1.1%) say the same. Barrick's +4.9% against its group is still not looked into.",
+    "cause": "December WTI settled at $83.26 (-3.2% on Tuesday's $86.01) after the EIA's crude and gasoline builds; gold fell 3.5% to $3,728.60 (Motley Fool) as the Fed minutes pointed to more rate increases and the dollar rose to a 19-month high. Refiners closed lower than at midday (the bank's daily bars): CVR -11.2%, Delek -8.6%, Par, HF Sinclair and PBF about -7.2%, Valero and Marathon -5.5%, Phillips 66 -4.7%; Chevron -4.7%, Occidental -4.9%. Gold miners: SSR -7.4%, Coeur -7.1%, Hecla -6.6%, Newmont -6.0%, Royal Gold -3.6%; Barrick +4.9%.",
+    "evidence": [
+     "t4",
+     "t5",
+     "d:oil",
+     "d:gold",
+     "r:gold",
+     "q:VLO",
+     "q:MPC",
+     "q:CVI",
+     "q:CVX",
+     "q:NEM",
+     "q:CDE",
+     "q:HL",
+     "q:RGLD",
+     "q:GOLD",
+     "https://www.fool.com/coverage/stock-market-today/2026/11/18/stock-market-today-nov-18-s-and-p-500-breaks-key-support-as-fed-minutes-signal-more-rate-hikes-ahead/"
+    ],
+    "kind": "inferred",
+    "mechanism": "A rising dollar and higher expected rates lower what holders pay for gold, which pays no interest. Motley Fool reports the minutes, the dollar's 19-month high and gold's fall side by side; the link between them is my inference, and it is stronger than the midday account, which leaned on rate odds that had not changed. For oil, the gasoline build is what reaches refiners most.",
+    "members": [
+     "VLO",
+     "MPC",
+     "PSX",
+     "CVI",
+     "DK",
+     "PBF",
+     "CVX",
+     "OXY",
+     "NEM",
+     "CDE",
+     "HL",
+     "SSRM",
+     "RGLD"
+    ],
+    "name": "Oil, gold and their stocks closed at the day's lows",
+    "read_through": [],
+    "watch": "Whether gold keeps falling as rate-rise odds hold; the next EIA report for gasoline demand."
+   }
+  ],
+  "threads": [
+   "Anthropic's first trade Thursday: does application software, down three sessions, move on it?",
+   "Walmart and Alibaba report Thursday before the open.",
+   "Health insurers after three days down (Humana about -16% and UnitedHealth about -15% in two sessions): a reversal, or a fourth leg?",
+   "The desk's size calls are judged at Friday's close against Nov 13's: Nvidia 7.32% below (line 7.5%), Dell 8.71% (line 9.5%), AMD 0.5% (line 9%).",
+   "Security software: does it keep Palo Alto's after-hours lift?",
+   "Hyster-Yale: what lies under a 41% fall on a $125 million convertible?",
+   "Barrick +4.9% against falling gold miners: still not looked into. Primo Brands closed -5.3%, cause still not found.",
+   "Check flaws: after the close every driver line (futures, oil, gold) is measured from the previous day's bar; the oil line also jumps when the front contract rolls; single pre-market prints count as moves.",
+   "Capricor and Savara FDA decisions by Sunday Nov 22; Inhibrx data Nov 19-20."
+  ],
+  "unexplained": []
+ },
+ "recorded_at": "2026-11-19T04:35:39Z"
+}

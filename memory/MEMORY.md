@@ -137,23 +137,23 @@ idea at a time, checked against the memory bank first.
   an industry lead-lag test; the earnings radar in the 8:07 check; S3 recalibrated going forward; the trader
   replayed on 2022; a better headline picker.
 
-## The market thread (last desk note: `research/desk/2026-11-17/2026-11-18T0432Z.json`, after Tuesday's close)
+## The market thread (last desk note: `research/desk/2026-11-18/2026-11-19T0432Z.json`, after Wednesday's close)
 
-- Tue 2026-11-17: S&P 500 -1.03% to 7,340.53 (lowest close since late July, fourth straight loss), VIX +11%.
-  Software sold as a group before Anthropic prices (Wed night; trades Thu): Salesforce -9.5%, Intuit -7.2%,
-  ServiceNow -6.5%; data providers too (Moody's, MSCI, S&P Global, FactSet about -4%). Health insurers fell on a
-  proposed Medicare Advantage audit rule (CRUSH; UnitedHealth -5.4%, Molina -5.1%).
-- Nvidia after the close: revenue $115.8bn (forecast $108bn +/-2%, consensus $109.1bn), Q4 guide $130bn +/-3% (no
-  China data-center compute; consensus $125.1bn), margin guide 71-72%; board does not intend to reinstate the former
-  chief. After hours Nvidia +4.8% (back to its Nov 13 level), CoreWeave +9%, IREN +10%, the chip median +3.1%;
-  software flat.
-- Desk calls judged Fri Nov 20 from Nov 13 prices: NVDA 7.5%+ (0.50; start $162.89), AMD 9%+ (0.42; $532.84),
-  DELL 9.5%+ (0.40; $342.98).
-- Sellas closed +156% on its Phase 3 result, then filed to sell shares (mosaic chance had been 7.3% vs 0.9%).
-- Unexplained: Abacus Global Management (-23%, ten times usual volume), Oxford Square (-30% in two sessions),
-  Icahn Enterprises (-22% since Friday net of its distribution).
-- Check flaws known (fix offered, not made): the futures line after the close is measured from the previous
-  day's bar (false -1.9% on Mon, -0.8% on Tue); zero-volume after-hours prints; dividends read as moves.
+- Wed 2026-11-18: S&P 500 -0.23% to 7,323.63 (fifth loss in a row, below its 200-day average), Dow -1.11%, Nasdaq
+  +0.42%. Fed minutes: nearly all officials see further hikes as likely; dollar at a 19-month high; gold -3.5%.
+  Health insurers' third day down on the Medicare Advantage audit proposal (CRUSH, Nov 16; comments to Jan 19,
+  2027): Humana -13.0%, UnitedHealth -10.2%, agilon -21.4%. Security software up on Homeland Security testimony,
+  then Palo Alto beat and raised after hours (+9%); application software down three sessions. TJX +8.0%, Target
+  +4.0% on results. Refiners -5 to -11% on EIA gasoline build. Hyster-Yale -41% on a $125m convertible proposal.
+- Anthropic priced at $83 (range $70-$78), 980m shares, about $81bn, about $1.5tn; trades Thu Nov 19 as ANT.
+  QQQ +1.4% after hours. Walmart and Alibaba report Thursday before the open.
+- Desk calls judged Fri Nov 20 at the close against Nov 13's: NVDA 7.5%+ (0.50; start $162.89; Wed close $150.96,
+  -7.32%), AMD 9%+ (0.42; $532.84; $530.14), DELL 9.5%+ (0.40; $342.98; $313.11, -8.71%).
+- Corrections made in the notes: Target's tariff refund did not explain a muted reaction (it rose); oil and gold
+  did not share a Middle East root (oil fell on US stocks; the fighting escalated).
+- Check flaws known (fix offered, not made): after the close every driver line (futures, oil, gold) is measured
+  from the previous day's bar; the oil line jumps when Yahoo's front WTI contract rolls (Nov 18: about 1-1.5
+  points); single early pre-market prints count as moves (Nov 18: NWN, HEI, NEOG, WELL); dividends read as moves.
 - Open with the person: the next research step (drug-trial line, a forward record of companies not issuing
   shares, or no new tests), and whether to fix the check's stale-baseline flaw.
 
