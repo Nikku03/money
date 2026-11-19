@@ -1,0 +1,523 @@
+{
+ "asof": "2026-11-18",
+ "at": "2026-11-19T13:34:01Z",
+ "calls": [],
+ "case_sha": "358032293a39017a",
+ "check": "2026-11-19T1334Z",
+ "claims_noted": 4,
+ "evidence": {
+  "d:10-year yield": {
+   "text": "10-year yield +0.00 pt since the close (its usual day: 0.04 pt)"
+  },
+  "d:bitcoin": {
+   "text": "bitcoin +1.1% since the close (its usual day: 2.8%)"
+  },
+  "d:gold": {
+   "text": "gold -0.7% since the close (its usual day: 1.8%)"
+  },
+  "d:oil": {
+   "text": "oil -0.1% since the close (its usual day: 3.7%)"
+  },
+  "f:LQDT:1": {
+   "text": "LQDT results report (8-K 2.02) at 2026-11-19T12:00Z: LIQUIDITY SERVICES ANNOUNCES FISCAL YEAR 2026 FINANCIAL RESULTS -- Exhibit 99.1 LIQUIDITY SERVICES ANNOUNCES FISCAL YEAR 2026 FINANCIAL RESULTS Full Year 2026 GAAP Net Income Up 33% and Non-GAAP Adjusted EBITDA Up 30% Fiscal Year 2027 GMV to Exceed $2 Billion Following Invaluable Acquisition and Continued Secular Growth Bethesda, MD - November 19, 2026 - Liquidity Services (NASDAQ:LQDT; www.liquidityservices.com), the leading global provider o",
+   "url": "https://www.sec.gov/Archives/edgar/data/1235468/000119312526467778/lqdt-ex99_1.htm"
+  },
+  "f:RRGB:1": {
+   "text": "RRGB results report (8-K 2.02) at 2026-11-18T21:10Z: RED ROBIN GOURMET BURGERS, INC. REPORTS THIRD QUARTER OF FISCAL 2026 RESULTS -- Exhibit 99.1 RED ROBIN GOURMET BURGERS, INC. REPORTS THIRD QUARTER OF FISCAL 2026 RESULTS Englewood, CO \u2013 November 18, 2026 \u2013 Red Robin Gourmet Burgers, Inc. (NASDAQ: RRGB) (\"Red Robin\" or the \"Company\"), a casual dining restaurant chain serving an innovative selection of high-quality gourmet burgers in a family-friendly atmosphere, today reported financial results",
+   "url": "https://www.sec.gov/Archives/edgar/data/1171759/000162828026074799/exhibit991q3-2026.htm"
+  },
+  "f:WSM:1": {
+   "text": "WSM results report (8-K 2.02) at 2026-11-19T13:02Z: Williams-Sonoma, Inc. announces strong third quarter 2026 results -- Exhibit 99.1 Williams-Sonoma, Inc. announces strong third quarter 2026 results Q3 comparable brand revenue +5.1%; net revenue growth of +5.8% GAAP operating margin of 18.9%; non-GAAP operating margin of 17.4% GAAP diluted EPS of $2.38, growth of +21.4%; non-GAAP diluted EPS of $2.19, growth of +11.7% Reiterates full-year 2026 outlook San Francisco, CA, November 19, 2026 \u2013 Will",
+   "url": "https://www.sec.gov/Archives/edgar/data/719955/000071995526000244/exhibit991fy2026q3earnings.htm"
+  },
+  "g:3672": {
+   "text": "Printed Circuit Boards: the median of its 8 checked stocks moved +3.4%"
+  },
+  "g:3674": {
+   "text": "Semiconductors & Related Devices: the median of its 59 checked stocks moved +3.2%"
+  },
+  "g:6199": {
+   "text": "Finance Services: the median of its 34 checked stocks moved +3.3%"
+  },
+  "h:MAGN": {
+   "text": "MAGN against the market, last sessions: 11-12 -1.7%, 11-13 -2.3%, 11-16 +0.8%, 11-17 -2.7%, 11-18 -0.7%; flagged before: 11-19 04:32Z +15.0%"
+  },
+  "h:RRGB": {
+   "text": "RRGB against the market, last sessions: 11-12 -1.8%, 11-13 +0.0%, 11-16 -0.6%, 11-17 -2.9%, 11-18 -2.4%; flagged before: 11-19 04:32Z -17.5%"
+  },
+  "h:SLS": {
+   "text": "SLS against the market, last sessions: 11-12 -5.5%, 11-13 -3.0%, 11-16 -3.6%, 11-17 +156.4%, 11-18 -7.2%"
+  },
+  "k": {
+   "text": "Market: S&P 500 (SPY) +1.3%, Nasdaq 100 (QQQ) +2.2%, Russell 2000 (IWM) +0.7%, S&P 500 futures +1.2%, VIX -9.2% (before the open)"
+  },
+  "m:LQDT": {
+   "text": "LQDT (LIQUIDITY SERVICES INC; Services-Business Services, NEC) -11.3% since the close (before the open), outside its 2-in-3 range (-6%..+7%)"
+  },
+  "m:MAGN": {
+   "text": "MAGN (Magnera Corp; Paper Mills) +8.2% since the close (before the open), outside its 2-in-3 range (-6%..+8%)"
+  },
+  "m:RRGB": {
+   "text": "RRGB (RED ROBIN GOURMET BURGERS INC; Retail-Eating  Places) -14.9% since the close (before the open), OUTSIDE its 9-in-10 range (-7%..+9%)"
+  },
+  "m:SLS": {
+   "text": "SLS (SELLAS Life Sciences Group, Inc.; Pharmaceutical Preparations) -20.9% since the close (before the open), outside its 2-in-3 range (-15%..+20%)"
+  },
+  "m:WSM": {
+   "text": "WSM (WILLIAMS SONOMA INC; Retail-Home Furniture, Furnishings & Equipment Stores) -6.2% since the close (before the open), outside its 2-in-3 range (-4%..+5%)"
+  },
+  "n:LQDT": {
+   "text": "LQDT accounts: market value $1.4 bn; revenue $489.6 m over the four quarters to 2026-06-30; net income $33.3 m over the four quarters to 2026-06-30"
+  },
+  "n:MAGN": {
+   "text": "MAGN accounts: market value $427.6 m; cash and equivalents $280.0 m (2026-06-27; investments not counted); long-term debt $1.9 bn (2026-06-27); net income $-112.0 m over the four quarters to 2026-06-27; that cash alone covers about 10.0 quarters of such losses"
+  },
+  "n:RRGB": {
+   "text": "RRGB accounts: market value $150.2 m; cash and equivalents $23.8 m (2026-10-04; investments not counted); long-term debt $96.4 m (2026-10-04)"
+  },
+  "n:SLS": {
+   "text": "SLS accounts: market value $3.6 bn; cash and equivalents $134.7 m (2026-09-30; investments not counted); net income $-35.8 m over the four quarters to 2026-09-30; that cash alone covers about 15.1 quarters of such losses"
+  },
+  "q:AMD": {
+   "text": "AMD +2.4% since the close of 2026-11-18, as the check read it"
+  },
+  "q:AMZN": {
+   "text": "AMZN +2.6% since the close of 2026-11-18, as the check read it"
+  },
+  "q:APLD": {
+   "text": "APLD +6.4% since the close of 2026-11-18, as the check read it"
+  },
+  "q:AVGO": {
+   "text": "AVGO +3.0% since the close of 2026-11-18, as the check read it"
+  },
+  "q:CIFR": {
+   "text": "CIFR +5.8% since the close of 2026-11-18, as the check read it"
+  },
+  "q:CLS": {
+   "text": "CLS +5.4% since the close of 2026-11-18, as the check read it"
+  },
+  "q:COHR": {
+   "text": "COHR +8.3% since the close of 2026-11-18, as the check read it"
+  },
+  "q:CORZ": {
+   "text": "CORZ +5.0% since the close of 2026-11-18, as the check read it"
+  },
+  "q:CRM": {
+   "text": "CRM -0.0% since the close of 2026-11-18, as the check read it"
+  },
+  "q:CRWD": {
+   "text": "CRWD +6.2% since the close of 2026-11-18, as the check read it"
+  },
+  "q:CRWV": {
+   "text": "CRWV +5.6% since the close of 2026-11-18, as the check read it"
+  },
+  "q:DELL": {
+   "text": "DELL +4.5% since the close of 2026-11-18, as the check read it"
+  },
+  "q:FLEX": {
+   "text": "FLEX +3.5% since the close of 2026-11-18, as the check read it"
+  },
+  "q:FTNT": {
+   "text": "FTNT +3.8% since the close of 2026-11-18, as the check read it"
+  },
+  "q:GOOGL": {
+   "text": "GOOGL +3.9% since the close of 2026-11-18, as the check read it"
+  },
+  "q:HUT": {
+   "text": "HUT +6.3% since the close of 2026-11-18, as the check read it"
+  },
+  "q:INTC": {
+   "text": "INTC +4.4% since the close of 2026-11-18, as the check read it"
+  },
+  "q:IREN": {
+   "text": "IREN +5.0% since the close of 2026-11-18, as the check read it"
+  },
+  "q:LITE": {
+   "text": "LITE +4.3% since the close of 2026-11-18, as the check read it"
+  },
+  "q:MRVL": {
+   "text": "MRVL +3.9% since the close of 2026-11-18, as the check read it"
+  },
+  "q:MU": {
+   "text": "MU +4.6% since the close of 2026-11-18, as the check read it"
+  },
+  "q:NET": {
+   "text": "NET +5.0% since the close of 2026-11-18, as the check read it"
+  },
+  "q:NOW": {
+   "text": "NOW +0.5% since the close of 2026-11-18, as the check read it"
+  },
+  "q:NVDA": {
+   "text": "NVDA +1.3% since the close of 2026-11-18, as the check read it"
+  },
+  "q:OKTA": {
+   "text": "OKTA +3.4% since the close of 2026-11-18, as the check read it"
+  },
+  "q:PANW": {
+   "text": "PANW +9.1% since the close of 2026-11-18, as the check read it"
+  },
+  "q:RIOT": {
+   "text": "RIOT +5.4% since the close of 2026-11-18, as the check read it"
+  },
+  "q:S": {
+   "text": "S +3.7% since the close of 2026-11-18, as the check read it"
+  },
+  "q:SANM": {
+   "text": "SANM +3.8% since the close of 2026-11-18, as the check read it"
+  },
+  "q:SMCI": {
+   "text": "SMCI +3.7% since the close of 2026-11-18, as the check read it"
+  },
+  "q:TENB": {
+   "text": "TENB +3.3% since the close of 2026-11-18, as the check read it"
+  },
+  "q:TGT": {
+   "text": "TGT -0.7% since the close of 2026-11-18, as the check read it"
+  },
+  "q:TJX": {
+   "text": "TJX -0.8% since the close of 2026-11-18, as the check read it"
+  },
+  "q:TTMI": {
+   "text": "TTMI +4.3% since the close of 2026-11-18, as the check read it"
+  },
+  "q:VRT": {
+   "text": "VRT +3.6% since the close of 2026-11-18, as the check read it"
+  },
+  "q:WMT": {
+   "text": "WMT -0.9% since the close of 2026-11-18, as the check read it"
+  },
+  "q:WULF": {
+   "text": "WULF +6.1% since the close of 2026-11-18, as the check read it"
+  },
+  "q:ZS": {
+   "text": "ZS +3.8% since the close of 2026-11-18, as the check read it"
+  },
+  "s10": {
+   "text": "2026-11-19T13:00Z finance.yahoo.com: Williams-Sonoma, Inc. announces strong third quarter 2026 results -- SAN FRANCISCO, November 19, 2026--Williams-Sonoma, Inc. (NYSE: WSM) today announced operating results for the third quarter ended November 1, 2026 versus the third quarter ended November 2, 2025.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/williams-sonoma-inc-announces-strong-130000366.html?.tsrc=rss"
+  },
+  "s11": {
+   "text": "2026-11-18T21:30Z finance.yahoo.com: Magnera Reports Fourth Quarter and Fiscal Year Results -- CHARLOTTE, N.C., Nov. 18, 2026 (GLOBE NEWSWIRE) -- Fourth Quarter Highlights GAAP: Net sales of $851 million; Operating loss of $90 million (includes $106 million of goodwill and other impairment)Non-GAAP: Adjusted EBITDA of $97 millionRecord cash flow with cash from operations of $99 million$57 million of debt repayments Fiscal Year Highlights GAAP: Net sales of $3.3 billion; Operating loss of $3",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/magnera-reports-fourth-quarter-fiscal-213000284.html?.tsrc=rss"
+  },
+  "s12": {
+   "text": "2026-11-19T11:02Z stocktwits.com: Stock Futures Climb Ahead Of Anthropic's Nasdaq Debut \u2014 NVDA, BABA, TTWO, SLS Stocks In Focus -- Oil futures edged higher as traders weighed supply glut concerns against rising tensions in the Strait of Hormuz.",
+   "url": "https://stocktwits.com/news-articles/markets/equity/stock-futures-climb-ahead-of-anthropic-s-nasdaq-debut-nvda-baba-ttwo-sls-stocks-in-focus/cNbiED8R9iw?.tsrc=rss"
+  },
+  "s2": {
+   "text": "2026-11-18T21:15Z finance.yahoo.com: Red Robin (RRGB) Reports Q3 Loss, Lags Revenue Estimates -- Red Robin (RRGB) delivered earnings and revenue surprises of +20.59% and -11.90%, respectively, for the quarter ended September 2026. Do the numbers hold clues to what lies ahead for the stock?",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/red-robin-rrgb-reports-q3-211502150.html?.tsrc=rss"
+  },
+  "s5": {
+   "text": "2026-11-19T12:29Z finance.yahoo.com: Liquidity Services: Fiscal Q4 Earnings Snapshot -- (LQDT) on Thursday reported net income of $11.9 million in its fiscal fourth quarter.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/liquidity-services-fiscal-q4-earnings-122905147.html?.tsrc=rss"
+  },
+  "s6": {
+   "text": "2026-11-19T11:55Z finance.yahoo.com: Liquidity Services Announces Fiscal Year 2026 Financial Results -- Full Year 2026 GAAP Net Income Up 33% and Non-GAAP Adjusted EBITDA Up 30% Fiscal Year 2027 GMV to Exceed $2 Billion Following Invaluable Acquisition and Continued Secular Growth BETHESDA, Md., Nov. 19, 2026 (GLOBE NEWSWIRE) -- Liquidity Services (NASDAQ:LQDT; www.liquidityservices.com), the leading global provider of e-commerce marketplaces and software solutions powering the circular economy,",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/liquidity-services-announces-fiscal-2026-115500865.html?.tsrc=rss"
+  },
+  "s7": {
+   "text": "2026-11-19T04:42Z stocktwits.com: SLS Stock Plunges Overnight As Sellas\u2019 Discounted Share Offering Has Retail Bulls Crying Foul: \u2018Crazy Low Price\u2019 -- The offering price was still 74% above Monday\u2019s close after positive leukemia trial results sent shares up 156% on Tuesday.",
+   "url": "https://stocktwits.com/news-articles/markets/equity/sls-stock-sellas-discounted-share-offering-retail-bulls-crying-foul-low-price/cNbLDqPR9ii?.tsrc=rss"
+  },
+  "s8": {
+   "text": "2026-11-19T02:59Z finance.yahoo.com: SELLAS Life Sciences Announces Pricing of $150.0 Million Underwritten Public Offering -- NEW YORK, Nov. 18, 2026 (GLOBE NEWSWIRE) -- SELLAS Life Sciences Group, Inc. (Nasdaq: SLS) (\u201cSELLAS\u201d or the \u201cCompany\u201d), a late-stage clinical biopharmaceutical company focused on the development of novel therapies for a broad range of cancer indications, today announced the pricing of its previously announced underwritten public offering of 11,538,462 shares of its common",
+   "url": "https://finance.yahoo.com/healthcare/articles/sellas-life-sciences-announces-pricing-025900180.html?.tsrc=rss"
+  },
+  "s9": {
+   "text": "2026-11-19T13:07Z finance.yahoo.com: Williams-Sonoma: Fiscal Q3 Earnings Snapshot -- SAN FRANCISCO (AP) \u2014 SAN FRANCISCO (AP) \u2014 Williams-Sonoma Inc. (WSM) on Thursday reported fiscal third-quarter net income of $283.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/williams-sonoma-fiscal-q3-earnings-130721260.html?.tsrc=rss"
+  },
+  "t2": {
+   "text": "the last note (2026-11-19T0432Z), theme 'Security software: the rally held, and Palo Alto confirmed it after the close': Wednesday's closes (the bank's daily bars): Tenable +15.8%, Qualys +12.9%, Fastly +12.6%, Rapid7 +12.5%, Okta +12.1%, SentinelOne +10.4%, Palo Alto +9.9%, Rubrik +9.3%, CrowdStrike +7.9%, Zscaler +6.8%, Fortinet +5.9%, Cloudflare +5.7%. After the close Palo Alto beat and raised its fiscal 2027 revenue forecast and rose 9.1%; CrowdStrike +6.0%, Okta +4.2%, the rest +2-4% (Stock"
+  },
+  "t3": {
+   "text": "the last note (2026-11-19T0432Z), theme \"The AI build-out rose after hours on Anthropic's price\": On the bank's daily bars Nvidia closed -2.9% at $150.96, Dell -3.0% at $313.11, CoreWeave -4.1%; AMD +5.3% and Broadcom +3.6% went the other way, and Amazon rose 3.8% on its Anthropic stake (Motley Fool). After Anthropic priced at $83, above its range, the group rose 1-3% after hours (IREN +2.8%, Vertiv +2.3%, Dell +2.2%, Coherent +2.2%, Lumentum +2.0%, Marvell +1.9%, Micron +1.9%, CoreWeave +1.9%, "
+  },
+  "t4": {
+   "text": "the last note (2026-11-19T0432Z), theme 'Discount and apparel retail held most of the rally': Wednesday's closes (the bank's daily bars): TJX +8.0% (comparable sales +4%, raised guidance; Motley Fool), Caleres +8.0%, Macy's +6.4%, Kontoor +5.9%, Steve Madden +5.8%, Burlington +5.5%, Urban Outfitters +5.0%, Target +4.0%, Ross +3.3%. Flat after hours. Walmart reports Thursday before the open."
+  },
+  "x:SLS": {
+   "text": "SLS: the market carried +2.0% (beta 1.57); its industry (Pharmaceutical Preparations, 145 stocks) moved +0.0%; left over after the market and its drivers -22.9%"
+  },
+  "z:SLS": {
+   "text": "SLS mosaic: at the close of 2026-11-18, before this move, the chance of the filing in the next 20 sessions: late or unreliable accounts 0.2% (the usual stock: 0.4%); a restructuring or a write-off 0.0% (the usual stock: 0.3%); a sale of new shares 43.2% (the usual stock: 0.9%; raised most by 5 sales of new shares opened in three years, a 157% session against the market in the last five). A chance that a filing comes, not a direction (tests P1a-P3b, research/RESULTS.md)"
+  }
+ },
+ "note": {
+  "backdrop": "A broad rally before the open on Anthropic's pricing. At 8:34 ET the S&P 500 fund was +1.3%, the Nasdaq 100 fund +2.2%, small companies +0.7% and the VIX -9.2%; oil, gold, the dollar and the 10-year yield barely moved. Reuters (on Yahoo) ties it to Anthropic pricing at $83, above its $70-$78 range, with $81 billion raised at about a $1.5 trillion value, and quotes an analyst calling the debut a valuation for the wider AI ecosystem; Anthropic starts trading later today. Traders still price a near-certain 25-basis-point Fed increase in December (LSEG via Reuters). The rally is in AI hardware and its hosts: chips' median +3.2%, circuit-board makers +3.4%, and the 'finance services' group +3.3%, which on inspection is bitcoin miners and crypto treasuries. Health insurers and application software are flat; retailers that rallied Wednesday are slightly down. Only 2 stocks are outside their 9-in-10 range.",
+  "backdrop_evidence": [
+   "k",
+   "d:oil",
+   "d:gold",
+   "d:10-year yield",
+   "d:bitcoin",
+   "g:3674",
+   "g:3672",
+   "g:6199",
+   "s12",
+   "https://finance.yahoo.com/markets/stocks/articles/nasdaq-futures-jump-anthropics-record-090243474.html"
+  ],
+  "by": "agent",
+  "calls": [],
+  "check": "2026-11-19T1334Z",
+  "read": [
+   {
+    "direction": "none",
+    "published": "2026-11-19T12:39:28Z",
+    "says": "Reuters: Nasdaq futures rose more than 2% after Anthropic priced above its range ($83, $81 billion, about $1.5 trillion); Amazon +2.2% and Alphabet +4.3% premarket as investors in it; Nvidia +1.7% after five straight losses; Intel, AMD, Micron, Marvell +2.7% to +4.3%; CoreWeave and Nebius over +5%, IREN and Applied Digital about +6%; Palo Alto +10.3% with CrowdStrike, Cloudflare, Okta, Zscaler +5-6%; Walmart +0.9% after slightly raising its targets; at 7:18 ET S&P 500 E-minis +1.16%, Nasdaq 100 +2.08%.",
+    "tier": "reported",
+    "url": "https://finance.yahoo.com/markets/stocks/articles/nasdaq-futures-jump-anthropics-record-090243474.html"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-19T11:02:03Z",
+    "says": "Intel +4.65% premarket after its chief executive said it signed a first external customer for its 18A process and expanded its Microsoft partnership with a multi-year Xeon supply deal; the President said the US could allow Nvidia's Blackwell chips to be sold to China in two to three years; Sellas -21% after pricing a $150 million offering at a discount; Palo Alto +10% after beating.",
+    "tier": "reported",
+    "url": "https://www.tradingview.com/news/stocktwits:3ce087482094b:0-stock-futures-climb-ahead-of-anthropic-s-nasdaq-debut-nvda-baba-ttwo-sls-stocks-in-focus/"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-19T12:37:48Z",
+    "says": "Walmart's quarter: revenue $188.8 billion (+5.2%, 0.8% above consensus), adjusted EPS $0.65 (consensus $0.64), same-store sales +2.9% (4.4% a year earlier), operating margin 4.1% flat; full-year adjusted EPS guidance raised 1.1% to $2.87 at the midpoint.",
+    "ticker": "WMT",
+    "tier": "reported",
+    "url": "https://stockstory.org/us/stocks/nasdaq/wmt/news/earnings/walmart-surprises-with-q3-cy2026-sales"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-19T13:02:00Z",
+    "says": "Williams-Sonoma's third quarter: comparable brand revenue +5.1%, non-GAAP EPS $2.19 (+11.7%); gross margin +150 basis points, of which 140 from IEEPA tariff refunds, with higher oil prices costing 50 in supply chain; fiscal 2026 guidance reiterated, not raised.",
+    "ticker": "WSM",
+    "tier": "reported",
+    "url": "https://www.sec.gov/Archives/edgar/data/719955/000071995526000244/exhibit991fy2026q3earnings.htm"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-19T02:59:00Z",
+    "says": "Sellas priced 11,538,462 new shares at $13.00 in an underwritten public offering, all sold by the company, about $150 million gross.",
+    "ticker": "SLS",
+    "tier": "reported",
+    "url": "https://finance.yahoo.com/healthcare/articles/sellas-life-sciences-announces-pricing-025900180.html"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-19T12:00:00Z",
+    "says": "Liquidity Services' fiscal fourth quarter: GMV $404.0 million against $404.5 million a year earlier, revenue $106.4 million (-10%) with a shift to consignment, GAAP net income $11.9 million (+52%); fiscal 2027 GMV expected to exceed $2 billion after the Invaluable acquisition.",
+    "ticker": "LQDT",
+    "tier": "reported",
+    "url": "https://www.sec.gov/Archives/edgar/data/1235468/000119312526467778/lqdt-ex99_1.htm"
+   }
+  ],
+  "singles": [
+   {
+    "beneath": "On Monday's close, before the trial result, the mosaic put a share-sale filing within 20 sessions at 7.3% against the usual 0.9%, because it had sold shares five times in three years (reported to the person on Nov 18); at Wednesday's close, after the jump, it read 43.2%. The filing came Tuesday and the pricing Wednesday night. Proceeds of $150 million more than double the $134.7 million of cash it held in September. $13.00 is about 28% below Wednesday's $17.95 close and the stock is falling toward it, as Ardent and Vir did. One case is not a record; the mosaic's live calls are scored in research/mosaic_calls.jsonl.",
+    "cause": "Sellas priced 11.54 million new shares at $13.00, about $150 million, two days after its Phase 3 result sent the stock up 156% (its release; Stocktwits). The stock is -20.9%.",
+    "evidence": [
+     "m:SLS",
+     "x:SLS",
+     "h:SLS",
+     "n:SLS",
+     "s7",
+     "s8",
+     "https://finance.yahoo.com/healthcare/articles/sellas-life-sciences-announces-pricing-025900180.html",
+     "z:SLS"
+    ],
+    "kind": "reported",
+    "t": "SLS"
+   },
+   {
+    "beneath": "Unchanged from last night's reading: about $29.5 million of total liquidity beside $100 million borrowed.",
+    "cause": "Red Robin is -14.9% before the open, after -17.5% after hours, on its third quarter and thin liquidity (its release).",
+    "evidence": [
+     "m:RRGB",
+     "h:RRGB",
+     "n:RRGB",
+     "f:RRGB:1",
+     "s2"
+    ],
+    "kind": "reported",
+    "t": "RRGB"
+   },
+   {
+    "beneath": "Fiscal 2026 GMV was $1.6 billion (+5%); getting to $2 billion needs the acquisition, so the organic business was flat in the quarter. My reading: the market priced the flat quarter, not the acquired growth.",
+    "cause": "Liquidity Services is -11.3%: fourth-quarter GMV was flat at $404.0 million and revenue fell 10% with a shift to consignment; it expects fiscal 2027 GMV above $2 billion after buying Invaluable (its release).",
+    "evidence": [
+     "m:LQDT",
+     "n:LQDT",
+     "f:LQDT:1",
+     "s5",
+     "s6",
+     "https://www.sec.gov/Archives/edgar/data/1235468/000119312526467778/lqdt-ex99_1.htm"
+    ],
+    "kind": "reported",
+    "t": "LQDT"
+   },
+   {
+    "beneath": "Half the after-hours gain is gone; the leverage arithmetic in last night's note (a 5.8% better EBITDA guide is worth about 28% to the equity at a constant multiple) is the upper bound, and the market is paying a fraction of it.",
+    "cause": "Magnera is +8.2% before the open, from +15.0% after hours, on its results (its release).",
+    "evidence": [
+     "m:MAGN",
+     "h:MAGN",
+     "n:MAGN",
+     "s11"
+    ],
+    "kind": "reported",
+    "t": "MAGN"
+   }
+  ],
+  "themes": [
+   {
+    "beneath": "In proportion: the group has turned three times since Tuesday's close (up after Nvidia's report, down through Wednesday, up again now), each time on a single event. The group is trading events, not a settled view. For the desk's calls from Nov 13's close: Nvidia at $152.75 premarket is 6.2% below $162.89 (line 7.5%); Dell at $325.32 is 5.1% below $342.98 (line 9.5%); AMD at $538.09 is 1.0% above $532.84 (line 9%). All three moved away from their lines overnight.",
+    "cause": "Anthropic priced at $83, above its range, raising $81 billion (Reuters). Before the open: Coherent +8.3%, Applied Digital +6.4%, CoreWeave +5.6%, IREN +5.0%, Micron +4.6%, Dell +4.5%, Intel +4.4%, Lumentum +4.3%, Marvell +3.9%, Super Micro +3.7%, Vertiv +3.6%, Broadcom +3.0%, AMD +2.4%, Nvidia +1.3%; circuit-board makers Celestica +5.4%, TTM +4.3%, Sanmina +3.8%, Flex +3.5%; its investors Alphabet +3.9% and Amazon +2.6%. Intel also has its own news (a first outside customer for its 18A process, a Microsoft supply deal), and Nvidia its own (the President said Blackwell sales to China could be allowed in two to three years).",
+    "evidence": [
+     "g:3674",
+     "g:3672",
+     "g:6199",
+     "d:bitcoin",
+     "q:NVDA",
+     "q:AMD",
+     "q:AVGO",
+     "q:MRVL",
+     "q:MU",
+     "q:INTC",
+     "q:DELL",
+     "q:SMCI",
+     "q:CRWV",
+     "q:IREN",
+     "q:APLD",
+     "q:LITE",
+     "q:COHR",
+     "q:VRT",
+     "q:CLS",
+     "q:TTMI",
+     "q:SANM",
+     "q:FLEX",
+     "q:HUT",
+     "q:WULF",
+     "q:CIFR",
+     "q:RIOT",
+     "q:CORZ",
+     "q:GOOGL",
+     "q:AMZN",
+     "t3",
+     "https://finance.yahoo.com/markets/stocks/articles/nasdaq-futures-jump-anthropics-record-090243474.html",
+     "https://www.tradingview.com/news/stocktwits:3ce087482094b:0-stock-futures-climb-ahead-of-anthropic-s-nasdaq-debut-nvda-baba-ttwo-sls-stocks-in-focus/"
+    ],
+    "kind": "reported",
+    "mechanism": "Anthropic spends what it raises on computing, about $70 billion in the next 12 months by its filings (AP, in the last note); a strong price says that money is there. The sellers of that computing (chips, optics, servers and boards) and its landlords rise with it. The bitcoin miners in the 'finance services' group (Hut 8 +6.3%, TeraWulf +6.1%, Cipher +5.8%, Riot +5.4%, Core Scientific +5.0%) rose four to six times bitcoin's +1.1%; my inference is that the market now prices them as AI data-center landlords, since several have turned their power sites to AI hosting.",
+    "members": [
+     "NVDA",
+     "AMD",
+     "AVGO",
+     "MRVL",
+     "MU",
+     "INTC",
+     "DELL",
+     "SMCI",
+     "CRWV",
+     "IREN",
+     "APLD",
+     "LITE",
+     "COHR",
+     "VRT",
+     "CLS",
+     "TTMI",
+     "SANM",
+     "FLEX",
+     "HUT",
+     "WULF",
+     "CIFR",
+     "RIOT",
+     "CORZ",
+     "GOOGL",
+     "AMZN"
+    ],
+    "name": "Anthropic's price lifted AI hardware, its hosts and its investors",
+    "read_through": [],
+    "watch": "Anthropic's first trade: a first price well above $83 confirms the reading; one near or below it would undo this morning. Application software (flat this morning) is the other half of the test."
+   },
+   {
+    "beneath": "A third day up for the smaller names after 10-16% on Wednesday; application software is flat, so the split between security and applications held overnight.",
+    "cause": "Palo Alto +9.1% before the open after beating and raising its revenue forecast; CrowdStrike +6.2%, Cloudflare +5.0%, Zscaler and Fortinet +3.8%, SentinelOne +3.7%, Okta +3.4%, Tenable +3.3% (Reuters; Stocktwits).",
+    "evidence": [
+     "t2",
+     "q:PANW",
+     "q:CRWD",
+     "q:NET",
+     "q:ZS",
+     "q:FTNT",
+     "q:S",
+     "q:OKTA",
+     "q:TENB",
+     "q:CRM",
+     "q:NOW",
+     "https://finance.yahoo.com/markets/stocks/articles/nasdaq-futures-jump-anthropics-record-090243474.html"
+    ],
+    "kind": "reported",
+    "mechanism": "The largest company in the group confirmed the demand the group had priced on Wednesday's testimony, and the partners that move with it all year followed.",
+    "members": [
+     "PANW",
+     "CRWD",
+     "NET",
+     "ZS",
+     "FTNT",
+     "S",
+     "OKTA",
+     "TENB"
+    ],
+    "name": "Security software extended its gains on Palo Alto's report",
+    "read_through": [],
+    "watch": "Whether the group holds through the session as money moves to Anthropic's first trade."
+   },
+   {
+    "beneath": "Tariff refunds again inflate the headline: 140 of Williams-Sonoma's 150 basis points of gross-margin gain came from IEEPA refunds, and higher oil cost it 50 in supply chain (its release). Walmart's same-store sales slowed to 2.9% from 4.4% a year earlier (StockStory). Under the beats, the underlying numbers are steady, not stronger.",
+    "cause": "Walmart beat slightly (revenue 0.8% above consensus, EPS $0.65 against $0.64) and raised its EPS guide 1.1% (StockStory); it is -0.9%. Williams-Sonoma reported comparable revenue +5.1% and EPS +11.7% but only reiterated its guidance; it is -6.2%. The names that rallied Wednesday are slightly lower: TJX -0.8%, Target -0.7%.",
+    "evidence": [
+     "t4",
+     "m:WSM",
+     "f:WSM:1",
+     "s9",
+     "s10",
+     "q:WMT",
+     "q:TJX",
+     "q:TGT",
+     "https://stockstory.org/us/stocks/nasdaq/wmt/news/earnings/walmart-surprises-with-q3-cy2026-sales",
+     "https://www.sec.gov/Archives/edgar/data/719955/000071995526000244/exhibit991fy2026q3earnings.htm"
+    ],
+    "kind": "inferred",
+    "mechanism": "After Wednesday's 4-8% rally on TJX and Target, the bar for the next reports rose: a small beat and an unchanged or slightly raised guide now reads as a miss. That is my inference.",
+    "members": [
+     "WMT",
+     "WSM",
+     "TJX",
+     "TGT"
+    ],
+    "name": "Retailers' beats are being sold",
+    "read_through": [],
+    "watch": "Gap's report after today's close; whether Wednesday's retail gains are given back in session."
+   }
+  ],
+  "threads": [
+   "Anthropic's first trade today: above or below $83, and what application software does after it.",
+   "The desk's size calls are judged at Friday's close against Nov 13's: Nvidia 6.2% below (line 7.5%), Dell 5.1% below (line 9.5%), AMD 1.0% above (line 9%).",
+   "Health insurers flat before the open after three days down: does it hold in session?",
+   "Retail: Gap reports after the close; are Wednesday's gains given back?",
+   "Sellas at its $13.00 offering price; Ardent's offering closes today.",
+   "Several Fed officials speak today; a near-certain December increase is priced.",
+   "Capricor and Savara FDA decisions by Sunday Nov 22; Inhibrx data Nov 19-20.",
+   "Check flaws (not fixed): single early prints (RLGT this morning), after-close driver lines measured from the previous day, the oil roll."
+  ],
+  "unexplained": [
+   {
+    "t": "RLGT",
+    "tried": "+10.3%, outside its 9-in-10 range, on a single print at 4:24 ET ($10.62); its only filing is the annual meeting's vote results. Web searches found nothing dated today. Likely a thin early print; the open will tell."
+   },
+   {
+    "t": "ESRT",
+    "tried": "-4.7%, no filing and no story; its office REIT partners are flat."
+   }
+  ]
+ },
+ "recorded_at": "2026-11-19T13:37:30Z"
+}
