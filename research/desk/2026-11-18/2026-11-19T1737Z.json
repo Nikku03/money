@@ -1,0 +1,616 @@
+{
+ "asof": "2026-11-18",
+ "at": "2026-11-19T17:37:42Z",
+ "calls": [],
+ "case_sha": "7069a291e7a5799d",
+ "check": "2026-11-19T1737Z",
+ "claims_noted": 2,
+ "evidence": {
+  "c1": {
+   "text": "movers tied together: EFOR, RHI (EFOR~RHI by p:EFOR~RHI)"
+  },
+  "d:10-year yield": {
+   "text": "10-year yield -0.00 pt since the close (its usual day: 0.04 pt)"
+  },
+  "d:gold": {
+   "text": "gold -1.4% since the close (its usual day: 1.8%)"
+  },
+  "d:oil": {
+   "text": "oil +0.1% since the close (its usual day: 3.7%)"
+  },
+  "f:LQDT:1": {
+   "text": "LQDT results report (8-K 2.02) at 2026-11-19T12:00Z: LIQUIDITY SERVICES ANNOUNCES FISCAL YEAR 2026 FINANCIAL RESULTS -- Exhibit 99.1 LIQUIDITY SERVICES ANNOUNCES FISCAL YEAR 2026 FINANCIAL RESULTS Full Year 2026 GAAP Net Income Up 33% and Non-GAAP Adjusted EBITDA Up 30% Fiscal Year 2027 GMV to Exceed $2 Billion Following Invaluable Acquisition and Continued Secular Growth Bethesda, MD - November 19, 2026 - Liquidity Services (NASDAQ:LQDT; www.liquidityservices.com), the leading global provider o",
+   "url": "https://www.sec.gov/Archives/edgar/data/1235468/000119312526467778/lqdt-ex99_1.htm"
+  },
+  "f:PCYO:1": {
+   "text": "PCYO results report (8-K 2.02) at 2026-11-19T16:01Z: Pure Cycle Announces Record Financial Results -- Exhibit 99.1 \u200b Pure Cycle Announces Record Financial Results For the Year Ended August 31, 2026 \u200b DENVER, CO / GLOBE NEWSWIRE / November 18, 2026 \u2013 Pure Cycle Corporation (NASDAQ Capital Market: PCYO) (\u201cPure Cycle\u201d, the \u201cCompany\u201d, \u201cwe\u201d, \u201cus\u201d or \u201cour\u201d) announced its financial results for the year ended August 31, 2026. Total revenue for the year ended August 31, 2026 grew 37% to a record $35.7 mi",
+   "url": "https://www.sec.gov/Archives/edgar/data/276720/000110465926129985/pcyo-ex99d1.htm"
+  },
+  "f:RRGB:1": {
+   "text": "RRGB results report (8-K 2.02) at 2026-11-18T21:10Z: RED ROBIN GOURMET BURGERS, INC. REPORTS THIRD QUARTER OF FISCAL 2026 RESULTS -- Exhibit 99.1 RED ROBIN GOURMET BURGERS, INC. REPORTS THIRD QUARTER OF FISCAL 2026 RESULTS Englewood, CO \u2013 November 18, 2026 \u2013 Red Robin Gourmet Burgers, Inc. (NASDAQ: RRGB) (\"Red Robin\" or the \"Company\"), a casual dining restaurant chain serving an innovative selection of high-quality gourmet burgers in a family-friendly atmosphere, today reported financial results",
+   "url": "https://www.sec.gov/Archives/edgar/data/1171759/000162828026074799/exhibit991q3-2026.htm"
+  },
+  "f:SNEX:1": {
+   "text": "SNEX results report (8-K 2.02) at 2026-11-18T21:25Z: StoneX Group Inc. Reports Fiscal 2026 Fourth Quarter Financial Results -- EXHIBIT 99.1 StoneX Group Inc. Reports Fiscal 2026 Fourth Quarter Financial Results Record Fiscal Year Results, with Net Income of $525.4 million, up 72% Quarterly Net Operating Revenues of $655.2 million, up 12% Quarterly Net Income of $84.2 million, Quarterly ROE of 11.6% Quarterly Diluted EPS of $0.66 per share, Fiscal Year of $4.15 per share NEW YORK \u2013 November 18, 2",
+   "url": "https://www.sec.gov/Archives/edgar/data/913760/000091376026000044/snex2026er_exhq4roll.htm"
+  },
+  "f:VVV:1": {
+   "text": "VVV results report (8-K 2.02) at 2026-11-19T12:03Z: Valvoline Inc. Reports Fourth Quarter and Fiscal Year 2026 Results -- Exhibit 99.1 PRESS RELEASE Valvoline Inc. Reports Fourth Quarter and Fiscal Year 2026 Results Delivers Sales of $2.1 billion and 20th consecutive year of system-wide SSS growth LEXINGTON, Ky., November 19, 2026 \u2013 Valvoline Inc. (NYSE: VVV), the quick, easy, trusted leader in preventive automotive maintenance, today reported financial results for its fourth quarter ended Septe",
+   "url": "https://www.sec.gov/Archives/edgar/data/1674910/000167491026000080/q42026earningsrelease.htm"
+  },
+  "f:WSM:1": {
+   "text": "WSM results report (8-K 2.02) at 2026-11-19T13:02Z: Williams-Sonoma, Inc. announces strong third quarter 2026 results -- Exhibit 99.1 Williams-Sonoma, Inc. announces strong third quarter 2026 results Q3 comparable brand revenue +5.1%; net revenue growth of +5.8% GAAP operating margin of 18.9%; non-GAAP operating margin of 17.4% GAAP diluted EPS of $2.38, growth of +21.4%; non-GAAP diluted EPS of $2.19, growth of +11.7% Reiterates full-year 2026 outlook San Francisco, CA, November 19, 2026 \u2013 Will",
+   "url": "https://www.sec.gov/Archives/edgar/data/719955/000071995526000244/exhibit991fy2026q3earnings.htm"
+  },
+  "g:1040": {
+   "text": "Gold and Silver Ores: the median of its 10 checked stocks moved -4.3%"
+  },
+  "g:2300": {
+   "text": "Apparel & Other Finishd Prods of  Fabrics & Similar Matl: the median of its 8 checked stocks moved -3.3%"
+  },
+  "g:6141": {
+   "text": "Personal Credit Institutions: the median of its 9 checked stocks moved -3.0%"
+  },
+  "g:6324": {
+   "text": "Hospital & Medical Service Plans: the median of its 10 checked stocks moved -3.6%"
+  },
+  "g:7363": {
+   "text": "Services-Help Supply Services: the median of its 11 checked stocks moved -4.5%"
+  },
+  "h:LQDT": {
+   "text": "LQDT against the market, last sessions: 11-12 -1.7%, 11-13 +0.0%, 11-16 -1.7%, 11-17 -0.3%, 11-18 +0.7%; flagged before: 11-19 13:34Z -11.3%"
+  },
+  "h:RRGB": {
+   "text": "RRGB against the market, last sessions: 11-12 -1.8%, 11-13 +0.0%, 11-16 -0.6%, 11-17 -2.9%, 11-18 -2.4%; flagged before: 11-19 04:32Z -17.5%; 11-19 13:34Z -14.9%"
+  },
+  "h:SNEX": {
+   "text": "SNEX against the market, last sessions: 11-12 -1.3%, 11-13 +0.6%, 11-16 +1.5%, 11-17 -2.1%, 11-18 -1.7%"
+  },
+  "h:WSM": {
+   "text": "WSM against the market, last sessions: 11-12 -4.2%, 11-13 +1.8%, 11-16 +1.3%, 11-17 +0.2%, 11-18 +4.2%; flagged before: 11-19 13:34Z -6.2%"
+  },
+  "k": {
+   "text": "Market: S&P 500 (SPY) -1.5%, Nasdaq 100 (QQQ) -1.6%, Russell 2000 (IWM) -2.1%, S&P 500 futures -1.5%, VIX +8.1% (in session)"
+  },
+  "m:EFOR": {
+   "text": "EFOR (Everforth Inc; Services-Help Supply Services) -11.5% since the close (in session), outside its 2-in-3 range (-7%..+8%)"
+  },
+  "m:INSM": {
+   "text": "INSM (INSMED Inc; Pharmaceutical Preparations) +19.6% since the close (in session), OUTSIDE its 9-in-10 range (-6%..+7%)"
+  },
+  "m:LQDT": {
+   "text": "LQDT (LIQUIDITY SERVICES INC; Services-Business Services, NEC) -18.5% since the close (in session), OUTSIDE its 9-in-10 range (-6%..+7%)"
+  },
+  "m:PCYO": {
+   "text": "PCYO (PURE CYCLE CORP; Water Supply) -6.8% since the close (in session), OUTSIDE its 9-in-10 range (-4%..+4%)"
+  },
+  "m:RRGB": {
+   "text": "RRGB (RED ROBIN GOURMET BURGERS INC; Retail-Eating  Places) -22.3% since the close (in session), OUTSIDE its 9-in-10 range (-7%..+9%)"
+  },
+  "m:SNEX": {
+   "text": "SNEX (StoneX Group Inc.; Security & Commodity Brokers, Dealers, Exchanges & Services) -26.3% since the close (in session), OUTSIDE its 9-in-10 range (-7%..+9%)"
+  },
+  "m:VVV": {
+   "text": "VVV (VALVOLINE INC; Miscellaneous Products of  Petroleum & Coal) +12.6% since the close (in session), OUTSIDE its 9-in-10 range (-5%..+6%)"
+  },
+  "m:WSM": {
+   "text": "WSM (WILLIAMS SONOMA INC; Retail-Home Furniture, Furnishings & Equipment Stores) -13.2% since the close (in session), OUTSIDE its 9-in-10 range (-4%..+5%)"
+  },
+  "n:INSM": {
+   "text": "INSM accounts: market value $26.2 bn; cash and equivalents $396.6 m (2026-09-30; investments not counted); long-term debt $546.8 m (2026-09-30); revenue $1.5 bn over the four quarters to 2026-09-30; net income $-605.6 m over the four quarters to 2026-09-30; that cash alone covers about 2.6 quarters of such losses"
+  },
+  "n:RRGB": {
+   "text": "RRGB accounts: market value $150.2 m; cash and equivalents $23.8 m (2026-10-04; investments not counted); long-term debt $96.4 m (2026-10-04)"
+  },
+  "n:SNEX": {
+   "text": "SNEX accounts: market value $6.7 bn; cash and equivalents $2.2 bn (2026-06-30; investments not counted); revenue $157.7 bn over the four quarters to 2026-06-30; net income $526.9 m over the four quarters to 2026-06-30"
+  },
+  "n:WSM": {
+   "text": "WSM accounts: market value $30.9 bn; cash and equivalents $1.0 bn (2026-08-02; investments not counted); revenue $8.0 bn over the four quarters to 2026-08-02; net income $1.2 bn over the four quarters to 2026-08-02"
+  },
+  "p:EFOR~RHI": {
+   "text": "EFOR and RHI: market-adjusted daily returns correlated 0.56 over the last 250 sessions; RHI -5.9% since the close"
+  },
+  "q:ACN": {
+   "text": "ACN -4.8% since the close of 2026-11-18, as the check read it"
+  },
+  "q:ALHC": {
+   "text": "ALHC -3.4% since the close of 2026-11-18, as the check read it"
+  },
+  "q:AMD": {
+   "text": "AMD -9.5% since the close of 2026-11-18, as the check read it"
+  },
+  "q:AMZN": {
+   "text": "AMZN -2.0% since the close of 2026-11-18, as the check read it"
+  },
+  "q:APLD": {
+   "text": "APLD -2.0% since the close of 2026-11-18, as the check read it"
+  },
+  "q:AVGO": {
+   "text": "AVGO -1.6% since the close of 2026-11-18, as the check read it"
+  },
+  "q:CI": {
+   "text": "CI -5.9% since the close of 2026-11-18, as the check read it"
+  },
+  "q:CNC": {
+   "text": "CNC -4.6% since the close of 2026-11-18, as the check read it"
+  },
+  "q:CRM": {
+   "text": "CRM -1.7% since the close of 2026-11-18, as the check read it"
+  },
+  "q:CRWD": {
+   "text": "CRWD +3.2% since the close of 2026-11-18, as the check read it"
+  },
+  "q:CRWV": {
+   "text": "CRWV -4.1% since the close of 2026-11-18, as the check read it"
+  },
+  "q:CVS": {
+   "text": "CVS -2.6% since the close of 2026-11-18, as the check read it"
+  },
+  "q:DELL": {
+   "text": "DELL +1.1% since the close of 2026-11-18, as the check read it"
+  },
+  "q:DXC": {
+   "text": "DXC -6.5% since the close of 2026-11-18, as the check read it"
+  },
+  "q:ELV": {
+   "text": "ELV -3.5% since the close of 2026-11-18, as the check read it"
+  },
+  "q:FTNT": {
+   "text": "FTNT +2.3% since the close of 2026-11-18, as the check read it"
+  },
+  "q:HUBS": {
+   "text": "HUBS -4.3% since the close of 2026-11-18, as the check read it"
+  },
+  "q:HUM": {
+   "text": "HUM -2.1% since the close of 2026-11-18, as the check read it"
+  },
+  "q:INTC": {
+   "text": "INTC +3.8% since the close of 2026-11-18, as the check read it"
+  },
+  "q:IREN": {
+   "text": "IREN -3.0% since the close of 2026-11-18, as the check read it"
+  },
+  "q:KELYA": {
+   "text": "KELYA -5.1% since the close of 2026-11-18, as the check read it"
+  },
+  "q:KFRC": {
+   "text": "KFRC -4.1% since the close of 2026-11-18, as the check read it"
+  },
+  "q:MAN": {
+   "text": "MAN -2.4% since the close of 2026-11-18, as the check read it"
+  },
+  "q:MOH": {
+   "text": "MOH -3.5% since the close of 2026-11-18, as the check read it"
+  },
+  "q:MRVL": {
+   "text": "MRVL -1.4% since the close of 2026-11-18, as the check read it"
+  },
+  "q:NET": {
+   "text": "NET +3.9% since the close of 2026-11-18, as the check read it"
+  },
+  "q:NVDA": {
+   "text": "NVDA -0.6% since the close of 2026-11-18, as the check read it"
+  },
+  "q:OKTA": {
+   "text": "OKTA +8.0% since the close of 2026-11-18, as the check read it"
+  },
+  "q:OSCR": {
+   "text": "OSCR -3.7% since the close of 2026-11-18, as the check read it"
+  },
+  "q:PANW": {
+   "text": "PANW +6.4% since the close of 2026-11-18, as the check read it"
+  },
+  "q:RHI": {
+   "text": "RHI -5.9% since the close of 2026-11-18, as the check read it"
+  },
+  "q:S": {
+   "text": "S +6.2% since the close of 2026-11-18, as the check read it"
+  },
+  "q:TEAM": {
+   "text": "TEAM +1.4% since the close of 2026-11-18, as the check read it"
+  },
+  "q:TENB": {
+   "text": "TENB +3.9% since the close of 2026-11-18, as the check read it"
+  },
+  "q:TNET": {
+   "text": "TNET -3.9% since the close of 2026-11-18, as the check read it"
+  },
+  "q:UNH": {
+   "text": "UNH -5.5% since the close of 2026-11-18, as the check read it"
+  },
+  "q:VRT": {
+   "text": "VRT -2.8% since the close of 2026-11-18, as the check read it"
+  },
+  "q:ZS": {
+   "text": "ZS +7.0% since the close of 2026-11-18, as the check read it"
+  },
+  "s1": {
+   "text": "2026-11-19T17:15Z www.marketbeat.com: StoneX Group Q4 Earnings Call Highlights -- StoneX Group (NASDAQ:SNEX) reported record fiscal 2026 earnings as growth in its commercial and institutional businesses helped offset a weaker fourth quarter for securities trading and self-directed retail. Net income for the year ended September 30 rose 72% to $525.4 million on net operating reve",
+   "url": "https://www.marketbeat.com/instant-alerts/transcript-stonex-group-q4-earnings-call-highlights-2026-11-19/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss"
+  },
+  "s16": {
+   "text": "2026-11-19T17:19Z stocktwits.com: INSM Stock On Track For Best Day In Over 3 Months After Sanofi Buyout Talks -- Sanofi is talking to advisers and studying a potential deal for Insmed, Bloomberg reported, citing unnamed people familiar with the matter.",
+   "url": "https://stocktwits.com/news-articles/markets/equity/insm-stock-on-track-for-best-day-in-over-3-months-after-sanofi-buyout-talks/cNbiLyuR90S?.tsrc=rss"
+  },
+  "s17": {
+   "text": "2026-11-19T17:07Z www.proactiveinvestors.com: Insmed shares jump 18% as Sanofi weighs potential takeover -- Insmed Incorporated (NASDAQ:INSM) shares surged on Thursday after reports that French pharmaceutical group Sanofi is considering an acquisition of the US biotechnology company, which has a market value of about $26.28 billion. On Thursday afternoon, Insmed was trading at $141.84, up $22.04, or...",
+   "url": "https://www.proactiveinvestors.com/companies/news/1102134/insmed-shares-jump-18-as-sanofi-weighs-potential-takeover-1102134.html?.tsrc=rss"
+  },
+  "s18": {
+   "text": "2026-11-19T17:00Z www.tikr.com: Insmed Soars 18% on Report That Sanofi Is Weighing a Takeover -- Key TakeawaysInsmed shares jumped 18% after Bloomberg reported that Sanofi is weighing an acquisition of the company. Sanofi is looking for growth to replace Dupixent, and Insmed\u2019s Brinsupri is tracking to $1.",
+   "url": "https://www.tikr.com/blog/insmed-soars-18-on-report-that-sanofi-is-weighing-a-takeover?ref=yahoofinance&tlnk=yf-261119-hc3pxpcr&.tsrc=rss"
+  },
+  "s19": {
+   "text": "2026-11-19T16:22Z finance.yahoo.com: Insmed Stock Already Was Flying High. Sanofi Takeover Buzz Lights the Afterburners. -- Insmed stock jumps following a report saying Sanofi is eyeing a takeover of the biopharma company.",
+   "url": "https://finance.yahoo.com/m/9e66eba9-2958-3fb0-9f85-df6810bf9c48/insmed-stock-already-was.html?.tsrc=rss"
+  },
+  "s2": {
+   "text": "2026-11-19T14:08Z finance.yahoo.com: SNEX Q4 Earnings Miss Estimates Despite Revenue Growth, Stock Dips -- StoneX shares fall 2.38% after Q4 earnings miss estimates, as rising expenses and segment weakness offset revenue growth.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/snex-q4-earnings-miss-estimates-140800573.html?.tsrc=rss"
+  },
+  "s20": {
+   "text": "2026-11-19T17:15Z www.marketbeat.com: Valvoline Q4 Earnings Call Highlights -- Valvoline (NYSE:VVV) reported higher fiscal fourth-quarter sales and earnings before interest, taxes, depreciation and amortization, but rising lubricant costs weighed on margins as the oil-change chain forecast further pressure in fiscal 2027. Net sales rose 22% to $555 million in the quarter ende",
+   "url": "https://www.marketbeat.com/instant-alerts/transcript-valvoline-q4-earnings-call-highlights-2026-11-19/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss"
+  },
+  "s21": {
+   "text": "2026-11-19T12:15Z finance.yahoo.com: Valvoline (VVV) Q4 Earnings Match Estimates -- Valvoline (VVV) delivered earnings and revenue surprises of 0.00% and -2.23%, respectively, for the quarter ended September 2026. Do the numbers hold clues to what lies ahead for the stock?",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/valvoline-vvv-q4-earnings-match-121502412.html?.tsrc=rss"
+  },
+  "s22": {
+   "text": "2026-11-19T12:10Z finance.yahoo.com: Valvoline: Fiscal Q4 Earnings Snapshot -- (VVV) on Thursday reported fiscal fourth-quarter profit of $9.The Lexington, Kentucky-based company said it had net income of 8 cents per share.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/valvoline-fiscal-q4-earnings-snapshot-121006893.html?.tsrc=rss"
+  },
+  "s23": {
+   "text": "2026-11-19T12:00Z finance.yahoo.com: Valvoline Inc. Reports Fourth Quarter and Fiscal Year 2026 Results -- LEXINGTON, Ky., November 19, 2026--Valvoline Inc. (NYSE: VVV), the quick, easy, trusted leader in preventive automotive maintenance, today reported financial results for its fourth quarter ended September 30, 2026. All comparisons in this press release are made to the same prior-year period unless otherwise noted.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/valvoline-inc-reports-fourth-quarter-120000951.html?.tsrc=rss"
+  },
+  "s24": {
+   "text": "2026-11-19T16:16Z www.marketbeat.com: Pure Cycle Q4 Earnings Call Highlights -- Pure Cycle (NASDAQ:PCYO) plans to exit its single-family rental business and focus on water and land development after reporting higher revenue and earnings for fiscal 2026, President and CEO Mark Harding said on the company\u2019s annual results call. Harding also said the company had temporarily suspe",
+   "url": "https://www.marketbeat.com/instant-alerts/transcript-pure-cycle-q4-earnings-call-highlights-2026-11-19/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss"
+  },
+  "s25": {
+   "text": "2026-11-18T21:16Z finance.yahoo.com: Pure Cycle: Fiscal Q4 Earnings Snapshot -- (PCYO) on Wednesday reported profit of $5.6 million in its fiscal fourth quarter.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/pure-cycle-fiscal-q4-earnings-211648924.html?.tsrc=rss"
+  },
+  "s3": {
+   "text": "2026-11-18T21:59Z finance.yahoo.com: StoneX Group falls after fourth quarter earnings miss -- Investing.com -- StoneX Group Inc. (NASDAQ:SNEX) reported fourth quarter results that fell short of analyst expectations, with diluted earnings per share of $0.66 compared to the consensus estimate of $0.81. The stock declined 6.2% in after-hours trading Wednesday following the announcement.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/stonex-group-falls-fourth-quarter-215923742.html?.tsrc=rss"
+  },
+  "s4": {
+   "text": "2026-11-18T21:15Z finance.yahoo.com: StoneX Group Inc. Reports Fiscal 2026 Fourth Quarter Financial Results -- Record Fiscal Year Results, with Net Income of $525.4 million, up 72% Quarterly Net Operating Revenues of $655.2 million, up 12% Quarterly Net Income of $84.2 million, Quarterly ROE of 11.6% Quarterly Diluted EPS of $0.66 per share, Fiscal Year of $4.15 per share NEW YORK, Nov. 18, 2026 (GLOBE NEWSWIRE) -- StoneX Group Inc. (the \u201cCompany\u201d; NASDAQ: SNEX), a leading financial services fra",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/stonex-group-inc-reports-fiscal-211500317.html?.tsrc=rss"
+  },
+  "s46": {
+   "text": "2026-11-19T13:07Z finance.yahoo.com: Dow Jones Futures Rise, Nasdaq Jumps: Anthropic To Debut After Record IPO; Palo Alto, Everpure Rally, Walmart Falls -- Tech futures jumped on Palo Alto, Everpure and a strong Anthropic IPO , which will start trading as ANT. Walmart beat views.",
+   "url": "https://finance.yahoo.com/m/107e5a2c-4fba-3df3-b2fd-5d1160e65516/dow-jones-futures-rise%2C.html?.tsrc=rss"
+  },
+  "s47": {
+   "text": "2026-11-19T05:00Z finance.yahoo.com: A soaring debut for Anthropic's stock is not enough to carry Wall Street, and indexes drop -- NEW YORK (AP) \u2014 Anthropic's soaring debut on Wall Street Thursday was not enough to carry the rest of the market. stock indexes fell after an early-morning rally quickly evaporated.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/asian-stocks-mixed-us-futures-050038678.html?.tsrc=rss"
+  },
+  "t1": {
+   "text": "the last note (2026-11-19T1334Z), theme \"Anthropic's price lifted AI hardware, its hosts and its investors\": Anthropic priced at $83, above its range, raising $81 billion (Reuters). Before the open: Coherent +8.3%, Applied Digital +6.4%, CoreWeave +5.6%, IREN +5.0%, Micron +4.6%, Dell +4.5%, Intel +4.4%, Lumentum +4.3%, Marvell +3.9%, Super Micro +3.7%, Vertiv +3.6%, Broadcom +3.0%, AMD +2.4%, Nvidia +1.3%; circuit-board makers Celestica +5.4%, TTM +4.3%, Sanmina +3.8%, Flex +3.5%; its investors"
+  },
+  "t2": {
+   "text": "the last note (2026-11-19T1334Z), theme \"Security software extended its gains on Palo Alto's report\": Palo Alto +9.1% before the open after beating and raising its revenue forecast; CrowdStrike +6.2%, Cloudflare +5.0%, Zscaler and Fortinet +3.8%, SentinelOne +3.7%, Okta +3.4%, Tenable +3.3% (Reuters; Stocktwits)."
+  },
+  "t3": {
+   "text": "the last note (2026-11-19T1334Z), theme \"Retailers' beats are being sold\": Walmart beat slightly (revenue 0.8% above consensus, EPS $0.65 against $0.64) and raised its EPS guide 1.1% (StockStory); it is -0.9%. Williams-Sonoma reported comparable revenue +5.1% and EPS +11.7% but only reiterated its guidance; it is -6.2%. The names that rallied Wednesday are slightly lower: TJX -0.8%, Target -0.7%."
+  }
+ },
+ "note": {
+  "backdrop": "The morning's rally reversed into a market-wide fall. At 12:37 ET the S&P 500 fund was -1.5%, the Nasdaq 100 fund -1.6%, small companies -2.1% and the VIX +8.1%, against +1.3%, +2.2% and +0.7% before the open: a swing of about 2.8 points in the S&P 500 fund. The check flagged a market-wide move. Yahoo Finance's live page: losses accelerated as Anthropic opened 34% above its offer price ($111.50 against $83); AMD fell as much as 9% after a short seller opened a position citing its China ties; the rotation out of healthcare continued, UnitedHealth on track for an 18% fall over five days; tech was briefly the only sector up before it too fell. Oil, the dollar and yields are flat; gold -1.4%. 8 stocks are outside their 9-in-10 range and 63 outside their 2-in-3 range, from 2 and 7 this morning.",
+  "backdrop_evidence": [
+   "k",
+   "d:oil",
+   "d:gold",
+   "d:10-year yield",
+   "g:7363",
+   "g:1040",
+   "g:6324",
+   "g:2300",
+   "g:6141",
+   "s46",
+   "s47",
+   "https://finance.yahoo.com/markets/live/stock-market-today-thursday-november-19-dow-sp-500-nasdaq-anthropic-ipo-live-141306032.html"
+  ],
+  "by": "agent",
+  "calls": [],
+  "check": "2026-11-19T1737Z",
+  "read": [
+   {
+    "direction": "none",
+    "published": "2026-11-19T17:12:00Z",
+    "says": "Dow -2% (over 1,000 points), S&P 500 -1.5%, Nasdaq -1.5% as Anthropic opened at $111.50, 34.3% above its $83 IPO price; AMD fell as much as 9% after Hunterbrook Capital opened a short position citing its China ties; UnitedHealth -5%, on track for an 18% fall over five days; Amazon -0.9% and Alphabet +0.7% after the first trade; retail got about 15% of the offering.",
+    "tier": "reported",
+    "url": "https://finance.yahoo.com/markets/live/stock-market-today-thursday-november-19-dow-sp-500-nasdaq-anthropic-ipo-live-141306032.html"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-19T16:52:56Z",
+    "says": "Anthropic began trading at $111.50 on Nasdaq as ANT; 980 million shares at $83 for about $81.3 billion plus a $26 billion private placement; as many as 315 million shares held by non-founder executives, directors, employees and consultants could become eligible for sale on the first day, generally up to 10% of their locked-up holdings.",
+    "tier": "reported",
+    "url": "https://www.foxbusiness.com/markets/anthropic-begins-trading-nasdaq-record-breaking-ipo"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-18T21:59:23Z",
+    "says": "StoneX's fourth quarter: diluted EPS $0.66 against a $0.81 consensus; net operating revenues $655.2 million (+12%); net income $84.2 million (-2%); shares -6.2% after hours Wednesday; fiscal-year net income a record $525.4 million.",
+    "ticker": "SNEX",
+    "tier": "reported",
+    "url": "https://finance.yahoo.com/markets/stocks/articles/stonex-group-falls-fourth-quarter-215923742.html"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-19T17:07:00Z",
+    "says": "Insmed rose about 18% after Bloomberg reported that Sanofi is speaking with advisers about a potential acquisition; any deal could be weeks away and neither company has confirmed talks.",
+    "tier": "reported",
+    "url": "https://www.proactiveinvestors.com/companies/news/1102134/insmed-shares-jump-18-as-sanofi-weighs-potential-takeover-1102134.html"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-19T12:03:00Z",
+    "says": "Valvoline's fiscal 2026: sales $2.1 billion (+21%), system-wide same-store sales +7.9%, adjusted EBITDA $557 million (+19%), adjusted EPS $1.76 (+11%); it expects another year of strong growth in fiscal 2027.",
+    "ticker": "VVV",
+    "tier": "reported",
+    "url": "https://www.sec.gov/Archives/edgar/data/1674910/000167491026000080/q42026earningsrelease.htm"
+   }
+  ],
+  "singles": [
+   {
+    "beneath": "In proportion: a 19% EPS miss in one quarter of a record year ($525.4 million of net income, +72%) does not by itself explain a fall from -6% after hours to -26% in session; about $1.8 billion of value on a $6.7 billion company. Something beyond the reported miss, or forced selling on a market-wide down day, is likely; the cause of the size is not established.",
+    "cause": "StoneX is -26.3% after its fourth quarter: EPS $0.66 against a $0.81 consensus, net income -2% (Investing.com). It fell 6.2% after hours on the report.",
+    "evidence": [
+     "m:SNEX",
+     "h:SNEX",
+     "n:SNEX",
+     "f:SNEX:1",
+     "s1",
+     "s2",
+     "s3",
+     "s4",
+     "https://finance.yahoo.com/markets/stocks/articles/stonex-group-falls-fourth-quarter-215923742.html"
+    ],
+    "kind": "reported",
+    "t": "SNEX"
+   },
+   {
+    "beneath": "A report of deliberations, not an offer: Insmed was worth about $26.3 billion before the move, so the jump adds about $5 billion on the chance of a deal. If no deal follows, the move is the market's estimate of that chance times a premium, which it will give back.",
+    "cause": "Insmed is +19.6% after Bloomberg reported that Sanofi is weighing an acquisition; neither company has confirmed talks (Proactive; Tikr; Stocktwits).",
+    "evidence": [
+     "m:INSM",
+     "n:INSM",
+     "s16",
+     "s17",
+     "s18",
+     "s19",
+     "https://www.proactiveinvestors.com/companies/news/1102134/insmed-shares-jump-18-as-sanofi-weighs-potential-takeover-1102134.html"
+    ],
+    "kind": "reported",
+    "t": "INSM"
+   },
+   {
+    "beneath": "Rising on a down day: a business that changes oil sells a service people cannot postpone, and its guide assumes elevated product costs persist. Why the stock rose this much on a quarter Zacks scored as an EPS match is not established; the fiscal 2027 table did not extract.",
+    "cause": "Valvoline is +12.6% on fiscal 2026 results (sales +21%, same-store sales +7.9%, adjusted EBITDA +19%) and an expectation of another year of strong growth (its release).",
+    "evidence": [
+     "m:VVV",
+     "f:VVV:1",
+     "s20",
+     "s21",
+     "s22",
+     "s23",
+     "https://www.sec.gov/Archives/edgar/data/1674910/000167491026000080/q42026earningsrelease.htm"
+    ],
+    "kind": "reported",
+    "t": "VVV"
+   },
+   {
+    "beneath": "The fall doubled in session with the market; a $30.9 billion company losing about $4 billion on a quarter with comparable sales +5.1% says the price had assumed a raise.",
+    "cause": "Williams-Sonoma is -13.2%, from -6.2% before the open: it reiterated rather than raised its guidance, and most of its margin gain was tariff refunds (its release, read this morning).",
+    "evidence": [
+     "m:WSM",
+     "h:WSM",
+     "n:WSM",
+     "f:WSM:1",
+     "t3"
+    ],
+    "kind": "reported",
+    "t": "WSM"
+   },
+   {
+    "beneath": "Deeper than after hours (-17.5%) and before the open (-14.9%); unchanged reading.",
+    "cause": "Red Robin is -22.3% on its third quarter and thin liquidity (its release).",
+    "evidence": [
+     "m:RRGB",
+     "h:RRGB",
+     "n:RRGB",
+     "f:RRGB:1"
+    ],
+    "kind": "reported",
+    "t": "RRGB"
+   },
+   {
+    "beneath": "Unchanged reading: the organic business was flat and the growth in its guide is bought.",
+    "cause": "Liquidity Services is -18.5%, from -11.3% before the open, on a flat quarter (its release).",
+    "evidence": [
+     "m:LQDT",
+     "h:LQDT",
+     "f:LQDT:1"
+    ],
+    "kind": "reported",
+    "t": "LQDT"
+   },
+   {
+    "beneath": "A strategy change on results day; whether the market dislikes the exit or the numbers is not established.",
+    "cause": "Pure Cycle is -6.8% after record results and a plan to exit its single-family rental business to focus on water and land (MarketBeat on its call).",
+    "evidence": [
+     "m:PCYO",
+     "f:PCYO:1",
+     "s24",
+     "s25"
+    ],
+    "kind": "reported",
+    "t": "PCYO"
+   }
+  ],
+  "themes": [
+   {
+    "beneath": "In proportion: at $111.50 Anthropic was valued above SpaceX at its listing; its fall to about $99.75 is 10.5% from the first trade. Fox Business reports that up to 315 million shares held by employees and others could be sold from the first day, so supply arrived with the debut. For the desk's calls (judged at Friday's close against Nov 13's): Nvidia at $149.88 is 7.99% below $162.89, past its 7.5% line; AMD at $489.85 is 8.07% below $532.84, short of its 9% line ($484.88); Dell at $320.61 is 6.50% below $342.98, short of its 9.5% line. Nothing is decided until Friday's close.",
+    "cause": "Anthropic opened at $111.50, 34% above its $83 offer price, and has since slid to about $99.75, still 20% above it (Fox Business; Yahoo Finance). The morning's AI gains are gone: CoreWeave -4.1%, IREN -3.0%, Vertiv -2.8%, Applied Digital -2.0%, Broadcom -1.6%, Marvell -1.4%, Nvidia -0.6%; Amazon -2.0%. AMD -9.5% has its own reported cause: a short seller's report on its China ties (Yahoo Finance; I could not read the report itself). Intel +3.8% still holds its own news.",
+    "evidence": [
+     "t1",
+     "k",
+     "q:NVDA",
+     "q:AMD",
+     "q:AVGO",
+     "q:MRVL",
+     "q:CRWV",
+     "q:IREN",
+     "q:APLD",
+     "q:VRT",
+     "q:AMZN",
+     "q:DELL",
+     "q:INTC",
+     "s47",
+     "https://finance.yahoo.com/markets/live/stock-market-today-thursday-november-19-dow-sp-500-nasdaq-anthropic-ipo-live-141306032.html",
+     "https://www.foxbusiness.com/markets/anthropic-begins-trading-nasdaq-record-breaking-ipo"
+    ],
+    "kind": "inferred",
+    "mechanism": "The rally of the morning was bought on the expectation of a strong debut; once the debut happened, there was nothing left to wait for, and holders sold (profit-taking is how the sources describe it). Money that bought Anthropic at the open had to come from somewhere, and the obvious source is other AI holdings; that is my inference, untested.",
+    "members": [
+     "NVDA",
+     "AMD",
+     "AVGO",
+     "MRVL",
+     "CRWV",
+     "IREN",
+     "APLD",
+     "VRT",
+     "AMZN",
+     "DELL",
+     "INTC"
+    ],
+    "name": "Anthropic's first trade marked the top of the AI rally, for now",
+    "read_through": [],
+    "watch": "Where Anthropic closes against $83 and $111.50; whether the AI group closes at today's lows. A close back above this morning's levels would say the selling was only the first-trade rush."
+   },
+   {
+    "beneath": "Four days of falls with no new information. The group's selling now lines up with the market's (small companies -2.1%, the VIX up 8%), so part of today's fall is the market, not the rule.",
+    "cause": "Yahoo Finance reports the rotation out of healthcare continued: Cigna -5.9%, UnitedHealth -5.5% (about 18% over five days), Centene -4.6%, Oscar -3.7%, Elevance and Molina -3.5%, Alignment -3.4%, CVS -2.6%, Humana -2.1%; the group's median -3.6%.",
+    "evidence": [
+     "g:6324",
+     "q:UNH",
+     "q:CI",
+     "q:CNC",
+     "q:OSCR",
+     "q:ELV",
+     "q:MOH",
+     "q:ALHC",
+     "q:CVS",
+     "q:HUM",
+     "https://finance.yahoo.com/markets/live/stock-market-today-thursday-november-19-dow-sp-500-nasdaq-anthropic-ipo-live-141306032.html"
+    ],
+    "kind": "reported",
+    "mechanism": "No new reported news beyond the Medicare Advantage audit proposal of Nov 16. Today Cigna, which held up best on Tuesday and Wednesday, fell most, and Humana, which fell most, fell least: the selling is spreading to the companies the proposal touches less. That reading is mine.",
+    "members": [
+     "UNH",
+     "CI",
+     "CNC",
+     "OSCR",
+     "ELV",
+     "MOH",
+     "ALHC",
+     "CVS",
+     "HUM"
+    ],
+    "name": "Health insurers fell a fourth day",
+    "read_through": [],
+    "watch": "A day without a fall, or any company sizing its exposure."
+   },
+   {
+    "beneath": "Application software is near flat (Salesforce -1.7%, HubSpot -4.3%, Atlassian +1.4%): Anthropic's debut did not change its slide in either direction.",
+    "cause": "On a day the market fell 1.5%: Okta +8.0%, Zscaler +7.0%, Palo Alto +6.4% (after its report), SentinelOne +6.2%, Cloudflare +3.9%, Tenable +3.9%, CrowdStrike +3.2%, Fortinet +2.3%.",
+    "evidence": [
+     "t2",
+     "q:OKTA",
+     "q:ZS",
+     "q:PANW",
+     "q:S",
+     "q:NET",
+     "q:TENB",
+     "q:CRWD",
+     "q:FTNT",
+     "q:CRM",
+     "q:HUBS",
+     "q:TEAM",
+     "k"
+    ],
+    "kind": "inferred",
+    "mechanism": "Palo Alto's raised forecast gave the group a reported number behind Wednesday's rally; the group kept rising while the AI hardware it had been sold to fund fell. That it is now a place investors hide within technology is my inference.",
+    "members": [
+     "OKTA",
+     "ZS",
+     "PANW",
+     "S",
+     "NET",
+     "TENB",
+     "CRWD",
+     "FTNT"
+    ],
+    "name": "Security software held up against the market",
+    "read_through": [],
+    "watch": "Whether it holds into the close on a down day."
+   },
+   {
+    "beneath": "In proportion: Accenture -4.8% and DXC -6.5% against the market's -1.5% is three to four times the market. The cluster is tied by a year of moving together (EFOR with Robert Half), not by news.",
+    "cause": "No source names a cause. Staffing companies' median -4.5%: Robert Half -5.9%, Kelly -5.1%, Kforce -4.1%, TriNet -3.9%, ManpowerGroup -2.4%; IT services: Accenture -4.8%, DXC -6.5%; EFOR -11.5%, which moved with Robert Half all year.",
+    "evidence": [
+     "c1",
+     "g:7363",
+     "p:EFOR~RHI",
+     "q:RHI",
+     "q:KELYA",
+     "q:KFRC",
+     "q:TNET",
+     "q:MAN",
+     "q:ACN",
+     "q:DXC",
+     "m:EFOR",
+     "k"
+    ],
+    "kind": "inferred",
+    "mechanism": "These companies sell people's time for work that AI models are sold to do. On the day the largest AI model maker listed at about $1.5 trillion, the market marked down the companies its product is said to replace. That is my inference only; the same companies also fall with the market and with weak job data.",
+    "members": [
+     "RHI",
+     "KELYA",
+     "KFRC",
+     "TNET",
+     "MAN",
+     "ACN",
+     "DXC",
+     "EFOR"
+    ],
+    "name": "Staffing and IT-services companies fell on Anthropic's day",
+    "read_through": [],
+    "watch": "Whether staffing and IT services keep falling on days AI stocks rise; if they fall only with the market, the AI reading is wrong."
+   }
+  ],
+  "threads": [
+   "Where does Anthropic close against $83 and its $111.50 first trade?",
+   "The desk's calls are judged at Friday's close against Nov 13's: Nvidia 7.99% below (line 7.5%), AMD 8.07% below (line 9%), Dell 6.50% below (line 9.5%).",
+   "AMD: what the short seller's report says; I could not read it.",
+   "Health insurers: four days down; Cigna fell most today.",
+   "StoneX: what lies under a 26% fall on a 19% EPS miss?",
+   "Staffing and IT services: is the AI reading right, or is it the market and job data?",
+   "Gap reports after the close; Capricor and Savara FDA decisions by Sunday Nov 22; Inhibrx data Nov 19-20."
+  ],
+  "unexplained": [
+   {
+    "t": "GLAD",
+    "tried": "-6.0%, outside its 9-in-10 range; no filing and no story; the bank holds no name or industry for it."
+   }
+  ]
+ },
+ "recorded_at": "2026-11-19T17:40:33Z"
+}
