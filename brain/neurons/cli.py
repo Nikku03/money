@@ -150,7 +150,7 @@ def _train(a):
     from brain.neurons import train
     sizes = tuple(int(x) for x in a.sizes.split(","))
     cells = tuple(a.cells.split(","))
-    rows = train.run(sizes=sizes, seeds=a.seeds, cells=cells, workers=a.workers)
+    rows = train.run(sizes=sizes, seeds=a.seeds, cells=cells, workers=a.workers, delays=not a.no_delays)
     if a.json:
         Path(a.json).write_text(json.dumps(rows, indent=1))
         print(f"runs written to {a.json}")
@@ -260,6 +260,7 @@ def add_cli(sub) -> None:
     q = s.add_parser("train", help="train networks of each kind of cell on a timing task; accuracy against size")
     q.add_argument("--sizes", default="1,2,4,8,16", help="hidden cells per network")
     q.add_argument("--cells", default="lif,izh,hh")
+    q.add_argument("--no-delays", action="store_true", help="fix every delay at 1 ms and train weights only")
     q.add_argument("--seeds", type=int, default=3)
     q.add_argument("--workers", type=int, default=4)
     q.add_argument("--json", help="write every run here")

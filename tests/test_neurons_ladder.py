@@ -158,6 +158,14 @@ class Timing(unittest.TestCase):
         X = np.eye(4)[y][None] * 3.0
         self.assertTrue((train.readout(X, y, X)[0] == y).all())
 
+    def test_fixed_delays(self):
+        U = np.random.default_rng(0).random((3, train.FIBRES * 2))
+        W, D = train.decode(U, 2, delays=False)
+        self.assertEqual(W.shape, (3, train.FIBRES, 2))
+        self.assertTrue((D == train.FIXED_DELAY).all())
+        W2, D2 = train.decode(np.random.default_rng(0).random((3, 2 * train.FIBRES * 2)), 2)
+        self.assertGreater(np.ptp(D2), 1.0)
+
     def test_training_beats_chance(self):
         r = train.train("lif", 2, seed=0, pop=8, elite=2, gens=3)
         self.assertGreater(r["test"], 0.35)

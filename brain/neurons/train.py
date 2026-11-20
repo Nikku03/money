@@ -106,20 +106,29 @@ def readout(Xtr: np.ndarray, ytr: np.ndarray, Xte: np.ndarray, lam: float = 1e-2
     return (B @ Wo).argmax(2)
 
 
-def decode(U: np.ndarray, n: int) -> tuple[np.ndarray, np.ndarray]:
-    """Unit-cube candidates (networks, 2 * fibres * n) to weights and delays."""
-    U = np.clip(U, 0, 1).reshape(len(U), 2, FIBRES, n)
-    return (2 * U[:, 0] - 1) * W_MAX, 0.25 + U[:, 1] * (MAX_DELAY - 0.25)
+FIXED_DELAY = 1.0
 
 
-def train(cells: str, n: int, seed: int = 0, pop: int = POP, elite: int = ELITE, gens: int = GENS) -> dict:
+def decode(U: np.ndarray, n: int, delays: bool = True) -> tuple[np.ndarray, np.ndarray]:
+    """Unit-cube candidates to weights and delays: (networks, 2 * fibres * n) when delays are trained,
+    (networks, fibres * n) when every delay is fixed at ``FIXED_DELAY``."""
+    U = np.clip(U, 0, 1).reshape(len(U), 2 if delays else 1, FIBRES, n)
+    W = (2 * U[:, 0] - 1) * W_MAX
+    D = 0.25 + U[:, 1] * (MAX_DELAY - 0.25) if delays else np.full(W.shape, FIXED_DELAY)
+    return W, D
+
+
+def train(cells: str, n: int, seed: int = 0, pop: int = POP, elite: int = ELITE, gens: int = GENS,
+          delays: bool = True) -> dict:
+    """Train one network size on one cell. With ``delays`` False every delay is fixed at 1 ms and only
+    the weights are trained: the timing must then come from inside the cells."""
     rng = np.random.default_rng(seed)
     tpl = templates()
     tr_s, tr_y = trials(N_TRAIN, 100 + seed, tpl)
     va_s, va_y = trials(N_VAL, 200 + seed, tpl)
     te_s, te_y = trials(N_TEST, 300 + seed, tpl)
     both = tr_s + va_s
-    dim = 2 * FIBRES * n
+    dim = (2 if delays else 1) * FIBRES * n
     mu, sd = np.full(dim, 0.5), np.full(dim, 0.3)
     best_u, best_f, curve = None, -1.0, []
     t0 = time.process_time()
@@ -130,7 +139,7 @@ def train(cells: str, n: int, seed: int = 0, pop: int = POP, elite: int = ELITE,
             start = U[: min(8, pop)].copy()           # untrained networks, for the comparison
         if best_u is not None:
             U[0] = best_u
-        W, D = decode(U, n)
+        W, D = decode(U, n, delays)
         C = counts(cells, W, D, both)
         pred = readout(C[:, :N_TRAIN], tr_y, C[:, N_TRAIN:])
         acc = (pred == va_y[None]).mean(1)
@@ -144,7 +153,7 @@ def train(cells: str, n: int, seed: int = 0, pop: int = POP, elite: int = ELITE,
     train_cpu = time.process_time() - t0
 
     def test(Us: np.ndarray) -> np.ndarray:
-        W, D = decode(Us, n)
+        W, D = decode(Us, n, delays)
         C = counts(cells, W, D, both + te_s)
         y_fit = np.concatenate([tr_y, va_y])
         pred = readout(C[:, : len(both)], y_fit, C[:, len(both):])
@@ -154,7 +163,7 @@ def train(cells: str, n: int, seed: int = 0, pop: int = POP, elite: int = ELITE,
     acc_best = float(test(best_u[None])[0])
     test_cpu = time.process_time() - t1
     acc_start = test(start)
-    return {"cells": cells, "n": n, "seed": seed, "test": acc_best, "val": best_f, "curve": curve,
+    return {"cells": cells, "n": n, "seed": seed, "delays": delays, "test": acc_best, "val": best_f, "curve": curve,
             "untrained_mean": float(acc_start.mean()), "untrained_best": float(acc_start.max()),
             "train_cpu_s": train_cpu, "cpu_per_net_trial_ms": 1000 * test_cpu / (len(both) + len(te_s))}
 
@@ -163,8 +172,8 @@ def _one(job):
     return train(*job)
 
 
-def run(sizes=SIZES, seeds: int = 3, cells=circuit.CELLS, workers: int = 4) -> list[dict]:
-    jobs = [(c, n, s) for c in cells for n in sizes for s in range(seeds)]
+def run(sizes=SIZES, seeds: int = 3, cells=circuit.CELLS, workers: int = 4, delays: bool = True) -> list[dict]:
+    jobs = [(c, n, s, POP, ELITE, GENS, delays) for c in cells for n in sizes for s in range(seeds)]
     jobs.sort(key=lambda j: -(j[1] * (6 if j[0] == "hh" else 1)))
     with ProcessPoolExecutor(max_workers=workers) as ex:
         return list(ex.map(_one, jobs))
@@ -172,7 +181,8 @@ def run(sizes=SIZES, seeds: int = 3, cells=circuit.CELLS, workers: int = 4) -> l
 
 def table(rows: list[dict]) -> list[str]:
     sizes = sorted({r["n"] for r in rows})
-    out = [f"test accuracy on 256 fresh trials (chance 25%), mean over seeds; untrained in brackets",
+    trained = "weights and delays trained" if rows and rows[0].get("delays", True) else "weights trained, every delay 1 ms"
+    out = [f"test accuracy on 256 fresh trials (chance 25%), mean over seeds; untrained in brackets; {trained}",
            f"{'cells':16s} " + " ".join(f"{'n=' + str(n):>14s}" for n in sizes) + f" {'cpu ms/net/trial':>17s}"]
     name = {"lif": "LIF (1 var)", "izh": "Izhikevich (2)", "hh": "HH (4 var)"}
     for c in circuit.CELLS:
