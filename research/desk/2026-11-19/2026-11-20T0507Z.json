@@ -1,0 +1,307 @@
+{
+ "asof": "2026-11-19",
+ "at": "2026-11-20T05:07:56Z",
+ "calls": [],
+ "case_sha": "6b386ad7709ecb5d",
+ "check": "2026-11-20T0507Z",
+ "claims_noted": 0,
+ "evidence": {
+  "d:gold": {
+   "text": "gold -4.1% since the close (its usual day: 1.8%)"
+  },
+  "d:oil": {
+   "text": "oil -0.2% since the close (its usual day: 3.7%)"
+  },
+  "f:INTU:1": {
+   "text": "INTU 8-K 8.01 at 2026-11-19T21:46Z: Table of Contents -- Table of Contents Exhibit 99.01 Explanatory Note: Intuit Inc. (Intuit) is filing this exhibit to update certain information set forth in its Annual Report on Form 10-K for the year ended July 31, 2026 (the 2026 Form 10-K), as filed with the Securities and Exchange Commission on September 9, 2026, to reflect changes in its reportable segments that became effective on August 1, 2026. This exhibit has not been updated for any other changes si",
+   "url": "https://www.sec.gov/Archives/edgar/data/896878/000089687826000047/intu-20261119_d2.htm"
+  },
+  "f:INTU:2": {
+   "text": "INTU 8-K 1.01, 8.01 at 2026-11-19T22:26Z: false 0000896878 0000896878 2026-11-19 2026-11-19 -- ITEM 1.01 ENTRY INTO A MATERIAL DEFINITIVE AGREEMENT. On November 19, 2026, Intuit Inc. (\u201cIntuit\u201d) entered into an Equity and Asset Purchase Agreement (the \u201cPurchase Agreement\u201d) with Bending Spoons US Inc., a Delaware corporation (\u201cPurchaser\u201d) and an indirect subsidiary of Bending Spoons S.p.A., an Italian joint stock company (societ\u00e0 per azioni) (\u201cParent\u201d), pursuant to which Intuit has agreed to sell ",
+   "url": "https://www.sec.gov/Archives/edgar/data/896878/000119312526468834/d182669d8k.htm"
+  },
+  "h:INTU": {
+   "text": "INTU against the market, last sessions: 11-13 +0.7%, 11-16 +1.6%, 11-17 -6.8%, 11-18 -2.1%, 11-19 -0.5%"
+  },
+  "k": {
+   "text": "Market: S&P 500 (SPY) -0.1%, Nasdaq 100 (QQQ) -0.5%, Russell 2000 (IWM) -0.2%, S&P 500 futures -2.3%, VIX +0.0% (after the close)"
+  },
+  "m:INTU": {
+   "text": "INTU (INTUIT INC.; Services-Prepackaged Software) -9.8% since the close (overnight), outside its 2-in-3 range (-8%..+10%)"
+  },
+  "n:INTU": {
+   "text": "INTU accounts: market value $83.1 bn; cash and equivalents $4.0 bn (2026-10-31; investments not counted); long-term debt $6.9 bn (2026-10-31); revenue $21.9 bn over the four quarters to 2026-10-31; net income $4.8 bn over the four quarters to 2026-10-31"
+  },
+  "q:ADBE": {
+   "text": "ADBE -0.8% since the close of 2026-11-19, as the check read it"
+  },
+  "q:AMD": {
+   "text": "AMD -3.4% since the close of 2026-11-19, as the check read it"
+  },
+  "q:AMZN": {
+   "text": "AMZN -0.4% since the close of 2026-11-19, as the check read it"
+  },
+  "q:CI": {
+   "text": "CI -0.5% since the close of 2026-11-19, as the check read it"
+  },
+  "q:CRM": {
+   "text": "CRM -1.3% since the close of 2026-11-19, as the check read it"
+  },
+  "q:GAP": {
+   "text": "GAP +3.6% since the close of 2026-11-19, as the check read it"
+  },
+  "q:GOOGL": {
+   "text": "GOOGL +0.2% since the close of 2026-11-19, as the check read it"
+  },
+  "q:HUM": {
+   "text": "HUM +0.0% since the close of 2026-11-19, as the check read it"
+  },
+  "q:INSM": {
+   "text": "INSM +0.4% since the close of 2026-11-19, as the check read it"
+  },
+  "q:MRVL": {
+   "text": "MRVL -2.0% since the close of 2026-11-19, as the check read it"
+  },
+  "q:NVDA": {
+   "text": "NVDA -0.9% since the close of 2026-11-19, as the check read it"
+  },
+  "q:ORCL": {
+   "text": "ORCL -1.2% since the close of 2026-11-19, as the check read it"
+  },
+  "q:ROST": {
+   "text": "ROST -5.2% since the close of 2026-11-19, as the check read it"
+  },
+  "q:SLS": {
+   "text": "SLS +0.9% since the close of 2026-11-19, as the check read it"
+  },
+  "q:SNEX": {
+   "text": "SNEX -0.4% since the close of 2026-11-19, as the check read it"
+  },
+  "q:TJX": {
+   "text": "TJX -0.3% since the close of 2026-11-19, as the check read it"
+  },
+  "q:UNH": {
+   "text": "UNH -0.5% since the close of 2026-11-19, as the check read it"
+  },
+  "q:WMT": {
+   "text": "WMT +0.4% since the close of 2026-11-19, as the check read it"
+  },
+  "q:WSM": {
+   "text": "WSM -0.3% since the close of 2026-11-19, as the check read it"
+  },
+  "r:gold": {
+   "text": "the stocks that moved most with gold over the year, today: RGLD -1.2% (its rate implies -2.5%), NEM -1.8% (its rate implies -2.8%), MUX -1.4% (its rate implies -3.5%), HL -1.3% (its rate implies -3.9%), CDE -0.9% (its rate implies -3.6%), NG -2.0% (its rate implies -3.6%)"
+  },
+  "s1": {
+   "text": "2026-11-20T02:18Z stocktwits.com: Why Is INTU Stock Falling Overnight? -- Intuit reported strong results and a major divestiture, but the stock fell, signaling fears of AI led disruption in Saas.",
+   "url": "https://stocktwits.com/news-articles/markets/equity/why-is-intu-stock-falling-overnight/cNbSGTSR90z?.tsrc=rss"
+  },
+  "s2": {
+   "text": "2026-11-20T01:13Z finance.yahoo.com: What Is Intuit (INTU) Asking With Its $3.68 Billion Mailchimp Exit? -- Intuit (NasdaqGS:INTU) agreed to sell Mailchimp to Bending Spoons for US$3.68b, far below its 2021 US$12b purchase price. The all-cash deal includes Intuit reinvesting a portion of the proceeds into equity of Bending Spoons. Intuit cited Mailchimp's impact on its revenue trends as a factor in the decision to exit the marketing platform business. The Mailchimp sale at US$3.68b, compared wit",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/intuit-intu-asking-3-68-011317926.html?.tsrc=rss"
+  },
+  "s3": {
+   "text": "2026-11-20T00:14Z www.marketbeat.com: What Intuit (INTU) Said on Its Q1 Earnings Call -- Intuit (NASDAQ:INTU) reported fiscal first-quarter revenue growth of 12% and results above its guidance, but lowered its full-year revenue outlook after Credit Karma fell short of expectations. The company also said it had agreed to sell Mailchimp to Bending Spoons, with the transaction expected to",
+   "url": "https://www.marketbeat.com/instant-alerts/transcript-what-intuit-intu-said-on-its-q1-earnings-call-2026-11-19/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss"
+  },
+  "s4": {
+   "text": "2026-11-19T22:30Z finance.yahoo.com: Intuit (INTU) Q1 Earnings: Taking a Look at Key Metrics Versus Estimates -- While the top- and bottom-line numbers for Intuit (INTU) give a sense of how the business performed in the quarter ended October 2026, it could be worth looking at how some of its key metrics compare to Wall Street estimates and year-ago values.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/intuit-intu-q1-earnings-taking-223001207.html?.tsrc=rss"
+  },
+  "t1": {
+   "text": "the last note (2026-11-19T1737Z), theme \"Anthropic's first trade marked the top of the AI rally, for now\": Anthropic opened at $111.50, 34% above its $83 offer price, and has since slid to about $99.75, still 20% above it (Fox Business; Yahoo Finance). The morning's AI gains are gone: CoreWeave -4.1%, IREN -3.0%, Vertiv -2.8%, Applied Digital -2.0%, Broadcom -1.6%, Marvell -1.4%, Nvidia -0.6%; Amazon -2.0%. AMD -9.5% has its own reported cause: a short seller's report on its China ties (Yahoo Fi"
+  },
+  "t2": {
+   "text": "the last note (2026-11-19T1737Z), theme 'Health insurers fell a fourth day': Yahoo Finance reports the rotation out of healthcare continued: Cigna -5.9%, UnitedHealth -5.5% (about 18% over five days), Centene -4.6%, Oscar -3.7%, Elevance and Molina -3.5%, Alignment -3.4%, CVS -2.6%, Humana -2.1%; the group's median -3.6%."
+  },
+  "t3": {
+   "text": "the last note (2026-11-19T1737Z), theme 'Security software held up against the market': On a day the market fell 1.5%: Okta +8.0%, Zscaler +7.0%, Palo Alto +6.4% (after its report), SentinelOne +6.2%, Cloudflare +3.9%, Tenable +3.9%, CrowdStrike +3.2%, Fortinet +2.3%."
+  }
+ },
+ "note": {
+  "backdrop": "Thursday closed at the day's lows: the S&P 500 -2.02% to 7,175.83, its sixth loss in a row and its longest losing run since April 2024; the Nasdaq -2.25%; the Dow -2.19%, below 50,000 for the first time since June; all 11 sectors fell, consumer discretionary most (-2.79%); the VIX neared 29, its highest since March; gold settled -1.5% at $3,685.50 and the 10-year yield eased to 5.05% (Motley Fool; StockTitan citing CNBC). Anthropic closed its first day at $97.17, 17% above its $83 price and 13% below its $111.50 first trade, and was -4.7% after hours. This check's own lines are unreliable tonight in two ways. First, Yahoo has posted no Thursday close for about 880 stocks (Thursday's bar exists with an empty close), so the scan of 2026-11-19 covers 1,580 stocks instead of about 2,450 and will be re-run when the bars appear. Second, the after-close driver lines are again measured from Wednesday's bars: the futures line reads -2.3% and gold -4.1%, which are Thursday's whole moves, while SPY is -0.1% and QQQ -0.5% after hours; the market-wide flag is false.",
+  "backdrop_evidence": [
+   "k",
+   "d:gold",
+   "d:oil",
+   "r:gold",
+   "https://www.fool.com/coverage/stock-market-today/2026/11/19/stock-market-today-nov-19-stock-market-today-nov-19-alphabet-shares-fall-as-anthropic-nasdaq-debut-puts-fresh-value-on-google-s-stake/",
+   "https://www.stocktitan.net/articles/stock-market-today-live-november-19-2026"
+  ],
+  "by": "agent",
+  "calls": [],
+  "check": "2026-11-20T0507Z",
+  "read": [
+   {
+    "direction": "none",
+    "published": "2026-11-19T22:00:00Z",
+    "says": "S&P 500 -2.0% to 7,177, sixth straight loss, longest since April 2024; Nasdaq -2.23%; Dow -2.19% to 49,097; all 11 sectors down, consumer discretionary -2.79%; December gold -1.50% to $3,685.50; 10-year yield 5.05%; Anthropic +17.07% on its debut; Insmed +20.58% on a report that Sanofi is weighing a bid; Palo Alto +6.42%; Williams-Sonoma -15.16%; AMD -7.72% after a Hunterbrook report alleging ties to a blacklisted Chinese server maker.",
+    "tier": "reported",
+    "url": "https://www.fool.com/coverage/stock-market-today/2026/11/19/stock-market-today-nov-19-stock-market-today-nov-19-alphabet-shares-fall-as-anthropic-nasdaq-debut-puts-fresh-value-on-google-s-stake/"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-20T01:00:00Z",
+    "says": "QQQ -2.19%, SPY -1.96% at the close; Anthropic opened at $111.50 and closed at $97.17, low $92.72, -4.70% after hours; the VIX neared 29, highest since March (CNBC); Vivid Seats +63% on a debt-for-shares swap; Seabridge Gold -29% on a court ruling on its KSM project; after hours Intuit -9.8% after results and a deal to sell Mailchimp, Ross -5.2% after raising its EPS outlook, Gap +3.6% after flat comparable sales and a lower full-year sales outlook.",
+    "tier": "reported",
+    "url": "https://www.stocktitan.net/articles/stock-market-today-live-november-19-2026"
+   }
+  ],
+  "singles": [
+   {
+    "beneath": "The cause of the size is still not established: a 19% miss in one quarter of a record year does not by itself take a quarter off the company.",
+    "cause": "StoneX closed -26.7% at $39.45 after a fourth-quarter EPS miss ($0.66 against $0.81) (StockTitan; Investing.com, last note).",
+    "evidence": [
+     "q:SNEX",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-19-2026"
+    ],
+    "kind": "reported",
+    "t": "SNEX"
+   },
+   {
+    "beneath": "Held the whole move into a falling market: the market prices a real chance of a deal. Neither company has confirmed talks.",
+    "cause": "Insmed closed +20.6% on a Bloomberg report that Sanofi is weighing a bid (Motley Fool).",
+    "evidence": [
+     "q:INSM",
+     "https://www.fool.com/coverage/stock-market-today/2026/11/19/stock-market-today-nov-19-stock-market-today-nov-19-alphabet-shares-fall-as-anthropic-nasdaq-debut-puts-fresh-value-on-google-s-stake/"
+    ],
+    "kind": "reported",
+    "t": "INSM"
+   },
+   {
+    "beneath": "As with Ardent and Vir, the stock is moving toward the price of its own share sale.",
+    "cause": "Sellas closed -17.2% at $14.86, approaching its $13.00 offering price; it filed the offering's final prospectus (424B5) after the close (the check's filing list; StockTitan).",
+    "evidence": [
+     "q:SLS",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-19-2026"
+    ],
+    "kind": "reported",
+    "t": "SLS"
+   }
+  ],
+  "themes": [
+   {
+    "beneath": "In proportion, for the desk's size calls, judged at Friday's close against Nov 13's: Nvidia at $145.98 is 10.38% below $162.89, past its 7.5% line; AMD at $489.19 is 8.19% below $532.84, 0.81 points short of its 9% line ($484.88); Dell at $312.54 (Yahoo's last price; its daily bar is empty) is 8.88% below $342.98, 0.62 points short of its 9.5% line ($310.40). After hours Nvidia is -0.9% and AMD -3.4%. The calls are sizes either way; Friday's close decides them.",
+    "cause": "From +1.3% before the open to -2.0% at the close for the S&P 500 fund: a swing of over 3 points on the day of the largest listing on record. The AI group closed at its lows: Nvidia -3.3% to $145.98, Marvell -4.9%, Amazon -3.9%, Alphabet -3.5%, Oracle -2.9%, Broadcom -2.1%; AMD -7.7% on a Hunterbrook report alleging ties to a blacklisted Chinese server maker (Motley Fool). All 11 sectors fell (Motley Fool).",
+    "evidence": [
+     "t1",
+     "q:NVDA",
+     "q:AMD",
+     "q:MRVL",
+     "q:AMZN",
+     "q:GOOGL",
+     "q:ORCL",
+     "https://www.fool.com/coverage/stock-market-today/2026/11/19/stock-market-today-nov-19-stock-market-today-nov-19-alphabet-shares-fall-as-anthropic-nasdaq-debut-puts-fresh-value-on-google-s-stake/",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-19-2026"
+    ],
+    "kind": "inferred",
+    "mechanism": "Anthropic sold about $81 billion of new stock in the offering plus a $26 billion private placement (Fox Business, last note): over $100 billion of new AI shares for investors to buy in one day. My inference is that much of it was paid for by selling other AI holdings, and that once the event the market had bought for had passed, the rest of the market sold with it. Motley Fool raises the same question about how much capital is left for other AI investments (an opinion).",
+    "members": [
+     "NVDA",
+     "AMD",
+     "MRVL",
+     "AMZN",
+     "GOOGL",
+     "ORCL",
+     "AVGO"
+    ],
+    "name": "The market sold the Anthropic news, and the selling reached every sector",
+    "read_through": [],
+    "watch": "Friday's close against the three call lines; whether Anthropic holds above $83; a seventh down day for the S&P 500 would match the longest run in over two years."
+   },
+   {
+    "beneath": "In proportion: Intuit was worth $83.1 billion; -9.8% is about $8 billion. The Mailchimp loss, about $8.3 billion against its purchase price, is roughly the same size, though it was written down over years; my reading is that the market is pricing the lowered outlook, not the sale.",
+    "cause": "Intuit fell 9.8% after hours: first-quarter revenue grew 12% and beat its guidance, but it lowered its full-year revenue outlook (MarketBeat on its call) and agreed to sell Mailchimp to Bending Spoons for $3.68 billion, against the $12 billion it paid in 2021 (Simply Wall St on Yahoo; its 8-K).",
+    "evidence": [
+     "m:INTU",
+     "h:INTU",
+     "n:INTU",
+     "f:INTU:1",
+     "f:INTU:2",
+     "s1",
+     "s2",
+     "s3",
+     "s4",
+     "q:CRM",
+     "q:ADBE",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-19-2026"
+    ],
+    "kind": "reported",
+    "mechanism": "Application software has fallen through the week as investors weigh what AI models replace (Salesforce -3.7% Thursday, after -2.1% Wednesday). Intuit's cut outlook gives that worry a number; selling a 2021 purchase for about 30 cents on the dollar marks down what such businesses are worth. Stocktwits reads it as fear of AI disruption in software-as-a-service (an opinion).",
+    "members": [
+     "INTU",
+     "CRM",
+     "ADBE"
+    ],
+    "name": "Intuit fell after hours on a lower outlook and Mailchimp's sale at a third of its price",
+    "read_through": [],
+    "watch": "Whether application software follows Intuit lower on Friday."
+   },
+   {
+    "beneath": "Gap rose on a cut outlook, which says its price had already assumed worse; Ross fell on a raised one, which says its price had assumed more. Neither move is about the shopper alone; each is about what the price had assumed.",
+    "cause": "Consumer discretionary was the worst sector (-2.79%, Motley Fool); Williams-Sonoma closed -15.2% (after reiterating, not raising, its guidance). After hours: Ross -5.2% even after raising its EPS outlook; Gap +3.6% after flat comparable sales, a full-year sales outlook cut to roughly flat from +1-1.5%, and a slower start to the fourth quarter (StockTitan).",
+    "evidence": [
+     "t3",
+     "q:ROST",
+     "q:GAP",
+     "q:WMT",
+     "q:TJX",
+     "q:WSM",
+     "https://www.fool.com/coverage/stock-market-today/2026/11/19/stock-market-today-nov-19-stock-market-today-nov-19-alphabet-shares-fall-as-anthropic-nasdaq-debut-puts-fresh-value-on-google-s-stake/",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-19-2026"
+    ],
+    "kind": "reported",
+    "mechanism": "Wednesday's rally priced relief that holiday shoppers were holding up (TJX, Target). Thursday's reports were weaker at the margin: Gap says the fourth quarter started slowly, Walmart's same-store sales slowed to 2.9%. That the holiday-relief trade is reversing is my inference.",
+    "members": [
+     "WSM",
+     "ROST",
+     "GAP",
+     "WMT",
+     "TJX"
+    ],
+    "name": "Consumer stocks led the fall, and the evening's retail reports cut outlooks",
+    "read_through": [],
+    "watch": "Ross and Gap at Friday's open; whether the off-price names give back Wednesday's gains."
+   },
+   {
+    "beneath": "In proportion: UnitedHealth closed at $412.02 on Monday (TradingKey, earlier note), so $330.48 is a 19.8% fall in three sessions, about $74 billion of value. The proposal's own estimate is about $9 billion a year across the industry.",
+    "cause": "UnitedHealth closed -5.6% at $330.48 and Cigna -4.3%; Elevance -2.7%, Centene -2.8%, Humana -1.5% (the bank's daily bars). After hours they are flat.",
+    "evidence": [
+     "t2",
+     "q:UNH",
+     "q:CI",
+     "q:HUM",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-19-2026"
+    ],
+    "kind": "inferred",
+    "mechanism": "No new report; the Medicare Advantage audit proposal of Nov 16 is still the only stated cause, and Thursday's fall came with the whole market's. A correction: the group rose on Monday Nov 16 and fell on Tuesday, Wednesday and Thursday, three sessions. Wednesday night's note called Wednesday the third day and Thursday's midday note called Thursday the fourth; both miscounted (Yahoo's '18% over five days' counts calendar sessions, not down days).",
+    "members": [
+     "UNH",
+     "CI",
+     "ELV",
+     "CNC",
+     "HUM"
+    ],
+    "name": "Health insurers: a third day down, not a fifth",
+    "read_through": [],
+    "watch": "A day without a fall, or a company sizing its exposure."
+   }
+  ],
+  "threads": [
+   "Re-run the scan of 2026-11-19 when Yahoo posts the missing ~880 closes, before Friday's open.",
+   "The desk's size calls are judged at Friday's close: Nvidia 10.38% below (line 7.5%), AMD 8.19% (line 9%), Dell 8.88% (line 9.5%).",
+   "A seventh down day for the S&P 500? Anthropic against its $83 price.",
+   "Intuit and application software on Friday.",
+   "Health insurers after three days down; UnitedHealth -19.8% since Monday's close.",
+   "Check flaws: after-close driver lines from the previous day's bar (false market-wide flag tonight), the oil contract roll, single early prints, and now missing daily bars.",
+   "Capricor and Savara FDA decisions by Sunday Nov 22."
+  ],
+  "unexplained": [
+   {
+    "t": "VABK",
+    "tried": "+6.9% overnight, outside its 9-in-10 range; no filing, no story; a $270 million bank. Likely a thin after-hours print."
+   }
+  ]
+ },
+ "recorded_at": "2026-11-20T05:09:48Z"
+}

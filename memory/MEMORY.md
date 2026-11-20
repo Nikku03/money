@@ -137,20 +137,19 @@ idea at a time, checked against the memory bank first.
   an industry lead-lag test; the earnings radar in the 8:07 check; S3 recalibrated going forward; the trader
   replayed on 2022; a better headline picker.
 
-## The market thread (last desk note: `research/desk/2026-11-18/2026-11-19T0432Z.json`, after Wednesday's close)
+## The market thread (last desk note: `research/desk/2026-11-19/2026-11-20T0507Z.json`, after Thursday's close)
 
-- Wed 2026-11-18: S&P 500 -0.23% to 7,323.63 (fifth loss in a row, below its 200-day average), Dow -1.11%, Nasdaq
-  +0.42%. Fed minutes: nearly all officials see further hikes as likely; dollar at a 19-month high; gold -3.5%.
-  Health insurers' third day down on the Medicare Advantage audit proposal (CRUSH, Nov 16; comments to Jan 19,
-  2027): Humana -13.0%, UnitedHealth -10.2%, agilon -21.4%. Security software up on Homeland Security testimony,
-  then Palo Alto beat and raised after hours (+9%); application software down three sessions. TJX +8.0%, Target
-  +4.0% on results. Refiners -5 to -11% on EIA gasoline build. Hyster-Yale -41% on a $125m convertible proposal.
-- Anthropic priced at $83 (range $70-$78), 980m shares, about $81bn, about $1.5tn; trades Thu Nov 19 as ANT.
-  QQQ +1.4% after hours. Walmart and Alibaba report Thursday before the open.
-- Desk calls judged Fri Nov 20 at the close against Nov 13's: NVDA 7.5%+ (0.50; start $162.89; Wed close $150.96,
-  -7.32%), AMD 9%+ (0.42; $532.84; $530.14), DELL 9.5%+ (0.40; $342.98; $313.11, -8.71%).
-- Corrections made in the notes: Target's tariff refund did not explain a muted reaction (it rose); oil and gold
-  did not share a Middle East root (oil fell on US stocks; the fighting escalated).
+- Thu 2026-11-19: Anthropic (ANT) priced $83, opened $111.50, closed $97.17 (+17%); -4.7% after hours. The market
+  reversed from +1.3% before the open to S&P 500 -2.02% (7,175.83, sixth loss in a row, longest since April 2024),
+  Nasdaq -2.25%, Dow -2.19% (below 50,000); all 11 sectors down; VIX near 29. AMD -7.7% on a Hunterbrook report.
+  Health insurers down a third day (UNH $330.48, -19.8% since Monday's $412.02); earlier notes miscounted the days
+  (said third/fourth), corrected in the Thursday close note. Security software up against the market (Palo Alto
+  beat and raised). After hours: Intuit -9.8% (lower outlook; Mailchimp sold for $3.68bn vs $12bn), Ross -5.2%,
+  Gap +3.6%.
+- Data gap: Yahoo posted Thursday's daily bar with an empty close for about 880 stocks; the recorded scan of
+  2026-11-19 covers 1,580 stocks. Re-run `scan run --refresh --record` when the closes appear, before Friday's open.
+- Desk calls judged at Fri Nov 20's close against Nov 13's: NVDA 7.5%+ (0.50; $162.89; Thu $145.98, -10.38%),
+  AMD 9%+ (0.42; $532.84; Thu $489.19, -8.19%), DELL 9.5%+ (0.40; $342.98; Thu about $312.54, -8.88%).
 - Check flaws known (fix offered, not made): after the close every driver line (futures, oil, gold) is measured
   from the previous day's bar; the oil line jumps when Yahoo's front WTI contract rolls (Nov 18: about 1-1.5
   points); single early pre-market prints count as moves (Nov 18: NWN, HEI, NEOG, WELL); dividends read as moves.

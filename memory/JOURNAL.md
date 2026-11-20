@@ -109,3 +109,11 @@ FAIL); "the market runs on chains of cause and effect, news and catalysts": the 
   2026-11-18 (2,446 stocks, 91 left out). The explorer page was refreshed after each check, by hand for midday and
   after the close (passing its url). A refresh without `url` made a separate broken page; told the person.
   Two of the morning's inferences were wrong and were corrected in the later notes.
+
+## 2026-11-19 to 2026-11-20
+
+- Thursday's three checks and notes: before the open (Anthropic's price lifted AI; Sellas priced its share sale, which
+  the mosaic had flagged at 7.3% on Monday), midday (the reversal on Anthropic's first trade; AMD short report;
+  staffing and IT services down, inferred AI reading), after the close (a 2% fall; Intuit, Ross, Gap after hours).
+- The close scan of 2026-11-19 covered only 1,580 stocks: Yahoo's Thursday bars lacked closes for about 880. A poll
+  waits for them; the container restarted once during the wait (the bank survived).
