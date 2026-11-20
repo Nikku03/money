@@ -1,0 +1,273 @@
+"""``python -m brain neurons play|wiring|topology``: the hand-wired spiking circuit (docs/NEURONS.md)."""
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+
+def _play(a):
+    from brain.neurons import pong
+    kill = tuple(x.strip() for x in (a.kill or "").split(",") if x.strip())
+    rows = []
+    for ctl in (["still", "random", "neurons"] if a.compare else [a.controller]):
+        H = M = 0
+        for s in range(a.seed, a.seed + a.games):
+            r = pong.play(a.frames, seed=s, noise=a.noise, lesion=a.lesion, kill=kill, controller=ctl,
+                          record=bool(a.replay or a.html) and ctl == "neurons" and s == a.seed, cells=a.cells)
+            H, M = H + r["hits"], M + r["misses"]
+            if "replay" in r:
+                data = json.dumps(r, separators=(",", ":"))
+                if a.replay:
+                    Path(a.replay).write_text(data)
+                    print(f"replay of game {s} written to {a.replay}")
+                if a.html:
+                    page = (Path(__file__).with_name("viewer.html")).read_text()
+                    Path(a.html).write_text(page.replace("__REPLAY__", data.replace("</", "<\\/")))
+                    print(f"viewer of game {s} written to {a.html}")
+        rows.append((ctl, H, M))
+        print(f"{ctl:8s} hits {H:4d}  misses {M:4d}  hit rate {H / max(1, H + M):.0%}"
+              f"   ({a.games} game(s) x {a.frames} frames, noise {a.noise}, lesion {a.lesion:.0%}"
+              f"{', killed ' + ','.join(kill) if kill else ''})")
+    print(f"circuit: {r['neurons']} neurons, {r['synapses']} synapses, {_cells(a.cells)}; no weight was learned")
+
+
+def _catch(a):
+    from brain.neurons import catch
+    kill = tuple(x.strip() for x in (a.kill or "").split(",") if x.strip())
+    ctls = ["still", "random", "reactive", "nowalls", "neurons", "oracle"] if a.compare else [a.controller]
+    for ctl in ctls:
+        H = M = 0
+        errs = []
+        for s in range(a.seed, a.seed + a.games):
+            first = s == a.seed and ctl == "neurons" and a.html
+            r = catch.play(a.frames, seed=s, controller=ctl, noise=a.noise, kill=kill, record=bool(first),
+                           cells=a.cells)
+            H, M = H + r["hits"], M + r["misses"]
+            if r.get("guess_error"):
+                errs.append(r["guess_error"])
+            if first:
+                page = Path(__file__).with_name("catch_viewer.html").read_text()
+                data = json.dumps(r, separators=(",", ":")).replace("</", "<\\/")
+                Path(a.html).write_text(page.replace("__REPLAY__", data))
+                print(f"viewer of game {s} written to {a.html}")
+        err = ""
+        if errs:
+            keys = [k for k in ("far", "mid", "near") if all(k in e for e in errs)]
+            err = "   landing guess off by " + ", ".join(f"{k} {sum(e[k] for e in errs) / len(errs):.3f}" for k in keys)
+        print(f"{ctl:9s} caught {H:4d}  missed {M:4d}  catch rate {H / max(1, H + M):.0%}{err}")
+    print(f"({a.games} game(s) x {a.frames} frames from seed {a.seed}, noise {a.noise}"
+          f"{', killed ' + ','.join(kill) if kill else ''}; paddle half-height {catch.PADDLE_H / 2}; {_cells(a.cells)})")
+
+
+def _school(a):
+    from concurrent.futures import ProcessPoolExecutor
+
+    import numpy as np
+
+    from brain.neurons import learn
+    modes = learn.MODES if a.mode == "all" else (a.mode,)
+    jobs = [(m, s) for s in range(a.seed, a.seed + 10 * a.seeds, 10) for m in modes]
+    with ProcessPoolExecutor(max_workers=a.workers) as ex:
+        runs = list(ex.map(_school_one, [(m, s, a.rounds, a.frames, a.cells) for m, s in jobs]))
+    if a.json:
+        Path(a.json).write_text(json.dumps(runs, separators=(",", ":")))
+        print(f"runs written to {a.json}")
+    if a.html:
+        page = Path(__file__).with_name("school_viewer.html").read_text()
+        Path(a.html).write_text(page.replace("__RUNS__", json.dumps(runs, separators=(",", ":")).replace("</", "<\\/")))
+        print(f"results page written to {a.html}")
+    print(f"exams on {len(learn.exam_set())} held-out serves (gravity {learn.GRAVITY}): early = exact landing band from the"
+          f" ball's far half; lenient = within one band, whole serve. {a.rounds} rounds x {a.frames // 30} serves,"
+          f" mean over {a.seeds} school(s); agent A3 broken except in honest")
+    print(f"{'mode':8s} {'early: start':>12s} {'end':>6s} {'broken A3':>10s}   {'lenient: end':>12s}   {'catch, last 3 rounds':>20s}")
+    g = lambda r, i: r["rounds"][i]["grades"]
+    for m in modes:
+        rs = [r for r in runs if r["mode"] == m]
+        e0 = np.mean([[x["early"] for x in g(r, 0)[:3]] for r in rs])
+        e1 = np.mean([[x["early"] for x in g(r, -1)[:3]] for r in rs])
+        eb = np.mean([g(r, -1)[3]["early"] for r in rs])
+        l1 = np.mean([[x["lenient"] for x in g(r, -1)[:3]] for r in rs])
+        cr = np.mean([[row["catch"][:3] for row in r["rounds"][-3:]] for r in rs])
+        print(f"{m:8s} {e0:12.0%} {e1:6.0%} {eb:10.0%}   {l1:12.0%}   {cr:20.0%}")
+
+
+def _school_one(args):
+    from brain.neurons import learn
+    mode, seed, rounds, frames, cells = args
+    return learn.school(mode, rounds=rounds, frames=frames, seed=seed, cells=cells)
+
+
+def _run(a):
+    from brain.neurons import runner
+    ctls = ["still", "random", "distance", "neurons", "oracle"] if a.compare else [a.controller]
+    for ctl in ctls:
+        C = R = best = 0
+        top = 0.0
+        causes: dict = {}
+        for s in range(a.seed, a.seed + a.games):
+            first = s == a.seed and ctl == "neurons" and a.html
+            r = runner.play(a.frames, seed=s, controller=ctl, noise=a.noise, record=bool(first), cells=a.cells)
+            C, R, best, top = C + r["crashes"], R + r["rows"], max(best, r["best_run_rows"]), max(top, r["top_speed"])
+            for k, v in r["causes"].items():
+                causes[k] = causes.get(k, 0) + v
+            if first:
+                page = Path(__file__).with_name("runner_viewer.html").read_text()
+                data = json.dumps(r, separators=(",", ":")).replace("</", "<\\/")
+                Path(a.html).write_text(page.replace("__REPLAY__", data))
+                print(f"viewer of game {s} written to {a.html}")
+        why = ", ".join(f"{k} {v}" for k, v in causes.items() if v) or "none"
+        print(f"{ctl:9s} crashes {C:4d}  rows passed {R:5d}  rows per crash {R / max(1, C):6.1f}"
+              f"  best run {best:4d}  top speed {top:.2f}  (crashes into: {why})")
+    print(f"({a.games} game(s) x {a.frames} frames from seed {a.seed}, noise {a.noise}; speed {runner.SPEED0} -> {runner.SPEED_MAX};"
+          f" {_cells(a.cells)})")
+
+
+def _ladder(a):
+    from brain.neurons import ladder
+    games = tuple(a.games.split(",")) if a.games else tuple(ladder.GAMES)
+    rows = ladder.run(workers=a.workers, games=games)
+    if a.json:
+        Path(a.json).write_text(json.dumps(rows, indent=1))
+        print(f"runs written to {a.json}")
+    print("every game wired as recorded, on each kind of cell; seeds as in docs/NEURONS.md")
+    for line in ladder.table(rows):
+        print(line)
+
+
+def _exchange(a):
+    from brain.neurons import exchange
+    res = exchange.run(seeds=a.seeds, workers=a.workers)
+    if a.json:
+        Path(a.json).write_text(json.dumps(res, indent=1))
+        print(f"results written to {a.json}")
+    print("how well each fitted model copies one Hodgkin-Huxley cell's spikes on input it never saw"
+          " (Gamma: 1 a perfect copy, 0 chance)")
+    for line in exchange.table(res):
+        print(line)
+
+
+def _train(a):
+    from brain.neurons import train
+    sizes = tuple(int(x) for x in a.sizes.split(","))
+    cells = tuple(a.cells.split(","))
+    rows = train.run(sizes=sizes, seeds=a.seeds, cells=cells, workers=a.workers)
+    if a.json:
+        Path(a.json).write_text(json.dumps(rows, indent=1))
+        print(f"runs written to {a.json}")
+    print("networks trained to tell four timing patterns apart (every class has the same spike counts)")
+    for line in train.table(rows):
+        print(line)
+
+
+def _cells(cells: str) -> str:
+    from brain.neurons.circuit import STATE_VARIABLES
+    name = {"izh": "Izhikevich", "hh": "Hodgkin-Huxley", "lif": "leaky integrate-and-fire"}[cells]
+    return f"{name} cells ({STATE_VARIABLES[cells]} state variable{'s' if STATE_VARIABLES[cells] > 1 else ''})"
+
+
+def _circuit(game: str):
+    from brain.neurons import catch, pong, runner
+    return {"pong": pong.build, "catch": catch.build, "run": runner.build}[game]()
+
+
+def _wiring(a):
+    from brain.neurons import catch, pong
+    c = _circuit(a.game)
+    names = [n.name for n in c.neurons]
+    ids = [c.by_name(a.neuron)] if a.neuron else range(len(names))
+    for i in ids:
+        n = c.neurons[i]
+        print(f"{n.name} ({n.kind}, {'excitatory' if n.sign > 0 else 'inhibitory'}, group {n.group})")
+        ins = c.inputs(i)
+        outs = c.outputs(i)
+        print("  inputs from:  " + (", ".join(f"{names[s.pre]} w{s.weight:.3f} @{s.delay:g}ms" for s in ins) or "electrode only"))
+        print("  outputs to:   " + (", ".join(f"{names[s.post]} w{s.weight:.3f} @{s.delay:g}ms" for s in outs) or "the paddle (motor)"))
+
+
+def _topology(a):
+    from brain.neurons import catch, pong
+    from brain.neurons.topology import simplices
+    c = _circuit(a.game)
+    counts = simplices(c.adjacency())
+    print("directed simplices by dimension (k neurons+1, all-to-all forward):")
+    for k, n in counts.items():
+        print(f"  dim {k:2d}: {n:6d}" + ("   <- neurons" if k == 0 else "   <- connections" if k == 1 else ""))
+    print(f"highest dimension: {max(counts)}")
+
+
+def add_cli(sub) -> None:
+    p = sub.add_parser("neurons", help="a hand-wired spiking circuit that plays Pong (docs/NEURONS.md)")
+    s = p.add_subparsers(dest="neurons_cmd", required=True)
+    q = s.add_parser("play", help="play Pong with the circuit and print the score")
+    q.add_argument("--frames", type=int, default=1500, help="frames per game (20 ms of neural time each)")
+    q.add_argument("--games", type=int, default=1)
+    q.add_argument("--seed", type=int, default=0)
+    q.add_argument("--noise", type=float, default=0.0, help="membrane current noise (spontaneous firing starts near 4)")
+    q.add_argument("--lesion", type=float, default=0.0, help="fraction of clique middle neurons removed at random")
+    q.add_argument("--kill", help="comma-separated neuron names to remove, e.g. UP1,DOWN1")
+    q.add_argument("--controller", choices=["neurons", "still", "random"], default="neurons")
+    q.add_argument("--compare", action="store_true", help="also play with a still and a random paddle")
+    q.add_argument("--replay", help="write a frame-by-frame replay (spikes, voltages) as JSON here")
+    q.add_argument("--html", help="write a page that replays the first game: court, circuit, raster, voltages")
+    q.add_argument("--cells", choices=["izh", "hh", "lif"], default="izh",
+                   help="the cell the circuit runs on: izh (Izhikevich, the default), hh (Hodgkin-Huxley), lif")
+    q.set_defaults(fn=_play)
+    q = s.add_parser("catch", help="Catch: a fast, bouncing ball the circuit must predict to reach")
+    q.add_argument("--frames", type=int, default=900, help="frames per game (30 per serve)")
+    q.add_argument("--games", type=int, default=1)
+    q.add_argument("--seed", type=int, default=10)
+    q.add_argument("--noise", type=float, default=0.0)
+    q.add_argument("--kill", help="comma-separated neuron names to remove")
+    q.add_argument("--controller", choices=["neurons", "nowalls", "reactive", "oracle", "still", "random"], default="neurons")
+    q.add_argument("--compare", action="store_true", help="play every controller, same serves")
+    q.add_argument("--html", help="write a page that replays the first game")
+    q.add_argument("--cells", choices=["izh", "hh", "lif"], default="izh",
+                   help="the cell the circuit runs on: izh (Izhikevich, the default), hh (Hodgkin-Huxley), lif")
+    q.set_defaults(fn=_catch)
+    q = s.add_parser("school", help="Catch circuits that learn under gravity, alone and from each other")
+    q.add_argument("--mode", choices=["all", "fixed", "alone", "naive", "trusted", "honest"], default="all")
+    q.add_argument("--rounds", type=int, default=15)
+    q.add_argument("--frames", type=int, default=300, help="frames per round (30 per serve)")
+    q.add_argument("--seeds", type=int, default=1, help="independent schools per mode (seeds 0, 10, 20, ...)")
+    q.add_argument("--seed", type=int, default=0)
+    q.add_argument("--workers", type=int, default=4)
+    q.add_argument("--json", help="write every run (curves, trust, exams) here")
+    q.add_argument("--html", help="write a results page: learning curves, trust map, table")
+    q.add_argument("--cells", choices=["izh", "hh", "lif"], default="izh",
+                   help="the cell the circuit runs on: izh (Izhikevich, the default), hh (Hodgkin-Huxley), lif")
+    q.set_defaults(fn=_school)
+    q = s.add_parser("run", help="Runner: a three-lane endless runner (walls, hurdles, beams, rising speed)")
+    q.add_argument("--frames", type=int, default=5000)
+    q.add_argument("--games", type=int, default=4)
+    q.add_argument("--seed", type=int, default=20)
+    q.add_argument("--noise", type=float, default=0.0)
+    q.add_argument("--controller", choices=["neurons", "distance", "oracle", "still", "random"], default="neurons")
+    q.add_argument("--compare", action="store_true", help="play every controller on the same tracks")
+    q.add_argument("--html", help="write a page that replays the first game")
+    q.add_argument("--cells", choices=["izh", "hh", "lif"], default="izh",
+                   help="the cell the circuit runs on: izh (Izhikevich, the default), hh (Hodgkin-Huxley), lif")
+    q.set_defaults(fn=_run)
+    q = s.add_parser("ladder", help="every game on each kind of cell (lif, izh, hh), clean and under noise")
+    q.add_argument("--games", help="comma-separated subset of pong,catch,run")
+    q.add_argument("--workers", type=int, default=4)
+    q.add_argument("--json", help="write every run here")
+    q.set_defaults(fn=_ladder)
+    q = s.add_parser("exchange", help="how many simple cells it takes to copy one Hodgkin-Huxley cell")
+    q.add_argument("--seeds", type=int, default=3)
+    q.add_argument("--workers", type=int, default=4)
+    q.add_argument("--json", help="write every fit here")
+    q.set_defaults(fn=_exchange)
+    q = s.add_parser("train", help="train networks of each kind of cell on a timing task; accuracy against size")
+    q.add_argument("--sizes", default="1,2,4,8,16", help="hidden cells per network")
+    q.add_argument("--cells", default="lif,izh,hh")
+    q.add_argument("--seeds", type=int, default=3)
+    q.add_argument("--workers", type=int, default=4)
+    q.add_argument("--json", help="write every run here")
+    q.set_defaults(fn=_train)
+    q = s.add_parser("wiring", help="who feeds each neuron and whom it feeds, with weights and delays")
+    q.add_argument("neuron", nargs="?", help="one neuron's name, e.g. UP11, C62, or (catch) P3_9_+2")
+    q.add_argument("--game", choices=["pong", "catch", "run"], default="pong")
+    q.set_defaults(fn=_wiring)
+    q = s.add_parser("topology", help="count the circuit's directed simplices by dimension")
+    q.add_argument("--game", choices=["pong", "catch", "run"], default="pong")
+    q.set_defaults(fn=_topology)

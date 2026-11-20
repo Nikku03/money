@@ -1,0 +1,231 @@
+<title>Simplex Runner</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the same lab bench as the other Simplex pages. Track view and the circuit's cell board side
+   by side; the raster full width below. */
+:root {
+  --bg: #e9edf1; --panel: #f7f9fb; --ink: #17202a; --muted: #5b6876; --rule: #cfd7df;
+  --exc: #e0552e; --inh: #2f6fd6; --eye: #c99a00; --go: #0f9d84;
+  --sky-top: #1b2233; --sky-low: #3a3350; --ground: #151a22; --lane: #2a3240; --runner: #f2f5f8;
+  --wall: #d9653b; --hurdle: #e9b949; --beam: #6aa6ff;
+  --font-display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --font-body: "Instrument Sans", "Helvetica Neue", system-ui, sans-serif;
+  --font-data: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f1419; --panel: #161d24; --ink: #e3e9ef; --muted: #8b98a6; --rule: #2a343e;
+  --exc: #ff7448; --inh: #5c95ff; --eye: #f2c437; --go: #2fd3b1; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0f1419; --panel: #161d24; --ink: #e3e9ef; --muted: #8b98a6; --rule: #2a343e;
+  --exc: #ff7448; --inh: #5c95ff; --eye: #f2c437; --go: #2fd3b1; color-scheme: dark }
+html, body { background: var(--bg); color: var(--ink); }
+body { font-family: var(--font-body); font-size: 15px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 20px 40px; }
+.wrap { max-width: 1180px; margin: 0 auto; display: grid; gap: 18px; }
+header { display: grid; gap: 6px; }
+h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(28px, 4.4vw, 44px); line-height: 1.05; margin: 0; letter-spacing: -0.01em; text-wrap: balance; }
+.lede { color: var(--muted); max-width: 72ch; margin: 0; }
+.eyebrow { font-family: var(--font-data); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.bench { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; }
+@media (max-width: 820px) { .bench { grid-template-columns: minmax(0, 1fr); } }
+.panel { background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 12px; display: grid; gap: 8px; min-width: 0; align-content: start; }
+.panel h2 { font-family: var(--font-display); font-weight: 500; font-size: 16px; margin: 0; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.sub { font-family: var(--font-data); font-size: 12px; color: var(--muted); font-weight: 400; font-variant-numeric: tabular-nums; }
+.sub b { color: var(--ink); }
+canvas { width: 100%; display: block; border-radius: 4px; }
+#track { aspect-ratio: 4 / 3; }
+#board { aspect-ratio: 4 / 3; }
+#raster { height: 200px; }
+.controls { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; font-family: var(--font-data); font-size: 13px; }
+button { font: 600 13px var(--font-data); background: var(--ink); color: var(--bg); border: 0; border-radius: 4px; padding: 7px 14px; cursor: pointer; }
+button.ghost { background: transparent; color: var(--ink); border: 1px solid var(--rule); }
+button[aria-pressed="true"] { outline: 2px solid var(--go); outline-offset: 1px; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--inh); outline-offset: 2px; }
+#scrub { flex: 1 1 220px; min-width: 0; accent-color: var(--go); }
+.stat { font-variant-numeric: tabular-nums; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-family: var(--font-data); font-size: 11.5px; color: var(--muted); }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+.notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+.notes h3 { font-family: var(--font-display); font-weight: 500; font-size: 16px; margin: 0 0 4px; }
+.notes p { margin: 0; }
+table { border-collapse: collapse; font-family: var(--font-data); font-size: 12.5px; font-variant-numeric: tabular-nums; width: 100%; }
+td, th { text-align: left; padding: 4px 8px 4px 0; border-bottom: 1px solid var(--rule); }
+th { color: var(--muted); font-weight: 400; }
+tr.me td { font-weight: 600; }
+.tablewrap { overflow-x: auto; }
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow"><span id="nn">77</span> spiking neurons · four 11-simplex cliques · 0 weights learned</span>
+    <h1>Simplex Runner</h1>
+    <p class="lede">An original three-lane endless runner. Walls mean switch lanes, hurdles mean jump, beams mean duck, and the speed keeps rising. The eye cells are tuned to time-to-contact, the way a locust's looming detector is, so they fire the same number of frames before impact at any speed. Coincidence cells turn what the eyes see into a command, and a directed 11-simplex clique carries out each move.</p>
+  </header>
+
+  <div class="controls" role="group" aria-label="Playback">
+    <button id="play" type="button">Pause</button>
+    <button class="ghost" type="button" data-speed="1" aria-pressed="false">1×</button>
+    <button class="ghost" type="button" data-speed="0.4" aria-pressed="true">0.4×</button>
+    <button class="ghost" type="button" data-speed="0.08" aria-pressed="false">0.08×</button>
+    <input id="scrub" type="range" min="0" max="1" value="0" step="1" aria-label="Frame">
+    <span class="stat" id="clock">frame 0</span>
+  </div>
+
+  <div class="bench">
+    <section class="panel" aria-label="Track">
+      <h2>Track <span class="sub">speed <b id="spd">1.00</b> · rows <b id="rows">0</b> · crashes <b id="crashes">0</b></span></h2>
+      <canvas id="track"></canvas>
+      <div class="legend"><span><i style="background:var(--wall)"></i>wall: switch lanes</span><span><i style="background:var(--hurdle)"></i>hurdle: jump</span><span><i style="background:var(--beam)"></i>beam: duck</span></div>
+    </section>
+    <section class="panel" aria-label="Circuit">
+      <h2>Circuit <span class="sub">cells light when they fire</span></h2>
+      <canvas id="board"></canvas>
+      <div class="legend"><span><i style="background:var(--eye)"></i>eye</span><span><i style="background:var(--go)"></i>decision</span><span><i style="background:var(--exc)"></i>clique</span><span><i style="background:var(--inh)"></i>inhibitory</span></div>
+    </section>
+  </div>
+
+  <section class="panel" aria-label="Raster">
+    <h2>Raster <span class="sub">last 300 ms · eyes, decisions, the four cliques</span></h2>
+    <canvas id="raster"></canvas>
+  </section>
+
+  <section class="notes">
+    <div>
+      <h3>Seeing in time, not distance</h3>
+      <p>WALL cells fire 3 to 12 frames before a wall arrives, and HURDLE and BEAM cells 2 to 5 frames before. Commands take about 2 frames to come out of a clique, so these windows lead the moment of action by those 2 frames, at every speed. CLEAR cells are OFF cells that fire when no wall arrives within 13 frames. Spikes can't signal that something is absent, so the eye reports it.</p>
+    </div>
+    <div>
+      <h3>Deciding by coincidence</h3>
+      <p>GO_R0 fires only when LANE0, WALL0 and CLEAR1 all spike at once. Each input carries 0.055, so any two reach 0.11, under the 0.135 threshold. When both sides are clear, the left-going axons are 1.5&nbsp;ms longer, so RIGHT's source fires first and its inhibitory cell silences LEFT.</p>
+    </div>
+    <div class="tablewrap">
+      <h3>Recorded results</h3>
+      <table>
+        <tr><th>4 fresh tracks × 5,000 frames</th><th>crashes</th><th>rows / crash</th></tr>
+        <tr><td>standing still</td><td>335</td><td>1.5</td></tr>
+        <tr><td>random moves</td><td>319</td><td>1.7</td></tr>
+        <tr><td>same circuit, distance-tuned eyes</td><td>38</td><td>24.9</td></tr>
+        <tr class="me"><td>this circuit</td><td>0</td><td>all 974</td></tr>
+        <tr><td>oracle (true state, no delay)</td><td>0</td><td>all 974</td></tr>
+        <tr><td>this circuit, membrane noise 2</td><td>191</td><td>3.8</td></tr>
+      </table>
+    </div>
+  </section>
+</div>
+
+<script id="replay" type="application/json">__REPLAY__</script>
+<script>
+(() => {
+  const R = JSON.parse(document.getElementById("replay").textContent);
+  const F = R.replay, FRAME = 20, N = R.names.length, SPAWN = 40;
+  document.getElementById("nn").textContent = N;
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  let C = {};
+  const read = () => { C = Object.fromEntries(["panel","ink","muted","rule","exc","inh","eye","go","sky-top","sky-low","ground","lane","runner","wall","hurdle","beam"].map(k => [k, css("--" + k)])); };
+  read();
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", read);
+  new MutationObserver(read).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  const spikes = []; F.forEach(f => f.spikes.forEach(s => spikes.push(s)));
+  const firstAt = t => { let lo = 0, hi = spikes.length; while (lo < hi) { const m = (lo + hi) >> 1; spikes[m][0] < t ? lo = m + 1 : hi = m; } return lo; };
+  let crashes = 0, rows = 0; const tally = F.map(f => { if (f.crash) crashes++; return crashes; });
+  const dist = []; F.reduce((s, f, i) => (dist[i] = s, s + f.speed), 0);
+  const byName = Object.fromEntries(R.names.map((n, i) => [n, i]));
+  const fit = cv => { const r = cv.getBoundingClientRect(), d = devicePixelRatio || 1; if (cv.width !== Math.round(r.width * d) || cv.height !== Math.round(r.height * d)) { cv.width = Math.round(r.width * d); cv.height = Math.round(r.height * d); } const g = cv.getContext("2d"); g.setTransform(d, 0, 0, d, 0, 0); return [g, r.width, r.height]; };
+  const $ = id => document.getElementById(id);
+
+  // Track: three lanes in perspective. z = distance / SPAWN, 0 at the runner, 1 at the horizon.
+  function drawTrack(fi, frac) {
+    const [g, W, H] = fit($("track")), f = F[fi], nx = F[Math.min(F.length - 1, fi + 1)];
+    const hz = H * 0.3, base = H * 0.94, cx = W / 2, halfNear = W * 0.46, halfFar = W * 0.06;
+    const sky = g.createLinearGradient(0, 0, 0, hz); sky.addColorStop(0, C["sky-top"]); sky.addColorStop(1, C["sky-low"]);
+    g.fillStyle = sky; g.fillRect(0, 0, W, hz); g.fillStyle = C.ground; g.fillRect(0, hz, W, H - hz);
+    const P = (lanePos, z) => { const y = base - (base - hz) * (1 - Math.pow(1 - z, 2.2)); const s = 1 - (1 - halfFar / halfNear) * (1 - Math.pow(1 - z, 2.2)); return [cx + (lanePos - 1) * (2 * halfNear / 3) * s, y, s]; };
+    // Lane dividers and moving ties.
+    g.strokeStyle = C.lane; g.lineWidth = 2;
+    for (const e of [-0.5, 0.5, 1.5, 2.5]) { const [x1, y1] = P(e, 0), [x2, y2] = P(e, 1); g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2, y2); g.stroke(); }
+    const travelled = dist[fi] + f.speed * frac;
+    g.strokeStyle = "rgba(255,255,255,0.05)"; g.lineWidth = 1;
+    for (let d = (4 - travelled % 4); d < SPAWN; d += 4) { const z = d / SPAWN, [xa, y] = P(-0.5, z), [xb] = P(2.5, z); g.beginPath(); g.moveTo(xa, y); g.lineTo(xb, y); g.stroke(); }
+    // Obstacles, far to near.
+    const obs = f.obs.map(o => [o[0], o[1], Math.max(0, o[2] - f.speed * frac)]).sort((a, b) => b[2] - a[2]);
+    for (const [lane, k, d] of obs) {
+      const z = d / SPAWN; if (z > 1) continue;
+      const [x, y, s] = P(lane, z), w = (2 * halfNear / 3) * s * 0.82, h = H * 0.42 * s;
+      g.fillStyle = C[{ w: "wall", h: "hurdle", b: "beam" }[k]];
+      if (k === "w") g.fillRect(x - w / 2, y - h, w, h);
+      else if (k === "h") { g.fillRect(x - w / 2, y - h * 0.24, w, h * 0.1); g.fillRect(x - w / 2, y - h * 0.24, w * 0.06, h * 0.24); g.fillRect(x + w / 2 - w * 0.06, y - h * 0.24, w * 0.06, h * 0.24); }
+      else { g.fillRect(x - w / 2, y - h * 0.95, w, h * 0.22); g.fillRect(x - w / 2, y - h * 0.95, w * 0.06, h * 0.95); g.fillRect(x + w / 2 - w * 0.06, y - h * 0.95, w * 0.06, h * 0.95); }
+    }
+    // The runner: a plain capsule and a head. Lane slides between frames; jump lifts it, duck squashes it.
+    const lanePos = f.lane + (nx.lane !== f.lane && !f.crash ? (nx.lane - f.lane) * frac : 0);
+    const [rx, ry] = P(lanePos, 0.02), u = H * 0.2;
+    const lift = f.air ? Math.sin(Math.PI * (8 - f.air + frac) / 8) * u * 0.9 : 0, squash = f.duck ? 0.5 : 1;
+    g.fillStyle = C.runner;
+    const bw = u * 0.32, bh = u * 0.62 * squash, by = ry - lift - bh;
+    g.beginPath(); g.roundRect(rx - bw / 2, by, bw, bh, bw / 2); g.fill();
+    g.beginPath(); g.arc(rx, by - u * 0.16, u * 0.13, 0, 7); g.fill();
+    if (f.crash) { g.fillStyle = "rgba(217,101,59,0.35)"; g.fillRect(0, 0, W, H); g.fillStyle = "#fff"; g.font = "600 16px " + css("--font-data"); g.textAlign = "center"; g.fillText(`crash: ${f.crash}`, W / 2, hz + 30); g.textAlign = "start"; }
+    if (f.acts.length) { g.fillStyle = "rgba(255,255,255,0.85)"; g.font = "12px " + css("--font-data"); g.fillText(f.acts.join(" + "), 10, H - 10); }
+  }
+
+  // Board: eye grid (kind × lane), decision cells, then four cliques as rows of 12.
+  const eyeKinds = ["LANE", "WALL", "CLEAR", "HURDLE", "BEAM"];
+  const decide = R.names.filter((n, i) => R.groups[i] === "decide");
+  const cliques = ["right", "left", "jump", "duck"];
+  function drawBoard(t) {
+    const [g, W, H] = fit($("board"));
+    g.fillStyle = C.panel; g.fillRect(0, 0, W, H);
+    const last = new Float64Array(N).fill(-1e9);
+    for (let s = firstAt(t - 40), e = firstAt(t); s < e; s++) last[spikes[s][1]] = spikes[s][0];
+    const dot = (n, x, y, r, col) => { const age = t - last[n], a = age >= 0 && age < 40 ? 1 - age / 40 : 0; g.fillStyle = C.rule; g.beginPath(); g.arc(x, y, r, 0, 7); g.fill(); if (a) { g.fillStyle = col; g.globalAlpha = a; g.beginPath(); g.arc(x, y, r + 1.5 * a, 0, 7); g.fill(); g.globalAlpha = 1; } };
+    g.font = "10.5px " + css("--font-data"); g.fillStyle = C.muted; g.textBaseline = "middle";
+    const ex = W * 0.2, ey = H * 0.1, cw = Math.min(W * 0.075, 34), rh = H * 0.075;
+    g.fillText("eyes · lane", 6, ey - rh * 0.9);
+    for (let l = 0; l < 3; l++) { g.textAlign = "center"; g.fillText(`${l}`, ex + l * cw, ey - rh * 0.9); }
+    eyeKinds.forEach((k, r) => { g.textAlign = "right"; g.fillStyle = C.muted; g.fillText(k, ex - cw * 0.7, ey + r * rh); for (let l = 0; l < 3; l++) dot(byName[k + l], ex + l * cw, ey + r * rh, 5, C.eye); });
+    const dx = W * 0.56; g.textAlign = "left"; g.fillStyle = C.muted; g.fillText("decisions", dx, ey - rh * 0.9);
+    decide.forEach((nm, i) => { const col = i % 2, row = Math.floor(i / 2), x = dx + col * W * 0.21, y = ey + row * rh * 0.85; dot(byName[nm], x, y, 4.5, C.go); g.fillStyle = C.muted; g.textAlign = "left"; g.fillText(nm, x + 9, y); });
+    const qy = H * 0.66, qx = W * 0.2, qs = (W * 0.76) / 12;
+    g.fillStyle = C.muted; g.textAlign = "left"; g.fillText("cliques (source → sink = command)", 6, qy - rh * 0.9);
+    cliques.forEach((q, r) => { g.textAlign = "right"; g.fillStyle = C.muted; g.fillText(q.toUpperCase(), qx - 10, qy + r * rh); for (let k = 0; k < 12; k++) dot(byName[q.toUpperCase() + k], qx + k * qs, qy + r * rh, 4, C.exc); });
+    g.textAlign = "start"; g.textBaseline = "alphabetic";
+  }
+
+  const order = ["eye", "decide", "right", "left", "wta", "jump", "duck"];
+  const rowsList = [...R.names.keys()].sort((a, b) => order.indexOf(R.groups[a]) - order.indexOf(R.groups[b]) || a - b);
+  const rowOf = []; rowsList.forEach((n, r) => rowOf[n] = r);
+  const colorOf = n => R.groups[n] === "eye" ? C.eye : R.groups[n] === "decide" ? C.go : R.signs[n] < 0 ? C.inh : C.exc;
+  function drawRaster(t) {
+    const [g, W, H] = fit($("raster")), win = 300, L = 58, rh = (H - 16) / N;
+    g.fillStyle = C.panel; g.fillRect(0, 0, W, H);
+    g.font = "10px " + css("--font-data");
+    const spans = {}; rowsList.forEach((n, r) => { const k = R.groups[n]; (spans[k] = spans[k] || [r, r])[1] = r; });
+    for (const [k, [a, b]] of Object.entries(spans)) { g.fillStyle = C.rule; g.fillRect(L, 4 + a * rh, W - L, 1); if (b - a >= 5) { g.fillStyle = C.muted; g.fillText(k, 4, 4 + (a + b + 1) / 2 * rh + 3); } }
+    const x = ts => L + (ts - (t - win)) / win * (W - L - 4);
+    for (let fb = Math.ceil((t - win) / FRAME) * FRAME; fb <= t; fb += FRAME) { g.fillStyle = C.rule; g.fillRect(x(fb), 4, 1, H - 20); }
+    for (let s = firstAt(t - win), e = firstAt(t); s < e; s++) { const [ts, n] = spikes[s]; g.fillStyle = colorOf(n); g.fillRect(x(ts) - 1, 4 + rowOf[n] * rh, 2, Math.max(1.5, rh)); }
+    g.fillStyle = C.muted; g.fillText("−300 ms", L, H - 2); g.textAlign = "right"; g.fillText("now", W - 4, H - 2); g.textAlign = "start";
+  }
+
+  const scrub = $("scrub"); scrub.max = F.length - 1;
+  let T = 0, speed = 0.4, playing = !matchMedia("(prefers-reduced-motion: reduce)").matches, last = null;
+  const end = F.length * FRAME - 0.001;
+  function render() {
+    const fi = Math.min(F.length - 1, Math.floor(T / FRAME)), frac = (T - fi * FRAME) / FRAME;
+    drawTrack(fi, frac); drawBoard(T); drawRaster(T);
+    $("clock").textContent = `frame ${fi}`; $("spd").textContent = F[fi].speed.toFixed(2); $("crashes").textContent = tally[fi];
+    $("rows").textContent = passed[fi]; scrub.value = fi;
+  }
+  // Rows passed so far: obstacles that left the list without a crash, grouped by row.
+  const passed = []; { let n = 0; for (let i = 0; i < F.length; i++) { if (i > 0 && !F[i - 1].crash) { const before = new Set(F[i - 1].obs.filter(o => o[2] - F[i - 1].speed <= 0).map(o => o[2])); n += before.size; } passed.push(n); } }
+  function loop(now) { if (last !== null && playing) { T += (now - last) * speed; if (T > end) T = 0; } last = now; render(); requestAnimationFrame(loop); }
+  $("play").textContent = playing ? "Pause" : "Play";
+  $("play").addEventListener("click", () => { playing = !playing; $("play").textContent = playing ? "Pause" : "Play"; });
+  document.querySelectorAll("[data-speed]").forEach(b => b.addEventListener("click", () => { speed = +b.dataset.speed; document.querySelectorAll("[data-speed]").forEach(x => x.setAttribute("aria-pressed", x === b ? "true" : "false")); }));
+  scrub.addEventListener("input", () => { T = +scrub.value * FRAME; render(); });
+  T = 40 * FRAME;
+  requestAnimationFrame(loop);
+})();
+</script>
