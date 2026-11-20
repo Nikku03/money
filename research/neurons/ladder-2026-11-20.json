@@ -1,0 +1,1289 @@
+[
+ {
+  "good": 236,
+  "bad": 8,
+  "game": "run",
+  "cells": "hh",
+  "cond": {
+   "noise": 0.0
+  },
+  "seed": 20,
+  "cpu_s": 112.17728265699999
+ },
+ {
+  "good": 236,
+  "bad": 8,
+  "game": "run",
+  "cells": "hh",
+  "cond": {
+   "noise": 0.0
+  },
+  "seed": 21,
+  "cpu_s": 111.866427477
+ },
+ {
+  "good": 234,
+  "bad": 9,
+  "game": "run",
+  "cells": "hh",
+  "cond": {
+   "noise": 0.0
+  },
+  "seed": 22,
+  "cpu_s": 112.136480405
+ },
+ {
+  "good": 225,
+  "bad": 19,
+  "game": "run",
+  "cells": "hh",
+  "cond": {
+   "noise": 0.0
+  },
+  "seed": 23,
+  "cpu_s": 110.632390152
+ },
+ {
+  "good": 171,
+  "bad": 54,
+  "game": "run",
+  "cells": "hh",
+  "cond": {
+   "noise": 2.0
+  },
+  "seed": 20,
+  "cpu_s": 118.66984215299999
+ },
+ {
+  "good": 179,
+  "bad": 49,
+  "game": "run",
+  "cells": "hh",
+  "cond": {
+   "noise": 2.0
+  },
+  "seed": 21,
+  "cpu_s": 118.49801761100001
+ },
+ {
+  "good": 178,
+  "bad": 50,
+  "game": "run",
+  "cells": "hh",
+  "cond": {
+   "noise": 2.0
+  },
+  "seed": 22,
+  "cpu_s": 119.10592787000002
+ },
+ {
+  "good": 171,
+  "bad": 57,
+  "game": "run",
+  "cells": "hh",
+  "cond": {
+   "noise": 2.0
+  },
+  "seed": 23,
+  "cpu_s": 118.743918813
+ },
+ {
+  "good": 148,
+  "bad": 71,
+  "game": "run",
+  "cells": "hh",
+  "cond": {
+   "noise": 4.0
+  },
+  "seed": 20,
+  "cpu_s": 121.677472948
+ },
+ {
+  "good": 150,
+  "bad": 69,
+  "game": "run",
+  "cells": "hh",
+  "cond": {
+   "noise": 4.0
+  },
+  "seed": 21,
+  "cpu_s": 121.59599924900002
+ },
+ {
+  "good": 145,
+  "bad": 72,
+  "game": "run",
+  "cells": "hh",
+  "cond": {
+   "noise": 4.0
+  },
+  "seed": 22,
+  "cpu_s": 123.061718327
+ },
+ {
+  "good": 154,
+  "bad": 67,
+  "game": "run",
+  "cells": "hh",
+  "cond": {
+   "noise": 4.0
+  },
+  "seed": 23,
+  "cpu_s": 122.56301240699997
+ },
+ {
+  "good": 28,
+  "bad": 2,
+  "game": "catch",
+  "cells": "hh",
+  "cond": {
+   "noise": 0.0
+  },
+  "seed": 10,
+  "cpu_s": 50.94072316499995
+ },
+ {
+  "good": 24,
+  "bad": 6,
+  "game": "catch",
+  "cells": "hh",
+  "cond": {
+   "noise": 0.0
+  },
+  "seed": 11,
+  "cpu_s": 52.887551013999996
+ },
+ {
+  "good": 26,
+  "bad": 4,
+  "game": "catch",
+  "cells": "hh",
+  "cond": {
+   "noise": 0.0
+  },
+  "seed": 12,
+  "cpu_s": 52.66493561599998
+ },
+ {
+  "good": 25,
+  "bad": 5,
+  "game": "catch",
+  "cells": "hh",
+  "cond": {
+   "noise": 0.0
+  },
+  "seed": 13,
+  "cpu_s": 52.18996538299996
+ },
+ {
+  "good": 27,
+  "bad": 3,
+  "game": "catch",
+  "cells": "hh",
+  "cond": {
+   "noise": 0.0
+  },
+  "seed": 14,
+  "cpu_s": 50.675637230999996
+ },
+ {
+  "good": 5,
+  "bad": 25,
+  "game": "catch",
+  "cells": "hh",
+  "cond": {
+   "noise": 2.0
+  },
+  "seed": 10,
+  "cpu_s": 53.70196820699999
+ },
+ {
+  "good": 3,
+  "bad": 27,
+  "game": "catch",
+  "cells": "hh",
+  "cond": {
+   "noise": 2.0
+  },
+  "seed": 11,
+  "cpu_s": 52.607123372000046
+ },
+ {
+  "good": 10,
+  "bad": 20,
+  "game": "catch",
+  "cells": "hh",
+  "cond": {
+   "noise": 2.0
+  },
+  "seed": 12,
+  "cpu_s": 53.182410936999986
+ },
+ {
+  "good": 7,
+  "bad": 23,
+  "game": "catch",
+  "cells": "hh",
+  "cond": {
+   "noise": 2.0
+  },
+  "seed": 13,
+  "cpu_s": 53.52200112400004
+ },
+ {
+  "good": 4,
+  "bad": 26,
+  "game": "catch",
+  "cells": "hh",
+  "cond": {
+   "noise": 2.0
+  },
+  "seed": 14,
+  "cpu_s": 53.76938399799997
+ },
+ {
+  "good": 7,
+  "bad": 23,
+  "game": "catch",
+  "cells": "hh",
+  "cond": {
+   "noise": 4.0
+  },
+  "seed": 10,
+  "cpu_s": 54.62748171000004
+ },
+ {
+  "good": 6,
+  "bad": 24,
+  "game": "catch",
+  "cells": "hh",
+  "cond": {
+   "noise": 4.0
+  },
+  "seed": 11,
+  "cpu_s": 55.22249305999998
+ },
+ {
+  "good": 9,
+  "bad": 21,
+  "game": "catch",
+  "cells": "hh",
+  "cond": {
+   "noise": 4.0
+  },
+  "seed": 12,
+  "cpu_s": 54.326999470999965
+ },
+ {
+  "good": 6,
+  "bad": 24,
+  "game": "catch",
+  "cells": "hh",
+  "cond": {
+   "noise": 4.0
+  },
+  "seed": 13,
+  "cpu_s": 56.43302299700002
+ },
+ {
+  "good": 9,
+  "bad": 21,
+  "game": "catch",
+  "cells": "hh",
+  "cond": {
+   "noise": 4.0
+  },
+  "seed": 14,
+  "cpu_s": 54.82801537700004
+ },
+ {
+  "good": 7,
+  "bad": 0,
+  "game": "pong",
+  "cells": "hh",
+  "cond": {
+   "noise": 0.0
+  },
+  "seed": 0,
+  "cpu_s": 19.057250633999956
+ },
+ {
+  "good": 6,
+  "bad": 0,
+  "game": "pong",
+  "cells": "hh",
+  "cond": {
+   "noise": 0.0
+  },
+  "seed": 1,
+  "cpu_s": 20.125738279000075
+ },
+ {
+  "good": 8,
+  "bad": 0,
+  "game": "pong",
+  "cells": "hh",
+  "cond": {
+   "noise": 0.0
+  },
+  "seed": 2,
+  "cpu_s": 19.311659485000064
+ },
+ {
+  "good": 7,
+  "bad": 1,
+  "game": "pong",
+  "cells": "hh",
+  "cond": {
+   "noise": 2.0
+  },
+  "seed": 0,
+  "cpu_s": 19.875879928000018
+ },
+ {
+  "good": 7,
+  "bad": 1,
+  "game": "pong",
+  "cells": "hh",
+  "cond": {
+   "noise": 2.0
+  },
+  "seed": 1,
+  "cpu_s": 19.47559728600004
+ },
+ {
+  "good": 8,
+  "bad": 0,
+  "game": "pong",
+  "cells": "hh",
+  "cond": {
+   "noise": 2.0
+  },
+  "seed": 2,
+  "cpu_s": 20.114812013000005
+ },
+ {
+  "good": 5,
+  "bad": 5,
+  "game": "pong",
+  "cells": "hh",
+  "cond": {
+   "noise": 4.0
+  },
+  "seed": 0,
+  "cpu_s": 20.07924064300005
+ },
+ {
+  "good": 6,
+  "bad": 3,
+  "game": "pong",
+  "cells": "hh",
+  "cond": {
+   "noise": 4.0
+  },
+  "seed": 1,
+  "cpu_s": 19.786950727999965
+ },
+ {
+  "good": 4,
+  "bad": 5,
+  "game": "pong",
+  "cells": "hh",
+  "cond": {
+   "noise": 4.0
+  },
+  "seed": 2,
+  "cpu_s": 20.20272318299999
+ },
+ {
+  "good": 2,
+  "bad": 11,
+  "game": "pong",
+  "cells": "hh",
+  "cond": {
+   "lesion": 0.3
+  },
+  "seed": 0,
+  "cpu_s": 19.8449384889999
+ },
+ {
+  "good": 6,
+  "bad": 0,
+  "game": "pong",
+  "cells": "hh",
+  "cond": {
+   "lesion": 0.3
+  },
+  "seed": 1,
+  "cpu_s": 19.279571008999937
+ },
+ {
+  "good": 8,
+  "bad": 0,
+  "game": "pong",
+  "cells": "hh",
+  "cond": {
+   "lesion": 0.3
+  },
+  "seed": 2,
+  "cpu_s": 19.730857356
+ },
+ {
+  "good": 242,
+  "bad": 0,
+  "game": "run",
+  "cells": "izh",
+  "cond": {
+   "noise": 0.0
+  },
+  "seed": 20,
+  "cpu_s": 12.641705430000002
+ },
+ {
+  "good": 244,
+  "bad": 0,
+  "game": "run",
+  "cells": "izh",
+  "cond": {
+   "noise": 0.0
+  },
+  "seed": 21,
+  "cpu_s": 12.385423876000004
+ },
+ {
+  "good": 242,
+  "bad": 0,
+  "game": "run",
+  "cells": "izh",
+  "cond": {
+   "noise": 0.0
+  },
+  "seed": 22,
+  "cpu_s": 12.653395595000006
+ },
+ {
+  "good": 246,
+  "bad": 0,
+  "game": "run",
+  "cells": "izh",
+  "cond": {
+   "noise": 0.0
+  },
+  "seed": 23,
+  "cpu_s": 12.459634724000011
+ },
+ {
+  "good": 191,
+  "bad": 42,
+  "game": "run",
+  "cells": "izh",
+  "cond": {
+   "noise": 2.0
+  },
+  "seed": 20,
+  "cpu_s": 15.171557477999954
+ },
+ {
+  "good": 178,
+  "bad": 52,
+  "game": "run",
+  "cells": "izh",
+  "cond": {
+   "noise": 2.0
+  },
+  "seed": 21,
+  "cpu_s": 15.507302620999894
+ },
+ {
+  "good": 183,
+  "bad": 47,
+  "game": "run",
+  "cells": "izh",
+  "cond": {
+   "noise": 2.0
+  },
+  "seed": 22,
+  "cpu_s": 15.263462189000052
+ },
+ {
+  "good": 180,
+  "bad": 50,
+  "game": "run",
+  "cells": "izh",
+  "cond": {
+   "noise": 2.0
+  },
+  "seed": 23,
+  "cpu_s": 15.32085215799998
+ },
+ {
+  "good": 159,
+  "bad": 66,
+  "game": "run",
+  "cells": "izh",
+  "cond": {
+   "noise": 4.0
+  },
+  "seed": 20,
+  "cpu_s": 15.765721683000038
+ },
+ {
+  "good": 163,
+  "bad": 62,
+  "game": "run",
+  "cells": "izh",
+  "cond": {
+   "noise": 4.0
+  },
+  "seed": 21,
+  "cpu_s": 15.561855394999952
+ },
+ {
+  "good": 160,
+  "bad": 63,
+  "game": "run",
+  "cells": "izh",
+  "cond": {
+   "noise": 4.0
+  },
+  "seed": 22,
+  "cpu_s": 14.957297800999982
+ },
+ {
+  "good": 156,
+  "bad": 65,
+  "game": "run",
+  "cells": "izh",
+  "cond": {
+   "noise": 4.0
+  },
+  "seed": 23,
+  "cpu_s": 15.10412915400002
+ },
+ {
+  "good": 239,
+  "bad": 6,
+  "game": "run",
+  "cells": "lif",
+  "cond": {
+   "noise": 0.0
+  },
+  "seed": 20,
+  "cpu_s": 12.413743100000033
+ },
+ {
+  "good": 236,
+  "bad": 8,
+  "game": "run",
+  "cells": "lif",
+  "cond": {
+   "noise": 0.0
+  },
+  "seed": 21,
+  "cpu_s": 12.258778005000067
+ },
+ {
+  "good": 234,
+  "bad": 9,
+  "game": "run",
+  "cells": "lif",
+  "cond": {
+   "noise": 0.0
+  },
+  "seed": 22,
+  "cpu_s": 12.584181967000063
+ },
+ {
+  "good": 232,
+  "bad": 14,
+  "game": "run",
+  "cells": "lif",
+  "cond": {
+   "noise": 0.0
+  },
+  "seed": 23,
+  "cpu_s": 12.37633870000002
+ },
+ {
+  "good": 171,
+  "bad": 56,
+  "game": "run",
+  "cells": "lif",
+  "cond": {
+   "noise": 2.0
+  },
+  "seed": 20,
+  "cpu_s": 17.173825396000097
+ },
+ {
+  "good": 189,
+  "bad": 43,
+  "game": "run",
+  "cells": "lif",
+  "cond": {
+   "noise": 2.0
+  },
+  "seed": 21,
+  "cpu_s": 17.120064164999917
+ },
+ {
+  "good": 180,
+  "bad": 49,
+  "game": "run",
+  "cells": "lif",
+  "cond": {
+   "noise": 2.0
+  },
+  "seed": 22,
+  "cpu_s": 17.76213727000004
+ },
+ {
+  "good": 187,
+  "bad": 45,
+  "game": "run",
+  "cells": "lif",
+  "cond": {
+   "noise": 2.0
+  },
+  "seed": 23,
+  "cpu_s": 17.16603299799999
+ },
+ {
+  "good": 171,
+  "bad": 56,
+  "game": "run",
+  "cells": "lif",
+  "cond": {
+   "noise": 4.0
+  },
+  "seed": 20,
+  "cpu_s": 21.561583792999954
+ },
+ {
+  "good": 163,
+  "bad": 61,
+  "game": "run",
+  "cells": "lif",
+  "cond": {
+   "noise": 4.0
+  },
+  "seed": 21,
+  "cpu_s": 21.374963400999945
+ },
+ {
+  "good": 170,
+  "bad": 56,
+  "game": "run",
+  "cells": "lif",
+  "cond": {
+   "noise": 4.0
+  },
+  "seed": 22,
+  "cpu_s": 21.234466393000048
+ },
+ {
+  "good": 174,
+  "bad": 56,
+  "game": "run",
+  "cells": "lif",
+  "cond": {
+   "noise": 4.0
+  },
+  "seed": 23,
+  "cpu_s": 21.83017702099994
+ },
+ {
+  "good": 23,
+  "bad": 7,
+  "game": "catch",
+  "cells": "izh",
+  "cond": {
+   "noise": 0.0
+  },
+  "seed": 10,
+  "cpu_s": 4.044777777000036
+ },
+ {
+  "good": 21,
+  "bad": 9,
+  "game": "catch",
+  "cells": "izh",
+  "cond": {
+   "noise": 0.0
+  },
+  "seed": 11,
+  "cpu_s": 4.021711940000046
+ },
+ {
+  "good": 25,
+  "bad": 5,
+  "game": "catch",
+  "cells": "izh",
+  "cond": {
+   "noise": 0.0
+  },
+  "seed": 12,
+  "cpu_s": 4.120240663000004
+ },
+ {
+  "good": 21,
+  "bad": 9,
+  "game": "catch",
+  "cells": "izh",
+  "cond": {
+   "noise": 0.0
+  },
+  "seed": 13,
+  "cpu_s": 3.694795522999925
+ },
+ {
+  "good": 23,
+  "bad": 7,
+  "game": "catch",
+  "cells": "izh",
+  "cond": {
+   "noise": 0.0
+  },
+  "seed": 14,
+  "cpu_s": 3.9304698390000112
+ },
+ {
+  "good": 9,
+  "bad": 21,
+  "game": "catch",
+  "cells": "izh",
+  "cond": {
+   "noise": 2.0
+  },
+  "seed": 10,
+  "cpu_s": 6.242780432000018
+ },
+ {
+  "good": 11,
+  "bad": 19,
+  "game": "catch",
+  "cells": "izh",
+  "cond": {
+   "noise": 2.0
+  },
+  "seed": 11,
+  "cpu_s": 6.543978780999964
+ },
+ {
+  "good": 10,
+  "bad": 20,
+  "game": "catch",
+  "cells": "izh",
+  "cond": {
+   "noise": 2.0
+  },
+  "seed": 12,
+  "cpu_s": 6.445345932999999
+ },
+ {
+  "good": 8,
+  "bad": 22,
+  "game": "catch",
+  "cells": "izh",
+  "cond": {
+   "noise": 2.0
+  },
+  "seed": 13,
+  "cpu_s": 6.373541086999921
+ },
+ {
+  "good": 10,
+  "bad": 20,
+  "game": "catch",
+  "cells": "izh",
+  "cond": {
+   "noise": 2.0
+  },
+  "seed": 14,
+  "cpu_s": 5.947431929000004
+ },
+ {
+  "good": 6,
+  "bad": 24,
+  "game": "catch",
+  "cells": "izh",
+  "cond": {
+   "noise": 4.0
+  },
+  "seed": 10,
+  "cpu_s": 9.830232797000008
+ },
+ {
+  "good": 7,
+  "bad": 23,
+  "game": "catch",
+  "cells": "izh",
+  "cond": {
+   "noise": 4.0
+  },
+  "seed": 11,
+  "cpu_s": 9.428416114000015
+ },
+ {
+  "good": 9,
+  "bad": 21,
+  "game": "catch",
+  "cells": "izh",
+  "cond": {
+   "noise": 4.0
+  },
+  "seed": 12,
+  "cpu_s": 9.35018318799996
+ },
+ {
+  "good": 7,
+  "bad": 23,
+  "game": "catch",
+  "cells": "izh",
+  "cond": {
+   "noise": 4.0
+  },
+  "seed": 13,
+  "cpu_s": 9.91210210099996
+ },
+ {
+  "good": 11,
+  "bad": 19,
+  "game": "catch",
+  "cells": "izh",
+  "cond": {
+   "noise": 4.0
+  },
+  "seed": 14,
+  "cpu_s": 10.17740069399997
+ },
+ {
+  "good": 9,
+  "bad": 21,
+  "game": "catch",
+  "cells": "lif",
+  "cond": {
+   "noise": 0.0
+  },
+  "seed": 10,
+  "cpu_s": 5.622664408999981
+ },
+ {
+  "good": 11,
+  "bad": 19,
+  "game": "catch",
+  "cells": "lif",
+  "cond": {
+   "noise": 0.0
+  },
+  "seed": 11,
+  "cpu_s": 5.467363798999941
+ },
+ {
+  "good": 7,
+  "bad": 23,
+  "game": "catch",
+  "cells": "lif",
+  "cond": {
+   "noise": 0.0
+  },
+  "seed": 12,
+  "cpu_s": 5.605263504999925
+ },
+ {
+  "good": 9,
+  "bad": 21,
+  "game": "catch",
+  "cells": "lif",
+  "cond": {
+   "noise": 0.0
+  },
+  "seed": 13,
+  "cpu_s": 5.568301499000086
+ },
+ {
+  "good": 6,
+  "bad": 24,
+  "game": "catch",
+  "cells": "lif",
+  "cond": {
+   "noise": 0.0
+  },
+  "seed": 14,
+  "cpu_s": 5.892326720000028
+ },
+ {
+  "good": 8,
+  "bad": 22,
+  "game": "catch",
+  "cells": "lif",
+  "cond": {
+   "noise": 2.0
+  },
+  "seed": 10,
+  "cpu_s": 9.966141272999948
+ },
+ {
+  "good": 7,
+  "bad": 23,
+  "game": "catch",
+  "cells": "lif",
+  "cond": {
+   "noise": 2.0
+  },
+  "seed": 11,
+  "cpu_s": 10.003104989000008
+ },
+ {
+  "good": 7,
+  "bad": 23,
+  "game": "catch",
+  "cells": "lif",
+  "cond": {
+   "noise": 2.0
+  },
+  "seed": 12,
+  "cpu_s": 9.79551927099999
+ },
+ {
+  "good": 3,
+  "bad": 27,
+  "game": "catch",
+  "cells": "lif",
+  "cond": {
+   "noise": 2.0
+  },
+  "seed": 13,
+  "cpu_s": 9.883088108999914
+ },
+ {
+  "good": 9,
+  "bad": 21,
+  "game": "catch",
+  "cells": "lif",
+  "cond": {
+   "noise": 2.0
+  },
+  "seed": 14,
+  "cpu_s": 9.668018465999921
+ },
+ {
+  "good": 6,
+  "bad": 24,
+  "game": "catch",
+  "cells": "lif",
+  "cond": {
+   "noise": 4.0
+  },
+  "seed": 10,
+  "cpu_s": 13.633779814000036
+ },
+ {
+  "good": 4,
+  "bad": 26,
+  "game": "catch",
+  "cells": "lif",
+  "cond": {
+   "noise": 4.0
+  },
+  "seed": 11,
+  "cpu_s": 13.533243646000074
+ },
+ {
+  "good": 8,
+  "bad": 22,
+  "game": "catch",
+  "cells": "lif",
+  "cond": {
+   "noise": 4.0
+  },
+  "seed": 12,
+  "cpu_s": 13.330281096000022
+ },
+ {
+  "good": 7,
+  "bad": 23,
+  "game": "catch",
+  "cells": "lif",
+  "cond": {
+   "noise": 4.0
+  },
+  "seed": 13,
+  "cpu_s": 13.23144723400003
+ },
+ {
+  "good": 4,
+  "bad": 26,
+  "game": "catch",
+  "cells": "lif",
+  "cond": {
+   "noise": 4.0
+  },
+  "seed": 14,
+  "cpu_s": 13.056775164999976
+ },
+ {
+  "good": 7,
+  "bad": 0,
+  "game": "pong",
+  "cells": "izh",
+  "cond": {
+   "noise": 0.0
+  },
+  "seed": 0,
+  "cpu_s": 1.7583191290000286
+ },
+ {
+  "good": 6,
+  "bad": 0,
+  "game": "pong",
+  "cells": "izh",
+  "cond": {
+   "noise": 0.0
+  },
+  "seed": 1,
+  "cpu_s": 1.74481162699999
+ },
+ {
+  "good": 8,
+  "bad": 0,
+  "game": "pong",
+  "cells": "izh",
+  "cond": {
+   "noise": 0.0
+  },
+  "seed": 2,
+  "cpu_s": 1.869799630999978
+ },
+ {
+  "good": 7,
+  "bad": 2,
+  "game": "pong",
+  "cells": "izh",
+  "cond": {
+   "noise": 2.0
+  },
+  "seed": 0,
+  "cpu_s": 2.2321179560000246
+ },
+ {
+  "good": 7,
+  "bad": 1,
+  "game": "pong",
+  "cells": "izh",
+  "cond": {
+   "noise": 2.0
+  },
+  "seed": 1,
+  "cpu_s": 2.127890047000051
+ },
+ {
+  "good": 6,
+  "bad": 1,
+  "game": "pong",
+  "cells": "izh",
+  "cond": {
+   "noise": 2.0
+  },
+  "seed": 2,
+  "cpu_s": 2.2265310649999037
+ },
+ {
+  "good": 5,
+  "bad": 3,
+  "game": "pong",
+  "cells": "izh",
+  "cond": {
+   "noise": 4.0
+  },
+  "seed": 0,
+  "cpu_s": 2.259541431999992
+ },
+ {
+  "good": 4,
+  "bad": 6,
+  "game": "pong",
+  "cells": "izh",
+  "cond": {
+   "noise": 4.0
+  },
+  "seed": 1,
+  "cpu_s": 2.2286213789999465
+ },
+ {
+  "good": 5,
+  "bad": 5,
+  "game": "pong",
+  "cells": "izh",
+  "cond": {
+   "noise": 4.0
+  },
+  "seed": 2,
+  "cpu_s": 2.000908174000074
+ },
+ {
+  "good": 3,
+  "bad": 7,
+  "game": "pong",
+  "cells": "izh",
+  "cond": {
+   "lesion": 0.3
+  },
+  "seed": 0,
+  "cpu_s": 1.8300667009999643
+ },
+ {
+  "good": 5,
+  "bad": 1,
+  "game": "pong",
+  "cells": "izh",
+  "cond": {
+   "lesion": 0.3
+  },
+  "seed": 1,
+  "cpu_s": 1.7359226089999993
+ },
+ {
+  "good": 4,
+  "bad": 6,
+  "game": "pong",
+  "cells": "izh",
+  "cond": {
+   "lesion": 0.3
+  },
+  "seed": 2,
+  "cpu_s": 1.7784596779999902
+ },
+ {
+  "good": 7,
+  "bad": 0,
+  "game": "pong",
+  "cells": "lif",
+  "cond": {
+   "noise": 0.0
+  },
+  "seed": 0,
+  "cpu_s": 1.944457961000012
+ },
+ {
+  "good": 6,
+  "bad": 0,
+  "game": "pong",
+  "cells": "lif",
+  "cond": {
+   "noise": 0.0
+  },
+  "seed": 1,
+  "cpu_s": 1.7196177879999368
+ },
+ {
+  "good": 8,
+  "bad": 0,
+  "game": "pong",
+  "cells": "lif",
+  "cond": {
+   "noise": 0.0
+  },
+  "seed": 2,
+  "cpu_s": 1.6966816649999146
+ },
+ {
+  "good": 7,
+  "bad": 0,
+  "game": "pong",
+  "cells": "lif",
+  "cond": {
+   "noise": 2.0
+  },
+  "seed": 0,
+  "cpu_s": 2.2949242250000452
+ },
+ {
+  "good": 6,
+  "bad": 0,
+  "game": "pong",
+  "cells": "lif",
+  "cond": {
+   "noise": 2.0
+  },
+  "seed": 1,
+  "cpu_s": 2.2798830919999773
+ },
+ {
+  "good": 8,
+  "bad": 0,
+  "game": "pong",
+  "cells": "lif",
+  "cond": {
+   "noise": 2.0
+  },
+  "seed": 2,
+  "cpu_s": 2.15429908100009
+ },
+ {
+  "good": 6,
+  "bad": 2,
+  "game": "pong",
+  "cells": "lif",
+  "cond": {
+   "noise": 4.0
+  },
+  "seed": 0,
+  "cpu_s": 2.492374620000078
+ },
+ {
+  "good": 5,
+  "bad": 3,
+  "game": "pong",
+  "cells": "lif",
+  "cond": {
+   "noise": 4.0
+  },
+  "seed": 1,
+  "cpu_s": 2.528041368000004
+ },
+ {
+  "good": 7,
+  "bad": 1,
+  "game": "pong",
+  "cells": "lif",
+  "cond": {
+   "noise": 4.0
+  },
+  "seed": 2,
+  "cpu_s": 2.6160100329999523
+ },
+ {
+  "good": 7,
+  "bad": 0,
+  "game": "pong",
+  "cells": "lif",
+  "cond": {
+   "lesion": 0.3
+  },
+  "seed": 0,
+  "cpu_s": 1.8125074929999982
+ },
+ {
+  "good": 6,
+  "bad": 0,
+  "game": "pong",
+  "cells": "lif",
+  "cond": {
+   "lesion": 0.3
+  },
+  "seed": 1,
+  "cpu_s": 1.8803303949999872
+ },
+ {
+  "good": 8,
+  "bad": 0,
+  "game": "pong",
+  "cells": "lif",
+  "cond": {
+   "lesion": 0.3
+  },
+  "seed": 2,
+  "cpu_s": 1.770903207999936
+ }
+]

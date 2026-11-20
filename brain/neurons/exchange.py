@@ -16,9 +16,10 @@ This measures that on our own simulator, with our own construction (not theirs):
 4. **The score.** The coincidence factor Gamma (Kistler et al. 1997; Jolivet et al. 2008): the share
    of the target's spikes matched within 2 ms, beyond what chance matching at the same rate gives. 1 is
    a perfect copy and 0 is chance.
-5. **The properties.** Two things HH does by its physics: it starts firing at a high rate, never slowly
-   (a type II onset), and it fires when released from inhibition (rebound). Each fitted model is
-   checked for both.
+5. **The properties.** Two things HH does by its physics: it stays silent with no input, and it fires
+   when released from inhibition (rebound). Each fitted model is checked for both. (``onset_rate`` also
+   records where steady firing starts and how fast; with input steps of 0.25 it cannot separate a steep
+   type I onset from a type II jump, so it is recorded, not judged.)
 
     python -m brain neurons exchange [--seeds 3] [--json FILE]
 """
@@ -312,10 +313,11 @@ def run(seeds: int = 3, workers: int = 4) -> dict:
 
 def table(res: dict) -> list[str]:
     t = res["target"]
-    out = [f"target: one Hodgkin-Huxley cell, 4 state variables; starts firing at {t['onset_rate']:.0f} spikes/s"
-           f" (input {t['onset_input']:g}); rebound after inhibition: {'yes' if t['rebound'] else 'no'};"
-           f" cpu {t['cpu_per_s']:.3f} s per neural second",
-           f"{'model':8s} {'cells':>5s} {'state vars':>10s} {'Gamma test (mean, each seed)':>34s} {'start rate':>11s} {'rebound':>8s} {'cpu/s':>7s}"]
+    silent = lambda r: not (r["onset_input"] == 0.0)          # no steady firing at zero input
+    out = [f"target: one Hodgkin-Huxley cell, 4 state variables; silent at rest: yes; rebound after inhibition:"
+           f" {'yes' if t['rebound'] else 'no'}; cpu {t['cpu_per_s']:.3f} s per neural second",
+           f"{'model':8s} {'cells':>5s} {'state vars':>10s}   {'Gamma on unseen input':>22s}   {'spikes vs HH':>12s}"
+           f" {'silent at rest':>15s} {'rebound':>8s} {'cpu/s':>7s}"]
     for m in models():
         rs = [r for r in res["fits"] if r["model"] == m]
         if not rs:
@@ -323,9 +325,9 @@ def table(res: dict) -> list[str]:
         gs = [r["gamma_test"] for r in rs]
         cells = 1 if m == "izh" else int(m.split("x")[1])
         label = "Izh x1" if m == "izh" else f"LIF x{cells}"
-        reb = sum(r["rebound"] for r in rs)
-        out.append(f"{label:8s} {cells:5d} {rs[0]['state_variables']:10d} {np.mean(gs):8.2f}  ("
+        ratio = np.mean([r["model_spikes_test"] / r["target_spikes_test"] for r in rs])
+        out.append(f"{label:8s} {cells:5d} {rs[0]['state_variables']:10d}   {np.mean(gs):5.2f} ("
                    + ", ".join(f"{g:.2f}" for g in gs) + ")"
-                   + f"{'':>{max(0, 22 - 6 * len(gs))}s} {np.nanmean([r['onset_rate'] for r in rs]):9.0f}/s"
-                   + f" {reb:>4d}/{len(rs)} {np.mean([r['cpu_per_s'] for r in rs]):7.3f}")
+                   + f"   {ratio:11.1f}x {sum(silent(r) for r in rs):>12d}/{len(rs)}"
+                   + f" {sum(r['rebound'] for r in rs):>6d}/{len(rs)} {np.mean([r['cpu_per_s'] for r in rs]):7.3f}")
     return out
