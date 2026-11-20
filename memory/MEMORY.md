@@ -146,8 +146,9 @@ idea at a time, checked against the memory bank first.
   (said third/fourth), corrected in the Thursday close note. Security software up against the market (Palo Alto
   beat and raised). After hours: Intuit -9.8% (lower outlook; Mailchimp sold for $3.68bn vs $12bn), Ross -5.2%,
   Gap +3.6%.
-- Data gap: Yahoo posted Thursday's daily bar with an empty close for about 880 stocks; the recorded scan of
-  2026-11-19 covers 1,580 stocks. Re-run `scan run --refresh --record` when the closes appear, before Friday's open.
+- Data gap (resolved): Yahoo posted Thursday's daily bar with an empty close for about 880 stocks; the closes
+  appeared by 06:30Z Nov 20 and the scan of 2026-11-19 was re-run in full (2,451 stocks, 86 left out; 7fd7bcd).
+  If it happens again: poll, then `scan run --refresh --record` before the next open, commit, refresh the explorer.
 - Desk calls judged at Fri Nov 20's close against Nov 13's: NVDA 7.5%+ (0.50; $162.89; Thu $145.98, -10.38%),
   AMD 9%+ (0.42; $532.84; Thu $489.19, -8.19%), DELL 9.5%+ (0.40; $342.98; Thu about $312.54, -8.88%).
 - Check flaws known (fix offered, not made): after the close every driver line (futures, oil, gold) is measured
