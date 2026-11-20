@@ -1,0 +1,301 @@
+{
+ "asof": "2026-11-19",
+ "at": "2026-11-20T13:34:59Z",
+ "calls": [],
+ "case_sha": "0ff05845eb049bc3",
+ "check": "2026-11-20T1334Z",
+ "claims_noted": 1,
+ "evidence": {
+  "d:gold": {
+   "text": "gold -3.4% since the close (its usual day: 1.8%)"
+  },
+  "f:BJ:1": {
+   "text": "BJ results report (8-K 2.02) at 2026-11-20T12:01Z: BJ\u2019s Wholesale Club Holdings, Inc. Announces Third Quarter Fiscal 2026 Results -- . Exhibit 99.1 BJ\u2019s Wholesale Club Holdings, Inc. Announces Third Quarter Fiscal 2026 Results Strong third quarter results reflect accelerating comparable sales, robust traffic growth and record membership; full-year comparable sales and EPS guidance raised Third Quarter Fiscal 2026 Highlights \u2022Comparable club sales increased by 13.5% year-over-year \u2022Comparable clu",
+   "url": "https://www.sec.gov/Archives/edgar/data/1531152/000153115226000083/bj-2026103126x8kex991.htm"
+  },
+  "f:INTU:2": {
+   "text": "INTU 8-K 1.01, 8.01 at 2026-11-19T22:26Z: false 0000896878 0000896878 2026-11-19 2026-11-19 -- ITEM 1.01 ENTRY INTO A MATERIAL DEFINITIVE AGREEMENT. On November 19, 2026, Intuit Inc. (\u201cIntuit\u201d) entered into an Equity and Asset Purchase Agreement (the \u201cPurchase Agreement\u201d) with Bending Spoons US Inc., a Delaware corporation (\u201cPurchaser\u201d) and an indirect subsidiary of Bending Spoons S.p.A., an Italian joint stock company (societ\u00e0 per azioni) (\u201cParent\u201d), pursuant to which Intuit has agreed to sell ",
+   "url": "https://www.sec.gov/Archives/edgar/data/896878/000119312526468834/d182669d8k.htm"
+  },
+  "f:NGVC:1": {
+   "text": "NGVC results report (8-K 2.02) at 2026-11-19T21:05Z: Natural Grocers by Vitamin Cottage Announces Fiscal 2026 Fourth Quarter and Full Year Results -- Exhibit 99.1 Natural Grocers by Vitamin Cottage Announces Fiscal 2026 Fourth Quarter and Full Year Results Lakewood, Colorado, November 19, 2026. Natural Grocers by Vitamin Cottage, Inc. (NYSE: NGVC) today announced results for its fourth quarter and fiscal year ended September 30, 2026 and provided its outlook for fiscal 2027. Highlights for Fourt",
+   "url": "https://www.sec.gov/Archives/edgar/data/1547459/000143774926037715/ex_1047600.htm"
+  },
+  "g:1000": {
+   "text": "Metal Mining: the median of its 9 checked stocks moved -3.1%"
+  },
+  "g:3674": {
+   "text": "Semiconductors & Related Devices: the median of its 59 checked stocks moved -3.6%"
+  },
+  "h:SVRA": {
+   "text": "SVRA against the market, last sessions: 11-13 -1.3%, 11-16 -1.4%, 11-17 +1.6%, 11-18 +5.7%, 11-19 +12.8%"
+  },
+  "k": {
+   "text": "Market: S&P 500 (SPY) -0.9%, Nasdaq 100 (QQQ) -1.7%, Russell 2000 (IWM) -0.4%, S&P 500 futures -0.9%, VIX +7.7% (before the open)"
+  },
+  "m:BJ": {
+   "text": "BJ (BJ's Wholesale Club Holdings, Inc.; Retail-Variety Stores) -6.1% since the close (before the open), outside its 2-in-3 range (-6%..+6%)"
+  },
+  "m:INTU": {
+   "text": "INTU (INTUIT INC.; Services-Prepackaged Software) -9.6% since the close (before the open), outside its 2-in-3 range (-8%..+10%)"
+  },
+  "m:NGVC": {
+   "text": "NGVC (Natural Grocers by Vitamin Cottage, Inc.; Retail-Grocery Stores) -9.8% since the close (before the open), outside its 2-in-3 range (-6%..+7%)"
+  },
+  "m:SVRA": {
+   "text": "SVRA (Savara Inc; Pharmaceutical Preparations) -25.5% since the close (before the open), OUTSIDE its 9-in-10 range (-9%..+11%)"
+  },
+  "n:SVRA": {
+   "text": "SVRA accounts: market value $1.3 bn; cash and equivalents $29.8 m (2026-09-30; investments not counted); long-term debt $30.2 m (2026-09-30); net income $-152.7 m over the four quarters to 2026-09-30; that cash alone covers about 0.8 quarters of such losses"
+  },
+  "p:BJ~COST": {
+   "text": "BJ and COST: market-adjusted daily returns correlated 0.54 over the last 250 sessions; COST +1.4% since the close"
+  },
+  "p:BJ~KR": {
+   "text": "BJ and KR: market-adjusted daily returns correlated 0.55 over the last 250 sessions; KR +2.0% since the close"
+  },
+  "p:INTU~ADBE": {
+   "text": "INTU and ADBE: market-adjusted daily returns correlated 0.76 over the last 250 sessions; ADBE -0.7% since the close"
+  },
+  "p:INTU~CRM": {
+   "text": "INTU and CRM: market-adjusted daily returns correlated 0.75 over the last 250 sessions; CRM -0.6% since the close"
+  },
+  "p:INTU~WDAY": {
+   "text": "INTU and WDAY: market-adjusted daily returns correlated 0.77 over the last 250 sessions; WDAY -0.8% since the close"
+  },
+  "q:AMD": {
+   "text": "AMD -6.5% since the close of 2026-11-19, as the check read it"
+  },
+  "q:MU": {
+   "text": "MU -5.2% since the close of 2026-11-19, as the check read it"
+  },
+  "q:NVDA": {
+   "text": "NVDA -3.6% since the close of 2026-11-19, as the check read it"
+  },
+  "r:gold": {
+   "text": "the stocks that moved most with gold over the year, today: RGLD -1.3% (its rate implies -2.1%), NEM -2.0% (its rate implies -2.3%), MUX -2.7% (its rate implies -3.0%), HL -2.2% (its rate implies -3.3%), IAUX -2.6% (its rate implies -2.9%), CDE -2.1% (its rate implies -3.0%)"
+  },
+  "s1": {
+   "text": "2026-11-20T13:30Z finance.yahoo.com: Savara Informed That FDA Will Not Take Action on the Molgramostim BLA for Autoimmune Pulmonary Alveolar Proteinosis (Autoimmune PAP) by the PDUFA Date -- YARDLEY, Pa., November 20, 2026--Savara Inc. (Nasdaq: SVRA), a clinical-stage biopharmaceutical company focused on rare respiratory diseases, today announced that the U.S. Food and Drug Administration (FDA) has communicated that it will not meet the Prescription Drug User Fee Act (PDUFA) target action date o",
+   "url": "https://finance.yahoo.com/healthcare/articles/savara-informed-fda-not-action-133000064.html?.tsrc=rss"
+  },
+  "s11": {
+   "text": "2026-11-20T12:29Z finance.yahoo.com: BJ's Wholesale Club beats estimates, raises guidance -- Investing.com -- BJ's Wholesale Club Holdings, Inc. (NYSE: BJ) reported third-quarter results that exceeded analyst expectations, with adjusted earnings per share of $1.73, beating the consensus estimate of $1.26 by $0.47.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/bj-wholesale-club-beats-estimates-122942177.html?.tsrc=rss"
+  },
+  "s12": {
+   "text": "2026-11-20T12:52Z finance.yahoo.com: US Equity Futures Drop Pre-Bell as Anthropic Shares Decline One Day After Debut -- US equity futures were lower pre-bell Friday as Anthropic (ANT) shares declined one day after the Cl",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/us-equity-futures-drop-pre-125211794.html?.tsrc=rss"
+  },
+  "s13": {
+   "text": "2026-11-20T12:02Z finance.yahoo.com: Anthropic, AMD, Intel, Marvell, Intuit, and More Stocks That Explain Today\u2019s Market -- Anthropic stock tumbles. Brace for volatility as investors try to figure out what the AI lab is worth.",
+   "url": "https://finance.yahoo.com/m/801603d1-8318-3eb0-99a6-10147f0d5ed5/anthropic%2C-amd%2C-intel%2C.html?.tsrc=rss"
+  },
+  "s14": {
+   "text": "2026-11-20T10:56Z finance.yahoo.com: Premarket movers: Anthropic slides after debut, Intuit tumbles on Mailchimp sale -- Investing.com -- U.S. stock futures fell early Friday after a rough session on Wall Street, where Anthropic\u2019s highly anticipated market debut failed to lift the artificial intelligence trade. S&P 500 futures slipped 0.6% and Nasdaq-100 futures dropped 1.4%, while Dow Jones Industrial Average futures were roughly flat.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/premarket-movers-anthropic-slides-debut-105600121.html?.tsrc=rss"
+  },
+  "s3": {
+   "text": "2026-11-20T02:35Z finance.yahoo.com: Savara Inc. (SVRA) Shares Are Taking Off. Here\u2019s What\u2019s Coming -- Savara Inc. (NASDAQ:SVRA) is one of the 10 Stocks Posting Monster Gains Amid Market Downfall. Savara extended its winning streak to a third consecutive day on Thursday, surging 10.38 percent to close at $5.21 apiece, as investors began positioning portfolios ahead of the Food and Drug Administration\u2019s (FDA) decision on its treatment candidate for autoimmune [\u2026]",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/savara-inc-svra-shares-taking-023551472.html?.tsrc=rss"
+  },
+  "s4": {
+   "text": "2026-11-19T23:13Z www.marketbeat.com: What Natural Grocers by Vitamin Cottage (NGVC) Said on Its Q4 Earnings Call -- Natural Grocers by Vitamin Cottage (NYSE:NGVC) reported higher fourth-quarter sales but lower earnings per share as inventory shrink, freight costs and expenses tied to new stores weighed on results. The natural and organic grocer also forecast fiscal 2027 earnings ranging from flat to modestly high",
+   "url": "https://www.marketbeat.com/instant-alerts/transcript-what-natural-grocers-by-vitamin-cottage-ngvc-said-on-its-q4-earnings-call-2026-11-19/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss"
+  },
+  "s7": {
+   "text": "2026-11-20T12:58Z stocktwits.com: INTU Stock Draws Multiple Price Target Cuts After Lowering FY27 Revenue Outlook -- Intuit expects total fiscal 2027 revenue of $23.08 billion to $23.37 billion, representing 8% to 9% growth, compared with its previous 9% to 10% forecast.",
+   "url": "https://stocktwits.com/news-articles/markets/equity/intu-stock-draws-multiple-price-target-cuts-after-lowering-fy-27-revenue-outlook/cNbSiPrR9KH?.tsrc=rss"
+  },
+  "s9": {
+   "text": "2026-11-20T11:03Z finance.yahoo.com: Intuit Shares Sink as Weak Outlook Overshadows Earnings Beat -- Intuit Stock Tumbles After Outlook Disappoints",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/intuit-shares-sink-weak-outlook-110300184.html?.tsrc=rss"
+  },
+  "t1": {
+   "text": "the last note (2026-11-20T0507Z), theme 'The market sold the Anthropic news, and the selling reached every sector': From +1.3% before the open to -2.0% at the close for the S&P 500 fund: a swing of over 3 points on the day of the largest listing on record. The AI group closed at its lows: Nvidia -3.3% to $145.98, Marvell -4.9%, Amazon -3.9%, Alphabet -3.5%, Oracle -2.9%, Broadcom -2.1%; AMD -7.7% on a Hunterbrook report alleging ties to a blacklisted Chinese server maker (Motley Fool). All 11 se"
+  },
+  "t2": {
+   "text": "the last note (2026-11-20T0507Z), theme \"Intuit fell after hours on a lower outlook and Mailchimp's sale at a third of its price\": Intuit fell 9.8% after hours: first-quarter revenue grew 12% and beat its guidance, but it lowered its full-year revenue outlook (MarketBeat on its call) and agreed to sell Mailchimp to Bending Spoons for $3.68 billion, against the $12 billion it paid in 2021 (Simply Wall St on Yahoo; its 8-K)."
+  },
+  "t3": {
+   "text": "the last note (2026-11-20T0507Z), theme \"Consumer stocks led the fall, and the evening's retail reports cut outlooks\": Consumer discretionary was the worst sector (-2.79%, Motley Fool); Williams-Sonoma closed -15.2% (after reiterating, not raising, its guidance). After hours: Ross -5.2% even after raising its EPS outlook; Gap +3.6% after flat comparable sales, a full-year sales outlook cut to roughly flat from +1-1.5%, and a slower start to the fourth quarter (StockTitan)."
+  },
+  "z:SVRA": {
+   "text": "SVRA mosaic: at the close of 2026-11-19, before this move, the chance of the filing in the next 20 sessions: late or unreliable accounts 0.2% (the usual stock: 0.4%); a restructuring or a write-off 0.3% (the usual stock: 0.3%); a sale of new shares 7.4% (the usual stock: 0.9%; raised most by 2 sales of new shares opened in three years, a registration to sell securities on file). A chance that a filing comes, not a direction (tests P1a-P3b, research/RESULTS.md)"
+  }
+ },
+ "note": {
+  "backdrop": "Before Friday's open the S&P 500 fund is -0.9%, the Nasdaq 100 fund -1.7%, the Russell 2000 fund -0.4%, S&P 500 futures -0.9% and the VIX +7.7% (the check, 13:34Z); Yahoo's page at about 13:36Z showed the VIX at 30.87 and the 10-year yield at 4.98%. Overnight the AI chip selloff ran through Asia: Taiwan's Taiex -6.2% to 36,033.29, -17.5% for the week, its worst week since 1991 (Bloomberg, via 24/7 Wall St); the KOSPI -5.2% and the Nikkei 225 -5.1%, a seven-month low; SoftBank -14.5% (24/7 Wall St). Treasuries were bought: the 10-year yield fell 6 basis points to 4.989% (CNBC, via StockTitan). Anthropic was $87.92 at 8:02 a.m. ET, 9.52% below Thursday's $97.17 close and 5.9% above its $83 offer price (StockTitan). The check flagged no market-wide move beyond what the market line shows. Today decides whether the S&P 500 has a seventh loss in a row. Four of this morning's eight flags rest on one or two pre-market trades and no news (SAIC, Marqeta, Richardson Electronics, BeOne): the known stray-print flaw, listed as unexplained.",
+  "backdrop_evidence": [
+   "k",
+   "s12",
+   "s14",
+   "t1",
+   "https://www.stocktitan.net/articles/stock-market-today-live-november-20-2026",
+   "https://247wallst.com/investing/2026/11/20/taiwan-stock-market-falls-6-2-to-cap-its-worst-week-since-1991-as-kospi-closes-down-5-2-and-nikkei-225-drops-5-1-in-ai-chip-selloff/"
+  ],
+  "by": "agent",
+  "calls": [],
+  "check": "2026-11-20T1334Z",
+  "read": [
+   {
+    "direction": "none",
+    "published": "2026-11-20T12:13:29Z",
+    "says": "Chip stocks fell in Asia, Europe and US pre-market trading on Nov 20: AMD -6.31%, TSMC -5.77%, Micron -4.99%, Nvidia -3.26% at $141.23 by 8:02 a.m. ET; Anthropic $87.92, above its $83 offer price; the 10-year yield down 6 bp to 4.989% (CNBC); BJ's EPS included a credit-card fee settlement that cut costs by about $240 million.",
+    "tier": "reported",
+    "url": "https://www.stocktitan.net/articles/stock-market-today-live-november-20-2026"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-20T07:33:04Z",
+    "says": "Taiwan's Taiex fell 6.2% on Nov 20 and 17.5% for the week, its worst week since 1991 (Bloomberg); KOSPI -5.2%, Nikkei -5.1%; SoftBank -14.5%; Tokyo is shut Monday.",
+    "tier": "reported",
+    "url": "https://247wallst.com/investing/2026/11/20/taiwan-stock-market-falls-6-2-to-cap-its-worst-week-since-1991-as-kospi-closes-down-5-2-and-nikkei-225-drops-5-1-in-ai-chip-selloff/"
+   },
+   {
+    "direction": "down",
+    "published": "2026-11-20T13:30:00Z",
+    "says": "Savara: the FDA will not meet the Nov 22, 2026 PDUFA date for its molgramostim BLA in autoimmune PAP; the review continues and no revised action date has been given.",
+    "ticker": "SVRA",
+    "tier": "reported",
+    "url": "https://finance.yahoo.com/healthcare/articles/savara-informed-fda-not-action-133000064.html"
+   }
+  ],
+  "singles": [
+   {
+    "beneath": "The stock had risen into the date (+5.7% Wednesday, +12.8% Thursday), so this gives back the run-up and more. Its cash and equivalents were $29.8 million at Sep 30 against $152.7 million of losses over four quarters, about 0.8 quarters (investments not counted). Before the news the mosaic put the chance of a share-sale filing in 20 sessions at 7.4% against 0.9% for the usual stock. My inference: a delay with no date makes paying for the wait more pressing; that chance is a chance a filing comes, not a direction.",
+    "cause": "Savara is -25.5%: the FDA will not meet the Nov 22 action date for its lead drug, molgramostim, in autoimmune PAP; the review continues and no new date has been given (its release).",
+    "evidence": [
+     "m:SVRA",
+     "h:SVRA",
+     "n:SVRA",
+     "z:SVRA",
+     "s1",
+     "s3",
+     "https://finance.yahoo.com/healthcare/articles/savara-informed-fda-not-action-133000064.html"
+    ],
+    "kind": "reported",
+    "t": "SVRA"
+   },
+   {
+    "beneath": "The last note asked whether application software would follow. So far it has not: Intuit's closest partners over the year are down under 2% (Workday -0.8%, Adobe -0.7%, Salesforce -0.6%, ServiceNow -1.9%) and the software industry median is -1.2%. The fall is about Intuit's own growth, not a repricing of its group.",
+    "cause": "Intuit is -9.6% before the open, after cutting its fiscal 2027 revenue outlook to $23.08-23.37 billion (8% to 9% growth) and drawing several price-target cuts (Stocktwits), and agreeing to sell Mailchimp to Bending Spoons (its 8-K).",
+    "evidence": [
+     "m:INTU",
+     "s7",
+     "s9",
+     "f:INTU:2",
+     "p:INTU~WDAY",
+     "p:INTU~ADBE",
+     "p:INTU~CRM",
+     "t2"
+    ],
+    "kind": "reported",
+    "t": "INTU"
+   }
+  ],
+  "themes": [
+   {
+    "beneath": "In proportion: Nvidia at $140.41 (13:36Z) is 13.80% below its $162.89 close of Nov 13; AMD at $454.00 is 14.80% below $532.84; Dell at $292.70 is 14.66% below $342.98. All three are past the desk's size lines (7.5%, 9%, 9.5%), which are judged at today's close. Taiwan's index is mostly technology, so a chip selloff is an index selloff there. My inference: the US-listed Asian funds closed Thursday before Friday's Asian losses (24/7 Wall St), so part of this morning's fall in US chips is that catch-up, and the rest is the week's run of selling.",
+    "cause": "Asia's chip-heavy markets fell over 5% each on Friday: the Taiex -6.2% (-17.5% for the week), the KOSPI -5.2%, the Nikkei -5.1%; SoftBank -14.5%, Advantest -10.3%, Tokyo Electron -7.1% (24/7 Wall St). ASML fell 5.8% in Europe (CNBC, via StockTitan). Before the US open: AMD -6.3%, TSMC -5.8%, Micron -5.0%, Nvidia -3.3% (StockTitan, 8:01-8:02 a.m. ET); the check's semiconductor industry median is -3.6% over 59 stocks.",
+    "evidence": [
+     "g:3674",
+     "q:NVDA",
+     "q:AMD",
+     "q:MU",
+     "t1",
+     "s13",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-20-2026",
+     "https://247wallst.com/investing/2026/11/20/taiwan-stock-market-falls-6-2-to-cap-its-worst-week-since-1991-as-kospi-closes-down-5-2-and-nikkei-225-drops-5-1-in-ai-chip-selloff/"
+    ],
+    "kind": "reported",
+    "mechanism": "The same AI-spending worry that sold US chips on Thursday was priced in Asia's Friday session and comes back to US chips at the open. CNBC wrote that markets 'question whether massive investments in AI infrastructure will generate sufficient returns' and that Anthropic's debut 'failed to boost the artificial intelligence trade' (via StockTitan): a view, not a fact.",
+    "members": [
+     "NVDA",
+     "AMD",
+     "MU",
+     "AVGO",
+     "MRVL"
+    ],
+    "name": "The AI chip selloff went round the world overnight and is back in US chips",
+    "read_through": [],
+    "watch": "Whether US chips close below their pre-market prices (a seventh S&P 500 loss) or recover as Deutsche Bank's 'very oversold' reading would have it (CNBC, an opinion); the three size calls at today's close."
+   },
+   {
+    "beneath": "My inference: when a fall is broad, holders sell what is still up to cover losses elsewhere, and gold had been a winner. Safety buying went to Treasuries, not gold. No source states this; it is a pattern, not a finding.",
+    "cause": "Gold is -3.4% since Thursday's close, about twice its usual day (1.8%); the metal-mining median is -3.1% (9 stocks), and the stocks most tied to gold fell about as far as their rates imply (Newmont -2.0% against -2.3%, Hecla -2.2% against -3.3%). Treasuries rose at the same time (the 10-year yield -6 bp, CNBC via StockTitan).",
+    "evidence": [
+     "d:gold",
+     "g:1000",
+     "r:gold",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-20-2026"
+    ],
+    "kind": "inferred",
+    "mechanism": "Through the miners' tie to the metal: their moves match what a year of daily returns implies from gold's fall.",
+    "members": [
+     "NEM",
+     "RGLD",
+     "HL",
+     "CDE"
+    ],
+    "name": "Gold fell with stocks instead of against them",
+    "read_through": [],
+    "watch": "Gold recovering while stocks keep falling would weaken the selling-winners reading; gold falling further with yields falling would fit it."
+   },
+   {
+    "beneath": "BJ's settled its credit-card fee lawsuit in the quarter, which cut its selling and administrative costs by about $240 million before about $95 million of new costs (StockTitan, from its release); its adjusted EPS equals its reported $1.73, so the settlement is inside the beat. My inference: the market is pricing the 4.1% sales growth without gasoline and taking the beat as one-time.",
+    "cause": "BJ's beat and raised but is -6.1%: comparable club sales +13.5%, +4.1% without gasoline, EPS $1.73 against a $1.26 consensus (its 8-K; Investing.com). Natural Grocers is -9.8%: fourth-quarter sales +3.4% but EPS lower, on shrink, freight and new-store costs, and a fiscal 2027 EPS outlook from flat to modestly higher (its 8-K; MarketBeat on its call). Ross -5.0% and Gap +3.5% at about 8 a.m. ET (StockTitan).",
+    "evidence": [
+     "m:BJ",
+     "f:BJ:1",
+     "s11",
+     "p:BJ~KR",
+     "p:BJ~COST",
+     "m:NGVC",
+     "f:NGVC:1",
+     "s4",
+     "t3",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-20-2026"
+    ],
+    "kind": "reported",
+    "mechanism": "Each on its own report; BJ's partners Kroger (+2.0%) and Costco (+1.4%) are up, so BJ's fall is its own.",
+    "members": [
+     "BJ",
+     "NGVC",
+     "ROST",
+     "GAP"
+    ],
+    "name": "Retail reports: beats that do not hold up",
+    "read_through": [],
+    "watch": "BJ's call and the regular session: whether the fall holds once the settlement's size is spelled out."
+   }
+  ],
+  "threads": [
+   "The desk's size calls are judged at today's close: Nvidia $140.41 at 13:36Z, 13.80% below $162.89 (line 7.5%); AMD $454.00, 14.80% below $532.84 (line 9%); Dell $292.70, 14.66% below $342.98 (line 9.5%).",
+   "A seventh S&P 500 loss in a row? Anthropic against its $83 offer price ($87.92 at 8:02 a.m. ET).",
+   "Gold falling with stocks: selling of winners, or something else?",
+   "Savara: a new FDA date or a share sale; Capricor's FDA decision by Sunday Nov 22.",
+   "Health insurers: UnitedHealth $336.50 before the open, +1.8% on Thursday's $330.48 close; a day without a fall?",
+   "Check flaws: single early pre-market trades flagged as moves again (SAIC, MQ, RELL, ONC); the bank's market value for BeOne (ONC) is wrong; after-close driver lines from the previous day's bar; the oil contract roll."
+  ],
+  "unexplained": [
+   {
+    "t": "SAIC",
+    "tried": "-9.3% on one pre-market trade at $130.00 (12:55Z in the bank's 5-minute bars); no filing, no story, no news found by web search; its partners are flat or up (Booz Allen +1.6%). Likely a stray print; the regular session will tell."
+   },
+   {
+    "t": "MQ",
+    "tried": "-6.9% on two pre-market trades (12:00-12:52Z); no filing, no story; its partners are flat (Q2 -0.9%)."
+   },
+   {
+    "t": "RELL",
+    "tried": "-7.9% on one pre-market trade at 13:00Z; no filing, no story. Its partners are chip-equipment makers that fell 4-8% this morning (Cohu -7.7%, Advanced Energy -5.3%), so the chip selloff may be part of it; one trade cannot say."
+   },
+   {
+    "t": "ONC",
+    "tried": "-4.4% on two trades at 09:00-09:05Z; no filing, no story; its partner Zai Lab is -4.5%. The bank's market value for it ($609.5 bn) is wrong and was not used."
+   }
+  ]
+ },
+ "recorded_at": "2026-11-20T13:39:23Z"
+}
