@@ -322,4 +322,61 @@ What this shows:
 
 ## 3. Training on a task nobody wired (`train`)
 
-Results to follow: the first run is in progress.
+Our circuits were wired by hand for one game each. This adds training, with one trainer for every cell,
+on a task no one wired.
+
+- **The task.** Six input fibres. Each of four classes is a fixed pattern in which every fibre fires once,
+  at its own time between 5 and 50 ms. A trial moves every spike by about 1.5 ms at random and adds, on
+  each fibre with chance 0.2, one extra spike. Every class has the same spike counts on every fibre, so
+  only timing tells them apart (chance is 25%).
+- **The network.** The fibres feed n hidden cells of one kind through conductance synapses, each with a
+  weight (its sign makes it excitatory or inhibitory) and a delay of 0.25-20 ms. The answer is read
+  from how often each hidden cell fired (ridge regression), so the cells must turn timing into counts.
+- **The training.** The cross-entropy method on weights and delays: 32 networks a generation, the best 6
+  kept, 30 generations, scored on 64 validation trials with the readout fitted on 64 others. The best
+  network is tested once on 256 fresh trials. "Untrained" is 8 random networks with a fitted readout.
+- **Fixed delays** (`--no-delays`). Every delay is 1 ms and only weights are trained, so any timing must
+  come from inside the cells: the paper's setting, without our circuits' strength.
+
+Test accuracy, mean of three seeds (untrained in brackets):
+
+| cell | n=1 | n=2 | n=4 | n=8 | n=16 | CPU per cell |
+|---|---|---|---|---|---|---|
+| **Weights and delays trained** | | | | | | |
+| LIF (1) | 45% [34%] | 79% [46%] | 89% [54%] | 92% [75%] | 94% [91%] | 1x |
+| Izhikevich (2) | 46% [33%] | 71% [41%] | 82% [51%] | 86% [68%] | 91% [82%] | 0.9x |
+| Hodgkin-Huxley (4) | 45% [37%] | 82% [46%] | 86% [59%] | 91% [75%] | 94% [87%] | 5.2x |
+| **Weights trained, every delay 1 ms** | | | | | | |
+| LIF (1) | 46% [34%] | 75% [45%] | 84% [56%] | 91% [73%] | 93% [88%] | 1x |
+| Izhikevich (2) | 46% [34%] | 71% [41%] | 79% [50%] | 82% [66%] | 87% [81%] | 1x |
+| Hodgkin-Huxley (4) | 44% [36%] | 70% [46%] | 85% [56%] | 88% [75%] | 93% [84%] | 5x |
+
+What this shows:
+
+- Training works on every cell: from a third right untrained to 9 in 10 right with 8-16 cells.
+- Richer cells did not need fewer cells here. Hodgkin-Huxley and LIF networks reached the same accuracy
+  at every size, with delays and without (at n=4: 86% and 89%; fixed delays 85% and 84%). The paper's
+  claim, that a rich cell does the work of several simple ones, did not show up on this task.
+- The Izhikevich cell, which our circuits use, was a few points behind both at every size from n=2 (n=8:
+  86% against 91-92%; fixed delays 82% against 88-91%).
+- Trained delays, our circuits' strength, added 0-5 points for every cell (n=4: LIF 84% to 89%,
+  Izhikevich 79% to 82%, Hodgkin-Huxley 85% to 86%).
+- One cell is capped near 50% for every kind: one spike count can split four classes only two ways.
+- Limits: from n=8 the networks reach 100% on the 64 validation trials, so the trainer can no longer tell
+  them apart, and differences above that size are capped by the method. Three seeds, one task, one
+  trainer (30 generations). The LIF cell's 1.25 ms time constant makes it a sharp coincidence detector,
+  which suits a timing task. These are recorded results for this setup, not general claims.
+
+## What the three parts say together
+
+- Inside the cell, richer is not free: a Hodgkin-Huxley cell costs 5-10 times the CPU of the others here.
+- It bought something in one place: the hand-wired Catch circuit caught 87% on it against 75%, with the
+  same landing guess.
+- It did not buy fewer cells: two plain LIF cells copied a Hodgkin-Huxley cell's spikes better than one
+  Izhikevich cell, no number of LIF cells (up to eight) copied it well, and trained networks of LIF and
+  Hodgkin-Huxley cells needed the same number of cells.
+- What our circuits already had held up: delays carry timing for every kind of cell, and one wiring runs
+  on all three.
+
+Results: `research/neurons/ladder-2026-11-20.json`, `exchange-2026-11-20.json`, `train-2026-11-20.json`,
+`train-fixed-delays-2026-11-20.json`.
