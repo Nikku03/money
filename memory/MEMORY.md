@@ -67,6 +67,7 @@ Updated 2026-11-16 (three sessions in the memory bank; the diagnosis; step 2 tes
 | Mosaic: share sale, late accounts, cuts | `mosaic read`, `mosaic show`, `mosaic radar --record`, `mosaic score` | `docs/MOSAIC.md` |
 | Trader replays | `scan trader [--one-trade]` | `research/SCAN-TRADER-2026-11.md` |
 | Memory bank: recall anything said or done | `memory start`, `memory recall`, `memory remember`, `memory save`, `memory load` | `docs/MEMORY.md` |
+| Spiking neurons (side project, not the market): hand-wired Pong/Catch/Runner, school; cells lif/izh/hh | `neurons play/catch/run --cells`, `neurons ladder`, `neurons exchange`, `neurons train [--no-delays]` | `docs/NEURONS.md` |
 
 ## What was found (verdicts in `research/RESULTS.md`)
 
@@ -125,6 +126,18 @@ idea at a time, checked against the memory bank first.
 - Mosaic calls (`research/mosaic_calls.jsonl`): 75, the top 25 of each picture at the close of 2026-11-13, judged
   after 20 sessions (mid-December). `mosaic score`.
 - S1 calls (`research/s1_calls.jsonl`, 27), predictions (`research/predictions.jsonl`, 31), M1 calls (99).
+
+## The neuron ladder (2026-11-20, at the person's request; `docs/NEURONS.md`)
+
+- The person shared He et al. 2024 (Nat Comput Sci, doi 10.1038/s43588-024-00674-9: rich Hodgkin-Huxley cells
+  vs more simple LIF cells) and asked to compare it with "our brain model" (the spiking circuits, not the
+  market), then to "add the missing parts but keep the good things". Brought `brain/neurons` over from
+  `claude/sleepy-goldberg-2ma18z` unchanged and added HH and LIF cells beside Izhikevich (default; every old
+  result reproduces exactly), an exchange-rate measurement and timing-task training.
+- Found: HH caught 87% in hand-wired Catch (Izh 75%, LIF 28%); Izh alone has Runner at 0 crashes (wiring tuned
+  on it). Copying one HH cell: LIF x1 0.34, Izh 0.47, LIF x2 0.53, x4 0.50, x8 0.53 (Gamma); none close.
+  Trained on timing: HH and LIF need the same number of cells (n=4: 86%/89%), Izh a few points behind;
+  trained delays add 0-5 points for every cell. HH costs 5-10x CPU. The paper's claim did not show up here.
 
 ## Open questions and offers (no answer yet)
 

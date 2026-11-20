@@ -117,3 +117,18 @@ FAIL); "the market runs on chains of cause and effect, news and catalysts": the 
   staffing and IT services down, inferred AI reading), after the close (a 2% fall; Intuit, Ross, Gap after hours).
 - The close scan of 2026-11-19 covered only 1,580 stocks: Yahoo's Thursday bars lacked closes for about 880. A poll
   waits for them; the container restarted once during the wait (the bank survived).
+- The full scan of 2026-11-19 was re-run at 06:30Z when Yahoo posted the missing closes (2,451 stocks, 86 left
+  out; 7fd7bcd); explorer refreshed.
+
+## 2026-11-20: the paper and the neuron ladder
+
+- The person asked to compare He et al. 2024 (PMID 39152312; abstract only, full text paywalled) with "our brain
+  model". First answered about the market engine; the person said to compare with the brain model itself, so
+  compared it with the spiking circuits (`brain/neurons`). Then asked: "add the missing parts in our current brain
+  model, but also keep the good things".
+- Brought the neuron code over unchanged (tests pass); added `--cells lif|izh|hh` (calibrated gains), `neurons
+  ladder` (every game on each cell), `neurons exchange` (fitting LIF circuits to one HH cell) and `neurons train`
+  (timing task, delays trained or fixed); 20 new tests; results in `research/neurons/` and `docs/NEURONS.md`.
+- Verdict: richer cells did not need fewer cells on this simulator; HH helped hand-wired Catch; delays (our
+  wiring's strength) helped every cell; HH costs 5-10x CPU.
+
