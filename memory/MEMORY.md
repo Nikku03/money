@@ -22,12 +22,11 @@ Updated 2026-11-16 (three sessions in the memory bank; the diagnosis; step 2 tes
   safe high variability trading ML model" following catalysts; moonshots of 10%+, about 5 trades a week; options;
   a Markov chain as a mass-emotion detector; trial results calendars). `memory recall` searches all three.
 - Copies live in the Google Drive folder `money-brain memory`, one file per save, named with the date; the newest
-  is current. One upload from here carries about 3 MB, so `save` writes larger files in parts. On Drive now: the
-  talk of all three sessions (`talk 2026-11-16d`, keys masked) and the vectors of this session only
-  (`vectors 2026-11-15c.npz`). The vectors of all three sessions (13 MB, five parts) are NOT on Drive: the upload
-  was refused for size and the person was asked (2026-11-16) whether to send the five parts. After a reset,
-  download the newest `talk` and every `vectors` part there is and run `memory load --talk FILE --vectors FILE
-  ...`; whatever has no vector is embedded again by `memory index` (about two hours for everything), and recall
+  is current. One upload from here carries about 3 MB, so `save` writes larger files in parts. Newest full set
+  (2026-11-20): `MEMORY`, `JOURNAL`, `claims`, `notes`, `talk 2026-11-20 1of2/2of2.jsonl.gz` and `vectors 2026-11-20
+  1of6..6of6.npz`, all uploaded by file reference. After a reset, download the newest `talk` and every `vectors`
+  part of the same date and run `memory load --talk FILE ... --vectors FILE ...`; whatever has no vector is
+  embedded again by `memory index` (about two hours for everything), and recall
   by words works meanwhile.
 - After meaningful work: rewrite what changed here, add to `JOURNAL.md`, `memory save`, commit, push, upload.
 - The local home's market data (2.7 GB of SEC data, 3.1 GB of prices) is public and rebuilt by commands
