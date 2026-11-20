@@ -1,0 +1,425 @@
+{
+ "asof": "2026-11-19",
+ "at": "2026-11-20T17:40:00Z",
+ "calls": [],
+ "case_sha": "1617344236b2ea47",
+ "check": "2026-11-20T1740Z",
+ "claims_noted": 0,
+ "evidence": {
+  "c1": {
+   "text": "movers tied together: ANET, AVGO, CLS, ONTO, MPWR, AOSL, COHR, LSCC, APH, SANM, AAOI, AEHR, TTMI, BE (ANET~CLS by p:ANET~CLS; ANET~APH by p:ANET~APH; ANET~ONTO by p:ANET~ONTO; AVGO~CLS by p:AVGO~CLS; CLS~COHR by p:CLS~COHR; AOSL~MPWR by p:AOSL~MPWR; AOSL~ONTO by p:AOSL~ONTO; COHR~ONTO by p:COHR~ONTO; LSCC~ONTO by p:LSCC~ONTO; LSCC~MPWR by p:LSCC~MPWR; SANM~TTMI by p:SANM~TTMI; AAOI~COHR by p:AAOI~COHR; AAOI~TTMI by p:AAOI~TTMI; AEHR~ONTO by p:AEHR~ONTO; AEHR~COHR by p:AEHR~COHR; BE~COHR by p:BE~"
+  },
+  "c2": {
+   "text": "movers tied together: APLD, CORZ, HUT (APLD~CORZ by p:APLD~CORZ; APLD~HUT by p:APLD~HUT; CORZ~HUT by p:CORZ~HUT)"
+  },
+  "c3": {
+   "text": "movers tied together: NET, DOCN (DOCN~NET by p:DOCN~NET)"
+  },
+  "d:10-year yield": {
+   "text": "10-year yield -0.12 pt since the close (its usual day: 0.04 pt)"
+  },
+  "d:bitcoin": {
+   "text": "bitcoin -4.7% since the close (its usual day: 2.7%)"
+  },
+  "d:gold": {
+   "text": "gold -4.2% since the close (its usual day: 1.8%)"
+  },
+  "f:BSET:1": {
+   "text": "BSET 8-K 5.02 at 2026-11-19T22:02Z: Bassett Furniture Industries, Inc. -- Exhibit 99 Bassett Furniture Industries, Inc. P.O. Box 626 Bassett, VA 24055 Contacts: J. Michael Daniel Senior Vice President and Chief Financial Officer (276) 629-6000 \u2013 Investors mdaniel@bassettfurniture.com Peter D. Morrison Vice President of Communications (276) 629-6450 \u2013 Media For immediate release Bassett Announces CEO Succession (Bassett, Va.) \u2013 November 19, 2026 \u2013 Bassett Furniture Industries Inc. (Nasdaq: BSET) ",
+   "url": "https://www.sec.gov/Archives/edgar/data/10329/000143774926037751/ex_1048951.htm"
+  },
+  "g:1000": {
+   "text": "Metal Mining: the median of its 9 checked stocks moved -6.5%"
+  },
+  "g:1040": {
+   "text": "Gold and Silver Ores: the median of its 10 checked stocks moved -3.0%"
+  },
+  "g:3559": {
+   "text": "Special Industry Machinery, NEC: the median of its 8 checked stocks moved -8.8%"
+  },
+  "g:3663": {
+   "text": "Radio & Tv Broadcasting & Communications Equipment: the median of its 11 checked stocks moved -7.8%"
+  },
+  "g:3672": {
+   "text": "Printed Circuit Boards: the median of its 8 checked stocks moved -9.1%"
+  },
+  "g:3674": {
+   "text": "Semiconductors & Related Devices: the median of its 59 checked stocks moved -9.6%"
+  },
+  "g:3825": {
+   "text": "Instruments For Meas & Testing of  Electricity & Elec Signals: the median of its 8 checked stocks moved -8.5%"
+  },
+  "g:6199": {
+   "text": "Finance Services: the median of its 34 checked stocks moved -5.5%"
+  },
+  "h:P": {
+   "text": "P against the market, last sessions: 11-13 -1.1%, 11-16 +0.9%, 11-17 +0.7%, 11-18 -0.4%, 11-19 +9.7%; flagged before: 11-19 17:37Z +10.9%"
+  },
+  "h:SVRA": {
+   "text": "SVRA against the market, last sessions: 11-13 -1.3%, 11-16 -1.4%, 11-17 +1.6%, 11-18 +5.7%, 11-19 +12.8%; flagged before: 11-20 13:34Z -25.5%"
+  },
+  "k": {
+   "text": "Market: S&P 500 (SPY) -2.0%, Nasdaq 100 (QQQ) -3.7%, Russell 2000 (IWM) -1.8%, S&P 500 futures -2.2%, VIX +8.6% (in session)"
+  },
+  "m:ANET": {
+   "text": "ANET (Arista Networks, Inc.; Computer Communications Equipment) -11.2% since the close (in session), OUTSIDE its 9-in-10 range (-6%..+7%)"
+  },
+  "m:AVGO": {
+   "text": "AVGO (Broadcom Inc.; Semiconductors & Related Devices) -10.7% since the close (in session), OUTSIDE its 9-in-10 range (-5%..+6%)"
+  },
+  "m:BSET": {
+   "text": "BSET (BASSETT FURNITURE INDUSTRIES INC; Wood Household Furniture, (No Upholstered)) -9.8% since the close (in session), OUTSIDE its 9-in-10 range (-5%..+6%)"
+  },
+  "m:CLS": {
+   "text": "CLS (CELESTICA INC; Printed Circuit Boards) -14.9% since the close (in session), OUTSIDE its 9-in-10 range (-8%..+10%)"
+  },
+  "m:DOCN": {
+   "text": "DOCN (DigitalOcean Holdings, Inc.; Services-Computer Programming, Data Processing, Etc.) -13.8% since the close (in session), outside its 2-in-3 range (-9%..+11%)"
+  },
+  "m:NET": {
+   "text": "NET (Cloudflare, Inc.; Services-Prepackaged Software) -10.2% since the close (in session), outside its 2-in-3 range (-6%..+7%)"
+  },
+  "m:P": {
+   "text": "P (Everpure, Inc.; Computer Storage Devices) -11.8% since the close (in session), outside its 2-in-3 range (-8%..+9%)"
+  },
+  "m:SEI": {
+   "text": "SEI (Solaris Energy Infrastructure, Inc.; Oil & Gas Field Machinery & Equipment) -13.5% since the close (in session), OUTSIDE its 9-in-10 range (-7%..+9%)"
+  },
+  "m:SVRA": {
+   "text": "SVRA (Savara Inc; Pharmaceutical Preparations) -17.1% since the close (in session), OUTSIDE its 9-in-10 range (-9%..+11%)"
+  },
+  "n:BSET": {
+   "text": "BSET accounts: market value $182.0 m; cash and equivalents $35.4 m (2026-08-29; investments not counted); revenue $335.6 m over the four quarters to 2026-08-29; net income $6.8 m over the four quarters to 2026-08-29"
+  },
+  "n:SVRA": {
+   "text": "SVRA accounts: market value $1.3 bn; cash and equivalents $29.8 m (2026-09-30; investments not counted); long-term debt $30.2 m (2026-09-30); net income $-152.7 m over the four quarters to 2026-09-30; that cash alone covers about 0.8 quarters of such losses"
+  },
+  "p:AAOI~COHR": {
+   "text": "AAOI and COHR: market-adjusted daily returns correlated 0.68 over the last 250 sessions; COHR -14.9% since the close"
+  },
+  "p:ANET~CLS": {
+   "text": "ANET and CLS: market-adjusted daily returns correlated 0.44 over the last 250 sessions; CLS -14.9% since the close"
+  },
+  "p:APLD~CORZ": {
+   "text": "APLD and CORZ: market-adjusted daily returns correlated 0.68 over the last 250 sessions; CORZ -14.3% since the close"
+  },
+  "p:AVGO~CLS": {
+   "text": "AVGO and CLS: market-adjusted daily returns correlated 0.49 over the last 250 sessions; CLS -14.9% since the close"
+  },
+  "p:CORZ~HUT": {
+   "text": "CORZ and HUT: market-adjusted daily returns correlated 0.72 over the last 250 sessions; HUT -14.4% since the close"
+  },
+  "p:DOCN~NET": {
+   "text": "DOCN and NET: market-adjusted daily returns correlated 0.46 over the last 250 sessions; NET -10.2% since the close"
+  },
+  "p:SEI~MKSI": {
+   "text": "SEI and MKSI: market-adjusted daily returns correlated 0.59 over the last 250 sessions; MKSI -9.8% since the close"
+  },
+  "q:AMD": {
+   "text": "AMD -11.8% since the close of 2026-11-19, as the check read it"
+  },
+  "q:DELL": {
+   "text": "DELL -10.6% since the close of 2026-11-19, as the check read it"
+  },
+  "q:INTU": {
+   "text": "INTU -8.6% since the close of 2026-11-19, as the check read it"
+  },
+  "q:MU": {
+   "text": "MU -12.6% since the close of 2026-11-19, as the check read it"
+  },
+  "q:NVDA": {
+   "text": "NVDA -7.3% since the close of 2026-11-19, as the check read it"
+  },
+  "q:UNH": {
+   "text": "UNH +4.3% since the close of 2026-11-19, as the check read it"
+  },
+  "r:10-year yield": {
+   "text": "the stocks that moved most with 10-year yield over the year, today: TOL +1.3% (its rate implies +3.1%), DHI +3.3% (its rate implies +3.3%), MHO +2.8% (its rate implies +3.1%), MTH +1.8% (its rate implies +3.5%), KBH +1.0% (its rate implies +3.4%), PHM +3.3% (its rate implies +3.0%)"
+  },
+  "r:bitcoin": {
+   "text": "the stocks that moved most with bitcoin over the year, today: MSTR -6.5% (its rate implies -6.1%), SBET -6.0% (its rate implies -5.9%), BMNR -8.4% (its rate implies -6.3%), COIN -2.5% (its rate implies -5.0%), ASST -10.1% (its rate implies -7.1%), FWDI -10.5% (its rate implies -5.7%)"
+  },
+  "r:gold": {
+   "text": "the stocks that moved most with gold over the year, today: RGLD -2.7% (its rate implies -2.5%), NEM -3.4% (its rate implies -2.8%), MUX -4.7% (its rate implies -3.6%), HL -4.8% (its rate implies -4.0%), IAUX -4.3% (its rate implies -3.5%), CDE -5.8% (its rate implies -3.6%)"
+  },
+  "s1": {
+   "text": "2026-11-20T15:23Z stocktwits.com: SVRA Stock Hits 52-Week Low After FDA Delays Decision On Lung Disease Drug Application -- Savara said the FDA\u2019s review of Molgramostim is ongoing, but did not provide a revised date for the decision.",
+   "url": "https://stocktwits.com/news-articles/markets/equity/svra-stock-hits-52-week-low-after-fda-delays-decision-on-lung-disease-drug-application/cNbSlGbR91G?.tsrc=rss"
+  },
+  "s10": {
+   "text": "2026-11-20T13:36Z finance.yahoo.com: Nvidia stock extends 6-day losing streak, as AMD, Broadcom lead chip sector lower -- Chip giant Nvidia slid further into red territory on Friday along with the rest of the semiconductor sector.",
+   "url": "https://finance.yahoo.com/markets/article/nvidia-amd-and-broadcom-lead-chip-stocks-lower-133658985.html?.tsrc=rss"
+  },
+  "s11": {
+   "text": "2026-11-19T22:59Z finance.yahoo.com: Bassett Furniture stock falls on CEO succession announcement -- Investing.com -- Bassett Furniture Industries (NASDAQ:BSET) shares declined 2.7% in after-hours trading Thursday following the company's announcement of a CEO transition set for February 2027.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/bassett-furniture-stock-falls-ceo-225928330.html?.tsrc=rss"
+  },
+  "s12": {
+   "text": "2026-11-19T21:15Z finance.yahoo.com: Bassett Announces CEO Succession -- BASSETT, Va., Nov. 19, 2026 (GLOBE NEWSWIRE) -- Bassett Furniture Industries, Inc. (Nasdaq: BSET) announced today that Chairman and CEO Rob Spilman will retire from his position effective January 31, 2027. Spilman will continue to serve Bassett as Executive Chairman, where his time will be spent primarily on overall strategic direction, organizational development, guiding the product assortment, a",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/bassett-announces-ceo-succession-211500335.html?.tsrc=rss"
+  },
+  "s2": {
+   "text": "2026-11-20T14:10Z finance.yahoo.com: Savara shares fall 20% as FDA says it will miss Molgramostim review deadline -- Investing.com -- Savara (Nasdaq: SVRA) shares fell about 20% after the company said the U.S. Food and Drug Administration will not meet its November 22, 2026 target action date for molgramostim, its investigational treatment for autoimmune pulmonary alveolar proteinosis, or autoimmune PAP.",
+   "url": "https://finance.yahoo.com/healthcare/articles/savara-shares-fall-20-fda-141014165.html?.tsrc=rss"
+  },
+  "s20": {
+   "text": "2026-11-20T02:10Z finance.yahoo.com: Learn Why The Bull Case For Everpure Stock Could Change Following Earnings Beat -- Everpure reported third quarter revenue of US$1,459.79 million and net income of US$100.4 million, with earnings per share from continuing operations improving versus the same period last year and full year fiscal 2027 guidance raised again. The business linked this stronger outlook to rising demand from hyperscale cloud and AI storage customers, as well as a new design win wit",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/learn-why-bull-case-everpure-021014785.html?.tsrc=rss"
+  },
+  "s28": {
+   "text": "2026-11-20T15:53Z 247wallst.com: Bloom Energy Tumbles 10% Despite BMO Upgrade With $230 Target; FuelCell Energy Slides 7%, Plug Power Drops 3% -- A bullish analyst call usually lifts a stock, yet Bloom Energy buyers watched the gains evaporate within hours. What is overpowering BMO's optimism, and can fuel cell rivals FuelCell and Plug Power escape the same pull?",
+   "url": "https://247wallst.com/investing/2026/11/20/bloom-energy-tumbles-10-despite-bmo-upgrade-with-230-target-fuelcell-energy-slides-7-plug-power-drops-3/?.tsrc=rss"
+  },
+  "s3": {
+   "text": "2026-11-20T13:30Z finance.yahoo.com: Savara Informed That FDA Will Not Take Action on the Molgramostim BLA for Autoimmune Pulmonary Alveolar Proteinosis (Autoimmune PAP) by the PDUFA Date -- YARDLEY, Pa., November 20, 2026--Savara Inc. (Nasdaq: SVRA), a clinical-stage biopharmaceutical company focused on rare respiratory diseases, today announced that the U.S. Food and Drug Administration (FDA) has communicated that it will not meet the Prescription Drug User Fee Act (PDUFA) target action date o",
+   "url": "https://finance.yahoo.com/healthcare/articles/savara-informed-fda-not-action-133000064.html?.tsrc=rss"
+  },
+  "s32": {
+   "text": "2026-11-20T15:59Z finance.yahoo.com: Anthropic, Nvidia, AMD, Micron, Sandisk, Bloom Energy, and More Stocks That Explain Today\u2019s Market -- Anthropic\u2019s post-IPO slide adds pressure to artificial-intelligence stocks as chip makers and data center suppliers retreat.",
+   "url": "https://finance.yahoo.com/m/801603d1-8318-3eb0-99a6-10147f0d5ed5/anthropic%2C-nvidia%2C-amd%2C.html?.tsrc=rss"
+  },
+  "s33": {
+   "text": "2026-11-20T15:56Z 247wallst.com: Applied Digital and Core Scientific Sink 12% as AI Infrastructure Sell-Off Deepens; TeraWulf Tumbles 10% -- Three former Bitcoin miners now bet their futures on AI data centers, and each carries billions in debt into a market that is turning on risk. Their playbooks differ, and so does how much pain each stock is taking.",
+   "url": "https://247wallst.com/investing/2026/11/20/applied-digital-and-core-scientific-sink-12-as-ai-infrastructure-sell-off-deepens-terawulf-tumbles-10/?.tsrc=rss"
+  },
+  "s34": {
+   "text": "2026-11-20T14:54Z 247wallst.com: Applied Optoelectronics Sinks 7% as Optics Stocks Reverse Thursday\u2019s Rally; Coherent Declines 4%, Lumentum Slides 5% -- Thursday\u2019s rebound in optical networking stocks is unwinding as the broader AI sell-off rolls on. Applied Optoelectronics (NASDAQ:AAOI) stock is at $36.70, down 7% in morning trading. Over the past month, Applied Optoelectronics stock has dropped 54%, and that slide makes the prior session\u2019s bounce look modest. On November 17, Applied Optoelectr",
+   "url": "https://247wallst.com/investing/2026/11/20/applied-optoelectronics-sinks-10-as-optics-stocks-reverse-thursdays-rally-coherent-tumbles-8-lumentum-slides-7/?.tsrc=rss"
+  },
+  "s8": {
+   "text": "2026-11-20T16:55Z finance.yahoo.com: Google reportedly cuts Broadcom-designed TPU plans, eyes more MediaTek chips -- Investing.com -- Google has reduced its planned 2027 shipments of Broadcom-designed AI chips while preparing to increase shipments of a MediaTek-designed alternative, according to technology supply-chain analyst Ming-Chi Kuo.",
+   "url": "https://finance.yahoo.com/technology/ai/articles/google-reportedly-cuts-broadcom-designed-165518878.html?.tsrc=rss"
+  },
+  "s9": {
+   "text": "2026-11-20T15:24Z finance.yahoo.com: Why Redburn Downgraded Broadcom (AVGO) Despite 221% AI Growth -- We just published a list of the 10 Potential Multibagger Stocks to Research for Long-Term Growth and Broadcom (NASDAQ:AVGO) ranked 6th on this list. Reuters reported on November 5 that the Nasdaq Composite fell 5.52% to 24,315, its deepest one-day drop in 19 months, while the S&P 500 lost 4.36% and about $3 trillion in [\u2026]",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/why-redburn-downgraded-broadcom-avgo-152421728.html?.tsrc=rss"
+  },
+  "t1": {
+   "text": "the last note (2026-11-20T1334Z), theme 'The AI chip selloff went round the world overnight and is back in US chips': Asia's chip-heavy markets fell over 5% each on Friday: the Taiex -6.2% (-17.5% for the week), the KOSPI -5.2%, the Nikkei -5.1%; SoftBank -14.5%, Advantest -10.3%, Tokyo Electron -7.1% (24/7 Wall St). ASML fell 5.8% in Europe (CNBC, via StockTitan). Before the US open: AMD -6.3%, TSMC -5.8%, Micron -5.0%, Nvidia -3.3% (StockTitan, 8:01-8:02 a.m. ET); the check's semiconductor ind"
+  },
+  "t2": {
+   "text": "the last note (2026-11-20T1334Z), theme 'Gold fell with stocks instead of against them': Gold is -3.4% since Thursday's close, about twice its usual day (1.8%); the metal-mining median is -3.1% (9 stocks), and the stocks most tied to gold fell about as far as their rates imply (Newmont -2.0% against -2.3%, Hecla -2.2% against -3.3%). Treasuries rose at the same time (the 10-year yield -6 bp, CNBC via StockTitan)."
+  },
+  "x:ANET": {
+   "text": "ANET: the market carried -4.9% (beta 2.46); 10-year yield carried -1.7% (+15.06% per point, t 3.5); its industry (Machinery and computer equipment, group 357, 33 stocks) moved -4.5%; left over after the market and its drivers -4.6%"
+  },
+  "x:NET": {
+   "text": "NET: the market carried -3.3% (beta 1.68); gold carried +2.0% (-0.48% per 1%, t -3.3); its industry (Services-Prepackaged Software, 104 stocks) moved -0.6%; left over after the market and its drivers -8.9%"
+  },
+  "x:SEI": {
+   "text": "SEI: the market carried -5.9% (beta 2.97); 10-year yield carried -2.7% (+23.53% per point, t 3.5); its industry (Oil & Gas Field Machinery & Equipment, 10 stocks) moved -3.8%; left over after the market and its drivers -4.9%"
+  },
+  "z:SVRA": {
+   "text": "SVRA mosaic: at the close of 2026-11-19, before this move, the chance of the filing in the next 20 sessions: late or unreliable accounts 0.2% (the usual stock: 0.4%); a restructuring or a write-off 0.3% (the usual stock: 0.3%); a sale of new shares 7.4% (the usual stock: 0.9%; raised most by 2 sales of new shares opened in three years, a registration to sell securities on file). A chance that a filing comes, not a direction (tests P1a-P3b, research/RESULTS.md)"
+  }
+ },
+ "note": {
+  "backdrop": "At midday Friday the S&P 500 fund is -2.0%, the Nasdaq 100 fund -3.7%, the Russell 2000 fund -1.8% and the VIX +8.6%; the check flagged a market-wide move, so every range is likely too narrow until the next scan, and it did not flag rising fear. The morning's catch-up became a deeper fall in the US session: at 11:02 a.m. ET the Nasdaq 100 fund was about 8.0% below last Friday's close, AMD -10.0% and Micron -11.3% (StockTitan), and by the check the median chip stock was -9.6%. Treasuries keep rising (the 10-year yield -0.12 pt, 4.94% at 17:25Z) while gold (-4.2%) and bitcoin (-4.7%) fall. Consumer sentiment rose to 51.5 from 48.0, and the University of Michigan's survey director tied weaker finances among the largest stockholders to 'continued AI-related agitation in stock markets' (StockTitan). Anthropic was -11.4% at 11:02 a.m. ET (StockTitan). Health insurers had their day without a fall: UnitedHealth $344.54, +4.25% on Thursday's close. A seventh S&P 500 loss in a row is now likely unless the afternoon turns; the close decides it.",
+  "backdrop_evidence": [
+   "k",
+   "d:10-year yield",
+   "d:gold",
+   "d:bitcoin",
+   "g:3674",
+   "s32",
+   "q:UNH",
+   "t1",
+   "https://www.stocktitan.net/articles/stock-market-today-live-november-20-2026"
+  ],
+  "by": "agent",
+  "calls": [],
+  "check": "2026-11-20T1740Z",
+  "read": [
+   {
+    "direction": "none",
+    "published": "2026-11-20T12:13:29Z",
+    "says": "At 11:02 a.m. ET on Nov 20 QQQ was -2.98%, about 8.0% below last Friday's close; AMD -10.01%, Micron -11.25%, Anthropic -11.35%, Gap +14.64%; November consumer sentiment 51.5 from 48.0 (University of Michigan).",
+    "tier": "reported",
+    "url": "https://www.stocktitan.net/articles/stock-market-today-live-november-20-2026"
+   }
+  ],
+  "singles": [
+   {
+    "beneath": "Part of the morning's fall came back once regular trading began. The money question stands: cash and equivalents of $29.8 million against $152.7 million of yearly losses, and a 7.4% share-sale chance before the news against 0.9% for the usual stock (a chance a filing comes, not a direction).",
+    "cause": "Savara is -17.1%, after -25.5% before the open: the FDA will not meet Sunday's action date for molgramostim and has given no new date (its release; Investing.com put the fall near 20%; Stocktwits a 52-week low).",
+    "evidence": [
+     "m:SVRA",
+     "h:SVRA",
+     "n:SVRA",
+     "z:SVRA",
+     "s1",
+     "s2",
+     "s3"
+    ],
+    "kind": "reported",
+    "t": "SVRA"
+   },
+   {
+    "beneath": "A $182 million company whose partners over the year are small banks, all near flat today; nothing else in the case file. The fall is about the leadership change and grew in regular trading.",
+    "cause": "Bassett Furniture is -9.8%, outside its 9-in-10 range: on Thursday evening it announced that its chairman and chief executive will retire and named a successor (its 8-K 5.02); it fell 2.7% after hours (Investing.com).",
+    "evidence": [
+     "m:BSET",
+     "f:BSET:1",
+     "s11",
+     "s12",
+     "n:BSET"
+    ],
+    "kind": "reported",
+    "t": "BSET"
+   },
+   {
+    "beneath": "It held its fall while application software stayed calm: its story is its own.",
+    "cause": "Intuit is -8.6% at midday (-9.6% before the open, -9.02% at 11:02 a.m. ET per StockTitan) on its lower revenue outlook and the Mailchimp sale (its release, via StockTitan).",
+    "evidence": [
+     "q:INTU",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-20-2026"
+    ],
+    "kind": "reported",
+    "t": "INTU"
+   }
+  ],
+  "themes": [
+   {
+    "beneath": "In proportion: the desk's size calls are past their lines by midday against Nov 13's closes: Nvidia $135.47, -16.84% (line 7.5%); AMD $433.92, -18.57% (line 9%); Dell $279.86, -18.40% (line 9.5%). The fall is not in proportion to any one company's news; only Broadcom has some. My inference: Asia's selling on Friday turned into US selling of the whole chain, deeper than the morning's catch-up, as holders cut AI hardware as one position. Over the year the market alone carries about half of these moves (Arista: -4.9% of -11.2%), so the rest is the group.",
+    "cause": "The semiconductor median is -9.6% (59 stocks), printed circuit boards -9.1%, chip equipment -8.8%, test instruments -8.5%, communications equipment -7.8%. Outside their 9-in-10 ranges: Broadcom -10.7%, Arista -11.2%, Celestica -14.9%; beside them Coherent -14.9%, Applied Optoelectronics -16.1%, Onto -13.9%, TTM -14.4%, Monolithic Power -10.3%. Since this morning AMD went from -6.3% to -11.8% and Micron from -5.0% to -12.6%.",
+    "evidence": [
+     "c1",
+     "g:3674",
+     "g:3672",
+     "g:3559",
+     "g:3825",
+     "g:3663",
+     "m:AVGO",
+     "m:ANET",
+     "m:CLS",
+     "x:ANET",
+     "s8",
+     "s9",
+     "s10",
+     "s32",
+     "s34",
+     "p:ANET~CLS",
+     "p:AVGO~CLS",
+     "p:AAOI~COHR",
+     "q:NVDA",
+     "q:AMD",
+     "q:MU",
+     "q:DELL",
+     "t1"
+    ],
+    "kind": "inferred",
+    "mechanism": "One chain, one buyer: these companies sell into the same AI data-center build, and over the year they moved together (Arista with Celestica, Broadcom with Celestica, Coherent with Applied Optoelectronics), so a doubt about the build reaches each at once. Broadcom also has news of its own: Google reportedly cut its planned 2027 shipments of Broadcom-designed AI chips and is preparing to use more MediaTek chips (Investing.com), and Redburn downgraded it.",
+    "members": [
+     "AVGO",
+     "ANET",
+     "CLS",
+     "COHR",
+     "AAOI",
+     "ONTO",
+     "TTMI",
+     "MPWR",
+     "AMD",
+     "MU",
+     "NVDA"
+    ],
+    "name": "The AI hardware chain fell as one: chips, networking, optics, boards and test",
+    "read_through": [],
+    "watch": "The close against midday; Monday's Asian session (Tokyo is shut); whether any company in the chain cuts an outlook, which would turn a selloff into news."
+   },
+   {
+    "beneath": "My inference: bitcoin's fall alone implies about -5% to -7% for bitcoin-tied stocks, so most of the former miners' -13% to -17% is the AI leg, and debt makes the AI leg heavier: a lender or bond buyer prices the build-out's doubt before a chip buyer does. Everpure (storage) gave back Thursday's +9.7% earnings jump (-11.8%).",
+    "cause": "Applied Digital -17.3%, Core Scientific -14.3%, Hut 8 -14.4%, and their partners Cipher -15.4%, TeraWulf -14.2%, IREN -13.2% (the check). 247wallst: 'Applied Digital and Core Scientific Sink 12% as AI Infrastructure Sell-Off Deepens', former bitcoin miners that 'now bet their futures on AI data centers, and each carries billions in debt into a market that is turning on risk'. Bloom Energy -13.3% despite a BMO upgrade (247wallst). Solaris Energy Infrastructure -13.5%, outside its 9-in-10 range, with no news of its own.",
+    "evidence": [
+     "c2",
+     "s33",
+     "s28",
+     "m:SEI",
+     "x:SEI",
+     "p:SEI~MKSI",
+     "p:APLD~CORZ",
+     "p:CORZ~HUT",
+     "r:bitcoin",
+     "d:bitcoin",
+     "g:6199",
+     "m:P",
+     "h:P",
+     "s20"
+    ],
+    "kind": "reported",
+    "mechanism": "Two legs at once for the former miners: bitcoin -4.7% (the stocks most tied to it fell about what their rates imply: Strategy -6.5% against -6.1%) and the AI selloff. Solaris trades as an AI-power stock: over the year its closest partners are chip-equipment makers and data-center builders (MKS -9.8%, Lam -9.6%, Comfort Systems -7.8%), not oil-field equipment, and it fell with them.",
+    "members": [
+     "APLD",
+     "CORZ",
+     "HUT",
+     "SEI",
+     "BE",
+     "P"
+    ],
+    "name": "The debt-financed end of the build-out: AI data-center hosts and power",
+    "read_through": [],
+    "watch": "Financing news from the hosts (the mosaic's share-sale chance was 2.1% for Applied Digital and 1.9% for Hut 8, against 0.9% for the usual stock, before today); bitcoin and the chain at the close."
+   },
+   {
+    "beneath": "The morning's reading holds so far: safety bought Treasuries, and gold and bitcoin, the year's winners, were sold with stocks. No source states the cause; it is a pattern. Homebuilders are the one group this selloff helps.",
+    "cause": "The 10-year yield is -0.12 pt since Thursday's close, three times its usual day; gold -4.2% (from -3.4% this morning), bitcoin -4.7%. The stocks most tied to yields rose as their rates imply (D.R. Horton +3.3% against +3.3%, PulteGroup +3.3% against +3.0%); gold miners fell a little more than theirs (Coeur -5.8% against -3.6%, Hecla -4.8% against -4.0%).",
+    "evidence": [
+     "d:10-year yield",
+     "d:gold",
+     "d:bitcoin",
+     "r:10-year yield",
+     "r:gold",
+     "g:1000",
+     "g:1040",
+     "t2"
+    ],
+    "kind": "inferred",
+    "mechanism": "Through each stock's year-long tie to its driver: lower mortgage-rate expectations for builders, the metal's price for miners.",
+    "members": [
+     "NEM",
+     "HL",
+     "CDE",
+     "DHI",
+     "PHM"
+    ],
+    "name": "Havens split: Treasuries up, gold and bitcoin down, homebuilders up with lower yields",
+    "read_through": [],
+    "watch": "Gold at the close; a rebound in gold while stocks keep falling would weaken the selling-winners reading."
+   },
+   {
+    "beneath": "My inference: the market groups them with AI infrastructure (they sell compute and network capacity), not with application software, which is barely down; that is why Intuit's peers were calm this morning while these fell.",
+    "cause": "Cloudflare -10.2% and DigitalOcean -13.8%, with Fastly -9.3% and Akamai -5.9%; none has a filing or story of its own today, and the software industry median is only -0.6%.",
+    "evidence": [
+     "c3",
+     "p:DOCN~NET",
+     "m:NET",
+     "m:DOCN",
+     "x:NET"
+    ],
+    "kind": "inferred",
+    "mechanism": "Over the year these moved with each other (Cloudflare with DigitalOcean) more than with software at large.",
+    "members": [
+     "NET",
+     "DOCN"
+    ],
+    "name": "Cloud and edge platforms sold with the build-out",
+    "read_through": [],
+    "watch": "Whether they track the chips into the close or recover with software."
+   }
+  ],
+  "threads": [
+   "The desk's size calls are judged at today's close: Nvidia $135.47 at 17:40Z (-16.84% on Nov 13, line 7.5%), AMD $433.92 (-18.57%, line 9%), Dell $279.86 (-18.40%, line 9.5%).",
+   "A seventh S&P 500 loss in a row; Anthropic against its $83 offer price.",
+   "Broadcom and Google's reported TPU cut: confirmation or denial.",
+   "Gold and bitcoin sold with stocks while Treasuries rise: does it hold at the close?",
+   "Savara: a new FDA date or a share sale; Capricor's FDA decision by Sunday.",
+   "This morning's single-print flags (SAIC, Marqeta, BeOne) are no longer flagged in session; Richardson Electronics is now -9.6% with the chip-equipment group."
+  ],
+  "unexplained": [
+   {
+    "t": "LOGC",
+    "tried": "-8.6% with no filing and no story; its market tie is small (beta 0.22). The mosaic's share-sale chance was 6.2% before today (a registration on file). Nothing in the case file explains the move."
+   }
+  ]
+ },
+ "recorded_at": "2026-11-20T17:42:27Z"
+}
