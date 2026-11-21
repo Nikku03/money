@@ -131,4 +131,7 @@ FAIL); "the market runs on chains of cause and effect, news and catalysts": the 
   (timing task, delays trained or fixed); 20 new tests; results in `research/neurons/` and `docs/NEURONS.md`.
 - Verdict: richer cells did not need fewer cells on this simulator; HH helped hand-wired Catch; delays (our
   wiring's strength) helped every cell; HH costs 5-10x CPU.
+- Friday Nov 20's three checks with desk notes: before the open (the chip selloff ran through Asia), midday (the
+  whole AI hardware chain fell, a market-wide move) and after the close (SPY -3.64%, QQQ -5.67%; the desk's first
+  three calls judged right; a new call on Kymera's Phase 2b readout). The scan of 2026-11-20 recorded in full.
 

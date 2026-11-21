@@ -149,7 +149,7 @@ idea at a time, checked against the memory bank first.
   an industry lead-lag test; the earnings radar in the 8:07 check; S3 recalibrated going forward; the trader
   replayed on 2022; a better headline picker.
 
-## The market thread (last desk note: `research/desk/2026-11-19/2026-11-20T0507Z.json`, after Thursday's close)
+## The market thread (last desk note: `research/desk/2026-11-20/2026-11-21T0427Z.json`, after Friday's close)
 
 - Thu 2026-11-19: Anthropic (ANT) priced $83, opened $111.50, closed $97.17 (+17%); -4.7% after hours. The market
   reversed from +1.3% before the open to S&P 500 -2.02% (7,175.83, sixth loss in a row, longest since April 2024),
@@ -161,8 +161,17 @@ idea at a time, checked against the memory bank first.
 - Data gap (resolved): Yahoo posted Thursday's daily bar with an empty close for about 880 stocks; the closes
   appeared by 06:30Z Nov 20 and the scan of 2026-11-19 was re-run in full (2,451 stocks, 86 left out; 7fd7bcd).
   If it happens again: poll, then `scan run --refresh --record` before the next open, commit, refresh the explorer.
-- Desk calls judged at Fri Nov 20's close against Nov 13's: NVDA 7.5%+ (0.50; $162.89; Thu $145.98, -10.38%),
-  AMD 9%+ (0.42; $532.84; Thu $489.19, -8.19%), DELL 9.5%+ (0.40; $342.98; Thu about $312.54, -8.88%).
+- Fri 2026-11-20: global AI-chip liquidation. Taiex -6.2% (-17.5% week, worst since 1991), KOSPI -5.2%, Nikkei
+  -5.1%. US close: SPY -3.64%, QQQ -5.67%, DIA -1.98% (SPY and DIA in correction; DIA's worst week since March
+  2020); seventh S&P 500 loss in a row. NVDA -14.01% to $125.53, MU/AMD -13%+, AVGO -12.2% (Google reportedly cut
+  Broadcom TPU plans; unconfirmed). AI data-center hosts -15-18%. Gold -4%, bitcoin -10%, 10-year 4.91%, VIX 35.89.
+  Fed Governor Cook warned against waiting on rate increases. Anthropic closed $88.91. After hours: CrowdStrike
+  reported in talks to buy Zscaler (ZS +16%, CRWD -5%).
+- Desk calls: the first three (NVDA, AMD, DELL size calls) were judged right at Friday's close (-22.9%, -20.4%,
+  -18.9% from Nov 13), but at chances 0.50/0.42/0.40 (Brier 0.316). Open: KYMR move 15%+ either way from $124.06
+  by Nov 27 (0.45), on its Phase 2b readout Monday Nov 23 at 8 a.m. ET.
+- Scan score: the week of Nov 13-20 held 29.9% (2-in-3) and 62.8% (9-in-10), the worst so far; mean of 5 judged
+  scans 54.2% and 83.3%.
 - Check flaws known (fix offered, not made): after the close every driver line (futures, oil, gold) is measured
   from the previous day's bar; the oil line jumps when Yahoo's front WTI contract rolls (Nov 18: about 1-1.5
   points); single early pre-market prints count as moves (Nov 18: NWN, HEI, NEOG, WELL); dividends read as moves.
