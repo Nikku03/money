@@ -1,0 +1,252 @@
+{
+ "asof": "2026-11-20",
+ "at": "2026-11-21T04:27:26Z",
+ "calls": [
+  "63a7bc55"
+ ],
+ "case_sha": "b31858e120a4028d",
+ "check": "2026-11-21T0427Z",
+ "claims_noted": 0,
+ "evidence": {
+  "h:ZS": {
+   "text": "ZS against the market, last sessions: 11-16 +1.1%, 11-17 -1.9%, 11-18 +7.2%, 11-19 +6.0%, 11-20 -1.7%"
+  },
+  "k": {
+   "text": "Market: S&P 500 (SPY) +1.1%, Nasdaq 100 (QQQ) +1.5%, Russell 2000 (IWM) +0.8%, S&P 500 futures -3.2%, VIX +0.0% (after the close)"
+  },
+  "m:KYMR": {
+   "text": "KYMR (Kymera Therapeutics, Inc.; Biological Products, (No Diagnostic Substances)) +7.6% since the close (after the close), outside its 2-in-3 range (-5%..+6%)"
+  },
+  "m:ZS": {
+   "text": "ZS (Zscaler, Inc.; Services-Computer Programming Services) +16.3% since the close (after the close), outside its 2-in-3 range (-8%..+11%)"
+  },
+  "n:KYMR": {
+   "text": "KYMR accounts: market value $11.5 bn; cash and equivalents $373.4 m (2026-09-30; investments not counted); revenue $102.2 m over the four quarters to 2026-09-30; net income $-349.4 m over the four quarters to 2026-09-30; that cash alone covers about 4.3 quarters of such losses"
+  },
+  "n:ZS": {
+   "text": "ZS accounts: market value $31.2 bn; cash and equivalents $928.4 m (2026-07-31; investments not counted); revenue $3.4 bn over the four quarters to 2026-07-31; net income $-63.2 m over the four quarters to 2026-07-31; that cash alone covers about 58.8 quarters of such losses"
+  },
+  "p:ZS~CRWD": {
+   "text": "ZS and CRWD: market-adjusted daily returns correlated 0.76 over the last 250 sessions; CRWD -4.8% since the close"
+  },
+  "p:ZS~OKTA": {
+   "text": "ZS and OKTA: market-adjusted daily returns correlated 0.74 over the last 250 sessions; OKTA +2.9% since the close"
+  },
+  "p:ZS~S": {
+   "text": "ZS and S: market-adjusted daily returns correlated 0.69 over the last 250 sessions; S +1.8% since the close"
+  },
+  "r:bitcoin": {
+   "text": "the stocks that moved most with bitcoin over the year, today: MSTR +2.2% (its rate implies -12.9%), SBET +2.3% (its rate implies -12.5%), BMNR +3.2% (its rate implies -13.2%), COIN +0.3% (its rate implies -10.7%), ASST +3.2% (its rate implies -15.0%), FWDI +3.4% (its rate implies -11.9%)"
+  },
+  "r:gold": {
+   "text": "the stocks that moved most with gold over the year, today: RGLD -0.0% (its rate implies -2.4%), NEM +1.6% (its rate implies -2.7%), MUX -1.1% (its rate implies -3.4%), HL +2.2% (its rate implies -3.8%), IAUX +3.7% (its rate implies -3.3%), CDE +2.3% (its rate implies -3.4%)"
+  },
+  "s2": {
+   "text": "2026-11-20T23:56Z finance.yahoo.com: CrowdStrike, Zscaler Merger Would Create Cybersecurity Giant -- CrowdStrike stock fell and Zscaler stock popped amid a report the companies are in merger talks. A deal would create a cybersecurity giant.",
+   "url": "https://finance.yahoo.com/m/6ad57889-68e7-393a-836e-1d70098a15da/crowdstrike%2C-zscaler-merger.html?.tsrc=rss"
+  },
+  "s3": {
+   "text": "2026-11-20T22:45Z finance.yahoo.com: Zscaler stock soars on reports that CrowdStrike is eyeing a possible buyout -- Zscaler (ZS) shares are surging in Friday's after-hours trading following Bloomberg reporting that CrowdStrike (CRWD) is in talks to buy the cybersecurity firm.",
+   "url": "https://finance.yahoo.com/video/zscaler-stock-soars-on-reports-that-crowdstrike-is-eyeing-a-possible-buyout-224517482.html?.tsrc=rss"
+  },
+  "s4": {
+   "text": "2026-11-20T21:56Z finance.yahoo.com: CrowdStrike Said in Talks to Buy Cybersecurity Firm Zscaler -- CrowdStrike Holdings Inc. is in talks to acquire Zscaler Inc., according to people familiar with the matter, in a deal that would be among the largest-ever in the cybersecurity sector. Zscaler, which had a market value of $32 billion at the end of regular trading Friday, rose about 16% after the close. The two companies are discussing a potential combination that could come together soon, the peop",
+   "url": "https://finance.yahoo.com/video/crowdstrike-said-talks-buy-cybersecurity-215606920.html?.tsrc=rss"
+  },
+  "s5": {
+   "text": "2026-11-20T21:01Z finance.yahoo.com: Kymera Therapeutics to Announce KT-621 BROADEN2 Phase 2b Atopic Dermatitis Trial Results on November 23, 2026 -- Company to host video conference call and webcast at 8:00 a.m. ET on Monday, November 23, 2026 WATERTOWN, Mass., Nov. 20, 2026 (GLOBE NEWSWIRE) -- Kymera Therapeutics, Inc. (NASDAQ: KYMR), a clinical-stage biopharmaceutical company advancing a new class of oral small molecule degrader medicines for immunological diseases, will announce results from",
+   "url": "https://finance.yahoo.com/healthcare/articles/kymera-therapeutics-announce-kt-621-210100108.html?.tsrc=rss"
+  },
+  "s6": {
+   "text": "2026-11-21T02:19Z finance.yahoo.com: Dow Jones Futures: Market Has Worst Week Since Covid Amid Nvidia, Anthropic. Does Fear Gauge Offer Hope? -- The Dow Jones and Nasdaq had their worst week since March 2020, fueled by Nvidia and Anthropic. A fear gauge is soaring. Good news?",
+   "url": "https://finance.yahoo.com/m/9ef9da98-bccf-3565-9a30-9bc3e57ad4b9/dow-jones-futures%3A-market-has.html?.tsrc=rss"
+  },
+  "s7": {
+   "text": "2026-11-20T22:27Z www.ibtimes.com: Zscaler Stock Soars 18% On CrowdStrike Takeover Report. $32 Billion Cybersecurity Deal In Focus. -- Zscaler shares jumped about 18% after a report that CrowdStrike was discussing a takeover of the cybersecurity company, valued at roughly $32 billion.",
+   "url": "https://www.ibtimes.com/crowdstrike-talks-acquire-zscaler-3810044?.tsrc=rss"
+  },
+  "t1": {
+   "text": "the last note (2026-11-20T1740Z), theme 'The AI hardware chain fell as one: chips, networking, optics, boards and test': The semiconductor median is -9.6% (59 stocks), printed circuit boards -9.1%, chip equipment -8.8%, test instruments -8.5%, communications equipment -7.8%. Outside their 9-in-10 ranges: Broadcom -10.7%, Arista -11.2%, Celestica -14.9%; beside them Coherent -14.9%, Applied Optoelectronics -16.1%, Onto -13.9%, TTM -14.4%, Monolithic Power -10.3%. Since this morning AMD went from "
+  },
+  "t2": {
+   "text": "the last note (2026-11-20T1740Z), theme 'The debt-financed end of the build-out: AI data-center hosts and power': Applied Digital -17.3%, Core Scientific -14.3%, Hut 8 -14.4%, and their partners Cipher -15.4%, TeraWulf -14.2%, IREN -13.2% (the check). 247wallst: 'Applied Digital and Core Scientific Sink 12% as AI Infrastructure Sell-Off Deepens', former bitcoin miners that 'now bet their futures on AI data centers, and each carries billions in debt into a market that is turning on risk'. Bloom E"
+  },
+  "t3": {
+   "text": "the last note (2026-11-20T1740Z), theme 'Havens split: Treasuries up, gold and bitcoin down, homebuilders up with lower yields': The 10-year yield is -0.12 pt since Thursday's close, three times its usual day; gold -4.2% (from -3.4% this morning), bitcoin -4.7%. The stocks most tied to yields rose as their rates imply (D.R. Horton +3.3% against +3.3%, PulteGroup +3.3% against +3.0%); gold miners fell a little more than theirs (Coeur -5.8% against -3.6%, Hecla -4.8% against -4.0%)."
+  },
+  "z:KYMR": {
+   "text": "KYMR mosaic: at the close of 2026-11-20, before this move, the chance of the filing in the next 20 sessions: late or unreliable accounts 0.1% (the usual stock: 0.4%); a restructuring or a write-off 0.2% (the usual stock: 0.3%); a sale of new shares 7.4% (the usual stock: 0.9%; raised most by 5 sales of new shares opened in three years, a registration to sell securities on file). A chance that a filing comes, not a direction (tests P1a-P3b, research/RESULTS.md)"
+  }
+ },
+ "note": {
+  "backdrop": "Friday closed at its lows: the S&P 500 fund -3.64%, the Nasdaq 100 fund -5.67%, the Dow fund -1.98%, the Russell 2000 fund -2.88% (StockTitan). It was the S&P 500's seventh loss in a row. The S&P 500 and Dow funds ended in a correction, about 11.5% and 11.4% below their records, and the Dow fund's week (-8.0%) was its worst since March 2020 (StockTitan). In the bank's quotes the VIX closed at 35.89 (+26.2%) and the 10-year yield at 4.91%, about 0.14 points lower on the day; gold settled at $3,539 (-3.98%) and bitcoin was -10.1% on Yahoo's day. A Federal Reserve governor said that 'waiting longer to implement rate increases risks getting behind the curve' (Fed, via StockTitan): the selloff came with no promise of easier money. Anthropic closed at $88.91, -8.5%, above its $83 offer price. After hours the S&P 500 fund is +1.1% and the Nasdaq 100 fund +1.5% (the check); Nvidia was +3.27% at 6:02 p.m. ET (StockTitan). The check's after-close driver lines are measured from Thursday's bars again (futures -3.2%, gold -4.0%, bitcoin -10.0% are Friday's whole moves): the stocks most tied to gold and bitcoin rose after hours (Newmont +1.6%, Strategy +2.2%) while those lines imply -2.7% and -12.9%. So the market-wide flag is false.",
+  "backdrop_evidence": [
+   "k",
+   "r:gold",
+   "r:bitcoin",
+   "s6",
+   "t1",
+   "https://www.stocktitan.net/articles/stock-market-today-live-november-20-2026"
+  ],
+  "by": "agent",
+  "calls": [
+   {
+    "by": "2026-11-27",
+    "call": "move",
+    "from": "KYMR",
+    "prob": 0.45,
+    "thesis": "Phase 2b readout for its lead drug Monday at 8 a.m. ET; the scan's 9-in-10 five-session range is -10%..+11%, so the scan gives under 10% to a move past about 11% and less to 15%; its two largest days in a year were +41.5% and +16.6%. Measured from the after-hours $124.06, either way.",
+    "threshold": 15.0,
+    "ticker": "KYMR"
+   }
+  ],
+  "check": "2026-11-21T0427Z",
+  "read": [
+   {
+    "direction": "none",
+    "published": "2026-11-20T12:13:29Z",
+    "says": "Nov 20 close: QQQ -5.67%, SPY -3.64%, DIA -1.98%, IWM -2.88%; SPY and DIA in a correction; DIA's worst week since March 2020; Nvidia -14.01%; Fed Governor Cook warned against waiting on rate increases; after hours Zscaler +16% on Bloomberg and Reuters reports that CrowdStrike is in talks to buy it.",
+    "tier": "reported",
+    "url": "https://www.stocktitan.net/articles/stock-market-today-live-november-20-2026"
+   }
+  ],
+  "singles": [
+   {
+    "beneath": "A $11.5 billion company whose value leans on this drug; cash and equivalents cover about 4.3 quarters of losses (investments not counted). Before the news the mosaic gave a share-sale filing in 20 sessions a 7.4% chance against 0.9% for the usual stock (5 sales in three years), a chance a filing comes, not a direction. Its two largest days in a year were +41.5% and +16.6%. The scan's five-session 9-in-10 range is -10%..+11%: it knows report dates, not trial readouts.",
+    "cause": "Kymera will announce the Phase 2b BROADEN2 results for KT-621 in atopic dermatitis on Monday Nov 23, with a call at 8:00 a.m. ET (its release). It is +7.6% after hours on real trading: 12 five-minute bars between $117 and $133.70, last $124.06.",
+    "evidence": [
+     "m:KYMR",
+     "n:KYMR",
+     "z:KYMR",
+     "s5"
+    ],
+    "kind": "reported",
+    "t": "KYMR"
+   }
+  ],
+  "themes": [
+   {
+    "beneath": "In proportion, over five sessions from Nov 13's closes: Nvidia -22.94%, AMD -20.35%, Dell -18.94%. The desk's three size calls (lines 7.5%, 9%, 9.5%) were all judged right, but at chances of 0.50, 0.42 and 0.40 they were set too low for the week that came (Brier 0.316, worse than a coin flip's 0.25 on three calls). My inference: Friday was a liquidation of AI hardware as one position, from Asia's session through the US close, with no new fact about demand beyond Broadcom's report. After hours the Nasdaq 100 fund is +1.5%.",
+    "cause": "Nvidia closed -14.01% at $125.53 (StockTitan; the bank's bars). In the bank's daily bars: Micron -13.89%, AMD -13.25%, Broadcom -12.19%, Celestica -16.00%, Coherent -12.90%, Arista -11.59%. The Taiwan fund EWT was -10.59% at 3:02 p.m. ET (StockTitan). Losses grew every hour into the close.",
+    "evidence": [
+     "t1",
+     "k",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-20-2026"
+    ],
+    "kind": "reported",
+    "mechanism": "The same chain as at midday: these companies sell into one AI data-center build and move together, so a doubt about the build reaches all at once. Only Broadcom had company news (Google's reported TPU cut, unconfirmed).",
+    "members": [
+     "NVDA",
+     "AMD",
+     "MU",
+     "AVGO",
+     "CLS",
+     "COHR",
+     "ANET"
+    ],
+    "name": "The AI hardware selloff closed at its lows",
+    "read_through": [],
+    "watch": "Monday: Taiwan and Korea open while Tokyo is shut; whether the after-hours rebound holds; any company in the chain changing its outlook."
+   },
+   {
+    "beneath": "Bitcoin's fall more than doubled after midday (from -4.7% to about -10%), so by the close it explains far more of the former miners' fall than it did at midday. After hours the stocks most tied to bitcoin rose 2-3% against what the stale bitcoin line implies, which says nothing new happened after the close.",
+    "cause": "In the bank's daily bars: Applied Digital -17.81%, Hut 8 -17.65%, Bloom Energy -15.30%, Core Scientific -15.19%, Solaris Energy Infrastructure -11.00%; bitcoin -10.1% on the day.",
+    "evidence": [
+     "t2",
+     "r:bitcoin"
+    ],
+    "kind": "inferred",
+    "mechanism": "Two legs for the former miners, bitcoin and the AI build-out, as at midday; Solaris and Bloom on the AI-power leg alone.",
+    "members": [
+     "APLD",
+     "HUT",
+     "BE",
+     "CORZ",
+     "SEI"
+    ],
+    "name": "Data-center hosts and AI power closed down 11-18%",
+    "read_through": [],
+    "watch": "Financing news from the hosts; bitcoin over the weekend."
+   },
+   {
+    "beneath": "The midday reading held through the close: gold did not rebound while stocks fell, so safety went to Treasuries and the year's winners were sold with stocks. No source states it; it remains a pattern.",
+    "cause": "The 10-year yield ended near 4.91%, about 0.14 points lower; D.R. Horton +1.96%, PulteGroup +1.75%; gold settled $3,539 (-3.98%), Newmont -5.37%, Hecla -5.65%; bitcoin about -10% (the bank's bars and quotes). The VIX closed at 35.89.",
+    "evidence": [
+     "t3",
+     "r:gold"
+    ],
+    "kind": "inferred",
+    "mechanism": "Each through its year-long tie to its driver; the after-hours rise in the miners runs against the stale gold line, not against the day.",
+    "members": [
+     "NEM",
+     "HL",
+     "DHI",
+     "PHM"
+    ],
+    "name": "Havens to the close: Treasuries and homebuilders up, gold and bitcoin down",
+    "read_through": [],
+    "watch": "Gold and bitcoin when stocks next steady: a rebound with stocks would fit the selling-winners reading."
+   },
+   {
+    "beneath": "Zscaler's market value is $31.2 billion in the bank, so +16% adds about $5 billion before any offer. My inference: the gap between +16% and a typical takeover premium is the market's doubt that a deal comes. The two moved together over the year (0.76), so this pulls them apart for a reason a partner link cannot see.",
+    "cause": "Bloomberg and Reuters reported after the close that CrowdStrike is in talks to buy Zscaler; Bloomberg said there is no certainty of a deal (Bloomberg on Yahoo; StockTitan). Zscaler is +16.3% after hours on steady trading, CrowdStrike -4.8%. IBTimes put Zscaler's value near $32 billion. At 4:05 p.m. ET Zscaler also announced AI security work with Anthropic and Mistral (StockTitan).",
+    "evidence": [
+     "m:ZS",
+     "h:ZS",
+     "n:ZS",
+     "s2",
+     "s3",
+     "s4",
+     "s7",
+     "p:ZS~CRWD",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-20-2026"
+    ],
+    "kind": "reported",
+    "mechanism": "A target trades toward a possible offer price; a buyer trades down for what it may pay and for the doubt.",
+    "members": [
+     "ZS",
+     "CRWD"
+    ],
+    "name": "CrowdStrike reported in talks to buy Zscaler",
+    "read_through": [
+     {
+      "evidence": [
+       "p:ZS~OKTA"
+      ],
+      "t": "OKTA",
+      "why": "Another security company that moved with Zscaler over the year; a deal may be read as consolidation among such companies. Untested: whether a stock's news reaches its partners has not been tested here."
+     },
+     {
+      "evidence": [
+       "p:ZS~S"
+      ],
+      "t": "S",
+      "why": "SentinelOne, a smaller security company tied to Zscaler over the year; the same consolidation reading. Untested."
+     }
+    ],
+    "watch": "A statement from either company; whether Zscaler holds its gain at Monday's open."
+   }
+  ],
+  "threads": [
+   "Kymera's readout Monday at 8 a.m. ET against the call (15% either way from $124.06, by Nov 27).",
+   "Zscaler and CrowdStrike: a statement or a denial.",
+   "Monday's Asian session with Tokyo shut; whether the after-hours rebound in US chips holds.",
+   "Capricor's FDA decision by Sunday; Savara closed -18.2% at $4.26 with no new FDA date.",
+   "Broadcom and Google's reported TPU cut: still no confirmation seen.",
+   "Thanksgiving week: markets shut Thursday Nov 26, a half day Friday Nov 27.",
+   "The scan's week of Nov 13-20: the 2-in-3 range held 29.9% and the 9-in-10 range 62.8%, its worst week yet, in a market-wide fall.",
+   "Check flaws: after-close driver lines from the previous day's bar (false market-wide flag again); single late prints (NABL)."
+  ],
+  "unexplained": [
+   {
+    "t": "NABL",
+    "tried": "-12.2% after hours on one late trade ($4.10 at 23:45Z after $4.67 earlier); no filing, no story; its partners are flat. Likely a stray print."
+   },
+   {
+    "t": "HIPO",
+    "tried": "-5.0% after hours on two trades; no filing, no story; its partners are flat."
+   }
+  ]
+ },
+ "recorded_at": "2026-11-21T04:30:39Z"
+}
