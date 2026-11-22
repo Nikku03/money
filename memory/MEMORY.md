@@ -23,7 +23,7 @@ Updated 2026-11-16 (three sessions in the memory bank; the diagnosis; step 2 tes
   a Markov chain as a mass-emotion detector; trial results calendars). `memory recall` searches all three.
 - Copies live in the Google Drive folder `money-brain memory`, one file per save, named with the date; the newest
   is current. One upload from here carries about 3 MB, so `save` writes larger files in parts. Newest full set
-  (2026-11-20): `MEMORY`, `JOURNAL`, `claims`, `notes`, `talk 2026-11-20 1of2/2of2.jsonl.gz` and `vectors 2026-11-20
+  (2026-11-22): `MEMORY`, `JOURNAL`, `claims`, `notes`, `talk 2026-11-22 1of2/2of2.jsonl.gz` and `vectors 2026-11-22
   1of6..6of6.npz`, all uploaded by file reference. After a reset, download the newest `talk` and every `vectors`
   part of the same date and run `memory load --talk FILE ... --vectors FILE ...`; whatever has no vector is
   embedded again by `memory index` (about two hours for everything), and recall
