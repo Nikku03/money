@@ -236,6 +236,15 @@ def is_gated_tilt(r: dict) -> bool:
     return is_tilt(r) and r.get("gate_type") in ("tilt", "timing")
 
 
+def is_ripple(r: dict) -> bool:
+    """A ripple test: how far and high news travels through the pond (brain/research/rippletest.py, docs/RIPPLES.md)."""
+    return r.get("kind") == "ripple"
+
+
+def is_gated_ripple(r: dict) -> bool:
+    return is_ripple(r) and r.get("gate_type") in ("size", "direction", "interference")
+
+
 def is_gated_forecast(r: dict) -> bool:
     """A forecast result with a declared gate (F1b, F1c); descriptive ones (F1a, F1d) are not."""
     return is_forecast(r) and (r.get("gate_type") == "ic" or (r.get("gate_type") is None and "p" in r))
@@ -243,7 +252,7 @@ def is_gated_forecast(r: dict) -> bool:
 
 def _bh_p(r: dict) -> float:
     if (is_forecast(r) or is_link(r) or is_event(r) or is_move(r) or is_shock(r) or is_range(r) or is_mosaic(r)
-            or is_tilt(r)):
+            or is_tilt(r) or is_ripple(r)):
         p = r.get("p")
         return float(p) if isinstance(p, (int, float)) and math.isfinite(p) else 1.0  # no p counts as 1
     return r["test"]["perm_p"]
@@ -270,7 +279,8 @@ def _link_verdict(r: dict, q: float) -> str:
 
 
 def _move_verdict(r: dict, q: float) -> str:
-    if not (is_gated_move(r) or is_gated_shock(r) or is_gated_range(r) or is_gated_mosaic(r) or is_gated_tilt(r)):
+    if not (is_gated_move(r) or is_gated_shock(r) or is_gated_range(r) or is_gated_mosaic(r) or is_gated_tilt(r)
+            or is_gated_ripple(r)):
         return "REPORT"
     if not (r.get("controls") or {}).get("pass"):
         return "FAIL (controls)"
@@ -289,7 +299,7 @@ def verdicts(path=None) -> list[dict]:
     tested = {k: r for k, r in res.items()
               if is_hypothesis(r) or is_gated_forecast(r) or is_gated_link(r) or is_gated_event(r)
               or is_gated_move(r) or is_gated_shock(r) or is_gated_range(r) or is_gated_mosaic(r)
-              or is_gated_tilt(r)}
+              or is_gated_tilt(r) or is_gated_ripple(r)}
     q_of = dict(zip(tested, bh_adjust([_bh_p(r) for r in tested.values()])))
     rows = []
     for k, r in res.items():
@@ -302,7 +312,7 @@ def verdicts(path=None) -> list[dict]:
         if is_link(r) or is_event(r):
             rows.append({**r, "bh_q": q, "verdict": _link_verdict(r, q)})
             continue
-        if is_move(r) or is_shock(r) or is_range(r) or is_mosaic(r) or is_tilt(r):
+        if is_move(r) or is_shock(r) or is_range(r) or is_mosaic(r) or is_tilt(r) or is_ripple(r):
             rows.append({**r, "bh_q": q, "verdict": _move_verdict(r, q)})
             continue
         te = r["test"]
@@ -368,6 +378,7 @@ def report(ledger_path=None, results_path=None) -> str:
     rng = [r for r in every if is_range(r)]
     msc = [r for r in every if is_mosaic(r)]
     tlt = [r for r in every if is_tilt(r)]
+    rip = [r for r in every if is_ripple(r)]
     led = Path(ledger_path or config.LEDGER)
     try:
         led_name = led.resolve().relative_to(config.ROOT.resolve()).as_posix()
@@ -378,7 +389,8 @@ def report(ledger_path=None, results_path=None) -> str:
                           f"Generated {now_iso()} from `{led_name}`. Every number below is copied from the ledger.",
                           "", *_forecast_section(forecasts), *_link_section(links, ledger_path),
                           *_event_section(evts, ledger_path), *_move_section(mvs), *_shock_section(shk),
-                          *_range_section(rng), *_mosaic_section(msc), *_tilt_section(tlt)]) + "\n"
+                          *_range_section(rng), *_mosaic_section(msc), *_tilt_section(tlt),
+                          *_ripple_section(rip)]) + "\n"
         Path(results_path or config.RESULTS).write_text(text)
         return text
     by_uni: dict[str, list[dict]] = {}
@@ -409,6 +421,7 @@ def report(ledger_path=None, results_path=None) -> str:
         + (" and every gated weekly-range test (see Weekly ranges)" if any(is_gated_range(r) for r in rng) else "")
         + (" and every gated mosaic test (see Mosaic)" if any(is_gated_mosaic(r) for r in msc) else "")
         + (" and every gated step-2 test (see Step 2)" if any(is_gated_tilt(r) for r in tlt) else "")
+        + (" and every gated ripple test (see Ripples)" if any(is_gated_ripple(r) for r in rip) else "")
         + ".",
         "",
         "| Hypothesis | Universe | Select | TEST net excess / mo | Annualised | Info ratio | Months won | Perm p | BH q | TRAIN net excess / mo | TRAIN p | TEST coverage | Verdict |",
@@ -491,6 +504,8 @@ def report(ledger_path=None, results_path=None) -> str:
         lines += ["", *_mosaic_section(msc)]
     if tlt:
         lines += ["", *_tilt_section(tlt)]
+    if rip:
+        lines += ["", *_ripple_section(rip)]
     text = "\n".join(lines) + "\n"
     Path(results_path or config.RESULTS).write_text(text)
     return text
@@ -1159,4 +1174,83 @@ def _tilt_section(rows: list[dict]) -> list[str]:
                      "so by market value it is not the S&P 500, and its gap to SPY is mostly that. The traits came from published research and from looks at "
                      "2011-2026 on other lists, so T1a's TEST is not unseen: a PASS is an upper bound. T1b's TEST "
                      "(1993-2010) had not been looked at. Paper only; nothing here places orders."), ""]
+
+
+def _ripple_section(rows: list[dict]) -> list[str]:
+    """The ripple tests (brain/research/rippletest.py, docs/RIPPLES.md): how far and high news travels through the
+    pond of stocks that moved together, and what happens where waves meet."""
+    if not rows:
+        return []
+    by = {r["id"]: r for r in rows}
+    lines = ["## Ripples", "",
+             ("Declared before running (`brain/research/rippletest.py`, `docs/RIPPLES.md`). A stone is an own move "
+              "(market removed) of 3+ usual days; its wave reaches each stock by how far that stock moved with it over "
+              "the year before. TRAIN 2011-2023, TEST 2024-01..2026-09, the research universe. Gated tests pass on a "
+              "positive statistic with p < 0.05, their controls, and Benjamini–Hochberg q < 0.10 across every gated "
+              "test in the ledger."), "",
+             "| Test | Question | Statistic | 90% interval | p | BH q | Controls | Verdict |",
+             "| --- | --- | --- | --- | --- | --- | --- | --- |"]
+    what = {"R1b": "how high the waves travel (next five sessions' size)",
+            "R1c": "which way the waves travel (next five sessions' direction)",
+            "R1d": "do waves that add up move a stock more than waves that cancel"}
+    for tid in ("R1b", "R1c", "R1d"):
+        r = by.get(tid)
+        if not r:
+            continue
+        m, c = r["metrics"], r.get("controls") or {}
+        q = f"{r['bh_q']:.3f}" if isinstance(r.get("bh_q"), float) and math.isfinite(r["bh_q"]) else "–"
+        stat = m.get("diff") if tid == "R1b" else m.get("ic")
+        iv = m.get("interval90") or [float("nan"), float("nan")]
+        fmt = "+.5f" if tid == "R1b" else "+.4f"
+        lines.append(f"| {tid} | {what[tid]} | {format(stat, fmt)} | {format(iv[0], fmt)}..{format(iv[1], fmt)} | "
+                     f"{r['p']:.4f} | {q} | {'passed' if c.get('pass') else 'FAILED'} | **{r['verdict'].split(':')[0]}** |")
+    words = []
+    if (r := by.get("R1a")):
+        m = r["metrics"]
+        sw = m["share_by_withstand"]
+        words.append(
+            f"- **R1a** (reported, the waves on the day): {m['sessions']} TEST sessions, {m['stones_per_session']:.1f} "
+            f"stones and {m['hit_per_session']:.0f} stocks reached a session. The wave's height matched the stock's own "
+            f"move that day with a rank correlation of {m['same_day_ic']:+.3f}. Own move (usual days) by ring: first "
+            f"{m['absz_by_ring']['1']:.3f}, second {m['absz_by_ring']['2']:.3f}, beyond {m['absz_by_ring']['3']:.3f}; on "
+            f"dry land (no link to any stone) {m['absz_dry_land']:.3f}. Wave height by ring: first "
+            f"{m['wave_by_ring']['1']:.3f}, second {m['wave_by_ring']['2']:.3f}, beyond {m['wave_by_ring']['3']:.3f}. "
+            f"Waves absorbed (under a quarter of a usual day) {sw['absorbed'] * 100:.1f}%, felt (a quarter to one) "
+            f"{sw['felt'] * 100:.1f}%, a hit (one or more) "
+            f"{sw['hit'] * 100:.2f}%. Interference against the day's own move size: {m['interference_same_day_ic']:+.3f}.")
+    if (r := by.get("R1b")):
+        m, c = r["metrics"], r.get("controls") or {}
+        bw = m["absY_by_withstand"]
+        words.append(
+            f"- **R1b** (size): {m['rows']} TEST stock-days in {m['months']} months. Squared error of the next five "
+            f"sessions' size: baseline {m['loss_base']:.4f}, with the waves {m['loss_ripple']:.4f}; better in "
+            f"{m['months_better']} of {m['months']} months. Next-five-session size (usual days of five sessions) after a "
+            f"wave absorbed {bw['absorbed']:.3f}, felt {bw['felt']:.3f}, a hit {bw['hit']:.3f}. Controls: shuffled waves "
+            f"reached p < 0.05 in {c.get('placebo_fpr', float('nan')) * 100:.1f}% of draws; an oracle p "
+            f"{c.get('oracle_p', float('nan')):.4f}. {r['verdict'].split(':')[0]}.")
+    if (r := by.get("R1c")):
+        m, c = r["metrics"], r.get("controls") or {}
+        words.append(
+            f"- **R1c** (direction): {m['rows']} TEST stock-days with wave energy of half a usual day or more, "
+            f"{m['sessions']} sessions. Monthly mean rank correlation of the wave with the next five sessions' own move "
+            f"{m['ic']:+.4f}, positive in {m['months_positive']} of {m['months']} months. The top fifth by wave against "
+            f"the bottom fifth: {m['spread_top_bottom']:+.3f} usual days of five sessions. Reported beside it: the wave "
+            f"not yet moved (wave less own move) {m['ic_gap_reported']:+.4f}; the stock's own move reversed "
+            f"{m['ic_own_reversal_reported']:+.4f}. Controls: shuffled waves reached p < 0.05 in "
+            f"{c.get('placebo_fpr', float('nan')) * 100:.1f}% of draws; an oracle p {c.get('oracle_p', float('nan')):.4f}. "
+            f"{r['verdict'].split(':')[0]}.")
+    if (r := by.get("R1d")):
+        m, c = r["metrics"], r.get("controls") or {}
+        words.append(
+            f"- **R1d** (interference): {m['rows']} TEST stock-days with wave energy of one usual day or more "
+            f"({m['share_destructive'] * 100:.0f}% of them more cancelled than added). Monthly mean rank correlation of "
+            f"interference with the next five sessions' size beyond the baseline {m['ic']:+.4f}, positive in "
+            f"{m['months_positive']} of {m['months']} months. Next-five-session size where waves added "
+            f"{m['absY_constructive']:.3f}, where they cancelled {m['absY_destructive']:.3f}. Controls: shuffled "
+            f"reached p < 0.05 in {c.get('placebo_fpr', float('nan')) * 100:.1f}% of draws; an oracle p "
+            f"{c.get('oracle_p', float('nan')):.4f}. {r['verdict'].split(':')[0]}.")
+    return lines + ["", *words, "",
+                    ("Reading this: the pond is the research universe's own stocks, chosen by today's lists (survivors). "
+                     "A wave on the day is a description, not a forecast; only R1b-R1d ask what follows. Paper only; "
+                     "nothing here places orders."), ""]
 
