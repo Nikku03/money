@@ -135,3 +135,11 @@ FAIL); "the market runs on chains of cause and effect, news and catalysts": the 
   whole AI hardware chain fell, a market-wide move) and after the close (SPY -3.64%, QQQ -5.67%; the desk's first
   three calls judged right; a new call on Kymera's Phase 2b readout). The scan of 2026-11-20 recorded in full.
 
+## 2026-11-22: what was won and lost; the pond
+
+- The person asked what was won and lost across the tests and scores (answered from RESULTS.md, the postmortem, the
+  trader replays and every score command), asked for it in simple words, then for every suggestion and call with its
+  outcome and the picks ranked.
+- The person proposed the pond-and-ripples picture. Built the ripple engine and map, declared R1a-R1d, ran once:
+  ripples travel one ring on the day and are mostly absorbed; nothing about the following five sessions passed.
+

@@ -68,6 +68,27 @@ Each gated test passes on a positive statistic with a one-sided sign-flip p unde
 placebo that shuffles waves within each session; an oracle), and Benjamini-Hochberg q under 0.10 across every gated
 test in the ledger. Results are recorded whatever they say.
 
+## Results on TEST (2024-01 to 2026-09, run once, `research/RESULTS.md`)
+
+| Test | Question | Result | Verdict |
+|---|---|---|---|
+| R1a | the waves on the day (reported) | height matched the day's own move, rank correlation +0.237; first ring 0.747 usual days, second 0.633, beyond 0.638, dry land 0.593; 58% absorbed, 42% felt, 0.06% a hit | reported |
+| R1b | how high the waves travel over the next five sessions | the waves cut the squared error by 1.1% (p 0.0011, 26 of 33 months), but shuffling the waves among each session's stocks did as well in every draw | **FAIL (controls)** |
+| R1c | which way they travel | rank correlation -0.0012 (p 0.57) | **FAIL** |
+| R1d | waves that add against waves that cancel | -0.0108 (p 0.88) | **FAIL** |
+
+What this says:
+
+- **On the day, a wave reaches one ring.** Partners of a stone moved 26% more than stocks on dry land; partners of
+  partners 7% more.
+- **It is mostly absorbed.** At the same-day calibration, almost no stock outside the stones takes a hit.
+- **The day's storm matters, where the waves went does not.** After the run, outside the test, the size gain was
+  split: the day's waves as a whole cut the error by 1.02%, and where they went added 0.06%. A session full of
+  stones means bigger moves next week for every stock, and the scan's own recent-move inputs already carry most of
+  that.
+- **Neither the direction of a wave nor how waves meet says anything about the next five sessions.** A stock's own
+  move reversing (+0.019) explains what little the wave not yet moved showed.
+
 ## Reading a map
 
 A map lists the day's stones, then the stocks the waves reach highest. For each stock it gives:
@@ -82,4 +103,4 @@ On Friday Nov 20, 2026 the highest waves (about 0.8 of a usual day) reached mort
 suppliers. They came mostly from Rocket and Invesco Mortgage (rate-linked) and from Spectrum Brands and Gap. 11 of the top 12
 moved up that day against the market.
 
-A map describes how the day's moves fit the year's links. Until R1b-R1d pass, it does not say what comes next.
+A map describes how the day's moves fit the year's links. R1b-R1d failed: it does not say what comes next.

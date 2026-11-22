@@ -138,6 +138,15 @@ idea at a time, checked against the memory bank first.
   Trained on timing: HH and LIF need the same number of cells (n=4: 86%/89%), Izh a few points behind;
   trained delays add 0-5 points for every cell. HH costs 5-10x CPU. The paper's claim did not show up here.
 
+## The pond and its ripples (2026-11-22, at the person's request; `docs/RIPPLES.md`)
+
+- The person's picture: news is a stone in a pond, its wave travels, hits or is absorbed, waves interfere. Built
+  `brain/ripple.py` (joint reading of the day's stones on a year of market-adjusted returns, calibrated KAPPA 0.24 on
+  2012-2016) and `ripple map`; declared R1a-R1d (78f4283) and ran them once on 2024-2026.
+- Result: on the day a wave reaches one ring (first ring 0.747 usual days against 0.593 on dry land) and is mostly
+  absorbed (58% absorbed, 42% felt, 0.06% a hit). After the day: R1b (size) FAIL on controls (the day's storm cut the
+  error 1.02%, where waves went 0.06%), R1c (direction) FAIL, R1d (interference) FAIL.
+
 ## Open questions and offers (no answer yet)
 
 - Asked 2026-11-14: add `mosaic read` and `mosaic radar --record` to the after-close check? (Without it the
