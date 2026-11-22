@@ -150,3 +150,33 @@ was the market and the chip group, not scattered company news. 33 stocks moved a
 Gladstone Commercial and WillScot (-2.7 usual days each against waves of +0.7 and +0.4).
 
 A map describes how the day's moves fit the year's links. R1b-R1d failed: it does not say what comes next.
+
+## The forward test: stocks that moved against their wave (R2a-R2c)
+
+Asked for on 2026-11-22. Published work suggests a move driven by a company's own news keeps going, and a move with
+no news behind it snaps back. The pond adds a question: does it matter that the stock moved against the wave its
+neighbours sent it?
+
+```
+python -m brain ripple record      # after each close, before the next one: write the day's readings
+python -m brain ripple score       # how the record stands (says nothing until it is judged)
+python -m brain againsttest test   # judged once, at 30 weekly readings
+```
+
+- **The record** (`brain/againstwave.py`, `research/ripple_calls.jsonl`), at each close from the session of
+  2026-11-20:
+  - Every stock that felt a wave of a quarter of a usual day or more one way and moved one or more the other.
+  - Whether it had company news that session (an 8-K or a results report at the SEC).
+  - Up to 10 matched stocks from the same day: same direction, within half a usual day in size, same news status, no
+    wave against them.
+  - A record must be written before the next session closes. Five sessions later, the bank's closes give each stock's
+    own move (market removed).
+- **The questions** (`brain/research/againsttest.py`, declared before the first record):
+  - **R2a:** without news, do they bounce back?
+  - **R2b:** with news, do they keep going?
+  - **R2c:** do they bounce back more than their matched stocks?
+- **Judging:**
+  - One reading per week, because a week's stocks move together.
+  - Judged once, at 30 weekly readings (about June 2027).
+  - Each passes on a positive weekly mean with a one-sided sign-flip p under 0.05 and Benjamini-Hochberg q under 0.10.
+  - Trading costs are not in the outcome; the result gives the move in percent beside them.

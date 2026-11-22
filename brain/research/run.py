@@ -242,7 +242,8 @@ def is_ripple(r: dict) -> bool:
 
 
 def is_gated_ripple(r: dict) -> bool:
-    return is_ripple(r) and r.get("gate_type") in ("size", "direction", "interference")
+    return is_ripple(r) and r.get("gate_type") in ("size", "direction", "interference", "bounce", "continue",
+                                                   "wave_matters")
 
 
 def is_gated_forecast(r: dict) -> bool:
@@ -1249,6 +1250,20 @@ def _ripple_section(rows: list[dict]) -> list[str]:
             f"{m['absY_constructive']:.3f}, where they cancelled {m['absY_destructive']:.3f}. Controls: shuffled "
             f"reached p < 0.05 in {c.get('placebo_fpr', float('nan')) * 100:.1f}% of draws; an oracle p "
             f"{c.get('oracle_p', float('nan')):.4f}. {r['verdict'].split(':')[0]}.")
+    what2 = {"R2a": "without news, do they bounce back", "R2b": "with news, do they keep going",
+             "R2c": "do they bounce back more than matched stocks without a wave against them"}
+    for tid in ("R2a", "R2b", "R2c"):
+        r = by.get(tid)
+        if not r:
+            continue
+        m = r["metrics"]
+        q = f"{r['bh_q']:.3f}" if isinstance(r.get("bh_q"), float) and math.isfinite(r["bh_q"]) else "–"
+        iv = m.get("interval90") or [float("nan"), float("nan")]
+        lines.append(f"| {tid} | stocks that moved against their wave: {what2[tid]} (forward) | {m['mean']:+.4f} | "
+                     f"{iv[0]:+.4f}..{iv[1]:+.4f} | {r['p']:.4f} | {q} | – | **{r['verdict'].split(':')[0]}** |")
+        words.append(f"- **{tid}** (forward from {m['first']} to {m['last']}): {m['stocks']} stocks in {m['weeks']} "
+                     f"weekly readings; weekly mean {m['mean']:+.4f} usual days of five sessions, positive in "
+                     f"{m['weeks_positive']} weeks. {r['verdict'].split(':')[0]}.")
     return lines + ["", *words, "",
                     ("Reading this: the pond is the research universe's own stocks, chosen by today's lists (survivors). "
                      "A wave on the day is a description, not a forecast; only R1b-R1d ask what follows. Paper only; "

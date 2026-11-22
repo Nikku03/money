@@ -334,9 +334,29 @@ def _cmd(a) -> int:
     return 0
 
 
+def _record(a) -> int:
+    from brain import againstwave
+    from brain.bank import Bank
+    againstwave.record(Bank(), a.date)
+    return 0
+
+
+def _score(a) -> int:
+    from brain import againstwave
+    from brain.bank import Bank
+    for line in againstwave.status(Bank()):
+        print(line)
+    return 0
+
+
 def add_cli(sub) -> None:
     p = sub.add_parser("ripple", help="the waves news sends through stocks that move together (docs/RIPPLES.md)")
     s = p.add_subparsers(dest="ripple_cmd", required=True)
+    q = s.add_parser("record", help="after a close: record the stocks that moved against their waves (R2a-R2c)")
+    q.add_argument("--date", help="the session (default and only allowed: the bank's latest)")
+    q.set_defaults(fn=_record)
+    q = s.add_parser("score", help="how the record of stocks that moved against their waves stands")
+    q.set_defaults(fn=_score)
     q = s.add_parser("map", help="stones and the waves they send, on the latest check or one session's closes")
     q.add_argument("--date", help="a session's close-to-close moves instead of the latest check (YYYY-MM-DD)")
     q.add_argument("--top", type=int, default=25)
