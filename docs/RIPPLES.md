@@ -89,6 +89,48 @@ What this says:
 - **Neither the direction of a wave nor how waves meet says anything about the next five sessions.** A stock's own
   move reversing (+0.019) explains what little the wave not yet moved showed.
 
+## How the market actually moves the water (measured after R1, on the training years 2011-2023 only)
+
+The first version treated the pond as still water, where every stock passes a wave on alike. Markets are not like
+that: busy, well-followed stocks take news in within minutes, quiet ones later; news should flow from the busy to
+the quiet; and a company's own results meet the waves its peers sent it weeks before. Each was measured on
+2011-2023 (scripts and logs in `research/ripples/`, not declared tests), to see where a wave might still be
+travelling after its day.
+
+- **Quiet water is slower, but only overnight.** First-ring partners moved +0.62 usual days with the stone on the day.
+  - Quiet partners of busy stones got another +0.11 on day 1, against +0.03 for busy partners.
+  - From the next day's open, though, the extra was gone: +0.03 that day and -0.14 over five days, both near zero.
+  - Most of the catch-up is the overnight gap (+0.07), which no one can buy.
+  - Quiet stocks that had not moved at all made +0.03% over five days, far below their trading costs.
+- **News does not flow from the busy to the quiet week by week.** An industry's most traded stocks' week told
+  nothing about its least traded stocks' next week (rank correlation +0.003, t 0.6).
+  - What looked like it was the quiet stocks' own pull-back (-0.050, t -10).
+- **Earnings read-through is real on the day and barely after it.** A results surprise moved peers that report later
+  the same day (+0.125, t 17).
+  - By each peer's own results, the leader's surprise added +0.005.
+  - Peers that jumped most on the read-through gave a little back at their own report (-0.006; -0.016 for same-industry
+    stocks that are not partners): slightly destructive interference, as published work finds, but small.
+  - The read-through also did not shrink a company's own results move (+0.014, t 1.9, flat across fifths).
+- **The storm is real, and the scan already has it.** Sessions whose own moves ran large (the stormiest fifth) were
+  followed by five sessions 26% bigger than average for every stock, the calmest fifth 15% smaller.
+  - Widening the scan's ranges by the storm fixed W1's calibration on its own fitting years (2011-2023: the stormiest
+    fifth from 64.1% to 68.3% inside the 2-in-3 range).
+  - Looked at after the fact on 2024-2026 (years already seen, so not a test), W1 was already calibrated across storm
+    levels (68.0% in the stormiest fifth), the widening made calm weeks too narrow (64.3%), and the loss was slightly
+    worse. The scan keeps W1 as it is.
+
+What is left for the pond, then, is to explain a day: what moved with the water, what took a hit, what moved against
+its wave. The map now also gives:
+
+- **The water:** how large the day's own moves were with the market's taken out, in fifths of 2011-2023, and what
+  such days were followed by for every stock.
+- **How each stock moved:**
+  - "with the water";
+  - "more than its wave: its own news";
+  - "against its wave" (a wave of a quarter of a usual day or more one way, a move of one or more the other way).
+
+  The last is where news of the company's own is likely and worth reading. None of this is a forecast.
+
 ## Reading a map
 
 A map lists the day's stones, then the stocks the waves reach highest. For each stock it gives:
@@ -96,11 +138,15 @@ A map lists the day's stones, then the stocks the waves reach highest. For each 
 - the wave's height and how the stock takes it (absorbed, felt, a hit);
 - the energy and the interference;
 - the ring;
-- the stock's own move;
+- the stock's own move, and whether it moved with the water, more than its wave or against it;
 - the stones that sent the largest parts of its wave.
+
+It then lists the stocks that moved against their waves, the largest first.
 
 On Friday Nov 20, 2026 the highest waves (about 0.8 of a usual day) reached mortgage lenders, homebuilders and building
 suppliers. They came mostly from Rocket and Invesco Mortgage (rate-linked) and from Spectrum Brands and Gap. 11 of the top 12
-moved up that day against the market.
+moved up that day against the market. With the market's fall taken out the water was quiet (fifth 2 of 5): Friday's fall
+was the market and the chip group, not scattered company news. 33 stocks moved against their waves, among them
+Gladstone Commercial and WillScot (-2.7 usual days each against waves of +0.7 and +0.4).
 
 A map describes how the day's moves fit the year's links. R1b-R1d failed: it does not say what comes next.

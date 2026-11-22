@@ -51,6 +51,12 @@ KAPPA = 0.24                    # how much of the joint reading a stock moved th
                                 # its own move on the reading over 2012-2016 (866,547 stock-days, inside TRAIN); the
                                 # wave's height is the reading times KAPPA, so it is in usual days that did happen
 H = 5                           # sessions ahead in the tests
+# The day's storm: the size of every stock's own move (root mean square, in usual days, capped at 10). Its fifths over
+# 2011-2023 (3,212 sessions) and the average size of the next five sessions in each, against an average session.
+STORM_EDGES = (0.832, 0.921, 1.019, 1.167)
+STORM_NEXT = (0.845, 0.915, 0.954, 1.031, 1.256)
+STORM_WORDS = ("calm", "quiet", "ordinary", "choppy", "stormy")
+AGAINST = 1.0                   # a stock that felt a wave and moved this many usual days the other way
 
 
 # ---------- the pond ----------
@@ -128,6 +134,27 @@ def contributions(w: dict, z: np.ndarray, S: np.ndarray, j: int, k: int = 4) -> 
     a = KAPPA * w["b"][j] * np.clip(np.nan_to_num(z[S]), -CAP, CAP)
     o = np.argsort(-np.abs(a))[:k]
     return [(int(S[i]), float(a[i])) for i in o if a[i] != 0]
+
+
+def storm(z: np.ndarray) -> dict:
+    """The day's storm from every stock's own move ``z`` (usual days): its size, its fifth over 2011-2023 and what such
+    days were followed by. A description of the water, not a forecast of direction; the scan's ranges already widen
+    with storms through each stock's recent moves and the VIX (docs/RIPPLES.md)."""
+    ok = np.isfinite(z)
+    size = float(np.sqrt(np.mean(np.clip(z[ok], -10, 10) ** 2))) if ok.sum() else float("nan")
+    k = int(np.searchsorted(STORM_EDGES, size)) if np.isfinite(size) else 2
+    return {"size": size, "fifth": k, "word": STORM_WORDS[k], "next_week": STORM_NEXT[k]}
+
+
+def how_it_moved(h: float, z: float, stone: bool) -> str:
+    """A stock's own move ``z`` against the wave ``h`` it felt: its own news, against its wave, or with the water."""
+    if stone:
+        return "a stone: its own news"
+    if abs(h) >= ABSORB and np.sign(z) == -np.sign(h) and abs(z) >= AGAINST:
+        return "against its wave"
+    if abs(z - h) >= 2.0:
+        return "more than its wave: its own news"
+    return "with the water"
 
 
 def withstand(h: float) -> str:
@@ -226,8 +253,14 @@ def summary(res: dict, k: int = 25) -> list[str]:
     t, p, e, S = res["tickers"], res["pond"], res["e"], res["S"]
     with np.errstate(all="ignore"):
         z = e / p["s"]
+    st = storm(z)
     out = [f"Ripples on the check against the close of {res['asof']}: {len(S)} stones (own moves of {STONE_Z:g}+ usual "
-           f"days, market removed) among {int(np.isfinite(z).sum())} stocks."]
+           f"days, market removed) among {int(np.isfinite(z).sum())} stocks.",
+           f"The water, with the market's own move taken out: {st['word']} (own moves averaged {st['size']:.2f} usual "
+           f"days, fifth {st['fifth'] + 1} of 5 over "
+           f"2011-2023). Sessions like it were followed by five sessions {abs(st['next_week'] - 1) * 100:.0f}% "
+           f"{'bigger' if st['next_week'] >= 1 else 'smaller'} than average, for every stock, either way; the scan's "
+           f"ranges already widen with storms."]
     for i in sorted(S, key=lambda i: -abs(z[i]))[:k]:
         out.append(f"  stone {t[i]:6s} own move {e[i] * 100:+.1f}% ({z[i]:+.1f} usual days)")
     hit = np.flatnonzero(~res["stone"] & (res["W"] > 0))
@@ -238,8 +271,16 @@ def summary(res: dict, k: int = 25) -> list[str]:
         c = contributions(res, z, S, j)
         moved = z[j]
         out.append(f"  {t[j]:6s} wave {res['H'][j]:+.1f} ({withstand(res['H'][j])}), energy {res['W'][j]:.1f}, "
-                   f"interference {res['I'][j]:.2f}, ring {res['ring'][j]}; its own move {moved:+.1f}; from "
+                   f"interference {res['I'][j]:.2f}, ring {res['ring'][j]}; its own move {moved:+.1f} "
+                   f"({how_it_moved(res['H'][j], moved, False)}); from "
                    + ", ".join(f"{t[i]} {a:+.1f}" for i, a in c))
+    against = [j for j in hit if np.isfinite(z[j]) and how_it_moved(res["H"][j], z[j], False) == "against its wave"]
+    against.sort(key=lambda j: -abs(z[j] - res["H"][j]))
+    if against:
+        out.append(f"Moved against their waves ({len(against)}; a wave of {ABSORB:g}+ usual days one way, a move of "
+                   f"{AGAINST:g}+ the other: news of their own is likely, worth reading):")
+        for j in against[:k]:
+            out.append(f"  {t[j]:6s} wave {res['H'][j]:+.1f}, own move {z[j]:+.1f} usual days ({res['e'][j] * 100:+.1f}%)")
     out.append("A wave on the day describes how stocks moved together; whether waves keep travelling after the day is "
                "what R1b-R1d test (docs/RIPPLES.md).")
     return out

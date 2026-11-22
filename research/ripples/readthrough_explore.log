@@ -1,0 +1,24 @@
+data 66 s
+leader-peer pairs 1010038 102 s
+
+all: 1010038 pairs
+  leader's surprise -> peer's same-day move (the transfer)       IC +0.1253 (t +17.2, 154 months)
+  leader's surprise -> peer's drift until its own report         IC +0.0066 (t +1.1, 154 months)
+  leader's surprise -> peer's own report reaction                IC +0.0052 (t +1.7, 154 months)
+  peer's same-day transfer move -> its own report reaction       IC -0.0063 (t -2.0, 154 months)
+  pooled: own-report reaction = +0.178 +0.015 x sign(leader) -0.017 x transfer move
+
+partners: 880269 pairs
+  leader's surprise -> peer's same-day move (the transfer)       IC +0.1437 (t +15.8, 154 months)
+  leader's surprise -> peer's drift until its own report         IC +0.0040 (t +0.6, 154 months)
+  leader's surprise -> peer's own report reaction                IC +0.0075 (t +1.8, 154 months)
+  peer's same-day transfer move -> its own report reaction       IC -0.0050 (t -1.2, 154 months)
+  pooled: own-report reaction = +0.193 +0.017 x sign(leader) -0.015 x transfer move
+
+same industry, not partners: 129769 pairs
+  leader's surprise -> peer's same-day move (the transfer)       IC +0.0669 (t +7.8, 152 months)
+  leader's surprise -> peer's drift until its own report         IC +0.0082 (t +0.9, 152 months)
+  leader's surprise -> peer's own report reaction                IC -0.0100 (t -1.7, 152 months)
+  peer's same-day transfer move -> its own report reaction       IC -0.0161 (t -2.2, 152 months)
+  pooled: own-report reaction = +0.079 +0.001 x sign(leader) -0.041 x transfer move
+done 105 s

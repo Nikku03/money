@@ -93,6 +93,22 @@ class Pond(unittest.TestCase):
         self.assertAlmostEqual(sum(a for _, a in c), float(w["H"][2]), places=4)
 
 
+class Water(unittest.TestCase):
+    def test_storm_fifths(self):
+        self.assertEqual(ripple.storm(np.full(100, 0.5))["word"], "calm")
+        self.assertEqual(ripple.storm(np.full(100, 2.0))["word"], "stormy")
+        st = ripple.storm(np.full(100, 0.95))
+        self.assertEqual(st["fifth"], 2)
+        self.assertAlmostEqual(st["next_week"], ripple.STORM_NEXT[2])
+
+    def test_how_it_moved(self):
+        self.assertEqual(ripple.how_it_moved(0.8, -1.5, False), "against its wave")
+        self.assertEqual(ripple.how_it_moved(0.1, -1.5, False), "with the water")      # the wave was absorbed
+        self.assertEqual(ripple.how_it_moved(0.5, 3.0, False), "more than its wave: its own news")
+        self.assertEqual(ripple.how_it_moved(0.5, 0.6, False), "with the water")
+        self.assertEqual(ripple.how_it_moved(0.0, 5.0, True), "a stone: its own news")
+
+
 class Days(unittest.TestCase):
     def test_days_yields_waves_and_outcomes(self):
         R, m = two_groups(400, seed=1)

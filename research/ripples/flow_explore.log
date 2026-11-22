@@ -1,0 +1,32 @@
+data 91 s
+ponds 99 s
+pairs 3845035 108 s
+
+A. Arrival of the wave at first-ring partners, in the receiver's usual days, signed by the stone
+all                                              n 3845035  day0 +0.618  day1 +0.042  days1-5 -0.074 (t +0.4, 154 months)
+sender busy   -> receiver busy                   n  484873  day0 +0.669  day1 +0.034  days1-5 -0.110 (t -0.2, 154 months)
+sender busy   -> receiver middle                 n  417163  day0 +0.632  day1 +0.069  days1-5 -0.156 (t +0.8, 154 months)
+sender busy   -> receiver quiet                  n  185292  day0 +0.575  day1 +0.113  days1-5 -0.062 (t +0.1, 154 months)
+sender middle -> receiver busy                   n  387961  day0 +0.588  day1 +0.037  days1-5 -0.075 (t +0.3, 154 months)
+sender middle -> receiver middle                 n  697393  day0 +0.582  day1 +0.048  days1-5 -0.077 (t +0.2, 154 months)
+sender middle -> receiver quiet                  n  472456  day0 +0.613  day1 +0.070  days1-5 +0.004 (t +0.7, 154 months)
+sender quiet  -> receiver busy                   n  173737  day0 +0.550  day1 +0.040  days1-5 -0.095 (t +1.1, 153 months)
+sender quiet  -> receiver middle                 n  482199  day0 +0.617  day1 +0.025  days1-5 -0.077 (t -0.2, 154 months)
+sender quiet  -> receiver quiet                  n  543961  day0 +0.674  day1 -0.006  days1-5 -0.034 (t +0.7, 154 months)
+sender on results day                            n  894419  day0 +0.242  day1 +0.003  days1-5 -0.049 (t -0.2, 154 months)
+sender without results                           n 2950616  day0 +0.733  day1 +0.054  days1-5 -0.081 (t +0.3, 154 months)
+results, sender much busier than receiver        n  113525  day0 +0.242  day1 +0.005  days1-5 -0.059 (t +1.5, 148 months)
+  ... receiver no own results within 5 days      n   85723  day0 +0.227  day1 +0.005  days1-5 -0.044 (t +1.4, 148 months)
+up stones                                        n 2078467  day0 +0.625  day1 +0.036  days1-5 -0.095 (t -0.7, 154 months)
+down stones                                      n 1766568  day0 +0.610  day1 +0.050  days1-5 -0.049 (t -0.7, 154 months)
+stone size 3-5 usual days                        n 3063863  day0 +0.675  day1 +0.040  days1-5 -0.074 (t +0.4, 154 months)
+stone size 5-8 usual days                        n  605827  day0 +0.420  day1 +0.082  days1-5 -0.081 (t +0.2, 154 months)
+stone size 8-99 usual days                       n  175322  day0 +0.319  day1 -0.048  days1-5 -0.034 (t +0.2, 154 months)
+receiver barely moved day 0, sender busier       n  199389  day0 -0.590  day1 +0.087  days1-5 +0.103 (t +2.3, 154 months)
+
+B. Weekly industry lead-lag (leaders = top 30% by trading, followers = bottom 30%, same 3-digit SIC)
+follower-weeks 205688
+  IC of lead  with followers' next week: +0.0025 (t +0.6, 154 months)
+  IC of gap   with followers' next week: +0.0457 (t +12.0, 154 months)
+  IC of own   with followers' next week: -0.0501 (t -10.3, 154 months)
+done 118 s

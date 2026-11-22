@@ -146,6 +146,11 @@ idea at a time, checked against the memory bank first.
 - Result: on the day a wave reaches one ring (first ring 0.747 usual days against 0.593 on dry land) and is mostly
   absorbed (58% absorbed, 42% felt, 0.06% a hit). After the day: R1b (size) FAIL on controls (the day's storm cut the
   error 1.02%, where waves went 0.06%), R1c (direction) FAIL, R1d (interference) FAIL.
+- Then asked to "adjust the strategy to how market works". Measured on 2011-2023 only (`research/ripples/`): quiet
+  stocks catch waves overnight, nothing after the next open; no weekly busy-to-quiet flow (IC +0.003); earnings
+  read-through priced on the day (later +0.005, small over-reaction -0.006); storm widening fixes W1 on 2011-2023 but
+  W1 was already calibrated across storms on 2024-2026 (after the fact), so not adopted. Map now shows the day's storm
+  and stocks that moved against their waves (own news likely). No new declared test; offered a forward one.
 
 ## Open questions and offers (no answer yet)
 

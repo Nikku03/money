@@ -142,4 +142,7 @@ FAIL); "the market runs on chains of cause and effect, news and catalysts": the 
   outcome and the picks ranked.
 - The person proposed the pond-and-ripples picture. Built the ripple engine and map, declared R1a-R1d, ran once:
   ripples travel one ring on the day and are mostly absorbed; nothing about the following five sessions passed.
+- Asked to adjust the ripple strategy to how markets work. Measured wave speed by liquidity, from the next open,
+  busy-to-quiet weekly flow, earnings read-through and the storm on W1, all on 2011-2023; none leaves a tradable wave
+  after the day. Added the storm reading and the moved-against-its-wave flag to the map.
 
