@@ -150,7 +150,14 @@ idea at a time, checked against the memory bank first.
   stocks catch waves overnight, nothing after the next open; no weekly busy-to-quiet flow (IC +0.003); earnings
   read-through priced on the day (later +0.005, small over-reaction -0.006); storm widening fixes W1 on 2011-2023 but
   W1 was already calibrated across storms on 2024-2026 (after the fact), so not adopted. Map now shows the day's storm
-  and stocks that moved against their waves (own news likely). No new declared test; offered a forward one.
+  and stocks that moved against their waves (own news likely).
+- The person said "test it": forward test R2a-R2c declared 2026-11-22 (96b1e39), recorder `brain/againstwave.py`,
+  record `research/ripple_calls.jsonl`; first reading 2026-11-20 (36 stocks against their waves, 2 with news).
+  Judged once at 30 weekly readings (about June 2027) with `python -m brain againsttest test`.
+- STANDING STEP: at every after-close check, after `scan run --refresh --record`, run `python -m brain ripple record`
+  and commit research/ripple_calls.jsonl (a reading must be written before the next session closes; the before-open
+  check is the backup slot). Adding it to the after-close task's prompt was refused by the permission check
+  (2026-11-22), so it is done by hand until the person allows update_trigger.
 
 ## Open questions and offers (no answer yet)
 

@@ -145,4 +145,7 @@ FAIL); "the market runs on chains of cause and effect, news and catalysts": the 
 - Asked to adjust the ripple strategy to how markets work. Measured wave speed by liquidity, from the next open,
   busy-to-quiet weekly flow, earnings read-through and the storm on W1, all on 2011-2023; none leaves a tradable wave
   after the day. Added the storm reading and the moved-against-its-wave flag to the map.
+- The person said to test whether stocks that moved against their wave keep going or bounce back. Built the recorder
+  and the forward tests R2a-R2c, declared them before any record, recorded the first session (2026-11-20). The
+  after-close task could not be changed (permission refused); the record is run by hand at each close.
 
