@@ -1,0 +1,385 @@
+{
+ "asof": "2026-11-20",
+ "at": "2026-11-23T13:30:51Z",
+ "calls": [],
+ "case_sha": "3ba10be1e27b951f",
+ "check": "2026-11-23T1330Z",
+ "claims_noted": 0,
+ "evidence": {
+  "d:bitcoin": {
+   "text": "bitcoin +4.1% since the close (its usual day: 2.8%)"
+  },
+  "d:gold": {
+   "text": "gold +3.1% since the close (its usual day: 1.8%)"
+  },
+  "f:CAPR:1": {
+   "text": "CAPR 8-K 7.01 at 2026-11-23T23:59Z: Capricor Therapeutics Provides Regulatory Update on Deramiocel BLA for Duchenne Muscular Dystrophy -- Exhibit 99.1 Capricor Therapeutics Provides Regulatory Update on Deramiocel BLA for Duchenne Muscular Dystrophy \u25cf Company receives Complete Response Letter from FDA for Deramiocel BLA \u25cf Conference call and webcast Monday, November 23, at 8:30 a.m. ET SAN DIEGO, Nov. 20, 2026 \u2014 Capricor Therapeutics (NASDAQ: CAPR), a biotechnology company developing transformat",
+   "url": "https://www.sec.gov/Archives/edgar/data/1133869/000110465926130730/capr-ex99d1.htm"
+  },
+  "f:KYMR:1": {
+   "text": "KYMR 8-K 7.01, 8.01 at 2026-11-23T12:06Z: Kymera Therapeutics Announces Positive Results from BROADEN2 Phase 2b Clinical Trial of KT-621, a First-in-Class, Oral STAT6 Degrader, in Patients with Moderate to Severe Atopic Dermatitis -- Exhibit 99.1 Kymera Therapeutics Announces Positive Results from BROADEN2 Phase 2b Clinical Trial of KT-621, a First-in-Class, Oral STAT6 Degrader, in Patients with Moderate to Severe Atopic Dermatitis BROADEN2 met primary and secondary endpoints with statistically ",
+   "url": "https://www.sec.gov/Archives/edgar/data/1815442/000119312526470926/d188151dex991.htm"
+  },
+  "f:ZS:1": {
+   "text": "ZS results report (8-K 2.02) at 2026-11-23T12:33Z: Zscaler Announces First Quarter Fiscal Year 2027 Financial Results -- Exhibit 99.1 Zscaler Announces First Quarter Fiscal Year 2027 Financial Results Enters into definitive agreement to be acquired by CrowdStrike Achieves strong Q1 performance with revenue up 20% and ARR expanding 21% Delivers record operating cash flow of $541 million and record free cash flow of $416 million Santa Clara, California - November 23, 2026 - Zscaler, Inc. (Nasdaq: ",
+   "url": "https://www.sec.gov/Archives/edgar/data/1713683/000119312526470942/d255961dex991.htm"
+  },
+  "g:1040": {
+   "text": "Gold and Silver Ores: the median of its 10 checked stocks moved +5.4%"
+  },
+  "g:3674": {
+   "text": "Semiconductors & Related Devices: the median of its 59 checked stocks moved +5.8%"
+  },
+  "h:LUCK": {
+   "text": "LUCK against the market, last sessions: 11-16 -1.6%, 11-17 +26.8%, 11-18 -3.1%, 11-19 -0.5%, 11-20 +5.2%"
+  },
+  "k": {
+   "text": "Market: S&P 500 (SPY) +2.6%, Nasdaq 100 (QQQ) +3.6%, Russell 2000 (IWM) +2.4%, S&P 500 futures +2.4%, VIX -11.9% (before the open)"
+  },
+  "n:CAPR": {
+   "text": "CAPR accounts: market value $441.2 m; cash and equivalents $44.3 m (2026-09-30; investments not counted); net income $-147.5 m over the four quarters to 2026-09-30; that cash alone covers about 1.2 quarters of such losses"
+  },
+  "n:KYMR": {
+   "text": "KYMR accounts: market value $11.5 bn; cash and equivalents $373.4 m (2026-09-30; investments not counted); revenue $102.2 m over the four quarters to 2026-09-30; net income $-349.4 m over the four quarters to 2026-09-30; that cash alone covers about 4.3 quarters of such losses"
+  },
+  "n:LUCK": {
+   "text": "LUCK accounts: market value $533.6 m; long-term debt $1.8 bn (2026-09-27); revenue $1.3 bn over the four quarters to 2026-09-27; net income $-47.7 m over the four quarters to 2026-09-27"
+  },
+  "n:MNRO": {
+   "text": "MNRO accounts: market value $297.3 m; cash and equivalents $15.0 m (2026-09-26; investments not counted); long-term debt $100.0 m (2026-09-26); revenue $1.1 bn over the four quarters to 2026-09-26; net income $798,000 over the four quarters to 2026-09-26"
+  },
+  "p:ZS~CRWD": {
+   "text": "ZS and CRWD: market-adjusted daily returns correlated 0.76 over the last 250 sessions; CRWD -6.7% since the close"
+  },
+  "p:ZS~OKTA": {
+   "text": "ZS and OKTA: market-adjusted daily returns correlated 0.74 over the last 250 sessions; OKTA +5.0% since the close"
+  },
+  "p:ZS~RBRK": {
+   "text": "ZS and RBRK: market-adjusted daily returns correlated 0.69 over the last 250 sessions; RBRK +5.9% since the close"
+  },
+  "r:bitcoin": {
+   "text": "the stocks that moved most with bitcoin over the year, today: MSTR +8.3% (its rate implies +5.4%), SBET +9.2% (its rate implies +5.2%), BMNR +9.7% (its rate implies +5.6%), COIN +4.5% (its rate implies +4.5%), ASST +10.8% (its rate implies +6.3%), FWDI +10.1% (its rate implies +5.1%)"
+  },
+  "r:gold": {
+   "text": "the stocks that moved most with gold over the year, today: RGLD +4.4% (its rate implies +1.9%), NEM +4.9% (its rate implies +2.1%), MUX +6.6% (its rate implies +2.6%), HL +6.9% (its rate implies +2.9%), CDE +6.8% (its rate implies +2.6%), IAUX +4.8% (its rate implies +2.5%)"
+  },
+  "s1": {
+   "text": "2026-11-23T12:01Z stocktwits.com: CAPR Stock Gets A 96% Price Target Cut After FDA Issues 2nd CRL For DMD Therapy \u2014 Piper Sandler Downgrades CAPR On Projected Cash -- Piper Sandler downgraded Capricor to \u2018Underweight\u2019 from \u2018Overweight\u2019 and cut its price target by 96% to $1 from $25, according to TheFly.",
+   "url": "https://stocktwits.com/news-articles/markets/equity/capr-stock-gets-price-target-cut-after-fda-issues-2nd-crl-for-dmd-therapy/cNbpGTiR9SD?.tsrc=rss"
+  },
+  "s10": {
+   "text": "2026-11-23T12:04Z finance.yahoo.com: CrowdStrike to Buy Zscaler in $44 Billion All-Stock Deal. Why They\u2019re Better Off Together. -- Under the terms of the agreement, Zscaler shareholders will receive 1.135 shares of CrowdStrike common stock for each share of Zscaler common stock they own.",
+   "url": "https://finance.yahoo.com/m/c15198fc-46aa-317e-ad7d-cc5e670695f9/crowdstrike-to-buy-zscaler-in.html?.tsrc=rss"
+  },
+  "s11": {
+   "text": "2026-11-23T11:41Z stocktwits.com: CrowdStrike To Acquire Zscaler For $43.9B In All-Stock Deal: TD Cowen Sees Cybersecurity Consolidation Entering \u2018More Material Phase\u2019 -- Zscaler and CrowdStrike also reported quarterly results on Monday, with both companies beating analyst estimates for revenue and earnings.",
+   "url": "https://stocktwits.com/news-articles/markets/equity/crowdstrike-to-acquire-zscaler-for-43-9-b-in-all-stock-deal/cNbYCS4R9Sv?.tsrc=rss"
+  },
+  "s14": {
+   "text": "2026-11-20T21:25Z finance.yahoo.com: S&P revises Lucky Strike outlook to negative on accelerating sales declines -- Investing.com -- S&P Global Ratings revised its outlook on Lucky Strike Entertainment Corp (NYSE:LUCK) to negative from stable on Friday, citing accelerating same-store sales declines and mounting pressure on profitability. While the credit rating agency affirmed the company\u2019s \u2018B-\u2019 issuer credit rating, the revision underscores heightened risks that consumer budget constraints and ",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/p-revises-lucky-strike-outlook-212511727.html?.tsrc=rss"
+  },
+  "s15": {
+   "text": "2026-11-23T12:30Z finance.yahoo.com: Monro, Inc. Announces Suspension of Quarterly Cash Dividend -- FAIRPORT, N.Y., November 23, 2026--Monro, Inc. (Nasdaq: MNRO), a leading provider of automotive repair and tire services, today announced that its Board of Directors (the \"Board\") has elected not to declare a cash dividend for the third quarter and to suspend future dividends until further action of the Board as the Company continues to execute its performance improvement plan, amid ongoing challe",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/monro-inc-announces-suspension-quarterly-123000935.html?.tsrc=rss"
+  },
+  "s16": {
+   "text": "2026-11-23T11:52Z finance.yahoo.com: Can NVT's Modular Cooling Solutions Capture AI Infrastructure Demand? -- nVent Electric expands its liquid cooling portfolio to tap AI data center demand, backed by modular products, strong pre-orders and major tech partnerships.",
+   "url": "https://finance.yahoo.com/technology/ai/articles/nvts-modular-cooling-solutions-capture-115200356.html?.tsrc=rss"
+  },
+  "s2": {
+   "text": "2026-11-23T11:30Z investorshub.advfn.com: Capricor Therapeutics Receives FDA Rejection for Deramiocel Duchenne Muscular Dystrophy Application -- Capricor Therapeutics (NASDAQ:CAPR) announced that the US Food and Drug Administration (FDA) has issued a Complete Response Letter (CRL) for its resubmitted Biologics License Application (BLA) for Deramiocel, an investigational cell therapy being developed to treat Duchenne muscular dystrophy (DMD). The regulatory decision means the application cannot b",
+   "url": "https://investorshub.advfn.com/market-news/article/40503/capricor-therapeutics-receives-fda-rejection-for-deramiocel-duchenne-muscular-dystrophy-application?.tsrc=rss"
+  },
+  "s22": {
+   "text": "2026-11-23T13:12Z finance.yahoo.com: Stock Market Today: Tech Futures, Nvidia Surge After Market Sell-Off; CrowdStrike Plunges On Zscaler Deal (Live Coverage) -- Tech futures and Nvidia stock surge Monday after Friday's market sell-off. CrowdStrike plunges on its Zscaler deal.",
+   "url": "https://finance.yahoo.com/m/8751de70-467e-380a-82cb-f4ee42adc461/stock-market-today%3A-tech.html?.tsrc=rss"
+  },
+  "s24": {
+   "text": "2026-11-23T11:20Z finance.yahoo.com: CrowdStrike, Zscaler, Anthropic, Sandisk, Strategy, Robinhood, and More Stocks That Explain Today\u2019s Market -- AI stocks surge as investors buy the dip following last week\u2019s ech selloff.",
+   "url": "https://finance.yahoo.com/m/76a3103b-f3de-364f-8cd8-90e453a902d8/crowdstrike%2C-zscaler%2C.html?.tsrc=rss"
+  },
+  "s25": {
+   "text": "2026-11-23T04:23Z finance.yahoo.com: US futures climb as technology recovers from brutal sell-off last week -- futures are rising as the technology sector looks to rebound following a brutal sell-off of artificial intelligence stocks last week.Futures for the S&P 500 gained 2.",
+   "url": "https://finance.yahoo.com/markets/world-indices/articles/asian-shares-mostly-fall-p-042312132.html?.tsrc=rss"
+  },
+  "s26": {
+   "text": "2026-11-20T22:35Z www.fool.com: Stock Market Today, Nov. 20: Stocks Plunge as AI Trade Unwinds -- Wall Street's worst stretch of the year deepened as AI-linked names sold off while defensive sectors drew buyers, today, Nov. 20, 2026.",
+   "url": "https://www.fool.com/coverage/stock-market-today/2026/11/20/stock-market-today-nov-20-stocks-plunge-as-ai-trade-unwinds/?.tsrc=rss"
+  },
+  "s3": {
+   "text": "2026-11-23T11:30Z finance.yahoo.com: Capricor Therapeutics Reschedules Conference Call to Provide Deramiocel Update -- SAN DIEGO, Nov. 23, 2026 (GLOBE NEWSWIRE) -- Capricor Therapeutics (NASDAQ: CAPR), a biotechnology company developing transformative cell and exosome-based therapeutics for rare diseases, today announced that it has rescheduled its conference call originally planned for today, November 23, 2026. Details for the rescheduled call will be shared shortly. Given the significance of t",
+   "url": "https://finance.yahoo.com/healthcare/articles/capricor-therapeutics-reschedules-conference-call-113000658.html?.tsrc=rss"
+  },
+  "s4": {
+   "text": "2026-11-23T10:47Z stocktwits.com: BBIO, PYPD Stocks On Radar Ahead Of FDA Rulings This Week \u2014 CAPR Gets CRL, Savara Still Awaits Molbreevi Decision -- BridgeBio expects an FDA decision on BBP-418, an oral treatment for limb-girdle muscular dystrophy type 2I/R9, on Friday, while a decision on PolyPid\u2019s D-PLEX100 to prevent surgical-site infections following colorectal surgery is expected on November 28.",
+   "url": "https://stocktwits.com/news-articles/markets/equity/bbio-pypd-stocks-fda-rulings-this-week-capr-gets-crl-savara-still-awaits-molbreevi-decision/cNbYyTSR9Sr?.tsrc=rss"
+  },
+  "s5": {
+   "text": "2026-11-23T13:04Z finance.yahoo.com: Kymera shares jump 29% after positive midstage eczema trial -- Investing.com -- Kymera Therapeutics shares rose 29% after the company reported positive Phase 2b results for KT-621, its experimental once-daily oral treatment for moderate to severe atopic dermatitis.",
+   "url": "https://finance.yahoo.com/healthcare/articles/kymera-shares-jump-29-positive-130437974.html?.tsrc=rss"
+  },
+  "s6": {
+   "text": "2026-11-23T12:00Z finance.yahoo.com: Kymera Therapeutics Announces Positive Results from BROADEN2 Phase 2b Clinical Trial of KT-621, a First-in-Class, Oral STAT6 Degrader, in Patients with Moderate to Severe Atopic Dermatitis -- BROADEN2 met primary and secondary endpoints with statistically significant improvements versus placebo at Week 16 across all doses, reinforcing KT-621\u2019s transformative potential KT-621 clinical efficacy profile was at least comparable to approved pathway biologics with ",
+   "url": "https://finance.yahoo.com/healthcare/articles/kymera-therapeutics-announces-positive-results-120000414.html?.tsrc=rss"
+  },
+  "s7": {
+   "text": "2026-11-20T21:01Z finance.yahoo.com: Kymera Therapeutics to Announce KT-621 BROADEN2 Phase 2b Atopic Dermatitis Trial Results on November 23, 2026 -- Company to host video conference call and webcast at 8:00 a.m. ET on Monday, November 23, 2026 WATERTOWN, Mass., Nov. 20, 2026 (GLOBE NEWSWIRE) -- Kymera Therapeutics, Inc. (NASDAQ: KYMR), a clinical-stage biopharmaceutical company advancing a new class of oral small molecule degrader medicines for immunological diseases, will announce results from",
+   "url": "https://finance.yahoo.com/healthcare/articles/kymera-therapeutics-announce-kt-621-210100108.html?.tsrc=rss"
+  },
+  "s8": {
+   "text": "2026-11-23T13:05Z finance.yahoo.com: Crowdstrike to acquire Zscaler in a $44 billion deal that would create a cybersecurity giant -- CrowdStrike is buying cloud security company Zscaler in an all-stock deal worth about $43.9 billion, the companies said Monday, in a major acquisition that combines two of the cybersecurity industry's biggest names.",
+   "url": "https://finance.yahoo.com/technology/articles/crowdstrike-acquire-zscaler-44-billion-130500925.html?.tsrc=rss"
+  },
+  "s9": {
+   "text": "2026-11-23T12:09Z www.ibtimes.com: CrowdStrike Agrees To Buy Zscaler For $43.9 Billion. Shares Move In Opposite Directions. -- The planned merger would bring device protection and cloud network security under one platform, opening access to thousands of additional customers as corporate demand for AI safeguards grows.",
+   "url": "https://www.ibtimes.com/crowdstrike-acquire-zscaler-43-9-billion-deal-3810075?.tsrc=rss"
+  },
+  "t1": {
+   "text": "the last note (2026-11-21T0427Z), theme 'The AI hardware selloff closed at its lows': Nvidia closed -14.01% at $125.53 (StockTitan; the bank's bars). In the bank's daily bars: Micron -13.89%, AMD -13.25%, Broadcom -12.19%, Celestica -16.00%, Coherent -12.90%, Arista -11.59%. The Taiwan fund EWT was -10.59% at 3:02 p.m. ET (StockTitan). Losses grew every hour into the close."
+  },
+  "t3": {
+   "text": "the last note (2026-11-21T0427Z), theme 'Havens to the close: Treasuries and homebuilders up, gold and bitcoin down': The 10-year yield ended near 4.91%, about 0.14 points lower; D.R. Horton +1.96%, PulteGroup +1.75%; gold settled $3,539 (-3.98%), Newmont -5.37%, Hecla -5.65%; bitcoin about -10% (the bank's bars and quotes). The VIX closed at 35.89."
+  },
+  "t4": {
+   "text": "the last note (2026-11-21T0427Z), theme 'CrowdStrike reported in talks to buy Zscaler': Bloomberg and Reuters reported after the close that CrowdStrike is in talks to buy Zscaler; Bloomberg said there is no certainty of a deal (Bloomberg on Yahoo; StockTitan). Zscaler is +16.3% after hours on steady trading, CrowdStrike -4.8%. IBTimes put Zscaler's value near $32 billion. At 4:05 p.m. ET Zscaler also announced AI security work with Anthropic and Mistral (StockTitan)."
+  },
+  "x:CAPR": {
+   "text": "CAPR: the market carried +2.3% (beta 0.89); its industry (Pharmaceutical Preparations, 145 stocks) moved +0.4%; left over after the market and its drivers -77.8%"
+  },
+  "x:KYMR": {
+   "text": "KYMR: the market carried +2.2% (beta 0.83); its industry (Biological Products, (No Diagnostic Substances), 49 stocks) moved +1.1%; left over after the market and its drivers +24.0%"
+  },
+  "x:LUCK": {
+   "text": "LUCK: the market carried +1.8% (beta 0.68); its industry (Services-Amusement & Recreation Services, 8 stocks) moved +0.0%; left over after the market and its drivers -12.6%"
+  },
+  "x:MNRO": {
+   "text": "MNRO: the market carried +3.6% (beta 1.37); 10-year yield carried +0.0% (-23.93% per point, t -5.5); left over after the market and its drivers -12.7%"
+  },
+  "x:NVT": {
+   "text": "NVT: the market carried +6.3% (beta 2.39); 10-year yield carried -0.0% (+14.80% per point, t 3.9); its industry (Machinery and computer equipment, group 355, 11 stocks) moved +2.7%; left over after the market and its drivers +3.7%"
+  },
+  "x:ZS": {
+   "text": "ZS: the market carried +2.1% (beta 0.81); its industry (Business services and software, group 737, 182 stocks) moved +1.7%; left over after the market and its drivers +16.8%"
+  },
+  "z:CAPR": {
+   "text": "CAPR mosaic: at the close of 2026-11-20, before this move, the chance of the filing in the next 20 sessions: late or unreliable accounts 0.3% (the usual stock: 0.4%); a restructuring or a write-off 1.1% (the usual stock: 0.3%; raised most by 79% below its 52-week high, moves about 6.9% a day against the market); a sale of new shares 3.4% (the usual stock: 0.9%; raised most by 2 sales of new shares opened in three years, a registration to sell securities on file). A chance that a filing comes, no"
+  },
+  "z:KYMR": {
+   "text": "KYMR mosaic: at the close of 2026-11-20, before this move, the chance of the filing in the next 20 sessions: late or unreliable accounts 0.1% (the usual stock: 0.4%); a restructuring or a write-off 0.2% (the usual stock: 0.3%); a sale of new shares 7.4% (the usual stock: 0.9%; raised most by 5 sales of new shares opened in three years, a registration to sell securities on file). A chance that a filing comes, not a direction (tests P1a-P3b, research/RESULTS.md)"
+  }
+ },
+ "note": {
+  "backdrop": "A rebound before the open after Friday's AI selloff: S&P 500 +2.6%, Nasdaq 100 +3.6%, VIX -11.9%, semiconductors' median +5.8%. The live coverage calls it buying the dip after last week's selloff; Nvidia was about +8.5% at 6:33 a.m. ET, near half of Friday's -14.01%, and the Taiwan names led (TSM about +7%). Gold +3.1% and bitcoin +4.1% rose with stocks, as they fell with them on Friday. Only 2 of 2451 stocks are outside their 9-in-10 range, both on their own news (Kymera, Capricor). The day's biggest single story is CrowdStrike agreeing to buy Zscaler in an all-stock deal.",
+  "backdrop_evidence": [
+   "k",
+   "s22",
+   "s24",
+   "s25",
+   "s26",
+   "g:3674",
+   "d:gold",
+   "d:bitcoin"
+  ],
+  "by": "agent",
+  "calls": [],
+  "check": "2026-11-23T1330Z",
+  "read": [
+   {
+    "direction": "none",
+    "published": "2026-11-23T11:33:00Z",
+    "says": "Before the open Nov 23: SPY +2.95% at 6:33 a.m. ET; Nvidia +8.46% after Friday's -14.01%; ASX +13.44%, UMC +12.21%, TSM +7.28%, CoreWeave +8.07%; Kospi -3.31%, Japan closed.",
+    "tier": "reported",
+    "url": "https://www.stocktitan.net/articles/stock-market-today-live-november-23-2026"
+   }
+  ],
+  "singles": [
+   {
+    "beneath": "Mid dose: a 72% mean reduction in eczema severity (EASI) against 27% on placebo; 62% reached EASI-75 against 22%; 38% clear or almost clear against 11%; 38% of patients had severe disease and 33% prior biologics. An oral pill in a market led by injectables. +26.2% since Friday's close, +24.0% after the market and drivers. Its cash covered about 4.3 quarters of losses, and the mosaic had a share sale at 7.4% against 0.9% usually before this move: a chance that a filing comes, not a direction. The desk's call 63a7bc55 (15% either way from $124.06 by Nov 27) is past its line before the open; it is judged at the Nov 27 close.",
+    "cause": "Kymera's BROADEN2 Phase 2b trial of KT-621, an oral STAT6 degrader for moderate to severe eczema, met its primary and secondary endpoints at all three doses.",
+    "evidence": [
+     "f:KYMR:1",
+     "s5",
+     "s6",
+     "s7",
+     "x:KYMR",
+     "n:KYMR",
+     "z:KYMR"
+    ],
+    "kind": "reported",
+    "t": "KYMR"
+   },
+   {
+    "beneath": "-75.5% since Friday's close. Piper Sandler cut to Underweight with a $1 target from $25 and expects job cuts to save cash. Cash and equivalents of $44.3 million covered about 1.2 quarters of its losses; the mosaic had a share sale at 3.4% and a restructuring at 1.1% (usual 0.9% and 0.3%) before this.",
+    "cause": "The FDA sent Capricor a second Complete Response Letter for deramiocel, its cell therapy for Duchenne muscular dystrophy, saying the evidence did not show effectiveness to the approval standard and citing other clinical deficiencies.",
+    "evidence": [
+     "f:CAPR:1",
+     "s1",
+     "s2",
+     "s3",
+     "s4",
+     "x:CAPR",
+     "n:CAPR",
+     "z:CAPR"
+    ],
+    "kind": "reported",
+    "t": "CAPR"
+   },
+   {
+    "beneath": "-9.2% with the market carrying +3.6% at its beta of 1.37: -12.7% of its own. Cash $15.0 million against $100.0 million of long-term debt; net income $0.8 million over four quarters.",
+    "cause": "Monro suspended its quarterly cash dividend.",
+    "evidence": [
+     "s15",
+     "x:MNRO",
+     "n:MNRO"
+    ],
+    "kind": "reported",
+    "t": "MNRO"
+   },
+   {
+    "beneath": "-10.9%, -12.6% after the market; long-term debt $1.8 billion against a market value of $533.6 million; it rose +26.8% on Nov 17.",
+    "cause": "S&P Global Ratings revised Lucky Strike's outlook to negative on accelerating sales declines, after Friday's close.",
+    "evidence": [
+     "s14",
+     "x:LUCK",
+     "n:LUCK",
+     "h:LUCK"
+    ],
+    "kind": "reported",
+    "t": "LUCK"
+   }
+  ],
+  "themes": [
+   {
+    "beneath": "Nasdaq 100 +3.6% against S&P 500 +2.6%; semiconductors' median +5.8%; Nvidia about +8.5% before the open, near half of Friday's -14.01% (StockTitan). Friday's note had chips -11% to -16% at the close.",
+    "cause": "Stories before the open describe investors buying AI and chip stocks after last week's selloff (Yahoo live coverage, StockTitan); index futures were up 2-4% before the open.",
+    "evidence": [
+     "k",
+     "s22",
+     "s24",
+     "s25",
+     "g:3674",
+     "x:NVT",
+     "s16",
+     "t1"
+    ],
+    "kind": "reported",
+    "mechanism": "The same AI-linked names that fell hardest on Friday lead the rebound; stocks with high betas carry most of it: nVent's +10.0% is +6.3% from the market alone at its beta of 2.39.",
+    "members": [
+     "NVT",
+     "NVDA"
+    ],
+    "name": "Dip buying after Friday's AI selloff",
+    "read_through": [],
+    "watch": "Whether the rebound holds through the cash session; a fade back toward Friday's lows would say Friday's selling is not done."
+   },
+   {
+    "beneath": "At the check's prices: CrowdStrike -6.7% puts the offer near $243 a share (1.135 x about $214), against Zscaler near $231 (+18.9% from about $194): a gap of about 5% (inferred from the deal terms and the moves). Zscaler's quarter: revenue +20%, ARR +21%, operating cash flow $541 million. CrowdStrike's: subscription revenue +29% to $1.50 billion, ARR +27% to $6.26 billion.",
+    "cause": "CrowdStrike agreed to buy Zscaler for about $43.9 billion in stock: 1.135 CrowdStrike shares per Zscaler share, $260.41 a share at Friday's prices, a 34% premium. Both reported results the same morning; Zscaler's release says it entered a definitive agreement to be acquired.",
+    "evidence": [
+     "f:ZS:1",
+     "s8",
+     "s9",
+     "s10",
+     "s11",
+     "x:ZS",
+     "p:ZS~CRWD",
+     "t4"
+    ],
+    "kind": "reported",
+    "mechanism": "Zscaler now trades as a fraction of CrowdStrike, less a gap for time and deal risk; CrowdStrike falls as its holders pay the premium and take dilution (they keep about 84.1% of the combined company).",
+    "members": [
+     "ZS",
+     "CRWD"
+    ],
+    "name": "CrowdStrike to buy Zscaler, all stock",
+    "read_through": [
+     {
+      "evidence": [
+       "p:ZS~OKTA",
+       "s11"
+      ],
+      "t": "OKTA",
+      "why": "Moved closely with Zscaler over the year (0.74) and is +5.0%; TD Cowen sees cybersecurity consolidation entering a 'more material phase', which may lift other targets. Untested: whether a partner's news reaches it the next day has not been tested here."
+     },
+     {
+      "evidence": [
+       "p:ZS~RBRK",
+       "s11"
+      ],
+      "t": "RBRK",
+      "why": "Partner of Zscaler (0.69), +5.9%: the same consolidation reading. Untested."
+     }
+    ],
+    "watch": "The gap between Zscaler and 1.135 CrowdStrike shares: a widening says the market doubts the deal (votes, antitrust); Zscaler's founder and affiliates, about 34%, agreed to vote for it."
+   },
+   {
+    "beneath": "Friday's note had gold -3.98% and bitcoin about -10% while stocks fell: selling of what had risen. Today's joint rebound fits the same holders buying back, not a flight to safety (inferred).",
+    "cause": "Gold +3.1% and bitcoin +4.1% since Friday's close, both about 1.5 times their usual day, rising with stocks after falling with them on Friday.",
+    "evidence": [
+     "d:gold",
+     "d:bitcoin",
+     "r:gold",
+     "r:bitcoin",
+     "g:1040",
+     "t3"
+    ],
+    "kind": "inferred",
+    "mechanism": "The stocks that track them move more than their rates imply: miners (Newmont +4.9%, Hecla +6.9%) and bitcoin holders (Strategy +8.3%, BitMine +9.7%).",
+    "members": [
+     "NEM",
+     "HL",
+     "MSTR",
+     "BMNR"
+    ],
+    "name": "Gold and bitcoin rebound with stocks",
+    "read_through": [],
+    "watch": "If gold and bitcoin fall again when stocks next fall, the 'selling winners' reading holds; if gold rises while stocks fall, it is a haven again."
+   }
+  ],
+  "threads": [
+   "Kymera: the call 63a7bc55 is judged at the Nov 27 close (a half day); before the open it is past its 15% line.",
+   "Zscaler and CrowdStrike: the gap to 1.135 CrowdStrike shares through the week.",
+   "Whether the chip rebound holds through the cash session.",
+   "Florida home insurers (SLDE, UVE, HRTG, HIPO) fell together with no story found.",
+   "Health insurers fell together (UNH, ELV, HUM, CVS) with no story found.",
+   "Thanksgiving week: markets shut Thursday Nov 26, a half day Friday Nov 27.",
+   "Check flaws still open: the stale baseline in after-close driver lines; single late prints."
+  ],
+  "unexplained": [
+   {
+    "t": "FTI",
+    "tried": "No filing and no story in its feed; a web search found no news for today. Oil -2.5%; its partners NOV, HAL, BKR moved 0-2%. It fell five sessions in a row before this."
+   },
+   {
+    "t": "HOS",
+    "tried": "No filing and no story; a web search found only Friday's report of a 52-week low. Partners moved 0-2.6%. It fell -4.6% Friday."
+   },
+   {
+    "t": "VTR",
+    "tried": "No filing and no story; its closest partner WELL +0.5% and other health-care REITs flat."
+   },
+   {
+    "t": "AMRX",
+    "tried": "No filing and no story; partners flat or up 2% (TEVA)."
+   },
+   {
+    "t": "UNH",
+    "tried": "Weekend stories (a TD Cowen upgrade, a suit over star ratings) carry no Monday event; health insurers fell together (ELV -2.8%, HUM -3.4%, CVS -3.9%), so a sector cause is likely but no source states it."
+   },
+   {
+    "t": "SLDE",
+    "tried": "No filing; one weekend opinion piece. Florida home insurers fell together (UVE -4.2%, HRTG -4.6%); no source says why."
+   },
+   {
+    "t": "HIPO",
+    "tried": "No filing and no story; -5.0% overnight, as on Friday after hours; partner HRTG -4.6%."
+   },
+   {
+    "t": "CFG",
+    "tried": "A weekend piece on a $450 million technology plan, not an event; regional bank partners KEY +2.8%, RF +2.6%; +4.1% left after the market."
+   }
+  ]
+ },
+ "recorded_at": "2026-11-23T13:39:47Z"
+}
