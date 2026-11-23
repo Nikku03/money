@@ -1,0 +1,519 @@
+{
+ "asof": "2026-11-20",
+ "at": "2026-11-23T17:48:13Z",
+ "calls": [],
+ "case_sha": "06d47e0e7b583895",
+ "check": "2026-11-23T1748Z",
+ "claims_noted": 0,
+ "evidence": {
+  "c1": {
+   "text": "movers tied together: NVDA, TSLA, MPWR, TXN, CRWV, LSCC, MRVL, NXPI (NVDA~TSLA by s16; MPWR~NXPI by s21; MPWR~TXN by s21; NXPI~TXN by s21; NVDA~TXN by s26; CRWV~NVDA by s33; MRVL~NVDA by s40; NVDA~NXPI by s48; NVDA~TXN by s48; NXPI~TXN by s48; MPWR~TXN by p:MPWR~TXN; LSCC~MPWR by p:LSCC~MPWR; NXPI~TXN by p:NXPI~TXN)"
+  },
+  "c2": {
+   "text": "movers tied together: SITM, MXL, MTSI, FN (MXL~SITM by p:MXL~SITM; MTSI~SITM by p:MTSI~SITM; FN~MTSI by p:FN~MTSI)"
+  },
+  "c3": {
+   "text": "movers tied together: ZS, CRWD, PLTR (CRWD~ZS by s22; CRWD~ZS by s23; CRWD~ZS by s24; CRWD~ZS by s25; PLTR~ZS by p:PLTR~ZS)"
+  },
+  "c4": {
+   "text": "movers tied together: DELL, HPE (DELL~HPE by s45; DELL~HPE by s50; DELL~HPE by p:DELL~HPE)"
+  },
+  "d:bitcoin": {
+   "text": "bitcoin +4.3% since the close (its usual day: 2.8%)"
+  },
+  "d:dollar": {
+   "text": "dollar +0.6% since the close (its usual day: 0.3%)"
+  },
+  "d:gold": {
+   "text": "gold +4.2% since the close (its usual day: 1.8%)"
+  },
+  "f:CAPR:1": {
+   "text": "CAPR 8-K 7.01 at 2026-11-23T23:59Z: Capricor Therapeutics Provides Regulatory Update on Deramiocel BLA for Duchenne Muscular Dystrophy -- Exhibit 99.1 Capricor Therapeutics Provides Regulatory Update on Deramiocel BLA for Duchenne Muscular Dystrophy \u25cf Company receives Complete Response Letter from FDA for Deramiocel BLA \u25cf Conference call and webcast Monday, November 23, at 8:30 a.m. ET SAN DIEGO, Nov. 20, 2026 \u2014 Capricor Therapeutics (NASDAQ: CAPR), a biotechnology company developing transformat",
+   "url": "https://www.sec.gov/Archives/edgar/data/1133869/000110465926130730/capr-ex99d1.htm"
+  },
+  "f:CRWD:1": {
+   "text": "CRWD results report (8-K 2.02) at 2026-11-23T11:04Z: CrowdStrike Reports Third Quarter Fiscal Year 2027 Financial Results -- CrowdStrike Reports Third Quarter Fiscal Year 2027 Financial Results \u2022Announces definitive agreement to acquire Zscaler \u2022Delivers all-time record net new ARR of $419 million, accelerates growth to 58% year-over-year \u2022Ending ARR reaches $6.26 billion, accelerates growth for the fifth consecutive quarter to 27% year-over-year \u2022Increases FY27 net new ARR growth guidance by 1,",
+   "url": "https://www.sec.gov/Archives/edgar/data/1535527/000153552726000035/crwd-20261123xex991.htm"
+  },
+  "f:CRWD:2": {
+   "text": "CRWD 8-K 1.01, 7.01 at 2026-11-23T11:15Z: Acquire Zscaler, Bringing Network Security and Zero Trust to the Falcon Platform -- Exhibit 99.1 CrowdStrike to Acquire Zscaler, Bringing Network Security and Zero Trust to the Falcon Platform \u25cf Acquisition will unite the leaders in securing every device and every connection \u25cf Zscaler will expand CrowdStrike\u2019s total addressable market by more than $185 billion \u25cf Will provide a path to cross-sell the CrowdStrike platform to approximately 8,000 Zscaler cus",
+   "url": "https://www.sec.gov/Archives/edgar/data/1535527/000110465926130785/tm2630454d1_ex99-1.htm"
+  },
+  "f:KYMR:1": {
+   "text": "KYMR 8-K 7.01, 8.01 at 2026-11-23T12:06Z: Kymera Therapeutics Announces Positive Results from BROADEN2 Phase 2b Clinical Trial of KT-621, a First-in-Class, Oral STAT6 Degrader, in Patients with Moderate to Severe Atopic Dermatitis -- Exhibit 99.1 Kymera Therapeutics Announces Positive Results from BROADEN2 Phase 2b Clinical Trial of KT-621, a First-in-Class, Oral STAT6 Degrader, in Patients with Moderate to Severe Atopic Dermatitis BROADEN2 met primary and secondary endpoints with statistically ",
+   "url": "https://www.sec.gov/Archives/edgar/data/1815442/000119312526470926/d188151dex991.htm"
+  },
+  "f:KYMR:2": {
+   "text": "KYMR 8-K 7.01 at 2026-11-23T13:29Z: November 23, 2026 KT-621 Phase 2b -- November 23, 2026 KT-621 Phase 2b Atopic Dermatitis Trial Results Exhibit 99.1 Agenda Introduction Justine Koenigsberg Vice President, Investor Relations KT-621: Transforming Type 2 Disease Treatment Nello Mainolfi, PhD Founder, President and Chief Executive Officer KT-621/STAT6: BROADEN2 Phase 2b Atopic Dermatitis Results Terence Rooney, MD Chief Medical Officer Closing Remarks Nello Mainolfi, PhD Founder, President and Ch",
+   "url": "https://www.sec.gov/Archives/edgar/data/1815442/000119312526470995/d159818dex991.htm"
+  },
+  "f:MNRO:1": {
+   "text": "MNRO 8-K 8.01 at 2026-11-23T13:44Z: Drive, Suite 202, Fairport, New York 14450 -- Exhibit 99.1 295 Woodcliff Drive, Suite 202, Fairport, New York 14450 CONTACT: Investors and Media: Felix Veksler Vice President, Investor Relations ir@monro.com FOR IMMEDIATE RELEASE Monro, Inc. Announces Suspension of Quarterly Cash Dividend FAIRPORT, N.Y. \u2013 November 23, 2026 \u2013 Monro, Inc. (Nasdaq: MNRO), a leading provider of automotive repair and tire services, today announced that its Board of Directors (the \u201c",
+   "url": "https://www.sec.gov/Archives/edgar/data/876427/000119312526471010/d125105dex991.htm"
+  },
+  "f:NVDA:1": {
+   "text": "NVDA 8-K 5.02 at 2026-11-23T13:57Z: NVIDIA Board Reinstates Jensen Huang as President, CEO and Board Director -- NVIDIA Board Reinstates Jensen Huang as President, CEO and Board Director SANTA CLARA, Calif.\u2014November 23, 2026\u2014NVIDIA (NASDAQ: NVDA) today announced that effective immediately, Jensen Huang has been reinstated as President and Chief Executive Officer, and as a member of the Board. The Board of Directors voted unanimously to reinstate Mr. Huang following a series of discussions and me",
+   "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000090/nov23pressrelease.htm"
+  },
+  "f:ZS:2": {
+   "text": "ZS 8-K 1.01, 7.01 at 2026-11-23T15:01Z: CrowdStrike to Acquire Zscaler, Bringing Network Security and Zero Trust to the Falcon Platform -- Exhibit 99.1 CrowdStrike to Acquire Zscaler, Bringing Network Security and Zero Trust to the Falcon Platform \u2022 Acquisition will unite the leaders in securing every device and every connection \u2022 Zscaler will expand CrowdStrike\u2019s total addressable market by more than $185 billion \u2022 Will provide a path to cross-sell the CrowdStrike platform to approximately 8,00",
+   "url": "https://www.sec.gov/Archives/edgar/data/1713683/000119312526471211/d115803dex991.htm"
+  },
+  "g:3674": {
+   "text": "Semiconductors & Related Devices: the median of its 59 checked stocks moved +12.6%"
+  },
+  "k": {
+   "text": "Market: S&P 500 (SPY) +4.8%, Nasdaq 100 (QQQ) +7.1%, Russell 2000 (IWM) +3.3%, S&P 500 futures +4.9%, VIX -22.9% (in session)"
+  },
+  "n:CAPR": {
+   "text": "CAPR accounts: market value $441.2 m; cash and equivalents $44.3 m (2026-09-30; investments not counted); net income $-147.5 m over the four quarters to 2026-09-30; that cash alone covers about 1.2 quarters of such losses"
+  },
+  "p:DELL~HPE": {
+   "text": "DELL and HPE: market-adjusted daily returns correlated 0.69 over the last 250 sessions; HPE +15.5% since the close"
+  },
+  "p:DELL~SMCI": {
+   "text": "DELL and SMCI: market-adjusted daily returns correlated 0.45 over the last 250 sessions; SMCI +13.9% since the close"
+  },
+  "p:ZS~OKTA": {
+   "text": "ZS and OKTA: market-adjusted daily returns correlated 0.74 over the last 250 sessions; OKTA +8.9% since the close"
+  },
+  "r:bitcoin": {
+   "text": "the stocks that moved most with bitcoin over the year, today: MSTR +10.3% (its rate implies +5.6%), SBET +8.9% (its rate implies +5.4%), BMNR +13.2% (its rate implies +5.8%), COIN +7.9% (its rate implies +4.6%), ASST +11.5% (its rate implies +6.5%), FWDI +14.5% (its rate implies +5.3%)"
+  },
+  "r:gold": {
+   "text": "the stocks that moved most with gold over the year, today: RGLD +5.1% (its rate implies +2.5%), NEM +6.9% (its rate implies +2.8%), MUX +3.6% (its rate implies +3.5%), HL +7.2% (its rate implies +3.9%), CDE +7.4% (its rate implies +3.5%), IAUX +1.3% (its rate implies +3.3%)"
+  },
+  "s1": {
+   "text": "2026-11-23T15:38Z finance.yahoo.com: Capricor Therapeutics Stock Crashes 70% After FDA Rejection -- Capricor's FDA Setback Deepens. Its Experimental Treatment Fails to Win Approval Again",
+   "url": "https://finance.yahoo.com/healthcare/articles/capricor-therapeutics-stock-crashes-70-153850749.html?.tsrc=rss"
+  },
+  "s10": {
+   "text": "2026-11-23T17:35Z www.thestreet.com: Nvidia stock soars 30% after brutal selloff -- Nvidia\u2019s board brought Jensen Huang back just 11 days after his resignation, following discussions with senior U.S. government officials.",
+   "url": "https://www.thestreet.com/investing/stocks/nvidia-stock-soars-after-jensen-huang-reinstated-as-ceo?.tsrc=rss"
+  },
+  "s12": {
+   "text": "2026-11-23T17:28Z finance.yahoo.com: Anthropic Stock Slips, Misses Out On AI Rally Following Jensen Huang's Nvidia Comeback -- Anthropic stock is left out of the broader AI stock rally that followed Jensen Huang's return to leadership at Nvidia.",
+   "url": "https://finance.yahoo.com/m/935809eb-fa5d-3f8d-8aa1-cc24528bbd44/anthropic-stock-slips%2C-misses.html?.tsrc=rss"
+  },
+  "s16": {
+   "text": "2026-11-23T17:03Z 247wallst.com: Tesla Jumps 13% as Jensen Huang\u2019s Return to NVIDIA Sparks Broad Market Rally; Rivian Rallies 9%, Lucid Surges 8% -- A boardroom reversal at the world's most important AI chipmaker sent EV stocks soaring, but the smallest names carry the deepest scars. Can a one-day relief rally turn into a real recovery for Tesla, Rivian and Lucid?",
+   "url": "https://247wallst.com/investing/2026/11/23/tesla-jumps-13-as-jensen-huangs-return-to-nvidia-sparks-broad-market-rally-rivian-rallies-9-lucid-surges-8/?.tsrc=rss"
+  },
+  "s19": {
+   "text": "2026-11-23T14:09Z finance.yahoo.com: Monro stock tumbles as company suspends dividend payments -- Investing.com -- Monro, Inc (NASDAQ:MNRO) shares fell 7% in premarket trading Monday after the automotive repair and tire services provider announced it would suspend its quarterly dividend as it pursues a strategic review.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/monro-stock-tumbles-company-suspends-140937659.html?.tsrc=rss"
+  },
+  "s2": {
+   "text": "2026-11-23T15:25Z www.proactiveinvestors.com: Capricor shares plunge after FDA rejects Duchenne muscular dystrophy therapy -- Capricor Therapeutics (NASDAQ:CAPR) shares plunged 76% to $1.84 in early trading Monday after the Food and Drug Administration declined to approve deramiocel, the company\u2019s experimental cell therapy for Duchenne muscular dystrophy. The agency said serious violations had irreparably compromised...",
+   "url": "https://www.proactiveinvestors.com/companies/news/1102274/capricor-shares-plunge-after-fda-rejects-duchenne-muscular-dystrophy-therapy-1102274.html?.tsrc=rss"
+  },
+  "s20": {
+   "text": "2026-11-23T12:30Z finance.yahoo.com: Monro, Inc. Announces Suspension of Quarterly Cash Dividend -- FAIRPORT, N.Y., November 23, 2026--Monro, Inc. (Nasdaq: MNRO), a leading provider of automotive repair and tire services, today announced that its Board of Directors (the \"Board\") has elected not to declare a cash dividend for the third quarter and to suspend future dividends until further action of the Board as the Company continues to execute its performance improvement plan, amid ongoing challe",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/monro-inc-announces-suspension-quarterly-123000935.html?.tsrc=rss"
+  },
+  "s22": {
+   "text": "2026-11-23T17:12Z www.marketbeat.com: CrowdStrike to Buy Zscaler for $43.9 Billion in AI Security Push -- CrowdStrike has agreed to acquire Zscaler (NASDAQ:ZS) in an all-stock transaction valued at approximately $43.9 billion, a deal the cybersecurity companies say will combine endpoint and cloud protection with network security as enterprises adopt artificial intelligence. Under the agreement, Zscaler",
+   "url": "https://www.marketbeat.com/instant-alerts/event-crowdstrike-to-buy-zscaler-for-439-billion-in-ai-security-push-2026-11-23/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss"
+  },
+  "s23": {
+   "text": "2026-11-23T17:05Z finance.yahoo.com: CrowdStrike Stocks Fall 9.67% on $43.9 Billion All-Stock Deal for Zscaler -- The biggest acquisition in CrowdStrike's history pushes it into network security, targeting $1 billion of revenue synergies within 30 months.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/crowdstrike-stocks-fall-9-67-170530745.html?.tsrc=rss"
+  },
+  "s24": {
+   "text": "2026-11-23T16:27Z finance.yahoo.com: CrowdStrike and Zscaler Ink Biggest Cybersecurity Deal Ever -- 1 Stock Sinks, Other Soars -- CrowdStrike Is Buying Zscaler In One Of Cybersecurity's Biggest Deals Ever",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/crowdstrike-zscaler-ink-biggest-cybersecurity-162743320.html?.tsrc=rss"
+  },
+  "s25": {
+   "text": "2026-11-23T16:20Z finance.yahoo.com: CrowdStrike to acquire Zscaler for $44 billion -- The cybersecurity giant said that the deal to buy Zscaler, which provides zero-trust products to large enterprises, will better equip their customers to use AI agents.",
+   "url": "https://finance.yahoo.com/technology/articles/crowdstrike-acquire-zscaler-44-billion-162011395.html?.tsrc=rss"
+  },
+  "s3": {
+   "text": "2026-11-23T12:58Z finance.yahoo.com: Capricor Therapeutics Hits 52-Week Low after Second FDA Rejection for Duchenne Cell Therapy -- Capricor Therapeutics Inc. (NASDAQ:CAPR) stock hit its 52-week low after an FDA update for its lead cell therapy. The biotechnology company on Friday received a Complete Response Letter (CRL) from the U.S. Food and Drug Administration (FDA) for its resubmitted Biologics License Application (BLA) for Deramiocel, its investigational cell therapy for Duchenne muscular ",
+   "url": "https://finance.yahoo.com/healthcare/articles/capricor-therapeutics-hits-52-week-125805136.html?.tsrc=rss"
+  },
+  "s31": {
+   "text": "2026-11-23T16:06Z www.tikr.com: Bad News for CoreWeave and IREN: GPU Lenders Now Want \u201c50 to 60 Percent\u201d Loan-to-Value, Down From 80% -- Key TakeawaysGPU lenders now want 50% to 60% loan-to-value, down from 80% over the summer, according to Odd Lots guest Stanley Lee. At those levels, a neocloud has to cover 40% to 50% of each chip itself, up from 20%.",
+   "url": "https://www.tikr.com/blog/bad-news-for-coreweave-and-iren-gpu-lenders-now-want-50-to-60-percent-loan-to-value-down-from-80?ref=yahoofinance&tlnk=yf-261123-5g5wvc3x&.tsrc=rss"
+  },
+  "s33": {
+   "text": "2026-11-23T15:14Z finance.yahoo.com: CoreWeave, Nebius lead neocloud stocks higher as Jensen Huang's Nvidia return lifts AI trade -- CoreWeave and Nebius shares soared on Monday as CEO Jensen Huang returned to Nvidia, a major backer of the AI trade.",
+   "url": "https://finance.yahoo.com/markets/article/coreweave-nebius-lead-neocloud-stocks-higher-as-jensen-huang-is-reinstated-as-ceo-of-nvidia-151417634.html?.tsrc=rss"
+  },
+  "s34": {
+   "text": "2026-11-23T16:28Z finance.yahoo.com: Why Palantir Stock Popped Today -- Palantir Shares Surge With Nvidia. The AI Trade Gets a Fresh Boost",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/why-palantir-stock-popped-today-162850403.html?.tsrc=rss"
+  },
+  "s4": {
+   "text": "2026-11-23T12:01Z stocktwits.com: CAPR Stock Gets A 96% Price Target Cut After FDA Issues 2nd CRL For DMD Therapy \u2014 Piper Sandler Downgrades CAPR On Projected Cash -- Piper Sandler downgraded Capricor to \u2018Underweight\u2019 from \u2018Overweight\u2019 and cut its price target by 96% to $1 from $25, according to TheFly.",
+   "url": "https://stocktwits.com/news-articles/markets/equity/capr-stock-gets-price-target-cut-after-fda-issues-2nd-crl-for-dmd-therapy/cNbpGTiR9SD?.tsrc=rss"
+  },
+  "s40": {
+   "text": "2026-11-23T15:52Z 247wallst.com: Semiconductor Stocks like Micron, Marvell, and Bloom Energy See Massive Gains as Jensen Huang Returns to NVIDIA -- Eric Bleeker, Chief Investment Officer at 24/7 Wall St., covers the news that Jensen Huang is returning to NVIDIA, announced shortly before Monday's open. Shares of NVIDIA are up 31%. The Nasdaq (Nasdaq: QQQ) is up about 5.7%, the S&P 500 about 4% and the Dow Jones 2.1%. The VanEck semiconductor ETF (Nasdaq: SMH) is up 13%. Bleeker names three stocks",
+   "url": "https://247wallst.com/videos/semiconductor-stocks-like-micron-marvell-and-bloom-energy-see-massive-gains-as-jensen-huang-returns-to-nvidia/?.tsrc=rss"
+  },
+  "s45": {
+   "text": "2026-11-23T16:30Z finance.yahoo.com: Dell Stock Jumps 20% Just Day Before Earnings -- Dell Stock Roars Back as Investors Bet on Its $95 Billion AI Server Backlog",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/dell-stock-jumps-20-just-163045211.html?.tsrc=rss"
+  },
+  "s46": {
+   "text": "2026-11-23T16:04Z finance.yahoo.com: Dell Q3 earnings on deck: What to expect -- Dell Earnings Could Trigger a Sharp Stock Move. Wall Street Wants Answers on AI Servers",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/dell-q3-earnings-deck-expect-160455855.html?.tsrc=rss"
+  },
+  "s47": {
+   "text": "2026-11-23T15:53Z finance.yahoo.com: Dell Faces $49 Billion Earnings Test as AI Server Costs Threaten Margins -- Wall Street forecasts $49.32 billion in revenue as AI server demand drives infrastructure growth.",
+   "url": "https://finance.yahoo.com/technology/ai/articles/dell-faces-49-billion-earnings-155333103.html?.tsrc=rss"
+  },
+  "s5": {
+   "text": "2026-11-23T16:49Z www.proactiveinvestors.com: Kymera shares soar as oral eczema treatment produces promising results -- Shares of Kymera Therapeutics (NASDAQ:KYMR) jumped 34% to $155.04 Monday morning after the biotech said its oral eczema drug, KT-621, met the primary and secondary goals of a midstage trial. At 16 weeks, eczema severity scores fell an average of 72% in the middle-dose group versus 27% in the...",
+   "url": "https://www.proactiveinvestors.com/companies/news/1102278/kymera-shares-soar-as-oral-eczema-treatment-produces-promising-results-1102278.html?.tsrc=rss"
+  },
+  "s50": {
+   "text": "2026-11-23T15:41Z finance.yahoo.com: HPE Earnings: Numbers on Its Side, Market Against It -- Management guided Cloud & AI revenue growth to 60%-72% in Q4, a dramatic step up from 25% in Q3.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/hpe-earnings-numbers-side-market-154100028.html?.tsrc=rss"
+  },
+  "s51": {
+   "text": "2026-11-23T08:30Z stocktwits.com: Why Is HPE Stock Up 6% Overnight? -- Server sellers are asking for higher prices, The Financial Times reported.",
+   "url": "https://stocktwits.com/news-articles/markets/equity/why-is-hpe-stock-up-6-overnight/cNbYHhnR9SN?.tsrc=rss"
+  },
+  "s52": {
+   "text": "2026-11-22T14:30Z www.barchart.com: Ahead of Hewlett Packard Earnings, Here\u2019s What Barchart Data Says Comes Next for HPE Stock -- HPE is set to reported earnings on Nov. 23. Here\u2019s how data suggests you should play HPE stock ahead of the quarterly release.",
+   "url": "https://www.barchart.com/story/news/8956254/ahead-of-hewlett-packard-earnings-heres-what-barchart-data-says-comes-next-for-hpe-stock?.tsrc=rss"
+  },
+  "s59": {
+   "text": "2026-11-23T17:03Z finance.yahoo.com: Top Midday Stories: Nvidia Reappoints Jensen Huang as CEO, Stocks Soar; CrowdStrike Agrees to Acquire Zscaler for $43.9 billion -- All three major US stock indexes were up over 3%, with the Nasdaq Composite up nearly 7%, after Nvid",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/top-midday-stories-nvidia-reappoints-170336731.html?.tsrc=rss"
+  },
+  "s6": {
+   "text": "2026-11-23T16:33Z finance.yahoo.com: Kymera Surges 30%-Plus As It Takes On $18 Billion Blockbuster Dupixent -- Kymera Therapeutics' experimental eczema pill delivered Dupixent-like results in 16 weeks, the biotech company said Monday.",
+   "url": "https://finance.yahoo.com/m/84f792e3-a784-3351-95fc-6f6dc1ec2cef/kymera-surges-30%25-plus-as-it.html?.tsrc=rss"
+  },
+  "s60": {
+   "text": "2026-11-23T17:03Z finance.yahoo.com: Nvidia, Dell, Micron, Anthropic, CrowdStrike, UnitedHealth, and More Stocks That Explain Today\u2019s Market -- Nvidia surges after saying it will reinstate Jensen Huang as CEO.",
+   "url": "https://finance.yahoo.com/m/76a3103b-f3de-364f-8cd8-90e453a902d8/nvidia%2C-dell%2C-micron%2C.html?.tsrc=rss"
+  },
+  "s61": {
+   "text": "2026-11-23T16:49Z finance.yahoo.com: Stock Market Today: Dow Surges As Trump Says This On Huang's Nvidia Return; Chip Plays Rocket (Live Coverage) -- Stock Market Today: The Dow Jones index surges Monday. President Trump boasts of his role in Jensen Huang's return as Nvidia CEO.",
+   "url": "https://finance.yahoo.com/m/8751de70-467e-380a-82cb-f4ee42adc461/stock-market-today%3A-dow.html?.tsrc=rss"
+  },
+  "s63": {
+   "text": "2026-11-23T16:30Z finance.yahoo.com: Nvidia\u2019s Jensen Huang Returns. Tesla, Dell, and Many More Stocks Are Soaring. -- Nvidia\u2019s return to form lifts its biggest customers, suppliers, and strategic partners, with many of the stocks posting double-digit gains.",
+   "url": "https://finance.yahoo.com/m/08b876b7-cd5a-3d86-880d-6a64edb13816/nvidia%E2%80%99s-jensen-huang.html?.tsrc=rss"
+  },
+  "s64": {
+   "text": "2026-11-23T16:25Z finance.yahoo.com: Nasdaq futures tripped a circuit breaker built for market crashes as Jensen Huang returned to Nvidia -- Monday was the first time the stock futures hit CME's 7% overnight limit since it was set in 2020.",
+   "url": "https://finance.yahoo.com/markets/stocks/article/nasdaq-futures-tripped-a-circuit-breaker-built-for-market-crashes-as-jensen-huang-returned-to-nvidia-162506665.html?.tsrc=rss"
+  },
+  "s65": {
+   "text": "2026-11-23T15:03Z 247wallst.com: Super Micro Jumps 19% on Reports of Rising AI Server Prices; Dell Soars 30%, Hewlett Packard Enterprise Rallies 15% Ahead of Earnings -- Server makers are surging on a pricing report and a surprise CEO reversal at NVIDIA, but one of them is still under an independent review and burning cash. Which stock has the most to prove before the rally holds?",
+   "url": "https://247wallst.com/investing/2026/11/23/super-micro-jumps-19-on-reports-of-rising-ai-server-prices-dell-soars-30-hewlett-packard-enterprise-rallies-15-ahead-of-earnings/?.tsrc=rss"
+  },
+  "s7": {
+   "text": "2026-11-23T14:53Z www.biopharmadive.com: Kymera eczema pill meets goals in mid-stage trial -- The protein degrader drug showed \"biologic-like efficacy,\" according to Wall Street analysts who argued it could challenge Sanofi and Regeneron\u2019s market leader Dupixent.",
+   "url": "https://www.biopharmadive.com/news/kymera-eczema-pill-phase2-data-protein-degrader-dupixent-ebglyss/875462/?.tsrc=rss"
+  },
+  "s8": {
+   "text": "2026-11-23T13:49Z investorshub.advfn.com: Kymera Therapeutics Shares Surge 29% as Phase 2b Eczema Trial Meets All Primary and Secondary Endpoints -- Kymera Therapeutics (NASDAQ:KYMR) shares jumped 29% after the biotechnology company announced positive Phase 2b clinical trial results for KT-621, its investigational once-daily oral treatment for moderate to severe atopic dermatitis, commonly known as eczema. The 244-patient BROADEN2 study met its primary and secondary endpoints at Week 16, demonst",
+   "url": "https://investorshub.advfn.com/market-news/article/40528/kymera-therapeutics-shares-surge-29-as-phase-2b-eczema-trial-meets-all-primary-and-secondary-endpoints?.tsrc=rss"
+  },
+  "t1": {
+   "text": "the last note (2026-11-23T1330Z), theme \"Dip buying after Friday's AI selloff\": Stories before the open describe investors buying AI and chip stocks after last week's selloff (Yahoo live coverage, StockTitan); index futures were up 2-4% before the open."
+  },
+  "t2": {
+   "text": "the last note (2026-11-23T1330Z), theme 'CrowdStrike to buy Zscaler, all stock': CrowdStrike agreed to buy Zscaler for about $43.9 billion in stock: 1.135 CrowdStrike shares per Zscaler share, $260.41 a share at Friday's prices, a 34% premium. Both reported results the same morning; Zscaler's release says it entered a definitive agreement to be acquired."
+  },
+  "t3": {
+   "text": "the last note (2026-11-23T1330Z), theme 'Gold and bitcoin rebound with stocks': Gold +3.1% and bitcoin +4.1% since Friday's close, both about 1.5 times their usual day, rising with stocks after falling with them on Friday."
+  },
+  "x:CAPR": {
+   "text": "CAPR: the market carried +4.3% (beta 0.89); its industry (Pharmaceutical Preparations, 145 stocks) moved +3.5%; left over after the market and its drivers -80.9%"
+  },
+  "x:CRWD": {
+   "text": "CRWD: the market carried +6.6% (beta 1.37); its industry (Services-Prepackaged Software, 104 stocks) moved +4.7%; left over after the market and its drivers -16.3%"
+  },
+  "x:CRWV": {
+   "text": "CRWV: the market carried +15.0% (beta 3.12); its industry (Services-Prepackaged Software, 104 stocks) moved +4.5%; left over after the market and its drivers +7.6%"
+  },
+  "x:DELL": {
+   "text": "DELL: the market carried +13.2% (beta 2.73); its industry (Machinery and computer equipment, group 357, 32 stocks) moved +6.0%; left over after the market and its drivers +8.9%"
+  },
+  "x:HPE": {
+   "text": "HPE: the market carried +12.2% (beta 2.53); its industry (Machinery and computer equipment, group 357, 32 stocks) moved +6.0%; left over after the market and its drivers +3.3%"
+  },
+  "x:KYMR": {
+   "text": "KYMR: the market carried +4.0% (beta 0.83); its industry (Biological Products, (No Diagnostic Substances), 49 stocks) moved +4.4%; left over after the market and its drivers +32.1%"
+  },
+  "x:LSCC": {
+   "text": "LSCC: the market carried +15.3% (beta 3.18); its industry (Semiconductors & Related Devices, 58 stocks) moved +12.5%; left over after the market and its drivers -0.5%"
+  },
+  "x:MNRO": {
+   "text": "MNRO: the market carried +6.6% (beta 1.37); 10-year yield carried -0.9% (-23.93% per point, t -5.5); left over after the market and its drivers -18.9%"
+  },
+  "x:MRVL": {
+   "text": "MRVL: the market carried +16.6% (beta 3.44); its industry (Semiconductors & Related Devices, 58 stocks) moved +12.5%; left over after the market and its drivers +1.7%"
+  },
+  "x:NVDA": {
+   "text": "NVDA: the market carried +8.3% (beta 1.72); its industry (Semiconductors & Related Devices, 58 stocks) moved +12.5%; left over after the market and its drivers +24.0%"
+  },
+  "x:NXPI": {
+   "text": "NXPI: the market carried +8.4% (beta 1.75); its industry (Semiconductors & Related Devices, 58 stocks) moved +12.7%; left over after the market and its drivers -0.1%"
+  },
+  "x:TSLA": {
+   "text": "TSLA: the market carried +9.4% (beta 1.95); its industry (Transportation equipment, group 371, 34 stocks) moved +4.0%; left over after the market and its drivers +2.8%"
+  },
+  "x:TXN": {
+   "text": "TXN: the market carried +8.4% (beta 1.75); its industry (Semiconductors & Related Devices, 58 stocks) moved +12.7%; left over after the market and its drivers +1.3%"
+  },
+  "x:ZS": {
+   "text": "ZS: the market carried +3.9% (beta 0.81); its industry (Business services and software, group 737, 182 stocks) moved +3.6%; left over after the market and its drivers +11.6%"
+  }
+ },
+ "note": {
+  "backdrop": "The morning's rebound became one of the largest up days in years, on a single piece of company news: at 8:55 a.m. ET Nvidia's board reinstated Jensen Huang as president and CEO, 11 days after he resigned. By the check the S&P 500 was +4.8%, the Nasdaq 100 +7.1%, small caps +3.3% and the VIX -22.9%; semiconductors' median +12.6%, against +5.8% before the open. Nasdaq futures hit CME's 7% overnight limit for the first time since it was set in 2020. Gold +4.2% and bitcoin +4.3% rose with stocks again. Only 4 of 2451 stocks are outside their 9-in-10 range: Nvidia, Kymera and Capricor on their own news, GigaCloud with no event found.",
+  "backdrop_evidence": [
+   "k",
+   "f:NVDA:1",
+   "s59",
+   "s60",
+   "s61",
+   "s63",
+   "s64",
+   "g:3674",
+   "d:gold",
+   "d:bitcoin",
+   "t1"
+  ],
+  "by": "agent",
+  "calls": [],
+  "check": "2026-11-23T1748Z",
+  "read": [
+   {
+    "direction": "none",
+    "published": "2026-11-23T12:07:35Z",
+    "says": "At 11:03 a.m. ET: QQQ +6.98%, SPY +4.82%, Nvidia +33.55% (board reinstated Huang at 8:55 a.m. ET, up from +8.04% at 8:02); Zscaler 3.7% below the value of 1.135 CrowdStrike shares ($220.91 against $229.41); Zscaler owes a $1.4 billion fee in some cases; Capricor says cash and investments of about $198.5 million at Sept 30 fund at least 12 months; HPE and Symbotic report after today's close.",
+    "tier": "reported",
+    "url": "https://www.stocktitan.net/articles/stock-market-today-live-november-23-2026"
+   }
+  ],
+  "singles": [
+   {
+    "beneath": "+36.1% since Friday's close, +32.1% after the market and drivers; about $157 against Friday's $115.31. The desk's call 63a7bc55 (15% either way from $124.06 by Nov 27) stands about 26% above $124.06; it is judged at the Nov 27 close. A Phase 3 is planned by mid-2027.",
+    "cause": "BROADEN2: its oral eczema pill KT-621 met its primary and secondary goals at every dose; Jefferies said the 40-point gap over placebo cleared its benchmark and skin and itch results were broadly in line with dupilumab's, with conjunctivitis manageable and no patient stopping KT-621 for it (s5).",
+    "evidence": [
+     "f:KYMR:1",
+     "f:KYMR:2",
+     "s5",
+     "s6",
+     "s7",
+     "s8",
+     "x:KYMR"
+    ],
+    "kind": "reported",
+    "t": "KYMR"
+   },
+   {
+    "beneath": "-76.6%. A correction to this morning's note: the case file's 1.2 quarters counts cash only; Capricor says cash and investments of about $198.5 million at Sept 30 fund its plans for at least 12 months (StockTitan, citing its release). The inspection findings go to the trial's integrity, not only its size, which is why a third filing on the same data looks harder (inferred).",
+    "cause": "The FDA's second Complete Response Letter for deramiocel. Beyond the evidence falling short, an FDA inspection found unauthorized changes to the statistical analysis plan after the fact and breaches of the procedures that keep treatment assignments hidden, and the FDA sent a separate Regulatory Responsibility Letter (s2).",
+    "evidence": [
+     "f:CAPR:1",
+     "s1",
+     "s2",
+     "s3",
+     "s4",
+     "x:CAPR",
+     "n:CAPR"
+    ],
+    "kind": "reported",
+    "t": "CAPR"
+   },
+   {
+    "beneath": "-13.2%, deeper than -9.2% before the open; on this market it is -18.9% of its own.",
+    "cause": "Monro suspended its quarterly cash dividend.",
+    "evidence": [
+     "f:MNRO:1",
+     "s19",
+     "s20",
+     "x:MNRO"
+    ],
+    "kind": "reported",
+    "t": "MNRO"
+   }
+  ],
+  "themes": [
+   {
+    "beneath": "The stock had fallen about a third since the CEO resigned on Nov 12 (memory of the Nov 12-20 notes); Friday alone it fell 14.01%. Before the open, with only the dip-buying story, Nvidia was about +8%; it went to +26.8% by 9:01 a.m. ET after the release and +33.6% at 11:03 (StockTitan). So most of today's chip move rests on one board decision, not on new numbers about demand. Not every AI name joined: Anthropic, listed Thursday, was down (s12), and a report says lenders against GPUs now want 50-60% loan-to-value, down from 80% (s31, opinion-level, not checked).",
+    "cause": "Nvidia's board unanimously reinstated Jensen Huang as president, CEO and director, effective immediately, saying input from senior levels of the US government left it confident his return poses no national security risk; a committee of independent directors continues its investigation, and Nvidia keeps cooperating with government inquiries (its 8-K release).",
+    "evidence": [
+     "f:NVDA:1",
+     "x:NVDA",
+     "s10",
+     "s59",
+     "s60",
+     "s63",
+     "s64",
+     "s33",
+     "s40",
+     "s16",
+     "s34",
+     "s12",
+     "s31",
+     "c1",
+     "c2",
+     "g:3674",
+     "x:LSCC",
+     "x:MRVL",
+     "x:TXN",
+     "x:NXPI",
+     "x:TSLA",
+     "x:CRWV"
+    ],
+    "kind": "reported",
+    "mechanism": "Nvidia moved most on its own (+24.0% after the market and its industry). Its suppliers, customers and the AI hosts rose with it, but for most of them the move is their beta to a +5-7% market: Lattice +14.8% with the market carrying +15.3% at beta 3.18; Marvell +18.2% with +16.6%; Texas Instruments +9.7% with +8.4%; NXP +8.3% with +8.4%; Tesla +12.2% with +9.4%. CoreWeave keeps +7.6% of its own, Dell +8.9%.",
+    "members": [
+     "NVDA",
+     "CRWV",
+     "MRVL",
+     "MPWR",
+     "TXN",
+     "NXPI",
+     "LSCC",
+     "SITM",
+     "MXL",
+     "MTSI",
+     "FN",
+     "APH",
+     "TSLA",
+     "PLTR",
+     "DOCN",
+     "INOD",
+     "CRSR",
+     "RAL",
+     "FLS"
+    ],
+    "name": "Nvidia brings back its CEO; chips and AI surge",
+    "read_through": [],
+    "watch": "Whether the gains hold into the close and tomorrow; any finding from Nvidia's independent committee or the government inquiries, which the release says go on."
+   },
+   {
+    "beneath": "Most of each move is the market: Dell keeps +8.9% of its own, HPE +3.3%. Dell's report is tested by a $49 billion revenue forecast and margins on AI servers (s47, s46); HPE guided Cloud & AI revenue growth to 60-72% in its fourth quarter (s50).",
+    "cause": "Dell +22.0% and HPE +15.5%, with Super Micro +13.9%: a Financial Times report that server sellers are asking for higher prices lifted HPE overnight (s51) and Super Micro (s65); HPE reports after today's close and Dell tomorrow (StockTitan; s45).",
+    "evidence": [
+     "s45",
+     "s46",
+     "s47",
+     "s50",
+     "s51",
+     "s52",
+     "s65",
+     "c4",
+     "p:DELL~HPE",
+     "x:DELL",
+     "x:HPE"
+    ],
+    "kind": "reported",
+    "mechanism": "Two partners (0.69 over the year) that report back to back; both have high betas to the market (Dell 2.73, HPE 2.53).",
+    "members": [
+     "DELL",
+     "HPE"
+    ],
+    "name": "Server makers before their reports",
+    "read_through": [
+     {
+      "evidence": [
+       "p:DELL~SMCI",
+       "s65"
+      ],
+      "t": "SMCI",
+      "why": "Dell's partner (0.45), +13.9%, named in the same server-price report. Untested: whether a partner's report reaches it the next day has not been tested here."
+     }
+    ],
+    "watch": "HPE's report tonight and Dell's tomorrow after the close."
+   },
+   {
+    "beneath": "On a +4.8% market, CrowdStrike's -9.7% is -16.3% of its own. The gap to the offer was 3.2% at 8:01, 3.3% at 10:02 and 3.7% at 11:03 a.m. ET (StockTitan): widening as CrowdStrike slid. Closing is expected between August 2027 and January 2028, so the gap pays for about a year's wait and the deal's risk (inferred).",
+    "cause": "The all-stock deal (1.135 CrowdStrike shares per Zscaler share) set this morning; Zscaler's 8-K at 10:01 a.m. ET adds a $1.4 billion termination fee owed by Zscaler in some cases (a better offer, a changed recommendation) and an outside date of Nov 23, 2027, extendable to Feb 23, 2028 for antitrust or foreign-investment approvals (StockTitan; Zscaler 8-K).",
+    "evidence": [
+     "f:ZS:2",
+     "f:CRWD:1",
+     "f:CRWD:2",
+     "s22",
+     "s23",
+     "s24",
+     "s25",
+     "x:CRWD",
+     "x:ZS",
+     "c3",
+     "t2"
+    ],
+    "kind": "reported",
+    "mechanism": "Zscaler tracks 1.135 CrowdStrike shares less a gap; CrowdStrike carries the dilution, about 191 million new shares, close to 19% of its count (s23).",
+    "members": [
+     "ZS",
+     "CRWD"
+    ],
+    "name": "CrowdStrike to buy Zscaler, all stock",
+    "read_through": [
+     {
+      "evidence": [
+       "p:ZS~OKTA",
+       "c3"
+      ],
+      "t": "OKTA",
+      "why": "Zscaler's partner (0.74), +8.9%; on a day the software industry moved +4.6%, part of it may be the consolidation reading. Untested."
+     }
+    ],
+    "watch": "The gap: wider says doubt about the deal; CrowdStrike's registration statement with Zscaler's proxy."
+   },
+   {
+    "beneath": "The same holders selling winners on Friday and buying them back today fits both days (inferred); the dollar is +0.6%, which usually weighs on gold, so this is not a weak-dollar move.",
+    "cause": "Gold +4.2% and bitcoin +4.3% since Friday's close, up from +3.1% and +4.1% before the open, rising with stocks as they fell with them on Friday.",
+    "evidence": [
+     "d:gold",
+     "d:bitcoin",
+     "d:dollar",
+     "r:gold",
+     "r:bitcoin",
+     "t3"
+    ],
+    "kind": "inferred",
+    "mechanism": "Miners and bitcoin holders move more than their rates imply: Newmont +6.9%, Hecla +7.2%, Strategy +10.3%, BitMine +13.2%.",
+    "members": [
+     "NEM",
+     "HL",
+     "MSTR",
+     "BMNR"
+    ],
+    "name": "Gold and bitcoin keep rising with stocks",
+    "read_through": [],
+    "watch": "Whether gold falls with stocks on the next down day, as on Friday."
+   }
+  ],
+  "threads": [
+   "Kymera: the call 63a7bc55 is judged at the Nov 27 close (a half day); at midday it stands about 26% above $124.06.",
+   "HPE and Symbotic report after today's close, Dell tomorrow after the close.",
+   "Zscaler's gap to 1.135 CrowdStrike shares: 3.2%, 3.3%, 3.7% through the morning (StockTitan).",
+   "Nvidia: the independent committee's investigation and government inquiries continue.",
+   "Florida home insurers and health insurers fell together this morning with no story found; not among midday's movers.",
+   "Check flaws: the case file prints the 2-in-3 range's numbers under the label 9-in-10 (CAPR, KYMR, NVDA); attention called AMD 'an open desk call', though the AMD call was judged Friday; the case file's cash line leaves out investments (Capricor).",
+   "Thanksgiving week: markets shut Thursday Nov 26, a half day Friday Nov 27."
+  ],
+  "unexplained": [
+   {
+    "t": "GCT",
+    "tried": "Outside its 9-in-10 range at +13.5%. No filing since the close; the two stories (a sector comparison, a Forbes small-cap list) are not events. The market carried +6.7% at its beta of 1.40 and its industry +4.5%; +6.8% is left."
+   },
+   {
+    "t": "CD",
+    "tried": "No filing, no story; Finance Services' median +8.9% on a day bitcoin rose 4.3%; +12.6% left after the market."
+   },
+   {
+    "t": "KRSA",
+    "tried": "No filing, no story; drug makers' median +3.5%; +7.9% left."
+   },
+   {
+    "t": "SYM",
+    "tried": "No filing; one opinion piece on its backlog. It reports after today's close (StockTitan); the market carried +10.6% at its beta of 2.19, +5.7% left."
+   }
+  ]
+ },
+ "recorded_at": "2026-11-23T17:55:17Z"
+}

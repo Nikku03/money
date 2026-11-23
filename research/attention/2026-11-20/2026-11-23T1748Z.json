@@ -1,0 +1,874 @@
+{
+ "check": "2026-11-23T1748Z",
+ "asof": "2026-11-20",
+ "built_at": "2026-11-23T17:53:26Z",
+ "weights": {
+  "surprise": 0.25,
+  "unexplained": 0.2,
+  "news": 0.15,
+  "reach": 0.1,
+  "against": 0.1,
+  "memory": 0.1,
+  "fragile": 0.1
+ },
+ "temp": 0.12,
+ "candidates": 56,
+ "focus": [
+  {
+   "t": "KYMR",
+   "company": "Kymera Therapeutics, Inc.",
+   "move": 0.36072328072798054,
+   "z": 8.090531587485186,
+   "wave": 0.0,
+   "mover": true,
+   "score": 0.7645023426462321,
+   "parts": {
+    "surprise": 1.0,
+    "unexplained": 0.889,
+    "news": 0.8,
+    "reach": 0.482,
+    "against": 0.0,
+    "memory": 1.0,
+    "fragile": 0.685
+   },
+   "reasons": [
+    "outside its 9-in-10 range",
+    "most of the move is its own",
+    "filed 8-K 7.01, 8.01 at 2026-11-23T12:06Z",
+    "filed 8-K 7.01 at 2026-11-23T13:29Z",
+    "4 stories name it",
+    "an open desk call",
+    "chance of a sale of new shares 7.4% against 0.9% usually"
+   ],
+   "attention": 0.3087026560372178,
+   "bars": 47,
+   "filings": [
+    {
+     "what": "8-K 7.01, 8.01",
+     "at": "2026-11-23T12:06:49Z",
+     "title": "Kymera Therapeutics Announces Positive Results from BROADEN2 Phase 2b Clinical Trial of KT-621, a First-in-Class, Oral STAT6 Degrader, in Patients with Moderate to Severe Atopic Dermatitis",
+     "url": "https://www.sec.gov/Archives/edgar/data/1815442/000119312526470926/d188151dex991.htm",
+     "key": [
+      "Patients with severe disease based on a validated Investigator Global Assessment for Atopic Dermatitis (vIGA-AD) score of 4 represented 38% of the study population, and 33% of patients had received prior biologic therapy."
+     ],
+     "text": "EX-99.1 2 d188151dex991.htm EX-99.1 Exhibit 99.1 Kymera Therapeutics Announces Positive Results from BROADEN2 Phase 2b Clinical Trial of KT-621, a First-in-Class, Oral STAT6 Degrader, in Patients with Moderate to Severe Atopic Dermatitis BROADEN2 met primary and secondary endpoints with statistically significant improvements versus placebo at Week 16 across all doses, reinforcing KT-621\u2019s transformative potential KT-621 clinical efficacy profile was at least comparable to approved pathway biologics with statistically significant EASI and itch improvements versus placebo as early as Week 1 KT-621 achieved 45% placebo-adjusted mean EASI reduction, 40% placebo-adjusted EASI-75, and 38% placebo-adjusted \u22654-point PPNRS response in the mid dose cohort KT-621 was well-tolerated with a favorable safety profile First KT-621 Phase 3 AD trial planned to start by mid-2027; BREADTH Phase 2b asthma trial ongoing, with topline data expected to be reported by late 2027 Company to hold video conference call and webcast today at 8:00 a.m. ET Watertown, Mass. (November 23, 2026) \u2013 Kymera Therapeutics, Inc. (NASDAQ: KYMR), a clinical-stage biopharmaceutical company advancing a new class of oral small molecule degrader medicines for immunological diseases, today announced positive 16-week results from the BROADEN2 Phase 2b trial of KT-621, its first-in-class, once-daily oral STAT6 degrader, in patients with moderate to severe atopic dermatitis (AD). The trial met its primary endpoint of percent change from baseline in Eczema Area and Severity Index (EASI) score at Week 16 and secondary endpoints, with statistically significant improvements versus placebo across all dose cohorts. The BROADEN2 findings support advancement of KT-621 into late-stage development, with the first Phase 3 AD trial planned to initiate by mid-2027, subject to alignment with regulators, as well as potential expansion in other Type 2 indications. \u201cToday\u2019s results mark a pivotal moment in the field of immunology, demonstrating what truly groundbreaking science can achieve in areas of significant patient need. The BROADEN2 results exceeded our expectations, reinforcing our belief that KT-621 represents one of the largest opportunities in biopharma, with the potential to transform care for millions of people living with Type 2 inflammatory diseases,\u201d said Nello Mainolfi, PhD, Founder, President and CEO, Kymera Therapeutics. \u201cWhat stands out is the combination of improvements in disease severity and itch beginning as early as Week 1, significant continued responses across all dose cohorts at Week 16, and a favorable safety profile. The overall clinical activity supports the potential to deliver the level of disease control historically reported with approved biologics such as dupilumab. The mid dose, which we selected to achieve optimal STAT6 pharmacology, consistently delivered the largest numerical improvements across endpoints and is well positioned to advance towards Phase 3.\u201d Dr. Mainolfi continued, \u201cThese findings strengthen our conviction that KT-621 could substantially expand the number of patients receiving an advanced therapy. By overcoming the longstanding scientific challenge of directly targeting STAT6, we have taken a clear step toward our vision of delivering the first oral therapy for the full spectrum of Type 2 diseases, beginning in AD. Additionally, these results validate the scientific expertise and translational capabilities behind our innovation engine and our approach of pairing the right targets with the right technology to create a new era of oral medicines. As we advance KT-621 toward Phase 3, we are building an expanding franchise with the potential to reshape care across immunology. Importantly, we thank the patients and their families for their trust and commitment, and the investigators and study teams for their dedication to advancing this unique new treatment for AD.\u201d \u201cIn my practice, I see many patients living with AD who continue to struggle with persistent symptoms and the daily burden of managing this chronic condition,\u201d said Eric Simpson, MD, MCR, lead investigator on the BROADEN2 study and Frances J. Storrs Medical Dermatology Professor and Director of CLEAR Eczema Center, Oregon Health & Science University. \u201cA targeted oral therapy that combines robust clinical activity with favorable safety and tolerability could expand the number of patients receiving systemic treatment and help them achieve and maintain disease control. KT-621 brings an innovative mechanism to a well-established pathway in Type 2 inflammation by targeting STAT6. The highly encouraging BROADEN2 findings suggest a compelling profile and reinforce the potential of this program to address the substantial unmet need in AD.\u201d BROADEN2 Phase 2b Trial Design and Baseline Characteristics BROADEN2 is a randomized, double-blind, placebo-controlled, multicenter, dose-ranging trial evaluating the clinical activity, safety and tolerability of KT-621 in 244 adult and adolescent patients with moderate to severe AD. Patients were randomized (1:1:1:1) to receive a low dose (n=61), mid dose (n=61) or high dose (n=63) of KT-621, or placebo (n=59), once daily for 16 weeks. Patients completing 16 weeks of treatment were eligible to participate in a 52-week open-label extension following the treatment period. Baseline characteristics were generally balanced across the four treatment groups. The mean baseline EASI score was approximately 28, and the mean baseline Peak Pruritus Numerical Rating Scale (PPNRS) score was 7.1. Patients with severe disease based on a validated Investigator Global Assessment for Atopic Dermatitis (vIGA-AD) score of 4 represented 38% of the study population, and 33% of patients had received prior biologic therapy. Of the 244 randomized patients, 234 completed the 16-week double-blind treatment period, and 230 of those patients enrolled in the open-label extension. BROADEN2 Phase 2b Results at Week 16 Exposure and degradation profil"
+    },
+    {
+     "what": "8-K 7.01",
+     "at": "2026-11-23T13:29:54Z",
+     "title": "November 23, 2026 KT-621 Phase 2b",
+     "url": "https://www.sec.gov/Archives/edgar/data/1815442/000119312526470995/d159818dex991.htm",
+     "key": [
+      "All statements other than statements of historical facts contained in this presentation, including express or implied statements regarding our strategy, future financial condition, future operations, projected costs, prospects, plans, objectives of management and expected market growth, are forward-looking statements.",
+      "We may not actually achieve the plans, intentions or expectations disclosed in our forward-looking statements, and you should not place undue reliance on our forward-looking statements.",
+      "You should not rely upon forward-looking statements as predictions of future events and actual results or events could differ materially from the plans, intentions and expectations disclosed herein.",
+      "In addition, any forward-looking statements represent Kymera\u2019s views only as of today and should not be relied upon as representing its views as of any subsequent date.",
+      "Kymera explicitly disclaims any obligation to update any forward-looking statements, except as required by law."
+     ],
+     "text": "EX-99.1 2 d159818dex991.htm EX-99.1 November 23, 2026 KT-621 Phase 2b Atopic Dermatitis Trial Results Exhibit 99.1 Agenda Introduction Justine Koenigsberg Vice President, Investor Relations KT-621: Transforming Type 2 Disease Treatment Nello Mainolfi, PhD Founder, President and Chief Executive Officer KT-621/STAT6: BROADEN2 Phase 2b Atopic Dermatitis Results Terence Rooney, MD Chief Medical Officer Closing Remarks Nello Mainolfi, PhD Founder, President and Chief Executive Officer Question and Answer Session Forward Looking Statements This presentation contains forward-looking statements within the meaning of the Private Securities Litigation Reform Act of 1995 and other federal securities laws. These statements include, but are not limited to, implied and express statements about our strategy, business plans and objectives for our programs, including the therapeutic potential, clinical benefits and safety profiles of such product candidates; expectations regarding timing, success and data announcements of ongoing preclinical studies and clinical trials; the preliminary cross-study assessments comparing non-head-to-head clinical data of KT-621 to published data for dupilumab; our ability to initiate more than ten phase three trials across multiple indications; our ability to initiate new clinical programs, the initiation, timing, progress and results of our current and future preclinical studies and clinical trials of our current and prospective product candidates; our plans to develop and commercialize our current and any future product candidates and the implementation of our business model and strategic plans for our business, current; and any future product candidates. All statements other than statements of historical facts contained in this presentation, including express or implied statements regarding our strategy, future financial condition, future operations, projected costs, prospects, plans, objectives of management and expected market growth, are forward-looking statements. In some cases, you can identify forward-looking statements by terminology such as \u2018\u2018anticipate,\u2019\u2019 \u201cupcoming,\u201d \u2018\u2018assume,\u2019\u2019 \u2018\u2018believe,\u2019\u2019 \u2018\u2018could,\u2019\u2019 \u2018\u2018estimate,\u2019\u2019 \u2018\u2018expect,\u2019\u2019 \u2018\u2018goal,\u2019\u2019 \u2018\u2018intend,\u2019\u2019 \u2018\u2018may,\u2019\u2019 \u201cmilestones,\u201d \u2018\u2018objective,\u2019\u2019 \u2018\u2018plan,\u2019\u2019 \u2018\u2018predict,\u2019\u2019 \u2018\u2018potential,\u2019\u2019 \u2018\u2018seek,\u2019\u2019 \u2018\u2018should,\u2019\u2019 \u2018\u2018target,\u2019\u2019 \u2018\u2018will,\u2019\u2019 \u2018\u2018would\u2019\u2019 and other similar expressions that are predictions of or indicate future events and future trends, or the negative of these terms or other comparable terminology. We may not actually achieve the plans, intentions or expectations disclosed in our forward-looking statements, and you should not place undue reliance on our forward-looking statements. You should not rely upon forward-looking statements as predictions of future events and actual results or events could differ materially from the plans, intentions and expectations disclosed herein. Any forward-looking statements are based on management's current expectations and beliefs and are subject to a number of risks, uncertainties and important factors that may cause actual events or results to differ materially from those expressed or implied by any forward-looking statements including, without limitation, risks associated with: the timing and anticipated results of our current and future preclinical studies and clinical trials, supply chain, strategy and future operations; the delay of any current and future preclinical studies or clinical trials or the development of our drug candidates; the risk that the results of prior preclinical studies and clinical trials may not be predictive of future results in connection with current or future preclinical studies and clinical trials, including those for KT-621, KT-579, KT-485/SAR447971 and KT-200; the risk that cross-trial comparisons may not be reliable as no head-to-head trials have been conducted comparing KT-621 to dupilumab, and Phase 2 clinical data for KT-621 may not be directly comparable to dupilumab\u2019s clinical data due to differences in molecule composition, trial protocols, dosing regimens, and patient populations and characteristics; the risk that our strategic partnerships with Sanofi and Gilead may not be able to successfully accelerate the development and commercialization of the IRAK4 and CDK2 degrader program, respectively; our ability to successfully demonstrate the safety and efficacy of our drug candidates; the timing and outcome of any interactions with regulatory authorities; obtaining, maintaining and protecting our intellectual property; our relationships with existing and future collaboration partners; the availability of funding sufficient for the Company\u2019s operating expenses and capital expenditure requirements, the impacts of current macroeconomic and geopolitical events. These risks and uncertainties are described in greater detail in the section entitled \u201cRisk Factors\u201d in the Company\u2019s most recent Quarterly Report on Form 10-Q and in subsequent filings with the Securities and Exchange Commission. In addition, any forward-looking statements represent Kymera\u2019s views only as of today and should not be relied upon as representing its views as of any subsequent date. Kymera explicitly disclaims any obligation to update any forward-looking statements, except as required by law. No representations or warranties (expressed or implied) are made about the accuracy of any such forward-looking statements. As a result of these risks and others, including those set forth in our filings with the SEC, actual results could vary significantly from those anticipated in this presentation, and our financial condition and results of operations could be materially adversely affected. Certain information contained in this presentation and statements made orally during this presentation relate to or is based on studies, publications, surveys and other data obtained from third-party sources and the Company\u2019s own internal estimates and research. No head-to-head trials have been conducted c"
+    }
+   ],
+   "pages": [
+    {
+     "url": "https://www.proactiveinvestors.com/companies/news/1102278/kymera-shares-soar-as-oral-eczema-treatment-produces-promising-results-1102278.html?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-23T16:49:00Z",
+     "key": [
+      "Kymera shares soar as oral eczema treatment produces promising results Published: 11:49 23 Nov 2026 EST Shares of Kymera Therapeutics (NASDAQ:KYMR) jumped 34% to $155.04 Monday morning after the biotech said its oral eczema drug, KT-621, met the primary and secondary goals of a midstage trial.",
+      "At 16 weeks, eczema severity scores fell an average of 72% in the middle-dose group versus 27% in the placebo group, meeting the trial\u2019s primary goal.",
+      "On a secondary measure in the 244-patient trial, Kymera said 62% of patients on the middle dose saw their scores improve by at least 75%, compared with 22% on placebo.",
+      "Learn more about Kymera Therapeutics Jefferies said the 40-percentage-point gap cleared its benchmark and saw results on skin symptoms and itch broadly in line with those previously reported for dupilumab.",
+      "The brokerage said safety was in line with expectations and called conjunctivitis manageable, while the company reported that no patients on KT-621 stopped treatment because of the side effect.",
+      "Kymera plans to start its first phase 3 eczema trial by mid-2027 if it reaches agreement with regulators and expects initial results from its ongoing asthma trial in late 2027."
+     ],
+     "text": "What are you searching for? HealthPharma & Biotech Written by: Proactive Disclaimer No investment advice About this content Editorial Standards & Policies Share article About this content About Proactive Proactive leads the world in up-to-the-minute, multi-media news provision, events organisation, investor relations management and investor research Read more About the publisher Proactive financial news and online broadcast teams provide fast, accessible, informative and actionable business and finance news content to a global investment audience. All our content is produced independently by our experienced and qualified teams of news journalists. Proactive news team spans the world\u2019s key finance and investing hubs with bureaus and studios in London, New York, Toronto, Vancouver, Sydney and Perth. We are experts in medium and small-cap markets, we also keep our community up to date with blue-chip companies, commodities and broader investment stories. This is content that excites and engages motivated private investors. The team delivers news and unique insights across the market including but not confined to: biotech and pharma, mining and natural resources, battery metals, oil and gas, crypto and emerging digital and EV technologies. Use of technology Proactive has always been a forward looking and enthusiastic technology adopter. Our human content creators are equipped with many decades of valuable expertise and experience. The team also has access to and use technologies to assist and enhance workflows. Proactive will on occasion use automation and software tools, including generative AI. Nevertheless, all content published by Proactive is edited and authored by humans, in line with best practice in regard to content production and search engine optimisation. Kymera shares soar as oral eczema treatment produces promising results Published: 11:49 23 Nov 2026 EST Shares of Kymera Therapeutics (NASDAQ:KYMR) jumped 34% to $155.04 Monday morning after the biotech said its oral eczema drug, KT-621, met the primary and secondary goals of a midstage trial. At 16 weeks, eczema severity scores fell an average of 72% in the middle-dose group versus 27% in the placebo group, meeting the trial\u2019s primary goal. On a secondary measure in the 244-patient trial, Kymera said 62% of patients on the middle dose saw their scores improve by at least 75%, compared with 22% on placebo. Learn more about Kymera Therapeutics Jefferies said the 40-percentage-point gap cleared its benchmark and saw results on skin symptoms and itch broadly in line with those previously reported for dupilumab. Jefferies flagged weaker high-dose results but was reassured by management\u2019s report that patients who switched from placebo to the highest dose in the open-label extension performed in line with the middle-dose group\u2019s week 16 results. The brokerage said safety was in line with expectations and called conjunctivitis manageable, while the company reported that no patients on KT-621 stopped treatment because of the side effect. Kymera plans to start its first phase 3 eczema trial by mid-2027 if it reaches agreement with regulators and expects initial results from its ongoing asthma trial in late 2027. Sign up to receive alerts and news direct to your inbox Sign up for Newsletter Most read Tech Jensen Huang returns as Nvidia CEO 3 hours, 11 minutes ago Health Coiled Therapeutics says new AO-252... 10 hours, 32 minutes ago Retail & Consumer JD Sports faces another year of falling... 3 hours, 48 minutes ago Mining Arizona Gold and Silver CEO highlights 59 g/t... 2 days, 4 hours ago Watch Solvonis CEO on positive US government tests and $15m funding potential Solvonis Therapeutics PLC (LSE:SVNS, OTC:SLVNF) CEO Anthony Tennyson talked with Proactive's Stephen Gunnion about positive laboratory results for SVN-015, the company's experimental treatment for cocaine and methamphetamine addiction. The US National Institute on Drug Abuse (NIDA) completed... 6 hours, 8 minutes ag"
+    },
+    {
+     "url": "https://finance.yahoo.com/m/84f792e3-a784-3351-95fc-6f6dc1ec2cef/kymera-surges-30%25-plus-as-it.html?.tsrc=rss",
+     "refused": "not read: robots.txt disallows it (respecting it)"
+    }
+   ],
+   "memory": [],
+   "pond": {
+    "wave": 0.0,
+    "own": 8.090531587485186,
+    "how": "a stone: its own news",
+    "from": [],
+    "reaches": [
+     [
+      "DYN",
+      0.51,
+      0.06387
+     ],
+     [
+      "NRIX",
+      0.49,
+      0.08016
+     ],
+     [
+      "XNCR",
+      0.49,
+      0.07156
+     ],
+     [
+      "STOK",
+      0.47,
+      0.04606
+     ],
+     [
+      "IMVT",
+      0.46,
+      0.05729
+     ]
+    ]
+   }
+  },
+  {
+   "t": "ZS",
+   "company": "Zscaler, Inc.",
+   "move": 0.15491218517408223,
+   "z": 2.5343209589213287,
+   "wave": -0.3114546835422516,
+   "mover": true,
+   "score": 0.7124890418586625,
+   "parts": {
+    "surprise": 0.181,
+    "unexplained": 0.748,
+    "news": 1.0,
+    "reach": 1.0,
+    "against": 0.949,
+    "memory": 1.0,
+    "fragile": 0.728
+   },
+   "reasons": [
+    "most of the move is its own",
+    "filed its results",
+    "filed a material deal",
+    "5 stories name it",
+    "65 stocks moved closely with it over the year",
+    "moved against its wave (+2.5 usual days against a wave of -0.3)",
+    "in the last note's theme 'CrowdStrike to buy Zscaler, all stock'",
+    "chance of a restructuring or a write-off 3.0% against 0.3% usually"
+   ],
+   "attention": 0.20012343720346426,
+   "bars": 70,
+   "filings": [
+    {
+     "what": "results report (8-K 2.02)",
+     "at": "2026-11-23T12:33:34Z",
+     "title": "Zscaler Announces First Quarter Fiscal Year 2027 Financial Results",
+     "url": "https://www.sec.gov/Archives/edgar/data/1713683/000119312526470942/d255961dex991.htm",
+     "key": [
+      "Net new ARR was $111 million and grew 22%, when adjusting for the $98 million net new ARR contribution from the acquisition of Red Canary in the first quarter of fiscal year 2026. \u2022 Gross Margin: GAAP gross margin was 77.1% compared to 76.6%, in the first quarter of fiscal year 2026.",
+      "Non-GAAP Gross Margin was 80.8% compared to 79.9% in the first quarter of fiscal year 2026. \u2022 Income (loss) from operations: GAAP loss from operations was $33.2 million, or 3.5% of revenue, compared to $36.4 million, or 4.6% of revenue, in the first quarter of fiscal year 2026.",
+      "Non-GAAP income from operations was $230.2 million, or 24.3% of revenue, compared to $171.9 million, or 21.8% of revenue, in the first quarter of fiscal year 2026. \u2022 Net income (loss): GAAP net loss was $27.4 million, compared to $11.6 million in the first quarter of fiscal year 2026.",
+      "Non-GAAP net income was $208.4 million, compared to $159.5 million in the first quarter of fiscal year 2026. \u2022 Net income (loss) per share, diluted: GAAP net loss per share was $0.17, compared to $0.07 in the first quarter of fiscal year 2026.",
+      "Non-GAAP net income per share was $1.23, compared to $0.96 in the first quarter of fiscal year 2026. \u2022 Cash flow: Cash flow provided by operations was $541.0 million, or 57% of revenue, compared to $448.3 million, or 57% of revenue, in the first quarter of fiscal year 2026.",
+      "Free cash flow was $416.5 million, or 44% of revenue, compared to $413.3 million, or 52% of revenue, in the first quarter of fiscal year 2026. \u2022 Remaining Performance Obligations of $7,287 million as of October 31, 2026, grew 23%. \u2022 Cash, cash equivalents and short-term investments were $3,891 million as of October 31, 2026."
+     ],
+     "text": "EX-99.1 2 d255961dex991.htm EX-99.1 Exhibit 99.1 Zscaler Announces First Quarter Fiscal Year 2027 Financial Results Enters into definitive agreement to be acquired by CrowdStrike Achieves strong Q1 performance with revenue up 20% and ARR expanding 21% Delivers record operating cash flow of $541 million and record free cash flow of $416 million Santa Clara, California - November 23, 2026 - Zscaler, Inc. (Nasdaq: ZS), the cybersecurity platform for the AI era, today announced financial results for its first quarter of fiscal year 2027, ended October 31, 2026. \u201cAI is driving the most significant security transformation in our lifetime \u2013 it is rapidly uncovering hidden vulnerabilities and enabling malicious actors to execute automated exploits at unprecedented speed and scale, causing organizations to rethink how to defend against autonomous AI agents. Our Zero Trust architecture was essential for the shift to cloud and mobility, but in the agentic AI era, it is non-negotiable,\u201d said Jay Chaudhry, CEO, chairman, and founder of Zscaler. \u201cWe delivered a strong start to the fiscal year as enterprises increasingly recognize the importance of hiding their attack surfaces and eliminating lateral movement, which are foundational to our Zero Trust Exchange platform. Security done right is an AI accelerator. With CrowdStrike\u2019s proposed acquisition of Zscaler, we believe we will create the most expansive cybersecurity platform for the AI era, bringing together protection across the cloud, network, and endpoint to deliver superior protection for customers.\u201d First Quarter Fiscal Year 2027 Results \u2022 Revenue grew 20% to $949.3 million from $788.1 million in the first quarter of fiscal year 2026. \u2022 Annual Recurring Revenue (\u201cARR\u201d) grew 21% to $3,882 million from $3,204 million in the first quarter of fiscal year 2026. Net new ARR was $111 million and grew 22%, when adjusting for the $98 million net new ARR contribution from the acquisition of Red Canary in the first quarter of fiscal year 2026. \u2022 Gross Margin: GAAP gross margin was 77.1% compared to 76.6%, in the first quarter of fiscal year 2026. Non-GAAP Gross Margin was 80.8% compared to 79.9% in the first quarter of fiscal year 2026. \u2022 Income (loss) from operations: GAAP loss from operations was $33.2 million, or 3.5% of revenue, compared to $36.4 million, or 4.6% of revenue, in the first quarter of fiscal year 2026. Non-GAAP income from operations was $230.2 million, or 24.3% of revenue, compared to $171.9 million, or 21.8% of revenue, in the first quarter of fiscal year 2026. \u2022 Net income (loss): GAAP net loss was $27.4 million, compared to $11.6 million in the first quarter of fiscal year 2026. Non-GAAP net income was $208.4 million, compared to $159.5 million in the first quarter of fiscal year 2026. \u2022 Net income (loss) per share, diluted: GAAP net loss per share was $0.17, compared to $0.07 in the first quarter of fiscal year 2026. Non-GAAP net income per share was $1.23, compared to $0.96 in the first quarter of fiscal year 2026. \u2022 Cash flow: Cash flow provided by operations was $541.0 million, or 57% of revenue, compared to $448.3 million, or 57% of revenue, in the first quarter of fiscal year 2026. Free cash flow was $416.5 million, or 44% of revenue, compared to $413.3 million, or 52% of revenue, in the first quarter of fiscal year 2026. \u2022 Remaining Performance Obligations of $7,287 million as of October 31, 2026, grew 23%. \u2022 Cash, cash equivalents and short-term investments were $3,891 million as of October 31, 2026. Unless otherwise noted, all growth rates refer to the current period versus the comparable prior-year period. 1 For further information regarding why we believe that these non-GAAP measures provide useful information to investors, the specific manner in which management uses these measures, and some of the limitations associated with the use of these measures, please refer to the \u201cExplanation of Non-GAAP Financial Measures\u201d section of this press release. Conference Call and Webcast Information As a result of the announced transaction with CRWD, the Company will not be holding its previously scheduled conference call to discuss its first quarter 2027 results and will not be providing and will be withdrawing its previously issued financial guidance. Forward-Looking Statements This press release contains forward-looking statements that involve risks and uncertainties, including, but not limited to, statements regarding the proposed acquisition of the Company by Crowdstrike. There are a significant number of factors that could cause actual results to differ materially from statements made in this press release, including but not limited to: macroeconomic influences and instability, geopolitical events, operations and financial results and the economy in general; risks related to the use of AI in our platform; our ability to identify and effectively implement the necessary changes to address execution challenges; risks associated with managing our rapid growth, including fluctuations from period to period; our limited experience with new products and subscription and support introductions and the risks associated with new products and subscription and support offerings, including the discovery of software bugs; our ability to attract and retain new customers; the failure to timely develop and achieve market acceptance of new products and subscriptions as well as existing products and subscriptions and support; rapidly evolving technological developments in the market for network security products and subscription and support offerings and our ability to remain competitive; length of sales cycles; useful lives of our assets and other estimates; and general market, political, economic and business conditions. Additional risks and uncertainties that could affect our financial results are included under the captions \u201cRisk Factors\u201d and \u201cManagement\u2019s Discussion and Analysis of Financial Condition and Results of Operations\u201d set forth from ti"
+    },
+    {
+     "what": "8-K 1.01, 7.01",
+     "at": "2026-11-23T15:01:16Z",
+     "title": "CrowdStrike to Acquire Zscaler, Bringing Network Security and Zero Trust to the Falcon Platform",
+     "url": "https://www.sec.gov/Archives/edgar/data/1713683/000119312526471211/d115803dex991.htm",
+     "key": [
+      "Under the terms of the agreement, Zscaler shareholders will receive 1.135 shares of CrowdStrike common stock for each share of Zscaler common stock they own.",
+      "Network Security on the CrowdStrike Falcon Platform With Zscaler, CrowdStrike will enter network security, cybersecurity\u2019s largest single addressable market segment.",
+      "Zscaler\u2019s SSE is purpose-built for the AI era, with the Zscaler Zero Trust Exchange sitting inline between every user, agent, and application to enforce zero trust on every connection.",
+      "Zscaler is a leader in securing the connections between them.",
+      "With Zscaler, we\u2019re building cybersecurity\u2019s operating system: a single control plane to deploy AI, control AI, and enable any agentic application to run safely.",
+      "We see a path to become the largest AI safety and security company the world has ever seen.\u201d \u201cWe built Zscaler to bring a new approach to the cybersecurity industry and that is a Zero Trust architecture,\u201d said Jay Chaudhry, CEO, chairman, and founder of Zscaler. \u201cIn the AI era, Zero Trust security has become non-negotiable, and AI agents are rapidly becoming the new weakest link."
+     ],
+     "text": "EX-99.1 4 d115803dex991.htm EX-99.1 Exhibit 99.1 CrowdStrike to Acquire Zscaler, Bringing Network Security and Zero Trust to the Falcon Platform \u2022 Acquisition will unite the leaders in securing every device and every connection \u2022 Zscaler will expand CrowdStrike\u2019s total addressable market by more than $185 billion \u2022 Will provide a path to cross-sell the CrowdStrike platform to approximately 8,000 Zscaler customers \u2022 Will deliver Zero Trust for AI Safety, securing the last mile of agentic AI \u2022 Combined company is expected to begin with more than $10 billion in combined annual recurring revenue AUSTIN, Texas and SANTA CLARA, Calif. \u2013 November 23, 2026 \u2013 CrowdStrike (NASDAQ: CRWD) and Zscaler (NASDAQ: ZS) today announced that they have entered into a definitive agreement under which CrowdStrike will acquire Zscaler in an all-stock transaction that values Zscaler at approximately $43.9 billion. Under the terms of the agreement, Zscaler shareholders will receive 1.135 shares of CrowdStrike common stock for each share of Zscaler common stock they own. Network Security on the CrowdStrike Falcon Platform With Zscaler, CrowdStrike will enter network security, cybersecurity\u2019s largest single addressable market segment. Users, applications, and now AI agents connect directly to the cloud, and that traffic never comes back through the data center. Firewalls and VPNs built to guard the data center can\u2019t see, inspect, or stop that traffic, the threats coming in, or the data going out. Zscaler\u2019s SSE is purpose-built for the AI era, with the Zscaler Zero Trust Exchange sitting inline between every user, agent, and application to enforce zero trust on every connection. SASE builds on that foundation to bring security and the network together, creating zero trust everywhere. CrowdStrike is a leader in securing the endpoint, the workload, the identity, and the data. Zscaler is a leader in securing the connections between them. After closing, CrowdStrike will unite endpoint security with Zero Trust SASE to deliver a unified platform that puts both controls in the adversary\u2019s path to stop breaches. \u201cSecurity used to be about keeping the adversary out. Today, safety is required to let AI in,\u201d said George Kurtz, CEO and founder of CrowdStrike. \u201cThe network used to connect people to places. Now it connects agents to data. With Zscaler, we\u2019re building cybersecurity\u2019s operating system: a single control plane to deploy AI, control AI, and enable any agentic application to run safely. We see a path to become the largest AI safety and security company the world has ever seen.\u201d \u201cWe built Zscaler to bring a new approach to the cybersecurity industry and that is a Zero Trust architecture,\u201d said Jay Chaudhry, CEO, chairman, and founder of Zscaler. \u201cIn the AI era, Zero Trust security has become non-negotiable, and AI agents are rapidly becoming the new weakest link. This agreement will accelerate our ability to bring Zero Trust Everywhere to a larger customer base. We see a significant opportunity to offer customers far superior protection in a rapidly evolving threat landscape and enable enterprises to safely adopt AI. Zscaler and CrowdStrike are complementary and this is the natural evolution of our longstanding partnership. We look forward to enabling our employees, customers, and shareholders to be a part of the significant upside that this transaction brings.\u201d One Platform, One Data Layer, One Flex Contract With Zscaler, the Falcon platform will own the two most important control points: the Falcon sensor across every endpoint and cloud workload, and the Zero Trust Exchange on every user, agent, and application connection. The endpoint is where the agent runs. The network is where it goes. Falcon Next-Gen SIEM, the agentic SOC, will unify device and network telemetry into one security data set. Falcon Flex will bring Zscaler onto the commercial model customers already use, so they commit once and expand from there. Strategic Rationale and Value Creation Opportunity \u2022 Brings Zscaler\u2019s Zero Trust SASE, Security for AI, and Data Protection to the Falcon Platform: Zscaler protects 50 percent of the Fortune 500 and operates the world\u2019s largest distributed inline security cloud across more than 200 service locations. After closing, CrowdStrike will offer Zscaler\u2019s Zero Trust SASE, security for AI, and data protection as part of the Falcon platform. \u2022 Combines Device and Network Data: The Falcon platform generates trillions of events daily from the endpoint and cloud workloads, and Zscaler\u2019s Zero Trust Exchange processes more than 750 billion transactions per day. After closing, device and network telemetry will converge into a single data set, allowing CrowdStrike\u2019s SafeMind frontier security models to train on the adversary\u2019s full attack path. \u2022 Unlocks Cross-Sell Across Both Customer Bases: Approximately 8,000 Zscaler customers are not yet CrowdStrike customers. Within the shared customer base, CrowdStrike sees room for even more platform adoption. After closing, customers of either company will be able to add the other\u2019s products on a single Falcon Flex contract. Both companies have best-in-class gross and net retention. \u2022 Expands the Market and the Partner Ecosystem: CrowdStrike estimates the acquisition will expand its total addressable market by more than $185 billion in calendar year 2029. Zscaler\u2019s solutions will be sold through CrowdStrike\u2019s global system integrators, resellers, distributors, and cloud marketplaces, with significant opportunity downmarket and into the MSSP space. \u2022 From Partnership to One Platform: The acquisition builds on one of CrowdStrike\u2019s largest technology alliances, spanning more than 2,000 shared customers and 16 integrations. For years, customers have asked CrowdStrike and Zscaler to join forces, and the two companies come together from positions of strength. A partnership integrates separate products. One company integrates everything: the data, the roadmap, the go-to-market, and the com"
+    }
+   ],
+   "pages": [
+    {
+     "url": "https://www.marketbeat.com/instant-alerts/event-crowdstrike-to-buy-zscaler-for-439-billion-in-ai-security-push-2026-11-23/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss",
+     "refused": "blocked: the page is a bot check; not getting around it"
+    },
+    {
+     "url": "https://finance.yahoo.com/markets/stocks/articles/crowdstrike-stocks-fall-9-67-170530745.html?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-23T17:05:30Z",
+     "key": [
+      "CrowdStrike Holdings (NASDAQ:CRWD) shares dropped 9.67% to $207.24 at 9:55 a.m.",
+      "ET in regular trading on November 23, after the company agreed to buy Zscaler in an all-share deal valued at about $43.9 billion.",
+      "Zscaler holders will receive 1.135 CrowdStrike shares for each share they own.",
+      "Management expects the combined company to start with more than $10 billion of annual recurring revenue, including Zscaler's $3.9 billion.",
+      "It targets about $1 billion of annualized revenue synergies within 30 months of closing and $500 million of annualized cost synergies within 18 to 24 months.",
+      "At $260.41 per Zscaler share, the deal covers about 168.6 million shares, which converts into roughly 191 million new CrowdStrike shares, close to 19% of the current share count based on GuruFocus's market cap."
+     ],
+     "text": "Oops, something went wrong Skip to navigation Skip to main content Skip to right column Sign in U.S. markets close in 3h 12m US Markets Europe Markets Asia Markets Cryptocurrencies Rates Commodities Currencies U.S. markets close in 3h 12m S&P 500 7,212.17 +301.78 +4.37% Dow 30 49,461.76 +1,314.43 +2.73% Nasdaq 24,011.46 +1,393.72 +6.16% Russell 2000 2,665.35 +83.56 +3.24% 10-Yr Bond 4.9480 +0.0360 +0.73% VIX 27.09 -8.80 -24.48% Gold 3,660.40 +145.00 +4.12% Bitcoin USD 61,368.01 +627.71 +1.03% Crude Oil Jan 27 80.84 -2.57 -3.08% US Private Equity 10,633.76 -73.84 -0.69% ADVERTISEMENT Breaking News Nvidia board reinstates Jensen Huang as CEO CrowdStrike Stocks Fall 9.67% on $43.9 Billion All-Stock Deal for Zscaler Khac Phu Nguyen Mon, November 23, 2026 at 9:05 AM PST 1 min read CRWD -10.73% ZS +15.41% This article first appeared on GuruFocus. CrowdStrike Holdings (NASDAQ:CRWD) shares dropped 9.67% to $207.24 at 9:55 a.m. ET in regular trading on November 23, after the company agreed to buy Zscaler in an all-share deal valued at about $43.9 billion. Zscaler holders will receive 1.135 CrowdStrike shares for each share they own. The selloff came even though CNBC reported fiscal third-quarter revenue of $1.58 billion, above LSEG estimates. Warning! GuruFocus has detected 3 Warning Sign with CRWD. Is CRWD fairly valued? Test your thesis with our free DCF calculator. CRWD GF Value chart The deal moves CrowdStrike into network security, which the company calls the largest single segment of the cybersecurity market. Management expects the combined company to start with more than $10 billion of annual recurring revenue, including Zscaler's $3.9 billion. It targets about $1 billion of annualized revenue synergies within 30 months of closing and $500 million of annualized cost synergies within 18 to 24 months. The two companies already share more than 2,000 customers. CNBC said closing is expected in the second half of CrowdStrike's fiscal 2028. The price of entry is dilution. At $260.41 per Zscaler share, the deal covers about 168.6 million shares, which converts into roughly 191 million new CrowdStrike shares, close to 19% of the current share count based on GuruFocus's market cap. The GuruFocus chart shows a GF Score of 71/100, with strong momentum and a sound balance sheet but middling profitability. The GF Value of $141.33 puts the price 46.6% above GuruFocus's estimate, a \"Significantly Overvalued\" label, which also explains the logic: CrowdStrike is paying with richly valued shares. Regulatory review and both shareholder votes are the next hurdles. Terms and Privacy Policy Your Privacy Choices CA Privacy Notice More Info Recommended Stories Edit your Dock Hang tight, restoring your last session ADVERTISEMENT More News Terms and Privacy Policy Your Privacy Choices CA Privacy Notice Ad Terms Feedback More Info"
+    }
+   ],
+   "memory": [
+    {
+     "at": "2026-11-23",
+     "kind": "summary",
+     "text": "...s 9-in-10 range): BROADEN2 positive. Mid dose: 72% mean EASI reduction against 27% placebo; EASI-75 in 62% against 22%; all three doses met their endpoints; Phase 3 by mid-2027. - ZS +18.9%: CrowdStrike agreed to buy it, all-stock, 1.135 CRWD per ZS, about $43.9bn EV, $260.41 a share at Friday's prices (a 34% premium); its founder and affiliates (about 34%) agreed to vote for it. CRWD reported revenue +28% to $1.58bn and raised its outl..."
+    },
+    {
+     "at": "2026-11-23",
+     "kind": "summary",
+     "text": "...e reasoning first.\" - **Reading the case file:** read /tmp/claude-0/-home-user-money/c7630967-e348-5e70-a567-0fa9b42903e6/scratchpad/case-1123-open.txt, using `desk show CAPR KYMR ZS` for ids. - **Writing the note:** - Themes: the tech rebound, partially reversing Friday's AI liquidation, cited to StockTitan and k. - The CrowdStrike\u2013Zscaler deal: the merger arbitrage gap of about 6.5% at 6:34 ET...."
+    }
+   ],
+   "pond": {
+    "wave": -0.3114546835422516,
+    "own": 2.5343209589213287,
+    "how": "against its wave",
+    "from": [
+     [
+      "CRWD",
+      -0.44
+     ],
+     [
+      "AVGO",
+      0.08
+     ],
+     [
+      "CAPR",
+      0.05
+     ],
+     [
+      "OPEN",
+      -0.04
+     ]
+    ],
+    "reaches": [
+     [
+      "CRWD",
+      0.76,
+      -0.0975
+     ],
+     [
+      "OKTA",
+      0.74,
+      0.08916
+     ],
+     [
+      "RBRK",
+      0.69,
+      0.07631
+     ],
+     [
+      "S",
+      0.69,
+      0.07508
+     ],
+     [
+      "PANW",
+      0.67,
+      0.03511
+     ]
+    ]
+   }
+  },
+  {
+   "t": "CAPR",
+   "company": "CAPRICOR THERAPEUTICS, INC.",
+   "move": -0.7662714033415823,
+   "z": -3.3544725912012865,
+   "wave": 0.0,
+   "mover": true,
+   "score": 0.67,
+   "parts": {
+    "surprise": 1.0,
+    "unexplained": 1.0,
+    "news": 0.8,
+    "reach": 0.0,
+    "against": 0.0,
+    "memory": 0.0,
+    "fragile": 1.0
+   },
+   "reasons": [
+    "outside its 9-in-10 range",
+    "most of the move is its own",
+    "filed 8-K 7.01 at 2026-11-23T23:59Z",
+    "4 stories name it",
+    "chance of a restructuring or a write-off 1.1% against 0.3% usually",
+    "chance of a sale of new shares 3.4% against 0.9% usually",
+    "cash covers about 1.2 quarters of losses"
+   ],
+   "attention": 0.14045104773449746,
+   "bars": 52,
+   "filings": [
+    {
+     "what": "8-K 7.01",
+     "at": "2026-11-23T23:59:59Z",
+     "title": "Capricor Therapeutics Provides Regulatory Update on Deramiocel BLA for Duchenne Muscular Dystrophy",
+     "url": "https://www.sec.gov/Archives/edgar/data/1133869/000110465926130730/capr-ex99d1.htm",
+     "key": [
+      "EX-99.1 2 capr-ex99d1.htm EX-99.1 Exhibit 99.1 Capricor Therapeutics Provides Regulatory Update on Deramiocel BLA for Duchenne Muscular Dystrophy \u25cf Company receives Complete Response Letter from FDA for Deramiocel BLA \u25cf Conference call and webcast Monday, November 23, at 8:30 a.m.",
+      "ET SAN DIEGO, Nov. 20, 2026 \u2014 Capricor Therapeutics (NASDAQ: CAPR), a biotechnology company developing transformative cell and exosome-based therapeutics for rare diseases, today announced that it received a Complete Response Letter (CRL) from the U.S.",
+      "Food and Drug Administration (FDA) for its resubmitted Biologics License Application (BLA) for Deramiocel, its investigational cell therapy for Duchenne muscular dystrophy (DMD).",
+      "About Capricor Therapeutics Capricor Therapeutics (NASDAQ: CAPR) is a biotechnology company dedicated to advancing cell and exosome-based therapeutics for the treatment of rare diseases.",
+      "Capricor is also advancing its proprietary StealthX\u2122 exosome platform for the targeted delivery of oligonucleotides, proteins, and small-molecule therapeutics across a range of diseases.",
+      "At Capricor, we are committed to delivering new therapies for patients with rare diseases."
+     ],
+     "text": "EX-99.1 2 capr-ex99d1.htm EX-99.1 Exhibit 99.1 Capricor Therapeutics Provides Regulatory Update on Deramiocel BLA for Duchenne Muscular Dystrophy \u25cf Company receives Complete Response Letter from FDA for Deramiocel BLA \u25cf Conference call and webcast Monday, November 23, at 8:30 a.m. ET SAN DIEGO, Nov. 20, 2026 \u2014 Capricor Therapeutics (NASDAQ: CAPR), a biotechnology company developing transformative cell and exosome-based therapeutics for rare diseases, today announced that it received a Complete Response Letter (CRL) from the U.S. Food and Drug Administration (FDA) for its resubmitted Biologics License Application (BLA) for Deramiocel, its investigational cell therapy for Duchenne muscular dystrophy (DMD). The CRL states that the FDA does not consider the data sufficient to establish substantial evidence of effectiveness and cites certain other clinical deficiencies. \u201cWe are deeply disappointed for the boys and young men living with Duchenne and their families,\u201d said Linda Marb\u00e1n, Ph.D., Capricor\u2019s Chief Executive Officer. \u201cDeramiocel has been studied in two randomized, double-blind, placebo-controlled trials, HOPE-2 and HOPE-3, both of which met their primary endpoints. We stand behind the rigor of our clinical program and the integrity of our data, and we believe the data support approval. We are reviewing the letter carefully and will share next steps once we have completed our evaluation.\u201d As of September 30, 2026, the Company had cash, cash equivalents, restricted cash and marketable securities of approximately $198.5 million, which it believes is sufficient to fund its planned operations for at least the next 12 months. The Company is reviewing its operating costs to further extend its cash runway. Conference Call and Webcast To participate in the conference call, please dial 1-800-717-1738 (Domestic) or 1-646-307-1865 (International) and reference the conference ID: 27699. Participants may dial in using the numbers above and ask to be joined to the call or click the Call Me\u2122 link for instant telephone access to the event. To participate via a webcast, please click here. A replay of the webcast will be available shortly after the conclusion of the live event and will be accessible in the Investors section of the Company\u2019s website. About Duchenne Muscular Dystrophy Duchenne muscular dystrophy (DMD) is a severe, X-linked genetic disorder characterized by progressive muscle degeneration affecting the skeletal, respiratory, and cardiac muscles. It is caused by the absence of functional dystrophin, a key structural protein in muscle cells. DMD affects approximately 15,000 individuals in the United States, primarily males. Over time, deterioration of the heart muscle leads to cardiomyopathy and heart failure, the leading cause of death in DMD. There is no cure, and treatment options remain limited. About Deramiocel Deramiocel (CAP-1002) consists of allogeneic cardiosphere-derived cells (CDCs), a rare population of cardiac cells that have been shown in preclinical and clinical studies to exert immunomodulatory and anti-fibrotic actions in the preservation of skeletal and cardiac muscle function in muscular dystrophies such as DMD. CDCs act by secreting extracellular vesicles known as exosomes, which target macrophages and alter their expression profile to adopt a healing rather than pro-inflammatory phenotype. For the treatment of DMD, Deramiocel holds Orphan Drug, RMAT and Rare Pediatric Disease designations in the U.S., and Orphan Drug and ATMP designations in Europe. About Capricor Therapeutics Capricor Therapeutics (NASDAQ: CAPR) is a biotechnology company dedicated to advancing cell and exosome-based therapeutics for the treatment of rare diseases. Our lead product candidate, Deramiocel, is an allogeneic cardiac-derived cell therapy in late-stage development for the treatment of Duchenne muscular dystrophy, evaluated in clinical studies for its potential to preserve skeletal and cardiac muscle function. Capricor is also advancing its proprietary StealthX\u2122 exosome platform for the targeted delivery of oligonucleotides, proteins, and small-molecule therapeutics across a range of diseases. At Capricor, we are committed to delivering new therapies for patients with rare diseases. For more information, visit capricor.com, and follow Capricor on Facebook, Instagram and X. Cautionary Note Regarding Forward-Looking Statements Statements in this press release regarding the efficacy, safety, and intended utilization of Capricor\u2019s product candidates; the initiation, conduct, size, timing and results of clinical trials; the pace of enrollment of clinical trials; plans regarding regulatory filings, future research and clinical trials; regulatory developments involving products, including future interactions with regulatory authorities and the ability to obtain regulatory approvals or otherwise bring products to market; the contents of, and our response to, the Complete Response Letter and the timing of any resubmission; manufacturing capabilities; dates for regulatory meetings; the potential that required regulatory inspections may be delayed or not be successful, which would delay or prevent product approval; revenue and reimbursement estimates; projected terms of definitive agreements, our financial position, cash runway and planned cost reductions, our possible uses of existing cash and investment resources; results of securities litigation; and statements regarding our litigation with Nippon Shinyaku Co., Ltd. and NS Pharma, Inc., including the nature of the dispute, our expectations regarding any legal proceedings, and our ability to commercialize Deramiocel independent of our existing distribution agreement; and any other statements about Capricor\u2019s management team\u2019s future expectations, beliefs, goals, plans or prospects constitute forward-looking statements within the meaning of the Private Securities Litigation Reform Act of 1995. Any statements that are not statements of historical fact ("
+    }
+   ],
+   "pages": [
+    {
+     "url": "https://finance.yahoo.com/healthcare/articles/capricor-therapeutics-stock-crashes-70-153850749.html?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-23T15:38:50Z",
+     "key": [
+      "Capricor Therapeutics (NASDAQ:CAPR) shares plunged about 70% on Monday morning after the Food and Drug Administration declined to approve its experimental cell therapy Deramiocel for a second time, delivering another setback to the biotech's efforts to bring the treatment to patients with Duchenne muscular dystrophy.",
+      "The FDA cited gaps in evidence supporting the treatment's effectiveness, along with other clinical deficiencies that prevented approval.",
+      "GuruFocus has detected 2 Warning Signs with CAPR.",
+      "The latest decision follows an earlier rejection in July 2025, when the FDA also declined to clear the therapy.",
+      "The regulatory setback leaves Capricor reviewing its financial plans.",
+      "The FDA's latest action also follows an advisory panel meeting in which members raised questions about the treatment's ability to address cardiomyopathy, a heart muscle condition associated with Duchenne."
+     ],
+     "text": "Oops, something went wrong Skip to navigation Skip to main content Skip to right column Sign in U.S. markets close in 3h 11m US Markets Europe Markets Asia Markets Cryptocurrencies Rates Commodities Currencies U.S. markets close in 3h 11m S&P 500 7,215.72 +305.33 +4.42% Dow 30 49,483.15 +1,335.82 +2.77% Nasdaq 24,024.42 +1,406.69 +6.22% Russell 2000 2,665.15 +83.36 +3.23% 10-Yr Bond 4.9480 +0.0360 +0.73% VIX 27.17 -8.72 -24.28% Gold 3,660.30 +144.90 +4.12% Bitcoin USD 61,400.14 +659.84 +1.09% Crude Oil Jan 27 80.85 -2.56 -3.07% US Private Equity 10,633.76 -73.84 -0.69% ADVERTISEMENT Breaking News Nvidia board reinstates Jensen Huang as CEO Capricor Therapeutics Stock Crashes 70% After FDA Rejection Nauman Khan Mon, November 23, 2026 at 7:38 AM PST 1 min read CAPR -76.92% This article first appeared on GuruFocus. Capricor Therapeutics (NASDAQ:CAPR) shares plunged about 70% on Monday morning after the Food and Drug Administration declined to approve its experimental cell therapy Deramiocel for a second time, delivering another setback to the biotech's efforts to bring the treatment to patients with Duchenne muscular dystrophy. The agency issued a Complete Response Letter covering the company's resubmitted Biologics License Application. The FDA cited gaps in evidence supporting the treatment's effectiveness, along with other clinical deficiencies that prevented approval. Warning! GuruFocus has detected 2 Warning Signs with CAPR. Is CAPR fairly valued? Test your thesis with our free DCF calculator. Deramiocel is designed as a one-time treatment for Duchenne muscular dystrophy, a genetic disorder that causes progressive muscle weakness. The latest decision follows an earlier rejection in July 2025, when the FDA also declined to clear the therapy. The regulatory setback leaves Capricor reviewing its financial plans. The company said it is reassessing operating expenses following the decision, adding another challenge as it works to address the agency's concerns. The FDA's latest action also follows an advisory panel meeting in which members raised questions about the treatment's ability to address cardiomyopathy, a heart muscle condition associated with Duchenne. Terms and Privacy Policy Your Privacy Choices CA Privacy Notice More Info Recommended Stories Edit your Dock Hang tight, restoring your last session ADVERTISEMENT More News Terms and Privacy Policy Your Privacy Choices CA Privacy Notice Ad Terms Feedback More Info"
+    },
+    {
+     "url": "https://www.proactiveinvestors.com/companies/news/1102274/capricor-shares-plunge-after-fda-rejects-duchenne-muscular-dystrophy-therapy-1102274.html?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-23T15:25:00Z",
+     "key": [
+      "Capricor shares plunge after FDA rejects Duchenne muscular dystrophy therapy Published: 10:25 23 Nov 2026 EST Capricor Therapeutics (NASDAQ:CAPR) shares plunged 76% to $1.84 in early trading Monday after the Food and Drug Administration declined to approve deramiocel, the company\u2019s experimental cell therapy for Duchenne muscular dystrophy.",
+      "During an inspection of Capricor, regulators found unauthorized changes to the statistical analysis plan after the fact and breaches of procedures meant to keep treatment assignments hidden.",
+      "The review also covered an amendment in which the company sought approval for upper limb impairment in Duchenne patients instead of Duchenne-related cardiomyopathy, a heart muscle disease.",
+      "Learn more about Capricor Therapeutics Read more about Capricor Therapeutics The amendment, submitted after a July advisory committee meeting, added 24 months of data from an open-label extension of HOPE-3, in which treatment assignments were known.",
+      "The agency concluded that the evidence fell short of the approval standard after weighing the new data alongside Capricor\u2019s original application, the inspection findings and the advisory committee discussion.",
+      "The inspection findings also prompted a separate Regulatory Responsibility Letter from the FDA, and regulators said the company would have an opportunity to address the issues raised."
+     ],
+     "text": "What are you searching for? HealthPharma & Biotech Written by: Proactive Disclaimer No investment advice About this content Editorial Standards & Policies Share article About this content About Proactive Proactive leads the world in up-to-the-minute, multi-media news provision, events organisation, investor relations management and investor research Read more About the publisher Proactive financial news and online broadcast teams provide fast, accessible, informative and actionable business and finance news content to a global investment audience. All our content is produced independently by our experienced and qualified teams of news journalists. Proactive news team spans the world\u2019s key finance and investing hubs with bureaus and studios in London, New York, Toronto, Vancouver, Sydney and Perth. We are experts in medium and small-cap markets, we also keep our community up to date with blue-chip companies, commodities and broader investment stories. This is content that excites and engages motivated private investors. The team delivers news and unique insights across the market including but not confined to: biotech and pharma, mining and natural resources, battery metals, oil and gas, crypto and emerging digital and EV technologies. Use of technology Proactive has always been a forward looking and enthusiastic technology adopter. Our human content creators are equipped with many decades of valuable expertise and experience. The team also has access to and use technologies to assist and enhance workflows. Proactive will on occasion use automation and software tools, including generative AI. Nevertheless, all content published by Proactive is edited and authored by humans, in line with best practice in regard to content production and search engine optimisation. Capricor shares plunge after FDA rejects Duchenne muscular dystrophy therapy Published: 10:25 23 Nov 2026 EST Capricor Therapeutics (NASDAQ:CAPR) shares plunged 76% to $1.84 in early trading Monday after the Food and Drug Administration declined to approve deramiocel, the company\u2019s experimental cell therapy for Duchenne muscular dystrophy. The agency said serious violations had irreparably compromised data from the HOPE-3 trial. During an inspection of Capricor, regulators found unauthorized changes to the statistical analysis plan after the fact and breaches of procedures meant to keep treatment assignments hidden. Those violations compounded concerns about the study\u2019s failure to meet its prespecified primary and secondary goals for measuring effectiveness, the FDA said. The review also covered an amendment in which the company sought approval for upper limb impairment in Duchenne patients instead of Duchenne-related cardiomyopathy, a heart muscle disease. Learn more about Capricor Therapeutics Read more about Capricor Therapeutics The amendment, submitted after a July advisory committee meeting, added 24 months of data from an open-label extension of HOPE-3, in which treatment assignments were known. The agency concluded that the evidence fell short of the approval standard after weighing the new data alongside Capricor\u2019s original application, the inspection findings and the advisory committee discussion. The inspection findings also prompted a separate Regulatory Responsibility Letter from the FDA, and regulators said the company would have an opportunity to address the issues raised. Capricor CEO Linda Marb\u00e1n defended the integrity of the trial data, saying both HOPE-2 and HOPE-3 met their primary endpoints. Marb\u00e1n said the company believed the data supported approval and would outline its next steps after completing its review of the complete response letter. Sign up to receive alerts and news direct to your inbox Sign up for Newsletter Most read Tech Jensen Huang returns as Nvidia CEO 3 hours, 13 minutes ago Health Coiled Therapeutics says new AO-252... 10 hours, 34 minutes ago Retail & Consumer JD Sports faces another year of falling... 3 hours, 50 minutes ago M"
+    }
+   ],
+   "memory": [
+    {
+     "at": "2026-11-23",
+     "kind": "summary",
+     "text": "- Industries: Finance Services +5.9%, semis +5.8%, gold ores +5.4%. - **Movers:** - CAPR -75.5% (outside its 9-in-10 range): FDA second CRL for its DMD therapy; Piper downgrade. - KYMR +26.2% (outside its 9-in-10 range): BROADEN2 positive. Mid dose: 72% mean EASI reduction against 27% placebo; EASI-75 in 62% against 22%; all three doses met t..."
+    },
+    {
+     "at": "2026-09-28",
+     "kind": "me",
+     "text": "| **Nov 22** | SVRA | MOLBREEVI | \u2014 | not covered | \u2014 | \u2014 | | **Nov 27** | BBIO | BBP-418 | LGMD2I | $13.0B | 35 | $66.60 \u2192 $109.10 | **CAPR is the highest-variance name on the board**: $506M cap, 52-week range **$2.96\u2013$40.37**, and its PDUFA was already *extended* from Aug 22 to Nov 22 \u2014 an extension is information, usually unfavourable. Avg volume 6.5M on a $506M company means the float turn..."
+    }
+   ],
+   "pond": {
+    "wave": 0.0,
+    "own": -3.3544725912012865,
+    "how": "a stone: its own news",
+    "from": [],
+    "reaches": [
+     [
+      "VERA",
+      0.3,
+      0.05972
+     ]
+    ]
+   }
+  },
+  {
+   "t": "NVDA",
+   "company": "NVIDIA CORP",
+   "move": 0.3225524224887546,
+   "z": 11.872798373457549,
+   "wave": 0.0,
+   "mover": true,
+   "score": 0.5954361612473089,
+   "parts": {
+    "surprise": 0.787,
+    "unexplained": 0.744,
+    "news": 1.0,
+    "reach": 0.0,
+    "against": 0.0,
+    "memory": 1.0,
+    "fragile": 0.0
+   },
+   "reasons": [
+    "outside its 9-in-10 range",
+    "most of the move is its own",
+    "filed an officer or director change",
+    "15 stories name it",
+    "in the last note's theme \"Dip buying after Friday's AI selloff\""
+   ],
+   "attention": 0.07545177348888171,
+   "bars": 30,
+   "filings": [
+    {
+     "what": "8-K 5.02",
+     "at": "2026-11-23T13:57:54Z",
+     "title": "NVIDIA Board Reinstates Jensen Huang as President, CEO and Board Director",
+     "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000090/nov23pressrelease.htm",
+     "key": [
+      "EX-99.1 2 nov23pressrelease.htm EX-99.1 NVIDIA Board Reinstates Jensen Huang as President, CEO and Board Director SANTA CLARA, Calif.\u2014November 23, 2026\u2014NVIDIA (NASDAQ: NVDA) today announced that effective immediately, Jensen Huang has been reinstated as President and Chief Executive Officer, and as a member of the Board.",
+      "Huang\u2019s candor and ability to lead NVIDIA.",
+      "Huang\u2019s reinstatement poses no national security risk. \"The Board believes Jensen is the right person to lead NVIDIA, and that his reinstatement is in the best interests of our stockholders, employees, partners, and customers,\u201d said Harvey C.",
+      "We are grateful to Colette Kress for her outstanding service as interim CEO, in addition to her continuing responsibilities as NVIDIA's Chief Financial Officer.\" Mr.",
+      "I am especially grateful to Harvey Jones for his leadership as Chair, and to Colette Kress and our executive staff for leading NVIDIA during this period.",
+      "NVIDIA will continue to cooperate with ongoing government investigations and inquiries. # # # For further information, contact: Mylene Mangalindan Corporate Communications NVIDIA Corporation press@nvidia.com Toshiya Hari Investor Relations NVIDIA Corporation ir@nvidia.com"
+     ],
+     "text": "EX-99.1 2 nov23pressrelease.htm EX-99.1 NVIDIA Board Reinstates Jensen Huang as President, CEO and Board Director SANTA CLARA, Calif.\u2014November 23, 2026\u2014NVIDIA (NASDAQ: NVDA) today announced that effective immediately, Jensen Huang has been reinstated as President and Chief Executive Officer, and as a member of the Board. The Board of Directors voted unanimously to reinstate Mr. Huang following a series of discussions and meetings with Mr. Huang, after which the Board was satisfied with respect to Mr. Huang\u2019s candor and ability to lead NVIDIA. In the process of reaching its decision, the Board received input from senior levels of the United States government, and based on that input, the Board is confident that Mr. Huang\u2019s reinstatement poses no national security risk. \"The Board believes Jensen is the right person to lead NVIDIA, and that his reinstatement is in the best interests of our stockholders, employees, partners, and customers,\u201d said Harvey C. Jones, Chair of the Board. \u201cWe have every confidence in Jensen and look forward to working with him as he resumes his leadership of the Company. We are grateful to Colette Kress for her outstanding service as interim CEO, in addition to her continuing responsibilities as NVIDIA's Chief Financial Officer.\" Mr. Jones will continue to serve as Board chair. \u201cI am honored to return to NVIDIA and lead one of the most consequential technology companies in the world at the beginning of a new industrial revolution,\u201d said Jensen Huang. \u201cI take this responsibility with the greatest humility and renewed commitment. I want to thank the NVIDIA Board for its confidence and deliberation through this process. I am especially grateful to Harvey Jones for his leadership as Chair, and to Colette Kress and our executive staff for leading NVIDIA during this period. I am also deeply thankful to our employees, shareholders, leaders across the industry, and partners around the world for their extraordinary support. Above all, I am grateful for the love and support of my family. I can\u2019t wait to get back to work.\u201d As previously announced, in light of recent reporting that Mr. Huang has been the target of a foreign intelligence effort, the Board formed a committee comprised solely of independent directors to investigate, and the committee retained independent counsel to assist it in that investigation. The Board reiterated that the committee\u2019s investigation will proceed to conclusion. Mr. Huang fully supports the investigation and is committed to cooperating with it. The Board also recently formed a National Security and Export Control Committee comprised solely of independent directors to oversee trade compliance and national security risks. The committee is engaging counsel with experience in national security matters, and such counsel will be retaining advisors with expertise in national security matters. NVIDIA is commencing a search to fill a new position, Chief Compliance Officer, to oversee compliance across NVIDIA and report to the Nominating and Corporate Governance Committee. NVIDIA will continue to cooperate with ongoing government investigations and inquiries. # # # For further information, contact: Mylene Mangalindan Corporate Communications NVIDIA Corporation press@nvidia.com Toshiya Hari Investor Relations NVIDIA Corporation ir@nvidia.com"
+    }
+   ],
+   "pages": [
+    {
+     "url": "https://finance.yahoo.com/m/5e3a489d-8e8c-3339-b4fb-2d40a5dec1db/fed-rate-hike-odds-jump-as.html?.tsrc=rss",
+     "refused": "not read: robots.txt disallows it (respecting it)"
+    },
+    {
+     "url": "https://www.thestreet.com/investing/stocks/nvidia-stock-soars-after-jensen-huang-reinstated-as-ceo?.tsrc=rss",
+     "refused": "blocked (HTTP 403, access denied); not getting around it"
+    }
+   ],
+   "memory": [
+    {
+     "at": "2026-11-12",
+     "kind": "me",
+     "text": "...itcoin (IREN, CIFR, MSTR, MARA, RIOT) were down 5\u20137%, and COIN was down 4.5%. Bitcoin itself was down 2%; one headline says it fell below $73K for the first time since August. - **NVDA \u22128.8%** (outside its 2-in-3 range). The chip group was down 2.6%, so about 6 points of the drop is Nvidia's own. The headline the check printed is a side story about CoreWeave. The actual news in this morning's headlines is that Nvidia's board is reported..."
+    },
+    {
+     "at": "2026-11-12",
+     "kind": "summary",
+     "text": "- The previous evening's after-hours check showed NVDA \u22128.6% (own \u22127.0% beyond semis \u22121.6%, on \"Nvidia's troubles\" headlines), plus OPRX \u221220.1%, DGII \u221214.7%, CTVA \u22128.0% and APPN \u221210.4%. - The scratchpad was wiped on a reset; recreate it with `mkdir -p /tmp/claude-0/-home-user-money/c7630967-e348-5e70-a567-0fa..."
+    }
+   ],
+   "pond": {
+    "wave": 0.0,
+    "own": 11.872798373457549,
+    "how": "a stone: its own news",
+    "from": [],
+    "reaches": [
+     [
+      "HD",
+      -0.39,
+      0.02082
+     ],
+     [
+      "ZTS",
+      -0.37,
+      0.00234
+     ],
+     [
+      "MCD",
+      -0.35,
+      0.00608
+     ],
+     [
+      "QSR",
+      -0.35,
+      0.0085
+     ],
+     [
+      "SPB",
+      -0.34,
+      0.00967
+     ]
+    ]
+   }
+  },
+  {
+   "t": "CRWD",
+   "company": "CrowdStrike Holdings, Inc.",
+   "move": -0.09749823256966872,
+   "z": -5.03452594115913,
+   "wave": 0.0,
+   "mover": true,
+   "score": 0.5850898845795645,
+   "parts": {
+    "surprise": 0.174,
+    "unexplained": 1.0,
+    "news": 1.0,
+    "reach": 0.916,
+    "against": 0.0,
+    "memory": 1.0,
+    "fragile": 0.0
+   },
+   "reasons": [
+    "most of the move is its own",
+    "filed its results",
+    "filed a material deal",
+    "6 stories name it",
+    "29 stocks moved closely with it over the year",
+    "in the last note's theme 'CrowdStrike to buy Zscaler, all stock'"
+   ],
+   "attention": 0.06921895340045435,
+   "bars": 58,
+   "filings": [
+    {
+     "what": "results report (8-K 2.02)",
+     "at": "2026-11-23T11:04:51Z",
+     "title": "CrowdStrike Reports Third Quarter Fiscal Year 2027 Financial Results",
+     "url": "https://www.sec.gov/Archives/edgar/data/1535527/000153552726000035/crwd-20261123xex991.htm",
+     "key": [
+      "Subscription revenue was $1.50 billion, a 29% increase, compared to $1.17 billion in the third quarter of fiscal 2026. \u2022Annual Recurring Revenue (ARR) grew 27% year-over-year to $6.26 billion as of October 31, 2026, of which $419.2 million was net new ARR added in the quarter. \u2022Subscription Gross Margin: GAAP subscription gross margin was 79%, compared to 78% in the third quarter of fiscal 2026.",
+      "Non-GAAP subscription gross margin was 82%, compared to 81% in the third quarter of fiscal 2026. \u2022Income/Loss from Operations: GAAP loss from operations was $0.8 million, compared to $62.2 million in the third quarter of fiscal 2026.",
+      "Non-GAAP income from operations was $405.5 million, compared to $264.6 million in the third quarter of fiscal 2026. \u2022Net Income/Loss Attributable to CrowdStrike: GAAP net income attributable to CrowdStrike was $24.9 million, compared to a loss of $26.8 million in the third quarter of fiscal 2026.",
+      "GAAP net income per share attributable to CrowdStrike common stockholders, diluted, was $0.02, compared to a loss of $0.03 in the third quarter of fiscal 2026.",
+      "Non-GAAP net income per share attributable to CrowdStrike common stockholders, diluted, was $0.34, compared to $0.24 in the third quarter of fiscal 2026. \u2022Cash Flow: Net cash generated from operations was $665.2 million, compared to $397.5 million in the third quarter of fiscal 2026.",
+      "Recent Highlights \u2022CrowdStrike\u2019s module adoption rates for subscription customers grew to 52%, 36%, and 26% for six or more, seven or more, and eight or more modules, respectively, as of October 31, 2026. \u2022Unveiled a series of new and enhanced offerings during the Fal.Con and Fal.Con Europe cybersecurity conferences."
+     ],
+     "text": "EX-99.1 2 crwd-20261123xex991.htm EX-99.1 CrowdStrike Reports Third Quarter Fiscal Year 2027 Financial Results \u2022Announces definitive agreement to acquire Zscaler \u2022Delivers all-time record net new ARR of $419 million, accelerates growth to 58% year-over-year \u2022Ending ARR reaches $6.26 billion, accelerates growth for the fifth consecutive quarter to 27% year-over-year \u2022Increases FY27 net new ARR growth guidance by 1,060 basis points to 45% year-over-year growth at the midpoint \u2022Achieves all-time record cash flow from operations of $665 million and all-time record free cash flow of $474 million AUSTIN, Texas, November 23, 2026 -- CrowdStrike Holdings, Inc. (Nasdaq: CRWD), today announced financial results for the third quarter fiscal year 2027, ended October 31, 2026. \u201cQ3 was the best quarter in CrowdStrike\u2019s history,\u201d said George Kurtz, CrowdStrike\u2019s Founder and Chief Executive Officer. \u201cGrowth accelerated across the business as customers consolidated on the Falcon platform through Falcon Flex. Falcon Guardian, which secures AI agents across the enterprise, crossed $100 million in ARR in its first year following the quarter end. With today\u2019s announced acquisition of Zscaler, we will add the network, entering security\u2019s largest TAM as a scaled leader. Falcon is the security operating system for the agentic era.\u201d Burt Podbere, CrowdStrike's Chief Financial Officer, added, \"Our Q3 results delivered record performance across the board, highlighted by all-time record net new ARR, cash flow from operations, free cash flow, and our all-time record pipeline entering Q4. Our strong business momentum gives us the confidence to significantly raise our full-year outlook. I am also incredibly excited about our intent to acquire Zscaler, which we expect will be significantly and immediately accretive to free cash flow per share upon close before factoring any synergies. We also expect it will be accretive to revenue growth, non-GAAP operating margin and free cash flow margin, after synergies, within the first fiscal year after close.\u201d CrowdStrike Enters Into Definitive Agreement to Acquire Zscaler CrowdStrike and Zscaler (Nasdaq: ZS), today announced that they have entered into a definitive agreement under which CrowdStrike will acquire Zscaler in an all-stock transaction that values Zscaler at approximately $43.9 billion. Under the terms of the agreement, Zscaler shareholders will receive 1.135 shares of CrowdStrike common stock for each share of Zscaler common stock they own. Additional information is available at ir.crowdstrike.com. Third Quarter Fiscal 2027 Financial Highlights \u2022Revenue: Total revenue was $1.58 billion, a 28% increase, compared to $1.23 billion in the third quarter of fiscal 2026. Subscription revenue was $1.50 billion, a 29% increase, compared to $1.17 billion in the third quarter of fiscal 2026. \u2022Annual Recurring Revenue (ARR) grew 27% year-over-year to $6.26 billion as of October 31, 2026, of which $419.2 million was net new ARR added in the quarter. \u2022Subscription Gross Margin: GAAP subscription gross margin was 79%, compared to 78% in the third quarter of fiscal 2026. Non-GAAP subscription gross margin was 82%, compared to 81% in the third quarter of fiscal 2026. \u2022Income/Loss from Operations: GAAP loss from operations was $0.8 million, compared to $62.2 million in the third quarter of fiscal 2026. Non-GAAP income from operations was $405.5 million, compared to $264.6 million in the third quarter of fiscal 2026. \u2022Net Income/Loss Attributable to CrowdStrike: GAAP net income attributable to CrowdStrike was $24.9 million, compared to a loss of $26.8 million in the third quarter of fiscal 2026. GAAP net income per share attributable to CrowdStrike common stockholders, diluted, was $0.02, compared to a loss of $0.03 in the third quarter of fiscal 2026. Non-GAAP net income attributable to CrowdStrike was $354.9 million, compared to $245.4 million in the third quarter of fiscal 2026. Non-GAAP net income per share attributable to CrowdStrike common stockholders, diluted, was $0.34, compared to $0.24 in the third quarter of fiscal 2026. \u2022Cash Flow: Net cash generated from operations was $665.2 million, compared to $397.5 million in the third quarter of fiscal 2026. Free cash flow was $474.4 million, compared to $295.9 million in the third quarter of fiscal 2026. \u2022Cash and Cash Equivalents grew to $5.37 billion as of October 31, 2026. Recent Highlights \u2022CrowdStrike\u2019s module adoption rates for subscription customers grew to 52%, 36%, and 26% for six or more, seven or more, and eight or more modules, respectively, as of October 31, 2026. \u2022Unveiled a series of new and enhanced offerings during the Fal.Con and Fal.Con Europe cybersecurity conferences. Announcements included Falcon Guardian, AI Gateway, AI Kill Switch, Agentic Identity Provider, AI Supply Chain Protection, Agent Insider Threat Detection, Agentic Adversary Emulation, and SafeMind, a family of purpose-built security models and harnesses from the CrowdStrike Cyber Superintelligence Lab. \u2022Agreed to acquire Fiddler, a leader in AI observability and explainability, and acquired Dreadnode, a leader in automated AI security testing. \u2022Announced an expanded partnership with Anthropic, natively integrating Falcon Guardian into Claude CoWork and adding the Falcon platform to the Anthropic Claude Marketplace. \u2022Announced an expanded partnership with OpenAI, extending enterprise security to Codex agents and adding the Falcon platform to the OpenAI Marketplace. \u2022Announced expanded partnerships and innovations with NVIDIA, Amazon Web Services (AWS), Google Cloud, Dell, CoreWeave, Lovable, and Snowflake to extend security across the full AI lifecycle. \u2022Announced that EY is building its frontier AI and cyber resilience business on the Falcon platform. \u2022Announced the launch of its sovereign cloud deployment in Saudi Arabia, enabling government entities, critical national infrastructure, and enterprises to consolidate cybersecurity on the Falcon pla"
+    },
+    {
+     "what": "8-K 1.01, 7.01",
+     "at": "2026-11-23T11:15:28Z",
+     "title": "Acquire Zscaler, Bringing Network Security and Zero Trust to the Falcon Platform",
+     "url": "https://www.sec.gov/Archives/edgar/data/1535527/000110465926130785/tm2630454d1_ex99-1.htm",
+     "key": [
+      "Under the terms of the agreement, Zscaler shareholders will receive 1.135 shares of CrowdStrike common stock for each share of Zscaler common stock they own.",
+      "Network Security on the CrowdStrike Falcon Platform With Zscaler, CrowdStrike will enter network security, cybersecurity\u2019s largest single addressable market segment.",
+      "CrowdStrike is a leader in securing the endpoint, the workload, the identity, and the data.",
+      "After closing, CrowdStrike will unite endpoint security with Zero Trust SASE to deliver a unified platform that puts both controls in the adversary\u2019s path to stop breaches. \u201cSecurity used to be about keeping the adversary out.",
+      "Today, safety is required to let AI in,\u201d said George Kurtz, CEO and founder of CrowdStrike. \u201cThe network used to connect people to places.",
+      "Both companies have best-in-class gross and net retention. \u25cf Expands the Market and the Partner Ecosystem: CrowdStrike estimates the acquisition will expand its total addressable market by more than $185 billion in calendar year 2029."
+     ],
+     "text": "EX-99.1 5 tm2630454d1_ex99-1.htm EXHIBIT 99.1 Exhibit 99.1 CrowdStrike to Acquire Zscaler, Bringing Network Security and Zero Trust to the Falcon Platform \u25cf Acquisition will unite the leaders in securing every device and every connection \u25cf Zscaler will expand CrowdStrike\u2019s total addressable market by more than $185 billion \u25cf Will provide a path to cross-sell the CrowdStrike platform to approximately 8,000 Zscaler customers \u25cf Will deliver Zero Trust for AI Safety, securing the last mile of agentic AI \u25cf Combined company is expected to begin with more than $10 billion in combined annual recurring revenue AUSTIN, Texas and SANTA CLARA, Calif. \u2013 November 23, 2026 \u2013 CrowdStrike (NASDAQ: CRWD) and Zscaler (NASDAQ: ZS) today announced that they have entered into a definitive agreement under which CrowdStrike will acquire Zscaler in an all-stock transaction that values Zscaler at approximately $43.9 billion. Under the terms of the agreement, Zscaler shareholders will receive 1.135 shares of CrowdStrike common stock for each share of Zscaler common stock they own. Network Security on the CrowdStrike Falcon Platform With Zscaler, CrowdStrike will enter network security, cybersecurity\u2019s largest single addressable market segment. Users, applications, and now AI agents connect directly to the cloud, and that traffic never comes back through the data center. Firewalls and VPNs built to guard the data center can\u2019t see, inspect, or stop that traffic, the threats coming in, or the data going out. Zscaler\u2019s SSE is purpose-built for the AI era, with the Zscaler Zero Trust Exchange sitting inline between every user, agent, and application to enforce zero trust on every connection. SASE builds on that foundation to bring security and the network together, creating zero trust everywhere. CrowdStrike is a leader in securing the endpoint, the workload, the identity, and the data. Zscaler is a leader in securing the connections between them. After closing, CrowdStrike will unite endpoint security with Zero Trust SASE to deliver a unified platform that puts both controls in the adversary\u2019s path to stop breaches. \u201cSecurity used to be about keeping the adversary out. Today, safety is required to let AI in,\u201d said George Kurtz, CEO and founder of CrowdStrike. \u201cThe network used to connect people to places. Now it connects agents to data. With Zscaler, we\u2019re building cybersecurity\u2019s operating system: a single control plane to deploy AI, control AI, and enable any agentic application to run safely. We see a path to become the largest AI safety and security company the world has ever seen.\u201d \u201cWe built Zscaler to bring a new approach to the cybersecurity industry and that is a Zero Trust architecture,\u201d said Jay Chaudhry, CEO, chairman, and founder of Zscaler. \u201cIn the AI era, Zero Trust security has become non-negotiable, and AI agents are rapidly becoming the new weakest link. This agreement will accelerate our ability to bring Zero Trust Everywhere to a larger customer base. We see a significant opportunity to offer customers far superior protection in a rapidly evolving threat landscape and enable enterprises to safely adopt AI. Zscaler and CrowdStrike are complementary and this is the natural evolution of our longstanding partnership. We look forward to enabling our employees, customers, and shareholders to be a part of the significant upside that this transaction brings.\u201d One Platform, One Data Layer, One Flex Contract With Zscaler, the Falcon platform will own the two most important control points: the Falcon sensor across every endpoint and cloud workload, and the Zero Trust Exchange on every user, agent, and application connection. The endpoint is where the agent runs. The network is where it goes. Falcon Next-Gen SIEM, the agentic SOC, will unify device and network telemetry into one security data set. Falcon Flex will bring Zscaler onto the commercial model customers already use, so they commit once and expand from there. Strategic Rationale and Value Creation Opportunity \u25cf Brings Zscaler\u2019s Zero Trust SASE, Security for AI, and Data Protection to the Falcon Platform: Zscaler protects 50 percent of the Fortune 500 and operates the world\u2019s largest distributed inline security cloud across more than 200 service locations. After closing, CrowdStrike will offer Zscaler\u2019s Zero Trust SASE, security for AI, and data protection as part of the Falcon platform. \u25cf Combines Device and Network Data: The Falcon platform generates trillions of events daily from the endpoint and cloud workloads, and Zscaler\u2019s Zero Trust Exchange processes more than 750 billion transactions per day. After closing, device and network telemetry will converge into a single data set, allowing CrowdStrike\u2019s SafeMind frontier security models to train on the adversary\u2019s full attack path. \u25cf Unlocks Cross-Sell Across Both Customer Bases: Approximately 8,000 Zscaler customers are not yet CrowdStrike customers. Within the shared customer base, CrowdStrike sees room for even more platform adoption. After closing, customers of either company will be able to add the other\u2019s products on a single Falcon Flex contract. Both companies have best-in-class gross and net retention. \u25cf Expands the Market and the Partner Ecosystem: CrowdStrike estimates the acquisition will expand its total addressable market by more than $185 billion in calendar year 2029. Zscaler\u2019s solutions will be sold through CrowdStrike\u2019s global system integrators, resellers, distributors, and cloud marketplaces, with significant opportunity downmarket and into the MSSP space. \u25cf From Partnership to One Platform: The acquisition builds on one of CrowdStrike\u2019s largest technology alliances, spanning more than 2,000 shared customers and 16 integrations. For years, customers have asked CrowdStrike and Zscaler to join forces, and the two companies come together from positions of strength. A partnership integrates separate products. One company integrates everything: the data, the roadmap, the go-to-market, a"
+    }
+   ],
+   "pages": [
+    {
+     "url": "https://www.marketbeat.com/instant-alerts/event-crowdstrike-to-buy-zscaler-for-439-billion-in-ai-security-push-2026-11-23/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss",
+     "refused": "blocked: the page is a bot check; not getting around it"
+    },
+    {
+     "url": "https://finance.yahoo.com/markets/stocks/articles/crowdstrike-stocks-fall-9-67-170530745.html?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-23T17:05:30Z",
+     "key": [
+      "CrowdStrike Holdings (NASDAQ:CRWD) shares dropped 9.67% to $207.24 at 9:55 a.m.",
+      "Zscaler holders will receive 1.135 CrowdStrike shares for each share they own.",
+      "Management expects the combined company to start with more than $10 billion of annual recurring revenue, including Zscaler's $3.9 billion.",
+      "CNBC said closing is expected in the second half of CrowdStrike's fiscal 2028.",
+      "At $260.41 per Zscaler share, the deal covers about 168.6 million shares, which converts into roughly 191 million new CrowdStrike shares, close to 19% of the current share count based on GuruFocus's market cap.",
+      "The GF Value of $141.33 puts the price 46.6% above GuruFocus's estimate, a \"Significantly Overvalued\" label, which also explains the logic: CrowdStrike is paying with richly valued shares."
+     ],
+     "text": "Oops, something went wrong Skip to navigation Skip to main content Skip to right column Sign in U.S. markets close in 3h 9m US Markets Europe Markets Asia Markets Cryptocurrencies Rates Commodities Currencies U.S. markets close in 3h 9m S&P 500 7,225.38 +314.99 +4.56% Dow 30 49,540.39 +1,393.06 +2.89% Nasdaq 24,051.26 +1,433.53 +6.34% Russell 2000 2,665.16 +83.37 +3.23% 10-Yr Bond 4.9480 +0.0360 +0.73% VIX 27.20 -8.69 -24.21% Gold 3,657.70 +142.30 +4.05% Bitcoin USD 61,641.55 +901.25 +1.48% Crude Oil Jan 27 80.89 -2.52 -3.02% US Private Equity 10,633.76 -73.84 -0.69% ADVERTISEMENT Breaking News Nvidia board reinstates Jensen Huang as CEO CrowdStrike Stocks Fall 9.67% on $43.9 Billion All-Stock Deal for Zscaler Khac Phu Nguyen Mon, November 23, 2026 at 9:05 AM PST 1 min read CRWD -10.65% ZS +15.36% This article first appeared on GuruFocus. CrowdStrike Holdings (NASDAQ:CRWD) shares dropped 9.67% to $207.24 at 9:55 a.m. ET in regular trading on November 23, after the company agreed to buy Zscaler in an all-share deal valued at about $43.9 billion. Zscaler holders will receive 1.135 CrowdStrike shares for each share they own. The selloff came even though CNBC reported fiscal third-quarter revenue of $1.58 billion, above LSEG estimates. Warning! GuruFocus has detected 3 Warning Sign with CRWD. Is CRWD fairly valued? Test your thesis with our free DCF calculator. CRWD GF Value chart The deal moves CrowdStrike into network security, which the company calls the largest single segment of the cybersecurity market. Management expects the combined company to start with more than $10 billion of annual recurring revenue, including Zscaler's $3.9 billion. It targets about $1 billion of annualized revenue synergies within 30 months of closing and $500 million of annualized cost synergies within 18 to 24 months. The two companies already share more than 2,000 customers. CNBC said closing is expected in the second half of CrowdStrike's fiscal 2028. The price of entry is dilution. At $260.41 per Zscaler share, the deal covers about 168.6 million shares, which converts into roughly 191 million new CrowdStrike shares, close to 19% of the current share count based on GuruFocus's market cap. The GuruFocus chart shows a GF Score of 71/100, with strong momentum and a sound balance sheet but middling profitability. The GF Value of $141.33 puts the price 46.6% above GuruFocus's estimate, a \"Significantly Overvalued\" label, which also explains the logic: CrowdStrike is paying with richly valued shares. Regulatory review and both shareholder votes are the next hurdles. Terms and Privacy Policy Your Privacy Choices CA Privacy Notice More Info Recommended Stories Edit your Dock Hang tight, restoring your last session ADVERTISEMENT More News Terms and Privacy Policy Your Privacy Choices CA Privacy Notice Ad Terms Feedback More Info"
+    }
+   ],
+   "memory": [
+    {
+     "at": "2026-11-23",
+     "kind": "summary",
+     "text": "...SI reduction against 27% placebo; EASI-75 in 62% against 22%; all three doses met their endpoints; Phase 3 by mid-2027. - ZS +18.9%: CrowdStrike agreed to buy it, all-stock, 1.135 CRWD per ZS, about $43.9bn EV, $260.41 a share at Friday's prices (a 34% premium); its founder and affiliates (about 34%) agreed to vote for it. CRWD reported revenue +28% to $1.58bn and raised its outlook; ZS withdrew its outlook. - CRWD -6.7%...."
+    }
+   ],
+   "pond": {
+    "wave": 0.0,
+    "own": -5.03452594115913,
+    "how": "a stone: its own news",
+    "from": [],
+    "reaches": [
+     [
+      "PANW",
+      0.84,
+      0.03511
+     ],
+     [
+      "OKTA",
+      0.78,
+      0.08916
+     ],
+     [
+      "ZS",
+      0.76,
+      0.15491
+     ],
+     [
+      "FTNT",
+      0.74,
+      0.05098
+     ],
+     [
+      "RBRK",
+      0.73,
+      0.07631
+     ]
+    ]
+   }
+  },
+  {
+   "t": "AMD",
+   "company": "ADVANCED MICRO DEVICES INC",
+   "move": 0.0796,
+   "z": -2.435587405789267,
+   "wave": -0.06447549164295197,
+   "mover": false,
+   "score": 0.4029656171491056,
+   "parts": {
+    "surprise": 0.812,
+    "unexplained": 0.0,
+    "news": 0.0,
+    "reach": 1.0,
+    "against": 0.0,
+    "memory": 1.0,
+    "fragile": 0.0
+   },
+   "reasons": [
+    "44 stocks moved closely with it over the year",
+    "an open desk call"
+   ],
+   "attention": 0.015173833886410224,
+   "bars": 41,
+   "filings": [
+    {
+     "what": "8-K 5.03",
+     "at": "2026-11-20T21:19:32Z",
+     "title": "Skip to Main Content",
+     "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000218/",
+     "key": [],
+     "text": "Search Options Skip to Main Content About What We Do Commissioners Securities Laws Reports Careers Contact Divisions Corporation Finance Enforcement Investment Management Risk, Strategy and Innovation Trading and Markets National Exam Program All Divisions and Offices Enforcement Litigation Releases Administrative Proceedings Opinions and Adjudicatory Orders Accounting and Auditing Trading Suspensions How Investigations Work Administrative Law Judges Regulation Proposed Rules Final Rules Interim Final Temporary Rules Other Orders and Notices Self-Regulatory Organizations Staff Interpretations Education Investor.gov Check Out a Broker or Adviser Investor Alerts and Bulletins Fast Answers File a Tip or Complaint Publications Filings Quick EDGAR Tutorial Company Filings Search Descriptions of SEC Forms Requesting Public Documents News Press Releases What's New Upcoming Events News Digest Webcasts Special Studies Speeches and Public Statements Testimony Directory Listing /Archives/edgar/data/2488/000000248826000218 Parent Directory Name Size Last Modified 0000002488-26-000218-index-headers.html 2026-11-20 16:19:32 0000002488-26-000218-index.html 2026-11-20 16:19:32 0000002488-26-000218.txt 2026-11-20 16:19:32 0000002488-26-000218-xbrl.zip 47786 2026-11-20 16:19:32 amd-20261118.htm 35061 2026-11-20 16:19:32 amd-20261118.xsd 1780 2026-11-20 16:19:32 amd-20261118_g1.jpg 8834 2026-11-20 16:19:32 amd-20261118_htm.xml 2812 2026-11-20 16:19:32 amd-20261118_lab.xml 22788 2026-11-20 16:19:32 amd-20261118_pre.xml 13046 2026-11-20 16:19:32 amd-bylawsnov2026amendment.htm 200743 2026-11-20 16:19:32 FilingSummary.xml 1684 2026-11-20 16:19:32 MetaLinks.json 17446 2026-11-20 16:19:32 R1.htm 39588 2026-11-20 16:19:32 report.css 2766 2026-11-20 16:19:32 Show.js 1085 2026-11-20 16:19:32 Site Map Accessibility Contracts Privacy Inspector General Careers Contact FOIA No FEAR Act & EEO Data Open Government Plain Writing Links Investor.gov USA.gov"
+    }
+   ],
+   "pages": [],
+   "memory": [
+    {
+     "at": "2026-11-19",
+     "kind": "me",
+     "text": "| Nvidia | about 9.0% below ($148.23) | 7.5% | | AMD | about 9.9% below ($480) | 9% | | Dell | about 8.4% below | 9.5% | Nvidia and AMD are past their lines for now, but nothing is decided until Friday's close. I'll write the reasoned midday note and refresh the explorer page as soon as the check's numbers a..."
+    },
+    {
+     "at": "2026-11-17",
+     "kind": "me",
+     "text": "...a can't rent them through data centres there ([CBS](https://www.cbsnews.com/news/nvidia-jensen-huang-commerce-department-limit-remote-access-ai-chips/)). The Motley Fool wrap ties AMD's fall to it. - **A warning about AI debt.** A Federal Reserve governor's warning from last week was back in the news: about $800 billion of AI spending this year, much of it borrowed, and a \"large correction\" if it doesn't pay off ([Motley Fool](https://w..."
+    },
+    {
+     "at": "2026-11-16",
+     "kind": "me",
+     "text": "...driving it **1. AI hardware is being marked down again before Nvidia reports (reported).** - The whole group is lower: CoreWeave -6.9%, Sandisk -6.6%, Micron -6.4%, Marvell -6.2%, AMD -5.2%, Dell -4.6%, Nvidia -3.8%, Broadcom -3.3%. - Commerzbank, quoted by [Invezz](https://finwire.io/news/stock-markets-news/why-are-amd-and-broadcom-stocks-falling-in-premarket-trading-on-monday), calls the fallout from Nvidia's leadership turmoil the ma..."
+    }
+   ],
+   "pond": {
+    "wave": -0.06447549164295197,
+    "own": -2.435587405789267,
+    "how": "more than its wave: its own news",
+    "from": [
+     [
+      "AVGO",
+      -0.17
+     ],
+     [
+      "CAPR",
+      -0.07
+     ],
+     [
+      "DX",
+      0.07
+     ],
+     [
+      "IP",
+      0.07
+     ]
+    ],
+    "reaches": [
+     [
+      "INTC",
+      0.58,
+      0.13124
+     ],
+     [
+      "SANM",
+      0.55,
+      0.10575
+     ],
+     [
+      "RMBS",
+      0.53,
+      0.13986
+     ],
+     [
+      "TER",
+      0.53,
+      0.138
+     ],
+     [
+      "FLEX",
+      0.53,
+      0.14342
+     ]
+    ]
+   }
+  }
+ ],
+ "rest": [
+  {
+   "t": "MNRO",
+   "score": 0.39733305761044097,
+   "attention": 0.014478061351788165,
+   "reasons": [
+    "most of the move is its own",
+    "filed 8-K 8.01 at 2026-11-23T13:44Z",
+    "2 stories name it"
+   ]
+  },
+  {
+   "t": "CNS",
+   "score": 0.33654050242793176,
+   "attention": 0.008723581420211892,
+   "reasons": [
+    "15 stocks moved closely with it over the year",
+    "moved against its wave (+2.2 usual days against a wave of -0.3)"
+   ]
+  },
+  {
+   "t": "ELV",
+   "score": 0.33301643297360833,
+   "attention": 0.008471119069434752,
+   "reasons": [
+    "moved against its wave (-1.5 usual days against a wave of +0.3)",
+    "in the last note's open questions"
+   ]
+  },
+  {
+   "t": "MPT",
+   "score": 0.33271628458873626,
+   "attention": 0.008449957273240131,
+   "reasons": [
+    "moved against its wave (+2.8 usual days against a wave of -0.4)"
+   ]
+  },
+  {
+   "t": "SLDE",
+   "score": 0.30764093351666333,
+   "attention": 0.00685652069667337,
+   "reasons": [
+    "in the last note's open questions"
+   ]
+  },
+  {
+   "t": "KRSA",
+   "score": 0.2997343162272226,
+   "attention": 0.006419316504682009,
+   "reasons": [
+    "most of the move is its own, with no news found",
+    "chance of a sale of new shares 5.1% against 0.9% usually"
+   ]
+  },
+  {
+   "t": "CRWV",
+   "score": 0.2932214840955357,
+   "attention": 0.006080202780584183,
+   "reasons": [
+    "3 stories name it",
+    "12 stocks moved closely with it over the year",
+    "chance of a restructuring or a write-off 2.2% against 0.3% usually"
+   ]
+  },
+  {
+   "t": "NJR",
+   "score": 0.29121402825813625,
+   "attention": 0.005979334348737693,
+   "reasons": [
+    "64 stocks moved closely with it over the year",
+    "moved against its wave (+1.6 usual days against a wave of -0.3)"
+   ]
+  },
+  {
+   "t": "DELL",
+   "score": 0.2836065527707502,
+   "attention": 0.005612036239859067,
+   "reasons": [
+    "7 stories name it",
+    "an open desk call"
+   ]
+  },
+  {
+   "t": "HL",
+   "score": 0.27337369368383335,
+   "attention": 0.00515331292395604,
+   "reasons": [
+    "14 stocks moved closely with it over the year",
+    "in the last note's theme 'Gold and bitcoin rebound with stocks'"
+   ]
+  },
+  {
+   "t": "UNH",
+   "score": 0.26918350322914103,
+   "attention": 0.004976473662280543,
+   "reasons": [
+    "in the last note's open questions"
+   ]
+  },
+  {
+   "t": "CD",
+   "score": 0.26699994472853134,
+   "attention": 0.0048867390467643825,
+   "reasons": [
+    "most of the move is its own, with no news found",
+    "chance of a sale of new shares 2.8% against 0.9% usually"
+   ]
+  },
+  {
+   "t": "BOX",
+   "score": 0.2505368925044574,
+   "attention": 0.004260272466746027,
+   "reasons": [
+    "124 stocks moved closely with it over the year",
+    "moved against its wave (+1.2 usual days against a wave of -0.3)"
+   ]
+  },
+  {
+   "t": "GCT",
+   "score": 0.24618077414247108,
+   "attention": 0.004108393726094362,
+   "reasons": [
+    "outside its 9-in-10 range",
+    "2 stories name it"
+   ]
+  },
+  {
+   "t": "UVE",
+   "score": 0.24536973398669817,
+   "attention": 0.004080720080864196,
+   "reasons": [
+    "34 stocks moved closely with it over the year",
+    "in the last note's open questions"
+   ]
+  },
+  {
+   "t": "MRVL",
+   "score": 0.2445124272735307,
+   "attention": 0.004051670400447995,
+   "reasons": [
+    "4 stories name it",
+    "38 stocks moved closely with it over the year",
+    "chance of a restructuring or a write-off 1.3% against 0.3% usually"
+   ]
+  },
+  {
+   "t": "MSTR",
+   "score": 0.24418443414577246,
+   "attention": 0.004040611187546645,
+   "reasons": [
+    "in the last note's theme 'Gold and bitcoin rebound with stocks'"
+   ]
+  },
+  {
+   "t": "MPWR",
+   "score": 0.24064511917489162,
+   "attention": 0.00392317656221911,
+   "reasons": [
+    "1 story names it",
+    "74 stocks moved closely with it over the year"
+   ]
+  },
+  {
+   "t": "BMNR",
+   "score": 0.23932858736243642,
+   "attention": 0.0038803702514575984,
+   "reasons": [
+    "11 stocks moved closely with it over the year",
+    "in the last note's theme 'Gold and bitcoin rebound with stocks'"
+   ]
+  },
+  {
+   "t": "HPE",
+   "score": 0.23917714843444446,
+   "attention": 0.0038754763475461794,
+   "reasons": [
+    "4 stories name it",
+    "chance of a restructuring or a write-off 2.0% against 0.3% usually"
+   ]
+  }
+ ]
+}
