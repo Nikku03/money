@@ -1,0 +1,444 @@
+{
+ "check": "2026-11-21T0427Z",
+ "asof": "2026-11-20",
+ "built_at": "2026-11-23T08:10:52Z",
+ "weights": {
+  "surprise": 0.25,
+  "unexplained": 0.2,
+  "news": 0.15,
+  "reach": 0.1,
+  "against": 0.1,
+  "memory": 0.1,
+  "fragile": 0.1
+ },
+ "temp": 0.12,
+ "candidates": 35,
+ "focus": [
+  {
+   "t": "KYMR",
+   "company": "Kymera Therapeutics, Inc.",
+   "move": 0.07588242261525324,
+   "z": 1.6776255834473055,
+   "wave": 0.0,
+   "mover": true,
+   "score": 0.4712552134714023,
+   "parts": {
+    "surprise": 0.138,
+    "unexplained": 0.875,
+    "news": 0.3,
+    "reach": 0.482,
+    "against": 0.0,
+    "memory": 1.0,
+    "fragile": 0.685
+   },
+   "reasons": [
+    "most of the move is its own",
+    "1 story names it",
+    "an open desk call",
+    "chance of a sale of new shares 7.4% against 0.9% usually"
+   ],
+   "attention": 0.18062080969921693,
+   "bars": 6,
+   "pond": {
+    "wave": 0.0,
+    "own": 1.6776255834473055,
+    "how": "with the water",
+    "from": [],
+    "reaches": [
+     [
+      "DYN",
+      0.51,
+      0.0
+     ],
+     [
+      "NRIX",
+      0.49,
+      -0.01167
+     ],
+     [
+      "XNCR",
+      0.49,
+      -0.0006
+     ],
+     [
+      "STOK",
+      0.47,
+      0.02201
+     ],
+     [
+      "IMVT",
+      0.46,
+      0.0
+     ]
+    ]
+   }
+  },
+  {
+   "t": "ZS",
+   "company": "Zscaler, Inc.",
+   "move": 0.16338154119869208,
+   "z": 3.588218343615654,
+   "wave": 0.0,
+   "mover": true,
+   "score": 0.45905432396692747,
+   "parts": {
+    "surprise": 0.209,
+    "unexplained": 0.945,
+    "news": 0.3,
+    "reach": 1.0,
+    "against": 0.0,
+    "memory": 0.0,
+    "fragile": 0.728
+   },
+   "reasons": [
+    "most of the move is its own",
+    "5 stories name it",
+    "65 stocks moved closely with it over the year",
+    "chance of a restructuring or a write-off 3.0% against 0.3% usually"
+   ],
+   "attention": 0.16315909708276183,
+   "bars": 21,
+   "pond": {
+    "wave": 0.0,
+    "own": 3.588218343615654,
+    "how": "a stone: its own news",
+    "from": [],
+    "reaches": [
+     [
+      "CRWD",
+      0.76,
+      -0.04836
+     ],
+     [
+      "OKTA",
+      0.74,
+      0.02894
+     ],
+     [
+      "RBRK",
+      0.69,
+      0.02884
+     ],
+     [
+      "S",
+      0.69,
+      0.01758
+     ],
+     [
+      "PANW",
+      0.67,
+      -0.02715
+     ]
+    ]
+   }
+  },
+  {
+   "t": "CRWD",
+   "company": "CrowdStrike Holdings, Inc.",
+   "move": -0.04836,
+   "z": -1.925801765940286,
+   "wave": 0.4374290108680725,
+   "mover": false,
+   "score": 0.3758461334726674,
+   "parts": {
+    "surprise": 0.642,
+    "unexplained": 0.0,
+    "news": 0.3,
+    "reach": 0.916,
+    "against": 0.788,
+    "memory": 0.0,
+    "fragile": 0.0
+   },
+   "reasons": [
+    "5 stories name it",
+    "29 stocks moved closely with it over the year",
+    "moved against its wave (-1.9 usual days against a wave of +0.4)"
+   ],
+   "attention": 0.08155879678177488,
+   "bars": 33,
+   "pond": {
+    "wave": 0.4374290108680725,
+    "own": -1.925801765940286,
+    "how": "against its wave",
+    "from": [
+     [
+      "ZS",
+      0.44
+     ]
+    ],
+    "reaches": [
+     [
+      "PANW",
+      0.84,
+      -0.02715
+     ],
+     [
+      "OKTA",
+      0.78,
+      0.02894
+     ],
+     [
+      "ZS",
+      0.76,
+      0.16338
+     ],
+     [
+      "FTNT",
+      0.74,
+      0.00305
+     ],
+     [
+      "RBRK",
+      0.73,
+      0.02884
+     ]
+    ]
+   }
+  },
+  {
+   "t": "NABL",
+   "company": "N-able, Inc.",
+   "move": -0.12205567451820132,
+   "z": -2.946063903811588,
+   "wave": 0.2874002158641815,
+   "mover": true,
+   "score": 0.2623792245371677,
+   "parts": {
+    "surprise": 0.315,
+    "unexplained": 1.0,
+    "news": 0.0,
+    "reach": 1.0,
+    "against": 1.0,
+    "memory": 0.0,
+    "fragile": 0.46
+   },
+   "reasons": [
+    "most of the move is its own, with no news found",
+    "78 stocks moved closely with it over the year",
+    "moved against its wave (-2.9 usual days against a wave of +0.3)",
+    "chance of a restructuring or a write-off 1.3% against 0.3% usually",
+    "but only 1 trade at the new price since the close: likely a stray print"
+   ],
+   "attention": 0.03168256781988001,
+   "bars": 1,
+   "pond": {
+    "wave": 0.2874002158641815,
+    "own": -2.946063903811588,
+    "how": "against its wave",
+    "from": [
+     [
+      "ZS",
+      0.29
+     ]
+    ],
+    "reaches": [
+     [
+      "ASAN",
+      0.63,
+      0.0068
+     ],
+     [
+      "WDAY",
+      0.62,
+      0.00189
+     ],
+     [
+      "HUBS",
+      0.61,
+      0.01906
+     ],
+     [
+      "PCOR",
+      0.61,
+      0.00906
+     ],
+     [
+      "BL",
+      0.61,
+      -0.00121
+     ]
+    ]
+   }
+  }
+ ],
+ "rest": [
+  {
+   "t": "SEI",
+   "score": 0.25190639970842166,
+   "attention": 0.029034740994970335,
+   "reasons": [
+    "55 stocks moved closely with it over the year",
+    "in the last note's theme 'The debt-financed end of the build-out: AI data-center hosts and power'"
+   ]
+  },
+  {
+   "t": "PANW",
+   "score": 0.2498624874316255,
+   "attention": 0.028544391616037,
+   "reasons": [
+    "20 stocks moved closely with it over the year",
+    "moved against its wave (-1.3 usual days against a wave of +0.4)"
+   ]
+  },
+  {
+   "t": "NTNX",
+   "score": 0.2460585582560409,
+   "attention": 0.027653742356425034,
+   "reasons": [
+    "68 stocks moved closely with it over the year",
+    "moved against its wave (-1.1 usual days against a wave of +0.4)"
+   ]
+  },
+  {
+   "t": "A",
+   "score": 0.2294354476040682,
+   "attention": 0.024076473108976166,
+   "reasons": [
+    "17 stocks moved closely with it over the year",
+    "in the last note's open questions"
+   ]
+  },
+  {
+   "t": "DHI",
+   "score": 0.2268248621868589,
+   "attention": 0.023558348663950197,
+   "reasons": [
+    "130 stocks moved closely with it over the year",
+    "in the last note's theme 'Havens split: Treasuries up, gold and bitcoin down, homebuilders up with lower yields'"
+   ]
+  },
+  {
+   "t": "ONTO",
+   "score": 0.21743700601837979,
+   "attention": 0.02178557668612186,
+   "reasons": [
+    "122 stocks moved closely with it over the year",
+    "in the last note's theme 'The AI hardware chain fell as one: chips, networking, optics, boards and test'"
+   ]
+  },
+  {
+   "t": "MU",
+   "score": 0.21140452801368878,
+   "attention": 0.020717473629647237,
+   "reasons": [
+    "29 stocks moved closely with it over the year",
+    "in the last note's theme 'The AI hardware chain fell as one: chips, networking, optics, boards and test'"
+   ]
+  },
+  {
+   "t": "TTMI",
+   "score": 0.21023443364355887,
+   "attention": 0.02051644366209643,
+   "reasons": [
+    "99 stocks moved closely with it over the year",
+    "in the last note's theme 'The AI hardware chain fell as one: chips, networking, optics, boards and test'"
+   ]
+  },
+  {
+   "t": "COHR",
+   "score": 0.20873596477113324,
+   "attention": 0.02026184283300607,
+   "reasons": [
+    "111 stocks moved closely with it over the year",
+    "in the last note's theme 'The AI hardware chain fell as one: chips, networking, optics, boards and test'"
+   ]
+  },
+  {
+   "t": "S",
+   "score": 0.20756426399020955,
+   "attention": 0.02006496542746713,
+   "reasons": [
+    "40 stocks moved closely with it over the year",
+    "in the last note's open questions"
+   ]
+  },
+  {
+   "t": "AMD",
+   "score": 0.20715638096832648,
+   "attention": 0.019996879882488428,
+   "reasons": [
+    "44 stocks moved closely with it over the year",
+    "in the last note's theme 'The AI hardware chain fell as one: chips, networking, optics, boards and test'"
+   ]
+  },
+  {
+   "t": "MPWR",
+   "score": 0.2014015169903194,
+   "attention": 0.01906051762832015,
+   "reasons": [
+    "74 stocks moved closely with it over the year",
+    "in the last note's theme 'The AI hardware chain fell as one: chips, networking, optics, boards and test'"
+   ]
+  },
+  {
+   "t": "CDE",
+   "score": 0.1908720885647088,
+   "attention": 0.01745932375935933,
+   "reasons": [
+    "15 stocks moved closely with it over the year",
+    "in the last note's theme 'Havens split: Treasuries up, gold and bitcoin down, homebuilders up with lower yields'"
+   ]
+  },
+  {
+   "t": "BE",
+   "score": 0.1903761335705292,
+   "attention": 0.017387314011724,
+   "reasons": [
+    "in the last note's theme 'The debt-financed end of the build-out: AI data-center hosts and power'"
+   ]
+  },
+  {
+   "t": "AAOI",
+   "score": 0.18537180512440665,
+   "attention": 0.016677126726271505,
+   "reasons": [
+    "10 stocks moved closely with it over the year",
+    "in the last note's theme 'The AI hardware chain fell as one: chips, networking, optics, boards and test'"
+   ]
+  },
+  {
+   "t": "HL",
+   "score": 0.18426905977421612,
+   "attention": 0.0165245735473543,
+   "reasons": [
+    "14 stocks moved closely with it over the year",
+    "in the last note's theme 'Havens split: Treasuries up, gold and bitcoin down, homebuilders up with lower yields'"
+   ]
+  },
+  {
+   "t": "APLD",
+   "score": 0.18137529715244835,
+   "attention": 0.016130854884245246,
+   "reasons": [
+    "17 stocks moved closely with it over the year",
+    "in the last note's theme 'The debt-financed end of the build-out: AI data-center hosts and power'"
+   ]
+  },
+  {
+   "t": "NET",
+   "score": 0.18094190598255522,
+   "attention": 0.01607270187604288,
+   "reasons": [
+    "18 stocks moved closely with it over the year",
+    "in the last note's theme 'Cloud and edge platforms sold with the build-out'"
+   ]
+  },
+  {
+   "t": "CLS",
+   "score": 0.1789044635461036,
+   "attention": 0.015802112131745358,
+   "reasons": [
+    "in the last note's theme 'The AI hardware chain fell as one: chips, networking, optics, boards and test'"
+   ]
+  },
+  {
+   "t": "CORZ",
+   "score": 0.17834345791341377,
+   "attention": 0.015728408932988127,
+   "reasons": [
+    "14 stocks moved closely with it over the year",
+    "in the last note's theme 'The debt-financed end of the build-out: AI data-center hosts and power'"
+   ]
+  }
+ ]
+}

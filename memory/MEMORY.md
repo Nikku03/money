@@ -159,6 +159,13 @@ idea at a time, checked against the memory bank first.
   check is the backup slot). Adding it to the after-close task's prompt was refused by the permission check
   (2026-11-22), so it is done by hand until the person allows update_trigger.
 
+## Attention (2026-11-23, at the person's request: "give the brain attention"; `docs/ATTENTION.md`)
+
+- `python -m brain attention` after `desk build`: scores movers, against-the-wave stocks and watched stocks on seven
+  fixed-weight parts (softmax), halves stray prints (one or two distinct prices since the close), and digs into the
+  top six (filings, stories under web rules, memory recall, the pond). Focus kept in `research/attention/`.
+- STANDING STEP: at every check, run `python -m brain attention` after `desk build` and start the note from it.
+
 ## Open questions and offers (no answer yet)
 
 - Asked 2026-11-14: add `mosaic read` and `mosaic radar --record` to the after-close check? (Without it the

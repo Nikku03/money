@@ -149,3 +149,9 @@ FAIL); "the market runs on chains of cause and effect, news and catalysts": the 
   and the forward tests R2a-R2c, declared them before any record, recorded the first session (2026-11-20). The
   after-close task could not be changed (permission refused); the record is run by hand at each close.
 
+## 2026-11-23: attention
+
+- The person asked what the brain can do, trace and reason, then said "give the brain attention". Built
+  `brain/attention.py`: what deserves a closer look at a check and the digging on it; tests, `docs/ATTENTION.md`.
+  On Nov 20's after-hours check it put Kymera, Zscaler and CrowdStrike first and halved N-able's single-trade move.
+
