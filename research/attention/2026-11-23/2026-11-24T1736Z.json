@@ -1,0 +1,825 @@
+{
+ "check": "2026-11-24T1736Z",
+ "asof": "2026-11-23",
+ "built_at": "2026-11-24T17:37:26Z",
+ "weights": {
+  "surprise": 0.25,
+  "unexplained": 0.2,
+  "news": 0.15,
+  "reach": 0.1,
+  "against": 0.1,
+  "memory": 0.1,
+  "fragile": 0.1
+ },
+ "temp": 0.12,
+ "candidates": 70,
+ "focus": [
+  {
+   "t": "SHOE",
+   "company": "SHOE STATION GROUP INC",
+   "move": -0.18111346824812669,
+   "z": -6.115178862973745,
+   "wave": 0.0,
+   "mover": true,
+   "score": 0.6982006535489076,
+   "parts": {
+    "surprise": 0.608,
+    "unexplained": 0.995,
+    "news": 1.0,
+    "reach": 0.972,
+    "against": 0.0,
+    "memory": 1.0,
+    "fragile": 0.0
+   },
+   "reasons": [
+    "outside its 9-in-10 range",
+    "most of the move is its own",
+    "filed its results",
+    "4 stories name it",
+    "36 stocks moved closely with it over the year",
+    "in the last note's theme 'Retailers report: most beat and raise'"
+   ],
+   "attention": 0.11674693651851947,
+   "bars": 53,
+   "filings": [
+    {
+     "what": "results report (8-K 2.02)",
+     "at": "2026-11-24T11:20:14Z",
+     "title": "SHOE STATION GROUP REPORTS THIRD QUARTER 2026 RESULTS",
+     "url": "https://www.sec.gov/Archives/edgar/data/895447/000119312526473085/shoe-ex99_1.htm",
+     "key": [
+      "EX-99.1 2 shoe-ex99_1.htm EX-99.1 EX-99.1 SHOE STATION GROUP REPORTS THIRD QUARTER 2026 RESULTS November 24, 2026 FOR IMMEDIATE RELEASE FORT MILL, SC - Shoe Station Group, Inc. (Nasdaq: SHOE) (the \u201cCompany\u201d), a leading omnichannel retailer of footwear and accessories for the family, today reported results for the third quarter ended October 31, 2026 and updated its Fiscal 2026 guidance.",
+      "Third Quarter 2026 Highlights \u2022 Net sales of $280.0 million compared to $297.2 million in the third quarter of 2025. \u2022 Shoe Carnival banner net sales declined 4.7 percent; Shoe Station banner net sales declined 7.7 percent.",
+      "We are debt-free, we ended the quarter with $116 million in cash and marketable securities, and we returned capital to shareholders through our 58th consecutive quarterly dividend and the repurchase of approximately $10 million of our stock.",
+      "By banner: \u2022 Shoe Carnival net sales were $180.3 million, representing 64 percent of total net sales, and declined 4.7 percent, inclusive of a comparable store sales decline of 3.7 percent. \u2022 Shoe Station net sales were $99.3 million, representing 36 percent of total net sales, and declined 7.7 percent, inclusive of a comparable store sales decline of 7.6 percent.",
+      "Selling, general and administrative expenses (\u201cSG&A\u201d) decreased $6.2 million compared to the third quarter of 2025, primarily due to lower selling costs, including advertising and other rebanner-related expenses, and lower performance-based compensation.",
+      "Excluding the non-cash goodwill impairment charge recorded in the quarter, non-GAAP adjusted net income (\u201cAdjusted Net Income\u201d) and Adjusted EPS were $1.3 million and $0.05 per diluted share, respectively."
+     ],
+     "text": "EX-99.1 2 shoe-ex99_1.htm EX-99.1 EX-99.1 SHOE STATION GROUP REPORTS THIRD QUARTER 2026 RESULTS November 24, 2026 FOR IMMEDIATE RELEASE FORT MILL, SC - Shoe Station Group, Inc. (Nasdaq: SHOE) (the \u201cCompany\u201d), a leading omnichannel retailer of footwear and accessories for the family, today reported results for the third quarter ended October 31, 2026 and updated its Fiscal 2026 guidance. Third Quarter 2026 Highlights \u2022 Net sales of $280.0 million compared to $297.2 million in the third quarter of 2025. \u2022 Shoe Carnival banner net sales declined 4.7 percent; Shoe Station banner net sales declined 7.7 percent. Sales in both banners were impacted by an increasingly promotional footwear marketplace and softer consumer demand following back-to-school. \u2022 Gross profit margin of 31.9 percent, compared to 37.6 percent in the third quarter of 2025, reflecting increased promotional activity, liquidation of aged and excess inventory, and the prior-year benefit from raising prices in advance of tariff-related cost increases. \u2022 Results include an approximately $18.0 million non-cash goodwill impairment charge; the charge will not result in any cash expenditures or affect the Company\u2019s cash flow or liquidity. \u2022 Cash, cash equivalents, and marketable securities of $116.0 million at quarter-end; the Company ended the third quarter of 2026 debt-free. \u2022 Repurchased approximately $10.0 million of common stock during the third quarter; year-to-date 2026 capital returned to shareholders totaled approximately $31.1 million, inclusive of dividends. \u2022 Full year 2026 net sales guidance and non-GAAP adjusted diluted earnings per share (\u201cAdjusted EPS\u201d) guidance lowered to reflect results through the third quarter and current family footwear industry trends. \u201cOur third quarter results were below the expectations we set in September. The improvement we saw in August did not carry into September and October. Families concentrated their spending around back-to-school, and then, as our advertising intensity lessened and fuel prices increased, consumer demand softened until cold weather arrived. Early results from our merchandising work are encouraging. Customers responded to our boot assortment as soon as the season opened, and those sales carried higher average unit retails and improved margins. Fall assortments that were curated to address localized demand began to arrive in our stores throughout the month of October,\u201d said Cliff Sifford, Interim President and Chief Executive Officer. \u201cWe enter the holiday season with the strongest boot assortment we have offered in years, intensified advertising, moderating fuel prices, and comparisons that ease as the quarter progresses. Our balance sheet remains strong. We are debt-free, we ended the quarter with $116 million in cash and marketable securities, and we returned capital to shareholders through our 58th consecutive quarterly dividend and the repurchase of approximately $10 million of our stock. We are managing this company for the long term, and the work underway in our assortments, our marketing, and our costs is aimed at returning this business to profitable growth,\u201d concluded Mr. Sifford. Third Quarter 2026 Operating Results Net sales in the third quarter of 2026 were $280.0 million compared to $297.2 million in the third quarter of 2025. Comparable store sales declined 5.1 percent, with a decline of 2.7 percent in fiscal August and approximately 7 percent in each of fiscal September and fiscal October. By banner: \u2022 Shoe Carnival net sales were $180.3 million, representing 64 percent of total net sales, and declined 4.7 percent, inclusive of a comparable store sales decline of 3.7 percent. \u2022 Shoe Station net sales were $99.3 million, representing 36 percent of total net sales, and declined 7.7 percent, inclusive of a comparable store sales decline of 7.6 percent. Gross profit margin in the third quarter of 2026 was 31.9 percent, a decrease of 570 basis points compared to the third quarter of 2025. Merchandise margin decreased 480 basis points compared to the third quarter of 2025. Merchandise margin in the third quarter of 2025 included a temporary benefit from raising prices in advance of increasing tariff-related costs. In the third quarter of 2026, merchandise margins were also impacted by increased promotional activity and product liquidation. Buying, distribution and occupancy costs increased compared to the third quarter of 2025 and reduced gross profit margin by 90 basis points, primarily due to the deleveraging effect of lower sales. Selling, general and administrative expenses (\u201cSG&A\u201d) decreased $6.2 million compared to the third quarter of 2025, primarily due to lower selling costs, including advertising and other rebanner-related expenses, and lower performance-based compensation. As a percent of net sales, SG&A for the third quarter of 2026 was 31.1 percent as compared to 31.3 percent in the third quarter of 2025. Income tax benefit in the third quarter of 2026 was $2.1 million and the effective tax rate in the third quarter of 2026 was 14.6 percent compared to 25.5 percent in the third quarter of 2025. The Company\u2019s non-GAAP adjusted effective tax rate (\u201cAdjusted Tax Rate\u201d) in the third quarter of 2026 was 63.2 percent. The GAAP net loss for the third quarter of 2026 was $(12.3) million, or $(0.46) per diluted share, compared to net income of $14.6 million, or $0.53 per diluted share, in the third quarter of 2025. Excluding the non-cash goodwill impairment charge recorded in the quarter, non-GAAP adjusted net income (\u201cAdjusted Net Income\u201d) and Adjusted EPS were $1.3 million and $0.05 per diluted share, respectively. Goodwill Impairment Due to the decline in the Company\u2019s financial performance and stock price through the third quarter of 2026, a quantitative impairment assessment was performed on its reporting unit. The Company concluded that a non-cash goodwill impairment charge was required because the carrying value of its reporting unit exceeded its es"
+    }
+   ],
+   "pages": [
+    {
+     "url": "https://finance.yahoo.com/markets/stocks/articles/shoe-station-group-inc-shoe-162221126.html?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-24T16:22:21Z",
+     "key": [
+      "Shoe Carnival Banner Net Sales: $180.3 million (64% of total), down 4.7%; comparable store sales down 3.7%.",
+      "Shoe Station Banner Net Sales: $99.3 million (36% of total), down 7.7%; comparable store sales down 7.6%.",
+      "SG&A: $87.0 million, down $6.2 million; 31.1% of net sales versus 31.3% last year.",
+      "Inventory: $421.1 million, down $14.2 million or 3.3%; inventory per store down 1.4%; on plan for ~$50 million reduction by fiscal year-end.",
+      "Store Actions: 131 re-bannered stores; 27 Shoe Station at Rogan's to return to Rogan's name; 75%+ of remaining 104 expected to return to Shoe Carnival banner in Q1 fiscal 2027; 74 stores to revert to angled aisle layout in Q4 at ~$4 million cost.",
+      "Fiscal 2026 Guidance: Net sales of $1.087 billion$1.092 billion (down ~4.3%3.8%); GAAP net loss per share of $0.84$0.76; adjusted EPS of $0.20$0.28; gross profit margin of ~31.4%31.6%; Q4 comparable store sales flat to up 2%."
+     ],
+     "text": "Oops, something went wrong Skip to navigation Skip to main content Skip to right column Sign in U.S. markets close in 3h 24m US Markets Europe Markets Asia Markets Cryptocurrencies Rates Commodities Currencies U.S. markets close in 3h 24m S&P 500 7,204.78 -32.39 -0.45% Dow 30 49,986.03 +390.72 +0.79% Nasdaq 23,741.24 -348.32 -1.45% Russell 2000 2,684.89 +15.23 +0.57% 10-Yr Bond 4.8980 -0.0200 -0.41% VIX 27.17 +0.55 +2.06% Gold 3,562.70 -88.70 -2.43% Bitcoin USD 59,907.35 -1,694.90 -2.75% Crude Oil Jan 27 81.45 +1.28 +1.60% US Private Equity 10,765.73 0.00 0.00% ADVERTISEMENT Shoe Station Group Inc (SHOE) (Q3 2026) Earnings Call Highlights: Sales Decline, Goodwill ... GuruFocus News Tue, November 24, 2026 at 8:22 AM PST 9 min read SHOE -18.29% This article first appeared on GuruFocus. Net Sales: $280.0 million, down 5.8% from $297.2 million last year. Comparable Store Sales: Declined 5.1%; down 2.7% in fiscal August and approximately 7% in each of fiscal September and October. Shoe Carnival Banner Net Sales: $180.3 million (64% of total), down 4.7%; comparable store sales down 3.7%. Shoe Station Banner Net Sales: $99.3 million (36% of total), down 7.7%; comparable store sales down 7.6%. Comparable E-commerce Sales: Increased 2.1%, moderating from 18.8% growth in the second quarter. Gross Profit Margin: 31.9%, down 570 basis points; merchandise margin decreased 480 basis points and buying, distribution, and occupancy costs reduced margin by 90 basis points. SG&A: $87.0 million, down $6.2 million; 31.1% of net sales versus 31.3% last year. Goodwill Impairment: $18.0 million noncash charge (all goodwill on balance sheet). GAAP Net Loss: $12.3 million, or $0.46 per diluted share, versus net income of $14.6 million, or $0.53 per diluted share, last year. Non-GAAP Adjusted Net Income: $1.3 million; adjusted EPS of $0.05. Income Tax: Benefit of $2.1 million; effective tax rate of 14.6% versus 25.5% prior year. Cash and Equivalents: $116 million in cash, cash equivalents, and marketable securities, up $8.4 million year over year; no borrowings under renewed $100 million credit facility. Inventory: $421.1 million, down $14.2 million or 3.3%; inventory per store down 1.4%; on plan for ~$50 million reduction by fiscal year-end. Capital Returns: ~$10 million in share repurchases in the quarter; ~$31 million returned year-to-date via dividends and buybacks; 58th consecutive quarterly dividend paid. Year-to-Date Net Sales: $835.0 million, down 5.2%; comparable store sales down 4.8%. Year-to-Date GAAP Net Loss: $11.7 million, or $0.43 per diluted share; non-GAAP adjusted net income of $13.8 million and adjusted EPS of $0.51. Store Actions: 131 re-bannered stores; 27 Shoe Station at Rogan's to return to Rogan's name; 75%+ of remaining 104 expected to return to Shoe Carnival banner in Q1 fiscal 2027; 74 stores to revert to angled aisle layout in Q4 at ~$4 million cost. Fiscal 2026 Guidance: Net sales of $1.087 billion$1.092 billion (down ~4.3%3.8%); GAAP net loss per share of $0.84$0.76; adjusted EPS of $0.20$0.28; gross profit margin of ~31.4%31.6%; Q4 comparable store sales flat to up 2%. Warning! GuruFocus has detected 5 Warning Sign with SHOE. Is SHOE fairly valued? Test your thesis with our free DCF calculator. SHOE GF Value chart Release Date: November 24, 2026 For the complete transcript of the earnings call, please refer to the full earnings call transcript. Positive Points Store conversion improved by almost a full point, with improvement across all banners, indicating that customers who visit are more likely to purchase. Boot assortment is the strongest in years, with women's boots comping up in the teens once weather turned seasonal, and men's work boots up high-single digits. Inventory management is disciplined, with inventory down 3.3% year-over-year and on plan to reduce by approximately $50 million by fiscal year-end. The company is taking decisive actions to address underperforming re-bannered stores, including reverting layouts"
+    },
+    {
+     "url": "https://www.marketbeat.com/instant-alerts/transcript-shoe-carnival-q3-earnings-call-highlights-2026-11-24/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss",
+     "refused": "blocked: the page is a bot check; not getting around it"
+    }
+   ],
+   "pond": {
+    "wave": 0.0,
+    "own": -6.115178862973745,
+    "how": "a stone: its own news",
+    "from": [],
+    "reaches": [
+     [
+      "CAL",
+      0.7,
+      0.02629
+     ],
+     [
+      "M",
+      0.53,
+      0.06079
+     ],
+     [
+      "BOOT",
+      0.53,
+      0.0458
+     ],
+     [
+      "BKE",
+      0.52,
+      0.00198
+     ],
+     [
+      "URBN",
+      0.51,
+      0.04772
+     ]
+    ]
+   }
+  },
+  {
+   "t": "ANF",
+   "company": "ABERCROMBIE & FITCH CO /DE/",
+   "move": 0.2530438537009301,
+   "z": 5.829025741437016,
+   "wave": 0.0,
+   "mover": true,
+   "score": 0.6734466811603522,
+   "parts": {
+    "surprise": 0.684,
+    "unexplained": 1.0,
+    "news": 1.0,
+    "reach": 0.524,
+    "against": 0.0,
+    "memory": 1.0,
+    "fragile": 0.0
+   },
+   "reasons": [
+    "outside its 9-in-10 range",
+    "most of the move is its own",
+    "filed its results",
+    "5 stories name it",
+    "in the last note's theme 'Retailers report: most beat and raise'"
+   ],
+   "attention": 0.09498562394898713,
+   "bars": 21,
+   "filings": [
+    {
+     "what": "results report (8-K 2.02)",
+     "at": "2026-11-24T12:36:44Z",
+     "title": "ABERCROMBIE & FITCH CO. REPORTS THIRD QUARTER FISCAL 2026 RESULTS",
+     "url": "https://www.sec.gov/Archives/edgar/data/1018840/000101884026000052/q32026pressrelease.htm",
+     "key": [
+      "EX-99.1 2 q32026pressrelease.htm EX-99.1 ABERCROMBIE & FITCH CO.",
+      "Fran Horowitz, Chief Executive Officer, said, \u201cWe delivered record third quarter net sales and our 16th consecutive quarter of growth, with strong customer response to our product and marketing driving results above our expectations.",
+      "Hollister grew 11% in the important back-to-school quarter, and Abercrombie brands grew 12%.",
+      "Disciplined inventory management supported higher average unit retail with lower than expected promotions.",
+      "Strong gross margin performance, coupled with operating expense leverage, led both operating margin and earnings per diluted share above our outlook.",
+      "Our strong profitability and balance sheet allowed us to further invest in new stores, marketing and technology while consistently returning capital to shareholders through share repurchases, with year-to-date repurchases totaling 9% of shares outstanding as of the beginning of the year."
+     ],
+     "text": "EX-99.1 2 q32026pressrelease.htm EX-99.1 ABERCROMBIE & FITCH CO. REPORTS THIRD QUARTER FISCAL 2026 RESULTS \u2022Record third quarter net sales of $1.4 billion, up 11% to last year, the 16th consecutive quarter of growth, with comparable sales up 6% \u2022Double-digit net sales growth across regions with Americas up 11%, EMEA up 12%, and APAC up 24% \u2022Best-ever third quarter sales across brands, with Abercrombie brands up 12% and Hollister up 11% \u2022Profitability exceeded outlook with operating margin of 15.5%, and 62% year-over-year growth in earnings per diluted share to $3.82 \u2022Consistent with outlook, operating income and earnings per diluted share include IEEPA tariff refund benefits of approximately $20 million on a pre-tax basis and $0.40 per diluted share, respectively \u2022$100 million in shares repurchased in the quarter; year-to-date share repurchases of $382 million totaling 9% of shares outstanding at beginning of the year \u2022Increases full-year outlook to net sales growth of around 6%, net income per diluted share of $13.70 to $13.90, and maintains outlook for share repurchases of at least $500 million \u2022Fourth quarter outlook of net sales growth of around 7%, net income per diluted share of $4.40 to $4.60, at least $120 million in share repurchases New Albany, Ohio, November 24, 2026: Abercrombie & Fitch Co. (NYSE: ANF) today announced results for the third quarter ended October 31, 2026. These compare to results for the third quarter ended November 1, 2025. Descriptions of the use of non-GAAP financial measures and reconciliations of GAAP and non-GAAP financial measures accompany this release. Fran Horowitz, Chief Executive Officer, said, \u201cWe delivered record third quarter net sales and our 16th consecutive quarter of growth, with strong customer response to our product and marketing driving results above our expectations. Growth was balanced across regions and brands, with each seeing growth rates accelerate from second quarter levels. Hollister grew 11% in the important back-to-school quarter, and Abercrombie brands grew 12%. Disciplined inventory management supported higher average unit retail with lower than expected promotions. Strong gross margin performance, coupled with operating expense leverage, led both operating margin and earnings per diluted share above our outlook. Our strong profitability and balance sheet allowed us to further invest in new stores, marketing and technology while consistently returning capital to shareholders through share repurchases, with year-to-date repurchases totaling 9% of shares outstanding as of the beginning of the year. We\u2019re energized by the momentum across our business as we enter the holiday season, and we are increasing our expectations for full-year net sales and earnings per share. We remain on track for another year of record net sales, strong double-digit operating margins and growth in earnings per share. Combined with consistent, significant share repurchases, we expect our performance in fiscal 2026 will further demonstrate the durability of our operating model and add to our track record of creating sustainable, profitable growth.\u201d A summary of results for the third quarter ended October 31, 2026 as compared to the third quarter ended November 1, 2025: \u2022Net sales of $1.4 billion, up 11% as compared to last year, with comparable sales up 6%. \u2022Operating income of $223 million, including approximately $20 million in refunds of IEEPA tariffs reflected as a reduction of cost of sales as compared to operating income of $155 million last year. \u2022Operating margin as a percent of sales of 15.5% as compared to 12.0% last year. \u2022Net income per diluted share of $3.82 as compared to net income per diluted share last year of $2.36. A summary of the impact of IEEPA tariff refunds for the thirteen- and thirty-nine weeks ended October 31, 2026 are as follows: Thirteen Weeks Ended Thirty-Nine Weeks Ended Impact of IEEPA tariff refunds (1) October 31, 2026 Operating income (in Millions) $20 benefit $120 benefit Operating margin 150 bps benefit 320 bps benefit Net Income per diluted share $0.40 benefit $2.10 benefit (1) Reflects the impact of International Emergency Economic Powers Act (\u201cIEEPA\u201d) tariff refunds recognized on operating income, operating margin, and net income per diluted share. The per diluted share estimated impact is calculated using a 26% tax rate. Details related to reported net income per diluted share and adjusted net income per diluted share for the third quarter are as follows: 2026 2025 GAAP $ 3.82 $ 2.36 Impact from changes in foreign currency exchange rates (1) \u2014 0.07 Adjusted non-GAAP constant currency $ 3.82 $ 2.43 (1)The estimated impact from foreign currency is calculated by applying current period exchange rates to prior year results using a 26% tax rate. 1 Net Sales Net sales by segment and brand for the third quarter are as follows: (in thousands) 2026 2025 1 YR % Change Comparable sales (2) Net sales by segment: (1) Americas (3) $ 1,169,873 $ 1,057,448 11% 5% EMEA (4) 217,666 194,510 12% 4% APAC (5) 47,902 38,661 24% 24% Total company $ 1,435,441 $ 1,290,619 11% 6% 2026 2025 1 YR % Change Comparable sales (2) Net sales by brand family: Abercrombie $ 688,839 $ 617,345 12% 6% Hollister 746,602 673,274 11% 5% Total company $ 1,435,441 $ 1,290,619 11% 6% (1) Net sales by segment are presented by attributing revenues to a physical store location or geographical region that fulfills the order. (2) Comparable sales are calculated on a constant currency basis. Refer to \"REPORTING AND USE OF GAAP AND NON-GAAP MEASURES,\" for further discussion. (3) The Americas segment includes the results of operations in North America and South America. (4) The EMEA segment includes the results of operations in Europe, the Middle East and Africa. (5) The APAC segment includes the results of operations in the Asia-Pacific region, including Asia and Oceania. Financial Position and Liquidity As of October 31, 2026, the company had: \u2022Cash and equivalent"
+    }
+   ],
+   "pages": [
+    {
+     "url": "https://finance.yahoo.com/markets/stocks/articles/abercrombie-fitch-co-anf-q3-162121493.html?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-24T16:21:21Z",
+     "key": [
+      "Net Sales: Up 11% year-over-year to a Q3 record of $1.4 billion, above the 5%6% guidance range; 16th consecutive quarter of growth.",
+      "Brand Net Sales: Abercrombie brands +12% (comps +6%); Hollister +11% (comps +5%) against last year's record.",
+      "Operating Margin: 15.5% of sales, above the 13%14% outlook; up ~350 bps year-over-year from 12% (incl. ~150 bps from IEEPA tariff refunds, ~80 bps from lower tariff expense, ~100 bps from opex leverage).",
+      "Net Income Per Diluted Share: $3.92 vs. $2.36 last year, above the $2.90$3.20 outlook (includes ~$0.40 benefit from tariff refunds); Fran cited 62% year-over-year growth to $3.82.",
+      "Full-Year Outlook: Net sales growth of ~6% from $5.7 billion in 2025; mid-single-digit AUR improvement; ~20 bps FX benefit to net sales; operating margin of 14.5%15% (incl. ~220 bps tariff refund benefit); tax rate ~28%; diluted shares ~44 million; EPS of $13.70$13.90 (incl. ~$2.15 from refunds); capex ~$260 million; at least $500 million of share repurchases.",
+      "Q4 Outlook: Net sales growth of ~7% from $1.67 billion; operating margin ~15%; tax rate ~28%; diluted shares ~43 million; EPS of $4.40$4.60; at least $120 million of Q4 share repurchases; ~100 bps incremental freight expense."
+     ],
+     "text": "Oops, something went wrong Skip to navigation Skip to main content Skip to right column Sign in U.S. markets close in 3h 23m US Markets Europe Markets Asia Markets Cryptocurrencies Rates Commodities Currencies U.S. markets close in 3h 23m S&P 500 7,204.40 -32.77 -0.45% Dow 30 49,975.59 +380.28 +0.77% Nasdaq 23,740.95 -348.61 -1.45% Russell 2000 2,684.88 +15.22 +0.57% 10-Yr Bond 4.8980 -0.0200 -0.41% VIX 27.18 +0.56 +2.10% Gold 3,560.90 -90.50 -2.48% Bitcoin USD 59,907.35 -1,694.90 -2.75% Crude Oil Jan 27 81.45 +1.28 +1.60% US Private Equity 10,765.73 0.00 0.00% ADVERTISEMENT Abercrombie & Fitch Co (ANF) (Q3 2026) Earnings Call Highlights: Record $1. ... GuruFocus News Tue, November 24, 2026 at 8:21 AM PST 9 min read ANF +25.06% This article first appeared on GuruFocus. Net Sales: Up 11% year-over-year to a Q3 record of $1.4 billion, above the 5%6% guidance range; 16th consecutive quarter of growth. Comparable Sales: Increased 6% overall; Americas +5%, EMEA +4%, APAC +24%. Regional Net Sales: Americas +11% (12% per Robert), EMEA +12%, APAC +24%; all three regions delivered double-digit growth. Brand Net Sales: Abercrombie brands +12% (comps +6%); Hollister +11% (comps +5%) against last year's record. AUR: Grew high-single digits, supported by lower promotional activity. Operating Income: $223 million. Operating Margin: 15.5% of sales, above the 13%14% outlook; up ~350 bps year-over-year from 12% (incl. ~150 bps from IEEPA tariff refunds, ~80 bps from lower tariff expense, ~100 bps from opex leverage). Tariff Refunds: ~$20 million of IEEPA refunds in Q3 (~150 bps to operating margin); ~$120 million recognized across Q2Q3, ~220 bps to full-year operating margin and ~$2.15 to full-year EPS. Tax Rate: 29% for the quarter, better than expected on stronger international performance. Net Income Per Diluted Share: $3.92 vs. $2.36 last year, above the $2.90$3.20 outlook (includes ~$0.40 benefit from tariff refunds); Fran cited 62% year-over-year growth to $3.82. Inventory: Up ~4% year-over-year at cost; units up mid-single digits, aligned with expected unit sales growth. Cash & Liquidity: $724 million in cash and cash equivalents; ~$1.2 billion of liquidity. Share Repurchases: $100 million in the quarter; $382 million year-to-date (~9% of beginning-of-year shares outstanding); 11th consecutive quarter of buybacks; $468 million remaining on authorization. Store Activity: Year-to-date opened 23 new stores and remodeled or right-sized 48 Hollister stores; full-year plan of ~130 new store experiences (15 new stores, 80 remodels/right-sizes, ~20 closures). Full-Year Outlook: Net sales growth of ~6% from $5.7 billion in 2025; mid-single-digit AUR improvement; ~20 bps FX benefit to net sales; operating margin of 14.5%15% (incl. ~220 bps tariff refund benefit); tax rate ~28%; diluted shares ~44 million; EPS of $13.70$13.90 (incl. ~$2.15 from refunds); capex ~$260 million; at least $500 million of share repurchases. Q4 Outlook: Net sales growth of ~7% from $1.67 billion; operating margin ~15%; tax rate ~28%; diluted shares ~43 million; EPS of $4.40$4.60; at least $120 million of Q4 share repurchases; ~100 bps incremental freight expense. Warning! GuruFocus has detected 6 Warning Signs with BWLP. Is ANF fairly valued? Test your thesis with our free DCF calculator. ANF GF Value chart Release Date: November 24, 2026 For the complete transcript of the earnings call, please refer to the full earnings call transcript. Positive Points Net sales grew 11% to a record $1.4 billion, marking the 16th consecutive quarter of growth. All three regions and both brands delivered double-digit net sales growth, with sequential acceleration. Operating margin was 15.5%, above expectations, driven by higher AUR and lower promotions. Inventory remains tightly managed, with units up mid-single digits aligned with sales growth. Year-to-date share repurchases of $382 million, representing 9% of shares outstanding, with at least $500 million planned for the full year. Neg"
+    },
+    {
+     "url": "https://www.marketbeat.com/instant-alerts/transcript-what-abercrombie-fitch-anf-said-on-its-q3-earnings-call-2026-11-24/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss",
+     "refused": "blocked: the page is a bot check; not getting around it"
+    }
+   ],
+   "pond": {
+    "wave": 0.0,
+    "own": 5.829025741437016,
+    "how": "a stone: its own news",
+    "from": [],
+    "reaches": [
+     [
+      "URBN",
+      0.65,
+      0.04772
+     ],
+     [
+      "GAP",
+      0.57,
+      0.03885
+     ],
+     [
+      "AEO",
+      0.56,
+      0.0683
+     ],
+     [
+      "BKE",
+      0.48,
+      0.00198
+     ],
+     [
+      "PVH",
+      0.47,
+      0.02263
+     ]
+    ]
+   }
+  },
+  {
+   "t": "ADI",
+   "company": "ANALOG DEVICES INC",
+   "move": -0.1742838541666667,
+   "z": -8.620437699783519,
+   "wave": 0.0,
+   "mover": true,
+   "score": 0.6581907944227899,
+   "parts": {
+    "surprise": 0.483,
+    "unexplained": 0.938,
+    "news": 1.0,
+    "reach": 1.0,
+    "against": 0.0,
+    "memory": 1.0,
+    "fragile": 0.0
+   },
+   "reasons": [
+    "outside its 9-in-10 range",
+    "most of the move is its own",
+    "filed its results",
+    "5 stories name it",
+    "41 stocks moved closely with it over the year",
+    "in the last note's theme 'Chips give back part of Monday'"
+   ],
+   "attention": 0.08364596284596224,
+   "bars": 48,
+   "filings": [
+    {
+     "what": "results report (8-K 2.02)",
+     "at": "2026-11-24T12:03:22Z",
+     "title": "Analog Devices Reports Record Fourth Quarter and Fiscal 2026 Financial Results",
+     "url": "https://www.sec.gov/Archives/edgar/data/6281/000000628126000087/adiq426exhibit991.htm",
+     "key": [
+      "Outlook for the First Quarter of Fiscal Year 2027 For the first quarter of fiscal 2027, we are forecasting revenue of $4.4 billion, +/- $150 million.",
+      "At the midpoint of this revenue outlook, we expect reported operating margin of approximately 40.3%, +/- 150 bps, and adjusted operating margin of approximately 50.5%, +/- 100 bps.",
+      "We are planning for reported EPS to be $3.02, +/- $0.20, and adjusted EPS to be $3.82, +/- $0.20.",
+      "The statements about our first quarter fiscal 2027 outlook supersede all prior statements regarding our business outlook set forth in prior ADI news releases, and ADI disclaims any obligation to update these forward-looking statements.",
+      "Dividend Payment The ADI Board of Directors has declared a quarterly cash dividend of $1.10 per outstanding share of common stock.",
+      "Conference Call Scheduled for Today, Tuesday, November 24, 2026 at 10:00 am ET ADI will host a conference call to discuss our fourth quarter and fiscal 2026 results and short-term outlook today, beginning at 10:00 am ET."
+     ],
+     "text": "EX-99.1 2 adiq426exhibit991.htm EX-99.1 Exhibit 99.1 Analog Devices Reports Record Fourth Quarter and Fiscal 2026 Financial Results \u2022Fourth quarter revenue of $4.37 billion, with year-over-year growth led by Data Center and Industrial \u2022Fiscal 2026 revenue of $15.2 billion, up 38% versus 2025, a new high-water mark \u2022Fiscal 2026 operating cash flow of $6.2 billion and free cash flow of $5.5 billion, or 41% and 36% of revenue, respectively \u2022Returned $5.4 billion to shareholders in fiscal 2026 via dividends and share repurchases WILMINGTON, Mass.--November 24, 2026--Analog Devices, Inc. (Nasdaq: ADI), a global semiconductor leader, today announced financial results for its fiscal fourth quarter and fiscal year 2026, which ended October 31, 2026. \u201cADI closed fiscal 2026 with record performance, demonstrating the continued strength of our business model,\u201d said Vincent Roche, CEO and Chair. \u201cWhile AI infrastructure investments are driving tremendous growth across our data center and ATE businesses, more than two-thirds of our growth in fiscal 2026 came from non-AI-centric market opportunities. These growth dynamics reinforce our confidence that ADI is structured to thrive across a wide range of technology and investment cycles. As we enter fiscal 2027, we remain focused on translating innovation leadership into durable growth and long-term value creation.\u201d \u201cCustomers are relying on ADI more than ever, and our capital allocation reflects that. We are directing investment to three priorities: R&D that extends our technology leadership, capacity that secures supply for our customers\u2019 growth, and consistent capital returns to our shareholders,\u201d said Richard Puccio, CFO. \u201cOur financial strength gives us the flexibility to pursue all three as we position ADI to capture the significant opportunity ahead.\u201d Performance for the Fourth Quarter and Fiscal Year 2026 Results Summary(1) (in millions, except per-share amounts and percentages) Three Months Ended Twelve Months Ended Oct. 31, 2026 Nov. 1, 2025 Change Oct. 31, 2026 Nov. 1, 2025 Change Revenue $ 4,373 $ 3,076 42 % $ 15,179 $ 11,020 38 % Gross margin $ 3,033 $ 1,942 56 % $ 10,225 $ 6,773 51 % Gross margin percentage 69.3 % 63.1 % 620 bps 67.4 % 61.5 % 590 bps Operating income $ 1,869 $ 945 98 % $ 5,858 $ 2,932 100 % Operating margin 42.7 % 30.7 % 1,200 bps 38.6 % 26.6 % 1,200 bps Diluted earnings per share $ 3.40 $ 1.60 113 % $ 10.21 $ 4.56 124 % Adjusted Results(2) Adjusted gross margin $ 3,259 $ 2,147 52 % $ 11,071 $ 7,641 45 % Adjusted gross margin percentage 74.5 % 69.8 % 470 bps 72.9 % 69.3 % 360 bps Adjusted operating income $ 2,287 $ 1,338 71 % $ 7,509 $ 4,622 62 % Adjusted operating margin 52.3 % 43.5 % 880 bps 49.5 % 41.9 % 760 bps Adjusted diluted earnings per share $ 4.06 $ 2.26 80 % $ 13.05 $ 7.79 68 % Three Months Ended Trailing Twelve Months Cash Generation Oct. 31, 2026 Oct. 31, 2026 Net cash provided by operating activities $ 2,341 $ 6,186 % of revenue 54 % 41 % Capital expenditures $ (340) $ (733) Free cash flow(2) $ 2,001 $ 5,453 % of revenue 46 % 36 % Three Months Ended Trailing Twelve Months Cash Return Oct. 31, 2026 Oct. 31, 2026 Dividend paid $ (532) $ (2,088) Stock repurchases (878) (3,324) Total cash returned $ (1,410) $ (5,413) (1) The sum and/or computation of the individual amounts may not equal the total due to rounding. (2) Reconciliations of non-GAAP financial measures to their most directly comparable GAAP financial measures are provided in the financial tables included in this press release. See also the \"Non-GAAP Financial Information\" section for additional information. Outlook for the First Quarter of Fiscal Year 2027 For the first quarter of fiscal 2027, we are forecasting revenue of $4.4 billion, +/- $150 million. At the midpoint of this revenue outlook, we expect reported operating margin of approximately 40.3%, +/- 150 bps, and adjusted operating margin of approximately 50.5%, +/- 100 bps. We are planning for reported EPS to be $3.02, +/- $0.20, and adjusted EPS to be $3.82, +/- $0.20. Our first quarter fiscal 2027 outlook is based on current expectations and actual results may differ materially as a result of, among other things, the important factors discussed at the end of this release. The statements about our first quarter fiscal 2027 outlook supersede all prior statements regarding our business outlook set forth in prior ADI news releases, and ADI disclaims any obligation to update these forward-looking statements. The adjusted results and adjusted anticipated results above are financial measures presented on a non-GAAP basis. Reconciliations of these non-GAAP financial measures to their most directly comparable GAAP financial measures are provided in the financial tables included in this release. See also the \u201cNon-GAAP Financial Information\u201d section for additional information. Dividend Payment The ADI Board of Directors has declared a quarterly cash dividend of $1.10 per outstanding share of common stock. The dividend will be paid on December 21, 2026 to all shareholders of record at the close of business on December 7, 2026. Conference Call Scheduled for Today, Tuesday, November 24, 2026 at 10:00 am ET ADI will host a conference call to discuss our fourth quarter and fiscal 2026 results and short-term outlook today, beginning at 10:00 am ET. Investors may join via webcast, accessible at investor.analog.com. Non-GAAP Financial Information This release includes non-GAAP financial measures that are not in accordance with, nor an alternative to, U.S. generally accepted accounting principles (GAAP) and may be different from non-GAAP measures presented by other companies. In addition, these non-GAAP measures are not based on any comprehensive set of accounting rules or principles. These non-GAAP measures have material limitations in that they do not reflect all of the amounts associated with the Company\u2019s results of operations as determined in accordance with GAAP and should not be considered in isolation fro"
+    }
+   ],
+   "pages": [
+    {
+     "url": "https://finance.yahoo.com/m/6e83312d-bf7d-326a-81cc-5e889e4efe06/analog-devices-tops-fiscal-q4.html?.tsrc=rss",
+     "refused": "not read: robots.txt disallows it (respecting it)"
+    },
+    {
+     "url": "https://www.marketbeat.com/instant-alerts/transcript-what-analog-devices-adi-said-on-its-q4-earnings-call-2026-11-24/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss",
+     "refused": "blocked: the page is a bot check; not getting around it"
+    }
+   ],
+   "pond": {
+    "wave": 0.0,
+    "own": -8.620437699783519,
+    "how": "a stone: its own news",
+    "from": [],
+    "reaches": [
+     [
+      "TXN",
+      0.8,
+      -0.09073
+     ],
+     [
+      "MCHP",
+      0.7,
+      -0.0713
+     ],
+     [
+      "ON",
+      0.66,
+      -0.07301
+     ],
+     [
+      "MPWR",
+      0.62,
+      -0.09645
+     ],
+     [
+      "DIOD",
+      0.62,
+      -0.10877
+     ]
+    ]
+   }
+  },
+  {
+   "t": "DLTR",
+   "company": "DOLLAR TREE, INC.",
+   "move": 0.12210639813967504,
+   "z": 4.726739306754845,
+   "wave": 0.0,
+   "mover": true,
+   "score": 0.6551143540967347,
+   "parts": {
+    "surprise": 0.611,
+    "unexplained": 1.0,
+    "news": 1.0,
+    "reach": 0.524,
+    "against": 0.0,
+    "memory": 1.0,
+    "fragile": 0.0
+   },
+   "reasons": [
+    "outside its 9-in-10 range",
+    "most of the move is its own",
+    "filed its results",
+    "5 stories name it",
+    "in the last note's theme 'Retailers report: most beat and raise'"
+   ],
+   "attention": 0.08152878606199415,
+   "bars": 37,
+   "filings": [
+    {
+     "what": "results report (8-K 2.02)",
+     "at": "2026-11-24T11:30:42Z",
+     "title": "Dollar Tree, Inc. Reports Third Quarter Results",
+     "url": "https://www.sec.gov/Archives/edgar/data/935703/000093570326000136/ex991q3-26earningspressrel.htm",
+     "key": [
+      "EX-99.1 2 ex991q3-26earningspressrel.htm EX-99.1 Exhibit 99.1 Dollar Tree, Inc.",
+      "Our broader assortment, better stores and stronger customer engagement give shoppers more reasons to choose Dollar Tree and come back more often.",
+      "Continuing operations reflect the results of the Dollar Tree U.S. and Dollar Tree Canada banners.",
+      "Comparable store net sales increased 4.6%, driven by a 3.8% increase in traffic and a 0.8% increase in average ticket.",
+      "Transition services agreement income, net was $10 million for services provided between Dollar Tree and Family Dollar following the sale, compared with $24 million in the prior-year period. 2 Operating income was $309 million and operating income margin was 6.1%.",
+      "Income from continuing operations was $232 million and diluted earnings per share was $1.24, including a $0.42 cost related to the net impact of tariff reinvestments."
+     ],
+     "text": "EX-99.1 2 ex991q3-26earningspressrel.htm EX-99.1 Exhibit 99.1 Dollar Tree, Inc. Reports Third Quarter Results \u2022Total revenue increased 6.9% to $5.1 billion \u2022Comparable store net sales increased 4.6% on top of 4.2% last year \u2022Comparable store net sales growth included a 3.8% increase in traffic and a 0.8% increase in average ticket \u2022Diluted EPS of $1.24, including $0.42 of cost related to the net impact of tariff reinvestments1 \u2022Adjusted EPS of $1.16, including $0.42 of cost related to the net impact of tariff reinvestments \u2022Operating income margin contracted 110 basis points including a 195 basis point cost related to the net impact of tariff reinvestments \u2022Adjusted operating income margin contracted 120 basis points including a 195 basis point cost related to the net impact of tariff reinvestments \u2022Returned $205 million to shareholders through share repurchases in Q3 \u2022Increasing fiscal 2026 adjusted EPS outlook to a range of $8.05 to $8.25 including an approximate $0.65 benefit related to the net impact of tariff refunds \u2022Q4 fiscal 2026 outlook of 3% to 4% comparable store net sales growth and adjusted EPS of $2.46 to $2.66 including an approximate $0.25 cost related to tariff refund reinvestments CHESAPEAKE, Va. \u2013 November 24, 2026 \u2013 Dollar Tree, Inc. (NASDAQ: DLTR) today reported financial results for its third quarter ended October 31, 2026. \u201cOur third quarter results show the strength of Dollar Tree\u2019s value proposition and the progress we\u2019ve made to improve the customer experience,\u201d said Mike Creedon, Chief Executive Officer. \u201cComp traffic accelerated to 3.8% and drove comparable sales above the high end of our outlook. Our broader assortment, better stores and stronger customer engagement give shoppers more reasons to choose Dollar Tree and come back more often. We continue to invest in our brand, our stores and our people to build on this momentum. As the holiday season begins, our focus is clear: make Dollar Tree the destination for value, convenience and discovery, and position the business for sustained, profitable growth.\u201d Additional Business Highlights \u2022Opened 84 new Dollar Tree stores during the quarter \u2022Converted or added approximately 800 stores to the Dollar Tree multi-price format, ending the quarter with approximately 7,400 multi-price stores 1 Net impact of tariff reinvestments includes reinvestment expenses totaling $103 million including $27 million in cost of sales, $76 million in selling, general and administrative expenses, and IEEPA tariff refunds totaling $4 million in cost of sales. Earnings per share impacts are net of tax. 1 \u2022Generated $375 million of net cash provided by operating activities from continuing operations and $122 million of free cash flow \u2022Ended the quarter with 9,511 stores across the Dollar Tree U.S. and Dollar Tree Canada banners Third Quarter 2026 Key Operating Results (unaudited) (from continuing operations unless otherwise noted) (Compared to same period fiscal 2025) Q3 Fiscal 2026 Change Net Sales $5.1B 6.9% Same-Store Net Sales Growth 4.6% Operating Income $309M (10.1)% Diluted EPS $1.24 3.3% Adjusted Operating Income1 $309M (10.6)% Adjusted Diluted EPS1 $1.16 (4.1)% 1 See \"Reconciliation of Non-GAAP Financial Measures\" below for detailed schedules of these adjustments. Third Quarter Results Results for the third quarter ended October 31, 2026 are presented on a continuing operations basis. Continuing operations reflect the results of the Dollar Tree U.S. and Dollar Tree Canada banners. Unless otherwise noted, all comparisons are to the prior-year third quarter ended November 1, 2025 for the results of continuing operations. Net sales increased 6.9% to $5.1 billion. Comparable store net sales increased 4.6%, driven by a 3.8% increase in traffic and a 0.8% increase in average ticket. Gross profit margin decreased 10 basis points to 35.7% and included 45 basis points of net cost from tariff refund reinvestment. Absent these factors, gross margin was primarily driven by lower tariff costs, lower markdowns and favorable shrink trends, partially offset by higher product and freight costs and unfavorable sales mix. Selling, general and administrative expenses increased 70 basis points to 29.9% of total revenue. SG&A included 150 basis points of tariff refund reinvestment, of which $40 million was attributable to a charitable donation. Absent these factors, SG&A was primarily driven by lower payroll. Adjusted selling, general and administrative expenses inclusive of transition services agreement income net, increased 110 basis points as a percent of total revenue and included 150 basis points attributable to tariff refund reinvestment. Transition services agreement income, net was $10 million for services provided between Dollar Tree and Family Dollar following the sale, compared with $24 million in the prior-year period. 2 Operating income was $309 million and operating income margin was 6.1%. Operating income margin decreased 110 basis points versus the prior-year period and included 195 basis points of net cost from tariff refund reinvestments. Adjusted operating income margin decreased 120 basis points, including 195 basis points of net tariff reinvestment cost. The Company\u2019s effective tax rate was 24.5%, compared with 23.9% in the prior-year period. Income from continuing operations was $232 million and diluted earnings per share was $1.24, including a $0.42 cost related to the net impact of tariff reinvestments. On an adjusted basis, income from continuing operations was $218 million and adjusted diluted earnings per share was $1.16. The Company repurchased 1.8 million shares of its common stock during the third quarter of fiscal 2026 for $205 million, excluding applicable excise tax. As of October 31, 2026, the Company had $2.3 billion remaining under its share repurchase authorization, $966 million of cash and cash equivalents, no commercial paper outstanding, and no borrowings under its revolving credit facility. Year-to-Date Results "
+    }
+   ],
+   "pages": [
+    {
+     "url": "https://247wallst.com/investing/2026/11/24/the-gates-foundation-trust-sold-2-2-million-berkshire-shares-and-opened-a-155-million-dollar-tree-stake/?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-24T16:53:56Z",
+     "key": [
+      "Dollar Tree's traffic is growing again and its share count is shrinking, though tariff refunds are inflating this year's earnings.",
+      "In the same quarter, it started a position of 1,361,022 shares in Dollar Tree (NASDAQ:DLTR), worth about $155 million at quarter-end.",
+      "The Berkshire sale cut the trust\u2019s Class B share count by 15.3%, which left 12,449,307 shares on September 30. 24/7 on YouTube1:08Play: Warren Buffet Buying These Stocks On The Way Out Warren Buffet Buying These Stocks On The Way Out Subscribe free on YouTube The filer is the trust that manages the Gates Foundation\u2019s endowment assets.",
+      "Operating earnings fell to $12.71 billion in Q3 FY26 from $23.49 billion a year earlier, although operating earnings through September rose to $37.03 billion from $34.29.",
+      "That quarter, the company bought more stock than it sold for the first time in more than three years, putting about $23.5 billion to work, and bought back about $4.5 billion of its own shares.",
+      "The stock trades at about 12 times earnings and is up 13.98% year to date at $572.94."
+     ],
+     "text": "Skip to content Authoritative Financial News \u00b7 Since 2006 AI Investor Podcast Menu \u25cf Markets open At close S&P 5007,202.60\u22120.80% Dow Jones49,958.20+0.41% Nasdaq 10026,244.20\u22122.11% Russell 20002,687.59+0.51% S&P 5007,202.60\u22120.80% Dow Jones49,958.20+0.41% Nasdaq 10026,244.20\u22122.11% Russell 20002,687.59+0.51% S&P 5007,202.60\u22120.80% Dow Jones49,958.20+0.41% Nasdaq 10026,244.20\u22122.11% Russell 20002,687.59+0.51% S&P 5007,202.60\u22120.80% Dow Jones49,958.20+0.41% Nasdaq 10026,244.20\u22122.11% Russell 20002,687.59+0.51% S&P 5007,202.60\u22120.80% Dow Jones49,958.20+0.41% Nasdaq 10026,244.20\u22122.11% Russell 20002,687.59+0.51% S&P 5007,202.60\u22120.80% Dow Jones49,958.20+0.41% Nasdaq 10026,244.20\u22122.11% Russell 20002,687.59+0.51% Investing The Gates Foundation Trust Sold 2.2 Million Berkshire Shares and Opened a $155 Million Dollar Tree Stake By David Beren Published November 24, 2026, 11:53am ET \u00b7 3 min read \ud835\udd4f f Quick Read The Gates Foundation Trust sold 15% of its Berkshire Hathaway stake and opened a $155 million Dollar Tree position, the move worth studying. Microsoft is absent from the trust's holdings, and the Berkshire sale reflects donated stock being sold, not a verdict on the business. Dollar Tree's traffic is growing again and its share count is shrinking, though tariff refunds are inflating this year's earnings. Released: The Definitive Guide to Retirement Income. It is a free guide from Fisher Investments covering what your retirement will really cost, where the cash flow should come from, and how much you can safely withdraw each year. Learn more here. Learn More Here \u203a (sponsor) This post may contain links from our sponsors and affiliates, and Flywheel Publishing may receive compensation for actions taken through them. \u00a9 Jack Taylor / Getty Images The Gates Foundation Trust sold 2,240,537 Class B shares of Berkshire Hathaway (NYSE:BRK-B | BRK-B Price Prediction) in the quarter ended September 30, 2026. In the same quarter, it started a position of 1,361,022 shares in Dollar Tree (NASDAQ:DLTR), worth about $155 million at quarter-end. Both moves appear in the trust\u2019s 13F filed November 16, 2026. The Berkshire sale cut the trust\u2019s Class B share count by 15.3%, which left 12,449,307 shares on September 30. 24/7 on YouTube1:08Play: Warren Buffet Buying These Stocks On The Way Out Warren Buffet Buying These Stocks On The Way Out Subscribe free on YouTube The filer is the trust that manages the Gates Foundation\u2019s endowment assets. It is a separate entity from Bill Gates personally. The trust reported no Microsoft (NASDAQ:MSFT) shares as of either June 30 or September 30, 2026. How to Read the Berkshire Sale The trust\u2019s Berkshire stake came largely from Warren Buffett\u2019s donations of Berkshire stock, but the filing does not establish why the trust reduced its position. A 13F only shows how many shares a fund held at quarter-end, and it leaves out sale prices, timing, and reasons, while a foundation sells shares when it needs cash for grants. Treating this sale as a verdict on Berkshire reads more into the filing than it contains. Berkshire\u2019s results give little cause for concern. Operating earnings fell to $12.71 billion in Q3 FY26 from $23.49 billion a year earlier, although operating earnings through September rose to $37.03 billion from $34.29. That quarter, the company bought more stock than it sold for the first time in more than three years, putting about $23.5 billion to work, and bought back about $4.5 billion of its own shares. The stock trades at about 12 times earnings and is up 13.98% year to date at $572.94. Of 15 tracked institutional filers, 9 cut their Berkshire stakes last quarter. Even after its sale, the trust was still the largest holder in that group. Why Dollar Tree Fits a Patient Portfolio Dollar Tree has been a simpler business since it sold Family Dollar in July 2025. Its multi-price format, which sells items above the old $1.25 price point, reached about 7,400 stores in Q3 FY26. In that quarter, same-store sales rose 4.6%, and"
+    },
+    {
+     "url": "https://www.retaildive.com/news/dollar-tree-q3-holiday-shoppers-buy-closer-to-need/875619/?.tsrc=rss",
+     "refused": "blocked (HTTP 403, access denied); not getting around it"
+    }
+   ],
+   "pond": {
+    "wave": 0.0,
+    "own": 4.726739306754845,
+    "how": "a stone: its own news",
+    "from": [],
+    "reaches": [
+     [
+      "DG",
+      0.68,
+      0.03896
+     ],
+     [
+      "HD",
+      0.52,
+      0.02072
+     ],
+     [
+      "TGT",
+      0.51,
+      0.04858
+     ],
+     [
+      "LOW",
+      0.51,
+      0.02578
+     ],
+     [
+      "HRL",
+      0.46,
+      0.00542
+     ]
+    ]
+   }
+  },
+  {
+   "t": "KSS",
+   "company": "KOHLS Corp",
+   "move": 0.18938674354722385,
+   "z": 4.347247934859395,
+   "wave": 0.0,
+   "mover": true,
+   "score": 0.6281239798550325,
+   "parts": {
+    "surprise": 0.339,
+    "unexplained": 1.0,
+    "news": 1.0,
+    "reach": 0.482,
+    "against": 0.0,
+    "memory": 1.0,
+    "fragile": 0.45
+   },
+   "reasons": [
+    "outside its 9-in-10 range",
+    "most of the move is its own",
+    "filed its results",
+    "4 stories name it",
+    "in the last note's theme 'Retailers report: most beat and raise'",
+    "chance of a restructuring or a write-off 1.3% against 0.3% usually"
+   ],
+   "attention": 0.06510728031467304,
+   "bars": 33,
+   "filings": [
+    {
+     "what": "results report (8-K 2.02)",
+     "at": "2026-11-24T12:00:10Z",
+     "title": "Kohl\u2019s Reports Third Quarter Fiscal 2026 Financial Results",
+     "url": "https://www.sec.gov/Archives/edgar/data/885639/000119312526473133/d168523dex991.htm",
+     "key": [
+      "As a percentage of total revenue, SG&A expenses were 35.1%, a decrease of 20 basis points year-over-year. \u2022 Operating income was $217 million compared to $73 million in the prior year.",
+      "Adjusted operating income was $156 million compared to $77 million in the prior year.",
+      "As a percentage of total revenue, adjusted operating income was 4.3%, an increase of 213 basis points year-over-year.(a) \u2022 Net income was $254 million, or $2.15 per diluted share.",
+      "This compares to net income of $8 million, or $0.07 per diluted share in the prior year.",
+      "As a percentage of total revenue, SG&A expenses were 35.0%, a decrease of 2 basis points year-over-year. \u2022 Operating income was $524 million compared to $412 million in the prior year.",
+      "As a percentage of total revenue, adjusted operating income was 4.5%, an increase of 160 basis points year-over-year.(a) \u2022 Net income was $391 million, or $3.33 per diluted share."
+     ],
+     "text": "EX-99.1 2 d168523dex991.htm EX-99.1 Exhibit 99.1 Kohl\u2019s Reports Third Quarter Fiscal 2026 Financial Results MENOMONEE FALLS, Wis.\u2014(BUSINESS WIRE)\u2014November 24, 2026\u2014 Kohl\u2019s Corporation (NYSE: KSS) (\u201cKohl\u2019s\u201d or the \u201cCompany\u201d) today reported results for the third quarter ended October 31, 2026. \u2022 Net sales increased 1.3% and comparable sales increased 1.2% \u2022 Gross margin increased 145 basis points \u2022 Tax benefit of $137 million or $1.16 per diluted share recognized in the quarter \u2022 Diluted earnings per share (\u201cEPS\u201d) of $2.15 for the quarter \u2022 Includes gain on sale of real estate of $61 million or $0.39 per diluted share \u2022 Includes tax benefit of $137 million or $1.16 per diluted share \u2022 Includes tariff refund benefit of $45 million or $0.28 per diluted share \u2022 Raises full year 2026 financial outlook Michael Bender, Kohl\u2019s Chief Executive Officer, said, \u201cIn the third quarter, we returned to top-line growth with a positive 1.2% comparable sales performance. As we make steady, tangible progress on our strategic initiatives, our customers are responding favorably, driving broad-based improvements across the business. While this is an encouraging milestone, we know crucial work remains ahead. Alongside the sales performance, our team operated with strong financial discipline, optimizing our cost structure, solidifying our balance sheet, and delivering strong cash generation. This operational rigor gives us the financial flexibility and confidence to continue investing in the business and deliver sustainable long-term shareholder value,\u201d Bender continued. Third Quarter 2026 Results Comparisons refer to the 13-week period ended October 31, 2026 versus the 13-week period ended November 1, 2025 \u2022 Net sales increased 1.3% year-over-year, to $3.5 billion, with comparable sales also up 1.2%. \u2022 Gross margin as a percentage of net sales was 41.0%, an increase of 145 basis points year-over-year. \u2022 Selling, general & administrative (SG&A) expenses increased 1.2% year-over-year, to $1.3 billion. As a percentage of total revenue, SG&A expenses were 35.1%, a decrease of 20 basis points year-over-year. \u2022 Operating income was $217 million compared to $73 million in the prior year. As a percentage of total revenue, operating income was 6.0%, an increase of 392 basis points year-over-year. Adjusted operating income was $156 million compared to $77 million in the prior year. As a percentage of total revenue, adjusted operating income was 4.3%, an increase of 213 basis points year-over-year.(a) \u2022 Net income was $254 million, or $2.15 per diluted share. This compares to net income of $8 million, or $0.07 per diluted share in the prior year. Adjusted net income was $207 million, or $1.76 per adjusted diluted share. This compares to adjusted net income of $11 million, or $0.10 per adjusted diluted share, in the prior year.(a) \u2022 Inventory was $3.9 billion, a decrease of 1% year-over-year. \u2022 Tax benefit of $137 million resulting from tax examinations being effectively settled was recorded during the quarter, which increased diluted EPS by $1.16 for the quarter. \u2022 Tariff refunds of approximately $45 million flowed through gross margin in the quarter. \u2022 Gain on sale of real estate of $61 million was recognized related to the sale of two properties. Nine Months Fiscal Year 2026 Results Comparisons refer to the 39-week period ended October 31, 2026 versus the 39-week period ended November 1, 2025 \u2022 Net sales decreased 0.4% year-over-year, to $9.8 billion, with comparable sales also down 0.2%. \u2022 Gross margin as a percentage of net sales was 41.3%, an increase of 156 basis points year-over-year. \u2022 Selling, general & administrative expenses decreased 0.4% year-over-year to $3.6 billion. As a percentage of total revenue, SG&A expenses were 35.0%, a decrease of 2 basis points year-over-year. \u2022 Operating income was $524 million compared to $412 million in the prior year. As a percentage of total revenue, operating income was 5.1%, an increase of 110 basis points year-over-year. Adjusted operating income was $463 million compared to $298 million in the prior year. As a percentage of total revenue, adjusted operating income was 4.5%, an increase of 160 basis points year-over-year.(a) \u2022 Net income was $391 million, or $3.33 per diluted share. This compares to net income of $147 million, or $1.30 per diluted share in the prior year. Adjusted net income was $344 million, or $2.94 per adjusted diluted share. This compares to adjusted net income of $61 million, or $0.54 per adjusted diluted share, in the prior year.(a) \u2022 Long-term debt decreased $196 million compared to the prior year, primarily driven by $113 million of debt repurchased at a discount of $15 million in 2026 and $87 million of debt repurchases in the prior year. \u2022 Tax benefit of $137 million resulting from tax examinations being effectively settled was recorded during the year, which increased diluted EPS by $1.17 for the year. \u2022 Tariff refunds of approximately $190 million were received, of which approximately $145 million flowed through gross margin. \u2022 Gain on sale of real estate of $61 million was recognized related to the sale of two properties. (a) Non-GAAP financial measures: Please see the \u201cRECONCILIATION OF NON-GAAP FINANCIAL MEASURES\u201d for a reconciliation of adjusted operating income to operating income, adjusted net income to net income, and adjusted diluted earnings per share to diluted earnings per share. 2026 Financial and Capital Allocation Outlook The Company raises its guidance. For the full year 2026, the Company now expects the following GAAP outlook: \u2022 Net sales and Comparable sales: In the range of flat to 0.5% \u2022 Operating margin: In the range of 4.7% to 4.9% which includes the benefit of: \u2022 0.4% from gain on real estate \u2022 1.0% from tariff refunds \u2022 Diluted EPS: In the range of $4.30 to $4.50 which includes the benefit of: \u2022 $0.40 from gain on real estate \u2022 $1.03 from tariff refunds \u2022 $1.17 from the tax benefit \u2022 Capital Expenditures: In the range of $"
+    }
+   ],
+   "pages": [
+    {
+     "url": "https://stocktwits.com/news-articles/markets/equity/kss-stock-rally-kohl-s-comparable-sales-return-to-growth-in-q3-as-retailer-raises-fy-26-outlook/cNbsXtKR9kM?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-24T16:08:35Z",
+     "key": [
+      "AI Agent Trending News Earnings DIA0.77% SPY0.38% QQQ1.72% Trending DELL11.23% HPE16.43% XBI5.71% MCD1.68% ANF24.47% TGTX6.05% IWM0.73% DKS16.58% KSS18.82% SNY9.84% HomeNewsMarketsEquityKSS Stock Rally: Kohl\u2019s Comparable Sales Return To Growth In Q3 As Retailer Raises FY26 Outlook Advertisement|Remove ads.",
+      "The company also raised its FY26 outlook, expecting net sales and comparable sales to range from flat to up 0.5%, and GAAP diluted EPS of $4.30 to $4.50.",
+      "Kohl's (KSS) shares rallied on Tuesday after the department-store retailer returned to comparable sales growth and raised its fiscal 2026 financial outlook, while reporting higher third-quarter net sales. \"In the third quarter, we returned to top-line growth with a positive 1.2% comparable sales performance,\" CEO Michael Bender said.",
+      "He added that the company's financial discipline gives it \"the financial flexibility and confidence to continue investing in the business and deliver sustainable long-term shareholder value.\" Read Next BBIO Stock Gains On FDA\u2019s Welgemda Approval: BofA Calls It A Win On Several Levels, While Citi Stays More Muted Anan Ashraf KSS shares traded 14% higher at the time of writing.",
+      "Kohl's Raises Full-Year Outlook Kohl's raised its fiscal 2026 outlook, now expecting net sales and comparable sales to range from flat to up 0.5%.",
+      "The updated EPS outlook includes expected benefits of $1.17 per share from the tax benefit, $1.03 from tariff refunds and $0.40 from the real estate gain."
+     ],
+     "text": "AI Agent Trending News Earnings DIA0.77% SPY0.38% QQQ1.72% Trending DELL11.23% HPE16.43% XBI5.71% MCD1.68% ANF24.47% TGTX6.05% IWM0.73% DKS16.58% KSS18.82% SNY9.84% HomeNewsMarketsEquityKSS Stock Rally: Kohl\u2019s Comparable Sales Return To Growth In Q3 As Retailer Raises FY26 Outlook Advertisement|Remove ads. KSS Stock Rally: Kohl\u2019s Comparable Sales Return To Growth In Q3 As Retailer Raises FY26 Outlook CEO Michael Bender said the return to comparable sales growth reflects progress on the company's strategic initiatives, adding that strong financial discipline provides flexibility to continue investing in the business. An exterior view of a Kohl's department store (Photo by Paul Weaver/SOPA Images/LightRocket via Getty Images) Heera Hari\u00b7Stocktwits Published Nov 24, 2026 | 11:08 AM EST Share \u00b7 Add us on Kohl's reported third-quarter total revenue of $3.64 billion, up 1.8% year over year, compared with analysts' estimate of $3.43 billion, according to Fiscal.ai. Comparable sales increased 1.2%, returning to growth, while gross margin expanded 145 basis points to 41.0%. The company also raised its FY26 outlook, expecting net sales and comparable sales to range from flat to up 0.5%, and GAAP diluted EPS of $4.30 to $4.50. Advertisement|Remove ads. Kohl's (KSS) shares rallied on Tuesday after the department-store retailer returned to comparable sales growth and raised its fiscal 2026 financial outlook, while reporting higher third-quarter net sales. \"In the third quarter, we returned to top-line growth with a positive 1.2% comparable sales performance,\" CEO Michael Bender said. He added that the company's financial discipline gives it \"the financial flexibility and confidence to continue investing in the business and deliver sustainable long-term shareholder value.\" Read Next BBIO Stock Gains On FDA\u2019s Welgemda Approval: BofA Calls It A Win On Several Levels, While Citi Stays More Muted Anan Ashraf KSS shares traded 14% higher at the time of writing. Advertisement|Remove ads. Kohl's Returns To Comparable Sales Growth Kohl's reported third-quarter (Q3) total revenue of $3.64 billion, up 1.8% year over year, compared with analysts' estimate of $3.43 billion, according to Fiscal.ai. Comparable sales increased 1.2%. Gross margin rose 145 basis points year over year to 41.0%. Operating income increased to $217 million from $73 million in the year-ago quarter, while adjusted operating income reached $156 million, compared with $77 million a year earlier. The retailer reported adjusted diluted EPS of $1.76, compared with $0.10 in the prior-year quarter. GAAP diluted EPS was $2.15, up from $0.07 a year earlier. Advertisement|Remove ads. However, the results included a $137 million tax benefit, equivalent to $1.16 per diluted share, a $61 million gain from the sale of two properties, and a $45 million benefit from tariff refunds. Kohl's Raises Full-Year Outlook Kohl's raised its fiscal 2026 outlook, now expecting net sales and comparable sales to range from flat to up 0.5%. It forecast GAAP diluted EPS of $4.30 to $4.50 for the full year. The updated EPS outlook includes expected benefits of $1.17 per share from the tax benefit, $1.03 from tariff refunds and $0.40 from the real estate gain. For the fourth quarter, Kohl's expects net sales and comparable sales to range from flat to up 2%. It forecast diluted EPS of $0.95 to $1.15, including an estimated $0.10 per share benefit from tariff refunds. Advertisement|Remove ads. Retail Turns \u2018Bullish\u2019 On Stocktwits, retail sentiment for the stock turned \u2018bullish\u2019 from \u2018bearish\u2019, amid \u2018high\u2019 message volumes in the past 24 hours. KSS was also one of the platform's trending tickers at the time of writing. KSS shares traded approximately 3.9% higher year-to-date. Advertisement|Remove ads. Also read: 'Big Short' Investor Steve Eisman Says AI Industry 'Dodged A Big Bullet' With Jensen Huang's Return, But Only 'For Now' For updates and corrections, email newsroom[at]stocktwits[dot]com. Comments Share your t"
+    },
+    {
+     "url": "https://finance.yahoo.com/markets/stocks/articles/why-kohls-kss-stock-today-153206268.html?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-24T15:32:06Z",
+     "key": [
+      "Strong Q3 Results and Raised 2026 Outlook GuruFocus News Tue, November 24, 2026 at 7:32 AM PST 3 min read KSS +18.92% ^GSPC -0.35% This article first appeared on GuruFocus.",
+      "Kohl's (KSS) stock is up 13.5% today, as of 10:31 a.m.",
+      "The company also raised its 2026 outlook, and GuruFocus reported that the shares surged nearly 8% premarket on the results.",
+      "ET +13.5% S&P 500 at the same time -0.4% Typical daily move (past year) 2.6% Times its typical move 6x Last gain this big +20.6% on May 28, 2026 (Earnings results (Q1 FY2026)) What moved Kohl's stock before?",
+      "KSS at a glance Measure Value Price $24.06 Market cap $2.73 billion Revenue (trailing 12 months) $15.43 billion P/E 10.5 GF Score 67/100 GF Value $16.28 GF Valuation Significantly Overvalued Is Kohl's stock overvalued?",
+      "At $24.06, the shares trade 47.8% above their GF Value of $16.28, a price-to-GF-Value ratio of 1.48."
+     ],
+     "text": "Oops, something went wrong Skip to navigation Skip to main content Skip to right column Sign in U.S. markets close in 3h 23m US Markets Europe Markets Asia Markets Cryptocurrencies Rates Commodities Currencies U.S. markets close in 3h 23m S&P 500 7,204.40 -32.77 -0.45% Dow 30 49,975.59 +380.28 +0.77% Nasdaq 23,740.95 -348.61 -1.45% Russell 2000 2,684.88 +15.22 +0.57% 10-Yr Bond 4.8980 -0.0200 -0.41% VIX 27.18 +0.56 +2.10% Gold 3,560.90 -90.50 -2.48% Bitcoin USD 59,907.35 -1,694.90 -2.75% Crude Oil Jan 27 81.45 +1.28 +1.60% US Private Equity 10,765.73 0.00 0.00% ADVERTISEMENT Why Is Kohl's (KSS) Stock Up Today? Strong Q3 Results and Raised 2026 Outlook GuruFocus News Tue, November 24, 2026 at 7:32 AM PST 3 min read KSS +18.92% ^GSPC -0.35% This article first appeared on GuruFocus. Kohl's (KSS) stock is up 13.5% today, as of 10:31 a.m. ET on Tuesday, Nov. 24, after strong Q3 results and a raised 2026 outlook. The shares traded at $24.06 while the S&P 500 fell 0.4%. GuruFocus reported that Kohl's posted third-quarter earnings of $2.15 per share and $3,800 million in revenue, both beating analyst estimates. Warning! GuruFocus has detected 5 Warning Signs with KSS. Is KSS fairly valued? Test your thesis with our free DCF calculator. KSS GF Value chart See every guru trade in KSS on the KSS guru trades page. Why is Kohl's stock up today? Kohl's reported third-quarter fiscal 2026 results, with earnings of $2.15 per share and $3,800 million in revenue, both beating analyst estimates, according to GuruFocus. The company also raised its 2026 outlook, and GuruFocus reported that the shares surged nearly 8% premarket on the results. GuruFocus: Kohl's Corp Reports Q3 Earnings of $2.15 Per Share and $3,800 Million in Revenue, Both Beating Analyst Estimates GuruFocus: Kohl's Reports Third Quarter Fiscal 2026 Financial Results GuruFocus: Kohl's (NYSE:KSS) Shares Surge Nearly 8% Premarket After Strong Q3 Results and Raised 2026 Outlook GuruFocus: Kohl's (NYSE:KSS) Beats Q3 Estimates, Raises 2026 Outlook Amid Dividend Sustainability Focus How unusual is this move for Kohl's? At 13.5%, the move is about 6 times Kohl's typical daily move of 2.6%. Its last move this big was a 20.6% jump on May 28, 2026, on first-quarter earnings. Earnings have driven most of its identified big jumps, including the 42.5% gain on Nov. 25, 2025, and three unusual jumps have come in the past 12 months. Measure Value Move as of 10:31 a.m. ET +13.5% S&P 500 at the same time -0.4% Typical daily move (past year) 2.6% Times its typical move 6x Last gain this big +20.6% on May 28, 2026 (Earnings results (Q1 FY2026)) What moved Kohl's stock before? Date Move What happened Oct. 22, 2026 +11.8% Gordon Haskett upgraded Kohl's to Buy on improving holiday outlook May 28, 2026 +20.6% Earnings results (Q1 FY2026) Nov. 25, 2025 +42.5% Earnings results (Q3 FY2025) Oct. 13, 2025 +11.1% Kohl's slashed its forecasts as inflation squeezed consumer demand Aug. 27, 2025 +24.0% Earnings results (Q2 FY2025) Aug. 11, 2025 +9.8% No cause identified How did Kohl's' peers trade? Company Move M Macy's +4.1% PLBL Polibeli -1.1% What does Kohl's do? Kohl's Corp is a US department store retailer headquartered in Menomonee Falls, Wisconsin, founded in 1962. It operates roughly 1,100 stores across 49 states, most located in strip centers rather than enclosed malls, and sells moderately priced apparel, footwear, accessories, cosmetics, and home goods. Kohl's has trailing 12-month revenue of $15.43 billion and a market value of $2.73 billion. The stock trades at 10.5 times trailing earnings and has a GF Score of 67 out of 100. KSS at a glance Measure Value Price $24.06 Market cap $2.73 billion Revenue (trailing 12 months) $15.43 billion P/E 10.5 GF Score 67/100 GF Value $16.28 GF Valuation Significantly Overvalued Is Kohl's stock overvalued? GF Valuation rates Kohl's Significantly Overvalued. At $24.06, the shares trade 47.8% above their GF Value of $16.28, a price-to-GF-Value ratio of 1.48. GF Value is"
+    }
+   ],
+   "pond": {
+    "wave": 0.0,
+    "own": 4.347247934859395,
+    "how": "a stone: its own news",
+    "from": [],
+    "reaches": [
+     [
+      "M",
+      0.64,
+      0.06079
+     ],
+     [
+      "DDS",
+      0.52,
+      0.04079
+     ],
+     [
+      "BBY",
+      0.51,
+      0.02795
+     ],
+     [
+      "CAL",
+      0.48,
+      0.02629
+     ],
+     [
+      "SHOE",
+      0.46,
+      -0.18111
+     ]
+    ]
+   }
+  },
+  {
+   "t": "HPE",
+   "company": "Hewlett Packard Enterprise Co",
+   "move": -0.17169926018577875,
+   "z": -4.698240301979014,
+   "wave": 0.0,
+   "mover": true,
+   "score": 0.6076230421517704,
+   "parts": {
+    "surprise": 0.3,
+    "unexplained": 0.914,
+    "news": 1.0,
+    "reach": 0.482,
+    "against": 0.0,
+    "memory": 1.0,
+    "fragile": 0.516
+   },
+   "reasons": [
+    "most of the move is its own",
+    "filed its results",
+    "6 stories name it",
+    "in the last note's theme 'Server makers: demand up, margins down'",
+    "chance of a restructuring or a write-off 1.6% against 0.3% usually"
+   ],
+   "attention": 0.0548825379737228,
+   "bars": 55,
+   "filings": [
+    {
+     "what": "results report (8-K 2.02)",
+     "at": "2026-11-23T21:12:08Z",
+     "title": "1701 E. Mossy Oaks Road",
+     "url": "https://www.sec.gov/Archives/edgar/data/1645590/000164559026000097/ex-991x11232026x8k.htm",
+     "key": [
+      "Fiscal 2027 First Quarter Outlook HPE estimates revenue to be in the range of $14.0 billion to $14.6 billion, representing a 51% to 57% growth rate from the prior year.",
+      "HPE estimates GAAP operating profit growth range to be 195% to 230% and non-GAAP operating profit growth range between 88% to 102%(1)(3).",
+      "HPE estimates GAAP diluted net EPS to be in the range of $0.88 to $0.98 and non-GAAP diluted net EPS to be in the range of $1.30 to $1.40(1).",
+      "Fiscal 2027 Full Year Outlook HPE is raising its FY27 revenue growth outlook range to 27% to 35%, representing $59.4 billion to $63.1 billion in revenue.",
+      "HPE estimates GAAP operating profit growth range to be between 29% to 40% and non-GAAP operating profit growth range to be between 23% to 30%(1)(3).",
+      "HPE is also raising its free cash flow(1)(2)(4) guidance and now expects free cash flow to be at least $5.5 billion. 1 A description of HPE\u2019s use of non-GAAP financial information is provided below under \u201cUse of non-GAAP financial information and"
+     ],
+     "text": "EX-99.1 2 ex-991x11232026x8k.htm EX-99.1 Exhibit 99.1 HPE 1701 E. Mossy Oaks Road Spring, TX 77389-1767 hpe.com News Release HPE reports fiscal 2026 fourth quarter results -Q4 results cap a year of record performance driven by strong demand and execution -Raising fiscal 2027 guidance to reflect durability of profitable growth HOUSTON \u2013 November 23, 2026 \u2013 HPE (NYSE: HPE) today announced financial results for the fourth quarter ended October 31, 2026. \u201cFiscal 2026 was a defining year for HPE as we built a new networking industry leader and expanded our role in the AI infrastructure market,\u201d said Antonio Neri, president and CEO of HPE. \u201cWe are now a fundamentally different company, with greater earnings power, a stronger competitive position, and a portfolio built to capitalize on the next phase of AI. Our record performance reflects the portfolio we have built to drive durable, profitable growth for our shareholders.\u201d \u201cWe achieved an exceptional fiscal 2026 while navigating a highly dynamic market and successfully integrating the largest acquisition in HPE\u2019s history,\u201d said Marie Myers, executive vice president and CFO of HPE. \u201cWith disciplined execution, we accelerated returns to shareholders by generating significant margin expansion, record operating profit, and free cash flow more than three times higher than last year. We enter fiscal 2027 in a position of strength, with a significantly higher outlook for revenue, operating profit, and free cash flow.\u201d Fourth Quarter Fiscal 2026 Financial Results \u2022Revenue: $14.5 billion, up 50% from the prior-year period \u2022Gross margins: \u25e6GAAP of 38.0%, up 450 basis points from the prior-year period and down 210 basis points sequentially \u25e6Non-GAAP(1) of 38.2%, up 180 basis points from the prior-year period and down 220 basis points sequentially \u2022Operating profit margins: \u25e6GAAP of 13.4%, up 1,350 basis points from the prior-year period and up 200 basis points sequentially \u25e6Non-GAAP(1) of 16.9%, up 470 basis points from the prior-year period and up 70 basis points sequentially \u2022Diluted net earnings per share (\u201cEPS\u201d): \u25e6GAAP of $1.26, up $1.15 from the prior-year period and above our outlook range of $1.12 - $1.22 \u25e6Non-GAAP(1) of $1.43, up $0.81 from the prior-year period and above our outlook range of $1.20 - $1.30 \u2022Cash flow from operations: $2.3 billion, a decrease of $0.1 billion from the prior-year period \u2022Free cash flow(1)(2): $1.9 billion, flat from the prior-year period \u2022Capital returns to common shareholders: $979 million in the form of dividends and share repurchases Fourth Quarter Fiscal 2026 Segment Results \u2022Networking revenue was $3.1 billion, up 12.3% from the prior-year period, with 22.1% operating profit margin, compared to 23.4% from the prior-year period. \u25e6Within Networking, revenue from: \u25aaCampus & Branch was $1.5 billion, up 16.7% from the prior-year period. \u25aaData Center Networking was $397 million, up 12.1% from the prior-year period. \u25aaSecurity was $268 million, down 1.8% from the prior-year period. \u25aaRouting was $893 million, up 10.1% from the prior-year period. \u2022Cloud & AI revenue was $11.3 billion, up 68.6% from the prior-year period, with 18.4% operating profit margin, compared to 9.3% from the prior-year period. \u25e6Within Cloud & AI, revenue from: \u25aaServer was $8.8 billion, up 94.7% from the prior-year period. \u25aaStorage was $1.5 billion, up 33.8% from the prior-year period. \u25aaFinancial Services was $0.9 billion, up 1.2% from the prior-year period. \u2022Corporate Investments and Other revenue was $234 million. Dividend and Share Repurchase Authorization The HPE Board of Directors declared a regular cash dividend of $0.17 per share on the company\u2019s common stock, payable on or about January 8, 2027, to stockholders of record as of the close of business on December 9, 2026. HPE\u2019s Board of Directors authorized an additional $5 billion in capacity for repurchases of common stock, bringing the total share repurchase authorization to approximately $7.3 billion as of November 23, 2026. The company plans to continue to return significant free cash flow to shareholders via share repurchases and common dividends, subject to approval by the Board. In FY27, the company is targeting returning at least 75% of its free cash flow to shareholders through dividends and share repurchases. Fiscal 2027 First Quarter Outlook HPE estimates revenue to be in the range of $14.0 billion to $14.6 billion, representing a 51% to 57% growth rate from the prior year. HPE estimates GAAP operating profit growth range to be 195% to 230% and non-GAAP operating profit growth range between 88% to 102%(1)(3). HPE estimates GAAP diluted net EPS to be in the range of $0.88 to $0.98 and non-GAAP diluted net EPS to be in the range of $1.30 to $1.40(1). Fiscal 2027 first quarter non-GAAP diluted net EPS estimate excludes net after-tax adjustments of approximately $0.42 per diluted share, primarily related to amortization of intangible assets, stock-based compensation expense, and acquisition, disposition and other charges. Fiscal 2027 Full Year Outlook HPE is raising its FY27 revenue growth outlook range to 27% to 35%, representing $59.4 billion to $63.1 billion in revenue. HPE estimates GAAP operating profit growth range to be between 29% to 40% and non-GAAP operating profit growth range to be between 23% to 30%(1)(3). HPE estimates GAAP diluted net EPS to be in the range of $3.68 to $3.98. The company is raising non-GAAP diluted net EPS estimates to be in the range of $5.05 to $5.35(1). Fiscal 2027 non-GAAP diluted net EPS estimate excludes net after-tax adjustments of approximately $1.37 per diluted share, primarily related to amortization of intangible assets, stock-based compensation expense, and acquisition, disposition and other charges. HPE is also raising its free cash flow(1)(2)(4) guidance and now expects free cash flow to be at least $5.5 billion. 1 A description of HPE\u2019s use of non-GAAP financial information is provided below under \u201cUse of non-GAAP financial information and"
+    }
+   ],
+   "pages": [
+    {
+     "url": "https://247wallst.com/investing/2026/11/24/hpe-stock-falls-7-after-hours-despite-50-revenue-growth-and-a-raised-outlook/?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-24T16:27:34Z",
+     "key": [
+      "At 8x to 9x fiscal 2027 earnings guidance, HPE trades far below its $71 analyst target, but server mix threatens margins.",
+      "ET open on November 24. 24/7 on YouTube2:22Play: 3 Power Stock Plays Ready To Surge 3 Power Stock Plays Ready To Surge Subscribe free on YouTube HPE is growing like an AI hardware company and raised its fiscal 2027 outlook.",
+      "What HPE Committed Revenue for the quarter ended October 31 was $14.5 billion, up 50%.",
+      "Non-GAAP EPS, which leaves out one-time items, was $1.43, above HPE\u2019s outlook of $1.20 to $1.30.",
+      "The board added $5 billion of buyback capacity, bringing the total to about $7.3 billion, and it set a quarterly dividend of $0.17, up from $0.1425.",
+      "HPE needs to turn that backlog into sales to reach its fiscal 2027 revenue guidance of $59.4 billion to $63.1 billion, which works out to growth of 27% to 35%."
+     ],
+     "text": "Skip to content Authoritative Financial News \u00b7 Since 2006 AI Investor Podcast Menu \u25cf Markets open At close S&P 5007,202.60\u22120.80% Dow Jones49,958.20+0.41% Nasdaq 10026,244.20\u22122.11% Russell 20002,687.59+0.51% S&P 5007,202.60\u22120.80% Dow Jones49,958.20+0.41% Nasdaq 10026,244.20\u22122.11% Russell 20002,687.59+0.51% S&P 5007,202.60\u22120.80% Dow Jones49,958.20+0.41% Nasdaq 10026,244.20\u22122.11% Russell 20002,687.59+0.51% S&P 5007,202.60\u22120.80% Dow Jones49,958.20+0.41% Nasdaq 10026,244.20\u22122.11% Russell 20002,687.59+0.51% S&P 5007,202.60\u22120.80% Dow Jones49,958.20+0.41% Nasdaq 10026,244.20\u22122.11% Russell 20002,687.59+0.51% S&P 5007,202.60\u22120.80% Dow Jones49,958.20+0.41% Nasdaq 10026,244.20\u22122.11% Russell 20002,687.59+0.51% Investing HPE Stock Falls 7% After Hours Despite 50% Revenue Growth and a Raised Outlook By Omor Ibne Ehsan Published November 24, 2026, 11:27am ET \u00b7 3 min read \ud835\udd4f f Quick Read HPE slid 7% after hours to about $45 despite 50% revenue growth, as a 17% daytime surge gave way to profit-taking. AI orders of $4.5 billion dwarf $2.5 billion in AI revenue, and AMD Helios and Oracle shipments should push results into the second half. At 8x to 9x fiscal 2027 earnings guidance, HPE trades far below its $71 analyst target, but server mix threatens margins. Released: The Definitive Guide to Retirement Income. It is a free guide from Fisher Investments covering what your retirement will really cost, where the cash flow should come from, and how much you can safely withdraw each year. Learn more here. Learn More Here \u203a (sponsor) This post may contain links from our sponsors and affiliates, and Flywheel Publishing may receive compensation for actions taken through them. \u00a9 Hewlett Packard Enterprise Inc. Hewlett Packard Enterprise (NYSE:HPE | HPE Price Prediction) reported fiscal fourth-quarter results after the close on November 23, 2026. During the evening, the stock gave back part of a very large regular-session gain. Shares had closed at $48.02, up $7.11 or 17.38%, on a day when the wide market rebounded. That was HPE\u2019s second-biggest one-day gain since it began trading in October 2015. Only the 19.47% rise on June 2, 2026, was larger. The first after-hours trade, around 4:09 p.m. ET, was down about 3% at $46.81. By 7:37 p.m. ET, the stock was at $44.63, down $3.39 or 7.06%, and that price can change before the 9:30 a.m. ET open on November 24. 24/7 on YouTube2:22Play: 3 Power Stock Plays Ready To Surge 3 Power Stock Plays Ready To Surge Subscribe free on YouTube HPE is growing like an AI hardware company and raised its fiscal 2027 outlook. Even so, the stock kept slipping through the evening, and no filing or company statement explains why. What HPE Committed Revenue for the quarter ended October 31 was $14.5 billion, up 50%. That was inside HPE\u2019s own earlier outlook range, so revenue came in about where the company planned. Earnings beat the company\u2019s own forecast. Non-GAAP EPS, which leaves out one-time items, was $1.43, above HPE\u2019s outlook of $1.20 to $1.30. GAAP EPS was $1.26, above the $1.12 to $1.22 range. The board added $5 billion of buyback capacity, bringing the total to about $7.3 billion, and it set a quarterly dividend of $0.17, up from $0.1425. Two other numbers are only targets: returning at least 75% of fiscal 2027 free cash flow to shareholders, and the roughly $3 billion of buybacks that CFO Marie Myers described on the call. Orders Are Running Far Ahead of Revenue AI systems orders in the fourth quarter reached $4.5 billion, up more than 130%, while AI systems revenue was $2.5 billion. Total orders rose 88%. HPE needs to turn that backlog into sales to reach its fiscal 2027 revenue guidance of $59.4 billion to $63.1 billion, which works out to growth of 27% to 35%. Guidance for the first quarter means 51% to 57% growth. Management said results will lean toward the second half of the year, when shipments for Helios systems from AMD (NASDAQ:AMD) and for Oracle (NYSE:ORCL) begin. HPE did not disclose the terms of the Oracle agree"
+    },
+    {
+     "url": "https://finance.yahoo.com/markets/stocks/articles/hpe-stock-plunges-10-despite-161021834.html?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-24T16:10:21Z",
+     "key": [
+      "A caution on profit margins is overshadowing an upbeat earnings report at Hewlett Packard Enterprise (NYSE:HPE), whose shares dropped about 10% in premarket trading Tuesday.",
+      "HPE GF Value chart She expects that mix to lean toward the second half and said synergies could help offset the pressure.",
+      "Fourth-quarter adjusted earnings were $1.43 per share, versus the $1.29 analysts expected.",
+      "For the first quarter of fiscal 2027, the company expects adjusted earnings of $1.30 to $1.40 per share on sales of $14 billion to $14.6 billion.",
+      "Analysts had expected $1.07 and $12.99 billion, respectively.",
+      "For the full year, it expects adjusted earnings of $5.05 to $5.35 per share and sales of $59.4 billion to $63.1 billion, compared with analyst estimates of $4.76 and $55.1 billion."
+     ],
+     "text": "Oops, something went wrong Skip to navigation Skip to main content Skip to right column Sign in U.S. markets close in 3h 23m US Markets Europe Markets Asia Markets Cryptocurrencies Rates Commodities Currencies U.S. markets close in 3h 23m S&P 500 7,204.91 -32.26 -0.45% Dow 30 49,982.84 +387.53 +0.78% Nasdaq 23,740.60 -348.96 -1.45% Russell 2000 2,684.67 +15.02 +0.56% 10-Yr Bond 4.8980 -0.0200 -0.41% VIX 27.19 +0.57 +2.14% Gold 3,561.40 -90.00 -2.46% Bitcoin USD 59,936.02 -1,666.23 -2.70% Crude Oil Jan 27 81.51 +1.34 +1.67% US Private Equity 10,765.73 0.00 0.00% ADVERTISEMENT HPE Stock Plunges 10% Despite Earnings Beat and Raised Outlook Nauman Khan Tue, November 24, 2026 at 8:10 AM PST 1 min read HPE -16.54% This article first appeared on GuruFocus. A caution on profit margins is overshadowing an upbeat earnings report at Hewlett Packard Enterprise (NYSE:HPE), whose shares dropped about 10% in premarket trading Tuesday. Chief Financial Officer Marie Myers said gross margin may soften through fiscal 2027 as artificial intelligence systems take a larger share of sales. Warning! GuruFocus has detected 6 Warning Signs with HPE. Is HPE fairly valued? Test your thesis with our free DCF calculator. HPE GF Value chart She expects that mix to lean toward the second half and said synergies could help offset the pressure. The stock closed 17.3% higher Monday during a broader market rally, then slipped about 2% in after-hours trading following the report. Fourth-quarter adjusted earnings were $1.43 per share, versus the $1.29 analysts expected. Revenue rose 50.3% from a year earlier to $14.55 billion, also above estimates. For the first quarter of fiscal 2027, the company expects adjusted earnings of $1.30 to $1.40 per share on sales of $14 billion to $14.6 billion. Analysts had expected $1.07 and $12.99 billion, respectively. For the full year, it expects adjusted earnings of $5.05 to $5.35 per share and sales of $59.4 billion to $63.1 billion, compared with analyst estimates of $4.76 and $55.1 billion. Terms and Privacy Policy Your Privacy Choices CA Privacy Notice More Info Recommended Stories Edit your Dock Hang tight, restoring your last session ADVERTISEMENT More News Terms and Privacy Policy Your Privacy Choices CA Privacy Notice Ad Terms Feedback More Info"
+    }
+   ],
+   "pond": {
+    "wave": 0.0,
+    "own": -4.698240301979014,
+    "how": "a stone: its own news",
+    "from": [],
+    "reaches": [
+     [
+      "DELL",
+      0.69,
+      -0.11875
+     ],
+     [
+      "NTAP",
+      0.61,
+      -0.0571
+     ],
+     [
+      "PENG",
+      0.47,
+      -0.10875
+     ],
+     [
+      "CSCO",
+      0.47,
+      -0.03833
+     ],
+     [
+      "SNX",
+      0.45,
+      -0.06821
+     ]
+    ]
+   }
+  }
+ ],
+ "rest": [
+  {
+   "t": "DKS",
+   "score": 0.5521263093439688,
+   "attention": 0.034560881667638745,
+   "reasons": [
+    "most of the move is its own",
+    "filed its results",
+    "5 stories name it",
+    "in the last note's theme 'Retailers report: most beat and raise'"
+   ]
+  },
+  {
+   "t": "DY",
+   "score": 0.5436763541454921,
+   "attention": 0.03221094048656368,
+   "reasons": [
+    "outside its 9-in-10 range",
+    "most of the move is its own",
+    "filed its results",
+    "4 stories name it",
+    "31 stocks moved closely with it over the year"
+   ]
+  },
+  {
+   "t": "COGT",
+   "score": 0.5410527516789546,
+   "attention": 0.03151434401117682,
+   "reasons": [
+    "outside its 9-in-10 range",
+    "most of the move is its own",
+    "4 stories name it",
+    "chance of a sale of new shares 5.6% against 0.9% usually",
+    "cash covers about 2.1 quarters of losses"
+   ]
+  },
+  {
+   "t": "INSM",
+   "score": 0.5362468382849227,
+   "attention": 0.030277156864667046,
+   "reasons": [
+    "outside its 9-in-10 range",
+    "most of the move is its own",
+    "filed a material deal",
+    "5 stories name it",
+    "chance of a sale of new shares 9.5% against 0.9% usually",
+    "cash covers about 2.6 quarters of losses"
+   ]
+  },
+  {
+   "t": "PINS",
+   "score": 0.5326909305328574,
+   "attention": 0.02939312974030889,
+   "reasons": [
+    "most of the move is its own",
+    "filed an officer or director change",
+    "3 stories name it",
+    "chance of a restructuring or a write-off 3.5% against 0.3% usually"
+   ]
+  },
+  {
+   "t": "DC",
+   "score": 0.5254849212550745,
+   "attention": 0.027680020944631508,
+   "reasons": [
+    "most of the move is its own",
+    "filed 8-K 7.01, 8.01 at 2026-11-23T21:16Z",
+    "14 stocks moved closely with it over the year",
+    "moved against its wave (-2.9 usual days against a wave of +0.3)",
+    "chance of a sale of new shares 8.3% against 0.9% usually"
+   ]
+  },
+  {
+   "t": "AMTM",
+   "score": 0.5174088471230306,
+   "attention": 0.025878442071403003,
+   "reasons": [
+    "outside its 9-in-10 range",
+    "most of the move is its own",
+    "filed its results",
+    "4 stories name it"
+   ]
+  },
+  {
+   "t": "TXN",
+   "score": 0.4744106392662918,
+   "attention": 0.018085162864154535,
+   "reasons": [
+    "most of the move is its own",
+    "3 stories name it",
+    "23 stocks moved closely with it over the year",
+    "in the last note's theme 'Chips give back part of Monday'"
+   ]
+  },
+  {
+   "t": "SMTC",
+   "score": 0.45,
+   "attention": 0.014756296557647026,
+   "reasons": [
+    "78 stocks moved closely with it over the year",
+    "in the last note's theme 'Chips give back part of Monday'"
+   ]
+  },
+  {
+   "t": "CMP",
+   "score": 0.4308998814885059,
+   "attention": 0.012584957136956301,
+   "reasons": [
+    "most of the move is its own",
+    "filed its results",
+    "4 stories name it"
+   ]
+  },
+  {
+   "t": "TGLS",
+   "score": 0.40422934884210016,
+   "attention": 0.01007692124532486,
+   "reasons": [
+    "most of the move is its own",
+    "1 story names it",
+    "28 stocks moved closely with it over the year"
+   ]
+  },
+  {
+   "t": "STOK",
+   "score": 0.40161881772487534,
+   "attention": 0.009860070887605963,
+   "reasons": [
+    "most of the move is its own",
+    "1 story names it",
+    "chance of a sale of new shares 4.3% against 0.9% usually"
+   ]
+  },
+  {
+   "t": "IRON",
+   "score": 0.400893549154832,
+   "attention": 0.00980065728426797,
+   "reasons": [
+    "most of the move is its own",
+    "1 story names it",
+    "chance of a restructuring or a write-off 1.0% against 0.3% usually",
+    "chance of a sale of new shares 10.4% against 0.9% usually"
+   ]
+  },
+  {
+   "t": "PNNT",
+   "score": 0.3979545595426789,
+   "attention": 0.009563539251562978,
+   "reasons": [
+    "16 stocks moved closely with it over the year",
+    "moved against its wave (-2.7 usual days against a wave of +0.6)"
+   ]
+  },
+  {
+   "t": "BMRN",
+   "score": 0.3956394653949486,
+   "attention": 0.009380803514897612,
+   "reasons": [
+    "most of the move is its own",
+    "1 story names it",
+    "chance of a restructuring or a write-off 1.8% against 0.3% usually"
+   ]
+  },
+  {
+   "t": "XRX",
+   "score": 0.3856543098667095,
+   "attention": 0.008631823603088796,
+   "reasons": [
+    "outside its 9-in-10 range",
+    "most of the move is its own, with no news found",
+    "chance of late or unreliable accounts 1.8% against 0.4% usually",
+    "chance of a restructuring or a write-off 1.2% against 0.3% usually",
+    "cash covers about 1.4 quarters of losses"
+   ]
+  },
+  {
+   "t": "AMD",
+   "score": 0.3805701414130642,
+   "attention": 0.0082737489212546,
+   "reasons": [
+    "44 stocks moved closely with it over the year",
+    "in the last note's theme 'Chips give back part of Monday'"
+   ]
+  },
+  {
+   "t": "BURL",
+   "score": 0.37958370724829094,
+   "attention": 0.008206015126485548,
+   "reasons": [
+    "in the last note's theme 'Retailers report: most beat and raise'"
+   ]
+  },
+  {
+   "t": "VREX",
+   "score": 0.3624436720477455,
+   "attention": 0.007113780445182651,
+   "reasons": [
+    "most of the move is its own",
+    "filed its results",
+    "2 stories name it"
+   ]
+  },
+  {
+   "t": "DELL",
+   "score": 0.36141852841534433,
+   "attention": 0.00705326723520817,
+   "reasons": [
+    "1 story names it",
+    "in the last note's theme 'Server makers: demand up, margins down'"
+   ]
+  }
+ ]
+}

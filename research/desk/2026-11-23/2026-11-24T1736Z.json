@@ -1,0 +1,583 @@
+{
+ "asof": "2026-11-23",
+ "at": "2026-11-24T17:36:20Z",
+ "calls": [],
+ "case_sha": "0014c2ff8a14b1be",
+ "check": "2026-11-24T1736Z",
+ "claims_noted": 0,
+ "evidence": {
+  "c1": {
+   "text": "movers tied together: ADI, INSM, TXN, IRON (ADI~TXN by s15; ADI~INSM by s30; ADI~TXN by s43; INSM~IRON by s54; ADI~TXN by p:ADI~TXN)"
+  },
+  "c2": {
+   "text": "movers tied together: COGT, ORIC (COGT~ORIC by p:COGT~ORIC)"
+  },
+  "g:1531": {
+   "text": "Operative Builders: the median of its 13 checked stocks moved +3.6%"
+  },
+  "g:2834": {
+   "text": "Pharmaceutical Preparations: the median of its 146 checked stocks moved +5.3%"
+  },
+  "g:2836": {
+   "text": "Biological Products, (No Diagnostic Substances): the median of its 50 checked stocks moved +4.1%"
+  },
+  "g:3674": {
+   "text": "Semiconductors & Related Devices: the median of its 59 checked stocks moved -8.4%"
+  },
+  "g:5331": {
+   "text": "Retail-Variety Stores: the median of its 9 checked stocks moved +3.9%"
+  },
+  "k": {
+   "text": "Market: S&P 500 (SPY) -0.6%, Nasdaq 100 (QQQ) -2.0%, Russell 2000 (IWM) +0.6%, S&P 500 futures -1.1%, VIX +6.1% (in session)"
+  },
+  "p:ADI~TXN": {
+   "text": "ADI and TXN: market-adjusted daily returns correlated 0.80 over the last 250 sessions; TXN -9.1% since the close"
+  },
+  "s1": {
+   "text": "2026-11-24T16:22Z finance.yahoo.com: Shoe Station Group Inc (SHOE) (Q3 2026) Earnings Call Highlights: Sales Decline, Goodwill ... -- Shoe Station Group Inc (SHOE) posts a 5.1% comparable sales drop and a $12.3 million net loss while reversing underperforming store conversions and boosting holiday advertising by 50%.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/shoe-station-group-inc-shoe-162221126.html?.tsrc=rss"
+  },
+  "s10": {
+   "text": "2026-11-24T15:25Z finance.yahoo.com: Cogent Biosciences stock surges on FDA approval of EKITNA -- Investing.com -- Cogent Biosciences Inc (NASDAQ:COGT) shares jumped 14% Tuesday following the FDA approval of EKITNA (bezuclastinib) for the treatment of advanced gastrointestinal stromal tumors in adult patients who have received prior treatment with imatinib.",
+   "url": "https://finance.yahoo.com/healthcare/articles/cogent-biosciences-stock-surges-fda-152543515.html?.tsrc=rss"
+  },
+  "s11": {
+   "text": "2026-11-24T15:00Z finance.yahoo.com: Why Is Cogent Biosciences (COGT) Stock Up Today? FDA Clearance for Ekitna -- On Tuesday, Nov. 24, shares rose 15.6% after the company gained FDA clearance for Ekitna in advanced GIST, according to GuruFocus",
+   "url": "https://finance.yahoo.com/healthcare/articles/why-cogent-biosciences-cogt-stock-150047862.html?.tsrc=rss"
+  },
+  "s12": {
+   "text": "2026-11-24T14:27Z finance.yahoo.com: Cogent Biosciences Announces FDA Approval and Launch of EKITNA\u2122 (bezuclastinib) for the Treatment of Patients with Gastrointestinal Stromal Tumors (GIST) Who Have Received Prior Treatment with Imatinib -- EKITNA logo EKITNA logo EKITNA Bottle and Package EKITNA bottle and package FDA approval based on results from pivotal Phase 3 PEAK trial; first ever GIST treatment to demonstrate a statistically significant progression-free survival benefit versus an active",
+   "url": "https://finance.yahoo.com/healthcare/articles/cogent-biosciences-announces-fda-approval-142700130.html?.tsrc=rss"
+  },
+  "s13": {
+   "text": "2026-11-24T17:20Z finance.yahoo.com: Analog Devices Tops Fiscal Q4 Views, Gives Mixed Outlook -- Analog Devices beat estimates for its fiscal fourth quarter but offered mixed guidance for the current period. ADI stock fell.",
+   "url": "https://finance.yahoo.com/m/6e83312d-bf7d-326a-81cc-5e889e4efe06/analog-devices-tops-fiscal-q4.html?.tsrc=rss"
+  },
+  "s14": {
+   "text": "2026-11-24T17:16Z www.marketbeat.com: What Analog Devices (ADI) Said on Its Q4 Earnings Call -- Analog Devices (NASDAQ:ADI) reported fiscal fourth-quarter revenue of $4.37 billion, up 42% from a year earlier, as demand from industrial customers and AI infrastructure helped the chipmaker close a record year. Revenue rose 9% sequentially, while adjusted earnings per share increased 80% year ove",
+   "url": "https://www.marketbeat.com/instant-alerts/transcript-what-analog-devices-adi-said-on-its-q4-earnings-call-2026-11-24/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss"
+  },
+  "s15": {
+   "text": "2026-11-24T15:13Z finance.yahoo.com: Why Analog Devices Stock Is Taking Its Worst Beating Since 2020 -- Analog Devices stock falls sharply as Wall Street doesn\u2019t see enough in the chip maker\u2019s guidance.",
+   "url": "https://finance.yahoo.com/m/46454a5c-9063-384d-acc5-8cb7e232384f/why-analog-devices-stock-is.html?.tsrc=rss"
+  },
+  "s16": {
+   "text": "2026-11-24T15:00Z finance.yahoo.com: Why Analog Devices (ADI) Stock Is Down Today: Shares Fall Despite Q4 Beat -- On Tuesday, Nov. 24, the stock fell 14.6% after its Q4 earnings release, even though the results beat estimates.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/why-analog-devices-adi-stock-150039276.html?.tsrc=rss"
+  },
+  "s17": {
+   "text": "2026-11-24T16:53Z 247wallst.com: The Gates Foundation Trust Sold 2.2 Million Berkshire Shares and Opened a $155 Million Dollar Tree Stake -- One of the world's biggest endowments trimmed a Berkshire stake it got from Warren Buffett and made a fresh bet on a discount retailer. Only one of those moves tells investors something worth acting on.",
+   "url": "https://247wallst.com/investing/2026/11/24/the-gates-foundation-trust-sold-2-2-million-berkshire-shares-and-opened-a-155-million-dollar-tree-stake/?.tsrc=rss"
+  },
+  "s18": {
+   "text": "2026-11-24T16:26Z www.retaildive.com: Dollar Tree predicts holiday shoppers will \u2018buy closer to need\u2019 -- The retailer\u2019s Q3 total revenue grew nearly 7%, with traffic growth outpacing increases in average ticket.",
+   "url": "https://www.retaildive.com/news/dollar-tree-q3-holiday-shoppers-buy-closer-to-need/875619/?.tsrc=rss"
+  },
+  "s19": {
+   "text": "2026-11-24T16:16Z www.marketbeat.com: Dollar Tree Q3 Earnings Call Highlights -- Dollar Tree (NASDAQ:DLTR) reported stronger-than-expected comparable sales and adjusted earnings for the third quarter of fiscal 2026, as more customers visited its stores and spending on everyday essentials accelerated. Net sales rose 6.9% to $5.1 billion, while comparable-store sales increased 4.",
+   "url": "https://www.marketbeat.com/instant-alerts/transcript-dollar-tree-q3-earnings-call-highlights-2026-11-24/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss"
+  },
+  "s20": {
+   "text": "2026-11-24T16:13Z finance.yahoo.com: Dollar Tree Jumps as Shopper Traffic Accelerates and Outlook Rises -- Comparable store sales rose 4.6%, above the top of the company's outlook",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/dollar-tree-jumps-shopper-traffic-161335619.html?.tsrc=rss"
+  },
+  "s21": {
+   "text": "2026-11-24T16:23Z finance.yahoo.com: Dycom Industries Inc (DY) (Q3 2027) Earnings Call Highlights: Record $2. ... -- Dycom Industries Inc (DY) beat guidance with 41.6% revenue growth and a record $12.9 billion backlog, while flagging a fiber-to-the-home slowdown offset by surging long-haul and data center demand.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/dycom-industries-inc-dy-q3-162346992.html?.tsrc=rss"
+  },
+  "s22": {
+   "text": "2026-11-24T15:11Z finance.yahoo.com: What Dycom\u2019s Earnings Say About AI Growth -- Tuesday, Dycom announced fiscal third-quarter adjusted EPS of $5.23 on sales of $2.1 billion. Wall Street was looking for EPS of $4.56 on sales of $1.9 billion.",
+   "url": "https://finance.yahoo.com/m/11cf3595-7eda-37a9-b753-8abbdf893f40/what-dycom%E2%80%99s-earnings-say.html?.tsrc=rss"
+  },
+  "s23": {
+   "text": "2026-11-24T15:01Z finance.yahoo.com: Why Is Dycom (DY) Stock Down Today? Q3 EPS Misses Estimates Despite Revenue Beat -- On Tuesday, Nov. 24, the shares fell 14.7% after the company's third-quarter earnings showed GAAP EPS missing estimates.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/why-dycom-dy-stock-down-150101343.html?.tsrc=rss"
+  },
+  "s24": {
+   "text": "2026-11-24T13:30Z finance.yahoo.com: Dycom Industries (DY) Reports Q3 Earnings: What Key Metrics Have to Say -- While the top- and bottom-line numbers for Dycom Industries (DY) give a sense of how the business performed in the quarter ended October 2026, it could be worth looking at how some of its key metrics compare to Wall Street estimates and year-ago values.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/dycom-industries-dy-reports-q3-133003914.html?.tsrc=rss"
+  },
+  "s25": {
+   "text": "2026-11-24T16:16Z www.marketbeat.com: What Amentum (AMTM) Said on Its Q4 Earnings Call -- Amentum (NYSE:AMTM) reported fiscal 2026 revenue of $13.8 billion and a 13% increase in adjusted earnings per share, as expanding margins and cash generation helped the company reduce debt and launch its first share repurchase program. The company expects fiscal 2027 revenue of $13.8 billion to $14",
+   "url": "https://www.marketbeat.com/instant-alerts/transcript-what-amentum-amtm-said-on-its-q4-earnings-call-2026-11-24/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss"
+  },
+  "s26": {
+   "text": "2026-11-24T15:00Z finance.yahoo.com: Amentum (AMTM) Stock Is Up 14.5% Today: Earnings Beat, FY27 Guidance -- On Tuesday, Nov. 24, shares rose 14.5% after Amentum reported a Q4 earnings beat and set FY27 revenue guidance",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/amentum-amtm-stock-14-5-150051315.html?.tsrc=rss"
+  },
+  "s27": {
+   "text": "2026-11-23T22:37Z finance.yahoo.com: Amentum surges on earnings beat and buyback program -- Investing.com -- Amentum Holdings LLC (NYSE:AMTM) reported fourth-quarter adjusted earnings per share of $0.71, beating analyst estimates of $0.66, while revenue of $3.62 billion fell short of the $3.7 billion consensus. The engineering and technology company also announced its first-ever $500 million share repurchase program, driving shares up 7.8% in after-hours trading Monday.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/amentum-surges-earnings-beat-buyback-223752582.html?.tsrc=rss"
+  },
+  "s29": {
+   "text": "2026-11-24T17:16Z www.marketbeat.com: Sanofi Bets $41 Billion on Insmed to Fuel Growth Beyond Dupixent -- Sanofi (NASDAQ:SNY) said it will acquire Insmed for about $41 billion in cash, adding two commercial medicines and a late-stage respiratory drug candidate as it seeks to strengthen growth beyond Dupixent. Insmed shareholders will receive $175 per share under the deal, which is expected to close in",
+   "url": "https://www.marketbeat.com/instant-alerts/event-sanofi-bets-41-billion-on-insmed-to-fuel-growth-beyond-dupixent-2026-11-24/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss"
+  },
+  "s3": {
+   "text": "2026-11-24T15:00Z finance.yahoo.com: Why Is Shoe Station (SHOE) Stock Plunging Today? Revenue Miss, Guidance Cut -- On Tuesday, Nov. 24, the stock fell 21.8% after a third-quarter revenue miss and lowered fiscal 2026 guidance, according to GuruFocus.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/why-shoe-station-shoe-stock-150035497.html?.tsrc=rss"
+  },
+  "s30": {
+   "text": "2026-11-24T16:56Z finance.yahoo.com: Top Midday Stories: Anthropic Falls Below $83 IPO Price; Sanofi to Buy Insmed -- The Nasdaq Composite and S&P 500 fell in late-morning trading Tuesday as tech stocks gave back some",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/top-midday-stories-anthropic-falls-165630459.html?.tsrc=rss"
+  },
+  "s31": {
+   "text": "2026-11-24T15:34Z finance.yahoo.com: Insmed Snags A Whopping Price Tag As Sanofi Confirms Rumored Buyout -- Sanofi said Tuesday it would spend $41 billion to acquire Insmed in the biggest biotech buyout since Pfizer bought Seagen for $43 billion.",
+   "url": "https://finance.yahoo.com/m/512db97e-0e42-388a-871d-acdb3ea67146/insmed-snags-a-whopping-price.html?.tsrc=rss"
+  },
+  "s32": {
+   "text": "2026-11-24T15:34Z www.euronews.com: Why French pharma firm Sanofi is paying $41 billion for US company Insmed -- French drugmaker Sanofi has agreed a $41 billion (\u20ac37.4bn) all-cash takeover of Insmed, a US biopharma company. The deal, one of its biggest ever, is meant to refill its pipeline of new medicines before its best-selling drug loses patent protection.View on euronews",
+   "url": "https://www.euronews.com/2026/11/24/why-french-pharma-firm-sanofi-is-paying-41-billion-for-us-company-insmed?.tsrc=rss"
+  },
+  "s35": {
+   "text": "2026-11-24T16:08Z stocktwits.com: KSS Stock Rally: Kohl\u2019s Comparable Sales Return To Growth In Q3 As Retailer Raises FY26 Outlook -- CEO Michael Bender said the return to comparable sales growth reflects progress on the company's strategic initiatives, adding that strong financial discipline provides flexibility to continue investing in the business.",
+   "url": "https://stocktwits.com/news-articles/markets/equity/kss-stock-rally-kohl-s-comparable-sales-return-to-growth-in-q3-as-retailer-raises-fy-26-outlook/cNbsXtKR9kM?.tsrc=rss"
+  },
+  "s36": {
+   "text": "2026-11-24T15:32Z finance.yahoo.com: Why Is Kohl's (KSS) Stock Up Today? Strong Q3 Results and Raised 2026 Outlook -- On Tuesday, Nov. 24, shares rose 13.5% after strong third-quarter results and a raised 2026 outlook, according to GuruFocus.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/why-kohls-kss-stock-today-153206268.html?.tsrc=rss"
+  },
+  "s39": {
+   "text": "2026-11-24T16:27Z 247wallst.com: HPE Stock Falls 7% After Hours Despite 50% Revenue Growth and a Raised Outlook -- HPE just posted blowout AI numbers and lifted its outlook, yet traders kept selling into the evening with no explanation from the company. The real story sits in the gap between orders and revenue, and one margin warning buried on the call.",
+   "url": "https://247wallst.com/investing/2026/11/24/hpe-stock-falls-7-after-hours-despite-50-revenue-growth-and-a-raised-outlook/?.tsrc=rss"
+  },
+  "s4": {
+   "text": "2026-11-24T14:03Z wwd.com: Shoe Station Group Stock Tumbles on Earnings Miss in Q3 Hit by Continued Promotional Environment -- Shares of Shoe Station Group fell nearly 24 percent in pre-market trading on Tuesday morning.",
+   "url": "https://wwd.com/footwear-news/shoe-industry-news/shoe-station-shoe-q3-2026-earnings-stock-price-1239463708/?.tsrc=rss"
+  },
+  "s40": {
+   "text": "2026-11-24T16:10Z finance.yahoo.com: HPE Stock Plunges 10% Despite Earnings Beat and Raised Outlook -- Hewlett Packard Enterprise erases rally gains as CFO cautions on AI server profits",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/hpe-stock-plunges-10-despite-161021834.html?.tsrc=rss"
+  },
+  "s41": {
+   "text": "2026-11-24T15:42Z stocktwits.com: HPE Stock On Track For Biggest Single-Day Loss In Over 18 Months \u2014 CEO Warns Of Supply Shortages Through 2028 -- HPE raised its fiscal 2027 guidance and quarterly orders jumped 88%, but analysts flagged margin pressure in its Cloud and AI business.",
+   "url": "https://stocktwits.com/news-articles/markets/equity/hpe-stock-on-track-for-biggest-single-day-loss-in-over-18-months-ceo-warns-of-supply-shortages-through-2028/cNbsQ2WR9kt?.tsrc=rss"
+  },
+  "s42": {
+   "text": "2026-11-24T15:31Z www.fool.com: HP Enterprise (HPE) Q4 2026 Earnings Call Transcript -- AI orders surged and Juniper integration ran ahead of plan in fiscal Q4.",
+   "url": "https://www.fool.com/earnings/call-transcripts/2026/11/24/hp-enterprise-hpe-q4-2026-earnings-call-transcript/?.tsrc=rss"
+  },
+  "s43": {
+   "text": "2026-11-24T15:32Z finance.yahoo.com: Texas Instruments (TXN) Stock Is Down 8.1% Today: Chip Sector Sell-Off -- On Tuesday, Nov. 24, the shares fell 8.1% as chip stocks slid after Analog Devices' weak outlook, according to GuruFocus.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/texas-instruments-txn-stock-down-153245668.html?.tsrc=rss"
+  },
+  "s46": {
+   "text": "2026-11-24T17:16Z www.marketbeat.com: Compass Minerals International Q4 Earnings Call Highlights -- Compass Minerals International (NYSE:CMP) expects higher salt prices and lower production costs to drive adjusted EBITDA growth in fiscal 2027, even as limited inventories constrain sales volumes. The company forecast adjusted EBITDA of $270 million at the midpoint of its outlook, about 15% above f",
+   "url": "https://www.marketbeat.com/instant-alerts/transcript-compass-minerals-international-q4-earnings-call-highlights-2026-11-24/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss"
+  },
+  "s48": {
+   "text": "2026-11-23T21:35Z finance.yahoo.com: Compass Minerals (CMP) Reports Q4 Loss, Beats Revenue Estimates -- Compass (CMP) delivered earnings and revenue surprises of -1,700.00% and +13.47%, respectively, for the quarter ended September 2026. Do the numbers hold clues to what lies ahead for the stock?",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/compass-minerals-cmp-reports-q4-213501311.html?.tsrc=rss"
+  },
+  "s49": {
+   "text": "2026-11-23T21:15Z finance.yahoo.com: Compass Minerals Reports Fiscal Fourth-Quarter and Full-Year 2026 Results -- OVERLAND PARK, Kan., November 23, 2026--Compass Minerals (NYSE: CMP), a leading global provider of essential minerals, today reported fiscal fourth-quarter and full-year 2026 results. Unless otherwise noted, time periods referenced below are on a fiscal-year basis.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/compass-minerals-reports-fiscal-fourth-211500758.html?.tsrc=rss"
+  },
+  "s5": {
+   "text": "2026-11-24T16:21Z finance.yahoo.com: Abercrombie & Fitch Co (ANF) (Q3 2026) Earnings Call Highlights: Record $1. ... -- Abercrombie & Fitch Co (ANF) posted 11% net sales growth with a 15.5% operating margin, double-digit gains across all regions and both brands, and $382 million in year-to-date buybacks.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/abercrombie-fitch-co-anf-q3-162121493.html?.tsrc=rss"
+  },
+  "s51": {
+   "text": "2026-11-24T16:00Z www.proactiveinvestors.com: Dick's Sporting Goods rises 16% after raising 2026 guidance -- Dick's Sporting Goods (NYSE:DKS) shares jumped 16% on Tuesday morning after the sports retailer beat third-quarter revenue and adjusted earnings estimates and raised its full-year 2026 guidance. Revenue rose 23.2% to $5.13 billion, topping the $5.07 billion S&P analyst consensus, while...",
+   "url": "https://www.proactiveinvestors.com/companies/news/1102363/dick-s-sporting-goods-rises-16-after-raising-2026-guidance-1102363.html?.tsrc=rss"
+  },
+  "s53": {
+   "text": "2026-11-24T14:47Z stocktwits.com: DKS Stock Rallies On Q3 Earnings Beat - Dick\u2019s Sporting Goods Raises FY2026 Forecast -- Executive Chairman Ed Stack said comparable sales at Foot Locker's U.S. banner increased more than 4%, despite continued challenges in the athletic footwear market.",
+   "url": "https://stocktwits.com/news-articles/markets/equity/dks-stock-rallies-on-q3-earnings-beat-dick-s-sporting-goods-raises-fy-2026-forecast/cNbsaNaR9k8?.tsrc=rss"
+  },
+  "s54": {
+   "text": "2026-11-24T17:00Z finance.yahoo.com: Disc Medicine (IRON) Stock Is Up 8.5% Today Without Company News -- On Tuesday, Nov. 24, shares rose 8.5% without company-specific news as health care stocks gained 2.4%.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/disc-medicine-iron-stock-8-170057302.html?.tsrc=rss"
+  },
+  "s55": {
+   "text": "2026-11-24T16:31Z finance.yahoo.com: BioMarin (BMRN) Stock Is Up 8.9% Today Without Company News -- On Tuesday, Nov. 24, shares rose 8.9% without company-specific news as health care stocks gained",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/biomarin-bmrn-stock-8-9-163108769.html?.tsrc=rss"
+  },
+  "s56": {
+   "text": "2026-11-24T15:37Z finance.yahoo.com: Pinterest shares jump 13% after executive pay overhaul -- Investing.com -- Pinterest shares jumped 13% as changes to its executive pay packages sparked speculation that the company could be positioning itself for a potential takeover.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/pinterest-shares-jump-13-executive-153755403.html?.tsrc=rss"
+  },
+  "s57": {
+   "text": "2026-11-24T15:01Z finance.yahoo.com: Pinterest (PINS) Stock Is Up 12.6% Today Without Company News -- On Tuesday, Nov. 24, the stock rose 12.6% without company-specific news",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/pinterest-pins-stock-12-6-150107246.html?.tsrc=rss"
+  },
+  "s58": {
+   "text": "2026-11-23T21:10Z www.socialmediatoday.com: Pinterest announces partnership with Microsoft Ads -- The integration will see Pinterest ad placements extended across Microsoft\u2019s partner platforms.",
+   "url": "https://www.socialmediatoday.com/news/pinterest-announces-partnership-with-microsoft-ads/875553/?.tsrc=rss"
+  },
+  "s6": {
+   "text": "2026-11-24T16:16Z www.marketbeat.com: What Abercrombie & Fitch (ANF) Said on Its Q3 Earnings Call -- Abercrombie & Fitch (NYSE:ANF) raised its full-year sales and earnings outlook after reporting record third-quarter revenue, as growth across both brands and all three regions helped the retailer extend its sales growth streak to 16 consecutive quarters. Net sales rose 11% to $1.44 billion in t",
+   "url": "https://www.marketbeat.com/instant-alerts/transcript-what-abercrombie-fitch-anf-said-on-its-q3-earnings-call-2026-11-24/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss"
+  },
+  "s7": {
+   "text": "2026-11-24T15:47Z www.proactiveinvestors.com: Abercrombie & Fitch shares jump as earnings beat estimates and outlook rises -- Abercrombie & Fitch (NYSE:ANF) shares surged more than 24% Tuesday after the retailer reported stronger-than-expected third-quarter earnings and raised its full-year guidance. Revenue for the quarter ended November 2026 increased 11% year over year to $1.44 billion, ahead of the $1.37...",
+   "url": "https://www.proactiveinvestors.com/companies/news/1102362/abercrombie-fitch-shares-jump-as-earnings-beat-estimates-and-outlook-rises-1102362.html?.tsrc=rss"
+  },
+  "s70": {
+   "text": "2026-11-24T16:17Z finance.yahoo.com: McDonald's Moves on Makeover; Dick's Sporting Goods Up on Earnings | Stock Movers -- On this episode of Stock Movers: - Anthropic (ANT) shares are lower and briefly traded below their $83 initial public offering price in premarket trading, wiping out gains for investors who piled into the artificial intelligence lab's record-setting debut. - McDonald's (MCD) shares are moving on news the company's betting big on a makeover to win back customers. The chain is ",
+   "url": "https://finance.yahoo.com/video/mcdonalds-moves-makeover-dicks-sporting-161755169.html?.tsrc=rss"
+  },
+  "s72": {
+   "text": "2026-11-24T15:44Z finance.yahoo.com: Stocks give back gains as Anthropic dips below IPO price -- Hosts Julie Hyman and Jake Conley, joined on the couch by Barron's markets reporter Jacob Sonenshine, tackle the top stories of the day. Including futures sliding after Monday's biggest rally since April 2025, Anthropic briefly trading below its $83 IPO price, a Wall Street Journal report that the U.S. is preparing new tariffs on China and dozens of other countries, and whether Jensen Huang's retu",
+   "url": "https://finance.yahoo.com/video/stocks-give-back-gains-as-anthropic-dips-below-ipo-price-154408548.html?.tsrc=rss"
+  },
+  "s73": {
+   "text": "2026-11-24T15:35Z finance.yahoo.com: Dollar Tree Turnaround Blooms; Abercrombie Struts With Double-Digit Growth -- Tariff refunds are fueling a turnaround strategy at one S&P 500 retailer.",
+   "url": "https://finance.yahoo.com/m/0c69688e-4fdf-305b-9afa-ac8253166177/dollar-tree-turnaround.html?.tsrc=rss"
+  },
+  "s75": {
+   "text": "2026-11-24T15:04Z finance.yahoo.com: Nvidia, Anthropic, Micron, HPE, Analog Devices, Insmed, and More Stocks That Explain Today\u2019s Market -- AMD, Anthropic, Intel, Marvell, Nvidia, and other AI stocks struggle as the euphoria from Monday fades.",
+   "url": "https://finance.yahoo.com/m/f7fa0ed2-2c68-3b80-9261-c35639090d03/nvidia%2C-anthropic%2C-micron%2C.html?.tsrc=rss"
+  },
+  "s8": {
+   "text": "2026-11-24T15:16Z wwd.com: Abercrombie & Fitch Powers Through Another Strong Quarter, Raises Outlook -- CEO Fran Horowitz said, \"Growth was balanced across regions and brands, with each seeing growth rates accelerate from second-quarter levels.\"",
+   "url": "https://wwd.com/business-news/retail/abercrombie-fitch-q3-raised-outlook-1239463752/?.tsrc=rss"
+  },
+  "s9": {
+   "text": "2026-11-24T16:33Z stocktwits.com: COGT Stock Heads For Best Session In Over A Year After FDA Approves Gastrointestinal Cancer Drug -- The FDA approval is based on a Phase 3 trial that showed a statistically significant improvement in progression-free survival.",
+   "url": "https://stocktwits.com/news-articles/markets/equity/cogt-stock-heads-for-best-session-in-over-a-year-after-fda-approves-gastrointestinal-cancer-drug/cNbsgimR9ku?.tsrc=rss"
+  },
+  "t1": {
+   "text": "the last note (2026-11-24T1330Z), theme 'Chips give back part of Monday': Chip stocks that led Monday's rally lead the market lower before the open as traders reassess the Nvidia-led rally and the AI buildout (WSJ; Yahoo; StockTitan). Analog Devices added its own news: record fourth-quarter revenue, up 42% to $4.37 billion, but a first-quarter earnings forecast below expectations."
+  },
+  "t2": {
+   "text": "the last note (2026-11-24T1330Z), theme 'Server makers: demand up, margins down': HPE beat on revenue ($14.5 billion, +50%) and orders (+80%, AI backlog about $10.5 billion) and raised fiscal 2027 revenue growth to 27-35%, but guided margins lower: Wells Fargo expects first-quarter gross margin about 4.7 points lower at 33.5% and cut its target to $50; HPE expects its Cloud & AI operating margin near 14% in fiscal 2027, from 18.4% last quarter."
+  },
+  "t3": {
+   "text": "the last note (2026-11-24T1330Z), theme 'Retailers report: most beat and raise': Seven retailers reported before the open: Dick's raised its earnings outlook to $11.40-12.25 a share; Abercrombie had record third-quarter sales of $1.4 billion (+11%) and raised its outlook; Dollar Tree beat ($1.16 a share against $0.91 expected) and raised its outlook; Burlington beat its own forecast; Kohl's raised its outlook, helped by a $1.16-a-share tax benefit; Best Buy raised its outlook; Shoe Station's sal"
+  },
+  "x:ADI": {
+   "text": "ADI: the market carried -1.1% (beta 1.90); its industry (Semiconductors & Related Devices, 58 stocks) moved -8.4%; left over after the market and its drivers -16.3%"
+  },
+  "x:ALKS": {
+   "text": "ALKS: the market carried -0.4% (beta 0.69); its industry (Pharmaceutical Preparations, 145 stocks) moved +5.3%; left over after the market and its drivers +8.1%"
+  },
+  "x:ANF": {
+   "text": "ANF: the market carried -0.6% (beta 1.05); its industry (Apparel stores (broad), 13 stocks) moved +3.9%; left over after the market and its drivers +25.9%"
+  },
+  "x:BMRN": {
+   "text": "BMRN: the market carried -0.2% (beta 0.35); its industry (Pharmaceutical Preparations, 145 stocks) moved +5.3%; left over after the market and its drivers +8.6%"
+  },
+  "x:DKS": {
+   "text": "DKS: the market carried -0.5% (beta 0.87); its industry (Miscellaneous retail (broad), 28 stocks) moved +1.4%; left over after the market and its drivers +16.7%"
+  },
+  "x:DLTR": {
+   "text": "DLTR: the market carried -0.3% (beta 0.52); 10-year yield carried +0.3% (-13.22% per point, t -3.8); its industry (Retail-Variety Stores, 8 stocks) moved +3.7%; left over after the market and its drivers +12.2%"
+  },
+  "x:HPE": {
+   "text": "HPE: the market carried -1.5% (beta 2.56); its industry (Machinery and computer equipment, group 357, 32 stocks) moved -2.6%; left over after the market and its drivers -15.7%"
+  },
+  "x:INSM": {
+   "text": "INSM: the market carried -0.2% (beta 0.43); its industry (Pharmaceutical Preparations, 145 stocks) moved +5.3%; left over after the market and its drivers +14.4%"
+  },
+  "x:IRON": {
+   "text": "IRON: the market carried -0.5% (beta 0.92); its industry (Pharmaceutical Preparations, 145 stocks) moved +5.3%; left over after the market and its drivers +10.3%"
+  },
+  "x:KSS": {
+   "text": "KSS: the market carried -0.6% (beta 1.10); 10-year yield carried +0.5% (-20.61% per point, t -4.0); its industry (General merchandise stores (broad), 12 stocks) moved +4.5%; left over after the market and its drivers +19.1%"
+  },
+  "x:ORIC": {
+   "text": "ORIC: the market carried -0.5% (beta 0.93); its industry (Pharmaceutical Preparations, 145 stocks) moved +5.3%; left over after the market and its drivers +13.5%"
+  },
+  "x:PRAX": {
+   "text": "PRAX: the market carried -0.7% (beta 1.22); its industry (Pharmaceutical Preparations, 145 stocks) moved +5.3%; left over after the market and its drivers +10.1%"
+  },
+  "x:SHOE": {
+   "text": "SHOE: the market carried -0.5% (beta 0.80); 10-year yield carried +0.4% (-16.80% per point, t -4.1); its industry (Apparel stores (broad), 13 stocks) moved +4.3%; left over after the market and its drivers -18.0%"
+  },
+  "x:STOK": {
+   "text": "STOK: the market carried -0.3% (beta 0.52); 10-year yield carried +0.3% (-15.87% per point, t -3.5); its industry (Pharmaceutical Preparations, 145 stocks) moved +5.3%; left over after the market and its drivers +9.8%"
+  },
+  "x:TXN": {
+   "text": "TXN: the market carried -1.0% (beta 1.76); its industry (Semiconductors & Related Devices, 58 stocks) moved -8.4%; left over after the market and its drivers -8.1%"
+  },
+  "x:VRDN": {
+   "text": "VRDN: the market carried -0.4% (beta 0.78); its industry (Pharmaceutical Preparations, 145 stocks) moved +5.3%; left over after the market and its drivers +10.3%"
+  }
+ },
+ "note": {
+  "backdrop": "A rotation, not a broad fall: the Nasdaq 100 -2.0% and semiconductors' median -8.4% (from -4.4% before the open), while small caps are +0.6%, drug makers' median +5.3%, variety stores +3.9% and homebuilders +3.6%. The S&P 500 is only -0.6%. The VIX is +6.1%. Since this morning the chip give-back deepened: StockTitan had AMD -11.7%, Micron -11.6% and Nvidia -8.3% at 11:01 a.m. ET, with Micron's give-back near three-quarters of Monday's jump and HPE's all of it; Anthropic, listed Thursday, briefly traded below its $83 offering price. 11 of 2451 stocks are outside their 9-in-10 range, all but two on their own reports or news.",
+  "backdrop_evidence": [
+   "k",
+   "g:3674",
+   "g:2834",
+   "g:2836",
+   "g:5331",
+   "g:1531",
+   "s30",
+   "s70",
+   "s72",
+   "s75",
+   "t1",
+   "https://www.stocktitan.net/articles/stock-market-today-live-november-24-2026"
+  ],
+  "by": "agent",
+  "calls": [],
+  "check": "2026-11-24T1736Z",
+  "read": [
+   {
+    "direction": "none",
+    "published": "2026-11-24T11:58:55Z",
+    "says": "At 11:01 a.m. ET against Monday's close: QQQ -2.83%, SPY -1.22%, DIA -0.16%; AMD -11.70%, Micron -11.59%, Nvidia -8.27%, Intel -9.03%; HPE -15.31%, below Friday's close; Dollar Tree +12.25%; Analog Devices -15.59% at 10:01; Cogent +17.18% at 10:01 on the FDA approval of Ekitna for GIST; Embecta +38.12%; Compass Minerals +13.53% after a fiscal 2027 EBITDA forecast of $250-290 million against $235.1 million.",
+    "tier": "reported",
+    "url": "https://www.stocktitan.net/articles/stock-market-today-live-november-24-2026"
+   }
+  ],
+  "singles": [
+   {
+    "beneath": "+20.1%, +14.8% of its own beyond the drug makers' +5.3%; its best session in over a year (s9).",
+    "cause": "The FDA approved Ekitna (bezuclastinib) for advanced gastrointestinal stromal tumors in patients treated before with imatinib, on a Phase 3 trial with a statistically significant improvement.",
+    "evidence": [
+     "s9",
+     "s10",
+     "s11",
+     "s12"
+    ],
+    "kind": "reported",
+    "t": "COGT"
+   },
+   {
+    "beneath": "+14.2%, holding a little below the offer.",
+    "cause": "Sanofi's $175-a-share cash deal, the biggest biotech buyout since Pfizer bought Seagen.",
+    "evidence": [
+     "s29",
+     "s31",
+     "s32",
+     "x:INSM"
+    ],
+    "kind": "reported",
+    "t": "INSM"
+   },
+   {
+    "beneath": "-15.9%, -11.1% of its own beyond heavy construction's -4.8%; a supplier to AI data centers, falling with the AI group today (inferred from s22).",
+    "cause": "Dycom beat on revenue (+41.6%, a record $12.9 billion backlog) and adjusted earnings ($5.23 against $4.56 expected), but its GAAP earnings missed (s21-s23).",
+    "evidence": [
+     "s21",
+     "s22",
+     "s23",
+     "s24"
+    ],
+    "kind": "reported",
+    "t": "DY"
+   },
+   {
+    "beneath": "+20.2%, up from +5% after hours.",
+    "cause": "Amentum beat fourth-quarter estimates, set fiscal 2027 guidance and approved its first buyback of up to $500 million.",
+    "evidence": [
+     "s25",
+     "s26",
+     "s27"
+    ],
+    "kind": "reported",
+    "t": "AMTM"
+   },
+   {
+    "beneath": "+12.6% with no results; the pay overhaul is the only filing (8-K 5.02).",
+    "cause": "Pinterest changed its executive pay packages, which stories say sparked speculation about the company's direction; it also announced a Microsoft Ads partnership Monday evening.",
+    "evidence": [
+     "s56",
+     "s57",
+     "s58"
+    ],
+    "kind": "reported",
+    "t": "PINS"
+   },
+   {
+    "beneath": "+12.1%; one story says 'without company news', but the results came Monday after the close (s49).",
+    "cause": "Compass Minerals forecast fiscal 2027 adjusted EBITDA of $250-290 million against $235.1 million in 2026, on higher salt prices and lower costs.",
+    "evidence": [
+     "s46",
+     "s48",
+     "s49",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-24-2026"
+    ],
+    "kind": "reported",
+    "t": "CMP"
+   }
+  ],
+  "themes": [
+   {
+    "beneath": "In the check's moves: Micron -10.6%, AMD -9.7%, Intel -8.4%, Nvidia -7.1%, Broadcom -3.6%. Nvidia keeps most of Monday's +31.48%; Micron (+19.04% Monday) has given back over half. The stocks that rose most on hope fall most now; the news behind Monday (Nvidia's CEO) has not changed (inferred).",
+    "cause": "The give-back that began before the open deepened in the session: AI and chip stocks fall as Monday's euphoria fades (Yahoo; StockTitan). Analog Devices, -17.4%, had its worst day since 2020 on a first-quarter outlook below expectations despite record revenue up 42%.",
+    "evidence": [
+     "g:3674",
+     "s13",
+     "s14",
+     "s15",
+     "s16",
+     "s43",
+     "s75",
+     "x:ADI",
+     "x:TXN",
+     "p:ADI~TXN",
+     "c1",
+     "t1",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-24-2026"
+    ],
+    "kind": "reported",
+    "mechanism": "The semiconductor median -8.4%. Analog Devices' partners fell with the group (Texas Instruments -9.1%, almost all of it the industry's -8.4%; Microchip -7.1%, ON -7.3%, Monolithic Power -9.6%), so its outlook may have deepened a fall already under way, but the pond cannot separate the two today (inferred). Semtech -16.5% after record sales up 58%.",
+    "members": [
+     "NVDA",
+     "MU",
+     "AMD",
+     "INTC",
+     "ADI",
+     "TXN",
+     "MCHP",
+     "ON",
+     "MPWR",
+     "SMTC"
+    ],
+    "name": "Chips give back more of Monday",
+    "read_through": [],
+    "watch": "The close: whether chips end near their lows or recover as they did by Monday's close; Dell's report tonight."
+   },
+   {
+    "beneath": "HPE has erased Monday's +17.4%; Dell has given back about 70% of its +20.5%. Dell's fall is the market pricing HPE's margin read onto Dell before Dell has said anything (inferred). Untested here whether a partner's report reaches it.",
+    "cause": "HPE -17.2%, below Friday's close: its chief financial officer cautioned on AI server profits and its chief executive warned of supply shortages through 2028, despite orders up 88% and a raised outlook (s40, s41).",
+    "evidence": [
+     "s39",
+     "s40",
+     "s41",
+     "s42",
+     "x:HPE",
+     "t2"
+    ],
+    "kind": "reported",
+    "mechanism": "Dell, HPE's closest partner (0.69), is -11.9% before its own report tonight; NetApp -5.7%, Penguin -10.9%, Super Micro -7.8%.",
+    "members": [
+     "HPE",
+     "DELL",
+     "SMCI"
+    ],
+    "name": "Servers: HPE's margins reach Dell before its report",
+    "read_through": [
+     {
+      "evidence": [
+       "s40",
+       "t2"
+      ],
+      "t": "DELL",
+      "why": "Already -11.9% before its report; its margin tonight settles whether HPE's problem is the group's. Untested."
+     }
+    ],
+    "watch": "Dell's AI server margin and gross margin after the close."
+   },
+   {
+    "beneath": "Dollar Tree expects holiday shoppers to buy closer to need (Retail Dive, s18) and credits tariff refunds in its turnaround (s73). Gains grew through the morning (Abercrombie +10.9% at 9:00 to +22.5% at 10:01, StockTitan): the reports are being read as a better holiday season than feared (inferred).",
+    "cause": "The morning's retail reports: Abercrombie record sales and a raised outlook (+25.3%); Kohl's comparable sales back to growth and a raised outlook (+18.9%); Dick's raised its outlook, with Foot Locker's US comparable sales improving (+16.2%); Dollar Tree comparable sales +4.6%, above the top of its outlook, and a raised outlook (+12.2%); Shoe Station's sales down 5.1% on a comparable basis and a cut outlook (-18.1%).",
+    "evidence": [
+     "s5",
+     "s6",
+     "s7",
+     "s8",
+     "s17",
+     "s18",
+     "s19",
+     "s20",
+     "s35",
+     "s36",
+     "s51",
+     "s53",
+     "s1",
+     "s3",
+     "s4",
+     "s73",
+     "g:5331",
+     "x:ANF",
+     "x:KSS",
+     "x:DKS",
+     "x:DLTR",
+     "x:SHOE",
+     "t3"
+    ],
+    "kind": "reported",
+    "mechanism": "This time the partners moved too: Abercrombie's Urban Outfitters +4.8%, Gap +3.9%, American Eagle +6.8%; Dollar Tree's Dollar General +3.9%, Target +4.9%; Kohl's Macy's +6.1%. Shoe Station's partners rose too (Caleres +2.6%): its fall stays its own.",
+    "members": [
+     "ANF",
+     "KSS",
+     "DKS",
+     "DLTR",
+     "SHOE",
+     "URBN",
+     "AEO",
+     "M",
+     "TGT",
+     "DG"
+    ],
+    "name": "Retailers' beats hold and grow",
+    "read_through": [],
+    "watch": "Whether the retail group holds its gains into Friday's half day."
+   },
+   {
+    "beneath": "Cogent's +20.1% has its own cause: the FDA approved Ekitna for advanced gastrointestinal stromal tumors. Insmed +14.2%, a little below Sanofi's $175.",
+    "cause": "Drug makers' median +5.3% and biological products' +4.1%, large and small: Eli Lilly, Merck, Pfizer, AbbVie, Amgen, Gilead, Vertex and Regeneron all +3-4.4%, and many small biotechs +8-13% with no company news (Disc Medicine, BioMarin, Stoke, Viridian, Praxis, Oric, Alkermes). Two stories note health care rising without naming a cause (s54, s55). The day's cash deal for Insmed, the biggest biotech buyout since Pfizer bought Seagen (s31), and money leaving chips are the likely causes; no source states either.",
+    "evidence": [
+     "g:2834",
+     "g:2836",
+     "s54",
+     "s55",
+     "s31",
+     "s29",
+     "s32",
+     "x:IRON",
+     "x:BMRN",
+     "x:STOK",
+     "x:VRDN",
+     "x:PRAX",
+     "x:ORIC",
+     "x:ALKS",
+     "c2"
+    ],
+    "kind": "inferred",
+    "mechanism": "The small biotechs move about +10% of their own, beyond the industry median: possible targets after a $41 billion cash deal (inferred). The large drug makers' +3-4% looks like money moving from chips into defensive sectors (inferred).",
+    "members": [
+     "IRON",
+     "BMRN",
+     "STOK",
+     "VRDN",
+     "PRAX",
+     "ORIC",
+     "ALKS",
+     "LLY",
+     "MRK",
+     "PFE"
+    ],
+    "name": "Drug makers rise across the board",
+    "read_through": [],
+    "watch": "A source naming a cause; whether the small biotechs hold their gains when chips stop falling."
+   }
+  ],
+  "threads": [
+   "Kymera +9.7% at midday, about $165, about 33% above the call's $124.06 (63a7bc55, judged at the Nov 27 close).",
+   "Dell, Workday, HP and Autodesk report after the close.",
+   "Drug makers' broad rally: no source names a cause yet.",
+   "GDP and PCE Wednesday 8:30 a.m. ET; markets shut Thursday, half day Friday.",
+   "Wintrust, TransDigm, Aveanna, NW Natural: last night's after-hours prices did not reappear among midday's movers.",
+   "Check flaws open: the case file's 9-in-10 label; attention's open-call date; the cash line without investments. SEC filing reads work again at midday."
+  ],
+  "unexplained": [
+   {
+    "t": "XRX",
+    "tried": "Outside its 9-in-10 range at -19.0%; no filing, no story naming it; its industry -2.6%. A story on HP names memory costs as a risk for printer makers (s33) but not Xerox."
+   },
+   {
+    "t": "EVCM",
+    "tried": "Outside its 9-in-10 range at -14.8%; a story says it fell without company news as software peers rose."
+   },
+   {
+    "t": "RELL",
+    "tried": "-12.8%, no filing, no story; the market carried -1.6% at its beta of 2.72."
+   },
+   {
+    "t": "DC",
+    "tried": "-12.2%; gold -2.4% carried -1.9%; its pre-feasibility study (Monday evening) reported strong economics, so the fall runs against its own news."
+   },
+   {
+    "t": "GCT",
+    "tried": "-8.9% after +14.4% Monday; only opinion pieces."
+   }
+  ]
+ },
+ "recorded_at": "2026-11-24T17:38:42Z"
+}
