@@ -1,0 +1,695 @@
+{
+ "check": "2026-11-24T0419Z",
+ "asof": "2026-11-23",
+ "built_at": "2026-11-24T04:24:42Z",
+ "weights": {
+  "surprise": 0.25,
+  "unexplained": 0.2,
+  "news": 0.15,
+  "reach": 0.1,
+  "against": 0.1,
+  "memory": 0.1,
+  "fragile": 0.1
+ },
+ "temp": 0.12,
+ "candidates": 43,
+ "focus": [
+  {
+   "t": "A",
+   "company": "AGILENT TECHNOLOGIES, INC.",
+   "move": 0.06793914721412196,
+   "z": 3.4172240027000473,
+   "wave": 0.0,
+   "mover": true,
+   "score": 0.4328944363941141,
+   "parts": {
+    "surprise": 0.045,
+    "unexplained": 0.969,
+    "news": 1.0,
+    "reach": 0.778,
+    "against": 0.0,
+    "memory": 0.0,
+    "fragile": 0.0
+   },
+   "reasons": [
+    "most of the move is its own",
+    "filed its results",
+    "4 stories name it",
+    "17 stocks moved closely with it over the year"
+   ],
+   "attention": 0.1483602687878979,
+   "bars": 12,
+   "filings": [
+    {
+     "what": "results report (8-K 2.02)",
+     "at": "2026-11-23T21:06:20Z",
+     "url": "https://www.sec.gov/Archives/edgar/data/1090872/000109087226000082/a-20261123.htm",
+     "error": "https://www.sec.gov/Archives/edgar/data/1090872/000109087226000082/index.json: HTTP 404"
+    }
+   ],
+   "pages": [
+    {
+     "url": "https://www.marketbeat.com/instant-alerts/transcript-what-agilent-technologies-a-said-on-its-q4-earnings-call-2026-11-23/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss",
+     "refused": "blocked: the page is a bot check; not getting around it"
+    },
+    {
+     "url": "https://finance.yahoo.com/m/fd6cc00e-542f-3ee5-9fde-718a8a441811/agilent-technologies-stock.html?.tsrc=rss",
+     "refused": "not read: robots.txt disallows it (respecting it)"
+    }
+   ],
+   "memory": [
+    {
+     "at": "2026-07-30",
+     "kind": "me",
+     "text": "...this settles **The DoD idea has a structural problem, not a measurement problem.** Awards go to companies too large for a contract to matter, or to private entities with no stock. A $500m award against a $116bn cap cannot produce a moonshot, and where it *would* matter the recipient is an LLC. Faster scraping changes nothing. **The trial-update result is the cautionary one** \u2014 t=+2.69 on 543 observations, completely spurious, exposed im..."
+    },
+    {
+     "at": "2026-11-12",
+     "kind": "me",
+     "text": "When the check says \"its own news\", it only means it found a headline naming the company. For GPN and WRBY (a product preorder story), those headlines don't explain the drop. A flag says where to look, not which way a stock will go. Sources searched (nothing dated today): [Weiss Ratings alert on GPN](https://weissratings.com/en/instant-news-alerts/global-payments-inc-gpn-down-5-0-should-i-move-my-capital-elsewhere), [Rallies.ai on ..."
+    },
+    {
+     "at": "2026-11-10",
+     "kind": "me",
+     "text": "I'm wiring the always-on watcher into the repo. Its tests pass now. A live check of all 2,446 stocks is about 60% done. Next I'll run the full test suite, commit, and set up the extra check times...."
+    }
+   ],
+   "pond": {
+    "wave": 0.0,
+    "own": 3.4172240027000473,
+    "how": "a stone: its own news",
+    "from": [],
+    "reaches": [
+     [
+      "TMO",
+      0.71,
+      0.0057
+     ],
+     [
+      "MTD",
+      0.71,
+      0.00601
+     ],
+     [
+      "WAT",
+      0.68,
+      0.01568
+     ],
+     [
+      "DHR",
+      0.66,
+      0.01024
+     ],
+     [
+      "RVTY",
+      0.62,
+      0.00601
+     ]
+    ]
+   }
+  },
+  {
+   "t": "HPE",
+   "company": "Hewlett Packard Enterprise Co",
+   "move": -0.06914,
+   "z": -2.236118703300391,
+   "wave": 0.11062780022621155,
+   "mover": false,
+   "score": 0.3345921736472178,
+   "parts": {
+    "surprise": 0.745,
+    "unexplained": 0.0,
+    "news": 0.0,
+    "reach": 0.482,
+    "against": 0.0,
+    "memory": 1.0,
+    "fragile": 0.0
+   },
+   "reasons": [
+    "in the last note's theme 'Server makers before their reports'"
+   ],
+   "attention": 0.0653958003426102,
+   "bars": 22,
+   "filings": [
+    {
+     "what": "results report (8-K 2.02)",
+     "at": "2026-11-23T21:12:08Z",
+     "url": "https://www.sec.gov/Archives/edgar/data/1645590/000164559026000097/hpe-20261123.htm",
+     "error": "https://www.sec.gov/Archives/edgar/data/1645590/000164559026000097/index.json: HTTP 404"
+    }
+   ],
+   "pages": [],
+   "memory": [
+    {
+     "at": "2026-11-23",
+     "kind": "me",
+     "text": "... numbers about AI demand (my inference). - Not everything joined in: Anthropic, which listed Thursday, is down. 2. **Server makers before their results (reported).** Dell +22% and HPE +15.5%. A Financial Times report says server sellers are asking for higher prices. HPE reports after today's close and Dell tomorrow. Most of each move is still the market. 3. **CrowdStrike\u2013Zscaler.** On a market up almost 5%, CrowdStrike is -9.7%, which i..."
+    },
+    {
+     "at": "2026-11-13",
+     "kind": "me",
+     "text": "...For every big mover it now works out: - which stocks it has really moved with for a year, whatever its industry label (Corteva's closest partner is FMC; Super Micro's are Dell and HPE); - how much of the move came from the market, oil, rates, gold or bitcoin; - which stories tie movers together. It also opens the filings and reads the company's accounts. - **I do the reasoning, under rules the engine enforces.** A note is refused unless..."
+    }
+   ],
+   "pond": {
+    "wave": 0.11062780022621155,
+    "own": -2.236118703300391,
+    "how": "more than its wave: its own news",
+    "from": [
+     [
+      "TDG",
+      -0.12
+     ],
+     [
+      "CENT",
+      0.1
+     ],
+     [
+      "USFD",
+      0.07
+     ],
+     [
+      "WTFC",
+      0.04
+     ]
+    ],
+    "reaches": [
+     [
+      "DELL",
+      0.69,
+      0.01069
+     ],
+     [
+      "NTAP",
+      0.61,
+      0.00489
+     ],
+     [
+      "PENG",
+      0.47,
+      0.01656
+     ],
+     [
+      "CSCO",
+      0.47,
+      -0.00052
+     ],
+     [
+      "SNX",
+      0.45,
+      -0.0
+     ]
+    ]
+   }
+  },
+  {
+   "t": "GLPI",
+   "company": "Gaming & Leisure Properties, Inc.",
+   "move": 0.01825,
+   "z": 1.492512311905187,
+   "wave": -0.26878586411476135,
+   "mover": false,
+   "score": 0.2830859633261596,
+   "parts": {
+    "surprise": 0.498,
+    "unexplained": 0.0,
+    "news": 0.0,
+    "reach": 1.0,
+    "against": 0.587,
+    "memory": 0.0,
+    "fragile": 0.0
+   },
+   "reasons": [
+    "49 stocks moved closely with it over the year",
+    "moved against its wave (+1.5 usual days against a wave of -0.3)"
+   ],
+   "attention": 0.042573824757425716,
+   "filings": [
+    {
+     "what": "8-K 8.01",
+     "at": "2026-11-23T22:21:28Z",
+     "url": "https://www.sec.gov/Archives/edgar/data/1575965/000119312526472645/d360170d8k.htm",
+     "error": "https://www.sec.gov/Archives/edgar/data/1575965/000119312526472645/index.json: HTTP 404"
+    }
+   ],
+   "pages": [],
+   "memory": [],
+   "pond": {
+    "wave": -0.26878586411476135,
+    "own": 1.492512311905187,
+    "how": "against its wave",
+    "from": [
+     [
+      "NWN",
+      -0.17
+     ],
+     [
+      "CENT",
+      -0.11
+     ],
+     [
+      "USFD",
+      -0.07
+     ],
+     [
+      "WTFC",
+      0.06
+     ]
+    ],
+    "reaches": [
+     [
+      "VICI",
+      0.79,
+      0.0029
+     ],
+     [
+      "ADC",
+      0.64,
+      0.0
+     ],
+     [
+      "NNN",
+      0.62,
+      0.00552
+     ],
+     [
+      "O",
+      0.61,
+      0.00085
+     ],
+     [
+      "ELS",
+      0.61,
+      0.01734
+     ]
+    ]
+   }
+  },
+  {
+   "t": "AVAH",
+   "company": "Aveanna Healthcare Holdings, Inc.",
+   "move": 0.09245364381198784,
+   "z": 2.9456313022397005,
+   "wave": 0.0,
+   "mover": true,
+   "score": 0.26861743640380525,
+   "parts": {
+    "surprise": 0.2,
+    "unexplained": 1.0,
+    "news": 0.0,
+    "reach": 0.187,
+    "against": 0.0,
+    "memory": 0.0,
+    "fragile": 0.0
+   },
+   "reasons": [
+    "most of the move is its own, with no news found"
+   ],
+   "attention": 0.03773803849513926,
+   "filings": [],
+   "pages": [],
+   "memory": [],
+   "pond": {
+    "wave": 0.0,
+    "own": 2.9456313022397005,
+    "how": "more than its wave: its own news",
+    "from": [],
+    "reaches": [
+     [
+      "PNTG",
+      0.46,
+      0.0
+     ],
+     [
+      "CON",
+      0.4,
+      0.00193
+     ],
+     [
+      "ENSG",
+      0.36,
+      0.0
+     ],
+     [
+      "ATRC",
+      0.35,
+      -0.0
+     ],
+     [
+      "THC",
+      0.34,
+      0.0
+     ]
+    ]
+   }
+  },
+  {
+   "t": "AMD",
+   "company": "ADVANCED MICRO DEVICES INC",
+   "move": -0.00494,
+   "z": -0.3733146281039643,
+   "wave": -0.03344201296567917,
+   "mover": false,
+   "score": 0.23110955234199704,
+   "parts": {
+    "surprise": 0.124,
+    "unexplained": 0.0,
+    "news": 0.0,
+    "reach": 1.0,
+    "against": 0.0,
+    "memory": 1.0,
+    "fragile": 0.0
+   },
+   "reasons": [
+    "44 stocks moved closely with it over the year",
+    "in the last note's open questions"
+   ],
+   "attention": 0.02760792485436408,
+   "filings": [
+    {
+     "what": "share-sale filing (S-3ASR)",
+     "at": "2026-11-23T21:15:58Z",
+     "title": "Table of Contents",
+     "url": "https://www.sec.gov/Archives/edgar/data/2488/000119312526472370/d171551ds3asr.htm",
+     "key": [
+      "Employer Identification Number) 2485 Augustine Drive Santa Clara, California 95054 (408) 749-4000 (Address, including zip code, and telephone number, including area code, of registrant\u2019s principal executive offices) Ava M.",
+      "Hahn Senior Vice President, General Counsel & Corporate Secretary Advanced Micro Devices, Inc. 2485 Augustine Drive Santa Clara, California 95054 (408) 749-4000 (Name, address, including zip code, and telephone number, including area code, of agent for service) Copy to: Tad J."
+     ],
+     "text": "S-3ASR 1 d171551ds3asr.htm S-3ASR Table of Contents As filed with the Securities and Exchange Commission on November 23, 2026 Registration No. 333- UNITED STATES SECURITIES AND EXCHANGE COMMISSION Washington, D.C. 20549 Form S-3 REGISTRATION STATEMENT UNDER THE SECURITIES ACT OF 1933 ADVANCED MICRO DEVICES, INC. (Exact name of registrant as specified in its charter) Delaware 94-1692300 (State or other jurisdiction of incorporation or organization) (I.R.S. Employer Identification Number) 2485 Augustine Drive Santa Clara, California 95054 (408) 749-4000 (Address, including zip code, and telephone number, including area code, of registrant\u2019s principal executive offices) Ava M. Hahn Senior Vice President, General Counsel & Corporate Secretary Advanced Micro Devices, Inc. 2485 Augustine Drive Santa Clara, California 95054 (408) 749-4000 (Name, address, including zip code, and telephone number, including area code, of agent for service) Copy to: Tad J. Freese Mark Bekheit Richard Kim Latham & Watkins LLP 505 Montgomery Street, Suite 2000 San Francisco, CA 94111 (415) 391-0600 APPROXIMATE DATE OF COMMENCEMENT OF PROPOSED SALE TO THE PUBLIC: From time to time after the effective date of this registration statement. If the only securities being registered on this Form are being offered pursuant to dividend or interest reinvestment plans, please check the following box. \u2610 If any of the securities being registered on this Form are to be offered on a delayed or continuous basis pursuant to Rule 415 under the Securities Act of 1933, other than securities offered only in connection with dividend or interest reinvestment plans, check the following box. \u2612 If this Form is filed to register additional securities for an offering pursuant to Rule 462(b) under the Securities Act, please check the following box and list the Securities Act registration statement number of the earlier effective registration statement for the same offering. \u2610 If this Form is a post-effective amendment filed pursuant to Rule 462(c) under the Securities Act, check the following box and list the Securities Act registration statement number of the earlier effective registration statement for the same offering. \u2610 If this Form is a registration statement pursuant to General Instruction I.D. or a post-effective amendment thereto that shall become effective on filing with the Commission pursuant to Rule 462(e) under the Securities Act, check the following box. \u2612 If this Form is a post-effective amendment to a registration statement filed pursuant to General Instruction I.D. filed to register additional securities or additional classes of securities pursuant to Rule 413(b) under the Securities Act, check the following box. \u2610 Indicate by check mark whether the registrant is a large accelerated filer, an accelerated filer, a non-accelerated filer, smaller reporting company, or an emerging growth company. See the definitions of \u201clarge accelerated filer,\u201d \u201caccelerated filer,\u201d \u201csmaller reporting company,\u201d and \u201cemerging growth company\u201d in Rule 12b-2 of the Exchange Act. Large accelerated filer \u2612 Accelerated filer \u2610 Non-accelerated filer \u2610 Smaller reporting company \u2610 Emerging growth company \u2610 If an emerging growth company, indicate by check mark if the registrant has elected not to use the extended transition period for complying with any new or revised financial accounting standards provided pursuant to Section 7(a)(2)(B) of the Securities Act. \u2610 Table of Contents PROSPECTUS ADVANCED MICRO DEVICES, INC. 336,934,324 Shares Common Stock Offered by the Selling Stockholders This prospectus relates to the proposed resale or other disposition of up to an aggregate of 336,934,324 shares of common stock, par value $0.01 per share, of Advanced Micro Devices, Inc. (the \u201ccommon stock\u201d) by the selling stockholders identified in this prospectus. We are registering the offer and sale of the shares of common stock issued or issuable to the selling stockholders, consisting of (i) 16,627 shares of common stock (the \u201cTaalas Closing Shares\u201d) issued to certain selling stockholders as partial consideration pursuant to a share purchase agreement, dated as of August 5, 2026, by and among Advanced Micro Devices, Inc. (the \u201cCompany\u201d), Taalas Inc. (\u201cTaalas\u201d), and the other parties thereto (the \u201cTaalas Purchase Agreement\u201d), pursuant to which we acquired Taalas (the \u201cTaalas Acquisition\u201d), (ii) 466,267 shares of common stock (the \u201cTaalas Closing Underlying Shares\u201d) issuable upon the exchange, in accordance with their terms, of exchangeable shares of preferred stock (the \u201cTaalas Exchangeable Shares\u201d) issued by a subsidiary of the Company to certain selling stockholders at the closing of the Taalas Acquisition as partial consideration pursuant to the Taalas Purchase Agreement (such Taalas Exchangeable Shares issued at the closing of the Taalas Acquisition, the \u201cTaalas Closing Exchangeable Shares\u201d), (iii) up to 568,128 shares of common stock (the \u201cTaalas Contingent Shares\u201d) issuable to certain selling stockholders as partial contingent consideration in connection with the Taalas Acquisition, (iv) up to 904,980 shares of common stock (the \u201cTaalas Contingent Underlying Shares\u201d) issuable upon the exchange, in accordance with their terms, of Taalas Exchangeable Shares issuable by a subsidiary of the Company to certain selling stockholders as partial contingent consideration in connection with the Taalas Acquisition (such Taalas Exchangeable Shares issuable as partial contingent consideration in connection with the Taalas Acquisition, the \u201cTaalas Contingent Exchangeable Shares\u201d), (v) 14,978,322 shares of common stock (the \u201cWorld Labs Closing Shares\u201d) issued to certain selling stockholders as consideration pursuant to an agreement and plan of merger, dated as of September 26, 2026, by and among the Company, World Labs Technologies, Inc. (\u201cWorld Labs\u201d), and the other parties thereto (the \u201cWorld Labs Merger Agreement\u201d), pursuant to which we acquired World Labs (the \u201cWorld Labs Acqui"
+    }
+   ],
+   "pages": [],
+   "memory": [
+    {
+     "at": "2026-11-19",
+     "kind": "me",
+     "text": "| Nvidia | about 9.0% below ($148.23) | 7.5% | | AMD | about 9.9% below ($480) | 9% | | Dell | about 8.4% below | 9.5% | Nvidia and AMD are past their lines for now, but nothing is decided until Friday's close. I'll write the reasoned midday note and refresh the explorer page as soon as the check's numbers a..."
+    },
+    {
+     "at": "2026-11-17",
+     "kind": "me",
+     "text": "...a can't rent them through data centres there ([CBS](https://www.cbsnews.com/news/nvidia-jensen-huang-commerce-department-limit-remote-access-ai-chips/)). The Motley Fool wrap ties AMD's fall to it. - **A warning about AI debt.** A Federal Reserve governor's warning from last week was back in the news: about $800 billion of AI spending this year, much of it borrowed, and a \"large correction\" if it doesn't pay off ([Motley Fool](https://w..."
+    },
+    {
+     "at": "2026-11-16",
+     "kind": "me",
+     "text": "...driving it **1. AI hardware is being marked down again before Nvidia reports (reported).** - The whole group is lower: CoreWeave -6.9%, Sandisk -6.6%, Micron -6.4%, Marvell -6.2%, AMD -5.2%, Dell -4.6%, Nvidia -3.8%, Broadcom -3.3%. - Commerzbank, quoted by [Invezz](https://finwire.io/news/stock-markets-news/why-are-amd-and-broadcom-stocks-falling-in-premarket-trading-on-monday), calls the fallout from Nvidia's leadership turmoil the ma..."
+    }
+   ],
+   "pond": {
+    "wave": -0.03344201296567917,
+    "own": -0.3733146281039643,
+    "how": "with the water",
+    "from": [
+     [
+      "TDG",
+      -0.08
+     ],
+     [
+      "NWN",
+      0.08
+     ],
+     [
+      "WTFC",
+      -0.07
+     ],
+     [
+      "CENT",
+      0.05
+     ]
+    ],
+    "reaches": [
+     [
+      "INTC",
+      0.56,
+      -0.01187
+     ],
+     [
+      "SANM",
+      0.55,
+      -0.0
+     ],
+     [
+      "RMBS",
+      0.53,
+      0.0
+     ],
+     [
+      "BRO",
+      -0.52,
+      -0.0
+     ],
+     [
+      "TER",
+      0.52,
+      -0.01363
+     ]
+    ]
+   }
+  },
+  {
+   "t": "MPWR",
+   "company": "MONOLITHIC POWER SYSTEMS, INC.",
+   "move": -0.001,
+   "z": -0.27722512998936527,
+   "wave": 0.0,
+   "mover": false,
+   "score": 0.22310209416578045,
+   "parts": {
+    "surprise": 0.092,
+    "unexplained": 0.0,
+    "news": 0.0,
+    "reach": 1.0,
+    "against": 0.0,
+    "memory": 1.0,
+    "fragile": 0.0
+   },
+   "reasons": [
+    "70 stocks moved closely with it over the year",
+    "in the last note's theme 'Nvidia brings back its CEO; chips and AI surge'"
+   ],
+   "attention": 0.025825801382124196,
+   "filings": [],
+   "pages": [],
+   "memory": [],
+   "pond": {
+    "wave": 0.0,
+    "own": -0.27722512998936527,
+    "how": "with the water",
+    "from": [],
+    "reaches": [
+     [
+      "DIOD",
+      0.64,
+      0.0
+     ],
+     [
+      "TER",
+      0.63,
+      -0.01363
+     ],
+     [
+      "ADI",
+      0.62,
+      -0.00304
+     ],
+     [
+      "LSCC",
+      0.6,
+      0.0
+     ],
+     [
+      "LFUS",
+      0.6,
+      0.0
+     ]
+    ]
+   }
+  }
+ ],
+ "rest": [
+  {
+   "t": "FN",
+   "score": 0.22221550583342603,
+   "attention": 0.025635697395285602,
+   "reasons": [
+    "54 stocks moved closely with it over the year",
+    "in the last note's theme 'Nvidia brings back its CEO; chips and AI surge'"
+   ]
+  },
+  {
+   "t": "SITM",
+   "score": 0.22140162113050818,
+   "attention": 0.02546241484329753,
+   "reasons": [
+    "56 stocks moved closely with it over the year",
+    "in the last note's theme 'Nvidia brings back its CEO; chips and AI surge'"
+   ]
+  },
+  {
+   "t": "LSCC",
+   "score": 0.22109272238224204,
+   "attention": 0.02539695489756653,
+   "reasons": [
+    "89 stocks moved closely with it over the year",
+    "in the last note's theme 'Nvidia brings back its CEO; chips and AI surge'"
+   ]
+  },
+  {
+   "t": "CRWD",
+   "score": 0.21656494663602402,
+   "attention": 0.024456543706325124,
+   "reasons": [
+    "26 stocks moved closely with it over the year",
+    "in the last note's theme 'CrowdStrike to buy Zscaler, all stock'"
+   ]
+  },
+  {
+   "t": "MTSI",
+   "score": 0.2164725593206662,
+   "attention": 0.024437721999150983,
+   "reasons": [
+    "107 stocks moved closely with it over the year",
+    "in the last note's theme 'Nvidia brings back its CEO; chips and AI surge'"
+   ]
+  },
+  {
+   "t": "VREX",
+   "score": 0.21122270845749008,
+   "attention": 0.023391651024561137,
+   "reasons": [
+    "most of the move is its own",
+    "filed its results",
+    "1 story names it",
+    "moved against its wave (-1.0 usual days against a wave of +0.4)",
+    "but only 2 trades at the new price since the close: likely a stray print"
+   ]
+  },
+  {
+   "t": "MXL",
+   "score": 0.2071037578273063,
+   "attention": 0.022602365666083358,
+   "reasons": [
+    "48 stocks moved closely with it over the year",
+    "in the last note's theme 'Nvidia brings back its CEO; chips and AI surge'"
+   ]
+  },
+  {
+   "t": "TXN",
+   "score": 0.20653715778844753,
+   "attention": 0.022495896376279773,
+   "reasons": [
+    "23 stocks moved closely with it over the year",
+    "in the last note's theme 'Nvidia brings back its CEO; chips and AI surge'"
+   ]
+  },
+  {
+   "t": "J",
+   "score": 0.2036094944950313,
+   "attention": 0.021953700547794913,
+   "reasons": [
+    "moved against its wave (-1.2 usual days against a wave of +0.3)"
+   ]
+  },
+  {
+   "t": "ZS",
+   "score": 0.20244897426889685,
+   "attention": 0.021742409612745837,
+   "reasons": [
+    "63 stocks moved closely with it over the year",
+    "in the last note's theme 'CrowdStrike to buy Zscaler, all stock'"
+   ]
+  },
+  {
+   "t": "MRVL",
+   "score": 0.20068436019918143,
+   "attention": 0.0214250242439511,
+   "reasons": [
+    "37 stocks moved closely with it over the year",
+    "in the last note's theme 'Nvidia brings back its CEO; chips and AI surge'"
+   ]
+  },
+  {
+   "t": "NEM",
+   "score": 0.19435562343886198,
+   "attention": 0.0203243591144737,
+   "reasons": [
+    "14 stocks moved closely with it over the year",
+    "in the last note's theme 'Gold and bitcoin keep rising with stocks'"
+   ]
+  },
+  {
+   "t": "WTFC",
+   "score": 0.19392510368976032,
+   "attention": 0.020251572775807768,
+   "reasons": [
+    "outside its 9-in-10 range",
+    "most of the move is its own, with no news found",
+    "219 stocks moved closely with it over the year",
+    "but only 1 trade at the new price since the close: likely a stray print"
+   ]
+  },
+  {
+   "t": "KYMR",
+   "score": 0.19007679551844475,
+   "attention": 0.01961242362235762,
+   "reasons": [
+    "in the last note's open questions"
+   ]
+  },
+  {
+   "t": "HL",
+   "score": 0.18815956135926926,
+   "attention": 0.01930156676964415,
+   "reasons": [
+    "14 stocks moved closely with it over the year",
+    "in the last note's theme 'Gold and bitcoin keep rising with stocks'"
+   ]
+  },
+  {
+   "t": "RBC",
+   "score": 0.1860907352074269,
+   "attention": 0.018971655593840682,
+   "reasons": [
+    "56 stocks moved closely with it over the year",
+    "moved against its wave (-2.2 usual days against a wave of +0.3)",
+    "but only 1 trade at the new price since the close: likely a stray print"
+   ]
+  },
+  {
+   "t": "BMNR",
+   "score": 0.18133351089995342,
+   "attention": 0.018234265040408107,
+   "reasons": [
+    "11 stocks moved closely with it over the year",
+    "in the last note's theme 'Gold and bitcoin keep rising with stocks'"
+   ]
+  },
+  {
+   "t": "NXPI",
+   "score": 0.18087231585512226,
+   "attention": 0.018164319930556255,
+   "reasons": [
+    "11 stocks moved closely with it over the year",
+    "in the last note's theme 'Nvidia brings back its CEO; chips and AI surge'"
+   ]
+  },
+  {
+   "t": "FLS",
+   "score": 0.1771930427263259,
+   "attention": 0.017615842110884718,
+   "reasons": [
+    "in the last note's theme 'Nvidia brings back its CEO; chips and AI surge'"
+   ]
+  },
+  {
+   "t": "CRWV",
+   "score": 0.17558433159401246,
+   "attention": 0.017381261332804144,
+   "reasons": [
+    "12 stocks moved closely with it over the year",
+    "in the last note's theme 'Nvidia brings back its CEO; chips and AI surge'"
+   ]
+  }
+ ]
+}

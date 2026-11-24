@@ -1,0 +1,215 @@
+{
+ "asof": "2026-11-23",
+ "at": "2026-11-24T04:19:45Z",
+ "calls": [],
+ "case_sha": "4991ee6d7d284065",
+ "check": "2026-11-24T0419Z",
+ "claims_noted": 0,
+ "evidence": {
+  "f:A:1": {
+   "text": "A results report (8-K 2.02) at 2026-11-23T21:06Z: ",
+   "url": "https://www.sec.gov/Archives/edgar/data/1090872/000109087226000082/a-20261123.htm"
+  },
+  "f:VREX:1": {
+   "text": "VREX results report (8-K 2.02) at 2026-11-23T21:38Z: ",
+   "url": "https://www.sec.gov/Archives/edgar/data/1681622/000168162226000085/vrex-20261123.htm"
+  },
+  "k": {
+   "text": "Market: S&P 500 (SPY) +0.3%, Nasdaq 100 (QQQ) +0.2%, Russell 2000 (IWM) +0.1%, S&P 500 futures +4.8%, VIX +0.0% (after the close)"
+  },
+  "s1": {
+   "text": "2026-11-23T21:30Z finance.yahoo.com: Varex Announces Financial Results for Fourth Quarter and Fiscal Year 2026 -- SALT LAKE CITY, November 23, 2026--Varex Imaging Corporation (Nasdaq: VREX) today announced its unaudited financial results for the fourth quarter and fiscal year 2026.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/varex-announces-financial-results-fourth-213000244.html?.tsrc=rss"
+  },
+  "s2": {
+   "text": "2026-11-24T01:13Z www.marketbeat.com: What Agilent Technologies (A) Said on Its Q4 Earnings Call -- Agilent Technologies (NYSE:A) reported fiscal fourth-quarter revenue of $2.04 billion, its first quarter above $2 billion, as demand from pharmaceutical customers, instrument replacement cycles and growth in China helped the company exceed its guidance. Revenue rose 8.3% on a core basis, which excl",
+   "url": "https://www.marketbeat.com/instant-alerts/transcript-what-agilent-technologies-a-said-on-its-q4-earnings-call-2026-11-23/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss"
+  },
+  "s3": {
+   "text": "2026-11-23T23:03Z finance.yahoo.com: Agilent Technologies Stock Jumps on Higher Demand for Its Lab Devices -- The company is forecasting higher than expected results for the current quarter and full fiscal year 2027.",
+   "url": "https://finance.yahoo.com/m/fd6cc00e-542f-3ee5-9fde-718a8a441811/agilent-technologies-stock.html?.tsrc=rss"
+  },
+  "s5": {
+   "text": "2026-11-23T21:51Z finance.yahoo.com: Agilent beats estimates, surges on strong guidance -- Investing.com -- Agilent Technologies Inc (NYSE:A) reported fourth-quarter results that exceeded analyst expectations and issued fiscal 2027 guidance above consensus, sending shares up over 7% in after-hours trading Monday.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/agilent-beats-estimates-surges-strong-215151998.html?.tsrc=rss"
+  },
+  "t1": {
+   "text": "the last note (2026-11-23T1748Z), theme 'Nvidia brings back its CEO; chips and AI surge': Nvidia's board unanimously reinstated Jensen Huang as president, CEO and director, effective immediately, saying input from senior levels of the US government left it confident his return poses no national security risk; a committee of independent directors continues its investigation, and Nvidia keeps cooperating with government inquiries (its 8-K release)."
+  },
+  "t2": {
+   "text": "the last note (2026-11-23T1748Z), theme 'Server makers before their reports': Dell +22.0% and HPE +15.5%, with Super Micro +13.9%: a Financial Times report that server sellers are asking for higher prices lifted HPE overnight (s51) and Super Micro (s65); HPE reports after today's close and Dell tomorrow (StockTitan; s45)."
+  },
+  "t3": {
+   "text": "the last note (2026-11-23T1748Z), theme 'CrowdStrike to buy Zscaler, all stock': The all-stock deal (1.135 CrowdStrike shares per Zscaler share) set this morning; Zscaler's 8-K at 10:01 a.m. ET adds a $1.4 billion termination fee owed by Zscaler in some cases (a better offer, a changed recommendation) and an outside date of Nov 23, 2027, extendable to Feb 23, 2028 for antitrust or foreign-investment approvals (StockTitan; Zscaler 8-K)."
+  },
+  "x:A": {
+   "text": "A: the market carried +0.2% (beta 0.81); its industry (Laboratory Analytical Instruments, 10 stocks) moved +0.6%; left over after the market and its drivers +6.6%"
+  },
+  "x:VREX": {
+   "text": "VREX: the market carried +0.2% (beta 0.72); its industry (Electronic equipment, group 367, 80 stocks) moved +0.0%; left over after the market and its drivers -3.8%"
+  }
+ },
+ "note": {
+  "backdrop": "Monday held its gains to the close: the S&P 500 +4.73%, its 33rd biggest one-day gain since 1957 by StockTitan's count; QQQ +7.00%, the Dow fund +3.04%, small caps +3.56%, all above Thursday's close, so Friday's fall is erased. Nvidia closed +31.48% after its board reinstated its CEO. After the close the market is quiet (SPY +0.3%); the moves are company reports (HPE, Agilent, Fluence, Semtech) and Kymera's share sale. Only 1 of 2451 stocks is outside its 9-in-10 range after hours, and that one rests on a single trade. The line 'S&P 500 futures +4.8%' and the market-wide flag compare with Friday's close, not Monday's: the known stale baseline, not a new move.",
+  "backdrop_evidence": [
+   "k",
+   "t1",
+   "https://www.stocktitan.net/articles/stock-market-today-live-november-23-2026"
+  ],
+  "by": "agent",
+  "calls": [],
+  "check": "2026-11-24T0419Z",
+  "read": [
+   {
+    "direction": "none",
+    "published": "2026-11-23T12:07:35Z",
+    "says": "Nov 23 close: SPY +4.73%, QQQ +7.00%, DIA +3.04%, IWM +3.56%; S&P 500 at 7,237.17, its 33rd biggest gain since 1957; Nvidia +31.48%, CrowdStrike -8.92%, Zscaler +17.67% (3.3% below the deal's value), Capricor -74.70%. After hours: HPE -6.90% on revenue +50% to $14.5 billion and a raised fiscal 2027 outlook; Fluence +17.37% on record orders of $3.5 billion; Agilent +6.79%; Semtech -4.61%; Kymera started a proposed $1.5 billion public offering of new shares at 4:45 p.m. ET (+2.74%).",
+    "tier": "reported",
+    "url": "https://www.stocktitan.net/articles/stock-market-today-live-november-23-2026"
+   }
+  ],
+  "singles": [
+   {
+    "beneath": "In the morning's case file the mosaic gave Kymera a 7.4% chance of a sale of new shares within 20 sessions, against 0.9% for the usual stock (5 sales opened in three years, a registration on file); it came the same day. One case says nothing about calibration, which P1a tested. $1.5 billion is about a tenth of its market value after the jump (about $15 billion: the morning case file's $11.5 billion x 1.304; inferred). The desk's call 63a7bc55 (15% either way from $124.06 by Nov 27): Monday's close, about $150.4 ($115.31 x 1.304), is about 21% above $124.06; it is judged at the Nov 27 close.",
+    "cause": "After closing +30.4% on its trial results, Kymera started a proposed $1.5 billion public offering of new shares at 4:45 p.m. ET, under a registration already in effect; it said the offering may not be completed. The stock was +2.7% after hours (StockTitan).",
+    "evidence": [
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-23-2026"
+    ],
+    "kind": "reported",
+    "t": "KYMR"
+   },
+   {
+    "beneath": "+6.8% after hours, +6.6% of its own; its partners (Thermo Fisher, Mettler-Toledo, Waters) were up 0.6-1.6% after hours.",
+    "cause": "Agilent reported fiscal fourth-quarter revenue of $2.04 billion, its first quarter above $2 billion, beat estimates and gave a fiscal 2027 outlook above expectations.",
+    "evidence": [
+     "f:A:1",
+     "s2",
+     "s3",
+     "s5",
+     "x:A"
+    ],
+    "kind": "reported",
+    "t": "A"
+   },
+   {
+    "beneath": "-3.6% after hours; the release's text was not read (SEC refused the reads tonight).",
+    "cause": "Varex reported fourth-quarter and fiscal 2026 results after the close.",
+    "evidence": [
+     "f:VREX:1",
+     "s1",
+     "x:VREX"
+    ],
+    "kind": "reported",
+    "t": "VREX"
+   },
+   {
+    "beneath": "Inside its 2-in-3 range: the scan already gave it one of its widest ranges and a 19.1% chance of a 20%+ day, with results due.",
+    "cause": "Fluence reported record fiscal fourth-quarter orders of $3.5 billion while quarterly revenue fell to $0.7 billion from $1.0 billion; +17.4% after hours (StockTitan).",
+    "evidence": [
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-23-2026"
+    ],
+    "kind": "reported",
+    "t": "FLNC"
+   }
+  ],
+  "themes": [
+   {
+    "beneath": "QQQ and SPY ended below their opening prices (StockTitan): the gain was made by the open and held, not built through the session. After the close, chip names moved little (Monolithic Power -0.1%, AMD -0.5%): no follow-through and no reversal yet. AMD filed an automatic shelf registration (S-3ASR) after the close: a registration that lets it sell securities, not a sale.",
+    "cause": "Nvidia's board reinstated its CEO at 8:55 a.m. ET; Nvidia closed +31.48% and the S&P 500 +4.73%, QQQ +7.00%, close to their midday levels, so the move held into the close.",
+    "evidence": [
+     "t1",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-23-2026"
+    ],
+    "kind": "reported",
+    "mechanism": "As at midday: Nvidia on its own news, the chip and AI names largely through their high betas to the market (in the bank's bars: Micron +19.0%, CoreWeave +22.3%, Tesla +11.5%, AMD +6.9%, Broadcom +3.0%).",
+    "members": [
+     "NVDA",
+     "MU",
+     "CRWV",
+     "TSLA",
+     "AMD"
+    ],
+    "name": "Nvidia's CEO return carried the whole day",
+    "read_through": [],
+    "watch": "Tuesday's session: whether chips hold above Thursday's close; Nvidia's independent committee and the government inquiries continue."
+   },
+   {
+    "beneath": "HPE's after-hours fall is -2.2 of its usual days of its own, against a +17% session. Dell reports Tuesday after the close.",
+    "cause": "HPE closed +17.4% and Dell +20.5% on the server-price report; after the close HPE reported fiscal fourth-quarter revenue of $14.5 billion, up 50%, raised its fiscal 2027 revenue outlook, and fell 6.9% after hours (StockTitan).",
+    "evidence": [
+     "t2",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-23-2026"
+    ],
+    "kind": "reported",
+    "mechanism": "A strong report after a +17% day: the after-hours fall measures it against what the day's rise already priced (inferred). Dell, its closest partner (0.69), was +1.1% after hours.",
+    "members": [
+     "HPE",
+     "DELL"
+    ],
+    "name": "Server makers: HPE reports, Dell next",
+    "read_through": [
+     {
+      "evidence": [
+       "t2"
+      ],
+      "t": "DELL",
+      "why": "Its partner of the year (0.69) and the next report in the group. Untested: whether a partner's report reaches it the next day has not been tested here."
+     }
+    ],
+    "watch": "Dell's report Tuesday after the close, and whether HPE's after-hours fall holds into the session."
+   },
+   {
+    "beneath": "Closing is expected between August 2027 and January 2028; 3.3% for about a year's wait and the deal's risk is a modest gap (inferred).",
+    "cause": "Zscaler closed +17.67% and CrowdStrike -8.92%; Zscaler ended about 3.3% below the value of the 1.135 CrowdStrike shares its holders would get (StockTitan).",
+    "evidence": [
+     "t3",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-23-2026"
+    ],
+    "kind": "reported",
+    "mechanism": "Zscaler tracks the offer less a gap; the gap moved between 3.2% and 3.7% through the day as CrowdStrike moved.",
+    "members": [
+     "ZS",
+     "CRWD"
+    ],
+    "name": "CrowdStrike to buy Zscaler: the first close",
+    "read_through": [],
+    "watch": "The gap through the week; CrowdStrike's registration statement with Zscaler's proxy."
+   }
+  ],
+  "threads": [
+   "Kymera: the call 63a7bc55 is judged at the Nov 27 close (a half day); Monday's close is about 21% above $124.06; its $1.5 billion offering prices tonight or Tuesday.",
+   "Dell reports Tuesday after the close; HPE's after-hours fall.",
+   "Health insurers lagged Monday's +4.7% market (Elevance -3.8%, Humana -1.6%, UnitedHealth -1.1% in the bank's bars) with no new story found; a search found only last week's coverage of a proposed rule widening Medicare Advantage audits.",
+   "Settled: the Florida home insurers' fall before the open did not hold (Slide +3.8%, Universal +1.7%, Heritage +0.6% at the close).",
+   "Check flaws: the after-close market and driver lines compare with Friday's close (futures +4.8%, gold +3.3%), raising a false market-wide flag; the case file prints the 2-in-3 numbers under the 9-in-10 label; attention called AMD's judged call open; the cash line leaves out investments; SEC refused filing reads tonight.",
+   "Thanksgiving week: markets shut Thursday Nov 26, a half day Friday Nov 27."
+  ],
+  "unexplained": [
+   {
+    "t": "WTFC",
+    "tried": "Outside its 9-in-10 range at +7.4% after hours, but attention found only one trade at the new price since the close: likely a stray print. No filing, no story."
+   },
+   {
+    "t": "TDG",
+    "tried": "+7.4% after hours with no filing and no story; it moved with Loar (+7.8%), its partner, with nothing filed by either; aerospace partners GE, HEI, RTX flat."
+   },
+   {
+    "t": "LOAR",
+    "tried": "+7.8% after hours, no filing, no story; see TransDigm."
+   },
+   {
+    "t": "USFD",
+    "tried": "-6.5% after hours, no filing, no story; industry flat."
+   },
+   {
+    "t": "AVAH",
+    "tried": "+9.2% after hours, no filing, no story; home health partners flat."
+   },
+   {
+    "t": "NWN",
+    "tried": "-4.9% after hours, no filing, no story; gas utilities flat."
+   }
+  ]
+ },
+ "recorded_at": "2026-11-24T04:26:53Z"
+}
