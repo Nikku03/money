@@ -1,0 +1,389 @@
+{
+ "asof": "2026-11-23",
+ "at": "2026-11-24T13:30:52Z",
+ "calls": [],
+ "case_sha": "5184eaac20d2033a",
+ "check": "2026-11-24T1330Z",
+ "claims_noted": 0,
+ "evidence": {
+  "g:3674": {
+   "text": "Semiconductors & Related Devices: the median of its 59 checked stocks moved -4.4%"
+  },
+  "k": {
+   "text": "Market: S&P 500 (SPY) -1.1%, Nasdaq 100 (QQQ) -2.0%, Russell 2000 (IWM) -0.8%, S&P 500 futures -0.9%, VIX +8.1% (before the open)"
+  },
+  "p:ADI~MCHP": {
+   "text": "ADI and MCHP: market-adjusted daily returns correlated 0.70 over the last 250 sessions; MCHP -4.1% since the close"
+  },
+  "p:ADI~ON": {
+   "text": "ADI and ON: market-adjusted daily returns correlated 0.66 over the last 250 sessions; ON -4.4% since the close"
+  },
+  "p:ADI~TXN": {
+   "text": "ADI and TXN: market-adjusted daily returns correlated 0.80 over the last 250 sessions; TXN -4.9% since the close"
+  },
+  "p:ANF~URBN": {
+   "text": "ANF and URBN: market-adjusted daily returns correlated 0.65 over the last 250 sessions; URBN +0.1% since the close"
+  },
+  "p:DKS~ASO": {
+   "text": "DKS and ASO: market-adjusted daily returns correlated 0.52 over the last 250 sessions; ASO +0.0% since the close"
+  },
+  "p:SHOE~CAL": {
+   "text": "SHOE and CAL: market-adjusted daily returns correlated 0.70 over the last 250 sessions; CAL +0.0% since the close"
+  },
+  "s1": {
+   "text": "2026-11-24T11:20Z finance.yahoo.com: Shoe Station Group (SHOE) Q3 Earnings and Revenues Miss Estimates -- Shoe Station Group (SHOE) delivered earnings and revenue surprises of -76.19% and -1.46%, respectively, for the quarter ended October 2026. Do the numbers hold clues to what lies ahead for the stock?",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/shoe-station-group-shoe-q3-112002429.html?.tsrc=rss"
+  },
+  "s10": {
+   "text": "2026-11-24T11:30Z finance.yahoo.com: Dollar Tree, Inc. Reports Third Quarter Results -- CHESAPEAKE, Va., November 24, 2026--Dollar Tree, Inc. (NASDAQ: DLTR) today reported financial results for its third quarter ended October 31, 2026.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/dollar-tree-inc-reports-third-113000207.html?.tsrc=rss"
+  },
+  "s11": {
+   "text": "2026-11-24T12:41Z finance.yahoo.com: Analog Devices unveils lower-than-expected first-quarter earnings forecast -- Investing.com - Analog Devices has guided for first-quarter adjusted earnings per share of $3.82, missing Bloomberg consensus estimates.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/analog-devices-unveils-lower-expected-124146186.html?.tsrc=rss"
+  },
+  "s12": {
+   "text": "2026-11-24T12:38Z finance.yahoo.com: Analog Devices Tops Fiscal Q4 Views, Gives Mixed Outlook -- Analog Devices beat estimates for its fiscal fourth quarter but offered mixed guidance for the current period. ADI stock fell.",
+   "url": "https://finance.yahoo.com/m/6e83312d-bf7d-326a-81cc-5e889e4efe06/analog-devices-tops-fiscal-q4.html?.tsrc=rss"
+  },
+  "s14": {
+   "text": "2026-11-24T12:01Z finance.yahoo.com: Analog Devices Reports Record Fourth Quarter and Fiscal 2026 Financial Results -- Analog Devices, Inc. (Nasdaq: ADI), a global semiconductor leader, today announced financial results for its fiscal fourth quarter and fiscal year 2026, which ended October 31, 2026.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/analog-devices-reports-record-fourth-120100362.html?.tsrc=rss"
+  },
+  "s16": {
+   "text": "2026-11-24T12:19Z finance.yahoo.com: Wells Fargo Trims HPE Target Despite Surging AI Orders -- The firm expects gross margin to fall about 4.7 points to 33.5% in the first quarter",
+   "url": "https://finance.yahoo.com/technology/ai/articles/wells-fargo-trims-hpe-target-121903955.html?.tsrc=rss"
+  },
+  "s17": {
+   "text": "2026-11-24T12:02Z www.trefis.com: HPE Expects Thinner AI Margins. Is Dell Next? -- Today's big story: Nvidia Added $954 Billion In A Day. Is Jensen Huang Too Big To Fire.",
+   "url": "https://www.trefis.com/stock/hpe/articles/628212/hpe-expects-thinner-ai-margins-is-dell-next/2026-11-24?.tsrc=rss"
+  },
+  "s18": {
+   "text": "2026-11-24T11:09Z investorshub.advfn.com: Why Is Hewlett Packard Enterprise Stock Falling 9.6% Today? -- Hewlett Packard Enterprise (NYSE:HPE) shares fell 9. 6% to US$43.",
+   "url": "https://investorshub.advfn.com/market-news/article/40591/why-is-hewlett-packard-enterprise-stock-falling-9-6-today?.tsrc=rss"
+  },
+  "s19": {
+   "text": "2026-11-24T10:53Z finance.yahoo.com: HPE Stock Tumbles After Earnings Beat. Strong AI Demand Isn\u2019t Enough. -- Hewlett Packard Enterprise reports fiscal fourth-quarter revenue of $14.55 billion, beating analysts\u2019 expectations.",
+   "url": "https://finance.yahoo.com/m/42d4b2b6-fa8b-3c24-8736-09ba00afc7b1/hpe-stock-tumbles-after.html?.tsrc=rss"
+  },
+  "s2": {
+   "text": "2026-11-24T11:10Z finance.yahoo.com: Shoe Station Group Reports Third Quarter 2026 Results -- FORT MILL, S.C., November 24, 2026--Shoe Station Group, Inc. (Nasdaq: SHOE) (the \"Company\"), a leading omnichannel retailer of footwear and accessories for the family, today reported results for the third quarter ended October 31, 2026 and updated its Fiscal 2026 guidance.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/shoe-station-group-reports-third-111000700.html?.tsrc=rss"
+  },
+  "s21": {
+   "text": "2026-11-24T10:56Z finance.yahoo.com: Agilent Technologies Stock Jumps on Higher Demand for Its Lab Devices -- The company is forecasting higher-than-expected results for the current quarter and fiscal 2027.",
+   "url": "https://finance.yahoo.com/m/fd6cc00e-542f-3ee5-9fde-718a8a441811/agilent-technologies-stock.html?.tsrc=rss"
+  },
+  "s22": {
+   "text": "2026-11-24T01:13Z www.marketbeat.com: What Agilent Technologies (A) Said on Its Q4 Earnings Call -- Agilent Technologies (NYSE:A) reported fiscal fourth-quarter revenue of $2.04 billion, its first quarter above $2 billion, as demand from pharmaceutical customers, instrument replacement cycles and growth in China helped the company exceed its guidance. Revenue rose 8.3% on a core basis, which excl",
+   "url": "https://www.marketbeat.com/instant-alerts/transcript-what-agilent-technologies-a-said-on-its-q4-earnings-call-2026-11-23/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss"
+  },
+  "s24": {
+   "text": "2026-11-23T21:51Z finance.yahoo.com: Agilent beats estimates, surges on strong guidance -- Investing.com -- Agilent Technologies Inc (NYSE:A) reported fourth-quarter results that exceeded analyst expectations and issued fiscal 2027 guidance above consensus, sending shares up over 7% in after-hours trading Monday.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/agilent-beats-estimates-surges-strong-215151998.html?.tsrc=rss"
+  },
+  "s25": {
+   "text": "2026-11-24T12:30Z finance.yahoo.com: Abercrombie & Fitch Co. Reports Third Quarter Fiscal 2026 Results -- Record third quarter net sales of $1.4 billion, up 11% to last year, the 16th consecutive quarter of growth, with comparable sales up 6%Double-digit net sales growth across regions with Americas up 11%, EMEA up 12%, and APAC up 24%Best-ever third quarter sales across brands, with Abercrombie brands up 12% and Hollister up 11%Profitability exceeded outlook with operating margin of 15.5%, and ",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/abercrombie-fitch-co-reports-third-123000073.html?.tsrc=rss"
+  },
+  "s27": {
+   "text": "2026-11-24T13:11Z finance.yahoo.com: Medtronic (MDT) Nears Q2 Results After Hugo Clearance, Is It Still A Bargain? -- Medtronic (MDT) heads into its fiscal second quarter earnings with attention fixed on three fronts: organic revenue trends, margin resilience, and management\u2019s updated view on fiscal 2027. The recent share price move tells you sentiment is in flux. Medtronic closed at US$100.72 after a 1-month share price return of 5.57% and a 90-day share price gain of 10.51%. However, the 1-yea",
+   "url": "https://finance.yahoo.com/healthcare/articles/medtronic-mdt-nears-q2-results-131109436.html?.tsrc=rss"
+  },
+  "s28": {
+   "text": "2026-11-24T12:32Z finance.yahoo.com: Medtronic reaffirms guidance after broadly in-line fiscal Q2 print -- Investing.com -- Medtronic held its full-year outlook after second-quarter organic revenue growth topped analyst estimates, though total revenue came in slightly below forecasts.",
+   "url": "https://finance.yahoo.com/healthcare/articles/medtronic-reaffirms-guidance-broadly-line-123245944.html?.tsrc=rss"
+  },
+  "s3": {
+   "text": "2026-11-24T12:39Z www.pharmaceutical-technology.com: Sanofi buys US drugmaker Insmed for $41bn to expand respiratory portfolio -- The deal marks the largest pharma acquisition since 2023, and the most Sanofi has outlaid in a deal since 2004.",
+   "url": "https://www.pharmaceutical-technology.com/news/sanofi-buys-us-drugmaker-insmed-for-41bn-to-expand-respiratory-portfolio/?.tsrc=rss"
+  },
+  "s30": {
+   "text": "2026-11-24T11:45Z finance.yahoo.com: Medtronic (MDT) Matches Q2 Earnings Estimates -- Medtronic (MDT) delivered earnings and revenue surprises of 0.00% and -1.07%, respectively, for the quarter ended October 2026. Do the numbers hold clues to what lies ahead for the stock?",
+   "url": "https://finance.yahoo.com/healthcare/articles/medtronic-mdt-matches-q2-earnings-114502046.html?.tsrc=rss"
+  },
+  "s31": {
+   "text": "2026-11-24T13:28Z www.wsj.com: Nasdaq Futures Fall as Questions Linger Over AI Trade -- U.S. stock futures fell amid investor concerns around Jensen Huang\u2019s return as Nvidia chief and the artificial-intelligence buildout after Monday\u2019s stunning rally.",
+   "url": "https://www.wsj.com/finance/stocks/nasdaq-futures-fall-as-questions-linger-over-ai-trade-68ba6d71?.tsrc=rss"
+  },
+  "s32": {
+   "text": "2026-11-24T13:03Z finance.yahoo.com: US Equity Futures Slide Pre-Bell as Traders Assess Nvidia-Led Market Rally -- US equity futures were lower pre-bell Tuesday as traders assessed the Nvidia-led (NVDIA) market rall",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/us-equity-futures-slide-pre-130353339.html?.tsrc=rss"
+  },
+  "s33": {
+   "text": "2026-11-24T12:24Z finance.yahoo.com: Premarket movers: Nvidia slips; HPE, Semtech fall -- Investing.com - U.S. stock futures turned lower on Tuesday following a sharp rally on Wall Street driven by Nvidia\u2019s decision to reinstate founder Jensen Huang as chief executive.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/premarket-movers-nvidia-slips-hpe-122424595.html?.tsrc=rss"
+  },
+  "s34": {
+   "text": "2026-11-24T11:21Z finance.yahoo.com: Nvidia, Anthropic, Intel, HPE, Sanofi, and More Stocks That Explain Today\u2019s Market -- AMD, Anthropic, Intel, Marvell, Nvidia, and other AI stocks struggle as the euphoria from Monday fades.",
+   "url": "https://finance.yahoo.com/m/f7fa0ed2-2c68-3b80-9261-c35639090d03/nvidia%2C-anthropic%2C-intel%2C.html?.tsrc=rss"
+  },
+  "s36": {
+   "text": "2026-11-24T08:14Z stocktwits.com: Dell Q3 Preview: Margins, Outlook In Focus As Strong AI Server Demand Seen Supporting Performance -- With memory and other server component costs rising sharply, Dell\u2019s gross profit margins dipped year-over-year for five straight quarters before recovering in Q2.",
+   "url": "https://stocktwits.com/news-articles/markets/equity/dell-q3-preview-margins-outlook-in-focus-as-strong-ai-server-demand-seen-supporting-performance/cNbsRdxR9k7?.tsrc=rss"
+  },
+  "s4": {
+   "text": "2026-11-24T11:07Z investorshub.advfn.com: Why Is Insmed Stock Rising 14.3% Today? -- Insmed Inc. (NASDAQ:INSM) shares rose 14.",
+   "url": "https://investorshub.advfn.com/market-news/article/40589/why-is-insmed-stock-rising-14-3-today?.tsrc=rss"
+  },
+  "s5": {
+   "text": "2026-11-24T10:44Z finance.yahoo.com: Sanofi to buy US biopharma group Insmed for $41 bn in cash -- French pharmaceutical giant Sanofi said Tuesday that it would buy the US biopharma group Insmed, a specialist in respiratory treatments, for $41 billion as it races to bulk up its development pipeline of new drugs.Insmed's two main drugs are Brinsupri, to treat bronchiectasis, and Arikayce, a specialised treatment for the lung disease mycobacterium avium complex (MAC).",
+   "url": "https://finance.yahoo.com/healthcare/articles/sanofi-buy-us-biopharma-group-104404701.html?.tsrc=rss"
+  },
+  "s6": {
+   "text": "2026-11-24T10:31Z finance.yahoo.com: Insmed Stock Jumps 14% on $41 Billion Sanofi Deal. Why the Price Is Right. -- The stock market can be ruthless when it comes to mergers and acquisitions\u2014but the pharma deal looks like a rare win-win.",
+   "url": "https://finance.yahoo.com/m/7a952b43-9d5d-34d0-a5f6-868bdeb1ee28/insmed-stock-jumps-14%25-on-%2441.html?.tsrc=rss"
+  },
+  "s8": {
+   "text": "2026-11-24T12:17Z finance.yahoo.com: Dollar Tree stock jumps on earnings beat and raised outlook -- Investing.com -- Dollar Tree Inc. (NASDAQ: DLTR) shares surged 10.8% following the company's third-quarter results that exceeded analyst expectations and raised full-year earnings guidance, driven by stronger traffic and comparable store sales growth.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/dollar-tree-stock-jumps-earnings-121709851.html?.tsrc=rss"
+  },
+  "s9": {
+   "text": "2026-11-24T12:05Z finance.yahoo.com: Dollar Tree Boosts Earnings Guidance as Discount Retail Meets Early Holiday Demand -- Dollar Tree\u2019s traffic for the third quarter rises 3.8%, up from a 0.4% increase in the second quarter.",
+   "url": "https://finance.yahoo.com/m/cdd1297f-30d8-3060-80d6-87096a8cd844/dollar-tree-boosts-earnings.html?.tsrc=rss"
+  },
+  "t1": {
+   "text": "the last note (2026-11-24T0419Z), theme \"Nvidia's CEO return carried the whole day\": Nvidia's board reinstated its CEO at 8:55 a.m. ET; Nvidia closed +31.48% and the S&P 500 +4.73%, QQQ +7.00%, close to their midday levels, so the move held into the close."
+  },
+  "t2": {
+   "text": "the last note (2026-11-24T0419Z), theme 'Server makers: HPE reports, Dell next': HPE closed +17.4% and Dell +20.5% on the server-price report; after the close HPE reported fiscal fourth-quarter revenue of $14.5 billion, up 50%, raised its fiscal 2027 revenue outlook, and fell 6.9% after hours (StockTitan)."
+  },
+  "x:A": {
+   "text": "A: the market carried -0.9% (beta 0.80); its industry (Laboratory Analytical Instruments, 10 stocks) moved +0.3%; left over after the market and its drivers +8.3%"
+  },
+  "x:ADI": {
+   "text": "ADI: the market carried -2.1% (beta 1.90); its industry (Semiconductors & Related Devices, 58 stocks) moved -4.4%; left over after the market and its drivers -9.4%"
+  },
+  "x:ANF": {
+   "text": "ANF: the market carried -1.2% (beta 1.05); its industry (Apparel stores (broad), 13 stocks) moved +0.0%; left over after the market and its drivers +11.2%"
+  },
+  "x:DKS": {
+   "text": "DKS: the market carried -1.0% (beta 0.87); its industry (Miscellaneous retail (broad), 28 stocks) moved -0.0%; left over after the market and its drivers +17.7%"
+  },
+  "x:DLTR": {
+   "text": "DLTR: the market carried -0.6% (beta 0.52); 10-year yield carried -0.0% (-13.22% per point, t -3.8); its industry (Retail-Variety Stores, 8 stocks) moved +0.6%; left over after the market and its drivers +9.1%"
+  },
+  "x:HPE": {
+   "text": "HPE: the market carried -2.9% (beta 2.56); its industry (Machinery and computer equipment, group 357, 32 stocks) moved -0.8%; left over after the market and its drivers -9.5%"
+  },
+  "x:INSM": {
+   "text": "INSM: the market carried -0.5% (beta 0.43); its industry (Pharmaceutical Preparations, 145 stocks) moved +0.0%; left over after the market and its drivers +15.1%"
+  },
+  "x:MDT": {
+   "text": "MDT: the market carried -0.1% (beta 0.11); 10-year yield carried -0.0% (-7.84% per point, t -3.6); its industry (Instruments, medical and optical goods, watches, group 384, 64 stocks) moved +0.0%; left over after the market and its drivers -3.6%"
+  },
+  "x:SHOE": {
+   "text": "SHOE: the market carried -0.9% (beta 0.80); 10-year yield carried -0.0% (-16.80% per point, t -4.1); its industry (Apparel stores (broad), 13 stocks) moved +0.0%; left over after the market and its drivers -18.9%"
+  }
+ },
+ "note": {
+  "backdrop": "A give-back before the open after Monday's surge: S&P 500 -1.1%, Nasdaq 100 -2.0%, VIX +8.1%, semiconductors' median -4.4%. The stories frame it as traders reassessing Monday's Nvidia-led rally and the AI buildout (WSJ, Yahoo). The give-back is uneven: Nvidia has returned about a fifth of Monday's +31.48%, Micron about two-fifths of its +19.04%, HPE nearly four-fifths after its report (StockTitan). Outside chips the morning belongs to company news: Sanofi agreed to buy Insmed for $175 a share in cash, and seven retailers reported, most of them up. 4 of 2451 stocks are outside their 9-in-10 range: Shoe Station and Insmed on their news; Summit Hotel and Wintrust with none.",
+  "backdrop_evidence": [
+   "k",
+   "g:3674",
+   "s31",
+   "s32",
+   "s33",
+   "s34",
+   "t1",
+   "https://www.stocktitan.net/articles/stock-market-today-live-november-24-2026"
+  ],
+  "by": "agent",
+  "calls": [],
+  "check": "2026-11-24T1330Z",
+  "read": [
+   {
+    "direction": "none",
+    "published": "2026-11-24T11:58:55Z",
+    "says": "Before the open Nov 24: QQQ -1.74% and SPY -0.90% at 6:34-6:35 a.m. ET; Nvidia -5.34%, Micron -6.94%, Intel -6.62%, HPE -11.64%; Sanofi to buy Insmed for $175 a share in cash (about $41.0 billion, 46% above the Nov 18 close, closing expected in the first half of 2027), Insmed +14.64%, Sanofi +6.46%; Dick's +15.58% and Abercrombie +10.22% on raised outlooks; Burlington +9.50%, Kohl's +8.87%, Dollar Tree +8.20%, Best Buy +5.67%; Shoe Station -23.47%; Semtech -10.60%; Analog Devices -9.44%; Dell, Workday, HP and Autodesk report after the close; GDP and PCE Wednesday 8:30 a.m. ET.",
+    "tier": "reported",
+    "url": "https://www.stocktitan.net/articles/stock-market-today-live-november-24-2026"
+   }
+  ],
+  "singles": [
+   {
+    "beneath": "+14.6%, trading about $4 below $175 before the open: the gap pays for a wait to mid-2027 and the deal's risk (inferred). Its lung drug Brinsupri brought $1.09 billion from its August 2025 launch to Sept 30, 2026. Sanofi, the buyer paying cash, rose 6.5%, unlike CrowdStrike paying in shares on Monday.",
+    "cause": "Sanofi agreed to buy Insmed for $175 a share in cash, about $41.0 billion: 46% above its Nov 18 close, before reports of a deal, and about 17.5% above Monday's close. Both boards approved; it needs Insmed's shareholders and regulators, and Sanofi expects to close in the first half of 2027.",
+    "evidence": [
+     "s3",
+     "s4",
+     "s5",
+     "s6",
+     "x:INSM",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-24-2026"
+    ],
+    "kind": "reported",
+    "t": "INSM"
+   },
+   {
+    "beneath": "-3.7% against a wave of +0.3 from its neighbours: an in-line report on a stock up 10.5% in 90 days (s27).",
+    "cause": "Medtronic's fiscal second quarter: adjusted earnings of $1.34 a share against $1.33 expected, revenue of $9.4 billion against $9.48 billion; it kept its fiscal 2027 outlook.",
+    "evidence": [
+     "s27",
+     "s28",
+     "s30",
+     "x:MDT"
+    ],
+    "kind": "reported",
+    "t": "MDT"
+   },
+   {
+    "beneath": "+7.4%, +8.3% of its own; up from +6.8% after hours.",
+    "cause": "Agilent's first quarter above $2 billion of revenue and a fiscal 2027 outlook above expectations.",
+    "evidence": [
+     "s21",
+     "s22",
+     "s24",
+     "x:A"
+    ],
+    "kind": "reported",
+    "t": "A"
+   }
+  ],
+  "themes": [
+   {
+    "beneath": "Before the open: Nvidia -5.4%, Micron -6.8%, Intel -6.2%, AMD -4.7%, Broadcom -4.0% (the check's moves). A fifth to two-fifths of Monday's gains, not all of them: QQQ about a quarter of its +7.00%. Semtech is -10% after record sales up 58%, like HPE a strong report met by a fall after a big Monday (inferred). UBS Global Wealth Management's CIO wrote that the swings are not a sign the AI investment story has broken, and expects more differentiation (opinion, via CNBC in StockTitan).",
+    "cause": "Chip stocks that led Monday's rally lead the market lower before the open as traders reassess the Nvidia-led rally and the AI buildout (WSJ; Yahoo; StockTitan). Analog Devices added its own news: record fourth-quarter revenue, up 42% to $4.37 billion, but a first-quarter earnings forecast below expectations.",
+    "evidence": [
+     "g:3674",
+     "s31",
+     "s32",
+     "s33",
+     "s34",
+     "s11",
+     "s12",
+     "s14",
+     "x:ADI",
+     "p:ADI~TXN",
+     "p:ADI~MCHP",
+     "p:ADI~ON",
+     "t1",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-24-2026"
+    ],
+    "kind": "reported",
+    "mechanism": "The semiconductor median is -4.4%; Analog Devices' partners (Texas Instruments -4.9%, Microchip -4.1%, ON -4.4%) moved about with that median, so their falls are the group's, not a spread of its forecast (inferred from the pond: Analog Devices is a stone of -5.0 usual days of its own).",
+    "members": [
+     "NVDA",
+     "MU",
+     "INTC",
+     "AMD",
+     "AVGO",
+     "ADI",
+     "TXN",
+     "MCHP",
+     "ON",
+     "SMTC"
+    ],
+    "name": "Chips give back part of Monday",
+    "read_through": [],
+    "watch": "Whether the give-back stays near a quarter of Monday's gain through the session or runs further; Analog Devices' call at 10:00 a.m. ET."
+   },
+   {
+    "beneath": "HPE -12.4%, -9.5% of its own, against a +17.4% Monday: it has given back most of Monday's server-price rally. Dell enters its report with analysts at $49.3 billion of sales and $6.62 a share against its guide of $49.0 billion and $6.50, and an AI server backlog of $95 billion at the end of July (Trefis).",
+    "cause": "HPE beat on revenue ($14.5 billion, +50%) and orders (+80%, AI backlog about $10.5 billion) and raised fiscal 2027 revenue growth to 27-35%, but guided margins lower: Wells Fargo expects first-quarter gross margin about 4.7 points lower at 33.5% and cut its target to $50; HPE expects its Cloud & AI operating margin near 14% in fiscal 2027, from 18.4% last quarter.",
+    "evidence": [
+     "s16",
+     "s17",
+     "s18",
+     "s19",
+     "s36",
+     "x:HPE",
+     "t2",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-24-2026"
+    ],
+    "kind": "reported",
+    "mechanism": "The read is margins, not demand: AI servers sell more but earn less per dollar, as memory and component costs rise. Dell, HPE's closest partner (0.69) and the next report, is -6.9% before its own results tonight; Super Micro -4.5%.",
+    "members": [
+     "HPE",
+     "DELL",
+     "SMCI"
+    ],
+    "name": "Server makers: demand up, margins down",
+    "read_through": [
+     {
+      "evidence": [
+       "s17",
+       "s36"
+      ],
+      "t": "DELL",
+      "why": "Same products, same component costs, reports tonight; already -6.9%. Untested: whether a partner's report reaches it the next day has not been tested here."
+     }
+    ],
+    "watch": "Dell's gross margin and AI server margin tonight: a margin hold would separate it from HPE; a fall like HPE's would make it the group's problem."
+   },
+   {
+    "beneath": "The holiday quarter's shoppers: Dollar Tree's traffic rose 3.8% against 0.4% the quarter before (s9); Burlington's chief executive called its 1% comparable sales rise disappointing (StockTitan). The family footwear chain lost sales while sporting goods and teen apparel gained: spending is being chosen, not cut across the board (inferred).",
+    "cause": "Seven retailers reported before the open: Dick's raised its earnings outlook to $11.40-12.25 a share; Abercrombie had record third-quarter sales of $1.4 billion (+11%) and raised its outlook; Dollar Tree beat ($1.16 a share against $0.91 expected) and raised its outlook; Burlington beat its own forecast; Kohl's raised its outlook, helped by a $1.16-a-share tax benefit; Best Buy raised its outlook; Shoe Station's sales fell to $280.0 million from $297.2 million, it cut its guidance and took an $18 million goodwill write-off.",
+    "evidence": [
+     "s1",
+     "s2",
+     "s8",
+     "s9",
+     "s10",
+     "s25",
+     "x:DKS",
+     "x:ANF",
+     "x:DLTR",
+     "x:SHOE",
+     "p:DKS~ASO",
+     "p:ANF~URBN",
+     "p:SHOE~CAL",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-24-2026"
+    ],
+    "kind": "reported",
+    "mechanism": "Each moved on its own report: Dick's +16.7%, Abercrombie +10.0%, Burlington +9.3%, Dollar Tree +8.6%, Kohl's +8.2%, Best Buy +5.8%, Shoe Station -19.8%. Their partners barely moved (Dick's: Academy 0.0%; Abercrombie: Urban Outfitters +0.1%; Shoe Station: Caleres 0.0%), so no sector wave yet (the pond).",
+    "members": [
+     "DKS",
+     "ANF",
+     "DLTR",
+     "BURL",
+     "KSS",
+     "BBY",
+     "SHOE"
+    ],
+    "name": "Retailers report: most beat and raise",
+    "read_through": [],
+    "watch": "Whether the gains hold in the session; Friday's half day starts the holiday season."
+   }
+  ],
+  "threads": [
+   "Kymera: +5.1% before the open after launching its $1.5 billion offering; about $158, 27% above the call's $124.06 (63a7bc55, judged at the Nov 27 close).",
+   "Dell, Workday, HP and Autodesk report after today's close; Dell's margins against HPE's.",
+   "GDP and PCE inflation Wednesday 8:30 a.m. ET; markets shut Thursday, half day Friday.",
+   "Health insurers: flat to up before the open (Humana +2.2%, Elevance +0.9%); Monday's lag not repeated so far.",
+   "Wintrust, TransDigm, Aveanna, NW Natural: last night's after-hours prices, not yet traded again.",
+   "Check flaws open: the case file's 9-in-10 label; attention's open-call date; the cash line without investments; SEC refused filing reads again this morning (the releases were read through news pages)."
+  ],
+  "unexplained": [
+   {
+    "t": "INN",
+    "tried": "Outside its 9-in-10 range at -10.7%. No filing, no story; its hotel REIT partners (DiamondRock +0.2%, RLJ 0.0%, Xenia 0.0%) flat."
+   },
+   {
+    "t": "WTFC",
+    "tried": "Outside its 9-in-10 range at +7.4%: the same single after-hours trade as last night, still its last price ('overnight'); no filing, no story. Likely a stray print until it trades."
+   },
+   {
+    "t": "TDG",
+    "tried": "+7.4% overnight: the same after-hours price as last night; no filing, no story."
+   },
+   {
+    "t": "AVAH",
+    "tried": "+9.2% overnight, the same after-hours price; its only story is a conference appearance."
+   },
+   {
+    "t": "NWN",
+    "tried": "-4.9% overnight, the same after-hours price; no filing, no story."
+   },
+   {
+    "t": "ZION",
+    "tried": "+4.8% before the open with only a valuation opinion piece; regional bank partners flat."
+   },
+   {
+    "t": "LIF",
+    "tried": "-9.4%, no filing, no story; the market carried -1.9% at its beta of 1.73."
+   }
+  ]
+ },
+ "recorded_at": "2026-11-24T13:35:16Z"
+}

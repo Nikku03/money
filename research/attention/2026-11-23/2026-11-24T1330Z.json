@@ -1,0 +1,826 @@
+{
+ "check": "2026-11-24T1330Z",
+ "asof": "2026-11-23",
+ "built_at": "2026-11-24T13:33:45Z",
+ "weights": {
+  "surprise": 0.25,
+  "unexplained": 0.2,
+  "news": 0.15,
+  "reach": 0.1,
+  "against": 0.1,
+  "memory": 0.1,
+  "fragile": 0.1
+ },
+ "temp": 0.12,
+ "candidates": 34,
+ "focus": [
+  {
+   "t": "SHOE",
+   "company": "SHOE STATION GROUP INC",
+   "move": -0.19810429880197322,
+   "z": -6.536800693431738,
+   "wave": 0.0,
+   "mover": true,
+   "score": 0.6121822074095106,
+   "parts": {
+    "surprise": 0.696,
+    "unexplained": 0.955,
+    "news": 1.0,
+    "reach": 0.972,
+    "against": 0.0,
+    "memory": 0.0,
+    "fragile": 0.0
+   },
+   "reasons": [
+    "outside its 9-in-10 range",
+    "most of the move is its own",
+    "filed its results",
+    "2 stories name it",
+    "36 stocks moved closely with it over the year"
+   ],
+   "attention": 0.18449875378518907,
+   "bars": 22,
+   "filings": [
+    {
+     "what": "results report (8-K 2.02)",
+     "at": "2026-11-24T11:20:14Z",
+     "url": "https://www.sec.gov/Archives/edgar/data/895447/000119312526473085/shoe-20261124.htm",
+     "error": "https://www.sec.gov/Archives/edgar/data/895447/000119312526473085/index.json: HTTP 404"
+    }
+   ],
+   "pages": [
+    {
+     "url": "https://finance.yahoo.com/markets/stocks/articles/shoe-station-group-shoe-q3-112002429.html?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-24T11:20:02Z",
+     "key": [
+      "A quarter ago, it was expected that this footwear retailer would post earnings of $0.32 per share when it actually produced earnings of $0.23, delivering a surprise of -28.13%.",
+      "Shoe Station Group, which belongs to the Zacks Shoes and Retail Apparel industry, posted revenues of $279.96 million for the quarter ended October 2026, missing the Zacks Consensus Estimate by 1.46%.",
+      "Shoe Station Group shares have lost about 15.9% since the beginning of the year versus the S&P 500's gain of 5.7%.",
+      "What's Next for Shoe Station Group?",
+      "The current consensus EPS estimate is $0.12 on $250.65 million in revenues for the coming quarter and $0.79 on $1.09 billion in revenues for the current fiscal year.",
+      "In terms of the Zacks Industry Rank, Shoes and Retail Apparel is currently in the bottom 20% of the 250 plus Zacks industries."
+     ],
+     "text": "Oops, something went wrong Skip to navigation Skip to main content Skip to right column Sign in U.S. markets open in 59m US Markets Europe Markets Asia Markets Cryptocurrencies Rates Commodities Currencies U.S. markets open in 59m S&P Futures 7,159.25 -95.25 -1.31% Dow Futures 49,311.00 -366.00 -0.74% Nasdaq Futures 26,223.75 -584.25 -2.18% Russell 2000 Futures 2,648.90 -25.20 -0.94% 10-Yr Bond 4.9180 0.0000 0.00% VIX 30.13 +3.51 +13.11% Gold 3,628.10 -23.30 -0.64% Bitcoin USD 60,060.45 -3,726.15 -5.84% Crude Oil Jan 27 80.58 +0.41 +0.51% US Private Equity 10,765.73 +131.97 +1.24% ADVERTISEMENT Shoe Station Group (SHOE) Q3 Earnings and Revenues Miss Estimates Zacks Equity Research Tue, November 24, 2026 at 3:20 AM PST 3 min read SHOE -21.78% NKE +0.52% Shoe Station Group (SHOE) came out with quarterly earnings of $0.05 per share, missing the Zacks Consensus Estimate of $0.21 per share. This compares to earnings of $0.53 per share a year ago. These figures are adjusted for non-recurring items. This quarterly report represents an earnings surprise of -76.19%. A quarter ago, it was expected that this footwear retailer would post earnings of $0.32 per share when it actually produced earnings of $0.23, delivering a surprise of -28.13%. Over the last four quarters, the company has surpassed consensus EPS estimates just once. Shoe Station Group, which belongs to the Zacks Shoes and Retail Apparel industry, posted revenues of $279.96 million for the quarter ended October 2026, missing the Zacks Consensus Estimate by 1.46%. This compares to year-ago revenues of $297.15 million. The company has topped consensus revenue estimates two times over the last four quarters. The sustainability of the stock's immediate price movement based on the recently-released numbers and future earnings expectations will mostly depend on management's commentary on the earnings call. Shoe Station Group shares have lost about 15.9% since the beginning of the year versus the S&P 500's gain of 5.7%. What's Next for Shoe Station Group? While Shoe Station Group has underperformed the market so far this year, the question that comes to investors' minds is: what's next for the stock? There are no easy answers to this key question, but one reliable measure that can help investors address this is the company's earnings outlook. Not only does this include current consensus earnings expectations for the coming quarter(s), but also how these expectations have changed lately. Empirical research shows a strong correlation between near-term stock movements and trends in earnings estimate revisions. Investors can track such revisions by themselves or rely on a tried-and-tested rating tool like the Zacks Rank, which has an impressive track record of harnessing the power of earnings estimate revisions. Ahead of this earnings release, the estimate revisions trend for Shoe Station Group was unfavorable. While the magnitude and direction of estimate revisions could change following the company's just-released earnings report, the current status translates into a Zacks Rank #5 (Strong Sell) for the stock. So, the shares are expected to underperform the market in the near future. You can see the complete list of today's Zacks #1 Rank (Strong Buy) stocks here. It will be interesting to see how estimates for the coming quarters and the current fiscal year change in the days ahead. The current consensus EPS estimate is $0.12 on $250.65 million in revenues for the coming quarter and $0.79 on $1.09 billion in revenues for the current fiscal year. Investors should be mindful of the fact that the outlook for the industry can have a material impact on the performance of the stock as well. In terms of the Zacks Industry Rank, Shoes and Retail Apparel is currently in the bottom 20% of the 250 plus Zacks industries. Our research shows that the top 50% of the Zacks-ranked industries outperform the bottom 50% by a factor of more than 2 to 1. Another stock from the same industry, Nike (NKE), ha"
+    },
+    {
+     "url": "https://finance.yahoo.com/markets/stocks/articles/shoe-station-group-reports-third-111000700.html?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-24T11:10:00Z",
+     "key": [
+      "Third Quarter 2026 Highlights Net sales of $280.0 million compared to $297.2 million in the third quarter of 2025.",
+      "Shoe Carnival banner net sales declined 4.7 percent; Shoe Station banner net sales declined 7.7 percent.",
+      "Results include an approximately $18.0 million non-cash goodwill impairment charge; the charge will not result in any cash expenditures or affect the Company's cash flow or liquidity.",
+      "Repurchased approximately $10.0 million of common stock during the third quarter; year-to-date 2026 capital returned to shareholders totaled approximately $31.1 million, inclusive of dividends.",
+      "Full year 2026 net sales guidance and non-GAAP adjusted diluted earnings per share (\"Adjusted EPS\") guidance lowered to reflect results through the third quarter and current family footwear industry trends. \"Our third quarter results were below the expectations we set in September.",
+      "We are debt-free, we ended the quarter with $116 million in cash and marketable securities, and we returned capital to shareholders through our 58th consecutive quarterly dividend and the repurchase of approximately $10 million of our stock."
+     ],
+     "text": "Oops, something went wrong Skip to navigation Skip to main content Skip to right column Sign in U.S. markets open in 59m US Markets Europe Markets Asia Markets Cryptocurrencies Rates Commodities Currencies U.S. markets open in 59m S&P Futures 7,159.25 -95.25 -1.31% Dow Futures 49,311.00 -366.00 -0.74% Nasdaq Futures 26,223.75 -584.25 -2.18% Russell 2000 Futures 2,648.90 -25.20 -0.94% 10-Yr Bond 4.9180 0.0000 0.00% VIX 30.13 +3.51 +13.11% Gold 3,628.10 -23.30 -0.64% Bitcoin USD 60,060.45 -3,726.15 -5.84% Crude Oil Jan 27 80.58 +0.41 +0.51% US Private Equity 10,765.73 +131.97 +1.24% ADVERTISEMENT This is a paid press release. Contact the press release distributor directly with any inquiries. Shoe Station Group Reports Third Quarter 2026 Results Business Wire Tue, November 24, 2026 at 3:10 AM PST 24 min read SHOE -21.78% FORT MILL, S.C., November 24, 2026--(BUSINESS WIRE)--Shoe Station Group, Inc. (Nasdaq: SHOE) (the \"Company\"), a leading omnichannel retailer of footwear and accessories for the family, today reported results for the third quarter ended October 31, 2026 and updated its Fiscal 2026 guidance. Third Quarter 2026 Highlights Net sales of $280.0 million compared to $297.2 million in the third quarter of 2025. Shoe Carnival banner net sales declined 4.7 percent; Shoe Station banner net sales declined 7.7 percent. Sales in both banners were impacted by an increasingly promotional footwear marketplace and softer consumer demand following back-to-school. Gross profit margin of 31.9 percent, compared to 37.6 percent in the third quarter of 2025, reflecting increased promotional activity, liquidation of aged and excess inventory, and the prior-year benefit from raising prices in advance of tariff-related cost increases. Results include an approximately $18.0 million non-cash goodwill impairment charge; the charge will not result in any cash expenditures or affect the Company's cash flow or liquidity. Cash, cash equivalents, and marketable securities of $116.0 million at quarter-end; the Company ended the third quarter of 2026 debt-free. Repurchased approximately $10.0 million of common stock during the third quarter; year-to-date 2026 capital returned to shareholders totaled approximately $31.1 million, inclusive of dividends. Full year 2026 net sales guidance and non-GAAP adjusted diluted earnings per share (\"Adjusted EPS\") guidance lowered to reflect results through the third quarter and current family footwear industry trends. \"Our third quarter results were below the expectations we set in September. The improvement we saw in August did not carry into September and October. Families concentrated their spending around back-to-school, and then, as our advertising intensity lessened and fuel prices increased, consumer demand softened until cold weather arrived. Early results from our merchandising work are encouraging. Customers responded to our boot assortment as soon as the season opened, and those sales carried higher average unit retails and improved margins. Fall assortments that were curated to address localized demand began to arrive in our stores throughout the month of October,\" said Cliff Sifford, Interim President and Chief Executive Officer. \"We enter the holiday season with the strongest boot assortment we have offered in years, intensified advertising, moderating fuel prices, and comparisons that ease as the quarter progresses. Our balance sheet remains strong. We are debt-free, we ended the quarter with $116 million in cash and marketable securities, and we returned capital to shareholders through our 58th consecutive quarterly dividend and the repurchase of approximately $10 million of our stock. We are managing this company for the long term, and the work underway in our assortments, our marketing, and our costs is aimed at returning this business to profitable growth,\" concluded Mr. Sifford. Third Quarter 2026 Operating Results Net sales in the third quarter of 2026 were $280.0 million compared to $297.2 mi"
+    }
+   ],
+   "memory": [],
+   "pond": {
+    "wave": 0.0,
+    "own": -6.536800693431738,
+    "how": "a stone: its own news",
+    "from": [],
+    "reaches": [
+     [
+      "CAL",
+      0.7,
+      0.0
+     ],
+     [
+      "M",
+      0.53,
+      0.02475
+     ],
+     [
+      "BOOT",
+      0.53,
+      0.0
+     ],
+     [
+      "BKE",
+      0.52,
+      -0.0
+     ],
+     [
+      "URBN",
+      0.51,
+      0.00141
+     ]
+    ]
+   }
+  },
+  {
+   "t": "INSM",
+   "company": "INSMED Inc",
+   "move": 0.1459521402093269,
+   "z": 3.6007573901334107,
+   "wave": 0.0,
+   "mover": true,
+   "score": 0.5416645614531601,
+   "parts": {
+    "surprise": 0.459,
+    "unexplained": 1.0,
+    "news": 1.0,
+    "reach": 0.0,
+    "against": 0.0,
+    "memory": 0.0,
+    "fragile": 0.769
+   },
+   "reasons": [
+    "outside its 9-in-10 range",
+    "most of the move is its own",
+    "filed a material deal",
+    "4 stories name it",
+    "chance of a sale of new shares 9.5% against 0.9% usually",
+    "cash covers about 2.6 quarters of losses"
+   ],
+   "attention": 0.10251361912555448,
+   "bars": 8,
+   "filings": [
+    {
+     "what": "8-K 1.01, 7.01",
+     "at": "2026-11-24T11:04:08Z",
+     "url": "https://www.sec.gov/Archives/edgar/data/1104506/000114036126045364/ef20086426_8-k.htm",
+     "error": "https://www.sec.gov/Archives/edgar/data/1104506/000114036126045364/index.json: HTTP 404"
+    }
+   ],
+   "pages": [
+    {
+     "url": "https://www.pharmaceutical-technology.com/news/sanofi-buys-us-drugmaker-insmed-for-41bn-to-expand-respiratory-portfolio/",
+     "title": null,
+     "published": "2026-11-24T11:39:18Z",
+     "key": [
+      "Skip to site menu Skip to page content PT Login Menu Search News Sanofi buys US drugmaker Insmed for $41bn to expand respiratory portfolio The deal marks the largest pharma acquisition since 2023, and the most Sanofi has outlaid in a deal since 2004.",
+      "Sanofi has struck its biggest deal in over two decades after agreeing to buy US biopharma Insmed for $41bn in cash.",
+      "The French drugmaker will pay $175 per share, representing a premium of around 17.5% on Insmed\u2019s last price at market close on 23 November.",
+      "It is Sanofi\u2019s largest deal since its $65bn merger with Aventis in 2004.",
+      "Go deeper with GlobalData Reports Immuno-oncology (IO) - Thematic Intelligence Reports NPVM: Insmed Inc's Brensocatib Go deeper with GlobalData The gold standard of business intelligence.",
+      "Following the Insmed announcement, Sanofi\u2019s shares surged 5.6% at market open on 24 November compared to the previous market close."
+     ],
+     "text": "Skip to site menu Skip to page content PT Login Menu Search News Sanofi buys US drugmaker Insmed for $41bn to expand respiratory portfolio The deal marks the largest pharma acquisition since 2023, and the most Sanofi has outlaid in a deal since 2004. Robert Barrie November 24, 2026 Share Copy Link Share on X Share on Linkedin Share on Facebook The acquisition marks the most significant strategic move under CEO Bel\u00e9n Garijo, who took over at Sanofi in April this year. Credit: Below the Sky/Shutterstock.com. Sanofi has struck its biggest deal in over two decades after agreeing to buy US biopharma Insmed for $41bn in cash. The French drugmaker will pay $175 per share, representing a premium of around 17.5% on Insmed\u2019s last price at market close on 23 November. Sanofi is funding the transaction through a combination of debt and cash on hand and has secured financing to support the deal. It is Sanofi\u2019s largest deal since its $65bn merger with Aventis in 2004. Go deeper with GlobalData Reports Immuno-oncology (IO) - Thematic Intelligence Reports NPVM: Insmed Inc's Brensocatib Go deeper with GlobalData The gold standard of business intelligence. Find out more Discover B2B Marketing That Performs Combine business intelligence and editorial excellence to reach engaged professionals across 36 leading media platforms. Find out more The acquisition marks the most significant strategic move under CEO Bel\u00e9n Garijo, who took over at Sanofi in April this year. Garijo was tasked with turning around the company\u2019s growth prospects after investors became increasingly concerned with vaccine headwinds and a lacklustre pipeline. Under prior CEO Paul Hudson, shares in the French drugmaker were trading around 30% down compared to highs in March 2025, though they already started to recover under Garijo\u2019s leadership. Following the Insmed announcement, Sanofi\u2019s shares surged 5.6% at market open on 24 November compared to the previous market close. The big pharma company has a market cap of \u20ac108.4bn ($118.5bn). In a research note, Citi analysts said: \u201cWe view the deal as strategically sensible.\u201d Though they questioned whether it brings enough of an R&D platform to bolster Sanofi\u2019s weak internal R&D going forward, alongisde the deal\u2019s potential to limit further M&A capacity. In a statement, Garijo said: \u201cI am delighted to welcome Insmed to Sanofi. This acquisition is a major strategic step to significantly accelerate our mid- and long-term growth trajectory and further strengthen our mid- and early-stage pipeline.\u201d Sanofi will add two commercial therapies to its portfolio via the takeover. Brinsupri (brensocatib) is a once-daily, oral, reversible inhibitor of dipeptidyl peptidase 1 (DPP1) approved in multiple regions for non-cystic fibrosis bronchiectasis (NCFB), a type of chronic lung condition. Brinsupri reached blockbuster status this year, generating over $1bn through the end of September. Sanofi said, \u201csubstantial additional growth is expected\u201d. GlobalData, parent company of Pharmaceutical Technology, forecasts global sales of over $6bn in 2032. Sanofi also gains access to Arikayce (amikacin liposome inhalation suspension), an inhaled antibacterial treatment used in combination with multidrug therapy for certain adults with mycobacterium avium complex (MAC) lung disease. It is the only approved inhaled therapy specifically indicated for treatment-refractory patients in the US, EU and Japan. Arikayce made $433.8m in 2025, growing 19% compared to 2024. While sales are growing, GlobalData forecasts it will only reach blockbuster status by 2032. The deal\u2019s high price also reflects the extensive pipeline that will form a central pillar of Sanofi\u2019s next phase of growth. Sanofi highlighted the Phase III programme evaluating treprostinil palmitil inhalation powder (TPIP) across pulmonary hypertension and interstitial lung diseases (ILDs). Sanofi said the prostanoid\u2019s once-daily dosing and potential for multiple rare respiratory indications mean it could be a "
+    },
+    {
+     "url": "https://investorshub.advfn.com/market-news/article/40589/why-is-insmed-stock-rising-14-3-today?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-24T11:07:28Z",
+     "key": [
+      "Get Started Why Is Insmed Stock Rising 14.3% Today?",
+      "Fiona Craig NASDAQ:INSM Latest News November 24 2026 6:07AM Add as preferred source \u00a9 Pixnio Insmed Inc. (NASDAQ:INSM) shares rose 14.3% in premarket trading on Tuesday after French pharmaceutical group Sanofi announced a binding agreement to acquire the US biopharmaceutical company for approximately US$41 billion in an all-cash transaction.",
+      "Under the terms of the agreement, Sanofi will pay US$175 per Insmed share, representing a premium of approximately 46% to the company\u2019s unaffected closing share price on 18 November 2026, before media reports of a potential acquisition emerged.",
+      "What Is Sanofi Acquiring Through the Insmed Deal?",
+      "Insmed reported that Brinsupri, its treatment for non-cystic fibrosis bronchiectasis, generated US$1.09 billion in revenue through 30 September 2026, following its US commercial launch in August 2025.",
+      "Insmed\u2019s premarket gains came against a weaker backdrop for US equities, with the S&P 500 declining 0.4%, the Dow Jones Industrial Average falling 0.1% and the Nasdaq dropping 1%."
+     ],
+     "text": "Boards: Quotes: Favorites Popular Monitor Movers Level 2 News Menu Boards Stocks Commodities Forex Cryptocurrency The Lounge Advanced Search News All Company News iHub Market News News Scanner Price & News Alerts Market Data Monitor Level 2 Live Charts Trades Portfolio Economic Calendars Follow Feed Trader Alerts Price Alerts Options Markets Crypto Forex Commodities Futures Discover Market Movers Options Flow Breakouts Scanner Broker Review Breakout Boards Most Read Most Posted Most Followed Members Active Boards New Boards Site Stats PostStream My Stocks Activity Ticker Buzz Cloud Subscribe Login/Register Support 1-888-992-3836 help@advfn.com S&P 500 7,237.17 0.00% US Tech 100 25,412.00 -2.42% Dow Jones 49,595.31 0.00% Brent Oil 87.65 0.92% Bitcoin 60,316.25 -1.44% Customized watchlists with full streaming quotes from leading exchanges, such as NASDAQ, NYSE, AMEX, OTC Markets Small-Cap, LSE and more. Get Started Why Is Insmed Stock Rising 14.3% Today? Fiona Craig NASDAQ:INSM Latest News November 24 2026 6:07AM Add as preferred source \u00a9 Pixnio Insmed Inc. (NASDAQ:INSM) shares rose 14.3% in premarket trading on Tuesday after French pharmaceutical group Sanofi announced a binding agreement to acquire the US biopharmaceutical company for approximately US$41 billion in an all-cash transaction. Under the terms of the agreement, Sanofi will pay US$175 per Insmed share, representing a premium of approximately 46% to the company\u2019s unaffected closing share price on 18 November 2026, before media reports of a potential acquisition emerged. What Is Sanofi Acquiring Through the Insmed Deal? The acquisition includes Insmed\u2019s commercial medicines Brinsupri (brensocatib) and Arikayce (amikacin liposome inhalation suspension), alongside its Phase 3 clinical development programme for treprostinil palmitil inhalation powder (TPIP). TPIP is being developed for potential applications across multiple rare respiratory diseases. Insmed reported that Brinsupri, its treatment for non-cystic fibrosis bronchiectasis, generated US$1.09 billion in revenue through 30 September 2026, following its US commercial launch in August 2025. The acquisition expands Sanofi\u2019s commercial respiratory medicines portfolio and clinical development pipeline. Why Is Sanofi Acquiring Insmed? The transaction forms part of Sanofi\u2019s strategy to diversify its revenue sources ahead of the anticipated expiration of patent protection for Dupixent in 2031. Dupixent, a biologic treatment for inflammatory conditions including eczema and asthma, generated third-quarter revenue of \u20ac5.7 billion, accounting for nearly 40% of Sanofi\u2019s total group sales. Sanofi Chief Executive Officer Belen Garijo described the acquisition as \u201ca major strategic step to significantly accelerate our mid- and long-term growth trajectory and further strengthen our mid- and early-stage pipeline,\u201d Insmed Chief Executive Officer Will Lewis said the transaction would \u201cadvance our commercial portfolio and phase 3 pipeline with a combined multibillion-dollar peak sales potential.\u201d Sanofi expects the acquisition to contribute positively to its earnings per share starting in 2028. How Have Insmed Shares Responded to Acquisition Speculation? Insmed shares had already recorded substantial gains following media reports of Sanofi\u2019s interest in acquiring the company. The stock rose approximately 20.6% on 19 November and gained a further 5.5% during Monday\u2019s trading session. Tuesday\u2019s confirmation of the binding acquisition agreement provided further clarity regarding the proposed transaction, bringing Insmed\u2019s share price closer to the US$175 cash offer. Why Is Insmed Outperforming the Broader Market? Insmed\u2019s premarket gains came against a weaker backdrop for US equities, with the S&P 500 declining 0.4%, the Dow Jones Industrial Average falling 0.1% and the Nasdaq dropping 1%. The acquisition announcement appears to have been the principal factor behind Insmed\u2019s gains, despite broader market weakness. When Is Sanofi Expect"
+    }
+   ],
+   "memory": [
+    {
+     "at": "2026-07-30",
+     "kind": "me",
+     "text": "...:30 | 7.68 | 9.60 | **target** | **+25.0%** | +$10.00 | | VANI | 07-07 09:30 | 1.33 | 1.40 | time | +5.3% | +$2.12 | | AURA | 07-08 09:30 | 7.03 | 6.86 | time | \u22122.4% | \u2212$1.09 | | INSM | 07-16 09:30 | 110.00 | 107.35 | time | \u22122.4% | \u2212$1.11 | | SMMT | 07-22 09:30 | 15.45 | 13.43 | **stop** | \u221213.1% | \u2212$5.95 | | EMPD | 07-23 09:30 | 3.37 | 2.98 | **stop** | \u221211.6% | \u2212$5.20 | | MGNX | 07-24 09:30 | 4.01 | 3.58 | **stop** | \u221210.7% | \u2212$4.50..."
+    }
+   ],
+   "pond": {
+    "wave": 0.0,
+    "own": 3.6007573901334107,
+    "how": "a stone: its own news",
+    "from": [],
+    "reaches": [
+     [
+      "SRRK",
+      0.37,
+      -0.00828
+     ],
+     [
+      "BMRN",
+      0.35,
+      -0.0
+     ],
+     [
+      "XENE",
+      0.34,
+      -0.02024
+     ],
+     [
+      "AXSM",
+      0.33,
+      0.0
+     ],
+     [
+      "TARS",
+      0.32,
+      0.0
+     ]
+    ]
+   }
+  },
+  {
+   "t": "HPE",
+   "company": "Hewlett Packard Enterprise Co",
+   "move": -0.12423781757601005,
+   "z": -2.904649880499657,
+   "wave": -0.0457986481487751,
+   "mover": true,
+   "score": 0.5346635458924978,
+   "parts": {
+    "surprise": 0.125,
+    "unexplained": 0.768,
+    "news": 1.0,
+    "reach": 0.482,
+    "against": 0.0,
+    "memory": 1.0,
+    "fragile": 0.516
+   },
+   "reasons": [
+    "most of the move is its own",
+    "filed its results",
+    "8 stories name it",
+    "in the last note's theme 'Server makers: HPE reports, Dell next'",
+    "chance of a restructuring or a write-off 1.6% against 0.3% usually"
+   ],
+   "attention": 0.09670391260675552,
+   "bars": 41,
+   "filings": [
+    {
+     "what": "results report (8-K 2.02)",
+     "at": "2026-11-23T21:12:08Z",
+     "url": "https://www.sec.gov/Archives/edgar/data/1645590/000164559026000097/hpe-20261123.htm",
+     "error": "https://www.sec.gov/Archives/edgar/data/1645590/000164559026000097/index.json: HTTP 404"
+    }
+   ],
+   "pages": [
+    {
+     "url": "https://finance.yahoo.com/technology/ai/articles/wells-fargo-trims-hpe-target-121903955.html?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-24T12:19:03Z",
+     "key": [
+      "Wells Fargo lowered its price target on Hewlett Packard Enterprise Co. (NYSE:HPE), the server and networking equipment maker, to $50 from $63 and kept an Equal Weight rating, saying the implied drop in first-quarter gross margin will be a key focus for investors.",
+      "HPE shares were down 10.77% in premarket.",
+      "HPE GF Value chart The firm estimates gross margin will fall about 4.7 percentage points from the prior quarter to 33.5% in the fiscal first quarter, and continue to moderate through the second half as AI products make up a bigger share of sales.",
+      "HPE guided fiscal 2027 revenue growth of 27% to 35%, up from 16% to 20% previously, and EPS of $5.05 to $5.35, with Cloud & AI revenue expected to grow 30% to 40%.",
+      "Orders rose more than 80% from a year earlier, with Cloud & AI orders up 107% and Networking up 56%, and AI backlog climbed to about $10.5 billion from $7.6 billion in the third quarter.",
+      "For the fourth quarter, HPE posted adjusted EPS of $1.43 on $14.5 billion revenue, ahead of estimates of $1.27 and $14.35 billion."
+     ],
+     "text": "Oops, something went wrong Skip to navigation Skip to main content Skip to right column Sign in U.S. markets open in 58m US Markets Europe Markets Asia Markets Cryptocurrencies Rates Commodities Currencies U.S. markets open in 58m S&P Futures 7,165.25 -89.25 -1.23% Dow Futures 49,343.00 -334.00 -0.67% Nasdaq Futures 26,250.75 -557.25 -2.08% Russell 2000 Futures 2,651.20 -22.90 -0.86% 10-Yr Bond 4.9180 0.0000 0.00% VIX 30.15 +3.53 +13.23% Gold 3,627.30 -24.10 -0.66% Bitcoin USD 59,911.07 -3,875.53 -6.08% Crude Oil Jan 27 80.49 +0.32 +0.40% US Private Equity 10,765.73 +131.97 +1.24% ADVERTISEMENT Wells Fargo Trims HPE Target Despite Surging AI Orders Renato Neves, CFA Tue, November 24, 2026 at 4:19 AM PST 1 min read HPE -12.49% This article first appeared on GuruFocus. Wells Fargo lowered its price target on Hewlett Packard Enterprise Co. (NYSE:HPE), the server and networking equipment maker, to $50 from $63 and kept an Equal Weight rating, saying the implied drop in first-quarter gross margin will be a key focus for investors. HPE shares were down 10.77% in premarket. Warning! GuruFocus has detected 6 Warning Signs with HPE. Is HPE fairly valued? Test your thesis with our free DCF calculator. HPE GF Value chart The firm estimates gross margin will fall about 4.7 percentage points from the prior quarter to 33.5% in the fiscal first quarter, and continue to moderate through the second half as AI products make up a bigger share of sales. HPE guided fiscal 2027 revenue growth of 27% to 35%, up from 16% to 20% previously, and EPS of $5.05 to $5.35, with Cloud & AI revenue expected to grow 30% to 40%. Orders rose more than 80% from a year earlier, with Cloud & AI orders up 107% and Networking up 56%, and AI backlog climbed to about $10.5 billion from $7.6 billion in the third quarter. HPE said shortages of memory and other critical components are expected to last at least through the second half of 2028. For the fourth quarter, HPE posted adjusted EPS of $1.43 on $14.5 billion revenue, ahead of estimates of $1.27 and $14.35 billion. Terms and Privacy Policy Your Privacy Choices CA Privacy Notice More Info Recommended Stories Edit your Dock Hang tight, restoring your last session ADVERTISEMENT More News Terms and Privacy Policy Your Privacy Choices CA Privacy Notice Ad Terms Feedback More Info"
+    },
+    {
+     "url": "https://www.trefis.com/stock/hpe/articles/628212/hpe-expects-thinner-ai-margins-is-dell-next/2026-11-24?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-24T11:22:36Z",
+     "key": [
+      "November 24th, 2026 \u00b7 by Trefis Team HPEYTD+102.3%SPYYTD+6.7%QQQYTD+6.3% Analyze HPE \u2192 Today\u2019s big story: Nvidia Added $954 Billion In A Day.",
+      "HPE\u2019s stock rose 17.4% on Monday, and Dell\u2019s rose 20.5%.",
+      "HPE said this margin at its cloud and AI unit, 18.4% last quarter, will fall to about 14% in fiscal 2027.",
+      "Dell, before Tuesday\u2019s report 1 Analysts expect $49.3 billion of sales and $6.62 a share; Dell guided to $49.0 billion and $6.50. 2 Its company-wide operating margin was 11.5% in the July quarter, up from 6.0% a year earlier. 3 AI server backlog at the end of July: $95 billion. 4 The stock is 43% below its Sept 17 high, even after Monday\u2019s 20.5% jump.",
+      "HPE has fallen 5% or more after its own report 6 times since 2019.",
+      "The last three were gains of 22%, 33% and 16%."
+     ],
+     "text": "Invest in Trefis StrategiesPortfolios built and run with Trefis researchHelp Me InvestWealth management for individuals and familiesFor AdvisorsResearch and portfolio tools for advisors All articlesFeatured ArticlesActionable IdeasNotificationsCounter-Intuitive ComparisonsPeer ComparisonsRecently Viewed Loading rankings\u2026 Price EstimatesAll rankings CompaniesSectorsIndustriesDownloads Wealth Math: Limit Loss; Compound GainsWealth Management without Market Predictions6 Aversions to Hiring a Wealth Manager3 Key Metrics to Evaluate Market Valuation10 Ways to Prepare for a Market Correction9 Market Crashes Compared Our StoryManagement TeamInvestors and AdvisorsContact Us Trefis Storylines HPE Expects Thinner AI Margins. Is Dell Next? November 24th, 2026 \u00b7 by Trefis Team HPEYTD+102.3%SPYYTD+6.7%QQQYTD+6.3% Analyze HPE \u2192 Today\u2019s big story: Nvidia Added $954 Billion In A Day. Is Jensen Huang Too Big To Fire? Hewlett Packard Enterprise reported results after Monday\u2019s close. Its server sales nearly doubled, and it raised its outlook. But it also said it expects to keep less of each dollar it sells. That is the line Dell investors should watch when Dell reports after Tuesday\u2019s close. HPE\u2019s stock rose 17.4% on Monday, and Dell\u2019s rose 20.5%. Both were swept up in the rally that followed Jensen Huang\u2019s return to Nvidia. After the close, HPE reported total sales up by half from a year earlier. It guided next quarter\u2019s sales to $14.0 to $14.6 billion, above analysts\u2019 average estimate. Then came the weak spot. Operating margin is the share of sales left after the costs of running the business. HPE said this margin at its cloud and AI unit, 18.4% last quarter, will fall to about 14% in fiscal 2027. It said that is because it will sell more AI servers, and its costs are rising faster than its prices. \u201cWe expect gross margin to moderate as fiscal 2027 progresses,\u201d finance chief Marie Myers said. That would give back part of a big gain. The unit\u2019s margin was 9.3% a year earlier. Dell, before Tuesday\u2019s report 1 Analysts expect $49.3 billion of sales and $6.62 a share; Dell guided to $49.0 billion and $6.50. 2 Its company-wide operating margin was 11.5% in the July quarter, up from 6.0% a year earlier. 3 AI server backlog at the end of July: $95 billion. 4 The stock is 43% below its Sept 17 high, even after Monday\u2019s 20.5% jump. Source: Trefis. Consensus for the quarter to Oct 30, 2026, from 14 to 16 analysts. Margins from quarterly results. Prices at the Nov 23 close. Dell is still 43% below its Sept 17 high, even after Monday\u2019s 20.5% jump. If you are waiting to see Tuesday\u2019s report before you buy, your cash does not have to sit idle. The Trefis Income Solution pays a dividend yield about 3 times the S&P 500\u2019s, from 50 companies that have paid dividends for at least 10 years in a row. See what it pays. Image from Pixabay Does HPE\u2019s Report Tell Us How Dell Will Move? Not by itself. The two stocks do move together. Over the past year, their daily moves had a correlation of 0.73. On that scale, 1 would mean they always move in step. HPE has fallen 5% or more after its own report 6 times since 2019. Dell slipped the same day 5 of those times, but by a median of only 3.0%. HPE\u2019s report has told investors little about Dell\u2019s own report. Since 2019, HPE reported within a week before Dell in 9 quarters. Dell\u2019s report-day move went the same way as HPE\u2019s 5 times. That is close to a coin flip. How Big Can Dell\u2019s Move Be? Large, in either direction. Since 2023, Dell\u2019s stock has moved a median 8.9% on the day after its report. Median means the middle result. In 7 of those 15 report days, the move was 10% or more. The last three were gains of 22%, 33% and 16%. The worst was a 17.9% drop in May 2024. What Should Dell Investors Watch? The margin, not demand. Dell\u2019s backlog says the orders are there. The question HPE raised is how much of each AI server dollar a server maker keeps. Nvidia sets the chip price, and memory makers are raising theirs. Server makers, Dell"
+    }
+   ],
+   "memory": [
+    {
+     "at": "2026-11-23",
+     "kind": "me",
+     "text": "... numbers about AI demand (my inference). - Not everything joined in: Anthropic, which listed Thursday, is down. 2. **Server makers before their results (reported).** Dell +22% and HPE +15.5%. A Financial Times report says server sellers are asking for higher prices. HPE reports after today's close and Dell tomorrow. Most of each move is still the market. 3. **CrowdStrike\u2013Zscaler.** On a market up almost 5%, CrowdStrike is -9.7%, which i..."
+    },
+    {
+     "at": "2026-11-13",
+     "kind": "me",
+     "text": "...For every big mover it now works out: - which stocks it has really moved with for a year, whatever its industry label (Corteva's closest partner is FMC; Super Micro's are Dell and HPE); - how much of the move came from the market, oil, rates, gold or bitcoin; - which stories tie movers together. It also opens the filings and reads the company's accounts. - **I do the reasoning, under rules the engine enforces.** A note is refused unless..."
+    }
+   ],
+   "pond": {
+    "wave": -0.0457986481487751,
+    "own": -2.904649880499657,
+    "how": "more than its wave: its own news",
+    "from": [
+     [
+      "ADI",
+      -0.12
+     ],
+     [
+      "DLTR",
+      -0.1
+     ],
+     [
+      "TDG",
+      -0.1
+     ],
+     [
+      "AVAH",
+      -0.07
+     ]
+    ],
+    "reaches": [
+     [
+      "DELL",
+      0.69,
+      -0.06868
+     ],
+     [
+      "NTAP",
+      0.61,
+      0.00489
+     ],
+     [
+      "PENG",
+      0.47,
+      -0.0625
+     ],
+     [
+      "CSCO",
+      0.47,
+      -0.01446
+     ],
+     [
+      "SNX",
+      0.45,
+      -0.03952
+     ]
+    ]
+   }
+  },
+  {
+   "t": "MDT",
+   "company": "Medtronic plc",
+   "move": -0.0369340842242446,
+   "z": -2.236413104025961,
+   "wave": 0.2682832181453705,
+   "mover": true,
+   "score": 0.5177210805783455,
+   "parts": {
+    "surprise": 0.031,
+    "unexplained": 0.966,
+    "news": 1.0,
+    "reach": 0.832,
+    "against": 0.835,
+    "memory": 0.0,
+    "fragile": 0.0
+   },
+   "reasons": [
+    "most of the move is its own",
+    "filed its results",
+    "4 stories name it",
+    "21 stocks moved closely with it over the year",
+    "moved against its wave (-2.2 usual days against a wave of +0.3)"
+   ],
+   "attention": 0.0839705928121636,
+   "bars": 10,
+   "filings": [
+    {
+     "what": "results report (8-K 2.02)",
+     "at": "2026-11-24T11:32:02Z",
+     "url": "https://www.sec.gov/Archives/edgar/data/1613103/000162828026075604/mdt-20261124.htm",
+     "error": "https://www.sec.gov/Archives/edgar/data/1613103/000162828026075604/index.json: HTTP 404"
+    }
+   ],
+   "pages": [
+    {
+     "url": "https://finance.yahoo.com/healthcare/articles/medtronic-mdt-nears-q2-results-131109436.html?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-24T13:11:09Z",
+     "key": [
+      "Sasha Jovanovic Tue, November 24, 2026 at 5:11 AM PST 4 min read MDT -4.69% Medtronic (MDT) heads into its fiscal second quarter earnings with attention fixed on three fronts: organic revenue trends, margin resilience, and management's updated view on fiscal 2027.",
+      "Medtronic closed at US$100.72 after a 1-month share price return of 5.57% and a 90-day share price gain of 10.51%.",
+      "Even so, the events still feed into how the market prices execution risk around Medtronic's connected cardiac portfolio.",
+      "Most Popular Narrative: 12.7% Undervalued Medtronic closed at $100.72, while the most followed valuation narrative on Simply Wall St pegs fair value at $115.38.",
+      "Medtronic's fiscal first quarter of 2027 arrived with 13.7% organic growth, a number that would be arresting in any quarter.",
+      "Result: Fair Value of $115.38 (UNDERVALUED) Still, the Medtronic story could wobble if execution on Hugo robotics stalls or if any further device recalls weigh on confidence in the cardiac portfolio."
+     ],
+     "text": "Oops, something went wrong Skip to navigation Skip to main content Skip to right column Sign in U.S. markets open in 57m US Markets Europe Markets Asia Markets Cryptocurrencies Rates Commodities Currencies U.S. markets open in 57m S&P Futures 7,168.50 -86.00 -1.19% Dow Futures 49,364.00 -313.00 -0.63% Nasdaq Futures 26,243.00 -565.00 -2.11% Russell 2000 Futures 2,651.30 -22.80 -0.85% 10-Yr Bond 4.9180 0.0000 0.00% VIX 30.40 +3.78 +14.23% Gold 3,630.10 -21.30 -0.58% Bitcoin USD 59,949.78 -3,836.82 -6.02% Crude Oil Jan 27 80.54 +0.37 +0.46% US Private Equity 10,765.73 +131.97 +1.24% ADVERTISEMENT Medtronic (MDT) Nears Q2 Results After Hugo Clearance, Is It Still A Bargain? Sasha Jovanovic Tue, November 24, 2026 at 5:11 AM PST 4 min read MDT -4.69% Medtronic (MDT) heads into its fiscal second quarter earnings with attention fixed on three fronts: organic revenue trends, margin resilience, and management's updated view on fiscal 2027. The recent share price move tells you sentiment is in flux. Medtronic closed at US$100.72 after a 1-month share price return of 5.57% and a 90-day share price gain of 10.51%. However, the 1-year total shareholder return sits at just 0.83%, so momentum has picked up lately after a much flatter longer-run experience. That shift is happening around concrete catalysts. Clearance of the Hugo robotic-assisted surgery system for a broader set of general surgery procedures has refocused attention on Medtronic's longer-term procedure volume opportunity. In addition, the upcoming fiscal second quarter update is drawing attention to how quickly that platform might scale inside a US$122.3b medical devices group. On the other side of the ledger, investors are also absorbing a series of Class II recalls tied to Bluetooth disconnections in CareLink SmartSync device managers and related accessories. These issues relate to programming reliability rather than implant hardware, which helps explain why recent share price gains have continued. Even so, the events still feed into how the market prices execution risk around Medtronic's connected cardiac portfolio. Capitalize on the renewed focus on Medtronic's Hugo platform by scanning a curated set of robotics and automation opportunities with the 90 robotics and automation stocks. After a sharp three month climb and fresh excitement around Hugo, Medtronic's share price already reflects a lot of hope. The next step is to work out how much upside is still on the table. Most Popular Narrative: 12.7% Undervalued Medtronic closed at $100.72, while the most followed valuation narrative on Simply Wall St pegs fair value at $115.38. According to LunaRodas, a Simply Wall St Community investor who wrote the narrative, the key question is whether recent execution can carry the heavier expectations now being placed on the business. Medtronic's fiscal first quarter of 2027 arrived with 13.7% organic growth, a number that would be arresting in any quarter. This figure was inflated by an extra selling week that management estimates contributed roughly 670 basis points. Stripping out the calendar effect, the underlying figure still represents, by their own account, the strongest performance in nearly eight years. See why 14 investors see Medtronic as 13% undervalued. Result: Fair Value of $115.38 (UNDERVALUED) Still, the Medtronic story could wobble if execution on Hugo robotics stalls or if any further device recalls weigh on confidence in the cardiac portfolio. Find out about the key risks to this Medtronic narrative. Next Steps Does the Medtronic setup sound compelling or cautious to you right now? Act while sentiment is still forming and pressure test the optimism through the 5 key rewards. Looking for more ideas beyond Medtronic? If Medtronic has your attention, do not stop there. Broader context across sectors can sharpen your decisions and flag opportunities you would otherwise miss. Use the Simply Wall St Screener to pressure test your thinking and uncover fresh angles before th"
+    },
+    {
+     "url": "https://finance.yahoo.com/healthcare/articles/medtronic-reaffirms-guidance-broadly-line-123245944.html?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-24T12:32:45Z",
+     "key": [
+      "Finance readers: 55% off for Black Friday, plus an extra 15% at checkout.",
+      "Subscribe today! \u00bb Adjusted earnings per share edged past expectations at $1.34, against an estimate of $1.33, while revenue of $9.4 billion fell short of the $9.48 billion consensus.",
+      "For fiscal 2027, Medtronic still expects organic revenue growth of 7.25% to 7.75%.",
+      "It also kept its diluted non-GAAP earnings per share forecast at $5.94 to $6.00, which brackets the $5.97 consensus.",
+      "Original Article Medtronic reaffirms guidance after broadly in-line fiscal Q2 print J.M.",
+      "Smucker beats Q2 estimates but stock slips on guidance Kohl's jumps 4% in premarket as one-off gains inflate profit outlook Terms and Privacy Policy Your Privacy Choices CA Privacy Notice More Info Recommended Stories Edit your Dock Hang tight, restoring your last session ADVERTISEMENT More News Terms and Privacy Policy Your Privacy Choices CA Privacy Notice Ad Terms Feedback More Info"
+     ],
+     "text": "Oops, something went wrong Skip to navigation Skip to main content Skip to right column Sign in U.S. markets open in 57m US Markets Europe Markets Asia Markets Cryptocurrencies Rates Commodities Currencies U.S. markets open in 57m S&P Futures 7,168.50 -86.00 -1.19% Dow Futures 49,364.00 -313.00 -0.63% Nasdaq Futures 26,243.00 -565.00 -2.11% Russell 2000 Futures 2,651.30 -22.80 -0.85% 10-Yr Bond 4.9180 0.0000 0.00% VIX 30.40 +3.78 +14.23% Gold 3,630.10 -21.30 -0.58% Bitcoin USD 59,949.78 -3,836.82 -6.02% Crude Oil Jan 27 80.54 +0.37 +0.46% US Private Equity 10,765.73 +131.97 +1.24% ADVERTISEMENT Medtronic reaffirms guidance after broadly in-line fiscal Q2 print Vahid Karaahmetovic Tue, November 24, 2026 at 4:32 AM PST 1 min read MDT -4.69% Investing.com -- Medtronic held its full-year outlook after second-quarter organic revenue growth topped analyst estimates, though total revenue came in slightly below forecasts. Our AI stock portfolio is beating the S&P 500 by 118%. Discover the stocks we're buying and the opportunities we're watching next. Exclusive for Yahoo! Finance readers: 55% off for Black Friday, plus an extra 15% at checkout. Subscribe today! \u00bb Adjusted earnings per share edged past expectations at $1.34, against an estimate of $1.33, while revenue of $9.4 billion fell short of the $9.48 billion consensus. Organic revenue grew 6.5%, ahead of the 5.98% analysts had projected. Stop chasing stocks after they've already rallied. Find your next investment opportunity with AI stock picks, earnings insights, and market-moving news. Yahoo! Finance readers get an extra 15% off on top of the 55% off Black Friday price. Join today! \u00bb \"We delivered a strong second-quarter, with broad-based performance that reflects the strength of our business and our continued execution on our commitments,\" said CEO Geoff Martha. Cardiovascular led the way with organic growth of 10.4%. Medical surgical advanced 4.4%, while neuroscience lagged with a 3.2% gain. Adjusted operating margin stood at 23.4%. For fiscal 2027, Medtronic still expects organic revenue growth of 7.25% to 7.75%. It also kept its diluted non-GAAP earnings per share forecast at $5.94 to $6.00, which brackets the $5.97 consensus. Original Article Medtronic reaffirms guidance after broadly in-line fiscal Q2 print J.M. Smucker beats Q2 estimates but stock slips on guidance Kohl's jumps 4% in premarket as one-off gains inflate profit outlook Terms and Privacy Policy Your Privacy Choices CA Privacy Notice More Info Recommended Stories Edit your Dock Hang tight, restoring your last session ADVERTISEMENT More News Terms and Privacy Policy Your Privacy Choices CA Privacy Notice Ad Terms Feedback More Info"
+    }
+   ],
+   "memory": [],
+   "pond": {
+    "wave": 0.2682832181453705,
+    "own": -2.236413104025961,
+    "how": "against its wave",
+    "from": [
+     [
+      "AVAH",
+      0.13
+     ],
+     [
+      "NWN",
+      -0.11
+     ],
+     [
+      "DLTR",
+      0.08
+     ],
+     [
+      "SHOE",
+      -0.07
+     ]
+    ],
+    "reaches": [
+     [
+      "SYK",
+      0.63,
+      0.00588
+     ],
+     [
+      "BDX",
+      0.62,
+      -0.0
+     ],
+     [
+      "ABT",
+      0.62,
+      0.00484
+     ],
+     [
+      "STE",
+      0.61,
+      0.00035
+     ],
+     [
+      "ZBH",
+      0.61,
+      -0.0
+     ]
+    ]
+   }
+  },
+  {
+   "t": "DLTR",
+   "company": "DOLLAR TREE, INC.",
+   "move": 0.08554991723005378,
+   "z": 3.492057903954314,
+   "wave": 0.0,
+   "mover": true,
+   "score": 0.48444586743683654,
+   "parts": {
+    "surprise": 0.328,
+    "unexplained": 1.0,
+    "news": 1.0,
+    "reach": 0.524,
+    "against": 0.0,
+    "memory": 0.0,
+    "fragile": 0.0
+   },
+   "reasons": [
+    "most of the move is its own",
+    "filed its results",
+    "3 stories name it"
+   ],
+   "attention": 0.06363560935192866,
+   "bars": 13,
+   "filings": [
+    {
+     "what": "results report (8-K 2.02)",
+     "at": "2026-11-24T11:30:42Z",
+     "url": "https://www.sec.gov/Archives/edgar/data/935703/000093570326000136/dltr-20261124.htm",
+     "error": "https://www.sec.gov/Archives/edgar/data/935703/000093570326000136/index.json: HTTP 404"
+    }
+   ],
+   "pages": [
+    {
+     "url": "https://finance.yahoo.com/markets/stocks/articles/dollar-tree-stock-jumps-earnings-121709851.html?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-24T12:17:09Z",
+     "key": [
+      "Subscribe today! \u00bb The discount retailer reported adjusted earnings per share of $1.16 for the third quarter ended October 31, 2026, beating the analyst consensus of $0.91 by $0.25.",
+      "Revenue reached $5.1 billion, up 6.9% YoY and above the $5.04 billion estimate.",
+      "The company raised its fiscal 2026 adjusted EPS outlook to a range of $8.05 to $8.25, with a midpoint of $8.15 exceeding the analyst consensus of $7.93.",
+      "For the fourth quarter of fiscal 2026, Dollar Tree expects comparable store net sales growth of 3% to 4% and adjusted EPS of $2.46 to $2.66.",
+      "The company projects full-year revenue of $20.6 billion to $20.7 billion, with the midpoint of $20.65 billion slightly below the consensus estimate of $20.7 billion.",
+      "Original Article Dollar Tree stock jumps on earnings beat and raised outlook Will Jensen's return act as a clearing event for chip stocks?"
+     ],
+     "text": "Oops, something went wrong Skip to navigation Skip to main content Skip to right column Sign in U.S. markets open in 57m US Markets Europe Markets Asia Markets Cryptocurrencies Rates Commodities Currencies U.S. markets open in 57m S&P Futures 7,168.75 -85.75 -1.18% Dow Futures 49,364.00 -313.00 -0.63% Nasdaq Futures 26,243.75 -564.25 -2.10% Russell 2000 Futures 2,651.80 -22.30 -0.83% 10-Yr Bond 4.9180 0.0000 0.00% VIX 30.40 +3.78 +14.23% Gold 3,630.40 -21.00 -0.58% Bitcoin USD 59,949.78 -3,836.82 -6.02% Crude Oil Jan 27 80.55 +0.38 +0.47% US Private Equity 10,765.73 +131.97 +1.24% ADVERTISEMENT Dollar Tree stock jumps on earnings beat and raised outlook Sam Boughedda Tue, November 24, 2026 at 4:17 AM PST 2 min read DLTR +7.11% Investing.com -- Dollar Tree Inc. (NASDAQ: DLTR) shares surged 10.8% following the company's third-quarter results that exceeded analyst expectations and raised full-year earnings guidance, driven by stronger traffic and comparable store sales growth. Our AI stock portfolio is beating the S&P 500 by 118%. Discover the stocks we're buying and the opportunities we're watching next. Exclusive for Yahoo! Finance readers: 55% off for Black Friday, plus an extra 15% at checkout. Subscribe today! \u00bb The discount retailer reported adjusted earnings per share of $1.16 for the third quarter ended October 31, 2026, beating the analyst consensus of $0.91 by $0.25. Revenue reached $5.1 billion, up 6.9% YoY and above the $5.04 billion estimate. Comparable store net sales increased 4.6%, driven by a 3.8% increase in traffic and a 0.8% rise in average ticket. The company raised its fiscal 2026 adjusted EPS outlook to a range of $8.05 to $8.25, with a midpoint of $8.15 exceeding the analyst consensus of $7.93. Stop chasing stocks after they've already rallied. Find your next investment opportunity with AI stock picks, earnings insights, and market-moving news. Yahoo! Finance readers get an extra 15% off on top of the 55% off Black Friday price. Join today! \u00bb \"Our third quarter results show the strength of Dollar Tree's value proposition and the progress we've made to improve the customer experience,\" said Mike Creedon, Chief Executive Officer. \"Comp traffic accelerated to 3.8% and drove comparable sales above the high end of our outlook.\" Operating income was $309 million, down 10.1% from the prior year, with operating income margin contracting 110 basis points to 6.1%. The company noted that results included $0.42 of cost per share related to the net impact of tariff reinvestments. Gross profit margin decreased 10 basis points to 35.7%. For the fourth quarter of fiscal 2026, Dollar Tree expects comparable store net sales growth of 3% to 4% and adjusted EPS of $2.46 to $2.66. The company projects full-year revenue of $20.6 billion to $20.7 billion, with the midpoint of $20.65 billion slightly below the consensus estimate of $20.7 billion. Original Article Dollar Tree stock jumps on earnings beat and raised outlook Will Jensen's return act as a clearing event for chip stocks? Anthropic briefly falls below IPO price in premarket trading Terms and Privacy Policy Your Privacy Choices CA Privacy Notice More Info Recommended Stories Edit your Dock Hang tight, restoring your last session ADVERTISEMENT More News Terms and Privacy Policy Your Privacy Choices CA Privacy Notice Ad Terms Feedback More Info"
+    },
+    {
+     "url": "https://finance.yahoo.com/m/cdd1297f-30d8-3060-80d6-87096a8cd844/dollar-tree-boosts-earnings.html?.tsrc=rss",
+     "refused": "not read: robots.txt disallows it (respecting it)"
+    }
+   ],
+   "memory": [],
+   "pond": {
+    "wave": 0.0,
+    "own": 3.492057903954314,
+    "how": "a stone: its own news",
+    "from": [],
+    "reaches": [
+     [
+      "DG",
+      0.68,
+      0.03547
+     ],
+     [
+      "HD",
+      0.52,
+      -0.00038
+     ],
+     [
+      "TGT",
+      0.51,
+      0.01076
+     ],
+     [
+      "LOW",
+      0.51,
+      -0.01271
+     ],
+     [
+      "HRL",
+      0.46,
+      0.00867
+     ]
+    ]
+   }
+  },
+  {
+   "t": "ADI",
+   "company": "ANALOG DEVICES INC",
+   "move": -0.11551155115511547,
+   "z": -4.980964417213213,
+   "wave": 0.0,
+   "mover": true,
+   "score": 0.4649864935244361,
+   "parts": {
+    "surprise": 0.208,
+    "unexplained": 0.816,
+    "news": 1.0,
+    "reach": 1.0,
+    "against": 0.0,
+    "memory": 0.0,
+    "fragile": 0.0
+   },
+   "reasons": [
+    "most of the move is its own",
+    "filed its results",
+    "5 stories name it",
+    "41 stocks moved closely with it over the year"
+   ],
+   "attention": 0.054109607607012736,
+   "bars": 15,
+   "filings": [
+    {
+     "what": "results report (8-K 2.02)",
+     "at": "2026-11-24T12:03:22Z",
+     "url": "https://www.sec.gov/Archives/edgar/data/6281/000000628126000087/adi-20261124.htm",
+     "error": "https://www.sec.gov/Archives/edgar/data/6281/000000628126000087/index.json: HTTP 404"
+    }
+   ],
+   "pages": [
+    {
+     "url": "https://finance.yahoo.com/markets/stocks/articles/analog-devices-unveils-lower-expected-124146186.html?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-24T12:41:46Z",
+     "key": [
+      "Finance readers: 55% off for Black Friday, plus an extra 15% at checkout.",
+      "Subscribe today! \u00bb In a statement, the maker of power-management chips predicted that revenue would be $4.4 billion during the period, plus or minus $150 million.",
+      "Fiscal fourth-quarter income stood at $4.06 a share, compared to forecasts of $3.89.",
+      "Revenue of $4.37 billion topped expectations of $4.32 billion.",
+      "Shares of Analog Devices fell by more than 7% in premarket U.S. trading, mirroring a broader downturn in tech stocks before the opening bell on Wall Street. (This is a developing story.",
+      "Please check back later for updates.) Original Article Analog Devices unveils lower-than-expected first-quarter earnings forecast Will Jensen's return act as a clearing event for chip stocks?"
+     ],
+     "text": "Oops, something went wrong Skip to navigation Skip to main content Skip to right column Sign in U.S. markets open in 57m US Markets Europe Markets Asia Markets Cryptocurrencies Rates Commodities Currencies U.S. markets open in 57m S&P Futures 7,168.75 -85.75 -1.18% Dow Futures 49,364.00 -313.00 -0.63% Nasdaq Futures 26,243.75 -564.25 -2.10% Russell 2000 Futures 2,651.80 -22.30 -0.83% 10-Yr Bond 4.9180 0.0000 0.00% VIX 30.40 +3.78 +14.23% Gold 3,630.40 -21.00 -0.58% Bitcoin USD 59,949.78 -3,836.82 -6.02% Crude Oil Jan 27 80.55 +0.38 +0.47% US Private Equity 10,765.73 +131.97 +1.24% ADVERTISEMENT Analog Devices unveils lower-than-expected first-quarter earnings forecast Scott Kanowsky Tue, November 24, 2026 at 4:41 AM PST 2 min read ADI -10.76% Investing.com - Analog Devices has guided for first-quarter adjusted earnings per share of $3.82, missing Bloomberg consensus estimates. Our AI stock portfolio is beating the S&P 500 by 118%. Discover the stocks we're buying and the opportunities we're watching next. Exclusive for Yahoo! Finance readers: 55% off for Black Friday, plus an extra 15% at checkout. Subscribe today! \u00bb In a statement, the maker of power-management chips predicted that revenue would be $4.4 billion during the period, plus or minus $150 million. Fiscal fourth-quarter income stood at $4.06 a share, compared to forecasts of $3.89. Revenue of $4.37 billion topped expectations of $4.32 billion. Stop chasing stocks after they've already rallied. Find your next investment opportunity with AI stock picks, earnings insights, and market-moving news. Yahoo! Finance readers get an extra 15% off on top of the 55% off Black Friday price. Join today! \u00bb The company said investments in artificial intelligence infrastructure fueled growth in its data center and automated test equipment units. Analog Devices provides the processors that regulate power and help move massive amounts of data. The products are viewed as key components in data centers underpinning AI systems, as well as in vehicles and factory equipment. Still, more than two-thirds of growth in Analog Devices' fiscal 2026 year came from non-AI-centric opportunities, the firm said. Shares of Analog Devices fell by more than 7% in premarket U.S. trading, mirroring a broader downturn in tech stocks before the opening bell on Wall Street. (This is a developing story. Please check back later for updates.) Original Article Analog Devices unveils lower-than-expected first-quarter earnings forecast Will Jensen's return act as a clearing event for chip stocks? Anthropic briefly falls below IPO price in premarket trading Terms and Privacy Policy Your Privacy Choices CA Privacy Notice More Info Recommended Stories Edit your Dock Hang tight, restoring your last session ADVERTISEMENT More News Terms and Privacy Policy Your Privacy Choices CA Privacy Notice Ad Terms Feedback More Info"
+    },
+    {
+     "url": "https://finance.yahoo.com/m/6e83312d-bf7d-326a-81cc-5e889e4efe06/analog-devices-tops-fiscal-q4.html?.tsrc=rss",
+     "refused": "not read: robots.txt disallows it (respecting it)"
+    }
+   ],
+   "memory": [],
+   "pond": {
+    "wave": 0.0,
+    "own": -4.980964417213213,
+    "how": "a stone: its own news",
+    "from": [],
+    "reaches": [
+     [
+      "TXN",
+      0.8,
+      -0.04877
+     ],
+     [
+      "MCHP",
+      0.7,
+      -0.04084
+     ],
+     [
+      "ON",
+      0.66,
+      -0.04358
+     ],
+     [
+      "MPWR",
+      0.62,
+      -0.04407
+     ],
+     [
+      "DIOD",
+      0.62,
+      -0.04288
+     ]
+    ]
+   }
+  }
+ ],
+ "rest": [
+  {
+   "t": "A",
+   "score": 0.447063457656919,
+   "attention": 0.04660245059546182,
+   "reasons": [
+    "most of the move is its own",
+    "filed its results",
+    "4 stories name it",
+    "17 stocks moved closely with it over the year"
+   ]
+  },
+  {
+   "t": "ANF",
+   "score": 0.4196304871148273,
+   "attention": 0.03707878746993196,
+   "reasons": [
+    "most of the move is its own",
+    "filed its results",
+    "1 story names it"
+   ]
+  },
+  {
+   "t": "DKS",
+   "score": 0.411884843051589,
+   "attention": 0.03476106734047301,
+   "reasons": [
+    "most of the move is its own",
+    "filed its results"
+   ]
+  },
+  {
+   "t": "WTFC",
+   "score": 0.38785020737952064,
+   "attention": 0.028451741612953385,
+   "reasons": [
+    "outside its 9-in-10 range",
+    "most of the move is its own, with no news found",
+    "219 stocks moved closely with it over the year"
+   ]
+  },
+  {
+   "t": "ZION",
+   "score": 0.36706487461904036,
+   "attention": 0.023926778450735597,
+   "reasons": [
+    "most of the move is its own",
+    "1 story names it",
+    "216 stocks moved closely with it over the year"
+   ]
+  },
+  {
+   "t": "OTF",
+   "score": 0.35364540504999886,
+   "attention": 0.021395259010320078,
+   "reasons": [
+    "most of the move is its own, with no news found",
+    "19 stocks moved closely with it over the year"
+   ]
+  },
+  {
+   "t": "NWN",
+   "score": 0.3324577622412174,
+   "attention": 0.01793233783387898,
+   "reasons": [
+    "most of the move is its own, with no news found",
+    "52 stocks moved closely with it over the year"
+   ]
+  },
+  {
+   "t": "VREX",
+   "score": 0.3323396147531553,
+   "attention": 0.01791469101691611,
+   "reasons": [
+    "most of the move is its own",
+    "filed its results",
+    "1 story names it"
+   ]
+  },
+  {
+   "t": "MCHB",
+   "score": 0.32069844903400013,
+   "attention": 0.016258427489987206,
+   "reasons": [
+    "most of the move is its own, with no news found",
+    "187 stocks moved closely with it over the year"
+   ]
+  },
+  {
+   "t": "TDG",
+   "score": 0.316309008315056,
+   "attention": 0.015674461258460885,
+   "reasons": [
+    "most of the move is its own, with no news found"
+   ]
+  },
+  {
+   "t": "PNNT",
+   "score": 0.315219839606408,
+   "attention": 0.015532837176817598,
+   "reasons": [
+    "16 stocks moved closely with it over the year",
+    "moved against its wave (-1.9 usual days against a wave of +0.5)"
+   ]
+  },
+  {
+   "t": "AVAH",
+   "score": 0.3136174364038053,
+   "attention": 0.015326800313608538,
+   "reasons": [
+    "most of the move is its own",
+    "1 story names it"
+   ]
+  },
+  {
+   "t": "UTL",
+   "score": 0.29607114848767224,
+   "attention": 0.013241871395044071,
+   "reasons": [
+    "56 stocks moved closely with it over the year",
+    "moved against its wave (+1.6 usual days against a wave of -0.4)"
+   ]
+  },
+  {
+   "t": "IVR",
+   "score": 0.27957740186939584,
+   "attention": 0.011541347200435476,
+   "reasons": [
+    "10 stocks moved closely with it over the year",
+    "moved against its wave (-1.7 usual days against a wave of +0.4)"
+   ]
+  },
+  {
+   "t": "KYMR",
+   "score": 0.2778652018596799,
+   "attention": 0.011377840667345896,
+   "reasons": [
+    "an open desk call"
+   ]
+  },
+  {
+   "t": "MU",
+   "score": 0.2481444697970674,
+   "attention": 0.00888171701154465,
+   "reasons": [
+    "29 stocks moved closely with it over the year",
+    "in the last note's theme \"Nvidia's CEO return carried the whole day\""
+   ]
+  },
+  {
+   "t": "DELL",
+   "score": 0.24241928101509985,
+   "attention": 0.008467920703308738,
+   "reasons": [
+    "2 stories name it",
+    "in the last note's theme 'Server makers: HPE reports, Dell next'"
+   ]
+  },
+  {
+   "t": "LIF",
+   "score": 0.240907463913227,
+   "attention": 0.008361907016491942,
+   "reasons": [
+    "most of the move is its own, with no news found"
+   ]
+  },
+  {
+   "t": "YEXT",
+   "score": 0.23331727419267864,
+   "attention": 0.00784938301663956,
+   "reasons": [
+    "46 stocks moved closely with it over the year",
+    "moved against its wave (-1.0 usual days against a wave of +0.3)"
+   ]
+  },
+  {
+   "t": "AMD",
+   "score": 0.2252367337865429,
+   "attention": 0.007338225789684059,
+   "reasons": [
+    "44 stocks moved closely with it over the year",
+    "in the last note's theme \"Nvidia's CEO return carried the whole day\""
+   ]
+  }
+ ]
+}
