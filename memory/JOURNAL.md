@@ -166,3 +166,15 @@ FAIL); "the market runs on chains of cause and effect, news and catalysts": the 
 - The person said the brain lacks the how and why. Built the earnings episode library, the card before a report
   and the declared tests X1a-X1f (`docs/EARNINGS.md`). X1a PASS (a run-up makes a fall on the report session more
   likely; not a lower average); the rest FAILED. Recorded Deere's card before its Nov 25 report.
+- The person said to know each company in and out, to judge whether it can deliver; yes to the promise-keeping
+  record first. Re-read every earnings release of the 741 research-universe companies from SEC with its
+  forward-looking passages (reader 3; about four hours, restarted once at the two-hour limit). Built
+  `brain/promises.py` (revenue promises in dollars against revenue as first reported), the card, the desk's
+  `[g:TICKER]` line and `brain/research/promisetest.py`.
+- On 2011-2023 only: companies promise low (78% delivered above the midpoint); the median of the last four
+  deliveries says most about the next. Declared G1a and G1b, ran once: G1a PASS (+0.474, 11 of 11 seasons). The
+  day's move follows the delivery against the habit and the change in the year's promise (G1b, an explanation).
+  Two questions held back for more companies (the stretch; the price after a raise or a cut). Started the small
+  band's re-read.
+- Fixed on the way: three event-test fixtures broken by reader 3; past quarters' sales read as promises (a
+  quarter named with its year that is over is a result); the year-ago quarter of an open promise.

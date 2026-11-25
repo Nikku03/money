@@ -48,8 +48,9 @@ Together they make the episode's name:
 **Limits.**
 - There is no point-in-time consensus history in the bank, and no history of option prices, so the expectation is
   the price's own: the run-up, the stock's habit at its reports, the mood.
-- The press-release text was lost in a reset of the machine, so past episodes carry no guidance tags yet. Re-reading
-  releases from SEC (`brain releases`) would add them.
+- The press-release text was lost in a reset of the machine and re-read from SEC on 2026-11-25 for the research
+  universe. What each release promised, and whether the company delivered, is in `docs/PROMISES.md`: the day's move
+  follows the delivery against the company's habit and the change in its promise far more than the setup does.
 
 ## On TRAIN years (2011-2023), before any test
 

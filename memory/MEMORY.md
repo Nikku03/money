@@ -67,6 +67,7 @@ Updated 2026-11-16 (three sessions in the memory bank; the diagnosis; step 2 tes
 | Trader replays | `scan trader [--one-trade]` | `research/SCAN-TRADER-2026-11.md` |
 | Memory bank: recall anything said or done | `memory start`, `memory recall`, `memory remember`, `memory save`, `memory load` | `docs/MEMORY.md` |
 | Earnings: what was expected before a report, the past like it, what followed and why | `expect build/show/radar/record/score`, `earntest` | `docs/EARNINGS.md` |
+| Promises: what a company said it would deliver (revenue guidance) and whether it did | `releases --broad/--band`, `promises build/show`, `promisetest` | `docs/PROMISES.md` |
 | Spiking neurons (side project, not the market): hand-wired Pong/Catch/Runner, school; cells lif/izh/hh | `neurons play/catch/run --cells`, `neurons ladder`, `neurons exchange`, `neurons train [--no-delays]` | `docs/NEURONS.md` |
 
 ## What was found (verdicts in `research/RESULTS.md`)
@@ -187,7 +188,37 @@ idea at a time, checked against the memory bank first.
 - First forward record: Deere (DE) before its report of 2026-11-25. STANDING STEP to propose: at each after-close
   check, `expect radar --report <next session>` and record the confirmed reporters (`expect record`).
 
+## Promises: said and delivered (2026-11-25, at the person's request; `docs/PROMISES.md`)
+
+- The person's direction: know each company in and out (how it works, what it promised, what it needs, who it
+  trades with, its dates) to judge whether it can deliver and how far the stock moves. They said yes to starting
+  with the promise-keeping record.
+- Reader 3 (`brain/sources/releases.py`) keeps each release's forward-looking passages. All 741 research-universe
+  companies were re-read from SEC on 2026-11-25 (31,996 releases). `brain/promises.py` reads revenue guidance in
+  dollars by fixed rules and holds it against revenue as first reported: 5,576 promises of 266 companies.
+- The habit = the median surprise of a company's last four quarterly deliveries, the latest included (chosen on
+  TRAIN: `research/promises/explore_habit_train.log`). Ranges around it: BAND68 (-3.5%, +3.0%), BAND90 (±8.1%).
+- Declared and run once on 2026-11-25: **G1a PASS** (the habit carries to the next promise: +0.474, 11 of 11
+  seasons, p 0.0007, q 0.003; delivery a median 1.43% from the habit-moved midpoint against 2.41% from the
+  midpoint). G1b reported (same day): less than its habit -2.04% (40% rose), more +2.35%; year's promise cut -3.70%,
+  raised +3.29%; delivered inside its range -0.23%.
+- About deliveries, not the stock. Not declared (nothing on TRAIN): the record against the reaction on the day the
+  quarter is reported. HELD BACK for a later id (too few 2024-2026 cases in this universe): the stretch against
+  the delivery (TRAIN +0.071), the change of the year's promise against the next five sessions (TRAIN +0.054).
+- Coverage: 106 of 741 companies made a quarterly dollar revenue promise on 2024-2026; 2% mismatches not graded.
+- NEXT: the small band's releases are being re-read (`releases --band small`, started 2026-11-25 21:50Z; resumes
+  if re-run), then `--band micro`, then the us_watch tickers by name; then TRAIN exploration on those and the
+  held-back tests as new ids (G2). After that the other layers: what a company needs against what it has, its
+  dates, its calls.
+- The desk's case file now carries `[g:TICKER]` for a reporting mover (first live use: the next check with
+  reporters). `promisetest` does not pin `research/run.py`.
+
 ## Open questions and offers (no answer yet)
+
+- Asked 2026-11-25: (1) OK to withdraw R2a-R2c and re-declare them as new ids? Their pin on `brain/research/run.py`
+  broke when the earnings kind was added, so they would be refused at judgment; the restart loses 3 recorded
+  sessions. (2) Which companies does the person care about most (a short list for deep files)? (3) Can they get a
+  data key for analyst forecasts and option prices?
 
 - Asked 2026-11-14: add `mosaic read` and `mosaic radar --record` to the after-close check? (Without it the
   mosaic's prospectuses and accounts go stale.)
