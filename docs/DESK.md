@@ -55,6 +55,12 @@ writes it.
   each picture (a sale of new shares, late or unreliable accounts, a restructuring or a write-off) the chance
   that the filing comes in the next 20 sessions, the usual chance, and the pieces that raise it most. A chance
   that a filing comes is not a direction.
+- **What was expected** (`[e:TICKER]`, for a mover with a results report since the close; `docs/EARNINGS.md`). This
+  gives:
+  - its setup at the close before the report: the run into it in its own usual moves, its habit at its reports,
+    and the market's mood;
+  - how the 100 most similar past setups reacted, and their kinds (priced in, relief, ...);
+  - the tests' verdicts. X1a passed: a run-up makes a fall more likely, not a lower average.
 - **Its last sessions,** and the earlier checks that flagged it.
 - **Clusters.** Movers tied by a story that names one of them, or by a year of moving together and the same
   direction today. A tie is a lead. Whether the cause is shared is for the note.
