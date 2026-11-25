@@ -1,0 +1,281 @@
+{
+ "asof": "2026-11-24",
+ "at": "2026-11-25T04:17:32Z",
+ "calls": [],
+ "case_sha": "8a69ad07af48ef34",
+ "check": "2026-11-25T0417Z",
+ "claims_noted": 0,
+ "evidence": {
+  "c1": {
+   "text": "movers tied together: FDS, WDAY, NTNX (FDS~WDAY by s9; NTNX~WDAY by p:NTNX~WDAY)"
+  },
+  "f:AMBA:1": {
+   "text": "AMBA results report (8-K 2.02) at 2026-11-24T21:13Z: Ambarella, Inc. Announces Third Quarter Fiscal Year 2027 Financial Results -- Exhibit 99.1 Ambarella, Inc. Announces Third Quarter Fiscal Year 2027 Financial Results November 24, 2026 \u2014Santa Clara, Calif. \u2013 Ambarella, Inc. (NASDAQ: AMBA), an edge AI semiconductor company, today announced third quarter fiscal 2027 financial results for the period ended October 31, 2026. \u2022 Revenue for the third quarter of fiscal 2027 was $115.2 million, up 6.2% ",
+   "url": "https://www.sec.gov/Archives/edgar/data/1280263/000119312526475716/d912526dex991.htm"
+  },
+  "f:NTNX:1": {
+   "text": "NTNX results report (8-K 2.02) at 2026-11-24T21:01Z: Nutanix Reports First Quarter Fiscal 2027 Financial Results -- EXHIBIT 99.1 Nutanix Reports First Quarter Fiscal 2027 Financial Results Reports 15% YoY ARR Growth and Solid Free Cash Flow Nutanix Announces CEO Succession Plan; Board Initiates Search for Next CEO SAN JOSE, Calif., Nov. 24, 2026 (GLOBE NEWSWIRE) -- Nutanix, Inc. (NASDAQ: NTNX), a hybrid cloud leader and AI platform company, today announced financial results for its first quarter",
+   "url": "https://www.sec.gov/Archives/edgar/data/1618732/000117184326007693/exh_991.htm"
+  },
+  "f:WDAY:1": {
+   "text": "WDAY results report (8-K 2.02) at 2026-11-24T21:01Z: Workday Announces Fiscal 2027 Third Quarter Financial Results -- Exhibit 99.1 Workday Announces Fiscal 2027 Third Quarter Financial Results Fiscal Third Quarter Total Revenues of $2.705 Billion, Up 11.2% Year-Over-Year Subscription Revenues of $2.532 Billion, Up 12.8% Year-Over-Year PLEASANTON, Calif., November 24, 2026 \u2013 Workday, Inc. (NASDAQ: WDAY), the trusted agentic platform for HR, finance, and IT, today announced results for the fiscal ",
+   "url": "https://www.sec.gov/Archives/edgar/data/1327811/000132781126000057/wday-10312026x991.htm"
+  },
+  "k": {
+   "text": "Market: S&P 500 (SPY) -0.3%, Nasdaq 100 (QQQ) -0.5%, Russell 2000 (IWM) -0.2%, S&P 500 futures -1.0%, VIX +0.0% (after the close)"
+  },
+  "p:NTNX~WDAY": {
+   "text": "NTNX and WDAY: market-adjusted daily returns correlated 0.61 over the last 250 sessions; WDAY -7.2% since the close"
+  },
+  "s1": {
+   "text": "2026-11-25T03:12Z stocktwits.com: Why Is AMBA Stock Crashing 37% Overnight Today? -- Ambarella missed third-quarter estimates and issued a weak outlook, as memory shortages disrupt demand.",
+   "url": "https://stocktwits.com/news-articles/markets/equity/why-is-amba-stock-crashing-37-overnight-today/cNbHbe8R9le?.tsrc=rss"
+  },
+  "s10": {
+   "text": "2026-11-25T00:13Z www.marketbeat.com: Workday Q3 Earnings Call Highlights -- Workday (NASDAQ:WDAY) raised its fiscal 2027 subscription revenue and operating margin forecasts after reporting third-quarter growth fueled in part by demand for artificial intelligence products. Subscription revenue rose 13% from a year earlier to $2.532 billion, while total revenue increased 11%",
+   "url": "https://www.marketbeat.com/instant-alerts/transcript-workday-q3-earnings-call-highlights-2026-11-24/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss"
+  },
+  "s11": {
+   "text": "2026-11-24T23:20Z finance.yahoo.com: Workday Inc (WDAY) (Q3 2027) Earnings Call Highlights: AI Momentum Accelerates as ARR Tops $750 ... -- Workday Inc (WDAY) delivered strong AI-driven growth and margin expansion in Q3 2027, but flagged decelerating U.S. revenue and slower Q4 subscription growth ahead.",
+   "url": "https://finance.yahoo.com/technology/ai/articles/workday-inc-wday-q3-2027-232033166.html?.tsrc=rss"
+  },
+  "s13": {
+   "text": "2026-11-25T00:13Z www.marketbeat.com: What Nutanix (NTNX) Said on Its Q1 Earnings Call -- Nutanix (NASDAQ:NTNX) reported record revenue for its fiscal first quarter of 2027 and raised its full-year profitability outlook, while announcing plans for a CEO transition as it seeks to expand its position in artificial intelligence infrastructure. CEO Rajiv Ramaswami said he is working with th",
+   "url": "https://www.marketbeat.com/instant-alerts/transcript-what-nutanix-ntnx-said-on-its-q1-earnings-call-2026-11-24/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss"
+  },
+  "s14": {
+   "text": "2026-11-24T23:30Z finance.yahoo.com: Nutanix (NTNX) Q1 Earnings: Taking a Look at Key Metrics Versus Estimates -- The headline numbers for Nutanix (NTNX) give insight into how the company performed in the quarter ended October 2026, but it may be worthwhile to compare some of its key metrics to Wall Street estimates and the year-ago actuals.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/nutanix-ntnx-q1-earnings-taking-233001721.html?.tsrc=rss"
+  },
+  "s15": {
+   "text": "2026-11-24T23:20Z finance.yahoo.com: Nutanix Inc (NTNX) Q1 2027 Earnings Call Highlights: Record Margins, Raised Cash Flow Guidance ... -- Nutanix Inc (NTNX) beat Q1 FY27 revenue and margin guidance on 15% growth and a record 32.1% non-GAAP operating margin, but softer new logo bookings and a CEO succession plan framed the outlook.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/nutanix-inc-ntnx-q1-2027-232051371.html?.tsrc=rss"
+  },
+  "s16": {
+   "text": "2026-11-24T21:10Z finance.yahoo.com: Nutanix (NTNX) Q1 Earnings and Revenues Surpass Estimates -- Nutanix (NTNX) delivered earnings and revenue surprises of +21.67% and +1.31%, respectively, for the quarter ended October 2026. Do the numbers hold clues to what lies ahead for the stock?",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/nutanix-ntnx-q1-earnings-revenues-211002675.html?.tsrc=rss"
+  },
+  "s17": {
+   "text": "2026-11-25T04:04Z finance.yahoo.com: Dow Jones Futures Fall; Trump Says 'Not Too Late' For U.S. To Take Nvidia Stake -- Futures fell after AI stocks tumbled but medicals, retailers and more rose. President Trump mused about an Nvidia stake. Fed inflation data looms.",
+   "url": "https://finance.yahoo.com/m/d96603c1-fe7f-3bf3-8158-0728b464d469/dow-jones-futures-fall%3B-trump.html?.tsrc=rss"
+  },
+  "s2": {
+   "text": "2026-11-25T00:13Z www.marketbeat.com: Ambarella Q3 Earnings Call Highlights -- Ambarella (NASDAQ:AMBA) expects fiscal fourth-quarter revenue to fall sharply from a record third quarter as rising memory prices and limited supplies prompt customers to delay or cancel orders across its markets. The edge artificial intelligence chipmaker forecast fourth-quarter revenue of $70 mil",
+   "url": "https://www.marketbeat.com/instant-alerts/transcript-ambarella-q3-earnings-call-highlights-2026-11-24/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss"
+  },
+  "s3": {
+   "text": "2026-11-24T23:20Z finance.yahoo.com: Ambarella Inc (AMBA) (Q3 2027) Earnings Call Highlights: Record Revenue Meets Memory Crisis ... -- Ambarella Inc (AMBA) posts record Q3 revenue of $115.2 million but guides Q4 sharply lower as an industry-wide memory shortage spreads from consumer IoT into automotive and enterprise markets.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/ambarella-inc-amba-q3-2027-232045051.html?.tsrc=rss"
+  },
+  "s4": {
+   "text": "2026-11-24T21:20Z finance.yahoo.com: Ambarella (AMBA) Misses Q3 Earnings and Revenue Estimates -- Ambarella (AMBA) delivered earnings and revenue surprises of -12.50% and -3.94%, respectively, for the quarter ended October 2026. Do the numbers hold clues to what lies ahead for the stock?",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/ambarella-amba-misses-q3-earnings-212001963.html?.tsrc=rss"
+  },
+  "s5": {
+   "text": "2026-11-25T01:13Z www.marketbeat.com: What Urban Outfitters (URBN) Said on Its Q3 Earnings Call -- Urban Outfitters (NASDAQ:URBN) reported record fiscal third-quarter sales and higher earnings, but executives offered a more cautious holiday outlook as store traffic softened and Anthropologie prepared for deeper markdowns. Sales rose 9% to $1.7 billion for the quarter ended Oct. 31, 2026, marking",
+   "url": "https://www.marketbeat.com/instant-alerts/transcript-what-urban-outfitters-urbn-said-on-its-q3-earnings-call-2026-11-24/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss"
+  },
+  "s6": {
+   "text": "2026-11-25T00:20Z finance.yahoo.com: Urban Outfitters Notches a Record, But Comparable Sales Fall Short -- Third quarter profit beat projections and revenue matched expectations.",
+   "url": "https://finance.yahoo.com/m/e35ba371-d4b3-313f-a2f5-fbbd239b61fd/urban-outfitters-notches-a.html?.tsrc=rss"
+  },
+  "s7": {
+   "text": "2026-11-25T00:00Z finance.yahoo.com: Compared to Estimates, Urban Outfitters (URBN) Q3 Earnings: A Look at Key Metrics -- Although the revenue and EPS for Urban Outfitters (URBN) give a sense of how its business performed in the quarter ended October 2026, it might be worth considering how some key metrics compare with Wall Street estimates and the year-ago numbers.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/compared-estimates-urban-outfitters-urbn-000001686.html?.tsrc=rss"
+  },
+  "s9": {
+   "text": "2026-11-24T22:11Z finance.yahoo.com: Workday\u2019s AI Pivot and Earnings Beat Isn\u2019t Enough to Lift Stock -- The stock has fallen more than 16% this year.",
+   "url": "https://finance.yahoo.com/m/3091200f-dc36-3940-9764-6eda5d017e25/workday%E2%80%99s-ai-pivot-and.html?.tsrc=rss"
+  },
+  "t1": {
+   "text": "the last note (2026-11-24T1736Z), theme 'Chips give back more of Monday': The give-back that began before the open deepened in the session: AI and chip stocks fall as Monday's euphoria fades (Yahoo; StockTitan). Analog Devices, -17.4%, had its worst day since 2020 on a first-quarter outlook below expectations despite record revenue up 42%."
+  },
+  "t2": {
+   "text": "the last note (2026-11-24T1736Z), theme \"Servers: HPE's margins reach Dell before its report\": HPE -17.2%, below Friday's close: its chief financial officer cautioned on AI server profits and its chief executive warned of supply shortages through 2028, despite orders up 88% and a raised outlook (s40, s41)."
+  },
+  "t3": {
+   "text": "the last note (2026-11-24T1736Z), theme \"Retailers' beats hold and grow\": The morning's retail reports: Abercrombie record sales and a raised outlook (+25.3%); Kohl's comparable sales back to growth and a raised outlook (+18.9%); Dick's raised its outlook, with Foot Locker's US comparable sales improving (+16.2%); Dollar Tree comparable sales +4.6%, above the top of its outlook, and a raised outlook (+12.2%); Shoe Station's sales down 5.1% on a comparable basis and a cut outlook (-18.1%)."
+  },
+  "t4": {
+   "text": "the last note (2026-11-24T1736Z), theme 'Drug makers rise across the board': Drug makers' median +5.3% and biological products' +4.1%, large and small: Eli Lilly, Merck, Pfizer, AbbVie, Amgen, Gilead, Vertex and Regeneron all +3-4.4%, and many small biotechs +8-13% with no company news (Disc Medicine, BioMarin, Stoke, Viridian, Praxis, Oric, Alkermes). Two stories note health care rising without naming a cause (s54, s55). The day's cash deal for Insmed, the biggest biotech buyout since Pfizer bo"
+  },
+  "x:AMBA": {
+   "text": "AMBA: the market carried -0.8% (beta 2.44); its industry (Semiconductors & Related Devices, 58 stocks) moved -0.4%; left over after the market and its drivers -36.7%"
+  },
+  "x:NTNX": {
+   "text": "NTNX: the market carried -0.4% (beta 1.06); its industry (Services-Prepackaged Software, 104 stocks) moved -0.0%; left over after the market and its drivers -7.5%"
+  },
+  "x:URBN": {
+   "text": "URBN: the market carried -0.3% (beta 0.92); its industry (Apparel stores (broad), 13 stocks) moved +0.0%; left over after the market and its drivers -11.8%"
+  },
+  "x:WDAY": {
+   "text": "WDAY: the market carried +0.0% (beta -0.03); its industry (Services-Computer Processing & Data Preparation, 25 stocks) moved +0.0%; left over after the market and its drivers -7.2%"
+  }
+ },
+ "note": {
+  "backdrop": "Tuesday closed as a rotation: QQQ -1.99%, SPY -0.49%, while the Dow fund rose 0.79% and small caps 0.53% (StockTitan). Chips fell hard (in the bank's bars: Micron -11.0%, AMD -8.9%, Intel -8.1%, Nvidia -5.9%, Analog Devices -17.4%, HPE -16.3%, Dell -11.8%), while retailers (Abercrombie +19.7%, Kohl's +19.5%, Dick's +14.6%, Dollar Tree +11.2%) and drug makers (Cogent +17.4%, Kymera +15.7%, Disc Medicine +15.3%, Insmed +14.1%, Lilly +3.2%) rose. After the close the reports are mixed to weak: Ambarella -37.6%, Urban Outfitters -12.1%, Workday -7.2%, Nutanix -7.9%; Dell +0.9%. The after-hours market is quiet (SPY -0.3%). The case file's futures (-1.0%) and gold (-2.9%) lines likely compare with Monday's close, not Tuesday's: the known stale baseline.",
+  "backdrop_evidence": [
+   "k",
+   "s17",
+   "t1",
+   "t3",
+   "t4",
+   "https://www.stocktitan.net/articles/stock-market-today-live-november-24-2026"
+  ],
+  "by": "agent",
+  "calls": [],
+  "check": "2026-11-25T0417Z",
+  "read": [
+   {
+    "direction": "none",
+    "published": "2026-11-24T11:58:55Z",
+    "says": "Nov 24 close: QQQ -1.99%, SPY -0.49%, DIA +0.79%, IWM +0.53%; Micron -11.01%, Nvidia -5.86%, HPE -16.31% (below its Friday close); Insmed +14.13%, Embecta +40.64%, Shoe Station -18.39%. After hours: Ambarella -37.55% on fourth-quarter revenue guidance of $70-75 million against $115.2 million in the third, its CEO citing rising memory prices leading customers to cut outlooks; Dell +4.35% at 6:02 p.m. on record revenue of $54.9 billion and an AI backlog of $132.3 billion, slightly higher by 7:59; Urban Outfitters -12.71% on record sales; Nutanix and Workday down more than 7%; HP +2.00%.",
+    "tier": "reported",
+    "url": "https://www.stocktitan.net/articles/stock-market-today-live-november-24-2026"
+   }
+  ],
+  "singles": [
+   {
+    "beneath": "-12.1% after hours, all its own; its partners (Abercrombie +0.5%, American Eagle -0.6%) did not follow. A miss on comparable sales in a week when retailers that beat rose 11-20%.",
+    "cause": "Urban Outfitters reported record third-quarter sales and an earnings beat, but comparable sales fell short of expectations.",
+    "evidence": [
+     "s5",
+     "s6",
+     "s7",
+     "x:URBN"
+    ],
+    "kind": "reported",
+    "t": "URBN"
+   },
+   {
+    "beneath": "About $174 at the close ($150.36 x 1.157), about 40% above the call's $124.06 (63a7bc55, judged at the Nov 27 close).",
+    "cause": "Kymera rose another 15.7% on Tuesday, the day after it launched a $1.5 billion offering of new shares; no new company news was found, and the drug makers' broad rise is my inference for the rest.",
+    "evidence": [
+     "t4",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-24-2026"
+    ],
+    "kind": "reported",
+    "t": "KYMR"
+   }
+  ],
+  "themes": [
+   {
+    "beneath": "Ambarella -37.6% after hours is -36.7% of its own; in the bank's bars it had already closed -20.0% in Tuesday's session, before its report, with chips. Its partners barely moved after hours (Ceva 0.0%, Alpha and Omega -0.4%, Rambus -1.1%), so tonight the read stays with Ambarella (the pond). Dell's record revenue and $132.3 billion backlog held it up (+0.9%) after its -11.8% day: the demand side remains strong; the question is margins (inferred).",
+    "cause": "Ambarella guided fourth-quarter revenue to $70-75 million against a record $115.2 million in the third quarter and a Street view near $112.6 million; its CEO said rising memory prices and shortages are leading many customers to cut their outlooks (StockTitan; s1, s2).",
+    "evidence": [
+     "f:AMBA:1",
+     "s1",
+     "s2",
+     "s3",
+     "s4",
+     "x:AMBA",
+     "t2",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-24-2026"
+    ],
+    "kind": "reported",
+    "mechanism": "Memory is a cost to everyone who builds devices and servers on top of it: HPE guided AI server margins lower on component costs on Monday night, a Dell preview flagged rising memory costs, and now Ambarella's customers buy fewer of its chips because memory makes their products dearer.",
+    "members": [
+     "AMBA",
+     "HPE",
+     "DELL",
+     "HPQ"
+    ],
+    "name": "Memory costs: Ambarella's forecast and the hardware chain",
+    "read_through": [
+     {
+      "evidence": [
+       "t2"
+      ],
+      "t": "SMCI",
+      "why": "Another server builder carrying memory costs; untested: whether a partner's report reaches it the next day has not been tested here."
+     }
+    ],
+    "watch": "Dell's margin guidance on its call as reported Wednesday; other device makers' comments on memory prices."
+   },
+   {
+    "beneath": "The pattern of the week: results above expectations, growth guided slower, the stock lower (HPE, Semtech, Workday, Nutanix). Workday's stock has fallen more than 16% this year (s9). FactSet -6.8% after hours sits in the cluster but no story names it.",
+    "cause": "Workday beat and raised its fiscal 2027 subscription revenue and margin forecasts (revenue +11.2%, subscription +12.8%, AI products' annual recurring revenue above $750 million, up over 130%), but guided fourth-quarter subscription growth down to 10% and said its third-quarter backlog was helped by early renewals. Nutanix beat on earnings ($0.73 against $0.60) and raised its cash-flow guidance, but its annual recurring revenue of $2.63 billion was a little under the $2.65 billion expected.",
+    "evidence": [
+     "f:WDAY:1",
+     "s9",
+     "s10",
+     "s11",
+     "f:NTNX:1",
+     "s13",
+     "s14",
+     "s15",
+     "s16",
+     "x:WDAY",
+     "x:NTNX",
+     "c1",
+     "p:NTNX~WDAY"
+    ],
+    "kind": "reported",
+    "mechanism": "Each fell on its own report (Workday -7.2%, Nutanix -7.9%); their partners Salesforce (-0.4%), ServiceNow (-0.6%) and Adobe (-0.1%) barely moved after hours. Autodesk -3.6% moved against a small wave of +0.3 from its neighbours.",
+    "members": [
+     "WDAY",
+     "NTNX",
+     "ADSK",
+     "FDS"
+    ],
+    "name": "Software: beats met by falls",
+    "read_through": [],
+    "watch": "Whether software peers follow Workday in Wednesday's session."
+   },
+   {
+    "beneath": "Monday's gains in chips were mostly given back in two sessions for the most speculative names (Micron), less for Nvidia. Trump said late Tuesday it is 'not too late' for the US to take a stake in Nvidia (s17).",
+    "cause": "Chips fell for a second day while retailers rose on their reports and drug makers rose broadly after Sanofi's $41 billion cash deal for Insmed. No source states a single cause for the drug makers' rise; money leaving the AI trade and the deal's read-through for possible targets are my inference.",
+    "evidence": [
+     "s17",
+     "t1",
+     "t3",
+     "t4",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-24-2026"
+    ],
+    "kind": "inferred",
+    "mechanism": "The retail gains held into the close (Kohl's grew to +19.5%), and the drug makers' gains grew (Disc Medicine +15.3% at the close, +9.8% at midday).",
+    "members": [
+     "MU",
+     "AMD",
+     "NVDA",
+     "ANF",
+     "KSS",
+     "DKS",
+     "DLTR",
+     "IRON",
+     "INSM",
+     "LLY"
+    ],
+    "name": "The day's rotation: out of chips, into retail and drugs",
+    "read_through": [],
+    "watch": "Wednesday's 8:30 a.m. data (GDP, personal income and spending with PCE inflation, durable goods, jobless claims) moves the whole market first."
+   }
+  ],
+  "threads": [
+   "The Dell call 10833f5c (a move of 4.5%+ either way from $296.45 by Wednesday's close, 75%): Dell closed down on the day and was +0.9% after hours.",
+   "Kymera 63a7bc55: about 40% above $124.06 at Tuesday's close; judged Friday Nov 27 (half day).",
+   "Wednesday 8:30 a.m. ET: GDP, PCE, durable goods, jobless claims; Deere before the open (call 10 a.m.), Li Auto at 7 a.m.",
+   "FDA: Savara's decision overdue since Nov 22; Vertex and Roche due Nov 30, PolyPid Nov 28; BridgeBio and Cogent already approved early.",
+   "Check flaws: after-close futures and driver lines compare with the previous day's close; the case file's 9-in-10 label; attention's open-call date; the cash line without investments."
+  ],
+  "unexplained": [
+   {
+    "t": "OC",
+    "tried": "Outside its 9-in-10 range at -10.9% after hours; no filing, no story; homebuilder and building-product partners flat (Builders FirstSource, PulteGroup, Masco 0.0%)."
+   },
+   {
+    "t": "STGW",
+    "tried": "+10.3% after hours, no filing, no story."
+   },
+   {
+    "t": "ED",
+    "tried": "-3.4% after hours, no filing, no story; utilities flat."
+   },
+   {
+    "t": "APG",
+    "tried": "-4.5% after hours, no filing, no story."
+   }
+  ]
+ },
+ "recorded_at": "2026-11-25T04:20:05Z"
+}
