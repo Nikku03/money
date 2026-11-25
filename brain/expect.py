@@ -190,11 +190,39 @@ def render(c: dict) -> list[str]:
 
 
 # ---------- the forward record ----------
-def read_calls(path: Path | None = None) -> list[dict]:
+def read_calls(path: Path | None = None, *, include_withdrawn: bool = False) -> list[dict]:
+    """The recorded cards; a later ``{"op": "withdraw", "id": ..., "reason": ...}`` line withdraws one (kept, never
+    judged)."""
     p = path or CALLS
     if not p.exists():
         return []
-    return [json.loads(x) for x in p.read_text().splitlines() if x.strip()]
+    rows = [json.loads(x) for x in p.read_text().splitlines() if x.strip()]
+    gone = {r["id"]: r.get("reason") for r in rows if r.get("op") == "withdraw"}
+    calls = [r for r in rows if r.get("op") != "withdraw"]
+    if include_withdrawn:
+        return [{**r, "withdrawn": gone[r["id"]]} if r["id"] in gone else r for r in calls]
+    return [r for r in calls if r["id"] not in gone]
+
+
+def withdraw(call_id: str, reason: str, path: Path | None = None) -> None:
+    p = path or CALLS
+    if not any(r["id"] == call_id for r in read_calls(p)):
+        raise SystemExit(f"{call_id} is not an open record")
+    with p.open("a") as f:
+        f.write(json.dumps({"op": "withdraw", "id": call_id, "reason": reason, "at": now_iso()}, sort_keys=True) + "\n")
+
+
+def still_ahead(when: str, now_utc: str | None = None) -> bool:
+    """Whether a calendar slot ("before the open on D" / "after the close on D") is still ahead: before 06:00 New
+    York on D for a morning report (they come from about then), before 16:00 for an evening one."""
+    from datetime import datetime, time
+    from zoneinfo import ZoneInfo
+    ny = ZoneInfo("America/New_York")
+    d = when.rsplit(" ", 1)[-1]
+    cut = time(6, 0) if when.startswith("before") else time(16, 0)
+    deadline = datetime.combine(datetime.fromisoformat(d).date(), cut, ny)
+    now = datetime.fromisoformat((now_utc or now_iso()).replace("Z", "+00:00"))
+    return now < deadline
 
 
 def record(bank: Bank, ticker: str, report: str, lib: list[dict] | None = None, path: Path | None = None) -> dict:
@@ -215,7 +243,7 @@ def record(bank: Bank, ticker: str, report: str, lib: list[dict] | None = None, 
            "score": sv.get("score"), "score_pct": sv.get("pct")}
     p = path or CALLS
     p.parent.mkdir(parents=True, exist_ok=True)
-    if any(r["id"] == rec["id"] for r in read_calls(p)):
+    if any(r["id"] == rec["id"] for r in read_calls(p, include_withdrawn=True)):
         raise SystemExit(f"{rec['id']} is already recorded")
     with p.open("a") as f:
         f.write(json.dumps(rec, sort_keys=True) + "\n")
@@ -420,6 +448,12 @@ def _cmd(a) -> int:
             r = record(bank, t, a.report, lib)
             print(f"recorded {r['id']}: lean {r['lean'] * 100:+.2f}%, {r['rose'] * 100:.0f}% of the analogs rose; "
                   f"commit {CALLS.relative_to(config.ROOT)}")
+    elif a.action == "withdraw":
+        if not (a.tickers and a.reason):
+            print("usage: brain expect withdraw ID --reason '...'")
+            return 1
+        withdraw(a.tickers[0], a.reason)
+        print(f"withdrew {a.tickers[0]}; commit {CALLS.relative_to(config.ROOT)}")
     elif a.action == "radar":
         from datetime import date, timedelta
         asof = bank.view().t[:10]
@@ -452,7 +486,10 @@ def _cmd(a) -> int:
             print(f"  {c['t']:6s} usual move {s['med8'] * 100:4.1f}%  run21 {s['run21']:+.1f}  rose at {s['up8'] * 100:3.0f}% "
                   f"of its last 8  score {sv.get('score', float('nan')):+.2f}  analogs: {an['rose'] * 100:.0f}% rose, mean "
                   f"{an['mean_r1'] * 100:+.2f}%  ({'' if a.confirmed else 'last year '}{c['basis']}){out}")
-            if a.record and not s.get("pending"):
+            ahead = (not a.confirmed) or still_ahead(c["basis"])
+            if a.record and not ahead and not s.get("pending"):
+                print("    not recorded: its report slot has passed (the results may be public before the filing)")
+            if a.record and ahead and not s.get("pending"):
                 try:
                     record(bank, c["t"], start, lib)
                 except SystemExit as e:
@@ -473,11 +510,12 @@ def _cmd(a) -> int:
 def add_cli(sub) -> None:
     p = sub.add_parser("expect", help="before a report: what the price expects, the past setups like it, what "
                                       "followed and why (docs/EARNINGS.md)")
-    p.add_argument("action", choices=["build", "show", "record", "score", "radar"])
+    p.add_argument("action", choices=["build", "show", "record", "score", "radar", "withdraw"])
     p.add_argument("tickers", nargs="*")
     p.add_argument("--report", help="record: the report's session, YYYY-MM-DD (radar: the session they likely react)")
     p.add_argument("--days", type=int, default=1, help="radar: how many calendar days ahead to look (default 1)")
     p.add_argument("--record", action="store_true", help="radar: record each card before its report")
+    p.add_argument("--reason", help="withdraw: why (a record is never deleted)")
     p.add_argument("--confirmed", action="store_true",
                    help="radar: only the companies a published weekly calendar lists for that session")
     p.set_defaults(fn=_cmd)

@@ -175,6 +175,21 @@ class Calendar(unittest.TestCase):
                          "https://www.stocktitan.net/articles/earnings-calendar-week-of-november-30-2026")
 
 
+class Record(unittest.TestCase):
+    def test_withdraw_and_time_guard(self):
+        self.assertFalse(expect.still_ahead("after the close on 2026-11-24", "2026-11-25T09:04:54Z"))
+        self.assertTrue(expect.still_ahead("before the open on 2026-11-25", "2026-11-25T09:04:54Z"))   # 04:04 NY
+        self.assertFalse(expect.still_ahead("before the open on 2026-11-25", "2026-11-25T11:30:00Z"))  # 06:30 NY
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d) / "calls.jsonl"
+            p.write_text('{"id": "A-2026-12-01", "t": "A", "report": "2026-12-01", "asof": "2026-11-30", "lean": 0.01}\n')
+            expect.withdraw("A-2026-12-01", "a test", p)
+            self.assertEqual(expect.read_calls(p), [])
+            self.assertEqual(expect.read_calls(p, include_withdrawn=True)[0]["withdrawn"], "a test")
+            with self.assertRaises(SystemExit):
+                expect.withdraw("A-2026-12-01", "again", p)
+
+
 class Card(unittest.TestCase):
     def test_analogs_and_record(self):
         lib = library(2000)
