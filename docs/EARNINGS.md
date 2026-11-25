@@ -108,7 +108,49 @@ TEST is 2024-01..2026-09.
 - Oracle: knowing the outcome must reach p < 0.01.
 - Benjamini–Hochberg q must be under 0.10 across every gated test in the ledger.
 
-The results are in `research/RESULTS.md`, section "Earnings: expected and what followed".
+The results are in `research/RESULTS.md`, section "Earnings: expected and what followed". Run once on 2026-11-25:
+
+| Test | 2024-01..2026-09 | p | BH q | Verdict |
+|---|---|---|---|---|
+| X1a priced in (the run into the report) | +0.029, positive in 23 of 33 months | 0.003 | 0.013 | **PASS** |
+| X1b habit | -0.008 | 0.77 | | **FAIL** |
+| X1c the 100 most similar past setups | +0.009 | 0.16 | | **FAIL** |
+| X1d the week after the reaction | +0.006 | 0.33 | | **FAIL** |
+| X1f the expectation score | +0.020, positive in 25 of 33 months | 0.052 | 0.19 | **FAIL** |
+
+**What X1a's pass means.** The rank correlation measures the typical reaction, not the average. After the fact
+(`research/earnings/after_the_fact_x1a.log`), by fifth of the run into the report:
+
+| Fifth | TEST median | TEST rose | TEST mean | TRAIN mean |
+|---|---|---|---|---|
+| sold off most | +0.08% | 50.6% | +0.31% | +0.26% |
+| ran up most | -0.13% | 49.0% | +0.49% | -0.01% |
+
+- The fifth that ran up most into its report fell more often.
+- Its big winners (10.1% of them rose more than twice their usual move) lifted its average above the others'.
+- So a run-up tilts the odds of a fall on the report session. It does not make a short pay on average, and the tilt
+  is a couple of percentage points against a usual report move of several percent.
+
+**What failed.**
+- The habit of rising at reports did not carry into 2024-2026.
+- The most similar past setups (X1c) did not predict.
+- The week after a reaction did not follow it.
+- The expectation score just missed (p 0.052, q 0.19).
+
+**What each kind did on 2024-2026 (X1e, reported).** These are after the fact and not tested:
+- A "priced in" fall kept going over the next week 55% of the time (-0.29%).
+- A "surprise down" kept going 54% of the time (-0.30%).
+- A "relief" rise gave back -0.38%.
+
+**Not declared: the season so far.**
+- The question: do the same-industry companies that reported in the 30 days before predict the next report?
+- On TRAIN it showed nothing: a rank correlation of -0.008 and -0.006 with three-digit industries, -0.017 and
+  -0.002 with two-digit, and it weakened the score when added (`research/earnings/explore_season_train.log`).
+- That fits the ripples' finding that read-through from one company's report is priced on the day.
+
+**A note on the placebo.** The placebo shuffle walked the months in a set's order, which follows the process's hash
+seed. The recorded statistics, p and intervals do not depend on it; only the placebo share could differ with the
+seed. The shuffle now walks the months in sorted order (commit after the results).
 
 ## The present: before a report (`brain/expect.py`)
 
