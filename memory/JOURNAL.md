@@ -178,3 +178,15 @@ FAIL); "the market runs on chains of cause and effect, news and catalysts": the 
   band's re-read.
 - Fixed on the way: three event-test fixtures broken by reader 3; past quarters' sales read as promises (a
   quarter named with its year that is over is a result); the year-ago quarter of an open promise.
+
+
+## 2026-11-26 (early UTC): the company file, and the ground for the next promise tests
+
+- The small band's re-read stopped at its two-hour limit (399 of 510); restarted, chained with the micro band.
+- Wrote `research/promises/explore_bands_train.py` (TRAIN only, any universes; reproduces the broad numbers). New
+  on TRAIN: beyond the habit, a promise that asks for more delivered more (t -5.0 for "less is better").
+- Counted guidance forms on the research universe (`research/promises/survey_forms.py`): dollars 199 companies,
+  growth in percent 215 more, EPS 262 more, at most 523 of 741 with all three (2024-2026).
+- Built `python -m brain file TICKER` (`brain/file.py`, `docs/FILE.md`, CLAUDE.md item 18, 10 tests): the
+  company on one page from the existing cards, each with its verdict. 1,082 tests pass.
+

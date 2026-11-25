@@ -207,11 +207,34 @@ idea at a time, checked against the memory bank first.
   the delivery (TRAIN +0.071), the change of the year's promise against the next five sessions (TRAIN +0.054).
 - Coverage: 106 of 741 companies made a quarterly dollar revenue promise on 2024-2026; 2% mismatches not graded.
 - NEXT: the small band's releases are being re-read (`releases --band small`, started 2026-11-25 21:50Z; resumes
-  if re-run), then `--band micro`, then the us_watch tickers by name; then TRAIN exploration on those and the
-  held-back tests as new ids (G2). After that the other layers: what a company needs against what it has, its
-  dates, its calls.
+  if re-run; 399 of 510 at the first two-hour limit, restarted 23:46Z chained with `--band micro`), then the
+  us_watch tickers by name; then `promises build`, then `research/promises/explore_bands_train.py us_small us_micro
+  us_watch` (TRAIN only, written and checked against the broad numbers) and the held-back tests as new ids (G2).
+- For G2's design: declare it on the small, micro and newer-listing universes only. The broad universe's
+  2024-2026 week after a raise or a cut was already printed by G1b (raised +0.09%, cut +1.65%), so it is seen.
+- Seen on TRAIN (broad), new on 2026-11-26: after taking the habit out, a promise that asks for MORE delivered
+  more, not less (minus the stretch against the surprise less the habit: -0.133, t -5.0, 6 of 30 seasons
+  positive). The raw +0.071 came from the habit (big beaters guide low). So "asks for more, falls short" is not
+  what the old years show.
+- Sized, not built (`research/promises/survey_forms.log`, loose patterns, an upper bound, 2024-2026): 199 of 741
+  companies gave a dollar revenue promise; 215 others gave revenue growth in percent; 262 others gave EPS; with
+  all three at most 523 of 741. EPS guidance is mostly adjusted EPS, which the accounts do not hold: its
+  delivery would have to be read from the next release.
 - The desk's case file now carries `[g:TICKER]` for a reporting mover (first live use: the next check with
   reporters). `promisetest` does not pin `research/run.py`.
+
+## The company file (2026-11-26; `docs/FILE.md`)
+
+- `python -m brain file TICKER` (`brain/file.py`, about 20 s a company): eight sections on one page: what it is;
+  its accounts and what the price pays (P/E on the fiscal year and on the last four quarters, price to sales);
+  what it promised and delivered; what it needs and what is on file (the mosaic); who it moves with; its dates;
+  how far it can move (W1, S1, M1; the run into a report only within 14 days of it); what is not in the file yet.
+- It adds no claim of its own: each line is an existing card with its recorded verdict. Start here when the
+  person asks about a company.
+- Not in it yet (the person's "every fabric"): customers and suppliers by name (10-K text), projects and what
+  they need, guidance as growth or EPS, earnings calls, any tested direction.
+- Seen while building, not fixed: the brief shows NVDA's capex from fiscal 2012 (the company changed the tag;
+  the file reads both tags and drops an item older than the fiscal year).
 
 ## Open questions and offers (no answer yet)
 

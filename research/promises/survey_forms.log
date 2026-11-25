@@ -1,0 +1,20 @@
+
+2011-2023: 22899 releases read with reader 3
+  rev_growth_range     2456 releases,  259 companies
+  rev_growth_point     2797 releases,  403 companies
+  eps_range            6244 releases,  360 companies
+  eps_point            4082 releases,  431 companies
+  companies with a dollar revenue promise (the library): 230
+  with revenue growth guidance but no dollar promise: 240
+  with EPS guidance (range or point): 471; of them no dollar revenue promise: 276
+  any of the three: 562 of 741
+
+2024-2026: 9097 releases read with reader 3
+  rev_growth_range     1172 releases,  216 companies
+  rev_growth_point     1333 releases,  316 companies
+  eps_range            2591 releases,  294 companies
+  eps_point            2084 releases,  355 companies
+  companies with a dollar revenue promise (the library): 199
+  with revenue growth guidance but no dollar promise: 215
+  with EPS guidance (range or point): 414; of them no dollar revenue promise: 262
+  any of the three: 523 of 741
