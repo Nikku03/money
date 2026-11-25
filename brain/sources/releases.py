@@ -39,7 +39,15 @@ _CELL = re.compile(r"<td[^>]*>(.*?)</td>", re.IGNORECASE | re.DOTALL)
 _HREF = re.compile(r'href="(?:[^"]*/)?([^/"]+)"', re.IGNORECASE)
 # 2: the index page's document types are read when no file name names the exhibit. A release kept by reader 1
 # with no text is read again, and the old fact downgraded as superseded.
-READER = 2
+# 3: the release's forward-looking passages are kept too (``outlook``: the windows around guidance words that carry
+# a figure, wherever they sit in the first SCAN_CHARS of text), for the promise record (brain/promises.py). The
+# opening and its event tags are unchanged. A release kept without ``outlook`` is read again and superseded.
+READER = 3
+SCAN_CHARS = 60_000      # text searched for forward-looking passages
+OUTLOOK_CHARS = 5000     # of them kept
+_FORWARD = re.compile(r"\b(outlook|guidance|expects?|expected|expecting|forecasts?|forecasting|anticipates?|"
+                      r"anticipated|projects?|projected|targets?|targeting)\b", re.IGNORECASE)
+_FIGURE = re.compile(r"\$\s?\d|\d\s?%|\d percent|\d basis points", re.IGNORECASE)
 
 
 def exhibit_name(names: list[str]) -> str | None:
@@ -68,9 +76,10 @@ def typed_exhibit(index_html: str) -> str | None:
 
 
 def settled(f: Fact) -> bool:
-    """Whether a release fact needs no second read: read at this OPENING_CHARS, and with text or by this reader."""
+    """Whether a release fact needs no second read: read at this OPENING_CHARS and by a reader that keeps the
+    forward-looking passages (reader 3 on)."""
     c = f.context or {}
-    return c.get("opening_chars") == OPENING_CHARS and bool(c.get("opening") or c.get("reader", 1) >= READER)
+    return c.get("opening_chars") == OPENING_CHARS and c.get("reader", 1) >= READER and "outlook" in c
 
 
 def _get(url: str, max_bytes: int | None = None, retries: int = 4) -> bytes:
@@ -94,14 +103,44 @@ def _get(url: str, max_bytes: int | None = None, retries: int = 4) -> bytes:
     raise net.FetchError(f"{url}: gave up after {retries} tries ({err})")
 
 
-def opening(html: str) -> tuple[str, str]:
-    """(title, opening text) of a release: its first line and its first OPENING_CHARS characters."""
+def parts(html: str) -> tuple[str, str, str]:
+    """(title, opening text, forward-looking passages) of a release."""
     from brain import scout
     text = scout.html_to_text(_WRAPPER.sub(" ", html))["text"]
     lines = [ln.strip() for ln in text.splitlines() if ln.strip()]
     title = next((ln for ln in lines if len(ln) > 15 and not ln.lower().startswith(("exhibit", "ex-99", "ex 99"))),
                  lines[0] if lines else "")
-    return title[:300], " ".join(text.split())[:OPENING_CHARS]
+    flat = " ".join(text.split())
+    return title[:300], flat[:OPENING_CHARS], outlook(flat)
+
+
+def opening(html: str) -> tuple[str, str]:
+    """(title, opening text) of a release: its first line and its first OPENING_CHARS characters."""
+    title, text, _ = parts(html)
+    return title, text
+
+
+def outlook(text: str) -> str:
+    """The forward-looking passages of a release's text: around each guidance word (outlook, guidance, expects,
+    forecast, ...) a window from 120 characters before to 420 after, kept when it carries a figure ($, %, basis
+    points); overlapping windows merged, joined by " … ", up to OUTLOOK_CHARS."""
+    spans: list[list[int]] = []
+    for m in _FORWARD.finditer(text[:SCAN_CHARS]):
+        a, b = max(0, m.start() - 120), min(len(text), m.end() + 420)
+        if not _FIGURE.search(text[a:b]):
+            continue
+        if spans and a <= spans[-1][1]:
+            spans[-1][1] = max(spans[-1][1], b)
+        else:
+            spans.append([a, b])
+    out, n = [], 0
+    for a, b in spans:
+        seg = text[a:b][:OUTLOOK_CHARS - n]
+        out.append(seg)
+        n += len(seg)
+        if n >= OUTLOOK_CHARS:
+            break
+    return " … ".join(out)
 
 
 def read_release(filing: Fact, fetched_at: str | None = None) -> Fact:
@@ -115,16 +154,16 @@ def read_release(filing: Fact, fetched_at: str | None = None) -> Fact:
     name, found_by = exhibit_name(names), "name"
     if not name and (idx := next((n for n in names if n.lower().endswith("-index.html")), None)):
         name, found_by = typed_exhibit(_get(folder + idx).decode("utf-8", "replace")), "index"
-    title, text, url = "(no exhibit 99 in the filing)", "", folder
+    title, text, ahead, url = "(no exhibit 99 in the filing)", "", "", folder
     if name:
         url = folder + name
         raw = _get(url, HEAD_BYTES).decode("utf-8", "replace")
-        title, text = opening(raw)
+        title, text, ahead = parts(raw)
     return Fact(entity=filing.entity, attr=ATTR, value=title or "(untitled)", as_of=filing.as_of,
                 known_at=filing.known_at, tier="filed", source={"name": "SEC EDGAR 8-K exhibit 99", "url": url},
                 context={"accn": filing.context.get("accn"), "filing": filing.ref, "exhibit": name,
                          "exhibit_by": found_by if name else None, "reader": READER, "opening_chars": OPENING_CHARS,
-                         "events": tags.tag(text), "opening": text},
+                         "events": tags.tag(text), "opening": text, "outlook": ahead},
                 retrieved_at=fetched_at or now_iso())
 
 
@@ -164,8 +203,8 @@ def collect(bank: Bank, tickers, since: str = SINCE, log=print, workers: int = W
                 stale.setdefault(f.context.get("accn"), []).append(f.id)
         for r in out:   # one live fact per release: the one it supersedes is downgraded, never deleted
             for fid in stale.get(r.context.get("accn"), []):
-                bank.downgrade(t, fid, f"superseded by {r.id}: read again (reader {READER}: the filing index's "
-                                       f"document types name the exhibit)")
+                bank.downgrade(t, fid, f"superseded by {r.id}: read again by reader {READER} (2: the filing index's "
+                                       f"document types name the exhibit; 3: the forward-looking passages are kept)")
         if log:
             log(f"{t}: {len(out)} releases read, {sum(bool(x.context['events']) for x in out)} with event tags")
     return {"kept": kept, "failed": failed}

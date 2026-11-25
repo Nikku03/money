@@ -68,3 +68,21 @@ class Releases(TempHome):
         self.assertEqual(releases.pending(self.bank.view(), "ACME"), ([], 1))
         with mock.patch.object(releases, "_get", side_effect=AssertionError("nothing left to read")):
             self.assertEqual(releases.collect(self.bank, ["ACME"], log=None)["kept"], 0)
+
+    def test_the_forward_looking_passages_are_kept(self):
+        filler = "Segment results were as described in the tables that follow. " * 200     # past the opening
+        text = ("Acme Reports Results. Revenue was $100 million. " + filler
+                + "Business Outlook For the fourth quarter, Acme expects revenue of $70.0 million to $75.0 million. "
+                + filler + "Forward-looking statements: the company expects, anticipates and projects many things. ")
+        out = releases.outlook(" ".join(text.split()))
+        self.assertIn("expects revenue of $70.0 million to $75.0 million", out)
+        self.assertNotIn("anticipates and projects many things", out)          # no figure near it
+        self.assertLessEqual(len(out), releases.OUTLOOK_CHARS + 10)
+        title, opening, ahead = releases.parts("<html><body><p>" + text + "</p></body></html>")
+        self.assertEqual(len(opening), releases.OPENING_CHARS)
+        self.assertIn("$70.0 million to $75.0 million", ahead)
+        old = Fact(entity="ACME", attr=releases.ATTR, value="x", as_of="2014-07-30", known_at="2014-07-30T20:05:00Z",
+                   tier="filed", source={"name": "s", "url": FOLDER},
+                   context={"accn": "a", "opening": "text", "opening_chars": releases.OPENING_CHARS, "reader": 2})
+        self.assertFalse(releases.settled(old))                                 # reader 2 kept no outlook
+
