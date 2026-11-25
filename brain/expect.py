@@ -246,6 +246,95 @@ def score(lib: list[dict] | None = None, path: Path | None = None) -> dict:
 
 
 # ---------- who reports soon ----------
+_DAY = __import__("re").compile(r"^(Monday|Tuesday|Wednesday|Thursday|Friday), ([A-Z][a-z]+) (\d{1,2})$")
+_ROW = __import__("re").compile(r"\(([A-Z][A-Z.\-]{0,6})\)$")
+_ALSO = __import__("re").compile(r"^(Before the open|After the close|Time not announced): ([A-Z][A-Z.\-, ]+)\.?$")
+_SESSIONS = {"Before the open": "before", "After the close": "after", "Time not announced": "unknown"}
+
+
+def parse_calendar(text: str, year: int) -> dict[str, dict[str, list[str]]]:
+    """A weekly earnings calendar article's text (StockTitan's "Earnings Calendar for the Week of ...") as
+    {date: {"before": [...], "after": [...], "unknown": [...]}}: the company rows (``Name (TICKER)``) under each day
+    and session heading, and the "Also reporting" lines."""
+    from datetime import datetime
+    out: dict[str, dict[str, list[str]]] = {}
+    day, session = None, None
+    for raw in text.splitlines():
+        line = raw.strip()
+        if (m := _DAY.match(line)):
+            try:
+                day = datetime.strptime(f"{m.group(2)} {m.group(3)} {year}", "%B %d %Y").date().isoformat()
+            except ValueError:
+                day = None
+            session = None
+            continue
+        if day is None:
+            continue
+        if line in _SESSIONS:
+            session = _SESSIONS[line]
+            continue
+        if (m := _ALSO.match(line)):
+            ses = _SESSIONS[m.group(1)]
+            for t in (x.strip().rstrip(".") for x in m.group(2).split(",")):
+                if t and t not in out.setdefault(day, {}).setdefault(ses, []):
+                    out[day][ses].append(t)
+            continue
+        if line.startswith("Source:") or line.startswith("Sec."):
+            session = None if line.startswith("Sec.") else session
+            if line.startswith("Sec."):
+                day = None
+            continue
+        if session and (m := _ROW.search(line)) and m.group(1) not in ("ET", "EPS"):
+            t = m.group(1).rstrip(".")
+            if t not in out.setdefault(day, {}).setdefault(session, []):
+                out[day][session].append(t)
+    return out
+
+
+def calendar_url(monday: str) -> str:
+    from datetime import date
+    d = date.fromisoformat(monday)
+    return f"https://www.stocktitan.net/articles/earnings-calendar-week-of-{d.strftime('%B').lower()}-{d.day}-{d.year}"
+
+
+def confirmed(session_date: str, gateway=None) -> dict[str, str] | None:
+    """The tickers whose report session (the session that trades on the report) is ``session_date``, from the weekly
+    calendar of its week and the week before: ticker -> "before the open on D" or "after the close on D-1". None
+    when no calendar page could be read (the web rules apply; a refused page is not got around)."""
+    from datetime import date, timedelta
+    from brain.web import extract
+    from brain.web.gateway import Gateway
+    d = date.fromisoformat(session_date)
+    mondays = sorted({(d - timedelta(days=d.weekday())).isoformat(),
+                      (d - timedelta(days=1) - timedelta(days=(d - timedelta(days=1)).weekday())).isoformat()})
+    cal: dict[str, dict[str, list[str]]] = {}
+    g = gateway or Gateway(mode="http")
+    read = False
+    try:
+        for mon in mondays:
+            u = calendar_url(mon)
+            pg = g.open(u)
+            if not pg.ok:
+                continue
+            read = True
+            for k, v in parse_calendar(extract.article(pg.html, u)["text"], date.fromisoformat(mon).year).items():
+                for ses, ts in v.items():
+                    cal.setdefault(k, {}).setdefault(ses, []).extend(ts)
+    finally:
+        if gateway is None:
+            g.close()
+    if not read:
+        return None
+    out = {t: f"before the open on {session_date}" for t in cal.get(session_date, {}).get("before", [])}
+    prev = d - timedelta(days=1)
+    while prev.weekday() >= 5:
+        prev -= timedelta(days=1)
+    for t in cal.get(prev.isoformat(), {}).get("after", []):
+        out.setdefault(t, f"after the close on {prev.isoformat()}")
+    return out
+
+
+
 def likely(lib: list[dict], start: str, end: str, slack: int = 6) -> dict[str, str]:
     """Tickers whose report a year before fell within [start - 1 year - slack, end - 1 year + slack] days and that have
     not reported in the 45 days to ``start``: ticker -> last year's report session (the guess's basis)."""
@@ -336,15 +425,33 @@ def _cmd(a) -> int:
         asof = bank.view().t[:10]
         start = a.report or (date.fromisoformat(asof) + timedelta(days=1)).isoformat()
         end = (date.fromisoformat(start) + timedelta(days=max(a.days, 1) - 1)).isoformat()
-        cards = radar(bank, lib, start, end)
-        print(f"Likely to react to a report between {start} and {end} (last year's dates; a guess, not a calendar): "
-              f"{len(cards)} with a setup")
+        if a.confirmed:
+            conf = confirmed(start)
+            if conf is None:
+                print(f"no weekly calendar could be read for {start}; nothing recorded")
+                return 1
+            cards = []
+            for t, when in sorted(conf.items()):
+                try:
+                    c = card(bank, t, lib)
+                except Exception:  # noqa: BLE001 - a company outside the bank is skipped
+                    continue
+                if c["setup"] and c["analogs"]:
+                    c["basis"] = when
+                    cards.append(c)
+            cards.sort(key=lambda c: -c["setup"]["med8"])
+            print(f"Confirmed to report for the session of {start} (the weekly calendar): {len(conf)} listed, "
+                  f"{len(cards)} with a setup in the bank")
+        else:
+            cards = radar(bank, lib, start, end)
+            print(f"Likely to react to a report between {start} and {end} (last year's dates; a guess, not a "
+                  f"calendar): {len(cards)} with a setup")
         for c in cards:
             s, an, sv = c["setup"], c["analogs"], c.get("score") or {}
             out = f"  [out {s['pending'][:16]}Z]" if s.get("pending") else ""
             print(f"  {c['t']:6s} usual move {s['med8'] * 100:4.1f}%  run21 {s['run21']:+.1f}  rose at {s['up8'] * 100:3.0f}% "
                   f"of its last 8  score {sv.get('score', float('nan')):+.2f}  analogs: {an['rose'] * 100:.0f}% rose, mean "
-                  f"{an['mean_r1'] * 100:+.2f}%  (last year {c['basis']}){out}")
+                  f"{an['mean_r1'] * 100:+.2f}%  ({'' if a.confirmed else 'last year '}{c['basis']}){out}")
             if a.record and not s.get("pending"):
                 try:
                     record(bank, c["t"], start, lib)
@@ -371,4 +478,6 @@ def add_cli(sub) -> None:
     p.add_argument("--report", help="record: the report's session, YYYY-MM-DD (radar: the session they likely react)")
     p.add_argument("--days", type=int, default=1, help="radar: how many calendar days ahead to look (default 1)")
     p.add_argument("--record", action="store_true", help="radar: record each card before its report")
+    p.add_argument("--confirmed", action="store_true",
+                   help="radar: only the companies a published weekly calendar lists for that session")
     p.set_defaults(fn=_cmd)

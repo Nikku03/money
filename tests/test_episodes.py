@@ -157,6 +157,24 @@ class Evaluate(unittest.TestCase):
         self.assertTrue(et.words("X1e", res["X1e"]))
 
 
+class Calendar(unittest.TestCase):
+    def test_parse_calendar(self):
+        text = "\n".join([
+            "Monday, November 23", "Monday has 9 reports.", "After the close", "Company", "Call (ET)", "Date",
+            "Hewlett Packard Enterprise (HPE)", "5:00 p.m.", "Confirmed", "$1.18",
+            "Also reporting on Monday, worth $2 billion to $10 billion, by ticker.",
+            "After the close: SMTC, AMTM, DAC.", "Source: Nasdaq earnings calendar.",
+            "Tuesday, November 24", "Before the open", "Company", "Call (ET)", "Analog Devices (ADI)", "10:00 a.m.",
+            "After the close", "Dell Technologies (DELL)", "Time not announced: GGAL.", "Sec.03Confirmed and expected"])
+        cal = expect.parse_calendar(text, 2026)
+        self.assertEqual(cal["2026-11-23"]["after"], ["HPE", "SMTC", "AMTM", "DAC"])
+        self.assertEqual(cal["2026-11-24"]["before"], ["ADI"])
+        self.assertEqual(cal["2026-11-24"]["after"], ["DELL"])
+        self.assertEqual(cal["2026-11-24"]["unknown"], ["GGAL"])
+        self.assertEqual(expect.calendar_url("2026-11-30"),
+                         "https://www.stocktitan.net/articles/earnings-calendar-week-of-november-30-2026")
+
+
 class Card(unittest.TestCase):
     def test_analogs_and_record(self):
         lib = library(2000)

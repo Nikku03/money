@@ -158,7 +158,18 @@ seed. The shuffle now walks the months in sorted order (commit after the results
 python -m brain expect show DELL CRM            # the card
 python -m brain expect record CRM --report 2026-12-02   # write it down before the report; judged on r1
 python -m brain expect score                    # the forward record (says nothing under 30 weeks)
+python -m brain expect radar --report 2026-12-01 --confirmed --record   # every company the weekly calendar lists
+                                                # for that session, recorded before its report
 ```
+
+`--confirmed` reads StockTitan's weekly earnings calendar (this week's and last week's page, under the web rules)
+for the companies whose report trades in that session: those reporting before its open and those reporting after
+the previous session's close. Without it the radar guesses from last year's dates. A report already public is
+marked `[out]` and never recorded.
+
+STANDING STEP: at each after-close check, run `expect radar --report <next session> --confirmed --record` and
+commit `research/earn_calls.jsonl`. The record is judged on each report's `r1` once the library is rebuilt
+(`expect build`).
 
 The card shows:
 - The stock's setup now, in words.
