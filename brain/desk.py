@@ -42,6 +42,7 @@ STORIES = 4             # stories kept for each mover (those that name it first)
 WRAPS = 8               # market-wide stories kept for the backdrop
 TEXTS = 12              # movers whose filings since the close are opened
 FILINGS_EACH = 2        # filings opened for one mover
+PROMISE_YEARS = 3       # a reporter's releases this far back are read for its promises (brain/promises.py)
 OPENING = 1800          # characters of a filing's text kept
 NUMBERS = 12            # movers whose accounts are read
 STALE_DAYS = 200        # a balance-sheet figure older than this is not shown
@@ -373,6 +374,22 @@ def build(bank: Bank, rec: dict | None = None, moves: dict | None = None, stamp:
                 m["expect"] = expect.desk_line(bank, m["t"], asof, lib) if lib else None
         except Exception:  # noqa: BLE001 - a case file without the expectations is still a case file
             pass
+        say("  what the reporters had promised, and what they promise now")
+        try:
+            from datetime import date, timedelta
+
+            from brain import promises
+            from brain.sources import releases
+            since = (date.fromisoformat(asof) - timedelta(days=PROMISE_YEARS * 366)).isoformat()
+            releases.collect(bank, [m["t"] for m in reporters], since=since, log=None)
+            fresh = bank.view()
+            for m in reporters:
+                try:
+                    m["said"] = promises.said(fresh, m["t"], asof)
+                except Exception:  # noqa: BLE001 - one company's accounts must not stop the case file
+                    m["said"] = None
+        except Exception:  # noqa: BLE001 - a case file without the promises is still a case file
+            pass
 
     case = {"check": stamp, "asof": asof, "at": rec["at"], "built_at": now_iso(), "scan": rec["scan"],
             "market": rec["market"], "market_wide": rec["market_wide"], "fear_up": rec["fear_up"], "drivers": drivers,
@@ -497,6 +514,8 @@ def evidence(case: dict) -> dict[str, dict]:
             ev[f"z:{t}"] = {"text": f"{t} mosaic: {line}"}
         if m.get("expect"):
             ev[f"e:{t}"] = {"text": f"{t} expected: {m['expect']}"}
+        if m.get("said"):
+            ev[f"g:{t}"] = {"text": f"{t} promised: {m['said']}"}
         for f in m["filings"]:
             ev[f["id"]] = {"text": f"{t} {f['what']} at {f['at'][:16]}Z: {f['title']}"
                            + (f" -- {f['text']}" if f["text"] else ""), "url": f["url"]}
@@ -562,6 +581,8 @@ def render(case: dict, detail: list[str] | None = None) -> str:
             L.append(f"     [z:{t}] " + ev[f"z:{t}"]["text"].split(": ", 1)[1])
         if f"e:{t}" in ev:
             L.append(f"     [e:{t}] " + ev[f"e:{t}"]["text"].split(": ", 1)[1])
+        if f"g:{t}" in ev:
+            L.append(f"     [g:{t}] " + ev[f"g:{t}"]["text"].split(": ", 1)[1])
         full = bool(detail) and t in detail
         for f in m["filings"]:
             body = f["text"] if full else f["text"][:260]

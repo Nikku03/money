@@ -53,6 +53,12 @@ Y_BAND = (0.6, 1.8)          # a yearly promise against the last four quarters
 Q_AHEAD = 125                # the promised quarter ends within this many days of the release
 RECORD = 8                   # promises in a company's record
 MIN_RECORD = 4
+READER_MIN = 3               # releases read with their forward-looking passages (releases.READER)
+# Where the delivery falls around the promise's midpoint moved by the company's habit (its usual surprise): the
+# surprise less the usual surprise, pooled over TRAIN's promises (research/promises/explore_train.log).
+OPEN_DAYS = 130              # an open promise older than this is no longer the one in force
+BAND68 = (-0.02, 0.02)       # PLACEHOLDER until TRAIN fixes it
+BAND90 = (-0.05, 0.05)       # PLACEHOLDER until TRAIN fixes it
 
 _UNIT = {"thousand": 1e3, "million": 1e6, "mn": 1e6, "billion": 1e9, "bn": 1e9}
 _NUM = r"(\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?)"
@@ -92,6 +98,48 @@ MISMATCH = (-0.30, 0.50)     # an actual this far below or above the promise is 
 PRELIM_AFTER, PRELIM_BEFORE = 25, 40   # a release this soon after a quarter's end, with another within 40 days, is
 #                                        a pre-announcement of that quarter, not a promise
 _OTHER = re.compile(r"\band\b|\binclud", re.IGNORECASE)
+# A quarter named with its year beside the figure ("4Q19", "Q4 2019", "fourth quarter of fiscal 2019"): when that
+# quarter ended before the release by the plain calendar, the figure is a result, not a promise. A fiscal year
+# named ahead of the calendar only makes a quarter look later, so a real promise is never dropped by this.
+_QNUM = {"first": 1, "second": 2, "third": 3, "fourth": 4}
+_QLABEL = re.compile(r"\b([1-4])Q\s?'?(20\d{2}|\d{2})\b|\bQ([1-4])\s?(?:FY)?\s?'?(20\d{2}|\d{2})\b|"
+                     r"\b(first|second|third|fourth)[- ](?:fiscal )?quarter(?: of)?(?: fiscal(?: year)?)? (20\d{2})\b",
+                     re.IGNORECASE)
+
+
+def quarter_label(text: str, start: int, end: int) -> tuple[int, int] | None:
+    """(quarter, year) of the last quarter named with its year in ``text[start:end]``; None when a quarter is named
+    after it without a year ("Reports Fourth Quarter 2020 Results; Expects First Quarter Revenue of ..."): then
+    the later one governs the figure."""
+    got, at = None, 0
+    for m in _QLABEL.finditer(text, start, end):
+        if m.group(1):
+            k, y = int(m.group(1)), int(m.group(2))
+        elif m.group(3):
+            k, y = int(m.group(3)), int(m.group(4))
+        else:
+            k, y = _QNUM[m.group(5).lower()], int(m.group(6))
+        got, at = (k, y + (2000 if y < 100 else 0)), m.end()
+    if got and any(q.start() >= at for q in _QTR.finditer(text, at, end)):
+        return None
+    return got
+
+
+_LABEL_STOP = re.compile(r"[.!?][\"”’)]?(?:\s+\d{1,2})?\s+(?=[A-Z•▪■●◦])")     # a sentence's end, a bullet after it
+
+
+def _sentence_start(text: str, lo: int, hi: int) -> int:
+    """Where the sentence holding ``hi`` starts, looking back no further than ``lo``."""
+    ends = [m.end() for m in _LABEL_STOP.finditer(text, lo, hi)]
+    return ends[-1] if ends else lo
+
+
+def ended_before(qlabel: tuple[int, int] | None, d: str) -> bool:
+    """Whether the labelled quarter ended, by the plain calendar, before the date ``d``."""
+    if not qlabel:
+        return False
+    k, y = qlabel
+    return f"{y}-{3 * k:02d}-{31 if k in (1, 4) else 30}" < d
 _LABEL = re.compile(r"\b(?:fiscal(?: year)?|FY|full[- ]year|year)[\s']{0,2}((?:20)?\d{2})\b|"
                     r"\b(20\d\d)\s+(?:total\s+|net\s+)?(?:revenues?|sales|guidance|outlook)", re.IGNORECASE)
 
@@ -171,6 +219,8 @@ def candidates(text: str) -> list[dict]:
         labels = [int(x.group(1) or x.group(2)) for x in _LABEL.finditer(text, max(0, f.start() - 120), end)]
         label = (labels[-1] + (2000 if labels[-1] < 100 else 0)) if labels else None
         out.append({"low": lo, "high": hi, "point": point, "words": words, "at": m.start(), "label": label,
+                    "qlabel": quarter_label(text, _sentence_start(text, max(0, f.start() - 120),
+                                                                  min(f.start(), m.start())), end),
                     "text": " ".join(text[max(0, f.start() - 40):end].split())[:260]})
     return out
 
@@ -254,7 +304,7 @@ def _ny(known_at: str) -> str:
 def company(view, ticker: str) -> list[dict]:
     """Every revenue promise read from ``ticker``'s releases, oldest first, each with its outcome when known."""
     t = ticker.upper()
-    rels = sorted((f for f in view.facts(t, ATTR) if (f.context or {}).get("reader", 1) >= 3),
+    rels = sorted((f for f in view.facts(t, ATTR) if (f.context or {}).get("reader", 1) >= READER_MIN),
                   key=lambda f: f.known_at)
     if not rels:
         return []
@@ -282,11 +332,19 @@ def company(view, ticker: str) -> list[dict]:
         if nxt:
             ya = [q for q in qs if abs((date.fromisoformat(nxt["end"]) - date.fromisoformat(q["end"])).days - 364) <= 10]
             year_ago = ya[0]["value"] if ya else None
-        elif len(past) >= 4:
-            year_ago = past[-4]["value"]
+        elif past:
+            # the promised quarter is not on file yet (an open promise): it is the first quarter to end after the
+            # release, counted from the last quarter on file, which may be one behind the release
+            last_end = date.fromisoformat(past[-1]["end"])
+            n = max(1, math.ceil((date.fromisoformat(d) - last_end).days / 91.31))
+            target = last_end + timedelta(days=round(91.31 * n))
+            ya = [q for q in qs if abs((target - date.fromisoformat(q["end"])).days - 364) <= 12]
+            year_ago = ya[0]["value"] if ya else None
         best: dict[str, dict] = {}
         for cand in candidates(text):
             h = horizon(cand, last_q, year_ago, ttm)
+            if h == "quarter" and ended_before(cand.get("qlabel"), d):
+                continue                               # a quarter already over: a result, not a promise
             if h and (h not in best or cand["high"] + cand["low"] > best[h]["high"] + best[h]["low"]):
                 best[h] = cand
         for h, cand in best.items():
@@ -355,6 +413,85 @@ def record(rows: list[dict], asof: str, horizon_: str = "quarter") -> dict | Non
             "surprise": float(np.median(s)), "last": done[-1]["grade"], "last_surprise": float(s[-1])}
 
 
+def expected(rows: list[dict], asof: str) -> dict | None:
+    """Where the company's habit puts the delivery of its latest open quarterly promise: the midpoint moved by its
+    usual surprise, with the ranges BAND68 and BAND90 around that. None without a record, or without an open
+    promise made in the last OPEN_DAYS days."""
+    rec = record(rows, asof)
+    open_ = [r for r in rows if r["horizon"] == "quarter" and not r.get("grade") and not r.get("mismatch")
+             and r["known_at"] <= asof]
+    if not rec or not open_:
+        return None
+    r = open_[-1]
+    if (date.fromisoformat(asof[:10]) - date.fromisoformat(r["made"])).days > OPEN_DAYS:
+        return None
+    mid, u = r["mid"], rec["surprise"]
+    return {"made": r["made"], "mid": mid, "usual": u, "point": mid * (1 + u),
+            "lo68": mid * (1 + u + BAND68[0]), "hi68": mid * (1 + u + BAND68[1]),
+            "lo90": mid * (1 + u + BAND90[0]), "hi90": mid * (1 + u + BAND90[1])}
+
+
+def verdicts() -> dict[str, str]:
+    """The recorded verdicts of the declared tests G1a-G1c ("not run" when absent)."""
+    try:
+        from brain.research import run
+        v = {r["id"]: r["verdict"].split(":")[0] for r in run.verdicts() if r.get("kind") == "promise"}
+    except Exception:  # noqa: BLE001 - a card without verdicts says so
+        v = {}
+    return {t: v.get(t, "not run") for t in ("G1a", "G1b", "G1c")}
+
+
+def after_close(known_at: str, asof: str) -> bool:
+    """Whether a release came out after the 4 p.m. New York close of the session ``asof``."""
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+    ny = datetime.fromisoformat(known_at.replace("Z", "+00:00")).astimezone(ZoneInfo("America/New_York"))
+    d = ny.date().isoformat()
+    return d > asof or (d == asof and ny.hour >= 16)
+
+
+def said(view, ticker: str, asof: str) -> str | None:
+    """For a company that reported after the close of ``asof`` (a date): what it had promised for the quarter it
+    just reported, its record, and what its new release promises. One line for the desk's case file; None when no
+    promise can be read."""
+    t = ticker.upper()
+    rows = changes(company(view, t))
+    if not rows:
+        return None
+    new = [r for r in rows if after_close(r["known_at"], asof)]
+    before = [r for r in rows if not after_close(r["known_at"], asof)]
+    old = [r for r in before if r["horizon"] == "quarter"]
+    parts = []
+    stamp = (before[-1]["known_at"] if before else asof) if not new else min(r["known_at"] for r in new)
+    stamp = max(stamp, asof + "T20:00:00Z") if not new else stamp
+    if old and (date.fromisoformat(asof) - date.fromisoformat(old[-1]["made"])).days <= OPEN_DAYS:
+        r = old[-1]
+        rng = _usd(r["low"]) if r["point"] else f"{_usd(r['low'])} to {_usd(r['high'])}"
+        line = f"for the quarter it has just reported it had promised revenue of {rng} (on {r['made']})"
+        if (rec := record(rows, stamp)):
+            line += (f"; its record over its last {rec['n']} quarterly promises: kept {rec['kept'] * 100:.0f}%, beat "
+                     f"{rec['beat'] * 100:.0f}%, usually {rec['surprise'] * 100:+.1f}% against its midpoint")
+            if (e := expected(before, stamp)):
+                line += f", which put the delivery near {_usd(e['point'])}"
+        parts.append(line)
+    for r in new:
+        rng = _usd(r["low"]) if r["point"] else f"{_usd(r['low'])} to {_usd(r['high'])}"
+        if r["horizon"] == "quarter":
+            ask = (f", which asks for {r['asks'] * 100:+.0f}% over the year-ago quarter after {r['did'] * 100:+.0f}% "
+                   f"in its last quarter on file" if r.get("stretch") is not None else "")
+            parts.append(f"its new promise for the next quarter is {rng}{ask}")
+        else:
+            ch = (f" ({r['changed']} {r['change'] * 100:+.1f}% against its last promise for the same year)"
+                  if r.get("changed") else "")
+            parts.append(f"its promise for the year is {rng}{ch}")
+    if not parts:
+        return None
+    v = verdicts()
+    return ("; ".join(parts) + f". Read by fixed rules from its releases (docs/PROMISES.md): check the figures "
+            f"against the release. Tests: the habit of beating its own number G1a {v['G1a']}; the price the week "
+            f"after a change of the year's promise G1c {v['G1c']}")
+
+
 # ---------- the library ----------
 def build(bank: Bank, tickers: list[str], log=print) -> list[dict]:
     view = bank.view()
@@ -409,15 +546,23 @@ def render(ticker: str, rows: list[dict], asof: str) -> list[str]:
     open_ = [r for r in rows if not r.get("grade") and not r.get("mismatch")]
     for r in open_[-2:]:
         rng = _usd(r["low"]) if r["point"] else f"{_usd(r['low'])} to {_usd(r['high'])}"
-        ask = (f"; that asks for {r['asks'] * 100:+.0f}% over the year-ago quarter, after {r['did'] * 100:+.0f}% last "
-               f"quarter" if r.get("stretch") is not None else "")
+        ask = (f"; that asks for {r['asks'] * 100:+.0f}% over the year-ago quarter, after {r['did'] * 100:+.0f}% in its "
+               f"last quarter on file" if r.get("stretch") is not None else "")
         L.append(f"  open promise ({r['horizon']}, made {r['made']}): revenue of {rng}{ask}")
+    v = verdicts()
+    if (e := expected(rows, asof)):
+        L.append(f"  its habit ({e['usual'] * 100:+.1f}% against its midpoint) puts the delivery near {_usd(e['point'])}: "
+                 f"2 in 3 between {_usd(e['lo68'])} and {_usd(e['hi68'])}, 9 in 10 between {_usd(e['lo90'])} and "
+                 f"{_usd(e['hi90'])} (ranges from 2011-2023's promises; the habit's test G1a {v['G1a']}, "
+                 f"research/RESULTS.md)")
     for r in [r for r in rows if r.get("grade")][-6:]:
         rng = _usd(r["low"]) if r["point"] else f"{_usd(r['low'])} to {_usd(r['high'])}"
         ch = f", {r['changed']} {r['change'] * 100:+.1f}%" if r.get("changed") else ""
         L.append(f"  {r['made']} {r['horizon']} to {r['period_end']}: promised {rng}{ch}; delivered {_usd(r['actual'])}: "
                  f"{r['grade']} ({r['surprise'] * 100:+.1f}%)")
-    L.append("  A record describes the past; it is not a forecast (docs/PROMISES.md).")
+    L.append(f"  Tests (research/RESULTS.md): the habit carries to the next promise G1a {v['G1a']}; a promise that "
+             f"asks for more falls short G1b {v['G1b']}; the price the week after the year's promise changes G1c "
+             f"{v['G1c']}. A delivery is not a direction for the stock (docs/PROMISES.md).")
     return L
 
 

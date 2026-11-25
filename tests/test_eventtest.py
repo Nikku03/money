@@ -50,7 +50,8 @@ def world(seed=5):
             facts.append(Fact(entity=t, attr="release.earnings", value="Acme results", as_of=DAYS[i], known_at=when,
                               tier="filed", source={"name": "SEC EDGAR 8-K exhibit 99", "url": f"https://www.sec.gov/x/{t}/{j}"},
                               context={"accn": f"{t}-{j}", "opening": OPENINGS[kind], "events": [],
-                                       "opening_chars": reader.OPENING_CHARS},
+                                       "opening_chars": reader.OPENING_CHARS, "reader": reader.READER,
+                                       "outlook": ""},
                               retrieved_at="2019-04-01T00:00:00Z"))
         facts.append(snap(t, 50 * np.cumprod(1 + r)))
     return facts

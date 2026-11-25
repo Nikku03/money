@@ -57,6 +57,27 @@ class Reading(unittest.TestCase):
         self.assertIsNone(one("we expect sales growth of more than $15 billion"))
 
 
+    def test_a_quarter_named_with_its_year(self):
+        c = one("Sets Outlook for Full Year 2020 Moody's Corporation 4Q19 revenue of $1.2 billion")
+        self.assertEqual(c["qlabel"], (4, 2019))
+        self.assertTrue(pr.ended_before(c["qlabel"], "2020-02-12"))            # a result, not a promise
+        c = one("For the first quarter of 2020, Fortinet currently expects: • Revenue in the range of $555 million "
+                "to $565 million")
+        self.assertEqual(c["qlabel"], (1, 2020))
+        self.assertFalse(pr.ended_before(c["qlabel"], "2020-02-06"))
+        self.assertEqual(pr.quarter_label("Q4 FY22: Revenue of", 0, 30), (4, 2022))
+        self.assertEqual(pr.quarter_label("fourth quarter of fiscal 2023, we are forecasting", 0, 60), (4, 2023))
+        self.assertIsNone(pr.quarter_label("next quarter revenue of", 0, 30))
+        # a quarter named after it without a year governs the figure
+        t = "Reports Fourth Quarter 2020 Results; Expects First Quarter Revenue of $500 million to $520 million"
+        self.assertIsNone(one(t)["qlabel"])
+        # the label of the sentence before does not reach this one
+        c = one("Sales rose 5% from the fourth quarter of 2017. • We expect full year 2018 reported revenue to be "
+                "between $3.425 billion and $3.525 billion")
+        self.assertIsNone(c["qlabel"])
+        self.assertFalse(pr.ended_before(None, "2020-02-06"))
+
+
 class Horizon(unittest.TestCase):
     def test_by_words_and_size(self):
         q = {"low": 95.0, "high": 105.0, "words": "quarter"}
@@ -98,6 +119,39 @@ class Record(unittest.TestCase):
                 {"t": "X", "horizon": "year", "period_end": "2026-12-31", "mid": 110.0}]
         pr.changes(rows)
         self.assertEqual([r.get("changed") for r in rows], [None, "raised", "cut", None])
+
+
+class Expected(unittest.TestCase):
+    def rows(self):
+        out = []
+        for k, s in enumerate([.02, .04, .03, .05]):
+            out.append({"t": "X", "horizon": "quarter", "grade": "met", "surprise": s, "made": f"2025-{k * 3 + 1:02d}-15",
+                        "known_at": f"2025-{k * 3 + 1:02d}-15T21:05:00Z", "mid": 100.0,
+                        "outcome_known": f"2025-{k * 3 + 3:02d}-20T00:00:00Z"})
+        out.append({"t": "X", "horizon": "quarter", "made": "2026-01-15", "known_at": "2026-01-15T21:05:00Z",
+                    "mid": 200.0, "low": 190.0, "high": 210.0, "point": False})
+        return out
+
+    def test_the_habit_moves_the_midpoint(self):
+        e = pr.expected(self.rows(), "2026-02-01T00:00:00Z")
+        self.assertAlmostEqual(e["usual"], 0.035)
+        self.assertAlmostEqual(e["point"], 207.0)
+        self.assertAlmostEqual(e["lo68"], 200.0 * (1.035 + pr.BAND68[0]))
+        self.assertLess(e["lo90"], e["lo68"])
+        self.assertGreater(e["hi90"], e["hi68"])
+
+    def test_none_without_a_record_or_with_a_stale_promise(self):
+        rows = self.rows()
+        self.assertIsNone(pr.expected(rows, "2026-01-01T00:00:00Z"))            # the open promise is not made yet
+        self.assertIsNone(pr.expected(rows, "2026-09-01T00:00:00Z"))            # made more than OPEN_DAYS ago
+        self.assertIsNone(pr.expected(rows[2:], "2026-02-01T00:00:00Z"))        # two outcomes: no record
+
+    def test_after_the_close(self):
+        self.assertTrue(pr.after_close("2026-11-24T21:05:00Z", "2026-11-24"))   # 4:05 p.m. in New York
+        self.assertFalse(pr.after_close("2026-11-24T13:00:00Z", "2026-11-24"))  # before that day's open
+        self.assertTrue(pr.after_close("2026-11-25T11:00:00Z", "2026-11-24"))
+        self.assertTrue(pr.after_close("2026-07-21T20:05:00Z", "2026-07-21"))   # summer time: 4:05 p.m.
+        self.assertFalse(pr.after_close("2026-07-21T19:30:00Z", "2026-07-21"))
 
 
 class FirstReported(unittest.TestCase):
