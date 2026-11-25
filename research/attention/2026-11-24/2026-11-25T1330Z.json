@@ -1,0 +1,768 @@
+{
+ "check": "2026-11-25T1330Z",
+ "asof": "2026-11-24",
+ "built_at": "2026-11-25T13:31:47Z",
+ "weights": {
+  "surprise": 0.25,
+  "unexplained": 0.2,
+  "news": 0.15,
+  "reach": 0.1,
+  "against": 0.1,
+  "memory": 0.1,
+  "fragile": 0.1
+ },
+ "temp": 0.12,
+ "candidates": 32,
+ "focus": [
+  {
+   "t": "NTNX",
+   "company": "Nutanix, Inc.",
+   "move": -0.12213225865543142,
+   "z": -3.6189182252406646,
+   "wave": 0.0,
+   "mover": true,
+   "score": 0.6387358197816809,
+   "parts": {
+    "surprise": 0.223,
+    "unexplained": 0.837,
+    "news": 1.0,
+    "reach": 1.0,
+    "against": 0.0,
+    "memory": 1.0,
+    "fragile": 0.656
+   },
+   "reasons": [
+    "most of the move is its own",
+    "filed its results",
+    "4 stories name it",
+    "66 stocks moved closely with it over the year",
+    "in the last note's theme 'Software: beats met by falls'",
+    "chance of a restructuring or a write-off 2.4% against 0.3% usually"
+   ],
+   "attention": 0.3374907345703122,
+   "bars": 25,
+   "filings": [
+    {
+     "what": "results report (8-K 2.02)",
+     "at": "2026-11-24T21:01:15Z",
+     "title": "Nutanix Reports First Quarter Fiscal 2027 Financial Results",
+     "url": "https://www.sec.gov/Archives/edgar/data/1618732/000117184326007693/exh_991.htm",
+     "key": [
+      "Nutanix Acquires Ryax Technologies to Help Customers Accelerate Agentic AI Initiatives: Nutanix completed its acquisition of Ryax Technologies, an AI-driven compute orchestration and management platform company, and plans to integrate the platform\u2019s advanced GPU utilization and smart scheduling capabilities into Nutanix Kubernetes Platform (NKP) and Nutanix Enterprise AI (NAI).",
+      "Nutanix Recognized in 2026 Gartner\u00ae Magic Quadrant\u2122 for Container Management for Second Consecutive Year: Nutanix announced its recognition as a Challenger in the 2026 Gartner\u00ae Magic Quadrant\u2122 for Container Management for the second consecutive year, following the 2024 launch of NKP.",
+      "Webcast and Conference Call Information Nutanix executives will discuss the Company\u2019s first quarter fiscal 2027 financial results on a conference call today at 4:30 p.m."
+     ],
+     "text": "EX-99.1 2 exh_991.htm PRESS RELEASE EXHIBIT 99.1 Nutanix Reports First Quarter Fiscal 2027 Financial Results Reports 15% YoY ARR Growth and Solid Free Cash Flow Nutanix Announces CEO Succession Plan; Board Initiates Search for Next CEO SAN JOSE, Calif., Nov. 24, 2026 (GLOBE NEWSWIRE) -- Nutanix, Inc. (NASDAQ: NTNX), a hybrid cloud leader and AI platform company, today announced financial results for its first quarter ended October 31, 2026. \u201cIn the first quarter we delivered results that exceeded all of our guided metrics,\u201d said Rajiv Ramaswami, CEO of Nutanix. \u201cWe also continued to invest in our cloud platform, especially with respect to AI and broadening our support for external storage.\u201d \u201cOur first quarter results demonstrated a good balance of top and bottom line performance with 15% year-over-year ARR growth and solid free cash flow generation,\u201d said Rukmini Sivaraman, CFO of Nutanix. \u201cWe remain focused on delivering sustainable growth and improving profitability.\u201d Nutanix today separately announced that the Board is working with Chief Executive Officer Rajiv Ramaswami to identify and recruit his successor, and he will step down after his successor has been appointed and assumes the role. Ramaswami will continue to serve as a senior advisor to the Company for a period of time after his successor is in place to ensure a smooth transition. The Board has engaged a leading national search firm to assist the process of identifying Nutanix\u2019s next CEO. First Quarter Fiscal 2027 Financial Summary Q1 FY\u201927 Q1 FY\u201926 Y/Y Change Annual Recurring Revenue (ARR)1 $2.63 billion $2.28 billion 15% Average Contract Duration2 3.4 years 3.1 years 0.3 years Revenue $772.4 million $670.6 million 15% GAAP Gross Margin 87.5% 87.0% 50 bps Non-GAAP Gross Margin 88.5% 88.0% 50 bps GAAP Operating Expenses $533.4 million $533.8 million (0.1%) Non-GAAP Operating Expenses $435.9 million $458.0 million (5%) GAAP Operating Income $142.6 million $49.3 million $93.3 million Non-GAAP Operating Income $248.1 million $131.8 million $116.3 million GAAP Operating Margin 18.5% 7.4% 1,110 bps Non-GAAP Operating Margin 32.1% 19.7% 1,240 bps Net Cash Provided by Operating Activities $219.9 million $196.8 million $23.1 million Free Cash Flow $209.3 million $174.5 million $34.8 million Reconciliations between GAAP and non-GAAP financial measures and key performance measures, to the extent available, are provided in the tables of this press release. Recent Company Highlights Nutanix Receives Micron Global Supplier Award for IT & Professional Services: Nutanix announced it was honored with the Outstanding Supplier Performance Award in IT & Professional Services at Micron Supplier Day 2026. Nutanix Builds a Faster Foundation for Production AI: Nutanix expanded its AI ecosystem with NVIDIA, Supermicro, and Netris to help enterprises and service providers quickly deploy and scale production AI, and reduce AI costs. Nutanix Acquires Ryax Technologies to Help Customers Accelerate Agentic AI Initiatives: Nutanix completed its acquisition of Ryax Technologies, an AI-driven compute orchestration and management platform company, and plans to integrate the platform\u2019s advanced GPU utilization and smart scheduling capabilities into Nutanix Kubernetes Platform (NKP) and Nutanix Enterprise AI (NAI). Nutanix Named a Leader in 2026 Gartner\u00ae Magic Quadrant\u2122 for Server Virtualization Platforms: Nutanix announced its recognition as a Leader in the 2026 Gartner\u00ae Magic Quadrant\u2122 for Server Virtualization Platforms. Nutanix Named a Leader in 2026 Gartner\u00ae Magic Quadrant\u2122 for Distributed Hybrid Infrastructure: Nutanix announced its recognition as a Leader in the 2026 Gartner\u00ae Magic Quadrant\u2122 for Distributed Hybrid Infrastructure. Nutanix Recognized in 2026 Gartner\u00ae Magic Quadrant\u2122 for Container Management for Second Consecutive Year: Nutanix announced its recognition as a Challenger in the 2026 Gartner\u00ae Magic Quadrant\u2122 for Container Management for the second consecutive year, following the 2024 launch of NKP. Second Quarter Fiscal 2027 Outlook Revenue $820 - $830 million Non-GAAP Operating Margin 27% to 28% Weighted Average Shares Outstanding (Diluted)3 Approximately 295 million Fiscal 2027 Outlook Revenue $3.180 - $3.230 billion Non-GAAP Operating Margin 24.5% to 25.5% Free Cash Flow $875 - $975 million Supplementary materials to this press release, including our first quarter fiscal 2027 earnings presentation, can be found at https://ir.nutanix.com/financial/quarterly-results. Webcast and Conference Call Information Nutanix executives will discuss the Company\u2019s first quarter fiscal 2027 financial results on a conference call today at 4:30 p.m. Eastern Time / 1:30 p.m. Pacific Time. Interested parties may access the conference call by registering at this link to receive dial in details and a unique PIN number. The conference call will also be webcast live on the Nutanix Investor Relations website at ir.nutanix.com. An archived replay of the webcast will be available on the Nutanix Investor Relations website at ir.nutanix.com shortly after the call. Footnotes 1Annual Recurring Revenue, or ARR, is defined as the sum of ACV for all subscription contracts from all customers in effect as of the end of a specific period, assuming any subscription contract that expires is renewed on its existing terms. ARR excludes the value of professional services, non-portable software and support contracts and hardware sales. For the purposes of this calculation, we generally assume that the contract term begins on the date when the software is made available to the customer. ACV is defined as the total annualized value of a contract. The total annualized value for a contract is calculated by dividing the total value of the contract by the number of years in the term of such contract. 2Average Contract Duration represents the dollar-weighted term, calculated on a billings basis, across all subscription contracts, as well as our limited number of life-of-device contracts, "
+    }
+   ],
+   "pages": [
+    {
+     "url": "https://www.fool.com/earnings/takeaways/2026/11/25/nutanix-3-key-takeaways-for-long-term-investors/?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-25T06:05:30Z",
+     "key": [
+      "First quarter revenue grew 15% year over year to $772 million.",
+      "Annual recurring revenue reached $2.63 billion in the first quarter. 10 stocks we like better than Nutanix \u203a On its firstquarter fiscal year 2027 earnings call, held on Nov. 24, 2026, Nutanix (NTNX -5.16%) announced that Chief Executive Officer Rajiv Ramaswami will step down once a successor is appointed.",
+      "Chief Executive Officer Rajiv Ramaswami Prepares for Leadership Succession Ramaswami announced plans to step down after six years leading the business through its shift to a subscription model.",
+      "Earlier today, we announced that I am working with the Board to identify and recruit my successor and will be stepping down from my role as CEO after a successor has been appointed and assumes the role. -- Rajiv Ramaswami, Chief Executive Officer 2.",
+      "Increasingly, customers are looking to do this while retaining their existing hardware, including servers and external storage. -- Rajiv Ramaswami, Chief Executive Officer 3.",
+      "Nutanix acquired Ryax Technologies during the quarter to integrate smart graphics processing unit (GPU) scheduling directly into its platform, optimizing resource efficiency for AI software."
+     ],
+     "text": "AccessibilityHelp \u25b2 S&P 500 +---%|\u25b2 Stock Advisor +---%Join The Motley Fool Search for a company Top 10 Stocks to Buy Now \u203a Top 10 Stocks to Buy Now \u203a AccessibilityHelp S&P 500 7,201.09 -0.5% -36.08 DJI 50,018.70 +0.9% +423.39 NASDAQ 23,733.54 -1.5% -356.02 Bitcoin $58,697.00 -2.1% -$1,266.77 ANT $81.91 -6.5% -$5.74 SPCX $125.81 -5.7% -$7.54 AAPL $354.07 +1.4% +$4.99 AMZN $252.29 -1.2% -$3.10 GOOG $276.58 -1.1% -$2.95 META $589.82 -1.3% -$7.78 MSFT $496.13 +0.7% +$3.63 NVDA $155.38 -5.9% -$9.67 TSLA $384.68 -0.2% -$0.78 Free ArticleExplore Premium Services Nutanix: 3 Key Takeaways for Long-Term Investors Nutanix is betting its next five years on becoming the platform for AI, and its new GPU scheduling tech shows how that bet is being built. By The Motley Fool Team \u2013 Nov 25, 2026 at 1:05AM EST Key Points CEO Rajiv Ramaswami will step down once a successor is appointed. First quarter revenue grew 15% year over year to $772 million. Annual recurring revenue reached $2.63 billion in the first quarter. 10 stocks we like better than Nutanix \u203a On its firstquarter fiscal year 2027 earnings call, held on Nov. 24, 2026, Nutanix (NTNX -5.16%) announced that Chief Executive Officer Rajiv Ramaswami will step down once a successor is appointed. The upcoming leadership transition arrives as the software vendor expands beyond its traditional hyper-converged infrastructure, which combines compute and storage into a single software platform. Three takeaways from management's comments highlight where the business is headed. 1. Chief Executive Officer Rajiv Ramaswami Prepares for Leadership Succession Ramaswami announced plans to step down after six years leading the business through its shift to a subscription model. A planned transition lets the board recruit a successor to lead its next growth phase without causing operational disruption. Earlier today, we announced that I am working with the Board to identify and recruit my successor and will be stepping down from my role as CEO after a successor has been appointed and assumes the role. -- Rajiv Ramaswami, Chief Executive Officer 2. External Storage Integration Expands Market Reach Into Enterprise Accounts Nutanix is expanding its compatibility to support external storage hardware arrays alongside its core platform. Allowing customers to keep their existing storage hardware removes a major friction point when they switch from legacy virtualization providers. Increasingly, customers are looking to do this while retaining their existing hardware, including servers and external storage. -- Rajiv Ramaswami, Chief Executive Officer 3. Artificial Intelligence Infrastructure Drives the Company's Five-Year Plan Management is positioning its software to host artificial intelligence (AI) applications and cloud-native workloads. Nutanix acquired Ryax Technologies during the quarter to integrate smart graphics processing unit (GPU) scheduling directly into its platform, optimizing resource efficiency for AI software. Now the next chapter, Chapter 3 is the next 5 years of the company. And that is the next transformation to be done, and that's about establishing Nutanix as the platform for AI. -- Rajiv Ramaswami, Chief Executive Officer Looking Ahead First-quarter revenue exceeded management's financial targets because small operational efficiencies paid off across multiple business units. Multiyear contract commitments and recurring subscription revenues provide the enterprise software provider with financial stability as it expands its sales force and software engineering investments. In closing, we are pleased to have exceeded all of our guided metrics for Q1 in a dynamic environment. -- Rukmini Sivaraman, Chief Financial Officer Extended server lead times and elevated hardware prices remain industry headwinds, but software flexibility across public cloud providers and external storage arrays protects the company's growth profile. Our competitive position is the strongest it's ever been and the market o"
+    },
+    {
+     "url": "https://www.fool.com/earnings/call-transcripts/2026/11/24/nutanix-ntnx-q1-2027-earnings-call-transcript/?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-25T03:53:04Z",
+     "key": [
+      "DATE Tue, Nov. 24, 2026 CALL PARTICIPANTS VP of Investor Relations - Richard Valera Chief Executive Officer - Rajiv Ramaswami Chief Financial Officer - Rukmini Sivaraman TAKEAWAYS Revenue -- $772.4 million, exceeding the guided range of $755 million to $765 million and growing 15% year over year.",
+      "Second-Quarter Revenue Guidance -- $820 million to $830 million, reflecting continued demand for hybrid cloud and AI infrastructure.",
+      "Second-Quarter Operating Margin Guidance -- 27% to 28%, balancing growth investments with operational discipline.",
+      "Fiscal 2027 Revenue Guidance -- $3.18 billion to $3.23 billion, remaining unchanged as the company maintains its full-year outlook.",
+      "Fiscal 2027 Operating Margin Guidance -- 24.5% to 25.5%, an increase of 50 basis points from the prior guidance.",
+      "Fiscal 2027 Free Cash Flow Guidance -- $875 million to $975 million, raised by $25 million from previous estimates."
+     ],
+     "text": "AccessibilityHelp \u25b2 S&P 500 +---%|\u25b2 Stock Advisor +---%Join The Motley Fool Search for a company Top 10 Stocks to Buy Now \u203a Top 10 Stocks to Buy Now \u203a AccessibilityHelp S&P 500 7,201.09 -0.5% -36.08 DJI 50,018.70 +0.9% +423.39 NASDAQ 23,733.54 -1.5% -356.02 Bitcoin $58,697.00 -2.1% -$1,266.77 ANT $81.91 -6.5% -$5.74 SPCX $125.81 -5.7% -$7.54 AAPL $354.07 +1.4% +$4.99 AMZN $252.29 -1.2% -$3.10 GOOG $276.58 -1.1% -$2.95 META $589.82 -1.3% -$7.78 MSFT $496.13 +0.7% +$3.63 NVDA $155.38 -5.9% -$9.67 TSLA $384.68 -0.2% -$0.78 Free ArticleExplore Premium Services Earnings Call Transcript Nutanix (NTNX) Q1 2027 Earnings Call Transcript CEO transition overshadows a record margin quarter as the company eyes AI growth. By Motley Fool Transcribing \u2013 Nov 24, 2026 at 10:53PM EST Image source: The Motley Fool. DATE Tue, Nov. 24, 2026 CALL PARTICIPANTS VP of Investor Relations - Richard Valera Chief Executive Officer - Rajiv Ramaswami Chief Financial Officer - Rukmini Sivaraman TAKEAWAYS Revenue -- $772.4 million, exceeding the guided range of $755 million to $765 million and growing 15% year over year. Annual Recurring Revenue -- $2.63 billion, representing 15% year-over-year growth. Non-GAAP Operating Margin -- 32.1%, a quarterly record driven by a confluence of small operational efficiencies across multiple departments. Free Cash Flow -- $209.3 million, resulting in a free cash flow margin of 27%. Non-GAAP Gross Margin -- 88.5%, reflecting a 50 basis point increase from the prior year. Net Dollar-Based Retention Rate -- 105%, ticking down slightly due to higher initial transaction sizes creating a headwind for expansion growth. Average Contract Duration -- 3.4 years, increasing from 3.1 years in the same quarter last year. Cash and Short-term Investments -- $2.47 billion, up from $2.36 billion at the end of the previous quarter. Share Repurchases -- $50 million, as part of the company's capital allocation strategy to manage dilution. Second-Quarter Revenue Guidance -- $820 million to $830 million, reflecting continued demand for hybrid cloud and AI infrastructure. Second-Quarter Operating Margin Guidance -- 27% to 28%, balancing growth investments with operational discipline. Fiscal 2027 Revenue Guidance -- $3.18 billion to $3.23 billion, remaining unchanged as the company maintains its full-year outlook. Fiscal 2027 Operating Margin Guidance -- 24.5% to 25.5%, an increase of 50 basis points from the prior guidance. Fiscal 2027 Free Cash Flow Guidance -- $875 million to $975 million, raised by $25 million from previous estimates. New Logo Performance -- Impacted by a temporary and higher-than-normal reallocation of customer and prospect accounts in the first quarter. Remaining Performance Obligations -- $3.3 billion, an increase of 23.7% from $2.67 billion in the prior year. Subscription Revenue -- $735.4 million, growing 15.3% year over year and forming the bulk of total revenue. Non-GAAP Net Income -- $216 million, or $0.73 per diluted share based on 295 million shares. Ryax Technologies Acquisition -- Completed in the first quarter to integrate GPU utilization and smart scheduling technology into the platform. TCV Bookings -- Declined slightly year over year, affected by account reallocations and the timing of large deals. Service Provider Deals -- Management signed several 7-figure deals with managed service provider partners across the Americas and EMEA. Q3 Revenue Seasonality -- Expected to be down by a mid- to high single-digit percentage sequentially, consistent with historical patterns before the last two years. Need a quote from a Motley Fool analyst? Email [email protected] RISKS Ramaswami stated, \"pricing remains elevated... there's still a huge shortage in memory [and] a significant shortage of CPUs,\" which management views as a persistent headwind for customers procuring hardware. Sivaraman noted that \"NRR did tick down slightly quarter-over-quarter,\" explaining that higher average selling prices for new logos create a mathem"
+    }
+   ],
+   "pond": {
+    "wave": 0.0,
+    "own": -3.6189182252406646,
+    "how": "a stone: its own news",
+    "from": [],
+    "reaches": [
+     [
+      "ESTC",
+      0.64,
+      -0.01109
+     ],
+     [
+      "DT",
+      0.62,
+      -0.0209
+     ],
+     [
+      "WDAY",
+      0.61,
+      -0.04592
+     ],
+     [
+      "ZS",
+      0.61,
+      -0.04469
+     ],
+     [
+      "NOW",
+      0.61,
+      -0.02703
+     ]
+    ]
+   }
+  },
+  {
+   "t": "AMBA",
+   "company": "AMBARELLA INC",
+   "move": -0.3464583011815089,
+   "z": -6.867129316775678,
+   "wave": 0.0,
+   "mover": true,
+   "score": 0.6348992797595163,
+   "parts": {
+    "surprise": 0.574,
+    "unexplained": 0.868,
+    "news": 1.0,
+    "reach": 0.296,
+    "against": 0.0,
+    "memory": 1.0,
+    "fragile": 0.382
+   },
+   "reasons": [
+    "outside its 9-in-10 range",
+    "most of the move is its own",
+    "filed its results",
+    "5 stories name it",
+    "in the last note's theme \"Memory costs: Ambarella's forecast and the hardware chain\"",
+    "chance of a restructuring or a write-off 1.0% against 0.3% usually"
+   ],
+   "attention": 0.3268714224185246,
+   "bars": 50,
+   "filings": [
+    {
+     "what": "results report (8-K 2.02)",
+     "at": "2026-11-24T21:13:44Z",
+     "title": "Ambarella, Inc. Announces Third Quarter Fiscal Year 2027 Financial Results",
+     "url": "https://www.sec.gov/Archives/edgar/data/1280263/000119312526475716/d912526dex991.htm",
+     "key": [
+      "Announces Third Quarter Fiscal Year 2027 Financial Results November 24, 2026 \u2014Santa Clara, Calif. \u2013 Ambarella, Inc. (NASDAQ: AMBA), an edge AI semiconductor company, today announced third quarter fiscal 2027 financial results for the period ended October 31, 2026. \u2022 Revenue for the third quarter of fiscal 2027 was $115.2 million, up 6.2% from $108.5 million in the same period in fiscal 2026.",
+      "For the nine months ended October 31, 2026, revenue was $323.7 million, up 11.7% from $289.8 million for the nine months ended October 31, 2025. \u2022 Gross margin under U.S. generally accepted accounting principles (GAAP) for the third quarter of fiscal 2027 was 57.8%, compared with 59.6% for the same period in fiscal 2026.",
+      "For the nine months ended October 31, 2026, GAAP gross margin was 57.9%, compared with 59.5% for the nine months ended October 31, 2025. \u2022 GAAP net loss for the third quarter of fiscal 2027 was $12.7 million, or loss per diluted ordinary share of $0.29, compared with a GAAP net loss of $15.1 million, or loss per diluted ordinary share of $0.35, for the same period in fiscal 2026.",
+      "For the nine months ended October 31, 2026, non-GAAP gross margin was 59.6%, compared with 61.1% for the nine months ended October 31, 2025. \u2022 Non-GAAP net income for the third quarter of fiscal 2027 was $12.7 million, or earnings per diluted ordinary share of $0.28.",
+      "Based on information available as of today, Ambarella is offering the following guidance for the fourth quarter of fiscal year 2027, ending January 31, 2027: \u2022 Revenue is expected to be between $70.0 million and $75.0 million. \u2022 Gross margin on a non-GAAP basis is expected to be between 59.0% and 60.25%. \u2022 Non-GAAP operating expenses are expected to be between $57.5 million and $59.5 million.",
+      "Our investments in new products, expanding Partner program, enhancements to our Cooper Development Platform and reach into new applications is expected to enable our fiscal 2028 to be a growth year.\u201d Quarterly Conference Call Ambarella plans to hold a conference call at 4:30 p.m."
+     ],
+     "text": "EX-99.1 2 d912526dex991.htm EX-99.1 Exhibit 99.1 Ambarella, Inc. Announces Third Quarter Fiscal Year 2027 Financial Results November 24, 2026 \u2014Santa Clara, Calif. \u2013 Ambarella, Inc. (NASDAQ: AMBA), an edge AI semiconductor company, today announced third quarter fiscal 2027 financial results for the period ended October 31, 2026. \u2022 Revenue for the third quarter of fiscal 2027 was $115.2 million, up 6.2% from $108.5 million in the same period in fiscal 2026. For the nine months ended October 31, 2026, revenue was $323.7 million, up 11.7% from $289.8 million for the nine months ended October 31, 2025. \u2022 Gross margin under U.S. generally accepted accounting principles (GAAP) for the third quarter of fiscal 2027 was 57.8%, compared with 59.6% for the same period in fiscal 2026. For the nine months ended October 31, 2026, GAAP gross margin was 57.9%, compared with 59.5% for the nine months ended October 31, 2025. \u2022 GAAP net loss for the third quarter of fiscal 2027 was $12.7 million, or loss per diluted ordinary share of $0.29, compared with a GAAP net loss of $15.1 million, or loss per diluted ordinary share of $0.35, for the same period in fiscal 2026. GAAP net loss for the nine months ended October 31, 2026 was $37.5 million or loss per diluted ordinary share of $0.85. This compares with GAAP net loss of $59.4 million, or loss per diluted ordinary share of $1.40, for the nine months ended October 31, 2025. Financial results on a non-GAAP basis for the third quarter of fiscal 2027 are as follows: \u2022 Gross margin on a non-GAAP basis for the third quarter of fiscal 2027 was 59.5%, compared with 60.9% for the same period in fiscal 2026. For the nine months ended October 31, 2026, non-GAAP gross margin was 59.6%, compared with 61.1% for the nine months ended October 31, 2025. \u2022 Non-GAAP net income for the third quarter of fiscal 2027 was $12.7 million, or earnings per diluted ordinary share of $0.28. This compares with non-GAAP net income of $11.9 million, or earnings per diluted ordinary share of $0.27, for the same period in fiscal 2026. Non-GAAP net income for the nine months ended October 31, 2026 was $26.0 million, or earnings per diluted ordinary share of $0.58. This compares with non-GAAP net income of $21.3 million, or earnings per diluted ordinary share of $0.49, for the nine months ended October 31, 2025. Based on information available as of today, Ambarella is offering the following guidance for the fourth quarter of fiscal year 2027, ending January 31, 2027: \u2022 Revenue is expected to be between $70.0 million and $75.0 million. \u2022 Gross margin on a non-GAAP basis is expected to be between 59.0% and 60.25%. \u2022 Non-GAAP operating expenses are expected to be between $57.5 million and $59.5 million. Ambarella reports gross margin, net income (loss) and earnings (losses) per share in accordance with GAAP and, additionally, on a non-GAAP basis. Non-GAAP financial information excludes the impact of stock-based compensation, nonrecurring development project termination credit and acquisition- related costs adjusted for the associated tax impact, which includes the effect of any benefits or shortfalls recognized. A reconciliation of the GAAP to non-GAAP gross margin, net income (loss) and earnings (losses) per share for the periods presented, as well as a description of the items excluded from the non-GAAP calculations, is included in the financial statements portion of this press release. Total cash, cash equivalents and marketable debt securities on hand at the end of the third quarter of fiscal 2027 was $282.8 million, compared with $272.3 million at the end of the prior quarter and $295.3 million at the end of the same quarter a year ago. \u201cWe reported record edge AI revenue in our third quarter, although total revenue was at the low end of our guidance range as our consumer IoT revenue was below our expectations. The unprecedented rise in memory prices and the scarcity of memory supply we previously highlighted has intensified and is causing many customers to reduce their outlooks\u201d, said Fermi Wang, President & CEO. \u201cMemory related challenges do not have an impact on our very positive secular growth outlook for edge AI and our positioning and investment therein. Physical AI brings domain specific context to LLMs running in the datacenter, which differentiates and improves the overall combined edge AI and cloud AI value proposition. Our investments in new products, expanding Partner program, enhancements to our Cooper Development Platform and reach into new applications is expected to enable our fiscal 2028 to be a growth year.\u201d Quarterly Conference Call Ambarella plans to hold a conference call at 4:30 p.m. Eastern Time / 1:30 p.m. Pacific Time today with Fermi Wang, President and Chief Executive Officer, and John Young, Chief Financial Officer, to discuss the third quarter of fiscal year 2027 results. A live and archived webcast of the call will be available on Ambarella\u2019s website at http://www.ambarella.com/ for up to 30 days after the call. About Ambarella With an installed base of more than 55 million AI SoC units, Ambarella\u2019s products are utilized in a wide variety of physical edge AI applications, spanning edge endpoint and edge infrastructure use cases including physical security, vehicle safety, telematics, autonomy, portable video, aerial drones, and other emerging robotic applications. Building on this footprint, Ambarella offers a full-stack edge AI platform, from highly optimized silicon and programmable software to AI agentic frameworks that coordinate perception, decision-making and control across devices. Ambarella\u2019s low-power systems-on-chip (SoCs) integrate proprietary and highly efficient perception and deep learning neural network AI accelerators, enabling electronic systems to become more productive with partial or complete levels of machine autonomy. For more information, please visit www.ambarella.com. \u201cSafe harbor\u201d statement under the Private Securities Litigation Reform "
+    }
+   ],
+   "pages": [
+    {
+     "url": "https://finance.yahoo.com/markets/stocks/articles/ambarella-stock-bull-case-changed-110900342.html?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-25T11:09:00Z",
+     "key": [
+      "We will now look at how Ambarella's sharply lower revenue guidance linked to memory supply issues could reshape the existing investment narrative.",
+      "Ambarella's current earnings sit at a loss of US$56.3 million.",
+      "Analyst assumptions point to 16.8% yearly revenue growth and a swing to US$132.9 million in earnings by 2029, which would mean an earnings increase of about US$189 million and rests on revenues reaching US$666.1 million that same year.",
+      "Uncover how Ambarella's fair value indicates a 97% potential upside to its current price that may not last much longer.",
+      "The most bearish analysts focus on cash strain rather than memory costs, pointing to earlier models where revenue was expected to reach about US$618.5 million and earnings about US$124.2 million by 2029.",
+      "Those assumptions looked cautious even before this Ambarella guidance shock, and opinions may shift again."
+     ],
+     "text": "Oops, something went wrong Skip to navigation Skip to main content Skip to right column Sign in U.S. markets open in 59m US Markets Europe Markets Asia Markets Cryptocurrencies Rates Commodities Currencies U.S. markets open in 59m S&P Futures 7,078.50 -139.00 -1.93% Dow Futures 49,429.00 -632.00 -1.26% Nasdaq Futures 25,525.50 -750.25 -2.86% Russell 2000 Futures 2,653.90 -35.40 -1.32% 10-Yr Bond 4.9040 -0.0140 -0.28% VIX 30.94 +4.58 +17.35% Gold 3,528.10 -63.00 -1.75% Bitcoin USD 58,365.34 -1,578.29 -2.63% Crude Oil Jan 27 82.55 +0.50 +0.61% US Private Equity 10,696.29 0.00 0.00% ADVERTISEMENT Ambarella Stock Has The Bull Case Changed After Lower Revenue Guidance Mitch Lawler Wed, November 25, 2026 at 3:09 AM PST 4 min read AMBA -34.54% Ambarella reported third quarter fiscal 2027 results with revenue of US$115.22 million and a net loss of US$12.7 million, alongside a sharp fourth quarter revenue forecast cut tied to higher memory costs and supply constraints. The most material detail is management pointing to surging memory prices and tight supply as a direct drag on consumer IoT demand and near term sales visibility, despite record AI related revenue in the latest quarter. We will now look at how Ambarella's sharply lower revenue guidance linked to memory supply issues could reshape the existing investment narrative. Spot 53 AI infrastructure stocks that, like Ambarella, are tied to the buildout of edge AI and could see sentiment shift quickly as supply conditions and demand signals change. Ambarella Investment Narrative Recap To own Ambarella, you need to believe that edge AI demand can outweigh current supply friction. The analyst consensus Narrative on Simply Wall St leans on rising Physical AI adoption and a richer mix of AI focused chips. The immediate swing factor now is how fast memory costs and availability stabilize, because management has tied the sharp Q4 revenue reset directly to that bottleneck. The biggest operational risk sits in that same supply chain. Elevated DRAM prices and tight capacity can make customer systems more expensive, which may keep unit volumes under pressure and muddy near term visibility. Execution on automotive and higher end AI programs stays important, but memory conditions look like the gating factor right now. The collaboration with Sigma Connectivity feels especially relevant to this setup. Ambarella is dealing with softer near term demand in consumer IoT tied to memory, yet it is also trying to shorten the path from AI prototype to production for OEMs. That kind of partner led industrialization work can matter when buyers become more selective about which projects move ahead. If Sigma's product design and integration services help customers bring Ambarella based edge AI devices to market faster, that could support the ramp of newer CV and accelerator products when supply conditions ease. The risk is execution rather than intent. Management still has to convert joint projects and reference designs into recurring, volume shipments across regions where Sigma operates. Ambarella's current earnings sit at a loss of US$56.3 million. Analyst assumptions point to 16.8% yearly revenue growth and a swing to US$132.9 million in earnings by 2029, which would mean an earnings increase of about US$189 million and rests on revenues reaching US$666.1 million that same year. Uncover how Ambarella's fair value indicates a 97% potential upside to its current price that may not last much longer. NasdaqGS:AMBA 1-Year Stock Price Chart Exploring Other Perspectives You can also weigh a very different angle. The most bearish analysts focus on cash strain rather than memory costs, pointing to earlier models where revenue was expected to reach about US$618.5 million and earnings about US$124.2 million by 2029. Those assumptions looked cautious even before this Ambarella guidance shock, and opinions may shift again. Explore 4 other Ambarella fair value estimates, including one that suggests it could be worth ju"
+    },
+    {
+     "url": "https://investorshub.advfn.com/market-news/article/40680/ambarella-shares-plunge-37-5-as-revenue-miss-and-weak-guidance-prompt-morgan-stanley-downgrade?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-25T11:00:38Z",
+     "key": [
+      "The company expects fourth-quarter revenue of between $70 million and $75 million, representing a sequential decline of approximately 37% and falling well short of market expectations of around $112 million.",
+      "Memory supply shortages and rising component prices are disrupting customer demand, particularly within Ambarella\u2019s consumer Internet of Things (IoT) business.",
+      "Memory Supply Constraints Disrupt Customer Orders Chief Executive Fermi Wang highlighted the worsening supply environment in the company\u2019s earnings release, stating that \u201cthe unprecedented rise in memory prices and the scarcity of memory supply we previously highlighted has intensified and is causing many customers to reduce their outlooks,\u201d with the consumer IoT segment particularly affected.",
+      "Customers have responded to the challenging supply conditions by cancelling, postponing or delaying orders, placing significant pressure on Ambarella\u2019s near-term revenue outlook.",
+      "Morgan Stanley Downgrades Ambarella and Cuts Price Target Morgan Stanley downgraded Ambarella from Overweight to Equalweight on Wednesday, reducing its price target to $42 from $70.",
+      "Near-Term Revenue Outlook Overshadows Record Edge AI Sales The weaker-than-expected fourth-quarter revenue forecast, combined with Morgan Stanley\u2019s downgrade and broader semiconductor sector weakness"
+     ],
+     "text": "Boards: Quotes: Favorites Popular Monitor Movers Level 2 News Menu Boards Stocks Commodities Forex Cryptocurrency The Lounge Advanced Search News All Company News iHub Market News News Scanner Price & News Alerts Market Data Monitor Level 2 Live Charts Trades Portfolio Economic Calendars Follow Feed Trader Alerts Price Alerts Options Markets Crypto Forex Commodities Futures Discover Market Movers Options Flow Breakouts Scanner Broker Review Breakout Boards Most Read Most Posted Most Followed Members Active Boards New Boards Site Stats PostStream My Stocks Activity Ticker Buzz Cloud Subscribe Login/Register Support 1-888-992-3836 help@advfn.com S&P 500 7,201.09 0.00% US Tech 100 24,805.20 -2.82% Dow Jones 50,018.70 0.00% Brent Oil 89.14 1.11% Bitcoin 58,420.68 -2.20% Customized watchlists with full streaming quotes from leading exchanges, such as NASDAQ, NYSE, AMEX, OTC Markets Small-Cap, LSE and more. Get Started Ambarella Shares Plunge 37.5% as Revenue Miss and Weak Guidance Prompt Morgan Stanley Downgrade Fiona Craig NASDAQ:AMBA Latest News November 25 2026 6:00AM Add as preferred source \u00a9 Adobe Stock Images Ambarella (NASDAQ:AMBA) shares fell 37.5% to $27.80 in premarket trading on Wednesday after the edge artificial intelligence semiconductor developer reported weaker-than-expected fiscal third-quarter revenue and issued fourth-quarter guidance significantly below analyst forecasts. The company expects fourth-quarter revenue of between $70 million and $75 million, representing a sequential decline of approximately 37% and falling well short of market expectations of around $112 million. Memory supply shortages and rising component prices are disrupting customer demand, particularly within Ambarella\u2019s consumer Internet of Things (IoT) business. Memory Supply Constraints Disrupt Customer Orders Chief Executive Fermi Wang highlighted the worsening supply environment in the company\u2019s earnings release, stating that \u201cthe unprecedented rise in memory prices and the scarcity of memory supply we previously highlighted has intensified and is causing many customers to reduce their outlooks,\u201d with the consumer IoT segment particularly affected. Customers have responded to the challenging supply conditions by cancelling, postponing or delaying orders, placing significant pressure on Ambarella\u2019s near-term revenue outlook. Despite these challenges, Wang maintained that the memory-related disruption does not alter the company\u2019s long-term growth prospects in edge artificial intelligence. Revenue from edge AI products reached a record level during the third quarter. Morgan Stanley Downgrades Ambarella and Cuts Price Target Morgan Stanley downgraded Ambarella from Overweight to Equalweight on Wednesday, reducing its price target to $42 from $70. The investment bank cited significant near-term business disruption resulting from memory supply constraints, although it considers these challenges temporary. Morgan Stanley expects weakness in the consumer segment to continue through the January quarter and into the April quarter. The company\u2019s enterprise and automotive businesses could also experience difficulties before conditions improve. Separately, insider transaction data indicated sustained net selling over the past 12 months, with no insider purchases recorded during the period. Semiconductor Sector Faces Broader Selling Pressure Ambarella\u2019s decline comes amid wider weakness across semiconductor and technology stocks. The Nasdaq fell 1.9%, while the S&P 500 declined approximately 1%. The Philadelphia Semiconductor Index recorded a decline of around 7.9% overnight. Shares in major memory manufacturers Samsung and SK Hynix also fell sharply, despite the supply shortages affecting customers of downstream semiconductor developers such as Ambarella. Near-Term Revenue Outlook Overshadows Record Edge AI Sales The weaker-than-expected fourth-quarter revenue forecast, combined with Morgan Stanley\u2019s downgrade and broader semiconductor sector weakness"
+    }
+   ],
+   "pond": {
+    "wave": 0.0,
+    "own": -6.867129316775678,
+    "how": "a stone: its own news",
+    "from": [],
+    "reaches": [
+     [
+      "CEVA",
+      0.49,
+      -0.04036
+     ],
+     [
+      "AOSL",
+      0.46,
+      -0.05667
+     ],
+     [
+      "AIP",
+      0.44,
+      -0.04262
+     ],
+     [
+      "RMBS",
+      0.44,
+      -0.05177
+     ],
+     [
+      "MPWR",
+      0.44,
+      -0.04536
+     ]
+    ]
+   }
+  },
+  {
+   "t": "URBN",
+   "company": "URBAN OUTFITTERS INC",
+   "move": -0.12362703613865299,
+   "z": -4.188572861827035,
+   "wave": 0.0,
+   "mover": true,
+   "score": 0.453913829207257,
+   "parts": {
+    "surprise": 0.703,
+    "unexplained": 0.856,
+    "news": 0.3,
+    "reach": 0.62,
+    "against": 0.0,
+    "memory": 0.0,
+    "fragile": 0.0
+   },
+   "reasons": [
+    "outside its 9-in-10 range",
+    "most of the move is its own",
+    "6 stories name it"
+   ],
+   "attention": 0.07233837782985257,
+   "bars": 24,
+   "filings": [],
+   "pages": [
+    {
+     "url": "https://www.just-style.com/news/urban-outfitters-sees-record-sales-profits-in-q3/",
+     "title": null,
+     "published": "2026-11-25T12:08:42Z",
+     "key": [
+      "Skip to site menu Skip to page content JS Login Login Menu Search News Urban Outfitters sees record sales, profits in Q3 Urban Outfitters (URBN), which owns the Anthropologie, Free People, FP Movement, Urban Outfitters and Nuuly brands, has reported net sales of $1.67bn for the third quarter of 2026 (Q3 FY26).",
+      "The company attributed its success to strong performance across its brands and segments, as well as \u201cdisciplined execution\u201d.",
+      "URBN attributed this to \u201cleverage in initial merchandise costs\u201d due to lower year-on-year tariffs.",
+      "First nine months of FY26 Over the nine months to 31 October 2026, total net sales at URBN increased 10.2% to hit a record $4.81bn.",
+      "URBN said this was driven by leverage in delivery expense and store occupancy costs, which were offset by segment markdowns.",
+      "In a call with investors, URBN\u2019s chief financial officer Melanie Marein-Efron said: \u201cWe are assuming that current oil surcharges related to the ongoing Middle East war remain in effect for the remainder of FY 2027."
+     ],
+     "text": "Skip to site menu Skip to page content JS Login Login Menu Search News Urban Outfitters sees record sales, profits in Q3 Urban Outfitters (URBN), which owns the Anthropologie, Free People, FP Movement, Urban Outfitters and Nuuly brands, has reported net sales of $1.67bn for the third quarter of 2026 (Q3 FY26). Rachel Lawler November 25, 2026 Share Copy Link Share on X Share on Linkedin Share on Facebook \u201cEvery brand and segment contributed positively to our third-quarter performance, underscoring the strength of our portfolio and disciplined execution across the organization.\u201d Credit: Shutterstock/Peter_Fleming Net sales increased 8.9% and set a record for URBN, as total retail segment net sales also increased 6.1%, driven by growth in stores and online. The company attributed its success to strong performance across its brands and segments, as well as \u201cdisciplined execution\u201d. Go deeper with GlobalData Reports Womenswear in Japan - Sector Overview, Brand Shares, Market Size an... Reports Menswear in the United States of America (USA) - Sector Overview, B... Go deeper with GlobalData The gold standard of business intelligence. Find out more Discover B2B Marketing That Performs Combine business intelligence and editorial excellence to reach engaged professionals across 36 leading media platforms. Find out more URBN\u2019s FP Group saw comparable retail net sales increase 8.5%, while sales were up 5.8% at Urban Outfitters and 1.7% at the Anthropologie group. \u201cOur teams delivered another standout quarter, achieving record third-quarter sales and earnings per share,\u201d commented Richard A Hayne, CEO at URBN. \u201cEvery brand and segment contributed positively to our third-quarter performance, underscoring the strength of our portfolio and disciplined execution across the organisation.\u201d Q3 FY26 highlights Gross profit for URBN increased by 26 basis points compared to Q3 2025. URBN attributed this to \u201cleverage in initial merchandise costs\u201d due to lower year-on-year tariffs. However, it added this was partially offset by higher freight fuel surcharges. Leverage in delivery expenses and in store occupancy costs were also partially offset by an increase in retail segment markdowns, driven by its Anthropologie brand. First nine months of FY26 Over the nine months to 31 October 2026, total net sales at URBN increased 10.2% to hit a record $4.81bn. Its gross profit rate increased by 204 basis points compared to the nine months ended 31 October 2025. URBN said this was driven by leverage in delivery expense and store occupancy costs, which were offset by segment markdowns. What next for URBN? In a call with investors, URBN\u2019s chief financial officer Melanie Marein-Efron said: \u201cWe are assuming that current oil surcharges related to the ongoing Middle East war remain in effect for the remainder of FY 2027. These surcharges, which began in March 2026, impact inbound freight and outbound delivery and freight expenses, and we estimate they will have an approximate 75 basis point unfavourable impact on the fourth quarter gross margin. \u201cBased on our current plans, we believe our FY 2027 adjusted gross profit margins could improve versus last year, despite the fuel surcharges which we have experienced for much of the FY.\u201d Sign up for our daily news round-up! Give your business an edge with our leading industry insights. Sign up Go deeper with GlobalData Reports Womenswear in Japan - Sector Overview, Brand Shares, Market Size an... Reports Menswear in the United States of America (USA) - Sector Overview, B... Go deeper with GlobalData The gold standard of business intelligence. Find out more Access deeper industry intelligence Experience unmatched clarity with a single platform that combines unique data, AI, and human expertise. Find out more Sign up for our daily news round-up! Give your business an edge with our leading industry insights. Give your business an edge with our leading industry insights. close close Sign up to the newsletter: In Brief Thank you f"
+    },
+    {
+     "url": "https://investorshub.advfn.com/market-news/article/40682/urban-outfitters-shares-fall-10-6-as-anthropologie-weakness-and-cautious-outlook-overshadow-earnings-beat?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-25T11:02:01Z",
+     "key": [
+      "Net sales increased 8.9% year-on-year to $1.67 billion, in line with market expectations.",
+      "Anthropologie Sales Growth Slows Anthropologie, which accounts for more than 40% of Urban Outfitters\u2019 total revenue, recorded comparable retail sales growth of just 1.7% during the third quarter.",
+      "The performance lagged the company\u2019s other major brands, with FP Group reporting comparable retail sales growth of 8.5% and the Urban Outfitters brand achieving growth of 5.8%.",
+      "Fourth-Quarter Guidance Points to Slower Growth Urban Outfitters expects total company sales to increase at a mid-single-digit rate during the fourth quarter, representing a slowdown from the 8.9% growth achieved in the third quarter.",
+      "Morgan Stanley Downgrades Urban Outfitters Morgan Stanley downgraded Urban Outfitters from Overweight to Equalweight on Wednesday and lowered its price target to $80 from $103.",
+      "The S&P 500 declined 1%, while the Dow Jones Industrial Average slipped 0.4% and the Nasdaq Composite fell 1.9%."
+     ],
+     "text": "Boards: Quotes: Favorites Popular Monitor Movers Level 2 News Menu Boards Stocks Commodities Forex Cryptocurrency The Lounge Advanced Search News All Company News iHub Market News News Scanner Price & News Alerts Market Data Monitor Level 2 Live Charts Trades Portfolio Economic Calendars Follow Feed Trader Alerts Price Alerts Options Markets Crypto Forex Commodities Futures Discover Market Movers Options Flow Breakouts Scanner Broker Review Breakout Boards Most Read Most Posted Most Followed Members Active Boards New Boards Site Stats PostStream My Stocks Activity Ticker Buzz Cloud Subscribe Login/Register Support 1-888-992-3836 help@advfn.com S&P 500 7,201.09 0.00% US Tech 100 24,802.00 -2.83% Dow Jones 50,018.70 0.00% Brent Oil 89.14 1.11% Bitcoin 58,420.68 -2.20% Customized watchlists with full streaming quotes from leading exchanges, such as NASDAQ, NYSE, AMEX, OTC Markets Small-Cap, LSE and more. Get Started Urban Outfitters Shares Fall 10.6% as Anthropologie Weakness and Cautious Outlook Overshadow Earnings Beat Fiona Craig NASDAQ:URBN Latest News November 25 2026 6:02AM Add as preferred source \u00a9 Shutterstock Urban Outfitters (NASDAQ:URBN) shares declined 10.6% in premarket trading on Wednesday after the fashion and lifestyle retailer reported fiscal third-quarter 2027 results that met or exceeded analyst expectations but issued a more cautious outlook for the holiday quarter. The company reported adjusted earnings per share of $1.54, exceeding the consensus estimate of $1.52. Net sales increased 8.9% year-on-year to $1.67 billion, in line with market expectations. However, weaker growth at Anthropologie, rising operating costs and expectations of slower revenue growth during the fourth quarter weighed on investor sentiment. Anthropologie Sales Growth Slows Anthropologie, which accounts for more than 40% of Urban Outfitters\u2019 total revenue, recorded comparable retail sales growth of just 1.7% during the third quarter. The performance lagged the company\u2019s other major brands, with FP Group reporting comparable retail sales growth of 8.5% and the Urban Outfitters brand achieving growth of 5.8%. Management indicated that Anthropologie\u2019s product transition was progressing more slowly than anticipated, contributing to expectations of higher markdown rates during the holiday shopping period. Fourth-Quarter Guidance Points to Slower Growth Urban Outfitters expects total company sales to increase at a mid-single-digit rate during the fourth quarter, representing a slowdown from the 8.9% growth achieved in the third quarter. Management also expects Anthropologie\u2019s comparable sales to remain broadly unchanged during the holiday quarter. Additional pressure on profitability is expected from higher transportation costs. Fuel surcharges associated with the ongoing Middle East conflict are anticipated to reduce fourth-quarter gross margin by approximately 75 basis points. Morgan Stanley Downgrades Urban Outfitters Morgan Stanley downgraded Urban Outfitters from Overweight to Equalweight on Wednesday and lowered its price target to $80 from $103. The investment bank indicated that signs of improvement at Anthropologie during the previous quarter had not been sustained, with a recovery considered unlikely before calendar year 2027 at the earliest. The downgrade reflected concerns surrounding the brand\u2019s performance and the company\u2019s near-term growth prospects. Broader Market Weakness Adds to Selling Pressure Urban Outfitters\u2019 share price decline coincided with broader weakness across US equity markets, particularly among consumer discretionary stocks. The S&P 500 declined 1%, while the Dow Jones Industrial Average slipped 0.4% and the Nasdaq Composite fell 1.9%. Despite exceeding third-quarter earnings expectations, Urban Outfitters faces near-term challenges from slowing sales growth at its largest brand, increased promotional activity and higher freight costs. The company\u2019s shares were indicated at $76.54 in premarket trading, below the"
+    }
+   ],
+   "pond": {
+    "wave": 0.0,
+    "own": -4.188572861827035,
+    "how": "a stone: its own news",
+    "from": [],
+    "reaches": [
+     [
+      "ANF",
+      0.61,
+      -0.01844
+     ],
+     [
+      "AEO",
+      0.57,
+      -0.01272
+     ],
+     [
+      "GAP",
+      0.56,
+      -0.00795
+     ],
+     [
+      "CAL",
+      0.52,
+      0.0
+     ],
+     [
+      "BKE",
+      0.51,
+      0.0
+     ]
+    ]
+   }
+  },
+  {
+   "t": "WDAY",
+   "company": "Workday, Inc.",
+   "move": -0.04592,
+   "z": -1.2448564444477386,
+   "wave": -0.3604866564273834,
+   "mover": false,
+   "score": 0.34873803703731154,
+   "parts": {
+    "surprise": 0.415,
+    "unexplained": 0.0,
+    "news": 0.3,
+    "reach": 1.0,
+    "against": 0.0,
+    "memory": 1.0,
+    "fragile": 0.0
+   },
+   "reasons": [
+    "2 stories name it",
+    "173 stocks moved closely with it over the year",
+    "in the last note's theme 'Software: beats met by falls'"
+   ],
+   "attention": 0.030110979337072716,
+   "bars": 32,
+   "filings": [
+    {
+     "what": "results report (8-K 2.02)",
+     "at": "2026-11-24T21:01:55Z",
+     "title": "Workday Announces Fiscal 2027 Third Quarter Financial Results",
+     "url": "https://www.sec.gov/Archives/edgar/data/1327811/000132781126000057/wday-10312026x991.htm",
+     "key": [
+      "Fiscal 2027 Third Quarter Results \u2022Total revenues were $2.705 billion, an increase of 11.2% from the same period last year.",
+      "Subscription revenues were $2.532 billion, an increase of 12.8% from the same period last year. \u2022Operating income was $329 million, or 12.1% of revenues, compared to an operating income of $259 million, or 10.7% of revenues, in the same period last year.",
+      "Current quarter operating income was impacted by restructuring expenses of $51 million.",
+      "Non-GAAP operating income for the third quarter was $850 million, or 31.4% of revenues, compared to a non-GAAP operating income of $692 million, or 28.5% of revenues, in the same period last year.1 \u2022Diluted net income per share was $0.96, compared to diluted net income per share of $0.94 in the same period last year.",
+      "Non-GAAP diluted net income per share was $2.82, compared to non-GAAP diluted net income per share of $2.32 in the same period last year.1 \u202212-month subscription revenue backlog was $9.216 billion, up 12.3% from the same period last year.",
+      "Total subscription revenue backlog was $27.548 billion, increasing 6.1% year-over-year. \u2022Operating cash flows were $735 million compared to $588 million in the same period last year."
+     ],
+     "text": "EX-99.1 2 wday-10312026x991.htm EX-99.1 Exhibit 99.1 Workday Announces Fiscal 2027 Third Quarter Financial Results Fiscal Third Quarter Total Revenues of $2.705 Billion, Up 11.2% Year-Over-Year Subscription Revenues of $2.532 Billion, Up 12.8% Year-Over-Year PLEASANTON, Calif., November 24, 2026 \u2013 Workday, Inc. (NASDAQ: WDAY), the trusted agentic platform for HR, finance, and IT, today announced results for the fiscal 2027 third quarter ended October 31, 2026. Fiscal 2027 Third Quarter Results \u2022Total revenues were $2.705 billion, an increase of 11.2% from the same period last year. Subscription revenues were $2.532 billion, an increase of 12.8% from the same period last year. \u2022Operating income was $329 million, or 12.1% of revenues, compared to an operating income of $259 million, or 10.7% of revenues, in the same period last year. Current quarter operating income was impacted by restructuring expenses of $51 million. Non-GAAP operating income for the third quarter was $850 million, or 31.4% of revenues, compared to a non-GAAP operating income of $692 million, or 28.5% of revenues, in the same period last year.1 \u2022Diluted net income per share was $0.96, compared to diluted net income per share of $0.94 in the same period last year. Current quarter diluted net income per share was impacted by restructuring expenses of $0.21 per share. Non-GAAP diluted net income per share was $2.82, compared to non-GAAP diluted net income per share of $2.32 in the same period last year.1 \u202212-month subscription revenue backlog was $9.216 billion, up 12.3% from the same period last year. Total subscription revenue backlog was $27.548 billion, increasing 6.1% year-over-year. \u2022Operating cash flows were $735 million compared to $588 million in the same period last year. Free cash flows were $691 million compared to $550 million in the same period last year.1 \u2022Workday repurchased approximately 3.8 million shares of Class A common stock for $750 million as part of its share repurchase programs. \u2022Cash, cash equivalents, and marketable securities were $5.643 billion as of October 31, 2026. 1See the section titled \u201cAbout Non-GAAP Financial Measures\u201d in the accompanying financial tables for further details. Comments on the News \u201cThe past few quarters have been our strongest on the innovation and invention front, and in Q3, our AI products drove nearly $150 million in new ACV, more than three times what we delivered a year ago,\u201d said Aneel Bhusri, co-founder, CEO, and chair, Workday. \u201cOur focus now is on accelerating customer adoption, moving more agents into production, and helping customers realize the value of our AI products faster.\u201d \u201cOur Q3 results reflect ongoing adoption across our AI portfolio, reinforcing our conviction in the compelling opportunity ahead,\u201d said Zane Rowe, CFO, Workday. \u201cWe are raising our fiscal 2027 subscription revenue guidance to $9.958 billion, growth of 13%, and increasing our fiscal 2027 non-GAAP operating margin guidance to 31.5%.\u201d Recent Business Highlights \u2022Workday welcomed new customers including AISIN Corporation, Dr. Oetker, Euronews, Greenpeace Australia, Pon Holdings B.V., and Standard Bots Company, and added new Sana Enterprise customers including Forvis Mazars, Virgin Cruises, and Wolters Kluwer N.V. \u2022Industry leaders such as Google, SMS Holdings Corporation, and WPP invested in Workday\u2019s AI products. \u2022More than 2,200 core customers have purchased at least one AI product, up nearly 25% from last quarter. \u2022Workday acquired C1.ai, a leading agentic identity platform for people and AI agents. \u2022Nearly 40,000 Workday customers, partners, and innovators joined Workday Rising in the U.S. and EMEA. \u2022Workday announced Sana is the new home experience for Workday. \u2022Workday launched Autopilot Agents, new agents that continuously handle routine HR, finance, and IT processes in the background. \u2022Workday announced that Sana will work inside the AI tools and platforms employees already use, including Claude, Google Cloud\u2019s Gemini for business, Microsoft Copilot, Microsoft Teams, and Slack. \u2022Workday announced its Trusted Agent Platform is now headless, enabling customers to build, run, and govern lawful AI agents across HR and finance with the development tools and models they choose. \u2022Workday announced Workday Candidate Profile to let job seekers own, manage, and save their information once and reuse it when they apply for jobs at the thousands of companies that use Workday to hire. \u2022Workday announced Workday Decision Intelligence is now available across its portfolio, giving HR and finance teams a single, governed AI experience that works the way an in-house analyst would to model business scenarios across HR and finance. \u2022Workday introduced Work Intelligence, which shows companies how AI is changing the work inside each job and which skills their people will need next. \u2022Workday and Anthropic announced a new partnership that will bring Claude\u2019s frontier reasoning together with Sana AI agents and Workday\u2019s trusted data and business context in HR and finance. \u2022Workday and Accenture launched a forward deployed engineering program to help organizations reinvent how work gets done in the age of AI. \u2022Workday completed the issuance and sale of $2.5 billion aggregate principal amount of senior notes in an underwritten, registered public offering. \u2022Workday launched operations in the United Arab Emirates, with a new office in Dubai and expanded local leadership. \u2022Workday was named a Market Shaper in the inaugural 2026 Gartner\u00ae Emerging Market Quadrant (eMQ) for AI Agents in Human Resources.1 \u2022Workday was named a Leader in the 2026 Gartner\u00ae Magic Quadrant\u2122 for Cloud HCM Suites for 1,000+ Employee Enterprises,2 Workforce Management Technology,3 and Cloud ERP Finance.4 \u2022Sana from Workday was named a 2026 Top HR Product of the Year by HR Executive. 1Gartner, Emerging Market Quadrant for AI Agents in Human Resources \u2014 Established Vendors, Ranadip Chandra, Eser Rizaoglu, 23 September 2026 2Gartner, Magic Qu"
+    }
+   ],
+   "pages": [],
+   "pond": {
+    "wave": -0.3604866564273834,
+    "own": -1.2448564444477386,
+    "how": "with the water",
+    "from": [
+     [
+      "NTNX",
+      -0.32
+     ],
+     [
+      "CTRI",
+      -0.15
+     ],
+     [
+      "SYBT",
+      0.09
+     ],
+     [
+      "AMBA",
+      0.04
+     ]
+    ],
+    "reaches": [
+     [
+      "CRM",
+      0.78,
+      -0.01946
+     ],
+     [
+      "ADBE",
+      0.77,
+      -0.01551
+     ],
+     [
+      "NOW",
+      0.77,
+      -0.02703
+     ],
+     [
+      "TEAM",
+      0.76,
+      -0.03061
+     ],
+     [
+      "ASAN",
+      0.76,
+      0.00319
+     ]
+    ]
+   }
+  },
+  {
+   "t": "ADSK",
+   "company": "Autodesk, Inc.",
+   "move": -0.04967,
+   "z": -1.6441648297749762,
+   "wave": -0.25603023171424866,
+   "mover": false,
+   "score": 0.3370137358145814,
+   "parts": {
+    "surprise": 0.548,
+    "unexplained": 0.0,
+    "news": 0.0,
+    "reach": 1.0,
+    "against": 0.0,
+    "memory": 1.0,
+    "fragile": 0.0
+   },
+   "reasons": [
+    "143 stocks moved closely with it over the year",
+    "in the last note's theme 'Software: beats met by falls'"
+   ],
+   "attention": 0.027308209112599194,
+   "bars": 10,
+   "filings": [
+    {
+     "what": "results report (8-K 2.02)",
+     "at": "2026-11-24T21:05:29Z",
+     "title": "AUTODESK, INC. ANNOUNCES FISCAL 2027 THIRD QUARTER RESULTS",
+     "url": "https://www.sec.gov/Archives/edgar/data/769397/000076939726000069/q327pressrelease.htm",
+     "key": [
+      "EX-99.1 2 q327pressrelease.htm EX-99.1 AUTODESK, INC.",
+      "Remaining Performance Obligations (In millions, except percentages) Q3 FY27 YoY Change Deferred Revenue $ 4,231 10 % Unbilled deferred revenue (1) 3,361 (4) % Remaining performance obligations (\u201cRPO\u201d)(1) 7,592 3 % Current RPO(1) 5,302 10 % (1) Reflects our sustained program reducing multi-year discounts, including winding down multi-year Maintenance-to-Subscription renewals.",
+      "Q4 FY27 GAAP income taxes are expected to include a discrete benefit of approximately $163 million from the release of certain tax reserves.",
+      "These do not impact operating results, the non-GAAP tax rate, non-GAAP EPS, free cash flow or cash and cash equivalents. (3) Free cash flow is cash flow from operating activities less approximately $70 million of capital expenditures."
+     ],
+     "text": "EX-99.1 2 q327pressrelease.htm EX-99.1 AUTODESK, INC. ANNOUNCES FISCAL 2027 THIRD QUARTER RESULTS Third quarter revenue grew 17 percent year over year as reported, 14 percent on a constant currency basis, to $2.16 billion SAN FRANCISCO, NOVEMBER 24, 2026 - Autodesk, Inc. (NASDAQ: ADSK) today reported financial results for the third quarter of fiscal 2027, ended October 31, 2026. \u201cAs AI becomes more capable and accessible, differentiation will increasingly come from the ability to combine intelligence with trusted engineering capabilities, rich project context and complex industry workflows,\u201d said Andrew Anagnost, CEO of Autodesk. \u201cThat\u2019s the strategy we\u2019ve been executing. As more work flows through Autodesk\u2019s platform, it creates richer project intelligence, enabling greater automation, better decisions and more valuable outcomes across the asset lifecycle. This reinforcing loop will not only amplify the value of our existing platform, but fundamentally expand what we can deliver, who we can serve and the value we can create for customers.\u201d \u201cOur third-quarter results reflect the consistent underlying momentum of our business, with continued strength in AEC, particularly construction and emerging markets, alongside strong renewal rates,\u201d said Janesh Moorjani, Autodesk CFO. \u201cDespite incremental headwinds from dollar appreciation, we\u2019ve raised the mid-points of our full-year billings and revenue outlook to reflect the third-quarter outperformance and stronger underlying expectations for the remainder of the year.\u201d Third Quarter Fiscal 2027 (In millions, except percentages and per share amounts) Q3 FY27 YoY Change Billings $ 2,070 12% Revenue $ 2,160 17% GAAP Operating Margin 26% 0 ppt Non-GAAP Operating Margin 39% 1 ppt GAAP EPS $ 2.68 $1.08 Non-GAAP EPS $ 3.20 $0.53 Cash flow from operating activities $ 518 18% Free cash flow $ 505 17% See GAAP to Non-GAAP reconciliation at the end of this document. Net Revenue by Geographic Area Q3 FY27 YoY Change YoY Change in Constant Currency (In millions, except percentages) % % Americas $ 967 18 % 18 % EMEA 838 17 % 11 % APAC 355 12 % 12 % Total Net Revenue $ 2,160 17 % 14 % 1 Net Revenue by Product Family Q3 FY27 YoY Change YoY Change in Constant Currency (In millions, except percentages) % % Architecture, Engineering, and Construction $ 1,097 19 % 17 % AutoCAD and AutoCAD LT 525 11 % 9 % Manufacturing 403 13 % 10 % Other products 135 35 % 34 % Total Net Revenue $ 2,160 17 % 14 % During the fiscal quarter ended October 31, 2026, the Company changed its presentation of net revenue by product family. A new category, Other products, includes media and entertainment and Autodesk operations solutions. Revenue in the historical Other category was reclassified to Architecture, Engineering, and Construction, AutoCAD and AutoCAD LT, Manufacturing, and Other products. The prior period amounts are not material and have been reclassified to conform to the current presentation. See the web financials and earnings deck on our website for more details. Remaining Performance Obligations (In millions, except percentages) Q3 FY27 YoY Change Deferred Revenue $ 4,231 10 % Unbilled deferred revenue (1) 3,361 (4) % Remaining performance obligations (\u201cRPO\u201d)(1) 7,592 3 % Current RPO(1) 5,302 10 % (1) Reflects our sustained program reducing multi-year discounts, including winding down multi-year Maintenance-to-Subscription renewals. The reduction of discounting for multi-year contracts benefits price realization over time while temporarily weighing on unbilled deferred revenue, RPO and current RPO growth. All growth rates are compared to the third quarter of fiscal 2026 unless otherwise noted. 2 Business Outlook The following are forward-looking statements based on current expectations and assumptions, and involve risks and uncertainties, some of which are set forth below under \"Safe Harbor Statement.\u201d A reconciliation between the fourth quarter and full-year fiscal 2027 GAAP and non-GAAP estimates is provided below or in the tables later in this document. Fourth Quarter Fiscal 2027 (1) Q4 FY27 Guidance Metrics Q4 FY27 (ending January 31, 2027) Revenue (in millions) $2,220 - $2,235 GAAP EPS (2) $2.64 - $3.02 Non-GAAP EPS $3.21 - $3.26 Full Year Fiscal 2027 (1) FY27 Guidance Metrics FY27 (ending January 31, 2027) Billings (in millions) $8,600 - $8,650 Revenue (in millions) $8,360 - $8,375 GAAP operating margin ~27% Non-GAAP operating margin 39.2% - 39.3% GAAP EPS (2) $9.98 - $10.35 Non-GAAP EPS $12.70 - $12.76 Free cash flow (in millions) (3) $2,725 - $2,750 (1) Includes MaintainX. (2) Q3 FY27 GAAP income taxes include a benefit of approximately $105 million from an approved change in treatment of certain non-U.S. R&D costs. Q4 FY27 GAAP income taxes are expected to include a discrete benefit of approximately $163 million from the release of certain tax reserves. FY27 GAAP income taxes reflect both of these effects. These do not impact operating results, the non-GAAP tax rate, non-GAAP EPS, free cash flow or cash and cash equivalents. (3) Free cash flow is cash flow from operating activities less approximately $70 million of capital expenditures. Earnings Conference Call and Webcast Autodesk will host its third quarter conference call today at 5 p.m. ET. The live broadcast can be accessed at autodesk.com/investor. A transcript of the opening commentary will also be available following the conference call. A replay of the broadcast will be available at 7 p.m. ET at autodesk.com/investor. This replay will be maintained on Autodesk's website for at least 12 months. Investor Presentation Details An investor presentation, Excel financials and other supplemental materials providing additional information can be found at autodesk.com/investor. Contacts Investors: Simon Mays-Smith 415-746-0137 simon.mays-smith@autodesk.com 3 Press: Ren\u00e9e Francis 628-888-4599 renee.francis@autodesk.com Safe Harbor Statement This press release contains forward-looking statements that involve risks and"
+    }
+   ],
+   "pages": [],
+   "pond": {
+    "wave": -0.25603023171424866,
+    "own": -1.6441648297749762,
+    "how": "with the water",
+    "from": [
+     [
+      "NTNX",
+      -0.21
+     ],
+     [
+      "CTRI",
+      -0.13
+     ],
+     [
+      "AMBA",
+      0.08
+     ],
+     [
+      "SYBT",
+      0.06
+     ]
+    ],
+    "reaches": [
+     [
+      "BSY",
+      0.73,
+      0.0
+     ],
+     [
+      "PCOR",
+      0.71,
+      -0.0
+     ],
+     [
+      "ADBE",
+      0.71,
+      -0.01551
+     ],
+     [
+      "APPF",
+      0.7,
+      -0.0049
+     ],
+     [
+      "TYL",
+      0.69,
+      -0.00119
+     ]
+    ]
+   }
+  },
+  {
+   "t": "HPQ",
+   "company": "HP INC",
+   "move": 0.02004,
+   "z": 1.0869164944612728,
+   "wave": -0.3684006929397583,
+   "mover": false,
+   "score": 0.2764174291004905,
+   "parts": {
+    "surprise": 0.362,
+    "unexplained": 0.0,
+    "news": 0.0,
+    "reach": 0.373,
+    "against": 0.485,
+    "memory": 1.0,
+    "fragile": 0.0
+   },
+   "reasons": [
+    "moved against its wave (+1.1 usual days against a wave of -0.4)",
+    "in the last note's theme \"Memory costs: Ambarella's forecast and the hardware chain\""
+   ],
+   "attention": 0.016481163693655636,
+   "filings": [
+    {
+     "what": "results report (8-K 2.02)",
+     "at": "2026-11-24T21:17:57Z",
+     "title": "1501 Page Mill Road",
+     "url": "https://www.sec.gov/Archives/edgar/data/47217/000004721726000054/hp103126exhibit991q426.htm",
+     "key": [
+      "Net revenue and EPS results HP Inc. and its subsidiaries (\u201cHP\u201d or the \"Company\") announced fiscal 2026 net revenue of $60.5 billion, up 9.5% (up 7.8% in constant currency) from the prior-year period.",
+      "Fiscal 2026 GAAP diluted net EPS was $2.62, down from $2.65 in the prior-year and within the previously provided outlook of $2.52 to $2.62.",
+      "Fiscal 2026 non-GAAP diluted net EPS was $3.33, up from $3.12 in the prior-year and above the previously provided outlook of $3.19 to $3.29.",
+      "Fourth quarter GAAP diluted net EPS was $0.84, flat from $0.84 in the prior-year period and within the previously provided outlook of $0.74 to $0.84.",
+      "Fourth quarter non-GAAP diluted net EPS was $0.83, down from $0.93 in the prior-year period and above the previously provided outlook of $0.69 to $0.79.",
+      "When combined with the $1.1 billion of cash used to pay dividends, HP returned 70% of its free cash flow to shareholders in fiscal 2026."
+     ],
+     "text": "EX-99.1 2 hp103126exhibit991q426.htm EX-99.1 1501 Page Mill Road Palo Alto, CA 94304 hp.com Editorial contacts HP Inc. Media Relations MediaRelations@hp.com HP Inc. Investor Relations InvestorRelations@hp.com EXHIBIT 99.1 News Release HP Inc. Reports Fiscal 2026 Full Year and Fourth Quarter Results; Announces Dividend Increase PALO ALTO, Calif. \u2013 November 24, 2026 (GLOBE NEWSWIRE) \u2013 HP (NYSE: HPQ) \u2022Fiscal 2026 GAAP diluted net earnings per share (\"EPS\") of $2.62, inclusive of tariff refunds, and down 1.1% from the prior year period \u2022Fiscal 2026 non-GAAP diluted net EPS of $3.33, inclusive of tariff refunds, and up 6.7% from the prior year period \u2022Fiscal 2026 net revenue of $60.5 billion, up 9.5% from the prior year period \u2022Fiscal 2026 net cash provided by operating activities of $4.0 billion, free cash flow of $3.3 billion \u2022Fiscal 2026 returned $2.3 billion to shareholders in the form of share repurchases and dividends \u2022Fourth quarter GAAP diluted net EPS of $0.84, inclusive of tariff refunds, and flat from the prior year period \u2022Fourth quarter non-GAAP diluted net EPS of $0.83, inclusive of tariff refunds, and down 10.8% from the prior year period \u2022Fourth quarter net revenue of $16.0 billion, up 9.3% from the prior year period \u2022Fourth quarter net cash provided by operating activities of $0.9 billion, free cash flow of $0.8 billion \u2022Fourth quarter returned $0.8 billion to shareholders in the form of share repurchases and dividends \u2022HP Inc. increases quarterly dividend to $0.31 per share HP Inc.'s fiscal 2026 full-year and fourth quarter financial performance FY26 FY25 Y/Y Q4 FY26 Q4 FY25 Y/Y GAAP net revenue ($B) $ 60.5 $ 55.3 9.5 % $ 16.0 $ 14.6 9.3 % GAAP operating margin 5.1 % 5.7 % (0.6) pts 5.3 % 6.6 % (1.3) pts GAAP net earnings ($B) $ 2.43 $ 2.53 (4.1) % $ 0.77 $ 0.80 (3.3 %) GAAP diluted net EPS 2.62 $ 2.65 (1.1) % $ 0.84 $ 0.84 \u2014 % Non-GAAP operating margin 6.7 % 7.4 % (0.7) pts 6.2 % 8.0 % (1.8) pts Non-GAAP net earnings ($B) $ 3.08 $ 2.97 3.7 % $ 0.77 $ 0.88 (12.7 %) Non-GAAP diluted net EPS $ 3.33 $ 3.12 6.7 % $ 0.83 $ 0.93 (10.8 %) Net cash provided by operating activities ($B) $ 3.98 $ 3.70 7.5 % $ 0.93 $ 1.62 (42.6 %) Free cash flow ($B) $ 3.33 $ 2.93 13.5 % $ 0.80 $ 1.49 (45.9 %) Notes to table Information about HP Inc.'s use of non-GAAP financial information is provided under \"Use of non-GAAP financial information\" below. Net revenue and EPS results HP Inc. and its subsidiaries (\u201cHP\u201d or the \"Company\") announced fiscal 2026 net revenue of $60.5 billion, up 9.5% (up 7.8% in constant currency) from the prior-year period. Fiscal 2026 GAAP diluted net EPS was $2.62, down from $2.65 in the prior-year and within the previously provided outlook of $2.52 to $2.62. Fiscal 2026 non-GAAP diluted net EPS was $3.33, up from $3.12 in the prior-year and above the previously provided outlook of $3.19 to $3.29. Both GAAP and non-GAAP diluted net EPS included a $0.26 favorable impact from tariff refunds, as compared to the $0.19 impact included in the previously provided outlook. Fiscal 2026 non-GAAP net earnings and non-GAAP diluted net EPS exclude certain adjustments. Refer to \"Adjustments to GAAP Net earnings\" section in the below tables. Fourth quarter net revenue was $16.0 billion, up 9.3% (up 8.6% in constant currency) from the prior-year period. Fourth quarter GAAP diluted net EPS was $0.84, flat from $0.84 in the prior-year period and within the previously provided outlook of $0.74 to $0.84. Fourth quarter non-GAAP diluted net EPS was $0.83, down from $0.93 in the prior-year period and above the previously provided outlook of $0.69 to $0.79. Both GAAP and non-GAAP diluted net EPS included a $0.15 favorable impact from tariff refunds, as compared to the $0.08 impact included in the previously provided outlook. Fourth quarter non-GAAP net earnings and non-GAAP diluted net EPS exclude certain adjustments. Refer to \"Adjustments to GAAP Net earnings\" section in the below tables. \u201cIn the fourth quarter, we continued to grow our higher-value businesses, with AI PCs reaching nearly 60% of shipments, while taking steps to address memory and storage cost pressures,\u201d said Bruce Broussard, Interim CEO, HP Inc. \u201cAdvances in processing power and engineering are accelerating AI at the edge, enabling agentic experiences and new device form factors. We believe these innovations will drive multiple waves of device refresh and create sustained growth opportunities. With our engineering expertise, global scale, and deep customer relationships, HP is uniquely positioned to help define the next era of edge computing and create long-term value for customers and shareholders.\" \u201cWe grew FY26 revenue 9.5%, delivered on our guidance for the year, exceeded our free cash flow target and returned $2.3 billion to shareholders, despite a challenging environment,\u201d said Karen Parkhill, CFO, HP Inc. \u201cWhile our fiscal 2027 outlook reflects a prudent view of continued cost and demand pressures, we have a strong track record of addressing challenges and are confident in our ability to drive improvement in our profitability throughout the year.\u201d Asset management HP generated $4.0 billion in net cash provided by operating activities and $3.3 billion of free cash flow in fiscal 2026. Free cash flow includes net cash provided by operating activities of $4.0 billion adjusted for net investment in leases from integrated financing of $142 million and net investments in property, plant, equipment and purchased intangibles of $0.8 billion. HP utilized $1.2 billion of cash during fiscal 2026 to repurchase approximately 46.7 million shares of common stock in the open market. When combined with the $1.1 billion of cash used to pay dividends, HP returned 70% of its free cash flow to shareholders in fiscal 2026. HP's net cash provided by operating activities in the fourth quarter of fiscal 2026 was $0.9 billion. Accounts receivable ended the quarter at $7.0 billion, down 2 days quarter over quarter to 39 days. Inventory ended the qu"
+    }
+   ],
+   "pages": [],
+   "pond": {
+    "wave": -0.3684006929397583,
+    "own": 1.0869164944612728,
+    "how": "against its wave",
+    "from": [
+     [
+      "NTNX",
+      -0.16
+     ],
+     [
+      "EBF",
+      -0.11
+     ],
+     [
+      "CTRI",
+      -0.06
+     ],
+     [
+      "URBN",
+      -0.04
+     ]
+    ],
+    "reaches": [
+     [
+      "LOGI",
+      0.56,
+      -0.01797
+     ],
+     [
+      "NTAP",
+      0.46,
+      0.0
+     ],
+     [
+      "CDW",
+      0.46,
+      -0.0
+     ],
+     [
+      "WDAY",
+      0.39,
+      -0.04592
+     ],
+     [
+      "DBX",
+      0.38,
+      -0.0093
+     ]
+    ]
+   }
+  }
+ ],
+ "rest": [
+  {
+   "t": "PBI",
+   "score": 0.25612273728613577,
+   "attention": 0.013916785516237304,
+   "reasons": [
+    "moved against its wave (+2.1 usual days against a wave of -0.4)"
+   ]
+  },
+  {
+   "t": "FDS",
+   "score": 0.2220713685192772,
+   "attention": 0.010478591764952342,
+   "reasons": [
+    "most of the move is its own, with no news found",
+    "142 stocks moved closely with it over the year",
+    "in the last note's theme 'Software: beats met by falls'",
+    "but only 1 trade at the new price since the close: likely a stray print"
+   ]
+  },
+  {
+   "t": "ET",
+   "score": 0.21460073803692364,
+   "attention": 0.009846135491099103,
+   "reasons": [
+    "43 stocks moved closely with it over the year",
+    "in the last note's open questions"
+   ]
+  },
+  {
+   "t": "AMD",
+   "score": 0.21230891114563397,
+   "attention": 0.009659872842578918,
+   "reasons": [
+    "52 stocks moved closely with it over the year",
+    "in the last note's theme \"The day's rotation: out of chips, into retail and drugs\""
+   ]
+  },
+  {
+   "t": "KYMR",
+   "score": 0.19837990637073744,
+   "attention": 0.008601231967655892,
+   "reasons": [
+    "an open desk call"
+   ]
+  },
+  {
+   "t": "DGII",
+   "score": 0.19822429118520624,
+   "attention": 0.00859008517752186,
+   "reasons": [
+    "moved against its wave (+1.5 usual days against a wave of -0.3)"
+   ]
+  },
+  {
+   "t": "MU",
+   "score": 0.19685466569058113,
+   "attention": 0.008492599235433558,
+   "reasons": [
+    "31 stocks moved closely with it over the year",
+    "in the last note's theme \"The day's rotation: out of chips, into retail and drugs\""
+   ]
+  },
+  {
+   "t": "DE",
+   "score": 0.19659961050636673,
+   "attention": 0.008474567725992862,
+   "reasons": [
+    "moved against its wave (-1.1 usual days against a wave of +0.3)"
+   ]
+  },
+  {
+   "t": "DLTR",
+   "score": 0.188244326399064,
+   "attention": 0.007904579528113334,
+   "reasons": [
+    "in the last note's theme \"The day's rotation: out of chips, into retail and drugs\""
+   ]
+  },
+  {
+   "t": "NTAP",
+   "score": 0.18638924124734907,
+   "attention": 0.007783321971578068,
+   "reasons": [
+    "moved against its wave (+1.1 usual days against a wave of -0.3)"
+   ]
+  },
+  {
+   "t": "LLY",
+   "score": 0.18254314901204474,
+   "attention": 0.007537815865634527,
+   "reasons": [
+    "in the last note's theme \"The day's rotation: out of chips, into retail and drugs\""
+   ]
+  },
+  {
+   "t": "NTCT",
+   "score": 0.18088625856710575,
+   "attention": 0.007434453300588725,
+   "reasons": [
+    "moved against its wave (+1.1 usual days against a wave of -0.4)"
+   ]
+  },
+  {
+   "t": "SYBT",
+   "score": 0.17228364127379653,
+   "attention": 0.006920143934835861,
+   "reasons": [
+    "most of the move is its own, with no news found",
+    "208 stocks moved closely with it over the year",
+    "but only 1 trade at the new price since the close: likely a stray print"
+   ]
+  },
+  {
+   "t": "PDEX",
+   "score": 0.16882217179489084,
+   "attention": 0.006723379905729782,
+   "reasons": [
+    "most of the move is its own",
+    "filed an officer or director change",
+    "but only 1 trade at the new price since the close: likely a stray print"
+   ]
+  },
+  {
+   "t": "EBF",
+   "score": 0.16766799452386422,
+   "attention": 0.006659023461033115,
+   "reasons": [
+    "most of the move is its own, with no news found",
+    "30 stocks moved closely with it over the year",
+    "but only 1 trade at the new price since the close: likely a stray print"
+   ]
+  },
+  {
+   "t": "DKS",
+   "score": 0.16732296037468086,
+   "attention": 0.0066399043731619764,
+   "reasons": [
+    "in the last note's theme \"The day's rotation: out of chips, into retail and drugs\""
+   ]
+  },
+  {
+   "t": "NSIT",
+   "score": 0.16466926758429837,
+   "attention": 0.006494680486615662,
+   "reasons": [
+    "moved against its wave (+1.0 usual days against a wave of -0.4)"
+   ]
+  },
+  {
+   "t": "KSS",
+   "score": 0.15905608963196394,
+   "attention": 0.006197877980333474,
+   "reasons": [
+    "in the last note's theme \"The day's rotation: out of chips, into retail and drugs\""
+   ]
+  },
+  {
+   "t": "HPE",
+   "score": 0.15872740360274987,
+   "attention": 0.006180924909398151,
+   "reasons": [
+    "in the last note's theme \"Memory costs: Ambarella's forecast and the hardware chain\""
+   ]
+  },
+  {
+   "t": "SCSC",
+   "score": 0.1562860785173221,
+   "attention": 0.006056448343118659,
+   "reasons": [
+    "moved against its wave (+1.0 usual days against a wave of -0.3)"
+   ]
+  }
+ ]
+}

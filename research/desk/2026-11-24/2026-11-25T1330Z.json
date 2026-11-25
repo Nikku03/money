@@ -1,0 +1,244 @@
+{
+ "asof": "2026-11-24",
+ "at": "2026-11-25T13:30:34Z",
+ "calls": [],
+ "case_sha": "7ebb444fe3092c05",
+ "check": "2026-11-25T1330Z",
+ "claims_noted": 0,
+ "evidence": {
+  "e:AMBA": {
+   "text": "AMBA expected: before the report: into the report it sold off: -1.3 of its usual months against the market over 21 sessions (-1.4 over 5, -0.8 over 63); 52% below its 52-week high; its usual report move 14.0%, last 5.6%; at its last eight reports it rose 25% of the time, mean -0.62 of its usual move; VIX 26.4, the market -6.1% over the last month. Of the 100 most similar past setups, 59% rose on the report session (all reports 51%), mean +2.30%; their kinds: relief 28, surprise up 22, surprise d"
+  },
+  "e:NTNX": {
+   "text": "NTNX expected: before the report: into the report it sold off: -1.7 of its usual months against the market over 21 sessions (-0.3 over 5, -0.5 over 63); 27% below its 52-week high; its usual report move 7.4%, last 3.6%; at its last eight reports it rose 50% of the time, mean -0.07 of its usual move; VIX 26.4, the market -6.1% over the last month. Of the 100 most similar past setups, 46% rose on the report session (all reports 51%), mean +0.62%; their kinds: relief 27, capitulation 22, no reactio"
+  },
+  "f:AMBA:1": {
+   "text": "AMBA results report (8-K 2.02) at 2026-11-24T21:13Z: Ambarella, Inc. Announces Third Quarter Fiscal Year 2027 Financial Results -- Exhibit 99.1 Ambarella, Inc. Announces Third Quarter Fiscal Year 2027 Financial Results November 24, 2026 \u2014Santa Clara, Calif. \u2013 Ambarella, Inc. (NASDAQ: AMBA), an edge AI semiconductor company, today announced third quarter fiscal 2027 financial results for the period ended October 31, 2026. \u2022 Revenue for the third quarter of fiscal 2027 was $115.2 million, up 6.2% ",
+   "url": "https://www.sec.gov/Archives/edgar/data/1280263/000119312526475716/d912526dex991.htm"
+  },
+  "f:NTNX:1": {
+   "text": "NTNX results report (8-K 2.02) at 2026-11-24T21:01Z: Nutanix Reports First Quarter Fiscal 2027 Financial Results -- EXHIBIT 99.1 Nutanix Reports First Quarter Fiscal 2027 Financial Results Reports 15% YoY ARR Growth and Solid Free Cash Flow Nutanix Announces CEO Succession Plan; Board Initiates Search for Next CEO SAN JOSE, Calif., Nov. 24, 2026 (GLOBE NEWSWIRE) -- Nutanix, Inc. (NASDAQ: NTNX), a hybrid cloud leader and AI platform company, today announced financial results for its first quarter",
+   "url": "https://www.sec.gov/Archives/edgar/data/1618732/000117184326007693/exh_991.htm"
+  },
+  "g:3674": {
+   "text": "Semiconductors & Related Devices: the median of its 59 checked stocks moved -4.5%"
+  },
+  "k": {
+   "text": "Market: S&P 500 (SPY) -1.9%, Nasdaq 100 (QQQ) -2.9%, Russell 2000 (IWM) -1.3%, S&P 500 futures -1.9%, VIX +16.9% (before the open)"
+  },
+  "s1": {
+   "text": "2026-11-25T13:08Z www.just-style.com: Urban Outfitters sees record sales, profits in Q3 -- Urban Outfitters (URBN), which owns the Anthropologie, Free People, FP Movement, Urban Outfitters and Nuuly brands, has reported net sales of $1.67bn for the third quarter of 2026 (Q3 FY26).",
+   "url": "https://www.just-style.com/news/urban-outfitters-sees-record-sales-profits-in-q3/?.tsrc=rss"
+  },
+  "s10": {
+   "text": "2026-11-25T04:13Z www.fool.com: Nutanix (NTNX) Q1 2027 Earnings Call Transcript -- CEO transition overshadows a record margin quarter as the company eyes AI growth.",
+   "url": "https://www.fool.com/earnings/call-transcripts/2026/11/24/nutanix-ntnx-q1-2027-earnings-call-transcript/?.tsrc=rss"
+  },
+  "s11": {
+   "text": "2026-11-25T00:13Z www.marketbeat.com: What Nutanix (NTNX) Said on Its Q1 Earnings Call -- Nutanix (NASDAQ:NTNX) reported record revenue for its fiscal first quarter of 2027 and raised its full-year profitability outlook, while announcing plans for a CEO transition as it seeks to expand its position in artificial intelligence infrastructure. CEO Rajiv Ramaswami said he is working with th",
+   "url": "https://www.marketbeat.com/instant-alerts/transcript-what-nutanix-ntnx-said-on-its-q1-earnings-call-2026-11-24/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss"
+  },
+  "s15": {
+   "text": "2026-11-25T13:14Z finance.yahoo.com: Stock Market Today: Dow Dives Ahead Of Fed Inflation Data; Nvidia, Anthropic Plunge (Live Coverage) -- The Dow Jones index dives 675 points Wednesday ahead of key inflation data. Nvidia and Anthropic plunge.",
+   "url": "https://finance.yahoo.com/m/90407e46-3b17-34e8-8c82-527bf00b63e4/stock-market-today%3A-dow-dives.html?.tsrc=rss"
+  },
+  "s16": {
+   "text": "2026-11-25T13:12Z finance.yahoo.com: Dow Jones Futures Fall, Techs Dive; Trump Says 'Not Too Late' For U.S. To Take Nvidia Stake -- Futures fell after AI stocks tumbled but medicals, retailers and more rose. President Trump mused about an Nvidia stake. Fed inflation data looms.",
+   "url": "https://finance.yahoo.com/m/d96603c1-fe7f-3bf3-8158-0728b464d469/dow-jones-futures-fall%2C-techs.html?.tsrc=rss"
+  },
+  "s17": {
+   "text": "2026-11-25T12:15Z finance.yahoo.com: Anthropic, Nvidia, Dell, Workday, Deere, and More Stocks That Explain Today\u2019s Market -- Anthropic, Nvidia, and other AI stocks take a hammering as the tech selloff gathers pace ahead of the Thanksgiving break.",
+   "url": "https://finance.yahoo.com/m/18e72c51-c6d7-33b1-aa90-ccce17a9b32f/anthropic%2C-nvidia%2C-dell%2C.html?.tsrc=rss"
+  },
+  "s18": {
+   "text": "2026-11-25T12:06Z stocktwits.com: Why Is URBN Stock Falling In Pre-Market? -- Morgan Stanley downgraded Urban Outfitters to \u2018Equal Weight\u2019 from \u2018Overweight\u2019 and lowered its price target to $80 from $103, according to TheFly.",
+   "url": "https://stocktwits.com/news-articles/markets/equity/why-is-urbn-stock-falling-in-pre-market/cNbHW1ER9md?.tsrc=rss"
+  },
+  "s19": {
+   "text": "2026-11-25T12:00Z finance.yahoo.com: Ambarella (AMBA) Stock Falls 35.0% Premarket: Q3 Earnings Miss -- On Wednesday, Nov. 25, the shares fell 35.0% in premarket trading after a Q3 earnings miss, according to GuruFocus.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/ambarella-amba-stock-falls-35-120034238.html?.tsrc=rss"
+  },
+  "s2": {
+   "text": "2026-11-25T11:02Z investorshub.advfn.com: Urban Outfitters Shares Fall 10.6% as Anthropologie Weakness and Cautious Outlook Overshadow Earnings Beat -- Urban Outfitters (NASDAQ:URBN) shares declined 10. 6% in premarket trading on Wednesday after the fashion and lifestyle retailer reported fiscal third-quarter 2027 results that met or exceeded analyst expectations but issued a more cautious outlook for the holiday quarter.",
+   "url": "https://investorshub.advfn.com/market-news/article/40682/urban-outfitters-shares-fall-10-6-as-anthropologie-weakness-and-cautious-outlook-overshadow-earnings-beat?.tsrc=rss"
+  },
+  "s20": {
+   "text": "2026-11-25T12:00Z finance.yahoo.com: Urban Outfitters (URBN) Stock Falls 14.7% Premarket: Shares Drop After Q3 Earnings -- On Wednesday, Nov. 25, shares fell 14.7% in premarket trading after Q3 earnings, according to GuruFocus",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/urban-outfitters-urbn-stock-falls-120026218.html?.tsrc=rss"
+  },
+  "s5": {
+   "text": "2026-11-25T11:09Z finance.yahoo.com: Ambarella Stock Has The Bull Case Changed After Lower Revenue Guidance -- Ambarella reported third quarter fiscal 2027 results with revenue of US$115.22 million and a net loss of US$12.7 million, alongside a sharp fourth quarter revenue forecast cut tied to higher memory costs and supply constraints. The most material detail is management pointing to surging memory prices and tight supply as a direct drag on consumer IoT demand and near term sales visibility,",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/ambarella-stock-bull-case-changed-110900342.html?.tsrc=rss"
+  },
+  "s6": {
+   "text": "2026-11-25T11:00Z investorshub.advfn.com: Ambarella Shares Plunge 37.5% as Revenue Miss and Weak Guidance Prompt Morgan Stanley Downgrade -- Ambarella (NASDAQ:AMBA) shares fell 37. 5% to $27.",
+   "url": "https://investorshub.advfn.com/market-news/article/40680/ambarella-shares-plunge-37-5-as-revenue-miss-and-weak-guidance-prompt-morgan-stanley-downgrade?.tsrc=rss"
+  },
+  "t1": {
+   "text": "the last note (2026-11-25T0417Z), theme \"Memory costs: Ambarella's forecast and the hardware chain\": Ambarella guided fourth-quarter revenue to $70-75 million against a record $115.2 million in the third quarter and a Street view near $112.6 million; its CEO said rising memory prices and shortages are leading many customers to cut their outlooks (StockTitan; s1, s2)."
+  },
+  "t2": {
+   "text": "the last note (2026-11-25T0417Z), theme 'Software: beats met by falls': Workday beat and raised its fiscal 2027 subscription revenue and margin forecasts (revenue +11.2%, subscription +12.8%, AI products' annual recurring revenue above $750 million, up over 130%), but guided fourth-quarter subscription growth down to 10% and said its third-quarter backlog was helped by early renewals. Nutanix beat on earnings ($0.73 against $0.60) and raised its cash-flow guidance, but its annual recurring reven"
+  },
+  "t3": {
+   "text": "the last note (2026-11-25T0417Z), theme \"The day's rotation: out of chips, into retail and drugs\": Chips fell for a second day while retailers rose on their reports and drug makers rose broadly after Sanofi's $41 billion cash deal for Insmed. No source states a single cause for the drug makers' rise; money leaving the AI trade and the deal's read-through for possible targets are my inference."
+  },
+  "x:AMBA": {
+   "text": "AMBA: the market carried -4.6% (beta 2.38); its industry (Semiconductors & Related Devices, 58 stocks) moved -4.5%; left over after the market and its drivers -30.1%"
+  },
+  "x:NTNX": {
+   "text": "NTNX: the market carried -2.0% (beta 1.04); its industry (Services-Prepackaged Software, 104 stocks) moved -1.3%; left over after the market and its drivers -10.2%"
+  },
+  "x:URBN": {
+   "text": "URBN: the market carried -1.8% (beta 0.92); its industry (Apparel stores (broad), 13 stocks) moved +0.0%; left over after the market and its drivers -10.6%"
+  },
+  "x:VECO": {
+   "text": "VECO: the market carried -5.1% (beta 2.67); its industry (Machinery and computer equipment, group 355, 11 stocks) moved -0.8%; left over after the market and its drivers -6.1%"
+  }
+ },
+ "note": {
+  "backdrop": "A third session of the tech sell-off, now pulling the whole market: before the open the S&P 500 is -1.9%, the Nasdaq 100 -2.9%, small caps -1.3%, and the VIX +16.9%, so rising fear and a market-wide move were both flagged. Chips lead again (semiconductors' median -4.5%; AMD -5.9%, 8.4% below Friday's close; Micron -6.8%, Nvidia -5.6% at 8:01 a.m. ET), and StockTitan counts about 74% of Monday's Nasdaq 100 gain gone. Last night's reports are met by sharp falls (Ambarella, Nutanix, Urban Outfitters, Dell, Workday). The 8:30 a.m. ET data (GDP, personal income and spending with PCE inflation, durable goods, jobless claims) came out as this check read the market and is not in it.",
+  "backdrop_evidence": [
+   "k",
+   "g:3674",
+   "s15",
+   "s16",
+   "s17",
+   "t1",
+   "t3",
+   "https://www.stocktitan.net/articles/stock-market-today-live-november-25-2026"
+  ],
+  "by": "agent",
+  "calls": [],
+  "check": "2026-11-25T1330Z",
+  "read": [
+   {
+    "direction": "none",
+    "published": "2026-11-25T11:58:53Z",
+    "says": "Before the open Nov 25 (8:01 a.m. ET, against Tuesday's close): QQQ -2.89% (about 74% of Monday's gain gone), SPY -1.95%; AMD -5.93%, Micron -6.78%, Nvidia -5.60%; Ambarella -34.70%, Nutanix -12.99% (revenue $772.4 million, +15%; its CEO to step down once a successor takes over), Urban Outfitters -12.65%, GoodRx -10.00%, Dell -5.24% (record revenue $54.9 billion, +103%, AI backlog $132.3 billion, full-year revenue guidance $202.0 billion), Workday -4.31%, Deere -3.06% (fourth-quarter net income $1.051 billion, -1%; fiscal 2027 net income guidance $4.50-5.25 billion), Li Auto +6.54%, Kanzhun +4.63%.",
+    "tier": "reported",
+    "url": "https://www.stocktitan.net/articles/stock-market-today-live-november-25-2026"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-24T11:58:55Z",
+    "says": "Nov 24 after hours: HP +2.00% at 7:59 p.m. ET after reporting higher fourth-quarter revenue; Dell slightly higher; Ambarella -37.55%.",
+    "tier": "reported",
+    "url": "https://www.stocktitan.net/articles/stock-market-today-live-november-24-2026"
+   }
+  ],
+  "singles": [
+   {
+    "beneath": "The forward record's first card (DE-2026-11-25, written at 08:46Z before the 6:15 a.m. ET release): its setup kept close to the market (+0.2 usual months), the 100 most similar past setups rose 55% of the time, mean +0.52%. Untested and not a call; judged on the report session's close against Tuesday's $613.76.",
+    "cause": "Deere reported fourth-quarter net income of $1.051 billion, down 1%, and guided fiscal 2027 net income to $4.50-5.25 billion; -3.1% before the open.",
+    "evidence": [
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-25-2026"
+    ],
+    "kind": "reported",
+    "t": "DE"
+   },
+   {
+    "beneath": "One of the few reporters up this morning.",
+    "cause": "HP reported higher fourth-quarter revenue on Tuesday evening; +2.0% before the open, against a wave of -0.4 from its neighbours.",
+    "evidence": [
+     "t1",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-24-2026"
+    ],
+    "kind": "reported",
+    "t": "HPQ"
+   }
+  ],
+  "themes": [
+   {
+    "beneath": "Monday's +7.00% Nasdaq 100 day rested on one board decision (Nvidia's CEO); two sessions later about three quarters of it is gone (StockTitan), and AMD is now below its Friday close. Tuesday's rotation into retail and drug makers does not hold this morning: the move is broad, not a rotation (inferred from the market line).",
+    "cause": "AI and chip stocks fall for a third session as the sell-off gathers pace before Thanksgiving (Yahoo, StockTitan); the Dow is lower too and Anthropic trades further below its offering price. The VIX rose 16.9% before the open.",
+    "evidence": [
+     "k",
+     "g:3674",
+     "s15",
+     "s16",
+     "s17",
+     "x:VECO",
+     "t1",
+     "t3",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-25-2026"
+    ],
+    "kind": "reported",
+    "mechanism": "The same high-beta AI names lead (in the check: semiconductors' median -4.5%), and this morning the broad market follows: SPY -1.9% against QQQ -2.9%. Veeco, a chip-equipment maker, -11.3% with the market carrying -5.1% at its beta of 2.67.",
+    "members": [
+     "AMD",
+     "MU",
+     "NVDA",
+     "VECO"
+    ],
+    "name": "The tech sell-off spreads to the whole market",
+    "read_through": [],
+    "watch": "The 8:30 a.m. data and the open: whether the fall stays led by chips or broadens; the VIX."
+   },
+   {
+    "beneath": "What the price expected (the case file's [e:] lines): Ambarella and Nutanix had both sold off into their reports (-1.3 and -1.7 of their usual months) and fell again: capitulation, in the library's names. X1a's tilt says a stock that sold off falls a little less often on its report day; these fell anyway, which is what a tilt of a point or two allows. Dell recovered part of its fall (-5.2% at 8:01 a.m. from -6.9% earlier, StockTitan).",
+    "cause": "Ambarella's revenue forecast ($70-75 million against $115.2 million), with Morgan Stanley downgrading it (s6); Nutanix's revenue +15% with its CEO to step down once a successor takes over; Urban Outfitters' record sales but Anthropologie weakness and a cautious holiday outlook, with Morgan Stanley downgrading it to Equal Weight (s2, s18); Dell's record revenue and $132.3 billion AI backlog; Workday's slower fourth quarter.",
+    "evidence": [
+     "f:AMBA:1",
+     "e:AMBA",
+     "s5",
+     "s6",
+     "s19",
+     "f:NTNX:1",
+     "e:NTNX",
+     "s10",
+     "s11",
+     "s1",
+     "s2",
+     "s18",
+     "s20",
+     "x:AMBA",
+     "x:NTNX",
+     "x:URBN",
+     "t1",
+     "t2",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-25-2026"
+    ],
+    "kind": "reported",
+    "mechanism": "Each falls on its own report (Ambarella -30.1% of its own, Nutanix -10.2%, Urban Outfitters -10.6%), on a morning the market carries -2% more. Ambarella's partners fell about as much as the chip group (Ceva -4.0%, Rambus -5.2%, Alpha and Omega -5.7% against the median -4.5%): the pond puts the rest on the group, not on Ambarella.",
+    "members": [
+     "AMBA",
+     "NTNX",
+     "URBN",
+     "DELL",
+     "WDAY",
+     "ADSK"
+    ],
+    "name": "Last night's reports met by sharp falls",
+    "read_through": [],
+    "watch": "Whether the falls hold after the open; Dell against the call's 4.5% line."
+   }
+  ],
+  "threads": [
+   "The Dell call 10833f5c (4.5%+ either way from $296.45 by today's close, 75%): Tuesday's close $295.28; before the open -5.2% to -5.7%, about 6% below $296.45; judged at today's close.",
+   "Kymera 63a7bc55: Tuesday's close $173.92, about 40% above $124.06; judged Friday Nov 27 (half day, close 1 p.m.).",
+   "Deere's forward card DE-2026-11-25: judged on today's close against Tuesday's.",
+   "The 8:30 a.m. data: GDP, PCE inflation, durable goods, jobless claims.",
+   "Markets shut Thursday for Thanksgiving; Friday closes at 1 p.m. ET."
+  ],
+  "unexplained": [
+   {
+    "t": "FDS",
+    "tried": "-6.8% overnight: the same after-hours price as last night, not yet traded again; no filing, no story names it."
+   },
+   {
+    "t": "EBF",
+    "tried": "-5.2%, no filing, no story."
+   },
+   {
+    "t": "SYBT",
+    "tried": "+5.1%, no filing, no story; banks flat."
+   },
+   {
+    "t": "PDEX",
+    "tried": "-8.6%; an 8-K on an officer or director change and a restricted stock grant Tuesday evening, its text not clear on who or why."
+   }
+  ]
+ },
+ "recorded_at": "2026-11-25T13:32:40Z"
+}
