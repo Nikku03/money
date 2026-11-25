@@ -61,6 +61,14 @@ writes it.
     and the market's mood;
   - how the 100 most similar past setups reacted, and their kinds (priced in, relief, ...);
   - the tests' verdicts. X1a passed: a run-up makes a fall more likely, not a lower average.
+- **What it promised** (`[g:TICKER]`, for a mover with a results report since the close; `docs/PROMISES.md`). The
+  desk reads the company's releases of the last three years, the new one included, and gives:
+  - the revenue it had promised for the quarter it has just reported, its record of keeping such promises, and
+    where its habit put the delivery;
+  - its new promise for the next quarter, and how much growth that asks for against what it has been doing;
+  - its promise for the year, and whether that was raised, held or cut.
+  The figures are read by fixed rules: check them against the release (`[f:TICKER:1]`) before quoting them. The
+  revenue just delivered is in the release, not in this line, until the accounts are filed.
 - **Its last sessions,** and the earlier checks that flagged it.
 - **Clusters.** Movers tied by a story that names one of them, or by a year of moving together and the same
   direction today. A tie is a lead. Whether the cause is shared is for the note.
