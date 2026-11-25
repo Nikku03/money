@@ -1,0 +1,13 @@
+TRAIN episodes 68506; with an industry code 67582
+
+3-digit industries: 46501 episodes with 2+ peers reported in the 30 days before
+  2011-2018 season vs r1: IC -0.0083 t -0.74 (76 months, 51% +)
+  2011-2018 score alone IC +0.0658; score + season IC +0.0446 t +3.53
+  2019-2023 season vs r1: IC -0.0064 t -0.64 (60 months, 55% +)
+  2019-2023 score alone IC +0.0494; score + season IC +0.0277 t +3.05
+
+2-digit industries: 59657 episodes with 2+ peers reported in the 30 days before
+  2011-2018 season vs r1: IC -0.0169 t -1.65 (85 months, 42% +)
+  2011-2018 score alone IC +0.0611; score + season IC +0.0240 t +2.32
+  2019-2023 season vs r1: IC -0.0022 t -0.29 (60 months, 50% +)
+  2019-2023 score alone IC +0.0531; score + season IC +0.0352 t +4.22

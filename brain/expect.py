@@ -24,7 +24,7 @@ from brain import config, episodes
 from brain.bank import Bank
 from brain.timeutil import now_iso
 
-K = 200
+K = 100              # as X1c (brain/research/earntest.py)
 CALLS = config.ROOT / "research" / "earn_calls.jsonl"
 TESTS = ("X1a", "X1b", "X1c", "X1d", "X1f")
 
@@ -60,6 +60,9 @@ def own(bank: Bank, ticker: str, book=None) -> tuple[list[dict], dict | None]:
     s = episodes.setup(adj, bclose, vix, p, prev)
     if s:
         s.update({"t": t, "asof": str(dates[p]), "price": float(book.close[t][:len(dates)][p])})
+        pending = [e for e in evs if events.event_index(dates, e.known_at) > p]
+        if pending:
+            s["pending"] = pending[-1].known_at     # a report is out, its session has not closed
     return rows, s
 
 
@@ -124,8 +127,9 @@ def verdicts() -> dict[str, str]:
 
 
 def setup_words(s: dict) -> str:
-    ran = ("ran up" if s["run21"] >= episodes.RAN else "sold off" if s["run21"] <= -episodes.RAN else "flat")
-    return (f"into the report it has {ran}: {s['run21']:+.1f} of its usual months against the market over 21 sessions "
+    ran = ("ran up" if s["run21"] >= episodes.RAN else "sold off" if s["run21"] <= -episodes.RAN
+           else "kept close to the market")
+    return (f"into the report it {ran}: {s['run21']:+.1f} of its usual months against the market over 21 sessions "
             f"({s['run5']:+.1f} over 5, {s['run63']:+.1f} over 63); {abs(s['hi52']) * 100:.0f}% below its 52-week high; "
             f"its usual report move {s['med8'] * 100:.1f}%, last {s['last'] * 100:.1f}%; at its last eight reports "
             f"it rose {s['up8'] * 100:.0f}% of the time, mean {s['mean8']:+.2f} of its usual move; VIX {s['vix']:.1f}, "
@@ -144,6 +148,9 @@ def card(bank: Bank, ticker: str, lib: list[dict] | None = None) -> dict:
 def render(c: dict) -> list[str]:
     t, s, a = c["t"], c["setup"], c["analogs"]
     L = [f"{t}: before its next report (the setup at the close of {s['asof'] if s else '?'})"]
+    if s and s.get("pending"):
+        L[0] = (f"{t}: a report was filed at {s['pending'][:16]}Z and its session has not closed; this is the setup "
+                f"at the close before it ({s['asof']})")
     if not s:
         return L + ["  not enough history: it needs four earlier reports, 160 ordinary sessions and the VIX"]
     L.append("  now: " + setup_words(s))
@@ -174,6 +181,11 @@ def render(c: dict) -> list[str]:
     v = c["verdicts"]
     L.append("  tests (research/RESULTS.md): " + ", ".join(f"{k} {x}" for k, x in v.items())
              + ". A score or a lean whose test has not passed is untested; neither is a call until recorded.")
+    if v.get("X1a") == "PASS":
+        L.append("  how to read X1a's PASS: the further a stock runs into its report, the more often it falls on the report "
+                 "session (its typical reaction is lower), but not its average: on 2024-2026 the fifth that ran up most "
+                 "rose 49% of the time with a median of -0.13%, yet averaged +0.49% on its big winners "
+                 "(research/earnings/after_the_fact_x1a.log). A tilt in the odds, not a trade")
     return L
 
 
@@ -190,6 +202,8 @@ def record(bank: Bank, ticker: str, report: str, lib: list[dict] | None = None, 
     c = card(bank, ticker, lib)
     if not c["setup"] or not c["analogs"]:
         raise SystemExit(f"{ticker}: no setup or no analogs")
+    if c["setup"].get("pending"):
+        raise SystemExit(f"{ticker}: a report is already public ({c['setup']['pending'][:16]}Z); a record comes before it")
     if report <= c["setup"]["asof"]:
         raise SystemExit(f"{ticker}: the report ({report}) must come after the setup's close ({c['setup']['asof']})")
     a = c["analogs"]
@@ -231,6 +245,45 @@ def score(lib: list[dict] | None = None, path: Path | None = None) -> dict:
             "mean_r1_when_lean_down": float(r1[lean < 0].mean()) if (lean < 0).any() else None}
 
 
+# ---------- who reports soon ----------
+def likely(lib: list[dict], start: str, end: str, slack: int = 6) -> dict[str, str]:
+    """Tickers whose report a year before fell within [start - 1 year - slack, end - 1 year + slack] days and that have
+    not reported in the 45 days to ``start``: ticker -> last year's report session (the guess's basis)."""
+    from datetime import date, timedelta
+    s0, e0 = date.fromisoformat(start), date.fromisoformat(end)
+    lo, hi = (s0 - timedelta(days=364 + slack)).isoformat(), (e0 - timedelta(days=364 - slack)).isoformat()
+    recent = (s0 - timedelta(days=45)).isoformat()
+    by: dict[str, list[str]] = {}
+    for r in lib:
+        by.setdefault(r["t"], []).append(r["date"])
+    out = {}
+    for t, ds in by.items():
+        ds.sort()
+        if any(recent <= d < start for d in ds):
+            continue
+        hit = [d for d in ds if lo <= d <= hi]
+        if hit:
+            out[t] = hit[-1]
+    return out
+
+
+def radar(bank: Bank, lib: list[dict], start: str, end: str, limit: int = 40) -> list[dict]:
+    """Cards for the stocks likely to report between ``start`` and ``end`` (by last year's dates), biggest usual
+    report moves first."""
+    cand = likely(lib, start, end)
+    cards = []
+    for t, basis in cand.items():
+        try:
+            c = card(bank, t, lib)
+        except Exception:  # noqa: BLE001 - one stock's missing prices must not stop the radar
+            continue
+        if c["setup"] and c["analogs"]:
+            c["basis"] = basis
+            cards.append(c)
+    cards.sort(key=lambda c: -c["setup"]["med8"])
+    return cards[:limit]
+
+
 # ---------- the case file ----------
 def desk_line(bank: Bank, ticker: str, asof: str, lib: list[dict]) -> str | None:
     """For a mover with a results report since the close: the setup before it and its analogs, one line."""
@@ -249,7 +302,10 @@ def desk_line(bank: Bank, ticker: str, asof: str, lib: list[dict]) -> str | None
         out += (f". Of the {a['n']} most similar past setups, {a['rose'] * 100:.0f}% rose on the report session "
                 f"(all reports {a['base_rose'] * 100:.0f}%), mean {a['mean_r1'] * 100:+.2f}%; their kinds: "
                 + ", ".join(f"{k} {v}" for k, v in list(a["why"].items())[:4]))
-    return out + ". Untested until X1c passes (research/RESULTS.md)"
+    v = verdicts()
+    return out + (f". Tests (research/RESULTS.md): the run into a report X1a {v['X1a']} (a run-up makes a fall on the "
+                  f"report session more likely, not a lower average); the similar past setups X1c {v['X1c']}; the "
+                  f"expectation score X1f {v['X1f']}")
 
 
 def _cmd(a) -> int:
@@ -275,6 +331,30 @@ def _cmd(a) -> int:
             r = record(bank, t, a.report, lib)
             print(f"recorded {r['id']}: lean {r['lean'] * 100:+.2f}%, {r['rose'] * 100:.0f}% of the analogs rose; "
                   f"commit {CALLS.relative_to(config.ROOT)}")
+    elif a.action == "radar":
+        from datetime import date, timedelta
+        asof = bank.view().t[:10]
+        start = a.report or (date.fromisoformat(asof) + timedelta(days=1)).isoformat()
+        end = (date.fromisoformat(start) + timedelta(days=max(a.days, 1) - 1)).isoformat()
+        cards = radar(bank, lib, start, end)
+        print(f"Likely to react to a report between {start} and {end} (last year's dates; a guess, not a calendar): "
+              f"{len(cards)} with a setup")
+        for c in cards:
+            s, an, sv = c["setup"], c["analogs"], c.get("score") or {}
+            out = f"  [out {s['pending'][:16]}Z]" if s.get("pending") else ""
+            print(f"  {c['t']:6s} usual move {s['med8'] * 100:4.1f}%  run21 {s['run21']:+.1f}  rose at {s['up8'] * 100:3.0f}% "
+                  f"of its last 8  score {sv.get('score', float('nan')):+.2f}  analogs: {an['rose'] * 100:.0f}% rose, mean "
+                  f"{an['mean_r1'] * 100:+.2f}%  (last year {c['basis']}){out}")
+            if a.record and not s.get("pending"):
+                try:
+                    record(bank, c["t"], start, lib)
+                except SystemExit as e:
+                    print(f"    not recorded: {e}")
+        if a.record:
+            print(f"recorded before the reports; commit {CALLS.relative_to(config.ROOT)}")
+        v = verdicts()
+        print(f"Tests (research/RESULTS.md): run-up X1a {v['X1a']} (more often down after a run-up, not a lower average), "
+              f"analogs X1c {v['X1c']}, score X1f {v['X1f']}. A lean is not a call; [out] marks a report already public.")
     elif a.action == "score":
         s = score(lib)
         print(json.dumps(s, indent=1))
@@ -286,7 +366,9 @@ def _cmd(a) -> int:
 def add_cli(sub) -> None:
     p = sub.add_parser("expect", help="before a report: what the price expects, the past setups like it, what "
                                       "followed and why (docs/EARNINGS.md)")
-    p.add_argument("action", choices=["build", "show", "record", "score"])
+    p.add_argument("action", choices=["build", "show", "record", "score", "radar"])
     p.add_argument("tickers", nargs="*")
-    p.add_argument("--report", help="record: the report's date, YYYY-MM-DD")
+    p.add_argument("--report", help="record: the report's session, YYYY-MM-DD (radar: the session they likely react)")
+    p.add_argument("--days", type=int, default=1, help="radar: how many calendar days ahead to look (default 1)")
+    p.add_argument("--record", action="store_true", help="radar: record each card before its report")
     p.set_defaults(fn=_cmd)

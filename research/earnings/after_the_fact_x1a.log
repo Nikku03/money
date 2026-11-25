@@ -1,0 +1,12 @@
+TRAIN 2011-2023 65357 episodes; by fifth of run21 (1 = sold off most, 5 = ran up most)
+  1: mean +0.26%  median +0.16%  rose 51.7%  big up 9.7%  big down 8.5%
+  2: mean +0.41%  median +0.17%  rose 52.0%  big up 9.5%  big down 7.4%
+  3: mean +0.26%  median +0.11%  rose 51.2%  big up 8.2%  big down 7.3%
+  4: mean +0.14%  median +0.06%  rose 50.6%  big up 8.3%  big down 8.3%
+  5: mean -0.01%  median -0.00%  rose 49.9%  big up 8.1%  big down 8.2%
+TEST 2024-01..2026-09 26814 episodes; by fifth of run21 (1 = sold off most, 5 = ran up most)
+  1: mean +0.31%  median +0.08%  rose 50.6%  big up 9.5%  big down 9.2%
+  2: mean +0.52%  median +0.16%  rose 51.1%  big up 10.1%  big down 7.9%
+  3: mean +0.18%  median -0.08%  rose 49.5%  big up 9.8%  big down 9.0%
+  4: mean +0.08%  median -0.19%  rose 48.3%  big up 8.6%  big down 8.5%
+  5: mean +0.49%  median -0.13%  rose 49.0%  big up 10.1%  big down 8.7%
