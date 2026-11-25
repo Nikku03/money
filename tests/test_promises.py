@@ -28,6 +28,12 @@ class Reading(unittest.TestCase):
         c = one("For the fourth quarter of fiscal 2023, we are forecasting revenue of $2.70 billion, +/- $100 million")
         self.assertAlmostEqual(c["high"], 2.8e9)
 
+    def test_a_bullet_after_a_colon(self):
+        c = one("NVIDIA's outlook for the first quarter of fiscal 2027 is as follows: • Revenue is expected to be "
+                "$43.0 billion, plus or minus 2%. • GAAP gross margins are expected to be 71.8%")
+        self.assertAlmostEqual(c["low"], 43.0e9 * 0.98)
+        self.assertEqual(c["words"], "quarteryear")           # "fiscal 2027" sits beside it: the size decides
+
     def test_a_single_figure_only_when_a_forward_word_governs_it(self):
         c = one("The company now expects 2023 revenue to be $42.7 billion.")
         self.assertEqual((c["low"], c["point"], c["label"]), (42.7e9, True, 2023))

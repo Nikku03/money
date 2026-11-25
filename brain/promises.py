@@ -78,7 +78,7 @@ _GROWTH = re.compile(r"\b(growth|increase|increases|decline|declines|decrease|im
                      re.IGNORECASE)
 _SEGMENT_AFTER = re.compile(r"\b(?:for|from|of|in)\s+(?!Q[1-4]\b|FY|Fiscal\b|The\b|Full\b|First\b|Second\b|Third\b|"
                             r"Fourth\b)[A-Z][A-Za-z]")
-_WORD_BEFORE = re.compile(r"([A-Za-z][A-Za-z\-]*|\d{2,4})[\s,:•*\u200b]*$")
+_WORD_BEFORE = re.compile(r"([A-Za-z][A-Za-z\-]*|\d{2,4})[ ,]*$")      # none when a bullet or a colon comes first
 # The word just before "revenue" or "sales" when the figure is the company's total: anything else ("service
 # revenues", "Cloud revenue", "property sales", "product sales") names a part of it.
 _TOTAL_BEFORE = frozenset((

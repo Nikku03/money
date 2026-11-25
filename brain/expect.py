@@ -142,7 +142,18 @@ def card(bank: Bank, ticker: str, lib: list[dict] | None = None) -> dict:
     a = analogs(s, lib) if s else None
     sv = score_view(s, lib) if s else None
     past = [r for r in rows if r.get("why")][-8:]
-    return {"t": ticker.upper(), "setup": s, "analogs": a, "score": sv, "own": past, "verdicts": verdicts()}
+    return {"t": ticker.upper(), "setup": s, "analogs": a, "score": sv, "own": past, "verdicts": verdicts(),
+            "promises": promise_lines(bank, ticker)}
+
+
+def promise_lines(bank: Bank, ticker: str) -> list[str]:
+    """The company's promise record and its open promises (brain/promises.py), as the card prints them."""
+    try:
+        from brain import promises
+        rows = promises.changes(promises.company(bank.view(), ticker))
+        return promises.render(ticker, rows, now_iso())[1:-1] if rows else []
+    except Exception:  # noqa: BLE001 - a card without the promise record is still a card
+        return []
 
 
 def render(c: dict) -> list[str]:
@@ -173,6 +184,9 @@ def render(c: dict) -> list[str]:
                      f"{a['post5_after_down'] * 100:+.2f}% (against the market)")
         L.append("  closest: " + "; ".join(f"{e['t']} {e['date']} {e['why']} {e['r1'] * 100:+.1f}%"
                                          for e in a["examples"][:5]))
+    if c.get("promises"):
+        L.append("  its promises (revenue guidance from its releases; docs/PROMISES.md):")
+        L += ["  " + x for x in c["promises"][:5]]
     if c["own"]:
         L.append("  its own last reports: " + "; ".join(
             f"{r['date']} {r['why']} {r['r1'] * 100:+.1f}%" + (f", week after {r['post5'] * 100:+.1f}%"
