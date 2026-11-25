@@ -131,6 +131,23 @@ The results are in `research/RESULTS.md`, section "Earnings: expected and what f
 - So a run-up tilts the odds of a fall on the report session. It does not make a short pay on average, and the tilt
   is a couple of percentage points against a usual report move of several percent.
 
+**Is it about reports at all?** Mostly not. After the fact (`research/earnings/after_the_fact_ordinary_days.log`),
+the same measure on an ordinary day of the same stocks, 10 sessions before each report with no report within three
+sessions (the 21-session run, then the next session's move):
+
+| | Report day | Ordinary day | Report day, the run ending a session earlier |
+|---|---|---|---|
+| TRAIN | +0.038 (t +6.4) | +0.020 (t +2.7) | +0.029 (t +4.9) |
+| TEST | +0.029 (t +2.8) | +0.037 (t +2.6) | +0.024 (t +2.2) |
+
+- **Most of X1a is the short-term pullback any stock shows after a run, report or not.** On TRAIN the report day
+  showed about twice the ordinary day's effect; on TEST it showed less.
+- **Not a dating artefact.** It survives when the run stops a session before the report.
+- **Not a trade.** A one-session pullback measured on closing prices is partly the bid-ask bounce, and it is not
+  tradable at that size.
+- **An open question.** Whether reports add anything beyond the everyday pullback has not been tested. It would
+  need a new id judged on data not yet seen, such as the forward record.
+
 **What failed.**
 - The habit of rising at reports did not carry into 2024-2026.
 - The most similar past setups (X1c) did not predict.

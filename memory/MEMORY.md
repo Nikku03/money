@@ -66,6 +66,7 @@ Updated 2026-11-16 (three sessions in the memory bank; the diagnosis; step 2 tes
 | Mosaic: share sale, late accounts, cuts | `mosaic read`, `mosaic show`, `mosaic radar --record`, `mosaic score` | `docs/MOSAIC.md` |
 | Trader replays | `scan trader [--one-trade]` | `research/SCAN-TRADER-2026-11.md` |
 | Memory bank: recall anything said or done | `memory start`, `memory recall`, `memory remember`, `memory save`, `memory load` | `docs/MEMORY.md` |
+| Earnings: what was expected before a report, the past like it, what followed and why | `expect build/show/radar/record/score`, `earntest` | `docs/EARNINGS.md` |
 | Spiking neurons (side project, not the market): hand-wired Pong/Catch/Runner, school; cells lif/izh/hh | `neurons play/catch/run --cells`, `neurons ladder`, `neurons exchange`, `neurons train [--no-delays]` | `docs/NEURONS.md` |
 
 ## What was found (verdicts in `research/RESULTS.md`)
@@ -73,6 +74,12 @@ Updated 2026-11-16 (three sessions in the memory bank; the diagnosis; step 2 tes
 - **PASS (sizes and events):** W1a, W1b, W1c (the weekly ranges hold their odds); S1a (shock radar ranks
   surprises); M1a (earnings move size); P1a, P2a, P3a (the mosaic sees share sales, late accounts and cuts coming,
   better than each company's habit, and calibrated).
+- **PASS, the first on which way (2026-11-25): X1a.** The further a stock runs into its results report, the more
+  often it falls on the report session (2024-2026 monthly rank IC +0.029, p 0.003, q 0.013). The typical reaction,
+  not the average: the fifth that ran up most rose 49% of the time, median -0.13%, mean +0.49% on big winners. A
+  tilt in the odds, not a trade. After the fact it is mostly the everyday pullback: ordinary days of the same
+  stocks showed +0.037 on 2024-2026 (report days +0.029). X1b habit, X1c analogs, X1d week after, X1f score
+  (p 0.052) FAILED.
 - **FAIL (every direction test):** H1-H8 (momentum, value, insider buying, earnings surprise), L1 (cause → effect
   links next month), E1/E2 (news drift), S2a/S2b (fade after a jump), S3a (calibration), P1b-P3b (mosaic-flagged
   stocks did not lag). No test of which way a stock goes has passed.
@@ -165,6 +172,20 @@ idea at a time, checked against the memory bank first.
   fixed-weight parts (softmax), halves stray prints (one or two distinct prices since the close), and digs into the
   top six (filings, stories under web rules, memory recall, the pond). Focus kept in `research/attention/`.
 - STANDING STEP: at every check, run `python -m brain attention` after `desk build` and start the note from it.
+
+## Earnings: expected and what followed (2026-11-25, at the person's request; `docs/EARNINGS.md`)
+
+- The person: "to predict the future of something, you need to know the past and present, not just what but how and
+  why too", then "start with earnings reports and do all the things and test overnight".
+- Built `brain/episodes.py` (107,583 reports since 2011, four universes; setup at the close before: run5/21/63 in
+  usual moves, hi52, med8, mean8, up8, vix, spy21; r1, car3, post5, post21; a fixed name: priced in, relief,
+  confirmed, capitulation, surprise up/down, no reaction), `brain/expect.py` (card, radar, forward record
+  `research/earn_calls.jsonl`, an `[e:TICKER]` case-file line), `brain/research/earntest.py` (X1a-X1f).
+- TRAIN 2011-2023 exploration logs in `research/earnings/`. The season so far (same-industry reports before) showed
+  nothing on TRAIN; not declared. No past release text in the bank (lost in a reset); expectations are price-based.
+- Declared and run once on 2026-11-25: X1a PASS; X1b, X1c, X1d, X1f FAIL; X1e reported.
+- First forward record: Deere (DE) before its report of 2026-11-25. STANDING STEP to propose: at each after-close
+  check, `expect radar --report <next session>` and record the confirmed reporters (`expect record`).
 
 ## Open questions and offers (no answer yet)
 

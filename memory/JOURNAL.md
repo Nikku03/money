@@ -155,3 +155,14 @@ FAIL); "the market runs on chains of cause and effect, news and catalysts": the 
   `brain/attention.py`: what deserves a closer look at a check and the digging on it; tests, `docs/ATTENTION.md`.
   On Nov 20's after-hours check it put Kymera, Zscaler and CrowdStrike first and halved N-able's single-trade move.
 
+
+## 2026-11-23 to 2026-11-25: the trade question, the catalysts, and earnings expectations
+
+- Nov 23-24 checks with desk notes: Nvidia reinstated its CEO (S&P 500 +4.73% Monday); chips gave much of it back
+  Tuesday while retailers and drug makers rose; Ambarella's memory-cost forecast; software beats met by falls.
+- The person asked for a trade to hold overnight on catalysts. Answer: no tested direction; recorded a Dell
+  move-size call (10833f5c, 4.5%+ either way from $296.45 by Nov 25, 75%). Then FDA dates and trial readouts: BBIO
+  and COGT approved early; Savara overdue.
+- The person said the brain lacks the how and why. Built the earnings episode library, the card before a report
+  and the declared tests X1a-X1f (`docs/EARNINGS.md`). X1a PASS (a run-up makes a fall on the report session more
+  likely; not a lower average); the rest FAILED. Recorded Deere's card before its Nov 25 report.

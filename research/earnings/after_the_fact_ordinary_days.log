@@ -1,0 +1,6 @@
+TRAIN report day: 65357 rows, monthly IC +0.0384 (t +6.43, 154 months)
+TRAIN ordinary day 10 sessions before: 64215 rows, monthly IC +0.0204 (t +2.66, 150 months)
+TRAIN report day, run ending a session earlier: 65357 rows, monthly IC +0.0290 (t +4.85, 154 months)
+TEST report day: 26814 rows, monthly IC +0.0291 (t +2.83, 33 months)
+TEST ordinary day 10 sessions before: 26336 rows, monthly IC +0.0370 (t +2.59, 33 months)
+TEST report day, run ending a session earlier: 26814 rows, monthly IC +0.0239 (t +2.17, 33 months)

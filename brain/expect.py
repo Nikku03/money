@@ -185,7 +185,9 @@ def render(c: dict) -> list[str]:
         L.append("  how to read X1a's PASS: the further a stock runs into its report, the more often it falls on the report "
                  "session (its typical reaction is lower), but not its average: on 2024-2026 the fifth that ran up most "
                  "rose 49% of the time with a median of -0.13%, yet averaged +0.49% on its big winners "
-                 "(research/earnings/after_the_fact_x1a.log). A tilt in the odds, not a trade")
+                 "(research/earnings/after_the_fact_x1a.log); and the same pullback shows on ordinary days, so it is "
+                 "mostly the everyday pullback after a run, not something about reports "
+                 "(research/earnings/after_the_fact_ordinary_days.log). A tilt in the odds, not a trade")
     return L
 
 
@@ -421,7 +423,8 @@ def desk_line(bank: Bank, ticker: str, asof: str, lib: list[dict]) -> str | None
                 + ", ".join(f"{k} {v}" for k, v in list(a["why"].items())[:4]))
     v = verdicts()
     return out + (f". Tests (research/RESULTS.md): the run into a report X1a {v['X1a']} (a run-up makes a fall on the "
-                  f"report session more likely, not a lower average); the similar past setups X1c {v['X1c']}; the "
+                  f"report session more likely, not a lower average, and the same shows on ordinary days); the similar past "
+                  f"setups X1c {v['X1c']}; the "
                   f"expectation score X1f {v['X1f']}")
 
 
