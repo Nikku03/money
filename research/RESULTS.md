@@ -1,6 +1,6 @@
 # Research results
 
-Generated 2026-11-25T08:44:59Z from `research/ledger.jsonl`. Every number below is copied from the ledger.
+Generated 2026-11-25T21:44:52Z from `research/ledger.jsonl`. Every number below is copied from the ledger.
 
 TRAIN 2011-01-31..2018-12-31, TEST from 2019-01-01. Monthly, equal weight against the equal-weight universe, 10 bps per unit turnover. Holdings: the top third by signal unless the hypothesis names another selection (Select column; see `brain/research/harness.py`).
 
@@ -9,19 +9,19 @@ Universes (each has its own panel and controls):
 - `universe/us_large.json`: 60 US stocks (top SEC filers by market value with 10-K XBRL and prices since 2010). Hypotheses: H1-mom12_1, H2-rev1, H3-earnings_yield, H4-low_asset_growth, H5-ridge.
 - `universe/us_broad.json`: 741 US stocks (SEC ranks 1-1500 with 10-K XBRL and prices since 2010). Hypotheses: H6-insider_buying, H3c-earnings_yield_ttm, H7b-earnings_reaction, H8b-sue, H3b-earnings_yield_ttm, H7-earnings_reaction, H8-sue.
 
-Gate (declared before running): TEST mean net excess > 0, permutation p < 0.05, and Benjamini–Hochberg q < 0.10 across every hypothesis in the ledger and every gated forecast test (see Forecasts) and every gated link test (see Links) and every gated event test (see Events) and every gated move-size test (see Move sizes) and every gated shock test (see Shocks) and every gated weekly-range test (see Weekly ranges) and every gated mosaic test (see Mosaic) and every gated step-2 test (see Step 2) and every gated ripple test (see Ripples) and every gated earnings test (see Earnings: expected and what followed).
+Gate (declared before running): TEST mean net excess > 0, permutation p < 0.05, and Benjamini–Hochberg q < 0.10 across every hypothesis in the ledger and every gated forecast test (see Forecasts) and every gated link test (see Links) and every gated event test (see Events) and every gated move-size test (see Move sizes) and every gated shock test (see Shocks) and every gated weekly-range test (see Weekly ranges) and every gated mosaic test (see Mosaic) and every gated step-2 test (see Step 2) and every gated ripple test (see Ripples) and every gated earnings test (see Earnings: expected and what followed) and every gated promise test (see Promises: said and delivered).
 
 | Hypothesis | Universe | Select | TEST net excess / mo | Annualised | Info ratio | Months won | Perm p | BH q | TRAIN net excess / mo | TRAIN p | TEST coverage | Verdict |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| H1-mom12_1 | us_large | top_frac | +0.11% | +1.3% | 0.12 | 42/92 | 0.1758 | 0.450 | +0.22% | 0.0148 | 100% | **FAIL** |
-| H2-rev1 | us_large | top_frac | -0.01% | -0.1% | -0.01 | 49/92 | 0.2142 | 0.457 | +0.05% | 0.0722 | 100% | **FAIL** |
+| H1-mom12_1 | us_large | top_frac | +0.11% | +1.3% | 0.12 | 42/92 | 0.1758 | 0.436 | +0.22% | 0.0148 | 100% | **FAIL** |
+| H2-rev1 | us_large | top_frac | -0.01% | -0.1% | -0.01 | 49/92 | 0.2142 | 0.447 | +0.05% | 0.0722 | 100% | **FAIL** |
 | H3-earnings_yield | us_large | top_frac | -0.23% | -2.7% | -0.31 | 46/92 | 0.8710 | 0.903 | -0.10% | 0.8714 | 85% | **FAIL** |
 | H4-low_asset_growth | us_large | top_frac | -0.11% | -1.3% | -0.22 | 48/92 | 0.7363 | 0.903 | -0.09% | 0.7251 | 97% | **FAIL** |
-| H5-ridge | us_large | top_frac | +0.19% | +2.3% | 0.27 | 48/92 | 0.0510 | 0.192 | +0.14% | 0.0546 | 100% | **FAIL** |
-| H6-insider_buying | us_broad | positive | +0.00% | +0.0% | 0.01 | 48/92 | 0.2789 | 0.496 | +0.11% | 0.0080 | 100% | **FAIL** |
+| H5-ridge | us_large | top_frac | +0.19% | +2.3% | 0.27 | 48/92 | 0.0510 | 0.182 | +0.14% | 0.0546 | 100% | **FAIL** |
+| H6-insider_buying | us_broad | positive | +0.00% | +0.0% | 0.01 | 48/92 | 0.2789 | 0.488 | +0.11% | 0.0080 | 100% | **FAIL** |
 | H3c-earnings_yield_ttm | us_broad | top_frac | -0.11% | -1.3% | -0.25 | 48/92 | 0.8846 | 0.903 | -0.11% | 0.9282 | 94% | **FAIL** |
-| H7b-earnings_reaction | us_broad | top_frac_vs_all | -0.24% | -2.8% | -0.55 | 36/92 | 0.5845 | 0.802 | -0.07% | 0.1838 | 36% | **FAIL** |
-| H8b-sue | us_broad | top_frac | -0.05% | -0.6% | -0.20 | 48/92 | 0.4867 | 0.754 | -0.03% | 0.1058 | 92% | **FAIL** |
+| H7b-earnings_reaction | us_broad | top_frac_vs_all | -0.24% | -2.8% | -0.55 | 36/92 | 0.5845 | 0.796 | -0.07% | 0.1838 | 36% | **FAIL** |
+| H8b-sue | us_broad | top_frac | -0.05% | -0.6% | -0.20 | 48/92 | 0.4867 | 0.745 | -0.03% | 0.1058 | 92% | **FAIL** |
 | H3b-earnings_yield_ttm | us_broad | top_frac | -0.11% | -1.3% | -0.25 | 48/92 | 0.8784 | – | -0.11% | 0.9342 | 94% | **WITHDRAWN** |
 | H7-earnings_reaction | us_broad | top_frac_vs_all | -0.24% | -2.9% | -0.56 | 34/92 | 0.6027 | – | -0.07% | 0.1704 | 35% | **WITHDRAWN** |
 | H8-sue | us_broad | top_frac | -0.06% | -0.7% | -0.23 | 48/92 | 0.5071 | – | -0.04% | 0.1378 | 92% | **WITHDRAWN** |
@@ -85,8 +85,8 @@ Gate (F1b, F1c; declared before running): mean size-neutral IC > 0 with a one-si
 | Test | h | Dates | Samples | IC | Size-neutral IC | p or 90% interval | BH q | Size IC | Momentum IC | Spread | Brier skill (within-date) | Placement | 68% band held | 90% band held | Verdict |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | F1a-w5-recent | 5 | 2026-08-18..2026-10-07 (8) | 5928 | +0.040 | +0.042 | 90% -0.099..+0.183 | – | -0.046 | +0.014 | +0.52% | +0.99% (+0.13%) | 50.9% | 69.0% (62.8%-75.2%) | 91.9% (88.1%-95.7%) | **REPORT** |
-| F1b-w5-test | 5 | 2019-01-03..2026-08-11 (383) | 283803 | +0.010 | +0.011 | p 0.0870 | 0.298 | +0.009 | +0.008 | -0.06% | -0.08% (+0.00%) | 50.4% | 67.8% (66.5%-69.1%) | 89.9% (89.0%-90.7%) | **FAIL** |
-| F1c-m21-test | 21 | 2019-01-07..2026-09-15 (93) | 68913 | +0.008 | +0.014 | p 0.2096 | 0.457 | +0.020 | -0.001 | +0.23% | -0.42% (-0.01%) | 50.2% | 69.3% (67.0%-71.5%) | 90.9% (89.4%-92.4%) | **FAIL** |
+| F1b-w5-test | 5 | 2019-01-03..2026-08-11 (383) | 283803 | +0.010 | +0.011 | p 0.0870 | 0.284 | +0.009 | +0.008 | -0.06% | -0.08% (+0.00%) | 50.4% | 67.8% (66.5%-69.1%) | 89.9% (89.0%-90.7%) | **FAIL** |
+| F1c-m21-test | 21 | 2019-01-07..2026-09-15 (93) | 68913 | +0.008 | +0.014 | p 0.2096 | 0.447 | +0.020 | -0.001 | +0.23% | -0.42% (-0.01%) | 50.2% | 69.3% (67.0%-71.5%) | 90.9% (89.4%-92.4%) | **FAIL** |
 | F1d-llm-w5-recent | 5 | 2026-08-18..2026-10-07 (8) | 96 | -0.003 | -0.011 | 90% -0.169..+0.147; Brier F1 - model +0.0097 (p 0.352) | – | +0.017 | -0.145 | -0.17% | +0.19% (+0.20%) | 37.5% | 76.0% (67.3%-84.8%) | 92.7% (82.5%-100.0%) | **REPORT** |
 
 IC: Spearman correlation of the chance to beat SPY with what each stock then did beyond SPY. Size-neutral IC: the same after the forecast's rank is cleared of its fit on market value, since the universe holds today's survivors and small-then predicts rose-later. Size IC and Momentum IC: the same samples ranked by size alone (smaller first) and by 12-1 momentum alone. Spread: top fifth minus bottom fifth by forecast, mean excess per date (F1d: halves of 12). Brier skill: against the training base rate as a constant; the within-date part is the only one that speaks to ranking. Placement: share placed on the right side of the date's median. Bands: share of stocks whose close at the exit fell inside, per date (interval).
@@ -94,8 +94,8 @@ IC: Spearman correlation of the chance to beat SPY with what each stock then did
 ### What the range and the chance showed
 
 - F1a-w5-recent (2026-08-18 to 2026-10-07, 8 dates): the 68% band held 69.0% of the time per date (date-level 90% interval 62.8% to 75.2%) and the 90% band 91.9% (88.1% to 95.7%), against 68% and 90% aimed for; its pinball loss was 1% above a naive normal band's. Then the chance to beat SPY had mean size-neutral IC +0.042 (90% interval -0.099..+0.183); retest (descriptive): inconclusive; it can detect mean IC >= 0.15 at 80% power.
-- F1b-w5-test (2019-01-03 to 2026-08-11, 383 dates): the 68% band held 67.8% of the time per date (date-level 90% interval 66.5% to 69.1%) and the 90% band 89.9% (89.0% to 90.7%), against 68% and 90% aimed for; its pinball loss was 2% below a naive normal band's. Then the chance to beat SPY ranked stocks beyond size with mean IC +0.011 (date-level p 0.0870, q 0.298): FAIL. Controls passed: the oracle reached p 0.00005 (smallest possible 0.00005), so the test can reject, and 3.0% of 200 coin-flipped placebos passed (1%-10% expected): a check of the sign-flip test itself, not of the forecaster, since coin-flipped signs pass about 5% of the time for any series, a look-ahead leak included (the features' leak tests are what check for one). Within-date permutation p 0.0010 (a diagnostic: too narrow, since stocks move together).
-- F1c-m21-test (2019-01-07 to 2026-09-15, 93 dates): the 68% band held 69.3% of the time per date (date-level 90% interval 67.0% to 71.5%) and the 90% band 90.9% (89.4% to 92.4%), against 68% and 90% aimed for; its pinball loss was 1% below a naive normal band's. Then the chance to beat SPY ranked stocks beyond size with mean IC +0.014 (date-level p 0.2096, q 0.457): FAIL. Controls passed: the oracle reached p 0.00005 (smallest possible 0.00005), so the test can reject, and 5.0% of 200 coin-flipped placebos passed (1%-10% expected): a check of the sign-flip test itself, not of the forecaster, since coin-flipped signs pass about 5% of the time for any series, a look-ahead leak included (the features' leak tests are what check for one). Within-date permutation p 0.0010 (a diagnostic: too narrow, since stocks move together).
+- F1b-w5-test (2019-01-03 to 2026-08-11, 383 dates): the 68% band held 67.8% of the time per date (date-level 90% interval 66.5% to 69.1%) and the 90% band 89.9% (89.0% to 90.7%), against 68% and 90% aimed for; its pinball loss was 2% below a naive normal band's. Then the chance to beat SPY ranked stocks beyond size with mean IC +0.011 (date-level p 0.0870, q 0.284): FAIL. Controls passed: the oracle reached p 0.00005 (smallest possible 0.00005), so the test can reject, and 3.0% of 200 coin-flipped placebos passed (1%-10% expected): a check of the sign-flip test itself, not of the forecaster, since coin-flipped signs pass about 5% of the time for any series, a look-ahead leak included (the features' leak tests are what check for one). Within-date permutation p 0.0010 (a diagnostic: too narrow, since stocks move together).
+- F1c-m21-test (2019-01-07 to 2026-09-15, 93 dates): the 68% band held 69.3% of the time per date (date-level 90% interval 67.0% to 71.5%) and the 90% band 90.9% (89.4% to 92.4%), against 68% and 90% aimed for; its pinball loss was 1% below a naive normal band's. Then the chance to beat SPY ranked stocks beyond size with mean IC +0.014 (date-level p 0.2096, q 0.447): FAIL. Controls passed: the oracle reached p 0.00005 (smallest possible 0.00005), so the test can reject, and 5.0% of 200 coin-flipped placebos passed (1%-10% expected): a check of the sign-flip test itself, not of the forecaster, since coin-flipped signs pass about 5% of the time for any series, a look-ahead leak included (the features' leak tests are what check for one). Within-date permutation p 0.0010 (a diagnostic: too narrow, since stocks move together).
 - F1d-llm-w5-recent (2026-08-18 to 2026-10-07, 8 dates): the 68% band held 76.0% of the time per date (date-level 90% interval 67.3% to 84.8%) and the 90% band 92.7% (82.5% to 100.0%), against 68% and 90% aimed for; its pinball loss was 2% above a naive normal band's. Then the local model's Brier score against F1's on the same stocks: F1 minus model +0.0097 per date (90% interval -0.0245..+0.0440, exact sign-flip p 0.352); 0 of 96 answers failed and count as F1's; retest (descriptive): LLM vs F1 inconclusive.
 
 ### Calibration
@@ -164,15 +164,15 @@ Tests of the chain engine's cause → effect links (`knowledge/links.json`, `doc
 | Test | Cause → effect | Timing | TEST months | Effect per move, points (TEST) | 90% interval | p | BH q | TRAIN effect | Verdict |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | L1-oil-airlines-same | oil_price_up → airline_stocks_down | same month | 93 (2019-01..2026-09) | +0.44% per +10% oil | -0.95%..+2.36% | 0.7417 | – | -3.13% | **REPORT** |
-| L1-oil-airlines-next | oil_price_up → airline_stocks_down | next month | 93 (2019-01..2026-09) | -0.49% per +10% oil | -2.28%..+0.45% | 0.2190 | 0.457 | -1.76% | **FAIL** |
+| L1-oil-airlines-next | oil_price_up → airline_stocks_down | next month | 93 (2019-01..2026-09) | -0.49% per +10% oil | -2.28%..+0.45% | 0.2190 | 0.447 | -1.76% | **FAIL** |
 | L1-oil-producers-same | oil_price_up → oil_producer_stocks_up | same month | 93 (2019-01..2026-09) | +2.96% per +10% oil | +1.19%..+5.81% | 0.0002 | – | +2.90% | **REPORT** |
 | L1-oil-producers-next | oil_price_up → oil_producer_stocks_up | next month | 93 (2019-01..2026-09) | -0.41% per +10% oil | -1.83%..+0.93% | 0.7489 | 0.903 | +0.20% | **FAIL** |
 | L1-rates-homebuilders-same | interest_rates_up → homebuilder_stocks_down | same month | 93 (2019-01..2026-09) | -2.29% per +0.25 pt 10-year | -3.70%..-0.95% | 0.0018 | – | -0.50% | **REPORT** |
 | L1-rates-homebuilders-next | interest_rates_up → homebuilder_stocks_down | next month | 93 (2019-01..2026-09) | +0.48% per +0.25 pt 10-year | -0.70%..+1.80% | 0.7395 | 0.903 | -0.26% | **FAIL** |
 | L1-rates-banks-same | interest_rates_up → bank_stocks_up | same month | 93 (2019-01..2026-09) | +1.05% per +0.25 pt 10-year | +0.03%..+2.10% | 0.0266 | – | +3.44% | **REPORT** |
-| L1-rates-banks-next | interest_rates_up → bank_stocks_up | next month | 93 (2019-01..2026-09) | +0.44% per +0.25 pt 10-year | -0.52%..+1.35% | 0.2088 | 0.457 | +0.15% | **FAIL** |
+| L1-rates-banks-next | interest_rates_up → bank_stocks_up | next month | 93 (2019-01..2026-09) | +0.44% per +0.25 pt 10-year | -0.52%..+1.35% | 0.2088 | 0.447 | +0.15% | **FAIL** |
 | L1-rates-tech-same | interest_rates_up → tech_stocks_down | same month | 93 (2019-01..2026-09) | -1.08% per +0.25 pt 10-year | -1.77%..-0.27% | 0.0180 | – | +0.42% | **REPORT** |
-| L1-rates-tech-next | interest_rates_up → tech_stocks_down | next month | 93 (2019-01..2026-09) | -0.33% per +0.25 pt 10-year | -1.07%..+0.42% | 0.2587 | 0.496 | -0.24% | **FAIL** |
+| L1-rates-tech-next | interest_rates_up → tech_stocks_down | next month | 93 (2019-01..2026-09) | -0.33% per +0.25 pt 10-year | -1.07%..+0.42% | 0.2587 | 0.488 | -0.24% | **FAIL** |
 
 - **L1-oil-airlines-same**: for each month with oil up 10%, the airline stocks' return over SPY that month was 0.44 points higher (90% interval -0.95% to +2.36%; TRAIN -3.13%). The links say lower. REPORT.
 - **L1-oil-airlines-next**: for each month with oil up 10%, the airline stocks' return over SPY the next month was 0.49 points lower (90% interval -2.28% to +0.45%; TRAIN -1.76%). The links say lower. FAIL.
@@ -199,13 +199,13 @@ Tests of corporate events named in earnings press releases (SEC 8-K exhibit 99; 
 | E1-guidance_raised-reaction | guidance_raised | -1..+1 | 174 (59) | +1.41% | -0.08%..+2.92% | 0.0579 | – | +2.28% | +1.28% | **REPORT** |
 | E1-guidance_raised-drift | guidance_raised | +2..+21 | 174 (59) | -2.15% | -3.27%..-1.14% | 0.9997 | 1.000 | -1.10% | -0.51% | **FAIL** |
 | E2-small-guidance_raised-reaction | guidance_raised | -1..+1 | 1071 (90) | +3.74% | +2.86%..+4.60% | 0.0000 | – | +3.97% | +3.35% | **REPORT** |
-| E2-small-guidance_raised-drift | guidance_raised | +2..+21 | 1071 (90) | -0.35% | -1.15%..+0.41% | 0.4570 | 0.754 | -0.37% | -1.25% | **FAIL** |
+| E2-small-guidance_raised-drift | guidance_raised | +2..+21 | 1071 (90) | -0.35% | -1.15%..+0.41% | 0.4570 | 0.745 | -0.37% | -1.25% | **FAIL** |
 | E2-small-guidance_cut-reaction | guidance_cut | -1..+1 | 91 (48) | -7.13% | -9.55%..-4.90% | 0.0000 | – | -6.68% | -5.33% | **REPORT** |
-| E2-small-guidance_cut-drift | guidance_cut | +2..+21 | 91 (48) | +0.90% | -1.00%..+2.84% | 0.4749 | 0.754 | +0.71% | +1.02% | **FAIL** |
+| E2-small-guidance_cut-drift | guidance_cut | +2..+21 | 91 (48) | +0.90% | -1.00%..+2.84% | 0.4749 | 0.745 | +0.71% | +1.02% | **FAIL** |
 | E2-micro-guidance_raised-reaction | guidance_raised | -1..+1 | 319 (81) | +6.78% | +4.99%..+8.52% | 0.0000 | – | +6.72% | +4.29% | **REPORT** |
-| E2-micro-guidance_raised-drift | guidance_raised | +2..+21 | 319 (81) | -1.25% | -2.77%..+0.20% | 0.1779 | 0.450 | -1.29% | -2.05% | **FAIL** |
+| E2-micro-guidance_raised-drift | guidance_raised | +2..+21 | 319 (81) | -1.25% | -2.77%..+0.20% | 0.1779 | 0.436 | -1.29% | -2.05% | **FAIL** |
 | E2-micro-guidance_cut-reaction | guidance_cut | -1..+1 | 59 (38) | -9.20% | -12.32%..-6.07% | 0.0000 | – | -8.74% | -5.36% | **REPORT** |
-| E2-micro-guidance_cut-drift | guidance_cut | +2..+21 | 59 (38) | -1.66% | -4.06%..+0.64% | 0.2717 | 0.496 | -1.47% | +0.14% | **FAIL** |
+| E2-micro-guidance_cut-drift | guidance_cut | +2..+21 | 59 (38) | -1.66% | -4.06%..+0.64% | 0.2717 | 0.488 | -1.47% | +0.14% | **FAIL** |
 
 - **E1-guidance_raised-reaction**: over days -1..+1, releases tagged guidance_raised did +1.41% against the month's other releases (90% interval -0.08% to +2.92%) and +2.28% against SPY, over 174 releases in 59 months. The event implies up. REPORT.
 - **E1-guidance_raised-drift**: over days +2..+21, releases tagged guidance_raised did -2.15% against the month's other releases (90% interval -3.27% to -1.14%) and -1.10% against SPY, over 174 releases in 59 months. The event implies up. FAIL.
@@ -254,7 +254,7 @@ Tests of what follows a shock: an up-shock episode opens on a session 20%+ above
 
 | Test | Statistic | TEST episodes (months) | Mean of monthly values | 90% interval | p | BH q | Verdict |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| S2a | percentile | 423 (33) | +0.0041 | -0.0281..+0.0347 | 0.5833 | 0.802 | **FAIL** |
+| S2a | percentile | 423 (33) | +0.0041 | -0.0281..+0.0347 | 0.5833 | 0.796 | **FAIL** |
 | S2b | abnormal | 423 (33) | +0.0439 | -0.0223..+0.1133 | 0.8406 | 0.903 | **FAIL (controls)** |
 
 - **S1a**: over 224166 stock-weeks of 1568 stocks from 2024-01 to 2026-09, 0.72% of stock-weeks had a 20%+ session (68% of those were up). S1's chances averaged 0.58% (the baseline's 0.72%) and beat the baseline's log loss in 31 of 33 months; AUC 0.905 against 0.857. Each week's top 1%, 5% and 10% by S1 held 22%, 52% and 68% of all shocks (the baseline's 21%, 45% and 59%); in S1's top 5% a shock came 7.5% of the time against a predicted 6.2%. Controls: shuffled chances reached p < 0.05 in 0.0% of 200 draws; an oracle reached p 0.0001. PASS.
@@ -296,9 +296,9 @@ Tests of whether the flagged stocks lag: each period's top twentieth by a pictur
 
 | Test | Picture | Flagged (periods) | Mean of period values | 90% interval | p | BH q | Return against peers | Verdict |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| P1b | sale | 3743 (31) | -0.0076 | -0.0270..+0.0117 | 0.2703 | 0.496 | +0.89% | **FAIL** |
-| P2b | books | 3743 (31) | -0.0073 | -0.0199..+0.0049 | 0.1734 | 0.450 | +2.17% | **FAIL** |
-| P3b | cuts | 3743 (31) | -0.0108 | -0.0237..+0.0027 | 0.0991 | 0.317 | -0.31% | **FAIL** |
+| P1b | sale | 3743 (31) | -0.0076 | -0.0270..+0.0117 | 0.2703 | 0.488 | +0.89% | **FAIL** |
+| P2b | books | 3743 (31) | -0.0073 | -0.0199..+0.0049 | 0.1734 | 0.436 | +2.17% | **FAIL** |
+| P3b | cuts | 3743 (31) | -0.0108 | -0.0237..+0.0027 | 0.0991 | 0.303 | -0.31% | **FAIL** |
 
 - **P1a** (a sale of new shares): over 75141 stock-periods of 2500 stocks from 2024-01-05 to 2026-09-04, the event came within 20 sessions in 1.37% of them (1027). The model's chances averaged 1.35% (the habit's 1.26%) and beat the habit's log loss in 24 of 31 periods; AUC 0.875 against 0.857. Each period's top 1%, 5% and 10% by the model held 10%, 38% and 59% of the events (the habit's 9%, 32% and 54%); in the model's top 5% the event came 10.6% of the time against a predicted 11.5% (in the habit's top 5%: 8.8%). Where the company had no such event in three years (58462 stock-periods, 194 events, 0.33%), the model's top 5% there had the event 1.7% of the time and held 25% of those events (AUC 0.774; reported, not gated). Controls: shuffled chances reached p < 0.05 in 0.0% of 200 draws; an oracle reached p 0.0001. PASS.
 - **P2a** (late or unreliable accounts): over 75141 stock-periods of 2500 stocks from 2024-01-05 to 2026-09-04, the event came within 20 sessions in 0.38% of them (283). The model's chances averaged 0.38% (the habit's 0.38%) and beat the habit's log loss in 25 of 31 periods; AUC 0.871 against 0.802. Each period's top 1%, 5% and 10% by the model held 35%, 54% and 64% of the events (the habit's 27%, 54% and 60%); in the model's top 5% the event came 4.1% of the time against a predicted 4.2% (in the habit's top 5%: 4.1%). Where the company had no such event in three years (68072 stock-periods, 112 events, 0.16%), the model's top 5% there had the event 0.7% of the time and held 21% of those events (AUC 0.766; reported, not gated). Controls: shuffled chances reached p < 0.05 in 0.0% of 200 draws; an oracle reached p 0.0001. PASS.
@@ -332,7 +332,7 @@ Declared before running (`brain/research/rippletest.py`, `docs/RIPPLES.md`). A s
 | Test | Question | Statistic | 90% interval | p | BH q | Controls | Verdict |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | R1b | how high the waves travel (next five sessions' size) | +0.00604 | +0.00314..+0.00911 | 0.0011 | 0.005 | FAILED | **FAIL (controls)** |
-| R1c | which way the waves travel (next five sessions' direction) | -0.0012 | -0.0137..+0.0109 | 0.5680 | 0.802 | passed | **FAIL** |
+| R1c | which way the waves travel (next five sessions' direction) | -0.0012 | -0.0137..+0.0109 | 0.5680 | 0.796 | passed | **FAIL** |
 | R1d | do waves that add up move a stock more than waves that cancel | -0.0108 | -0.0255..+0.0036 | 0.8782 | 0.903 | passed | **FAIL** |
 
 - **R1a** (reported, the waves on the day): 689 TEST sessions, 24.9 stones and 1184 stocks reached a session. The wave's height matched the stock's own move that day with a rank correlation of +0.237. Own move (usual days) by ring: first 0.747, second 0.633, beyond 0.638; on dry land (no link to any stone) 0.593. Wave height by ring: first 0.282, second 0.189, beyond 0.188. Waves absorbed (under a quarter of a usual day) 58.0%, felt (a quarter to one) 42.0%, a hit (one or more) 0.06%. Interference against the day's own move size: +0.121.
@@ -349,12 +349,12 @@ Declared before running (`brain/research/earntest.py`, `docs/EARNINGS.md`). Ever
 
 | Test | Question | Statistic | 90% interval | p | BH q | Controls | Verdict |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| X1a | does the run into a report predict the reaction (priced in) | +0.0291 | +0.0126..+0.0459 | 0.0029 | 0.013 | passed | **PASS** |
+| X1a | does the run into a report predict the reaction (priced in) | +0.0291 | +0.0126..+0.0459 | 0.0029 | 0.012 | passed | **PASS** |
 | X1b | does a stock's habit at its reports predict the reaction | -0.0083 | -0.0263..+0.0080 | 0.7706 | 0.903 | passed | **FAIL** |
-| X1c | do the most similar past setups predict the reaction (analogs) | +0.0085 | -0.0048..+0.0227 | 0.1576 | 0.450 | passed | **FAIL** |
-| X1d | does the reaction keep going or come back over the next week | +0.0058 | -0.0149..+0.0266 | 0.3264 | 0.559 | passed | **FAIL** |
+| X1c | do the most similar past setups predict the reaction (analogs) | +0.0085 | -0.0048..+0.0227 | 0.1576 | 0.436 | passed | **FAIL** |
+| X1d | does the reaction keep going or come back over the next week | +0.0058 | -0.0149..+0.0266 | 0.3264 | 0.551 | passed | **FAIL** |
 | X1e | what each kind of episode did (priced in, relief, ...) | +nan | +nan..+nan | – | – | – | **REPORT** |
-| X1f | does the expectation score (run-up against habit) predict the reaction | +0.0195 | +0.0001..+0.0377 | 0.0519 | 0.192 | passed | **FAIL** |
+| X1f | does the expectation score (run-up against habit) predict the reaction | +0.0195 | +0.0001..+0.0377 | 0.0519 | 0.182 | passed | **FAIL** |
 
 - **X1a**: 26814 TEST episodes in 33 months; monthly rank correlation with the reaction +0.0291 (positive in 23 of 33 months). The top fifth by the prediction averaged +0.31% (51% rose), the bottom fifth +0.49% (49% rose). Controls: shuffled predictions reached p < 0.05 in 7.5% of draws; the oracle p 0.0005. PASS.
 - **X1b**: 26814 TEST episodes in 33 months; monthly rank correlation with the reaction -0.0083 (positive in 13 of 33 months). The top fifth by the prediction averaged +0.27% (50% rose), the bottom fifth +0.38% (49% rose). Controls: shuffled predictions reached p < 0.05 in 6.0% of draws; the oracle p 0.0005. FAIL.
@@ -362,3 +362,15 @@ Declared before running (`brain/research/earntest.py`, `docs/EARNINGS.md`). Ever
 - **X1d**: 26814 TEST episodes in 33 months; monthly rank correlation with the next week's drift +0.0058 (positive in 17 of 33 months). The top fifth by the prediction averaged +0.05% (47% rose), the bottom fifth -0.34% (45% rose). Controls: shuffled predictions reached p < 0.05 in 5.5% of draws; the oracle p 0.0005. FAIL.
 - **X1e**: 26814 TEST episodes by kind. surprise down: 7758 episodes, reaction -7.47%, next week -0.30%, kept going 54%; surprise up: 7650 episodes, reaction +8.21%, next week +0.06%, kept going 48%; no reaction: 4485 episodes, reaction -0.02%, next week -0.21%, kept going 51%; priced in: 1755 episodes, reaction -7.22%, next week -0.29%, kept going 55%; confirmed: 1735 episodes, reaction +8.85%, next week +0.11%, kept going 49%; relief: 1730 episodes, reaction +7.83%, next week -0.38%, kept going 45%; capitulation: 1701 episodes, reaction -7.36%, next week +0.06%, kept going 51%. REPORT.
 - **X1f**: 26814 TEST episodes in 33 months; monthly rank correlation with the reaction +0.0195 (positive in 25 of 33 months). The top fifth by the prediction averaged +0.34% (52% rose), the bottom fifth +0.49% (49% rose). Controls: shuffled predictions reached p < 0.05 in 4.0% of draws; the oracle p 0.0005. FAIL.
+
+## Promises: said and delivered
+
+Declared before running (`brain/research/promisetest.py`, `docs/PROMISES.md`). A promise is revenue guidance in dollars read from an earnings release of the research universe; its outcome is the revenue first reported for the promised period, against the promise's midpoint. TRAIN is promises made 2011-2023, TEST 2024-01..2026-09. Per reporting season (a calendar quarter) the statistic is the rank correlation of the prediction with the outcome, averaged over seasons, with a one-sided sign-flip p over the seasons. Gated tests pass on a positive statistic with p < 0.05, their controls, and Benjamini–Hochberg q < 0.10 across every gated test in the ledger. G1a is about what a company delivers, not about its stock.
+
+| Test | Question | Statistic | 90% interval | p | BH q | Controls | Verdict |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| G1a | does a company's habit of beating its own revenue promise carry to the next promise | +0.4743 | +0.4300..+0.5141 | 0.0007 | 0.003 | passed | **PASS** |
+| G1b | the report session's move by what the release said | +nan | +nan..+nan | – | – | – | **REPORT** |
+
+- **G1a**: 670 quarterly promises in 11 seasons; rank correlation of its habit with the surprise on the new promise +0.4743 (positive in 11 of 11 seasons). The top fifth by the prediction delivered a median +5.13% against its midpoint, the bottom fifth +0.81%. Controls: shuffled predictions reached p < 0.05 in 6.5% of draws; the oracle p 0.0005. Reported, not gated: of 670 promises with a habit, the delivery was a median 2.41% from the midpoint and 1.43% from the midpoint moved by the habit; it fell inside the 2-in-3 range 77.3% of the time and inside the 9-in-10 range 95.7%; 3.9% missed the company's own range. PASS.
+- **G1b**: 765 quarterly promises of 106 companies and 594 changes of a year's promise on TEST. delivered above its last promise: 285 releases, the report session +2.21% against the market (median +2.28%, 61% rose), the week after +0.73%; delivered inside it: 355 releases, the report session -0.23% against the market (median -0.54%, 48% rose), the week after +0.25%; delivered below it: 28 releases, the report session -6.30% against the market (median -2.86%, 18% rose), the week after +1.45%; delivered more against its midpoint than its habit: 359 releases, the report session +2.35% against the market (median +2.28%, 60% rose), the week after +0.74%; delivered less than its habit: 277 releases, the report session -2.04% against the market (median -2.33%, 40% rose), the week after +0.19%; raised the year's promise: 199 releases, the report session +3.29% against the market (median +2.69%, 62% rose), the week after +0.09%; held it: 333 releases, the report session +0.22% against the market (median +0.10%, 50% rose), the week after -0.37%; cut it: 62 releases, the report session -3.70% against the market (median -2.66%, 34% rose), the week after +1.65%. REPORT.
