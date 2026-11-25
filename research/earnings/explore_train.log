@@ -1,0 +1,68 @@
+TRAIN episodes: 73165; with a full setup and r1: 65357
+r1 mean +0.211%, rose 51.1%
+
+== r1: 65357 episodes; monthly rank IC (mean, t, months, share positive)
+  run5    -0.0375  t -6.42  154 months  27% positive
+  run21   -0.0384  t -6.43  154 months  30% positive
+  run63   -0.0296  t -4.76  154 months  39% positive
+  hi52    -0.0156  t -2.34  154 months  40% positive
+  mean8   +0.0185  t +2.91  154 months  60% positive
+  up8     +0.0214  t +3.38  154 months  64% positive
+  med8    +0.0070  t +1.07  154 months  53% positive
+  vix     -0.0025  t -0.38  154 months  46% positive
+  spy21   +0.0098  t +1.38  154 months  54% positive
+  day_vol +0.0098  t +1.61  154 months  55% positive
+  last    +0.0061  t +1.01  154 months  58% positive
+
+== post5: 65357 episodes; monthly rank IC (mean, t, months, share positive)
+  run5    -0.0139  t -1.83  154 months  44% positive
+  run21   -0.0166  t -1.89  154 months  40% positive
+  run63   -0.0194  t -2.22  154 months  40% positive
+  hi52    +0.0017  t +0.16  154 months  52% positive
+  mean8   -0.0086  t -1.16  154 months  46% positive
+  up8     -0.0073  t -1.07  154 months  50% positive
+  med8    -0.0188  t -2.53  154 months  42% positive
+  vix     -0.0006  t -0.06  154 months  46% positive
+  spy21   +0.0109  t +1.16  154 months  51% positive
+  day_vol -0.0202  t -2.16  154 months  41% positive
+  last    +0.0026  t +0.37  154 months  49% positive
+
+== post21: 65357 episodes; monthly rank IC (mean, t, months, share positive)
+  run5    -0.0133  t -1.65  154 months  44% positive
+  run21   -0.0218  t -2.48  154 months  42% positive
+  run63   -0.0173  t -1.71  154 months  45% positive
+  hi52    +0.0113  t +0.82  154 months  53% positive
+  mean8   +0.0046  t +0.63  154 months  52% positive
+  up8     -0.0065  t -0.87  154 months  48% positive
+  med8    -0.0232  t -2.28  154 months  44% positive
+  vix     -0.0031  t -0.36  154 months  51% positive
+  spy21   +0.0122  t +1.30  154 months  49% positive
+  day_vol -0.0271  t -2.05  154 months  40% positive
+  last    -0.0025  t -0.30  154 months  49% positive
+
+== r1 by quintile of run21 (mean %, % rose, n)
+   1 +0.265% 51.7% 13072
+   2 +0.412% 52.0% 13071
+   3 +0.256% 51.2% 13071
+   4 +0.136% 50.6% 13071
+   5 -0.012% 49.9% 13072
+
+== r1 by quintile of mean8 (habit)
+   1 +0.096% 50.5% 13072
+   2 +0.130% 50.5% 13071
+   3 +0.228% 50.8% 13071
+   4 +0.221% 50.9% 13071
+   5 +0.382% 52.7% 13072
+
+== post5 vs the reaction z1: IC +0.0116 t +1.50 (154 months, 56% +)
+
+== post21 vs the reaction z1: IC +0.0227 t +3.47 (154 months, 64% +)
+
+== by why (count, r1 mean, post5 mean, post21 mean, post5 % same sign as r1)
+  surprise up     19690 r1 +5.98%  post5 +0.252%  post21 +0.720%  continued 49.7%
+  surprise down   18560 r1 -5.69%  post5 +0.057%  post21 +0.220%  continued 51.3%
+  no reaction     12380 r1 -0.01%  post5 +0.037%  post21 +0.432%  continued 50.3%
+  relief           3931 r1 +6.19%  post5 +0.267%  post21 +0.582%  continued 50.1%
+  confirmed        3622 r1 +5.84%  post5 +0.216%  post21 +0.069%  continued 48.3%
+  capitulation     3596 r1 -6.13%  post5 +0.348%  post21 +0.510%  continued 49.4%
+  priced in        3578 r1 -6.05%  post5 -0.070%  post21 -0.169%  continued 52.0%

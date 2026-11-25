@@ -1,0 +1,12 @@
+TRAIN-inner check: fit 2011-2018, judged 2019-2023; 28714 and 39792 episodes
+  -run21   IC +0.0343 t +3.55 60 months
+  up8      IC +0.0279 t +2.73 60 months
+  mean8    IC +0.0225 t +2.54 60 months
+  analogs k=100: IC +0.0219 t +2.96 60 months
+  analogs k=200: IC +0.0153 t +1.99 60 months
+  analogs k=500: IC +0.0190 t +2.53 60 months
+  post5 vs z1 IC +0.0084 t +0.93
+2011-2018 -run21+up8       IC +0.0444 t +6.29
+2011-2018 -run21-run5+up8  IC +0.0497 t +6.93
+2019-2023 -run21+up8       IC +0.0434 t +3.91
+2019-2023 -run21-run5+up8  IC +0.0520 t +5.22

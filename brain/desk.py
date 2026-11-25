@@ -363,6 +363,16 @@ def build(bank: Bank, rec: dict | None = None, moves: dict | None = None, stamp:
         got = mosaic_of(bank, [m["t"] for m in movers], asof)
         for m in movers:
             m["mosaic"] = got.get(m["t"])
+    reporters = [m for m in movers if any(f["what"].startswith("results report") for f in m["filings"])]
+    if reporters:
+        say("  what the price expected before the reports")
+        try:
+            from brain import episodes, expect
+            lib = episodes.load()
+            for m in reporters:
+                m["expect"] = expect.desk_line(bank, m["t"], asof, lib) if lib else None
+        except Exception:  # noqa: BLE001 - a case file without the expectations is still a case file
+            pass
 
     case = {"check": stamp, "asof": asof, "at": rec["at"], "built_at": now_iso(), "scan": rec["scan"],
             "market": rec["market"], "market_wide": rec["market_wide"], "fear_up": rec["fear_up"], "drivers": drivers,
@@ -485,6 +495,8 @@ def evidence(case: dict) -> dict[str, dict]:
             ev[f"n:{t}"] = {"text": f"{t} accounts: {line}"}
         if (line := _mosaic_line(m)):
             ev[f"z:{t}"] = {"text": f"{t} mosaic: {line}"}
+        if m.get("expect"):
+            ev[f"e:{t}"] = {"text": f"{t} expected: {m['expect']}"}
         for f in m["filings"]:
             ev[f["id"]] = {"text": f"{t} {f['what']} at {f['at'][:16]}Z: {f['title']}"
                            + (f" -- {f['text']}" if f["text"] else ""), "url": f["url"]}
@@ -548,6 +560,8 @@ def render(case: dict, detail: list[str] | None = None) -> str:
             L.append(f"     [n:{t}] " + ev[f"n:{t}"]["text"].split(": ", 1)[1])
         if f"z:{t}" in ev:
             L.append(f"     [z:{t}] " + ev[f"z:{t}"]["text"].split(": ", 1)[1])
+        if f"e:{t}" in ev:
+            L.append(f"     [e:{t}] " + ev[f"e:{t}"]["text"].split(": ", 1)[1])
         full = bool(detail) and t in detail
         for f in m["filings"]:
             body = f["text"] if full else f["text"][:260]
