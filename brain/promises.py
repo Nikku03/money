@@ -54,11 +54,13 @@ Q_AHEAD = 125                # the promised quarter ends within this many days o
 RECORD = 8                   # promises in a company's record
 MIN_RECORD = 4
 READER_MIN = 3               # releases read with their forward-looking passages (releases.READER)
-# Where the delivery falls around the promise's midpoint moved by the company's habit (its usual surprise): the
-# surprise less the usual surprise, pooled over TRAIN's promises (research/promises/explore_train.log).
+HABIT = 4                    # deliveries in a company's habit: the median surprise of its last four
 OPEN_DAYS = 130              # an open promise older than this is no longer the one in force
-BAND68 = (-0.02, 0.02)       # PLACEHOLDER until TRAIN fixes it
-BAND90 = (-0.05, 0.05)       # PLACEHOLDER until TRAIN fixes it
+# Where the delivery falls around the promise's midpoint moved by the habit: the surprise less the habit, pooled
+# over the promises made in 2011-2023 (research/promises/explore_train.log, section E): the middle 2 in 3 and the
+# middle 9 in 10.
+BAND68 = (-0.035, 0.030)
+BAND90 = (-0.081, 0.081)
 
 _UNIT = {"thousand": 1e3, "million": 1e6, "mn": 1e6, "billion": 1e9, "bn": 1e9}
 _NUM = r"(\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?)"
@@ -373,6 +375,9 @@ def company(view, ticker: str) -> list[dict]:
                         continue            # a year already ended (a result, not a promise) or one further out
                 if fy:
                     row.update(period_end=fy["end"], actual=fy["value"], outcome_known=fy["known_at"])
+                elif end:
+                    row["period_end"] = end        # the year in progress: where it should end, so that a later
+                    #                                promise for the same year is seen as a raise or a cut
             if row.get("actual") is not None:
                 if row["actual"] <= 0 or not (MISMATCH[0] <= row["actual"] / mid - 1 <= MISMATCH[1]):
                     row["mismatch"] = True        # a misread promise or a bad account figure: kept, not graded
@@ -413,32 +418,50 @@ def record(rows: list[dict], asof: str, horizon_: str = "quarter") -> dict | Non
             "surprise": float(np.median(s)), "last": done[-1]["grade"], "last_surprise": float(s[-1])}
 
 
+def habit(rows: list[dict], made: str) -> float | None:
+    """The company's habit when a promise is made on the date ``made``: the median surprise of its last HABIT
+    quarterly deliveries, the quarter it has just reported included. A delivery counts when its quarter ended
+    before ``made`` (the release that makes a promise reports the quarter before; the bank holds that figure from
+    the accounts filed days later, which state the same revenue). A quarter promised twice counts once, by its
+    last promise. None with fewer than HABIT."""
+    last: dict[str, dict] = {}
+    for r in rows:
+        if (r["horizon"] == "quarter" and r.get("grade") and r.get("period_end") and r["period_end"] < made
+                and (r["period_end"] not in last or r["known_at"] > last[r["period_end"]]["known_at"])):
+            last[r["period_end"]] = r
+    got = [last[k]["surprise"] for k in sorted(last)][-HABIT:]
+    return float(np.median(got)) if len(got) >= HABIT else None
+
+
 def expected(rows: list[dict], asof: str) -> dict | None:
-    """Where the company's habit puts the delivery of its latest open quarterly promise: the midpoint moved by its
-    usual surprise, with the ranges BAND68 and BAND90 around that. None without a record, or without an open
-    promise made in the last OPEN_DAYS days."""
-    rec = record(rows, asof)
+    """Where the company's habit puts the delivery of its latest open quarterly promise: the midpoint moved by the
+    habit, with the ranges BAND68 and BAND90 around that. None without a habit, or without an open promise made in
+    the last OPEN_DAYS days. In the days between a release and the accounts of the quarter it reports, the habit
+    is one delivery behind."""
     open_ = [r for r in rows if r["horizon"] == "quarter" and not r.get("grade") and not r.get("mismatch")
              and r["known_at"] <= asof]
-    if not rec or not open_:
+    if not open_:
         return None
     r = open_[-1]
     if (date.fromisoformat(asof[:10]) - date.fromisoformat(r["made"])).days > OPEN_DAYS:
         return None
-    mid, u = r["mid"], rec["surprise"]
+    u = habit([x for x in rows if x.get("outcome_known", "") <= asof], r["made"])
+    if u is None:
+        return None
+    mid = r["mid"]
     return {"made": r["made"], "mid": mid, "usual": u, "point": mid * (1 + u),
             "lo68": mid * (1 + u + BAND68[0]), "hi68": mid * (1 + u + BAND68[1]),
             "lo90": mid * (1 + u + BAND90[0]), "hi90": mid * (1 + u + BAND90[1])}
 
 
 def verdicts() -> dict[str, str]:
-    """The recorded verdicts of the declared tests G1a-G1c ("not run" when absent)."""
+    """The recorded verdict of the declared test G1a ("not run" when absent)."""
     try:
         from brain.research import run
         v = {r["id"]: r["verdict"].split(":")[0] for r in run.verdicts() if r.get("kind") == "promise"}
     except Exception:  # noqa: BLE001 - a card without verdicts says so
         v = {}
-    return {t: v.get(t, "not run") for t in ("G1a", "G1b", "G1c")}
+    return {t: v.get(t, "not run") for t in ("G1a",)}
 
 
 def after_close(known_at: str, asof: str) -> bool:
@@ -470,9 +493,10 @@ def said(view, ticker: str, asof: str) -> str | None:
         line = f"for the quarter it has just reported it had promised revenue of {rng} (on {r['made']})"
         if (rec := record(rows, stamp)):
             line += (f"; its record over its last {rec['n']} quarterly promises: kept {rec['kept'] * 100:.0f}%, beat "
-                     f"{rec['beat'] * 100:.0f}%, usually {rec['surprise'] * 100:+.1f}% against its midpoint")
-            if (e := expected(before, stamp)):
-                line += f", which put the delivery near {_usd(e['point'])}"
+                     f"{rec['beat'] * 100:.0f}%")
+        if (e := expected(before, stamp)):
+            line += (f"; its habit ({e['usual'] * 100:+.1f}% against the midpoint over its last {HABIT} deliveries "
+                     f"on file) put the delivery near {_usd(e['point'])}")
         parts.append(line)
     for r in new:
         rng = _usd(r["low"]) if r["point"] else f"{_usd(r['low'])} to {_usd(r['high'])}"
@@ -488,8 +512,8 @@ def said(view, ticker: str, asof: str) -> str | None:
         return None
     v = verdicts()
     return ("; ".join(parts) + f". Read by fixed rules from its releases (docs/PROMISES.md): check the figures "
-            f"against the release. Tests: the habit of beating its own number G1a {v['G1a']}; the price the week "
-            f"after a change of the year's promise G1c {v['G1c']}")
+            f"against the release. Test: the habit carries to the next delivery G1a {v['G1a']}; what the price "
+            f"does after a raise or a cut has not been tested")
 
 
 # ---------- the library ----------
@@ -551,18 +575,18 @@ def render(ticker: str, rows: list[dict], asof: str) -> list[str]:
         L.append(f"  open promise ({r['horizon']}, made {r['made']}): revenue of {rng}{ask}")
     v = verdicts()
     if (e := expected(rows, asof)):
-        L.append(f"  its habit ({e['usual'] * 100:+.1f}% against its midpoint) puts the delivery near {_usd(e['point'])}: "
-                 f"2 in 3 between {_usd(e['lo68'])} and {_usd(e['hi68'])}, 9 in 10 between {_usd(e['lo90'])} and "
-                 f"{_usd(e['hi90'])} (ranges from 2011-2023's promises; the habit's test G1a {v['G1a']}, "
-                 f"research/RESULTS.md)")
+        L.append(f"  its habit (the median of its last {HABIT} deliveries on file: {e['usual'] * 100:+.1f}% against "
+                 f"the midpoint) puts the delivery near {_usd(e['point'])}: 2 in 3 between {_usd(e['lo68'])} and "
+                 f"{_usd(e['hi68'])}, 9 in 10 between {_usd(e['lo90'])} and {_usd(e['hi90'])} (ranges from "
+                 f"2011-2023's promises; the habit's test G1a {v['G1a']}, research/RESULTS.md)")
     for r in [r for r in rows if r.get("grade")][-6:]:
         rng = _usd(r["low"]) if r["point"] else f"{_usd(r['low'])} to {_usd(r['high'])}"
         ch = f", {r['changed']} {r['change'] * 100:+.1f}%" if r.get("changed") else ""
         L.append(f"  {r['made']} {r['horizon']} to {r['period_end']}: promised {rng}{ch}; delivered {_usd(r['actual'])}: "
                  f"{r['grade']} ({r['surprise'] * 100:+.1f}%)")
-    L.append(f"  Tests (research/RESULTS.md): the habit carries to the next promise G1a {v['G1a']}; a promise that "
-             f"asks for more falls short G1b {v['G1b']}; the price the week after the year's promise changes G1c "
-             f"{v['G1c']}. A delivery is not a direction for the stock (docs/PROMISES.md).")
+    L.append(f"  Test (research/RESULTS.md): the habit carries to the next delivery G1a {v['G1a']}. Not tested yet: "
+             f"whether a promise that asks for more falls short, and what the price does after the year's promise "
+             f"changes. A delivery is not a direction for the stock (docs/PROMISES.md).")
     return L
 
 

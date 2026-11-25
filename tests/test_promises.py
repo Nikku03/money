@@ -127,6 +127,7 @@ class Expected(unittest.TestCase):
         for k, s in enumerate([.02, .04, .03, .05]):
             out.append({"t": "X", "horizon": "quarter", "grade": "met", "surprise": s, "made": f"2025-{k * 3 + 1:02d}-15",
                         "known_at": f"2025-{k * 3 + 1:02d}-15T21:05:00Z", "mid": 100.0,
+                        "period_end": f"2025-{k * 3 + 3:02d}-30",
                         "outcome_known": f"2025-{k * 3 + 3:02d}-20T00:00:00Z"})
         out.append({"t": "X", "horizon": "quarter", "made": "2026-01-15", "known_at": "2026-01-15T21:05:00Z",
                     "mid": 200.0, "low": 190.0, "high": 210.0, "point": False})
@@ -144,7 +145,18 @@ class Expected(unittest.TestCase):
         rows = self.rows()
         self.assertIsNone(pr.expected(rows, "2026-01-01T00:00:00Z"))            # the open promise is not made yet
         self.assertIsNone(pr.expected(rows, "2026-09-01T00:00:00Z"))            # made more than OPEN_DAYS ago
-        self.assertIsNone(pr.expected(rows[2:], "2026-02-01T00:00:00Z"))        # two outcomes: no record
+        self.assertIsNone(pr.expected(rows[1:], "2026-02-01T00:00:00Z"))        # three deliveries: no habit
+
+    def test_the_habit_is_the_last_four_deliveries_each_quarter_once(self):
+        rows = self.rows()
+        self.assertAlmostEqual(pr.habit(rows, "2026-01-15"), 0.035)
+        self.assertIsNone(pr.habit(rows, "2025-12-15"))                         # the fourth quarter has not ended
+        # a second promise for a quarter replaces the first; a fifth delivery pushes the oldest out
+        rows.insert(1, {**rows[0], "known_at": "2025-02-20T21:05:00Z", "made": "2025-02-20", "surprise": .01})
+        rows.append({**rows[0], "known_at": "2026-01-15T21:05:00Z", "made": "2026-01-15", "surprise": .09,
+                     "period_end": "2026-03-30"})
+        self.assertAlmostEqual(pr.habit(rows, "2026-01-15"), 0.035)             # .01 .04 .03 .05
+        self.assertAlmostEqual(pr.habit(rows, "2026-04-15"), 0.045)             # .04 .03 .05 .09
 
     def test_after_the_close(self):
         self.assertTrue(pr.after_close("2026-11-24T21:05:00Z", "2026-11-24"))   # 4:05 p.m. in New York

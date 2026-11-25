@@ -1248,8 +1248,8 @@ def _promise_section(rows: list[dict]) -> list[str]:
               "2011-2023, TEST 2024-01..2026-09. Per reporting season (a calendar quarter) the statistic is the rank "
               "correlation of the prediction with the outcome, averaged over seasons, with a one-sided sign-flip p "
               "over the seasons. Gated tests pass on a positive statistic with p < 0.05, their controls, and "
-              "Benjamini–Hochberg q < 0.10 across every gated test in the ledger. G1a and G1b are about what a "
-              "company delivers, not about its stock."),
+              "Benjamini–Hochberg q < 0.10 across every gated test in the ledger. G1a is about what a company "
+              "delivers, not about its stock."),
              "", "| Test | Question | Statistic | 90% interval | p | BH q | Controls | Verdict |",
              "| --- | --- | --- | --- | --- | --- | --- | --- |"]
     for r in sorted(rows, key=lambda x: x["id"]):

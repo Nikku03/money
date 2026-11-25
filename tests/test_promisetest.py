@@ -2,11 +2,15 @@
 from __future__ import annotations
 
 import unittest
+from unittest import mock
 
 import numpy as np
 
 from brain import promises as pr
 from brain.research import promisetest as pt
+from brain.research import run
+from brain.research.forecast_tests import Refused, paths
+from tests.util import TempHome
 
 
 def promise(t, made, surprise, *, known=None, period_end=None, outcome_known=None, stretch=0.0, horizon="quarter",
@@ -40,17 +44,20 @@ class Table(unittest.TestCase):
         self.assertEqual(pt.season("2025-02-10"), "2025Q1")
         self.assertEqual(pt.season("2025-12-31"), "2025Q4")
 
-    def test_the_record_uses_only_outcomes_known_when_the_promise_was_made(self):
+    def test_the_habit_uses_only_quarters_ended_when_the_promise_was_made(self):
         lib = company_rows("AAA", [0.01, 0.02, 0.03, 0.04, 0.05, 0.06])
         Q, Y = pt.table(lib, [])
         self.assertEqual(len(Q), 6)
         self.assertEqual(Y, [])
-        # the fifth promise is made two days before the fourth's outcome is filed: three known, no record yet
-        self.assertIsNone(Q[4]["usual"])
-        # the sixth sees the first four outcomes, not its own or the fifth's
-        self.assertAlmostEqual(Q[5]["usual"], float(np.median([0.01, 0.02, 0.03, 0.04])))
-        # what the same release delivered against the promise before it
+        # the fourth promise has three quarters delivered before it: no habit yet
+        self.assertIsNone(Q[3]["habit"])
+        # the fifth sees the first four deliveries, the one its release reports included, not its own
+        self.assertAlmostEqual(Q[4]["habit"], float(np.median([0.01, 0.02, 0.03, 0.04])))
+        # the sixth: the last four, the oldest dropped
+        self.assertAlmostEqual(Q[5]["habit"], float(np.median([0.02, 0.03, 0.04, 0.05])))
+        # what the same release delivered against the promise before it, and the habit that promise was made under
         self.assertAlmostEqual(Q[5]["got"], 0.05)
+        self.assertAlmostEqual(Q[5]["got_habit"], Q[4]["habit"])
         self.assertIsNone(Q[0]["got"])
 
     def test_the_report_session_and_the_year_s_change(self):
@@ -107,11 +114,11 @@ class Statistics(unittest.TestCase):
 
 class Reports(unittest.TestCase):
     def test_the_habit_s_ranges(self):
-        rows = [{"usual": 0.02, "surprise": 0.02 + e, "grade": "met"} for e in np.linspace(-0.10, 0.10, 41)]
-        rows.append({"usual": None, "surprise": 0.5, "grade": "beat"})
+        rows = [{"habit": 0.02, "surprise": 0.02 + e, "grade": "met"} for e in np.linspace(-0.101, 0.101, 41)]
+        rows.append({"habit": None, "surprise": 0.5, "grade": "beat"})
         h = pt.habit_report(rows)
         self.assertEqual(h["rows"], 41)
-        want = np.mean([(pr.BAND68[0] <= e <= pr.BAND68[1]) for e in np.linspace(-0.10, 0.10, 41)])
+        want = np.mean([(pr.BAND68[0] <= e <= pr.BAND68[1]) for e in np.linspace(-0.101, 0.101, 41)])
         self.assertAlmostEqual(h["in68"], float(want))
         self.assertLessEqual(h["in68"], h["in90"])
 
@@ -126,8 +133,9 @@ class Reports(unittest.TestCase):
         self.assertEqual(out["year"]["cut"]["n"], 1)
         self.assertNotIn("met", out["delivered"])
         self.assertEqual(out["habit"], {})
-        Q = [{"got": 0.01, "usual": 0.03, "r1": -0.04, "post5": 0.0}, {"got": 0.05, "usual": 0.03, "r1": 0.02, "post5": 0.0},
-             {"got": 0.05, "usual": None, "r1": 0.5, "post5": 0.0}]
+        Q = [{"got": 0.01, "got_habit": 0.03, "r1": -0.04, "post5": 0.0},
+             {"got": 0.05, "got_habit": 0.03, "r1": 0.02, "post5": 0.0},
+             {"got": 0.05, "got_habit": None, "r1": 0.5, "post5": 0.0}]
         out = pt.by_what(Q, [])
         self.assertEqual((out["habit"]["above"]["n"], out["habit"]["below"]["n"]), (1, 1))
         self.assertAlmostEqual(out["habit"]["below"]["r1"], -0.04)
@@ -148,19 +156,50 @@ class Evaluate(unittest.TestCase):
         out = pt.evaluate(lib, eps, rng=np.random.default_rng(1))
         self.assertGreater(out["G1a"]["stat"], 0.3)                     # the habit was planted
         self.assertLess(out["G1a"]["p"], 0.01)
-        self.assertGreater(out["G1b"]["p"], 0.01)                       # the stretch was noise
-        self.assertEqual(out["G1c"]["seasons"], 0)                      # no yearly promises here
         self.assertGreater(out["G1a"]["habit"]["rows"], 100)
         self.assertLess(out["G1a"]["habit"]["miss_habit"], out["G1a"]["habit"]["miss_midpoint"])
         self.assertIn("quarterly promises", pt.words("G1a", out["G1a"]))
-        self.assertIn("releases", pt.words("G1d", out["G1d"]))
+        self.assertIn("releases", pt.words("G1b", out["G1b"]))
 
     def test_the_spec_pins_the_code_and_the_ranges(self):
         s = pt.spec("G1a")
         self.assertEqual(s["band68"], list(pr.BAND68))
         self.assertEqual(s["code_sha"], pt.code_sha())
-        self.assertIsNone(pt.spec("G1d")["gate"])
+        self.assertIsNone(pt.spec("G1b")["gate"])
         self.assertNotEqual(pt.spec_sha(s), pt.spec_sha(pt.spec("G1b")))
+
+
+class TrialRun(TempHome):
+    def test_declare_then_test_writes_the_ledger_and_the_report(self):
+        rng = np.random.default_rng(4)
+        lib, eps = [], []
+        for c in range(50):
+            habit = rng.normal(0.02, 0.02)
+            rows = company_rows(f"C{c:02d}", [habit + rng.normal(0, 0.005) for _ in range(26)], start_year=2020)
+            for r in rows:
+                r["stretch"] = float(rng.normal())
+                eps.append({"t": r["t"], "date": r["made"], "pre": r["made"], "r1": float(rng.normal(0, 0.03)),
+                            "post5": float(rng.normal(0, 0.02))})
+            lib += rows
+        names = sorted({r["t"] for r in lib})
+        with mock.patch.object(pt, "universe", lambda: names), mock.patch.object(pt, "N_PLACEBO", 20):
+            with self.assertRaises(Refused):
+                pt.test(self.bank, log=None, lib=lib, eps=eps)                # not declared yet
+            self.assertEqual(len(pt.declare(log=None)), 2)
+            self.assertEqual(pt.declare(log=None), [])                        # declared once
+            out = pt.test(self.bank, log=None, lib=lib, eps=eps)
+            self.assertEqual([r["id"] for r in out], list(pt.IDS))
+            self.assertEqual(pt.test(self.bank, log=None, lib=lib, eps=eps), [])   # run once
+        by = {r["id"]: r for r in out}
+        self.assertTrue(by["G1a"]["gate"]["pass"])
+        self.assertEqual(by["G1b"]["gate_type"], "report")
+        led, res = paths(True)
+        text = res.read_text()
+        self.assertIn("## Promises: said and delivered", text)
+        self.assertIn("| G1a |", text)
+        got = {r["id"]: r["verdict"] for r in run.verdicts(led) if r.get("kind") == "promise"}
+        self.assertEqual(got["G1b"], "REPORT")
+        self.assertEqual(got["G1a"], "PASS")
 
 
 if __name__ == "__main__":

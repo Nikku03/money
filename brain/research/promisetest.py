@@ -1,5 +1,4 @@
-"""Declared tests of the promise record (brain/promises.py, docs/PROMISES.md): does a company deliver what it says,
-and what follows a change in what it says.
+"""Declared tests of the promise record (brain/promises.py, docs/PROMISES.md): does a company deliver what it says.
 
 A promise is revenue guidance read from an earnings release; its outcome is the revenue first reported for the
 promised period; ``surprise`` is the outcome over the promise's midpoint, less one. The tests use the research
@@ -9,31 +8,41 @@ calendar quarter a promise was made in, at least MIN_N of them) the statistic is
 prediction with the outcome; the seasons' values are averaged (a busy season counts once), with a one-sided
 sign-flip p over the seasons.
 
-The directions below were fixed on TRAIN only (``research/promises/explore_train.py``, its log beside it), before
-any TEST promise was held against anything:
+Fixed on TRAIN only (``research/promises/explore_train.py`` and ``explore_habit_train.py``, their logs beside
+them), before any TEST promise was held against anything:
 
-- **G1a, the habit.** The prediction is the company's usual surprise when the promise was made: the median surprise
-  of its last eight quarterly promises whose outcomes were known by then (at least four). The outcome is the
-  surprise on the new promise. Does a company that usually beats its own number keep beating it by as much?
-- **G1b, the stretch.** The prediction is ``SIGN_STRETCH * stretch``: the growth over the year-ago quarter that the
-  promise asks for, less the growth the company last reported. The outcome is the surprise. Does a promise that
-  asks for more than the company has been doing fall short more often?
-- **G1c, after a change of the year's promise.** The prediction is the change in the company's promise for its
-  fiscal year against its previous promise for the same year (the midpoint's move). The outcome is ``post5``: the
-  move against the market over the five sessions after the report session that carried it. Does the price keep
-  going after a raise or a cut?
-- **G1d** (reported, not gated): TEST releases by what they said (delivered above, inside or below the last promise;
-  more or less against its midpoint than the company's habit; the year's promise raised, held or cut), with the
-  report session's move and the week after. The same day: an explanation of a move, not a forecast.
+- **G1a, the habit.** The prediction is the company's habit when the promise is made (``promises.habit``): the
+  median surprise of its last four quarterly deliveries, the quarter it has just reported included. The outcome is
+  the surprise on the new promise. Does a company that beats its own number keep beating it by as much? TRAIN:
+  +0.315 (t +11.7, positive in 29 of 30 seasons). Among the measures looked at on TRAIN it came closest to the
+  delivery: a median 1.96% off, against 2.55% for the midpoint alone. The median of the last eight outcomes on
+  file when the promise was made, the measure first written down, gave +0.155.
+  Reported with it, not gated: how close the delivery came to the promise's midpoint, and to the midpoint moved by
+  the habit; and how often it fell inside the ranges ``promises.BAND68`` and ``promises.BAND90`` around that
+  (fixed on TRAIN).
+- **G1b** (reported, not gated): TEST releases by what they said (delivered above, inside or below the last
+  promise; more or less against its midpoint than the company's habit; the year's promise raised, held or cut),
+  with the report session's move and the week after. The same day: an explanation of a move, not a forecast.
 
-G1a also reports, not gated: how close the delivery came to the promise's midpoint, and to the midpoint moved by
-the habit; and how often the delivery fell inside the ranges ``promises.BAND68`` and ``promises.BAND90`` around
-that (fixed on TRAIN).
+G1a is about what a company delivers. It says nothing about its stock.
 
-Not declared, because TRAIN showed nothing: whether the record says how the stock reacts on the day the promised
-quarter is reported (docs/PROMISES.md).
+**Looked at on TRAIN and not declared.**
+- Whether the record says how the stock reacts on the day the promised quarter is reported: nothing (the habit
+  +0.004, the share of promises it beat +0.021).
+- The stretch (the growth a promise asks for, less the growth just reported) against the surprise: a promise that
+  asks for more fell short a little more often (+0.071, t +2.2, 24 of 36 seasons).
+- The change of the year's promise against the next five sessions: weak (+0.054, t +1.5; -0.056 on 2011-2018,
+  +0.102 on 2019-2023).
+The last two wait for more companies. On 2024-2026 the research universe has eleven seasons of about 65 quarterly
+promises, and nine seasons with twenty changes of a year's promise: too few to tell an effect of that size from
+none, so a FAIL would say nothing. They are for a later id, on the small and micro universes too, once their
+releases are re-read.
 
-Every gated test also needs its controls: a placebo that shuffles the prediction among each season's promises
+A delivery is "known" to a later promise once its quarter has ended and the release that makes the later promise
+has reported it. The bank holds the delivered figure from the accounts filed days after that release; the release
+states the same revenue.
+
+The gated test also needs its controls: a placebo that shuffles the prediction among each season's promises
 reaches p < 0.05 in at most 10% of draws, and an oracle that knows the outcome reaches p < 0.01. Then
 Benjamini-Hochberg q < 0.10 across every gated test in the ledger (``research/run.py``). Results are written
 whatever they say.
@@ -60,18 +69,14 @@ from brain.research.forecast_tests import Refused, is_trial, paths
 from brain.timeutil import now_iso
 
 KIND = "promise"
-IDS = ("G1a", "G1b", "G1c", "G1d")
-GATE_TYPE = {"G1a": "delivery", "G1b": "delivery", "G1c": "drift", "G1d": "report"}
+IDS = ("G1a", "G1b")
+GATE_TYPE = {"G1a": "delivery", "G1b": "report"}
 QUESTION = {"G1a": "does a company's habit of beating its own revenue promise carry to the next promise",
-            "G1b": "does a promise that asks for more than the company has been doing fall short",
-            "G1c": "does the price keep going the week after the year's promise is raised or cut",
-            "G1d": "the report session's move by what the release said"}
+            "G1b": "the report session's move by what the release said"}
 VERSION = 1
 UNIVERSE = "us_broad"
 TRAIN = ("2011-01-01", "2023-12-31")
 TEST = ("2024-01-01", "2026-09-30")
-SIGN_STRETCH = -1    # fixed on TRAIN (research/promises/explore_train.log)
-SIGN_CHANGE = 1      # fixed on TRAIN
 MIN_N = 20           # promises in a season
 HERE_DAYS = 4        # the report session comes within this many days of the release
 P_MAX = 0.05
@@ -108,8 +113,7 @@ def universe_sha() -> str:
 
 def spec(tid: str) -> dict:
     return {"id": tid, "version": VERSION, "train": list(TRAIN), "test": list(TEST), "universe": UNIVERSE,
-            "universe_sha": universe_sha(), "sign_stretch": SIGN_STRETCH, "sign_change": SIGN_CHANGE,
-            "min_n": MIN_N, "here_days": HERE_DAYS, "record": promises.RECORD, "min_record": promises.MIN_RECORD,
+            "universe_sha": universe_sha(), "min_n": MIN_N, "here_days": HERE_DAYS, "habit": promises.HABIT,
             "band68": list(promises.BAND68), "band90": list(promises.BAND90), "reader": promises.READER_MIN,
             "code_sha": code_sha(), "n_flip": N_FLIP, "n_boot": N_BOOT, "n_placebo": N_PLACEBO, "seed": SEED,
             "gate_type": GATE_TYPE[tid],
@@ -201,9 +205,10 @@ def table(lib: list[dict], eps: list[dict], tickers=None) -> tuple[list[dict], l
     """(quarterly promises, changes of a year's promise), each row with what was known when it was made and what
     followed. ``lib`` is the promise library, ``eps`` the episode library; ``tickers`` limits both.
 
-    A quarterly row: ``usual`` (the record's usual surprise when the promise was made, None under MIN_RECORD),
+    A quarterly row: ``habit`` (promises.habit when the promise was made, None with fewer than HABIT deliveries),
     ``stretch``, ``surprise`` (None until graded), ``got`` (what the same release delivered against the promise
-    before it), and the report session's ``r1`` and ``post5`` when the episode library has it.
+    before it) with ``got_habit`` (the habit that promise was made under), and the report session's ``r1`` and
+    ``post5`` when the episode library has it.
     A yearly row: ``change`` against the previous promise for the same fiscal year, ``r1`` and ``post5``."""
     keep = set(tickers) if tickers is not None else None
     by_t: dict[str, list[dict]] = defaultdict(list)
@@ -227,16 +232,16 @@ def table(lib: list[dict], eps: list[dict], tickers=None) -> tuple[list[dict], l
                     Y.append({"t": t, "made": r["made"], "season": season(r["made"]), "change": r["change"],
                               "changed": r["changed"], "r1": here["r1"], "post5": here.get("post5")})
                 continue
-            rec = promises.record(rs, r["known_at"])
             got = None
             if (prev is not None and prev.get("surprise") is not None and prev.get("period_end")
                     and prev["period_end"] < r["made"]
                     and (date.fromisoformat(r["made"]) - date.fromisoformat(prev["period_end"])).days <= 100):
                 got = prev
             Q.append({"t": t, "made": r["made"], "season": season(r["made"]),
-                      "usual": rec["surprise"] if rec else None, "stretch": r.get("stretch"),
+                      "habit": promises.habit(rs, r["made"]), "stretch": r.get("stretch"),
                       "surprise": r.get("surprise"), "grade": r.get("grade"),
                       "got": got["surprise"] if got else None, "got_grade": got["grade"] if got else None,
+                      "got_habit": promises.habit(rs, got["made"]) if got else None,
                       "r1": here["r1"] if here else None, "post5": here.get("post5") if here else None})
             prev = r
     return Q, Y
@@ -291,7 +296,7 @@ def ic_test(group: np.ndarray, pred: np.ndarray, y: np.ndarray, rng, n_placebo: 
 def habit_report(rows: list[dict]) -> dict:
     """How close the delivery came to the midpoint and to the midpoint moved by the habit, and how often it fell in
     the fixed ranges around that (rows with a record and a graded outcome)."""
-    u, s = _col(rows, "usual"), _col(rows, "surprise")
+    u, s = _col(rows, "habit"), _col(rows, "surprise")
     k = np.isfinite(u) & np.isfinite(s)
     if not k.any():
         return {"rows": 0}
@@ -315,9 +320,9 @@ def by_what(Q: list[dict], Y: list[dict]) -> dict:
         rows = [r for r in Q if r.get("got_grade") == g and r.get("r1") is not None]
         if rows:
             out["delivered"][g] = cell(rows)
-    known = [r for r in Q if r.get("got") is not None and r.get("usual") is not None and r.get("r1") is not None]
-    for g, rows in (("above", [r for r in known if r["got"] > r["usual"]]),
-                    ("below", [r for r in known if r["got"] <= r["usual"]])):
+    known = [r for r in Q if r.get("got") is not None and r.get("got_habit") is not None and r.get("r1") is not None]
+    for g, rows in (("above", [r for r in known if r["got"] > r["got_habit"]]),
+                    ("below", [r for r in known if r["got"] <= r["got_habit"]])):
         if rows:
             out["habit"][g] = cell(rows)
     for g in ("raised", "held", "cut"):
@@ -335,17 +340,14 @@ def evaluate(lib: list[dict], eps: list[dict], tickers=None, rng=None) -> dict[s
     y = [r for r in Y if TEST[0] <= r["made"] <= TEST[1]]
     gq = np.array([r["season"] for r in q])
     out = {}
-    out["G1a"] = {**ic_test(gq, _col(q, "usual"), _col(q, "surprise"), rng), "habit": habit_report(q)}
-    out["G1b"] = ic_test(gq, _col(q, "stretch", SIGN_STRETCH), _col(q, "surprise"), rng)
-    gy = np.array([r["season"] for r in y])
-    out["G1c"] = ic_test(gy, _col(y, "change", SIGN_CHANGE), _col(y, "post5"), rng)
-    out["G1d"] = {"by_what": by_what(q, y), "rows": len(q), "year_rows": len(y),
+    out["G1a"] = {**ic_test(gq, _col(q, "habit"), _col(q, "surprise"), rng), "habit": habit_report(q)}
+    out["G1b"] = {"by_what": by_what(q, y), "rows": len(q), "year_rows": len(y),
                   "companies": len({r["t"] for r in q})}
     return out
 
 
 def words(tid: str, m: dict) -> str:
-    if tid == "G1d":
+    if tid == "G1b":
         said = {"beat": "delivered above its last promise", "met": "delivered inside it", "missed": "delivered below it",
                 "above": "delivered more against its midpoint than its habit", "below": "delivered less than its habit",
                 "raised": "raised the year's promise", "held": "held it", "cut": "cut it"}
@@ -358,21 +360,13 @@ def words(tid: str, m: dict) -> str:
         return (f"{m['rows']} quarterly promises of {m['companies']} companies and {m['year_rows']} changes of a "
                 f"year's promise on TEST. " + "; ".join(parts) + ".")
     c = m["controls"]
-    if tid == "G1c":
-        return (f"{m['rows']} changes of a year's promise in {m['seasons']} seasons; rank correlation of the change "
-                f"with the next five sessions {m['stat']:+.4f} (positive in {m['seasons_positive']} of "
-                f"{m['seasons']} seasons). The fifth raised most averaged {m['top_fifth'] * 100:+.2f}% against the "
-                f"market over the week, the fifth cut most {m['bottom_fifth'] * 100:+.2f}%. Controls: shuffled "
-                f"predictions reached p < 0.05 in {c['placebo_fpr'] * 100:.1f}% of draws; the oracle p "
-                f"{c['oracle_p']:.4f}.")
-    what = "its usual surprise" if tid == "G1a" else "the stretch (less is better)"
-    base = (f"{m['rows']} quarterly promises in {m['seasons']} seasons; rank correlation of {what} with the surprise "
+    base = (f"{m['rows']} quarterly promises in {m['seasons']} seasons; rank correlation of its habit with the surprise "
             f"on the new promise {m['stat']:+.4f} (positive in {m['seasons_positive']} of {m['seasons']} seasons). "
             f"The top fifth by the prediction delivered a median {m['top_fifth_median'] * 100:+.2f}% against its "
             f"midpoint, the bottom fifth {m['bottom_fifth_median'] * 100:+.2f}%. Controls: shuffled predictions "
             f"reached p < 0.05 in {c['placebo_fpr'] * 100:.1f}% of draws; the oracle p {c['oracle_p']:.4f}.")
-    if tid == "G1a" and (h := m.get("habit")) and h.get("rows"):
-        base += (f" Reported, not gated: of {h['rows']} promises with a record, the delivery was a median "
+    if (h := m.get("habit")) and h.get("rows"):
+        base += (f" Reported, not gated: of {h['rows']} promises with a habit, the delivery was a median "
                  f"{h['miss_midpoint'] * 100:.2f}% from the midpoint and {h['miss_habit'] * 100:.2f}% from the "
                  f"midpoint moved by the habit; it fell inside the 2-in-3 range {h['in68'] * 100:.1f}% of the time "
                  f"and inside the 9-in-10 range {h['in90'] * 100:.1f}%; {h['missed_range'] * 100:.1f}% missed the "
@@ -422,7 +416,7 @@ def test(bank: Bank, *, trial: bool = False, log=print, lib: list[dict] | None =
     out = []
     for tid in todo:
         m = result[tid]
-        if tid == "G1d":
+        if tid == "G1b":
             rec = {"op": "result", "kind": KIND, "id": tid, "spec_sha": decls[tid]["spec_sha"],
                    "gate_type": "report", "metrics": {**m, "question": QUESTION[tid], "stat": float("nan"),
                                                        "words": words(tid, m)},
@@ -454,7 +448,7 @@ def _cmd(a) -> int:
 
 
 def add_cli(sub) -> None:
-    p = sub.add_parser("promisetest", help="declare or run G1a-G1d: does a company deliver what it says")
+    p = sub.add_parser("promisetest", help="declare or run G1a, G1b: does a company deliver what it says")
     p.add_argument("action", choices=["declare", "test"])
     p.add_argument("--trial", action="store_true", help="a trial run: a scratch ledger, no git checks")
     p.add_argument("--cached", action="store_true", help="use the episode library already built (var/episodes)")

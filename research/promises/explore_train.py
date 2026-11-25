@@ -82,9 +82,10 @@ def main() -> int:
             B.append({"season": pt.season(there["date"]), "r1": there["r1"],
                       "usual": rec["surprise"] if rec else None, "beat": rec["beat"] if rec else None,
                       "missed": rec["missed"] if rec else None, "stretch": r.get("stretch"),
-                      "surprise": r.get("surprise")})
+                      "habit": promises.habit(rs, r["made"]), "surprise": r.get("surprise")})
     for r in Q:
-        r["got_vs_usual"] = (r["got"] - r["usual"]) if (r.get("got") is not None and r.get("usual") is not None) else None
+        r["got_vs_habit"] = (r["got"] - r["got_habit"]) if (r.get("got") is not None
+                                                            and r.get("got_habit") is not None) else None
     for r in Y:
         e = pt._first_after(ep_t.get(r["t"], []), r["made"], pt.HERE_DAYS)
         r["post21"] = post21.get((r["t"], e["date"])) if e else None
@@ -100,19 +101,20 @@ def main() -> int:
         s = col(q, "surprise")
         g = np.isfinite(s)
         print(f"\n{name}: {len(q)} quarterly promises of {len({r['t'] for r in q})} companies ({int(g.sum())} graded, "
-              f"{int(np.isfinite(col(q, 'usual')).sum())} with a record), {len(y)} changes of a year's promise")
+              f"{int(np.isfinite(col(q, 'habit')).sum())} with a habit), {len(y)} changes of a year's promise")
         if not g.any():
             continue
         print(f"  graded: {np.mean(s[g] > 0) * 100:.0f}% above the midpoint; median {np.median(s[g]) * 100:+.2f}%; "
               f"missed the range {np.mean([r['grade'] == 'missed' for r in q if r.get('grade')]) * 100:.1f}%")
         gq = [r["season"] for r in q]
         print(" A. Delivery (against the surprise on the promise)")
-        line("its usual surprise (median of its last 8)", gq, col(q, "usual"), s)
+        line("its habit (median of its last 4 deliveries)", gq, col(q, "habit"), s)
         line("minus the stretch (growth asked less growth just done)", gq, col(q, "stretch", -1), s)
         line("what it delivered against its last promise", gq, col(q, "got"), s)
         print(" B. The day it delivers (against that report session's move)")
         gb = [r["season"] for r in b]
-        line("its usual surprise", gb, col(b, "usual"), col(b, "r1"))
+        line("its habit when it made the promise", gb, col(b, "habit"), col(b, "r1"))
+        line("its usual surprise (median of its last 8 on file)", gb, col(b, "usual"), col(b, "r1"))
         line("the share it beat", gb, col(b, "beat"), col(b, "r1"))
         line("minus the share it missed", gb, col(b, "missed", -1), col(b, "r1"))
         line("minus the stretch of the promise", gb, col(b, "stretch", -1), col(b, "r1"))
@@ -120,21 +122,21 @@ def main() -> int:
         print(" C. The day of the promise (same day; an explanation, not a forecast)")
         line("the stretch of the new promise", gq, col(q, "stretch"), col(q, "r1"))
         line("what it delivered against its last promise", gq, col(q, "got"), col(q, "r1"))
-        line("that, less its usual surprise", gq, col(q, "got_vs_usual"), col(q, "r1"))
+        line("that, less the habit that promise was made under", gq, col(q, "got_vs_habit"), col(q, "r1"))
         gy = [r["season"] for r in y]
         line("the change in its promise for the year", gy, col(y, "change"), col(y, "r1"))
         print(" D. After the promise (the week, then the month after the report session)")
         for out in ("post5", "post21"):
             line(f"the stretch of the new promise -> {out}", gq, col(q, "stretch"), col(q, out))
             line(f"what it delivered against its last promise -> {out}", gq, col(q, "got"), col(q, out))
-            line(f"that, less its usual surprise -> {out}", gq, col(q, "got_vs_usual"), col(q, out))
+            line(f"that, less the habit -> {out}", gq, col(q, "got_vs_habit"), col(q, out))
             line(f"the change in its promise for the year -> {out}", gy, col(y, "change"), col(y, out))
         if name.startswith("TRAIN"):
-            u = col(q, "usual")
+            u = col(q, "habit")
             k = np.isfinite(u) & g
             e = s[k] - u[k]
             qs = np.quantile(e, [0.05, 1 / 6, 0.5, 5 / 6, 0.95])
-            print(" E. The surprise less the usual surprise (promises with a record)")
+            print(" E. The surprise less the habit (promises with a habit)")
             print(f"  {int(k.sum())} rows; 5% {qs[0] * 100:+.2f}%, 1-in-6 {qs[1] * 100:+.2f}%, median {qs[2] * 100:+.2f}%, "
                   f"5-in-6 {qs[3] * 100:+.2f}%, 95% {qs[4] * 100:+.2f}%")
             print(f"  median distance of the delivery from the midpoint {np.median(np.abs(s[k])) * 100:.2f}%, from the "
