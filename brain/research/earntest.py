@@ -202,7 +202,7 @@ def monthly_ic(month: np.ndarray, pred: np.ndarray, y: np.ndarray, min_n: int = 
 
 def shuffled(month: np.ndarray, x: np.ndarray, rng) -> np.ndarray:
     out = x.copy()
-    for m in set(month.tolist()):
+    for m in sorted(set(month.tolist())):     # sorted: a set's order follows the process's hash seed
         k = np.flatnonzero(month == m)
         out[k] = x[rng.permutation(k)]
     return out
