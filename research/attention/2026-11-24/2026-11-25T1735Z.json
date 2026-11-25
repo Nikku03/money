@@ -1,0 +1,824 @@
+{
+ "check": "2026-11-25T1735Z",
+ "asof": "2026-11-24",
+ "built_at": "2026-11-25T17:37:25Z",
+ "weights": {
+  "surprise": 0.25,
+  "unexplained": 0.2,
+  "news": 0.15,
+  "reach": 0.1,
+  "against": 0.1,
+  "memory": 0.1,
+  "fragile": 0.1
+ },
+ "temp": 0.12,
+ "candidates": 44,
+ "focus": [
+  {
+   "t": "NTNX",
+   "company": "Nutanix, Inc.",
+   "move": -0.17750500960104587,
+   "z": -5.66369798091795,
+   "wave": 0.0,
+   "mover": true,
+   "score": 0.7158085593476462,
+   "parts": {
+    "surprise": 0.476,
+    "unexplained": 0.906,
+    "news": 1.0,
+    "reach": 1.0,
+    "against": 0.0,
+    "memory": 1.0,
+    "fragile": 0.656
+   },
+   "reasons": [
+    "outside its 9-in-10 range",
+    "most of the move is its own",
+    "filed its results",
+    "6 stories name it",
+    "66 stocks moved closely with it over the year",
+    "in the last note's theme \"Last night's reports met by sharp falls\"",
+    "chance of a restructuring or a write-off 2.4% against 0.3% usually"
+   ],
+   "attention": 0.32360247605755704,
+   "bars": 39,
+   "filings": [
+    {
+     "what": "results report (8-K 2.02)",
+     "at": "2026-11-24T21:01:15Z",
+     "title": "Nutanix Reports First Quarter Fiscal 2027 Financial Results",
+     "url": "https://www.sec.gov/Archives/edgar/data/1618732/000117184326007693/exh_991.htm",
+     "key": [
+      "Nutanix Acquires Ryax Technologies to Help Customers Accelerate Agentic AI Initiatives: Nutanix completed its acquisition of Ryax Technologies, an AI-driven compute orchestration and management platform company, and plans to integrate the platform\u2019s advanced GPU utilization and smart scheduling capabilities into Nutanix Kubernetes Platform (NKP) and Nutanix Enterprise AI (NAI).",
+      "Nutanix Recognized in 2026 Gartner\u00ae Magic Quadrant\u2122 for Container Management for Second Consecutive Year: Nutanix announced its recognition as a Challenger in the 2026 Gartner\u00ae Magic Quadrant\u2122 for Container Management for the second consecutive year, following the 2024 launch of NKP.",
+      "Webcast and Conference Call Information Nutanix executives will discuss the Company\u2019s first quarter fiscal 2027 financial results on a conference call today at 4:30 p.m."
+     ],
+     "text": "EX-99.1 2 exh_991.htm PRESS RELEASE EXHIBIT 99.1 Nutanix Reports First Quarter Fiscal 2027 Financial Results Reports 15% YoY ARR Growth and Solid Free Cash Flow Nutanix Announces CEO Succession Plan; Board Initiates Search for Next CEO SAN JOSE, Calif., Nov. 24, 2026 (GLOBE NEWSWIRE) -- Nutanix, Inc. (NASDAQ: NTNX), a hybrid cloud leader and AI platform company, today announced financial results for its first quarter ended October 31, 2026. \u201cIn the first quarter we delivered results that exceeded all of our guided metrics,\u201d said Rajiv Ramaswami, CEO of Nutanix. \u201cWe also continued to invest in our cloud platform, especially with respect to AI and broadening our support for external storage.\u201d \u201cOur first quarter results demonstrated a good balance of top and bottom line performance with 15% year-over-year ARR growth and solid free cash flow generation,\u201d said Rukmini Sivaraman, CFO of Nutanix. \u201cWe remain focused on delivering sustainable growth and improving profitability.\u201d Nutanix today separately announced that the Board is working with Chief Executive Officer Rajiv Ramaswami to identify and recruit his successor, and he will step down after his successor has been appointed and assumes the role. Ramaswami will continue to serve as a senior advisor to the Company for a period of time after his successor is in place to ensure a smooth transition. The Board has engaged a leading national search firm to assist the process of identifying Nutanix\u2019s next CEO. First Quarter Fiscal 2027 Financial Summary Q1 FY\u201927 Q1 FY\u201926 Y/Y Change Annual Recurring Revenue (ARR)1 $2.63 billion $2.28 billion 15% Average Contract Duration2 3.4 years 3.1 years 0.3 years Revenue $772.4 million $670.6 million 15% GAAP Gross Margin 87.5% 87.0% 50 bps Non-GAAP Gross Margin 88.5% 88.0% 50 bps GAAP Operating Expenses $533.4 million $533.8 million (0.1%) Non-GAAP Operating Expenses $435.9 million $458.0 million (5%) GAAP Operating Income $142.6 million $49.3 million $93.3 million Non-GAAP Operating Income $248.1 million $131.8 million $116.3 million GAAP Operating Margin 18.5% 7.4% 1,110 bps Non-GAAP Operating Margin 32.1% 19.7% 1,240 bps Net Cash Provided by Operating Activities $219.9 million $196.8 million $23.1 million Free Cash Flow $209.3 million $174.5 million $34.8 million Reconciliations between GAAP and non-GAAP financial measures and key performance measures, to the extent available, are provided in the tables of this press release. Recent Company Highlights Nutanix Receives Micron Global Supplier Award for IT & Professional Services: Nutanix announced it was honored with the Outstanding Supplier Performance Award in IT & Professional Services at Micron Supplier Day 2026. Nutanix Builds a Faster Foundation for Production AI: Nutanix expanded its AI ecosystem with NVIDIA, Supermicro, and Netris to help enterprises and service providers quickly deploy and scale production AI, and reduce AI costs. Nutanix Acquires Ryax Technologies to Help Customers Accelerate Agentic AI Initiatives: Nutanix completed its acquisition of Ryax Technologies, an AI-driven compute orchestration and management platform company, and plans to integrate the platform\u2019s advanced GPU utilization and smart scheduling capabilities into Nutanix Kubernetes Platform (NKP) and Nutanix Enterprise AI (NAI). Nutanix Named a Leader in 2026 Gartner\u00ae Magic Quadrant\u2122 for Server Virtualization Platforms: Nutanix announced its recognition as a Leader in the 2026 Gartner\u00ae Magic Quadrant\u2122 for Server Virtualization Platforms. Nutanix Named a Leader in 2026 Gartner\u00ae Magic Quadrant\u2122 for Distributed Hybrid Infrastructure: Nutanix announced its recognition as a Leader in the 2026 Gartner\u00ae Magic Quadrant\u2122 for Distributed Hybrid Infrastructure. Nutanix Recognized in 2026 Gartner\u00ae Magic Quadrant\u2122 for Container Management for Second Consecutive Year: Nutanix announced its recognition as a Challenger in the 2026 Gartner\u00ae Magic Quadrant\u2122 for Container Management for the second consecutive year, following the 2024 launch of NKP. Second Quarter Fiscal 2027 Outlook Revenue $820 - $830 million Non-GAAP Operating Margin 27% to 28% Weighted Average Shares Outstanding (Diluted)3 Approximately 295 million Fiscal 2027 Outlook Revenue $3.180 - $3.230 billion Non-GAAP Operating Margin 24.5% to 25.5% Free Cash Flow $875 - $975 million Supplementary materials to this press release, including our first quarter fiscal 2027 earnings presentation, can be found at https://ir.nutanix.com/financial/quarterly-results. Webcast and Conference Call Information Nutanix executives will discuss the Company\u2019s first quarter fiscal 2027 financial results on a conference call today at 4:30 p.m. Eastern Time / 1:30 p.m. Pacific Time. Interested parties may access the conference call by registering at this link to receive dial in details and a unique PIN number. The conference call will also be webcast live on the Nutanix Investor Relations website at ir.nutanix.com. An archived replay of the webcast will be available on the Nutanix Investor Relations website at ir.nutanix.com shortly after the call. Footnotes 1Annual Recurring Revenue, or ARR, is defined as the sum of ACV for all subscription contracts from all customers in effect as of the end of a specific period, assuming any subscription contract that expires is renewed on its existing terms. ARR excludes the value of professional services, non-portable software and support contracts and hardware sales. For the purposes of this calculation, we generally assume that the contract term begins on the date when the software is made available to the customer. ACV is defined as the total annualized value of a contract. The total annualized value for a contract is calculated by dividing the total value of the contract by the number of years in the term of such contract. 2Average Contract Duration represents the dollar-weighted term, calculated on a billings basis, across all subscription contracts, as well as our limited number of life-of-device contracts, "
+    }
+   ],
+   "pages": [
+    {
+     "url": "https://www.trefis.com/stock/ntnx/articles/629008/did-nutanix-stock-fall-alone-or-with-its-peers/2026-11-25?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-25T12:17:24Z",
+     "key": [
+      "November 25th, 2026 \u00b7 by Trefis Team NTNXYTD+5.6%SPYYTD+6.2%QQQYTD+4.2% Analyze NTNX \u2192 Today\u2019s big story: Anthropic Below Its IPO Price: Do Giants Come Back?",
+      "Nutanix stock fell 5.2% on November 24, 2026, to close at $54.59.",
+      "Dell Technologies fell 11.8% and Hewlett Packard Enterprise fell 16.3%.",
+      "Analysts had expected $762.8 million.",
+      "On November 24, Nutanix fell 5.2% while the median of the 29 other systems software companies worth $2 billion or more fell 0.1%.",
+      "If you like finding quality companies like Nutanix, the Trefis High Quality (HQ) Portfolio holds 30 of them in equal weight, and has returned more than 105% since"
+     ],
+     "text": "Invest in Trefis StrategiesPortfolios built and run with Trefis researchHelp Me InvestWealth management for individuals and familiesFor AdvisorsResearch and portfolio tools for advisors All articlesFeatured ArticlesActionable IdeasNotificationsCounter-Intuitive ComparisonsPeer ComparisonsRecently Viewed Loading rankings\u2026 Price EstimatesAll rankings CompaniesSectorsIndustriesDownloads Wealth Math: Limit Loss; Compound GainsWealth Management without Market Predictions6 Aversions to Hiring a Wealth Manager3 Key Metrics to Evaluate Market Valuation10 Ways to Prepare for a Market Correction9 Market Crashes Compared Our StoryManagement TeamInvestors and AdvisorsContact Us Trefis Storylines What Is Driving Nutanix Stock? November 25th, 2026 \u00b7 by Trefis Team NTNXYTD+5.6%SPYYTD+6.2%QQQYTD+4.2% Analyze NTNX \u2192 Today\u2019s big story: Anthropic Below Its IPO Price: Do Giants Come Back? Nutanix stock fell 5.2% on November 24, 2026, to close at $54.59. The S&P 500 slipped 0.5% in the same session. That day Nutanix reported results for the three months to October 31, 2026. It also said its CEO will step down once a successor takes over. Nutanix fell with most of its peers, but its own sub-industry barely moved. Four of the five companies on Trefis\u2019s peer list for Nutanix fell too. Dell Technologies fell 11.8% and Hewlett Packard Enterprise fell 16.3%. Both sit outside Nutanix\u2019s sub-industry, systems software. What Did Nutanix Report? The company said on its call that revenue reached a record $772 million. Analysts had expected $762.8 million. Adjusted earnings per share, which leave out some costs, came to $0.73 against an estimate of $0.61. The company also bought back $50 million of its own shares in the quarter. Nutanix used $50 million to buy back its own shares in the quarter, but it pays its holders no regular cash. If your savings have to cover the bills, this stock gives you nothing to live on while you hold it. The Trefis Income Solution pays a dividend yield about 3 times the S&P 500\u2019s, from 50 companies that have paid dividends for at least 10 years in a row. See what it pays. Bookings declined slightly from a year earlier. Management tied that to a reshuffle of sales accounts that it called temporary. The earnings calendar does not show whether the results came out before or after the close. So closing prices cannot show how much of the fall, if any, came from the report. Did Nutanix Fall With Its Group? Nutanix fell far more than its sub-industry. The median of the 29 other systems software companies worth $2 billion or more fell just 0.1%. A fund of the S&P 500\u2019s technology stocks fell 3.3%. On the peer list, Broadcom and Cisco Systems fell less than Nutanix. Microsoft rose. For more on Dell, see Is Dell Stock\u2019s Steep Fall A Bargain Or A Warning? For an earlier look at Nutanix, see Was Nutanix\u2019s Rise Driven By The Company Or Its Industry? Where Does Nutanix Stock Stand Now? Falls this large are not rare for Nutanix. It had 13 of them in the prior year. Its latest move at least this large came the session before, on November 23, when it rose 6.2%. The stock lost 24.9% in the past month, on a total return basis. Over the past year it lost 5.3%, while the S&P 500 gained 10.3%. Its highest close of the past year was $74.63 on October 9, 2026. Nutanix next reports in February 2027, for the three months to January 2027. At the end of October, its annual recurring revenue, the yearly value of its subscription contracts, was 15% higher than a year earlier. The February report will show where that figure stands next. Spreading money across many companies keeps one stock\u2019s bad day from deciding how your savings do. On November 24, Nutanix fell 5.2% while the median of the 29 other systems software companies worth $2 billion or more fell 0.1%. Why Own One Leader When You Can Own 30? If you like finding quality companies like Nutanix, the Trefis High Quality (HQ) Portfolio holds 30 of them in equal weight, and has returned more than 105% since "
+    },
+    {
+     "url": "https://finance.yahoo.com/m/ebb7cde4-51b3-3da8-8742-37ce38a5fd1e/nutanix-stock-gets.html?.tsrc=rss",
+     "refused": "not read: robots.txt disallows it (respecting it)"
+    }
+   ],
+   "pond": {
+    "wave": 0.0,
+    "own": -5.66369798091795,
+    "how": "a stone: its own news",
+    "from": [],
+    "reaches": [
+     [
+      "ESTC",
+      0.64,
+      -0.0039
+     ],
+     [
+      "DT",
+      0.62,
+      -0.0128
+     ],
+     [
+      "WDAY",
+      0.61,
+      0.02014
+     ],
+     [
+      "ZS",
+      0.61,
+      -0.04905
+     ],
+     [
+      "NOW",
+      0.61,
+      -0.01117
+     ]
+    ]
+   }
+  },
+  {
+   "t": "URBN",
+   "company": "URBAN OUTFITTERS INC",
+   "move": -0.11883615447789565,
+   "z": -4.118240119198419,
+   "wave": 0.0,
+   "mover": true,
+   "score": 0.6227243603295167,
+   "parts": {
+    "surprise": 0.662,
+    "unexplained": 0.875,
+    "news": 0.8,
+    "reach": 0.62,
+    "against": 0.0,
+    "memory": 1.0,
+    "fragile": 0.0
+   },
+   "reasons": [
+    "outside its 9-in-10 range",
+    "most of the move is its own",
+    "filed 8-K 8.01 at 2026-11-25T16:22Z",
+    "5 stories name it",
+    "in the last note's theme \"Last night's reports met by sharp falls\""
+   ],
+   "attention": 0.1489803142769032,
+   "bars": 38,
+   "filings": [
+    {
+     "what": "8-K 8.01",
+     "at": "2026-11-25T16:22:15Z",
+     "title": "URBAN OUTFITTERS, INC.",
+     "url": "https://www.sec.gov/Archives/edgar/data/912615/000119312526477264/urbn-ex99_1.htm",
+     "key": [
+      "EX-99.1 2 urbn-ex99_1.htm EX-99.1 Exhibit 99.1 URBAN OUTFITTERS, INC.",
+      "For the nine months ended October 31, 2026, net income was $490.4 million and earnings per diluted share were $5.61.",
+      "Comparable Retail segment net sales increased 8.5% at FP Group, 5.8% at Urban Outfitters and 1.7% at Anthropologie Group.",
+      "Comparable Retail segment net sales increased 9.4% at FP Group, 7.8% at Urban Outfitters and 2.2% at Anthropologie Group.",
+      "For the nine months ended October 31, 2026, the gross profit rate increased by 204 basis points compared to the nine months ended October 31, 2025, and gross profit dollars increased 16.3% to $1.88 billion from $1.62 billion.",
+      "For the nine months ended October 31, 2026, the adjusted gross profit rate increased by 5 basis points compared to the nine months ended October 31, 2025, and adjusted gross profit dollars increased 10.3% to $1.79 billion from $1.62 billion."
+     ],
+     "text": "EX-99.1 2 urbn-ex99_1.htm EX-99.1 Exhibit 99.1 URBAN OUTFITTERS, INC. Third Quarter Results Philadelphia, PA \u2013 November 24, 2026 For Immediate Release Contact: Oona McCullough Executive Director of Investor Relations (215) 454-4806 URBN Reports Record Q3 Sales and Profits PHILADELPHIA, PA, November 24, 2026 \u2013 Urban Outfitters, Inc. (NASDAQ:URBN), a leading lifestyle products and services company which operates a portfolio of global consumer brands including the Anthropologie, Free People, FP Movement, Urban Outfitters and Nuuly brands, today announced net income of $134.1 million and earnings per diluted share of $1.54 for the three months ended October 31, 2026. For the nine months ended October 31, 2026, net income was $490.4 million and earnings per diluted share were $5.61. For the nine months ended October 31, 2026, adjusted net income was $399.3 million and adjusted earnings per diluted share were $4.57. Adjusted net income and adjusted earnings per diluted share for the nine months ended October 31, 2026, exclude one-time benefits related to refunds for tariffs previously paid under the International Emergency Economic Powers Act (\"IEEPA\"), associated interest income and a tax benefit related to the release of a valuation allowance against certain foreign net deferred tax assets. See \u201cReconciliation of Non-GAAP Financial Measures\u201d included at the end of this release. Total Company net sales for the three months ended October 31, 2026, increased 8.9% to a record $1.67 billion. Total Retail segment net sales increased 6.1%, with comparable Retail segment net sales increasing 4.4%. The increase in Retail segment comparable net sales was driven by mid single-digit positive growth in both retail store sales and digital channel sales. Comparable Retail segment net sales increased 8.5% at FP Group, 5.8% at Urban Outfitters and 1.7% at Anthropologie Group. Subscription segment net sales increased 28.0% primarily driven by a 27.6% increase in average active subscribers in the current quarter versus the prior year quarter. Wholesale segment net sales increased 18.8% driven by a 20.8% increase in FP Group wholesale sales primarily due to an increase in sales to specialty customers and department stores. For the nine months ended October 31, 2026, total Company net sales increased 10.2% to a record $4.81 billion. Total Retail segment net sales increased 7.3%, with comparable Retail segment net sales increasing 5.4%. The increase in Retail segment comparable net sales was driven by mid single-digit positive growth in both digital channel sales and retail store sales. Comparable Retail segment net sales increased 9.4% at FP Group, 7.8% at Urban Outfitters and 2.2% at Anthropologie Group. Subscription segment net sales increased 30.2% primarily driven by a 30.3% increase in average active subscribers in the current period versus the prior year period. Wholesale segment net sales increased 20.6% driven by a 22.0% increase in FP Group wholesale sales primarily due to an increase in sales to specialty customers and department stores. \u201cOur teams delivered another standout quarter, achieving record third-quarter sales and earnings per share,\u201d said Richard A. Hayne, Chief Executive Officer. \u201cEvery brand and segment contributed positively to our third-quarter performance, underscoring the strength of our portfolio and disciplined execution across the organization,\u201d finished Mr. Hayne. Net sales by brand and segment for the three and nine-month periods were as follows: Three Months Ended Nine Months Ended October 31, October 31, 2026 2025 2026 2025 Net sales by brand Anthropologie Group $ 655,096 $ 634,828 $ 1,878,704 $ 1,811,713 FP Group 457,624 399,272 1,347,396 1,167,398 Urban Outfitters 355,434 339,848 1,020,176 946,524 Nuuly 185,071 144,629 530,940 407,915 Menus & Venues 11,858 10,773 31,127 30,056 Total Company $ 1,665,083 $ 1,529,350 $ 4,808,343 $ 4,363,606 Net sales by segment Retail Segment $ 1,375,187 $ 1,296,454 $ 3,988,621 $ 3,716,233 Subscription Segment 185,071 144,629 530,940 407,915 Wholesale Segment 104,825 88,267 288,782 239,458 Total Company $ 1,665,083 $ 1,529,350 $ 4,808,343 $ 4,363,606 For the three months ended October 31, 2026, the gross profit rate increased by 26 basis points compared to the three months ended October 31, 2025, and gross profit dollars increased 9.6% to $617.6 million from $563.3 million. The increase in gross profit rate was primarily driven by leverage in initial merchandise costs due in part to the lower year over year impact of tariffs which was partially offset by higher inbound freight fuel surcharges, leverage in delivery expense as a result of several company initiatives, and leverage in store occupancy costs due to the increase in total Company net sales. These benefits were partially offset by an increase in Retail segment markdowns primarily driven by Anthropologie Group. The increase in gross profit dollars was primarily due to higher net sales. For the nine months ended October 31, 2026, the gross profit rate increased by 204 basis points compared to the nine months ended October 31, 2025, and gross profit dollars increased 16.3% to $1.88 billion from $1.62 billion. For the nine months ended October 31, 2026, the adjusted gross profit rate increased by 5 basis points compared to the nine months ended October 31, 2025, and adjusted gross profit dollars increased 10.3% to $1.79 billion from $1.62 billion. The increase in the adjusted gross profit rate was primarily driven by leverage in delivery expense as a result of several company initiatives and leverage in store occupancy costs due to the increase in total Company net sales, partially offset by an increase in Retail segment markdowns primarily driven by Anthropologie Group. The increase in adjusted gross profit dollars was primarily due to higher net sales. As of October 31, 2026, total inventory increased by $84.4 million, or 10.1%, compared to total inventory as of October 31, 2025. Total Reta"
+    }
+   ],
+   "pages": [
+    {
+     "url": "https://finance.yahoo.com/markets/stocks/articles/urban-outfitters-urbn-stock-could-171030099.html?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-25T17:10:30Z",
+     "key": [
+      "Over the past 5 years the stock has returned roughly 170%, which raises the question of how much future cash generation is already reflected in the price.",
+      "What if you looked at Urban Outfitters through its earnings instead?",
+      "See why Urban Outfitters's 12.9x P/E tells a different valuation story.",
+      "For investors, the debate is whether Urban Outfitters' current share price is adequately supported by the cash flows implied by a Discounted Cash Flow (DCF) style intrinsic value estimate.",
+      "Latest twelve month free cash flow sits at about $410.3 million, and the forecast path points to growing cash generation, with analyst estimates stepping up over the next decade before easing into slower expansion.",
+      "Simply Wall St Narratives pick up where the DCF puzzle for Urban Outfitters leaves off and spell out the specific assumptions on growth, profitability and earnings that would need to play out for the share price to end up materially higher or lower than it is today on the Community page."
+     ],
+     "text": "Oops, something went wrong Skip to navigation Skip to main content Skip to right column Sign in U.S. markets close in 3h 24m US Markets Europe Markets Asia Markets Cryptocurrencies Rates Commodities Currencies U.S. markets close in 3h 24m S&P 500 7,113.47 -87.62 -1.22% Dow 30 49,952.06 -66.64 -0.13% Nasdaq 23,218.14 -515.40 -2.17% Russell 2000 2,677.44 -7.51 -0.28% 10-Yr Bond 4.8320 -0.0720 -1.47% VIX 30.21 +3.85 +14.51% Gold 3,530.80 -60.30 -1.68% Bitcoin USD 59,491.37 -540.10 -0.90% Crude Oil Jan 27 83.51 +1.46 +1.78% US Private Equity 10,696.29 0.00 0.00% ADVERTISEMENT Urban Outfitters (URBN) Stock Could Be A Cash Flow Bargain Sasha Jovanovic Wed, November 25, 2026 at 9:10 AM PST 4 min read URBN -11.62% Urban Outfitters has delivered a powerful multi year run in the market, and the latest swing in sentiment now puts the spotlight squarely on whether the current share price lines up with the cash the business can generate. After such a move, the key issue for anyone looking at the stock is how its trading level compares with an intrinsic value estimate built from its cash flows. Over the past 5 years the stock has returned roughly 170%, which raises the question of how much future cash generation is already reflected in the price. The recent share drop following slower comparable sales growth, particularly at Anthropologie and with management signalling flatter revenue and higher markdowns, may affect how confidently investors can project future cash flows and margins. What if you looked at Urban Outfitters through its earnings instead? See why Urban Outfitters's 12.9x P/E tells a different valuation story. For investors, the debate is whether Urban Outfitters' current share price is adequately supported by the cash flows implied by a Discounted Cash Flow (DCF) style intrinsic value estimate. If you want to test the same cash flow question beyond Urban Outfitters, compare its record with companies in the 37 high quality undervalued stocks. Is Urban Outfitters a Bargain on Cash Flow? The Discounted Cash Flow (DCF) model here focuses on the cash Urban Outfitters can return to shareholders over time. Latest twelve month free cash flow sits at about $410.3 million, and the forecast path points to growing cash generation, with analyst estimates stepping up over the next decade before easing into slower expansion. Those projections, when discounted back using this 2 Stage Free Cash Flow to Equity framework, produce an intrinsic value estimate that the model suggests is meaningfully above the current share price of $85.58. The recent share drop after slower Q3 comparable sales growth and expectations for flatter revenue with higher markdowns helps explain why the market is keeping the stock below what these cash flows support, even with growth assumptions that moderate over time. Find out what Urban Outfitters could be worth using our Discounted Cash Flow (DCF) estimate. The Urban Outfitters Narrative: What Would Justify Today's Price? Simply Wall St Narratives pick up where the DCF puzzle for Urban Outfitters leaves off and spell out the specific assumptions on growth, profitability and earnings that would need to play out for the share price to end up materially higher or lower than it is today on the Community page. Instead of a single output from a ratio or model, Narratives lay out the future those numbers rely on so you can watch how the real business lines up with that path over time. Bulls and bears are both watching the same Urban Outfitters story, but they read very different things into the cash flow and margin set up. Bull case: 7% undervalued The analyst consensus Narrative on Simply Wall St highlights what stronger brands and new platforms could mean for Urban Outfitters. \"The broader shift of Urban Outfitters, Inc. into a five brand portfolio with different banners, channels and customer demographics can create more stable company level revenue and margin performance\u2026\" Discover why this Narrative puts Urban Outfitter"
+    },
+    {
+     "url": "https://finance.yahoo.com/markets/stocks/articles/urbn-q3-earnings-beat-estimates-142200518.html?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-25T14:22:00Z",
+     "key": [
+      "The company reported earnings of $1.54 per share, exceeding the consensus estimate of $1.53 and increasing 20.3% year over year.",
+      "Quote Urban Outfitters Sees Broad-Based Retail Growth Retail segment net sales increased 6.1% year over year to $1,375.2 million, with comparable sales rising 4.4%.",
+      "Retail segment operating income increased 11% to $152.6 million, while the operating margin expanded to 11.1% from 10.6% in the prior-year quarter, supported by gross margin expansion and expense leverage.",
+      "Free People and FP Movement registered total sales growth of 11% and 27%, respectively, while comparable Retail segment sales increased 7% and 12%.",
+      "The Urban Outfitters brand's revenues rose 4.6% to $355.4 million, with comparable Retail segment sales rising 5.8%.",
+      "URBN Benefits From Subscription & Wholesale Strength Subscription segment net sales increased 28% year over year to $185.1 million, primarily driven by a 27.6% increase in average active subscribers."
+     ],
+     "text": "Oops, something went wrong Skip to navigation Skip to main content Skip to right column Sign in U.S. markets close in 3h 24m US Markets Europe Markets Asia Markets Cryptocurrencies Rates Commodities Currencies U.S. markets close in 3h 24m S&P 500 7,113.47 -87.62 -1.22% Dow 30 49,952.06 -66.64 -0.13% Nasdaq 23,218.14 -515.40 -2.17% Russell 2000 2,677.44 -7.51 -0.28% 10-Yr Bond 4.8320 -0.0720 -1.47% VIX 30.21 +3.85 +14.51% Gold 3,530.80 -60.30 -1.68% Bitcoin USD 59,461.59 -569.88 -0.95% Crude Oil Jan 27 83.61 +1.56 +1.90% US Private Equity 10,696.29 0.00 0.00% ADVERTISEMENT URBN Q3 Earnings Beat Estimates, Sales & Margins Improve Y/Y Zacks Equity Research Wed, November 25, 2026 at 6:22 AM PST 11 min read URBN -11.72% FOSL -1.00% TPR +0.00% FIGS -1.71% Urban Outfitters, Inc. URBN reported mixed third-quarter fiscal 2027 results, with earnings surpassing the Zacks Consensus Estimate and revenues marginally missing the same. The company reported earnings of $1.54 per share, exceeding the consensus estimate of $1.53 and increasing 20.3% year over year. Net sales rose 8.9% year over year to a record $1,665.1 million but fell slightly short of the consensus mark of $1,667 million. The company registered its ninth consecutive quarter of record sales, supported by positive comparable sales across all Retail brands and double-digit growth in the Subscription and Wholesale segments. Improved merchandise margins and expense leverage contributed to the bottom-line performance. Urban Outfitters, Inc. Price, Consensus and EPS Surprise Urban Outfitters, Inc. price-consensus-eps-surprise-chart | Urban Outfitters, Inc. Quote Urban Outfitters Sees Broad-Based Retail Growth Retail segment net sales increased 6.1% year over year to $1,375.2 million, with comparable sales rising 4.4%. Both retail stores and digital channels registered mid-single-digit comparable sales growth. Non-comparable Retail segment sales rose 47% to $73.8 million, primarily reflecting new store openings. Retail segment operating income increased 11% to $152.6 million, while the operating margin expanded to 11.1% from 10.6% in the prior-year quarter, supported by gross margin expansion and expense leverage. FP Group's total revenues jumped 14.6% to $457.6 million, with comparable Retail segment sales rising 8.5%. Free People and FP Movement registered total sales growth of 11% and 27%, respectively, while comparable Retail segment sales increased 7% and 12%. FP Group's performance benefited from strong regular-price sales, new store openings and robust Wholesale segment growth. The group's international business also delivered strong results, with comparable Retail segment sales increasing 19%. Disciplined inventory management and strong customer demand helped FP Group achieve record third-quarter operating profits. The Urban Outfitters brand's revenues rose 4.6% to $355.4 million, with comparable Retail segment sales rising 5.8%. Comparable sales increased 4% in North America and 8% in Europe, with store sales outperforming digital sales across both markets. Strength in women's apparel and accessories supported the performance. The brand registered its ninth consecutive quarter of improved profitability. Anthropologie Group's revenues jumped 3.2% to $655.1 million, with comparable Retail segment sales rising 1.7%. Digital comparable sales increased, while comparable store sales remained flat. Positive comparable sales in women's apparel and accessories were partly offset by softness in the home category. Difficulties clearing older merchandise and slower-than-expected adoption of newer products caused regular-price and overall sales to fall short of management's plans. Nevertheless, Anthropologie maintained a double-digit operating margin and expanded its customer base by 3%. URBN Benefits From Subscription & Wholesale Strength Subscription segment net sales increased 28% year over year to $185.1 million, primarily driven by a 27.6% increase in average active subscribers. Nuu"
+    }
+   ],
+   "pond": {
+    "wave": 0.0,
+    "own": -4.118240119198419,
+    "how": "a stone: its own news",
+    "from": [],
+    "reaches": [
+     [
+      "ANF",
+      0.61,
+      0.02629
+     ],
+     [
+      "AEO",
+      0.57,
+      -0.01207
+     ],
+     [
+      "GAP",
+      0.56,
+      0.01546
+     ],
+     [
+      "CAL",
+      0.52,
+      -0.00166
+     ],
+     [
+      "BKE",
+      0.51,
+      -0.02381
+     ]
+    ]
+   }
+  },
+  {
+   "t": "GDRX",
+   "company": "GoodRx Holdings, Inc.",
+   "move": -0.19006665547688806,
+   "z": -5.031913418568852,
+   "wave": 0.0,
+   "mover": true,
+   "score": 0.5890226188850223,
+   "parts": {
+    "surprise": 0.709,
+    "unexplained": 0.897,
+    "news": 1.0,
+    "reach": 0.0,
+    "against": 0.0,
+    "memory": 0.0,
+    "fragile": 0.824
+   },
+   "reasons": [
+    "outside its 9-in-10 range",
+    "most of the move is its own",
+    "filed its results",
+    "6 stories name it",
+    "chance of late or unreliable accounts 4.4% against 0.4% usually"
+   ],
+   "attention": 0.11250147502583041,
+   "bars": 38,
+   "filings": [
+    {
+     "what": "results report (8-K 2.02)",
+     "at": "2026-11-24T21:32:08Z",
+     "title": "GOODRX REPORTS THIRD QUARTER 2026 RESULTS AND PROVIDES UPDATE ON",
+     "url": "https://www.sec.gov/Archives/edgar/data/1809519/000180951926000231/gdrxq326-exx991pressrelease.htm",
+     "key": [
+      "We see a significant opportunity to build on that demand, strengthening GoodRx\u2019s role in healthcare affordability and creating a more durable business over time.\u201d 1.Adjusted EBITDA, Adjusted EBITDA Margin, Adjusted Net Income, Adjusted Net Income Margin, and Free Cash Flow are non-GAAP financial measures and are presented for supplemental informational purposes only.",
+      "Third Quarter 2026 Financial Overview (all comparisons are made to the same period of the prior year unless otherwise noted): Revenue increased 11% to $218.4 million compared to $196.0 million.",
+      "Prescription transactions revenue decreased 20% to $101.6 million compared to $127.3 million, primarily driven by a decrease in the number of our Monthly Active Consumers due to higher consumer prices and competition, coupled with the deliberate shift of product and marketing investment toward our new subscription offerings.",
+      "Subscription revenue increased 41% to $29.2 million compared to $20.7 million, primarily driven by the expansion and growth of our condition-specific subscription programs, in particular weight loss, as well as a resulting increase in the number of subscription plans.",
+      "Pharma Direct revenue increased 93% to $83.6 million compared to $43.4 million, driven by organic growth as we continued to expand our market penetration with pharma manufacturers and other customers, in particular our GLP-1 access programs, which are part of our consumer direct pricing.",
+      "We have not reconciled our Adjusted EBITDA guidance to GAAP net income or loss because we do not provide guidance for such GAAP measure due to the uncertainty and potential variability of stock-based compensation expense, acquired intangible assets and related amortization and income taxes, which are reconciling items between Adjusted EBITDA and the most directly comparable GAAP measure."
+     ],
+     "text": "EX-99.1 2 gdrxq326-exx991pressrelease.htm EX-99.1 Exhibit 99.1 GOODRX REPORTS THIRD QUARTER 2026 RESULTS AND PROVIDES UPDATE ON COMPLIANCE WITH NASDAQ LISTING REQUIREMENTS Pharma Direct and Subscription Revenue Increased 93% and 41%, Respectively, Year-Over-Year Company Raises Full-Year 2026 Revenue and Adjusted EBITDA Expectations SANTA MONICA, Calif. -- (November 24, 2026) -- GoodRx Holdings, Inc. (Nasdaq: GDRX) (\"we,\" \"us,\" \"our,\" \u201cGoodRx,\u201d or the \u201cCompany\u201d), the trusted platform for prescription access and affordability in the U.S., has released its financial results for the third quarter of 2026. Third Quarter 2026 Highlights \u2022Revenue of $218.4 million \u2022Net income of $16.4 million; Net income margin of 7.5% \u2022Adjusted EBITDA1 of $74.5 million; Adjusted EBITDA Margin1 of 34.1% \u2022Net cash provided by operating activities of $97.0 million \u2022Free Cash Flow1 of $81.1 million \u201cOur third quarter results show that the strategy we set in motion this year is working,\u201d said Wendy Barnes, President and Chief Executive Officer of GoodRx. \u201cPharma Direct and subscriptions are helping us serve more of consumers\u2019 healthcare needs and now account for more than half of our total revenue. We see a significant opportunity to build on that demand, strengthening GoodRx\u2019s role in healthcare affordability and creating a more durable business over time.\u201d 1.Adjusted EBITDA, Adjusted EBITDA Margin, Adjusted Net Income, Adjusted Net Income Margin, and Free Cash Flow are non-GAAP financial measures and are presented for supplemental informational purposes only. Adjusted EBITDA Margin and Adjusted Net Income Margin are defined as Adjusted EBITDA and Adjusted Net Income, respectively, divided by Adjusted Revenue. Refer to the Non-GAAP Financial Measures section below for definitions, additional information, and reconciliations to the most directly comparable GAAP measures. Update on Compliance with Nasdaq Listing Requirements The Company has filed its Quarterly Report on Form 10-Q for the quarterly period ended September 30, 2026 today and expects that such filing will enable it to regain compliance with the Nasdaq Stock Market LLC (\u201cNasdaq\u201d) Listing Rule 5250(c)(1), subject to confirmation by Nasdaq. Third Quarter 2026 Financial Overview (all comparisons are made to the same period of the prior year unless otherwise noted): Revenue increased 11% to $218.4 million compared to $196.0 million. Prescription transactions revenue decreased 20% to $101.6 million compared to $127.3 million, primarily driven by a decrease in the number of our Monthly Active Consumers due to higher consumer prices and competition, coupled with the deliberate shift of product and marketing investment toward our new subscription offerings. The year-over-year decrease was also due to lower unit economics which we expect to continue in the near-term as we made deliberate decisions to favor long-term durability and certainty. Subscription revenue increased 41% to $29.2 million compared to $20.7 million, primarily driven by the expansion and growth of our condition-specific subscription programs, in particular weight loss, as well as a resulting increase in the number of subscription plans. Pharma Direct revenue increased 93% to $83.6 million compared to $43.4 million, driven by organic growth as we continued to expand our market penetration with pharma manufacturers and other customers, in particular our GLP-1 access programs, which are part of our consumer direct pricing. Net income was $16.4 million compared to $1.1 million. Net income margin was 7.5% compared to 0.6%. Adjusted Net Income1 was $36.1 million compared to $28.8 million. Adjusted EBITDA1 was $74.5 million compared to $66.3 million. Adjusted EBITDA Margin1 was 34.1% compared to 33.8%. Exhibit 99.1 Cash Flow and Capital Allocation Net cash provided by operating activities in the third quarter was $97.0 million compared to $76.0 million in the comparable period last year. Free Cash Flow in the third quarter was $81.1 million compared to $58.0 million in the comparable period last year. As of September 30, 2026, we had cash and cash equivalents of $371.8 million and total outstanding debt of $491.3 million. We are focused on a disciplined approach to capital allocation, centered on furthering our mission and creating stockholder value. Our capital allocation priorities are investing for profitable growth, paying down debt, buying back shares, and M&A that aligns with our strategic priorities. These capital allocation priorities support our long-term growth strategy while also providing flexibility to navigate near-term challenges. Guidance Management is raising its full-year 2026 guidance as follows: $ in millions FY 2026 FY 2025 YoY Change Revenue $844 - $850 $796.9 6% - 7% Adjusted EBITDA2 $280 - $286 $270.5 4% - 6% \u201cWe delivered third quarter revenue of $218.4 million and Adjusted EBITDA1 of $74.5 million, as Pharma Direct and subscriptions continued to perform well,\u201d said Justin Fengler, Chief Financial Officer and Chief Strategy & Operations Officer of GoodRx. \u201cWe are raising our full-year revenue and Adjusted EBITDA2 guidance, which incorporates the restatement of our first and second quarter results, and expect 2026 to be a record year for both measures.\u201d 2.Adjusted EBITDA is a non-GAAP financial measure and is presented for supplemental informational purposes only. We have not reconciled our Adjusted EBITDA guidance to GAAP net income or loss because we do not provide guidance for such GAAP measure due to the uncertainty and potential variability of stock-based compensation expense, acquired intangible assets and related amortization and income taxes, which are reconciling items between Adjusted EBITDA and the most directly comparable GAAP measure. Because such items cannot be provided without unreasonable efforts, we are unable to provide a reconciliation of the non-GAAP financial measure guidance to the corresponding GAAP measure. However, such items could have a significant i"
+    }
+   ],
+   "pages": [
+    {
+     "url": "https://www.fool.com/earnings/takeaways/2026/11/25/goodrx-3-key-takeaways-for-long-term-investors/?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-25T16:01:53Z",
+     "key": [
+      "By The Motley Fool Team \u2013 Nov 25, 2026 at 11:01AM EST Key Points GoodRx raised full-year 2026 revenue guidance to $844 million to $850 million.",
+      "Prescription transactions revenue fell 20% year over year in the third quarter. 10 stocks we like better than GoodRx \u203a On its third quarter of 2026 earnings call, held on Nov. 24, 2026, GoodRx (GDRX -19.17%) raised its full-year 2026 revenue guidance to a range of $844 million to $850 million.",
+      "Management expects these lower unit fees to trigger a total revenue regression in Pharma Direct during 2027.",
+      "As pricing in the GLP-1 market becomes more competitive with some lower list prices next year, we expect lower unit economics in these programs. -- Justin Fengler, Chief Financial Officer 2.",
+      "Subscriptions allow us to deliver more value to consumers while also generating higher lifetime value for GoodRx. -- Wendy Barnes, Chief Executive Officer 3.",
+      "GoodRx introduced its enterprise health plan solution, Employer Direct, allowing companies to subsidize GLP-1 medications and subscription health benefits for employees."
+     ],
+     "text": "AccessibilityHelp \u25b2 S&P 500 +---%|\u25b2 Stock Advisor +---%Join The Motley Fool Search for a company Top 10 Stocks to Buy Now \u203a Top 10 Stocks to Buy Now \u203a AccessibilityHelp S&P 500 7,116.73 -1.2% -84.36 DJI 49,931.90 -0.2% -86.80 NASDAQ 23,222.62 -2.2% -510.91 Bitcoin $59,191.00 -0.7% -$434.51 ANT $81.80 -0.1% -$0.11 SPCX $120.69 -4.1% -$5.12 AAPL $352.56 -0.4% -$1.51 AMZN $243.97 -3.3% -$8.32 GOOG $268.17 -3.0% -$8.41 META $597.29 +1.3% +$7.47 MSFT $487.81 -1.7% -$8.32 NVDA $145.47 -6.4% -$9.91 TSLA $369.54 -3.9% -$15.14 Free ArticleExplore Premium Services GoodRx: 3 Key Takeaways for Long-Term Investors Management expects 2027 revenue growth to stall as weight loss drug price cuts shrink Pharma Direct fees, so the long-term question is whether subscriptions can fill the gap. By The Motley Fool Team \u2013 Nov 25, 2026 at 11:01AM EST Key Points GoodRx raised full-year 2026 revenue guidance to $844 million to $850 million. Pharma Direct and subscription offerings generated 51% of third-quarter revenue. Prescription transactions revenue fell 20% year over year in the third quarter. 10 stocks we like better than GoodRx \u203a On its third quarter of 2026 earnings call, held on Nov. 24, 2026, GoodRx (GDRX -19.17%) raised its full-year 2026 revenue guidance to a range of $844 million to $850 million. The company is shifting resources away from transaction fees toward recurring subscriptions and manufacturer pricing partnerships. Three takeaways from management's call clarify how this strategic evolution impacts future growth. 1. Price Pressures on Weight Loss Drugs Will Shrink Direct Revenue Next Year Glucagon-like peptide-1 (GLP-1) weight loss medications powered growth in the company's manufacturer pricing segment, Pharma Direct, but price cuts among drugmakers are eroding per-transaction fees. Management expects these lower unit fees to trigger a total revenue regression in Pharma Direct during 2027. As pricing in the GLP-1 market becomes more competitive with some lower list prices next year, we expect lower unit economics in these programs. -- Justin Fengler, Chief Financial Officer 2. Subscriptions Are Replacing Declining Prescription Transaction Revenues Revenue from the traditional prescription transaction platform, Rx Marketplace, fell 20% year over year as management shifted marketing dollars into membership products. Building predictable subscription revenue creates higher lifetime customer value than relying on individual discount fills. Subscriptions allow us to deliver more value to consumers while also generating higher lifetime value for GoodRx. -- Wendy Barnes, Chief Executive Officer 3. Employer Direct Opens a New Enterprise Sales Distribution Channel Employers face rising health costs and are dropping weight loss coverage from standard benefits. GoodRx introduced its enterprise health plan solution, Employer Direct, allowing companies to subsidize GLP-1 medications and subscription health benefits for employees. Since the end of the quarter, we also launched our Employer Direct weight loss offering, giving benefit leaders a configurable way to support all FDA-approved GLP-1 medications for weight management alongside their existing health plans. -- Wendy Barnes, Chief Executive Officer Looking Ahead Revenue growth faces headwinds in 2027 because subscription growth will not fully offset transaction declines and price resets in manufacturer programs. Management is prioritizing long-term customer value and multiyear pharmacy network relationships over short-term transaction growth. The pressure on Pharma Direct unit economics, coupled with continued expected declines in prescription transactions revenue that are unlikely to be offset by the growth of subscriptions in 2027 will make total revenue growth for 2027 over 2026 unlikely. -- Justin Fengler, Chief Financial Officer Expanding beyond individual discount transactions into comprehensive healthcare subscriptions strengthens overall consumer lock-in. Through Pharma Direct and"
+    },
+    {
+     "url": "https://www.fool.com/earnings/call-transcripts/2026/11/25/goodrx-gdrx-q3-2026-earnings-call-transcript/?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-25T15:23:28Z",
+     "key": [
+      "DATE Tuesday, Nov. 24, 2026 CALL PARTICIPANTS Director of Investor Relations - Aubrey Reynolds Chief Executive Officer - Wendy Barnes Chief Financial Officer - Justin Fengler TAKEAWAYS Pharma Direct Revenue -- $83.6 million, growing 93% year over year driven by expanded penetration with pharmaceutical manufacturers and GLP-1 access programs.",
+      "Financial Restatement Impact -- $29.8 million in combined revenue increases for the first and second quarters of 2026, reflecting corrected accounting for Pharma Direct transaction fees.",
+      "Subscription Revenue -- $29.2 million, growing 41% year over year due to the expansion of condition-specific programs like weight loss and the launch of Companion.",
+      "Full-Year 2026 Revenue Guidance -- $844 million to $850 million, increasing from previous estimates to account for restated financials and Pharma Direct performance.",
+      "Adjusted EBITDA -- $74.5 million, reaching a 34.1% margin for the third quarter.",
+      "Prescription Transactions Revenue -- $101.6 million, declining 20% year over year due to higher consumer prices and competitive pressures."
+     ],
+     "text": "AccessibilityHelp \u25b2 S&P 500 +---%|\u25b2 Stock Advisor +---%Join The Motley Fool Search for a company Top 10 Stocks to Buy Now \u203a Top 10 Stocks to Buy Now \u203a AccessibilityHelp S&P 500 7,116.73 -1.2% -84.36 DJI 49,931.90 -0.2% -86.80 NASDAQ 23,222.62 -2.2% -510.91 Bitcoin $59,191.00 -0.7% -$434.51 ANT $81.80 -0.1% -$0.11 SPCX $120.69 -4.1% -$5.12 AAPL $352.56 -0.4% -$1.51 AMZN $243.97 -3.3% -$8.32 GOOG $268.17 -3.0% -$8.41 META $597.29 +1.3% +$7.47 MSFT $487.81 -1.7% -$8.32 NVDA $145.47 -6.4% -$9.91 TSLA $369.54 -3.9% -$15.14 Free ArticleExplore Premium Services Earnings Call Transcript GoodRx (GDRX) Q3 2026 Earnings Call Transcript Restated first-half results and a 2027 unit economics warning shape the outlook. By Motley Fool Transcribing \u2013 Nov 25, 2026 at 10:23AM EST Image source: The Motley Fool. DATE Tuesday, Nov. 24, 2026 CALL PARTICIPANTS Director of Investor Relations - Aubrey Reynolds Chief Executive Officer - Wendy Barnes Chief Financial Officer - Justin Fengler TAKEAWAYS Pharma Direct Revenue -- $83.6 million, growing 93% year over year driven by expanded penetration with pharmaceutical manufacturers and GLP-1 access programs. Financial Restatement Impact -- $29.8 million in combined revenue increases for the first and second quarters of 2026, reflecting corrected accounting for Pharma Direct transaction fees. Subscription Revenue -- $29.2 million, growing 41% year over year due to the expansion of condition-specific programs like weight loss and the launch of Companion. Monthly Active Consumers -- 4.9 million, declining 9% year over year as management shifted marketing investment toward subscription offerings. Full-Year 2026 Revenue Guidance -- $844 million to $850 million, increasing from previous estimates to account for restated financials and Pharma Direct performance. Adjusted EBITDA -- $74.5 million, reaching a 34.1% margin for the third quarter. Prescription Transactions Revenue -- $101.6 million, declining 20% year over year due to higher consumer prices and competitive pressures. Subscription Plans -- 783,000, growing 17% compared to the prior year. Pharma Direct Revenue Concentration -- More than 50% of year-to-date Pharma Direct revenue is derived from consumer direct pricing programs, which include GLP-1 medications. Free Cash Flow -- $81.1 million, compared to $58.0 million in the same period last year. Search Visibility -- Roughly twofold growth since 2023, attributed to platform optimization for structured drug information and AI-powered searches. Total Outstanding Debt -- $491.3 million, with cash and cash equivalents of $371.8 million as of Sept. 30, 2026. Gemini for Healthcare Integration -- A new collaboration with Google Cloud allowing providers to access pricing and savings data directly through AI tools. Net Income -- $16.4 million, compared to $1.1 million in the third quarter of 2025. Adjusted EBITDA Restatement -- $21.4 million in total adjustments for the first half of 2026, increasing reported profitability for those periods. Condition-Specific Programs -- This segment includes weight loss, hair loss, and erectile dysfunction, which drove a 41% increase in subscription revenue. Addressable Market Growth -- The uninsured population is projected to reach 34 million people in 2027 and nearly 37 million by 2030, according to data cited by management. Net Income Adjustments -- Restated net income for the first half of 2026 increased by a combined $14.9 million across the first and second quarters. Pharma Direct Partners -- Management reported working with over 280 brands, with 135 utilized in consumer direct pricing programs. Employer Direct Expansion -- A new channel allowing employers to subsidize GLP-1 medications and Companion memberships, with programs starting in Jan. 2027. Net Income Margin -- 7.5% for the third quarter, increasing from 0.6% in the prior year period. Need a quote from a Motley Fool analyst? Email [email protected] RISKS Fengler stated, \"Specifically, we expect lower unit economi"
+    }
+   ],
+   "pond": {
+    "wave": 0.0,
+    "own": -5.031913418568852,
+    "how": "a stone: its own news",
+    "from": [],
+    "reaches": [
+     [
+      "EEFT",
+      0.42,
+      0.00768
+     ],
+     [
+      "ACIW",
+      0.4,
+      -0.00854
+     ],
+     [
+      "OTEX",
+      0.4,
+      0.01556
+     ],
+     [
+      "PAYC",
+      0.4,
+      0.02948
+     ],
+     [
+      "SHOP",
+      0.37,
+      -0.01716
+     ]
+    ]
+   }
+  },
+  {
+   "t": "AMBA",
+   "company": "AMBARELLA INC",
+   "move": -0.18371939687924577,
+   "z": -3.3321714627408205,
+   "wave": 0.0,
+   "mover": true,
+   "score": 0.5132448953314109,
+   "parts": {
+    "surprise": 0.148,
+    "unexplained": 0.792,
+    "news": 1.0,
+    "reach": 0.296,
+    "against": 0.0,
+    "memory": 1.0,
+    "fragile": 0.382
+   },
+   "reasons": [
+    "most of the move is its own",
+    "filed its results",
+    "5 stories name it",
+    "in the last note's theme \"Last night's reports met by sharp falls\"",
+    "chance of a restructuring or a write-off 1.0% against 0.3% usually"
+   ],
+   "attention": 0.05982868949108468,
+   "bars": 83,
+   "filings": [
+    {
+     "what": "results report (8-K 2.02)",
+     "at": "2026-11-24T21:13:44Z",
+     "title": "Ambarella, Inc. Announces Third Quarter Fiscal Year 2027 Financial Results",
+     "url": "https://www.sec.gov/Archives/edgar/data/1280263/000119312526475716/d912526dex991.htm",
+     "key": [
+      "Announces Third Quarter Fiscal Year 2027 Financial Results November 24, 2026 \u2014Santa Clara, Calif. \u2013 Ambarella, Inc. (NASDAQ: AMBA), an edge AI semiconductor company, today announced third quarter fiscal 2027 financial results for the period ended October 31, 2026. \u2022 Revenue for the third quarter of fiscal 2027 was $115.2 million, up 6.2% from $108.5 million in the same period in fiscal 2026.",
+      "For the nine months ended October 31, 2026, revenue was $323.7 million, up 11.7% from $289.8 million for the nine months ended October 31, 2025. \u2022 Gross margin under U.S. generally accepted accounting principles (GAAP) for the third quarter of fiscal 2027 was 57.8%, compared with 59.6% for the same period in fiscal 2026.",
+      "For the nine months ended October 31, 2026, GAAP gross margin was 57.9%, compared with 59.5% for the nine months ended October 31, 2025. \u2022 GAAP net loss for the third quarter of fiscal 2027 was $12.7 million, or loss per diluted ordinary share of $0.29, compared with a GAAP net loss of $15.1 million, or loss per diluted ordinary share of $0.35, for the same period in fiscal 2026.",
+      "For the nine months ended October 31, 2026, non-GAAP gross margin was 59.6%, compared with 61.1% for the nine months ended October 31, 2025. \u2022 Non-GAAP net income for the third quarter of fiscal 2027 was $12.7 million, or earnings per diluted ordinary share of $0.28.",
+      "Based on information available as of today, Ambarella is offering the following guidance for the fourth quarter of fiscal year 2027, ending January 31, 2027: \u2022 Revenue is expected to be between $70.0 million and $75.0 million. \u2022 Gross margin on a non-GAAP basis is expected to be between 59.0% and 60.25%. \u2022 Non-GAAP operating expenses are expected to be between $57.5 million and $59.5 million.",
+      "Our investments in new products, expanding Partner program, enhancements to our Cooper Development Platform and reach into new applications is expected to enable our fiscal 2028 to be a growth year.\u201d Quarterly Conference Call Ambarella plans to hold a conference call at 4:30 p.m."
+     ],
+     "text": "EX-99.1 2 d912526dex991.htm EX-99.1 Exhibit 99.1 Ambarella, Inc. Announces Third Quarter Fiscal Year 2027 Financial Results November 24, 2026 \u2014Santa Clara, Calif. \u2013 Ambarella, Inc. (NASDAQ: AMBA), an edge AI semiconductor company, today announced third quarter fiscal 2027 financial results for the period ended October 31, 2026. \u2022 Revenue for the third quarter of fiscal 2027 was $115.2 million, up 6.2% from $108.5 million in the same period in fiscal 2026. For the nine months ended October 31, 2026, revenue was $323.7 million, up 11.7% from $289.8 million for the nine months ended October 31, 2025. \u2022 Gross margin under U.S. generally accepted accounting principles (GAAP) for the third quarter of fiscal 2027 was 57.8%, compared with 59.6% for the same period in fiscal 2026. For the nine months ended October 31, 2026, GAAP gross margin was 57.9%, compared with 59.5% for the nine months ended October 31, 2025. \u2022 GAAP net loss for the third quarter of fiscal 2027 was $12.7 million, or loss per diluted ordinary share of $0.29, compared with a GAAP net loss of $15.1 million, or loss per diluted ordinary share of $0.35, for the same period in fiscal 2026. GAAP net loss for the nine months ended October 31, 2026 was $37.5 million or loss per diluted ordinary share of $0.85. This compares with GAAP net loss of $59.4 million, or loss per diluted ordinary share of $1.40, for the nine months ended October 31, 2025. Financial results on a non-GAAP basis for the third quarter of fiscal 2027 are as follows: \u2022 Gross margin on a non-GAAP basis for the third quarter of fiscal 2027 was 59.5%, compared with 60.9% for the same period in fiscal 2026. For the nine months ended October 31, 2026, non-GAAP gross margin was 59.6%, compared with 61.1% for the nine months ended October 31, 2025. \u2022 Non-GAAP net income for the third quarter of fiscal 2027 was $12.7 million, or earnings per diluted ordinary share of $0.28. This compares with non-GAAP net income of $11.9 million, or earnings per diluted ordinary share of $0.27, for the same period in fiscal 2026. Non-GAAP net income for the nine months ended October 31, 2026 was $26.0 million, or earnings per diluted ordinary share of $0.58. This compares with non-GAAP net income of $21.3 million, or earnings per diluted ordinary share of $0.49, for the nine months ended October 31, 2025. Based on information available as of today, Ambarella is offering the following guidance for the fourth quarter of fiscal year 2027, ending January 31, 2027: \u2022 Revenue is expected to be between $70.0 million and $75.0 million. \u2022 Gross margin on a non-GAAP basis is expected to be between 59.0% and 60.25%. \u2022 Non-GAAP operating expenses are expected to be between $57.5 million and $59.5 million. Ambarella reports gross margin, net income (loss) and earnings (losses) per share in accordance with GAAP and, additionally, on a non-GAAP basis. Non-GAAP financial information excludes the impact of stock-based compensation, nonrecurring development project termination credit and acquisition- related costs adjusted for the associated tax impact, which includes the effect of any benefits or shortfalls recognized. A reconciliation of the GAAP to non-GAAP gross margin, net income (loss) and earnings (losses) per share for the periods presented, as well as a description of the items excluded from the non-GAAP calculations, is included in the financial statements portion of this press release. Total cash, cash equivalents and marketable debt securities on hand at the end of the third quarter of fiscal 2027 was $282.8 million, compared with $272.3 million at the end of the prior quarter and $295.3 million at the end of the same quarter a year ago. \u201cWe reported record edge AI revenue in our third quarter, although total revenue was at the low end of our guidance range as our consumer IoT revenue was below our expectations. The unprecedented rise in memory prices and the scarcity of memory supply we previously highlighted has intensified and is causing many customers to reduce their outlooks\u201d, said Fermi Wang, President & CEO. \u201cMemory related challenges do not have an impact on our very positive secular growth outlook for edge AI and our positioning and investment therein. Physical AI brings domain specific context to LLMs running in the datacenter, which differentiates and improves the overall combined edge AI and cloud AI value proposition. Our investments in new products, expanding Partner program, enhancements to our Cooper Development Platform and reach into new applications is expected to enable our fiscal 2028 to be a growth year.\u201d Quarterly Conference Call Ambarella plans to hold a conference call at 4:30 p.m. Eastern Time / 1:30 p.m. Pacific Time today with Fermi Wang, President and Chief Executive Officer, and John Young, Chief Financial Officer, to discuss the third quarter of fiscal year 2027 results. A live and archived webcast of the call will be available on Ambarella\u2019s website at http://www.ambarella.com/ for up to 30 days after the call. About Ambarella With an installed base of more than 55 million AI SoC units, Ambarella\u2019s products are utilized in a wide variety of physical edge AI applications, spanning edge endpoint and edge infrastructure use cases including physical security, vehicle safety, telematics, autonomy, portable video, aerial drones, and other emerging robotic applications. Building on this footprint, Ambarella offers a full-stack edge AI platform, from highly optimized silicon and programmable software to AI agentic frameworks that coordinate perception, decision-making and control across devices. Ambarella\u2019s low-power systems-on-chip (SoCs) integrate proprietary and highly efficient perception and deep learning neural network AI accelerators, enabling electronic systems to become more productive with partial or complete levels of machine autonomy. For more information, please visit www.ambarella.com. \u201cSafe harbor\u201d statement under the Private Securities Litigation Reform "
+    }
+   ],
+   "pages": [
+    {
+     "url": "https://finance.yahoo.com/markets/stocks/articles/ambarella-facing-broader-memory-squeeze-161442572.html?.tsrc=rss",
+     "refused": "the page marks itself as paywalled; not reading behind it"
+    },
+    {
+     "url": "https://247wallst.com/investing/2026/11/25/the-memory-shortage-has-a-new-victim-ambarella-stock-crashes-37/?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-25T16:07:46Z",
+     "key": [
+      "Memory stocks Micron (MU) and Sandisk (SNDK) each fell about 11%, though Ambarella is too small to move the chip sector.",
+      "See for yourself (Sponsor) This post may contain links from our sponsors and affiliates, and Flywheel Publishing may receive compensation for actions taken through them. \u00a9 nuttiwut rodbangpong / iStock via Getty Images Ambarella (NASDAQ:AMBA) traded at $27.77 after hours as of 7:59 p.m.",
+      "A Fourth-Quarter Guide 36% Below Consensus Overshadowed a Record Quarter Ambarella guided fiscal fourth-quarter revenue to $70 million to $75 million after Morgan Stanley had already cut its target.",
+      "The $72.5 million midpoint is about 36% below the consensus of $112.62 million.",
+      "Ambarella guided non-GAAP gross margin to 59% to 60.25%, so pricing is holding up while unit volume drops.",
+      "CEO Fermi Wang said the memory squeeze \u201chas intensified and is causing many customers to reduce their outlooks.\u201d[1] Two Drops in One Day Cut Ambarella in Half Shares fell 19.96% in Tuesday\u2019s regular session before the report."
+     ],
+     "text": "Skip to content Authoritative Financial News \u00b7 Since 2006 AI Investor Podcast Menu \u25cf Markets open At close S&P 5007,089.90\u22121.51% Dow Jones49,809.40\u22120.40% Nasdaq 10025,487.80\u22122.78% Russell 20002,674.07\u22120.38% S&P 5007,089.90\u22121.51% Dow Jones49,809.40\u22120.40% Nasdaq 10025,487.80\u22122.78% Russell 20002,674.07\u22120.38% S&P 5007,089.90\u22121.51% Dow Jones49,809.40\u22120.40% Nasdaq 10025,487.80\u22122.78% Russell 20002,674.07\u22120.38% S&P 5007,089.90\u22121.51% Dow Jones49,809.40\u22120.40% Nasdaq 10025,487.80\u22122.78% Russell 20002,674.07\u22120.38% S&P 5007,089.90\u22121.51% Dow Jones49,809.40\u22120.40% Nasdaq 10025,487.80\u22122.78% Russell 20002,674.07\u22120.38% S&P 5007,089.90\u22121.51% Dow Jones49,809.40\u22120.40% Nasdaq 10025,487.80\u22122.78% Russell 20002,674.07\u22120.38% Investing The Memory Shortage Has a New Victim: Ambarella Stock Crashes 37% By Omor Ibne Ehsan Published November 25, 2026, 11:07am ET \u00b7 4 min read \ud835\udd4f f Quick Read Ambarella (AMBA) plunged about 50% to $27.77 after hours as its fourth-quarter revenue guide landed 36% below consensus despite a record quarter. Memory stocks Micron (MU) and Sandisk (SNDK) each fell about 11%, though Ambarella is too small to move the chip sector. Fermi Wang says most of the revenue cut is push-outs rather than cancellations, with consumer products, about half of revenue, hit hardest. It sounds nuts, but SoFi is giving new Active Invest users up to $1,000 in stock for a limited time, and all it takes is a $50 deposit to get started. See for yourself (Sponsor) This post may contain links from our sponsors and affiliates, and Flywheel Publishing may receive compensation for actions taken through them. \u00a9 nuttiwut rodbangpong / iStock via Getty Images Ambarella (NASDAQ:AMBA) traded at $27.77 after hours as of 7:59 p.m. ET Tuesday. The stock still sits well below the Street\u2019s average price target of $84.27, leaving a gap of roughly 203% between the shares and that consensus. The company designs edge AI and computer-vision chips for security cameras, cars, drones, and robots, and edge AI processors make up 80% of revenue. It went into the report as a small-cap physical AI stock valued at about $1.96 billion. 24/7 on YouTube9:35Play: 2026's Biggest AI Trends: The Memory Explosion | MU Stock, SNDK Stock, SK Hynix, CAMT Stock 2026's Biggest AI Trends: The Memory Explosion | MU Stock, SNDK Stock, SK Hynix, CAMT Stock Subscribe free on YouTube Ambarella\u2019s customers need DRAM to build every camera and device that uses its vision chip, and when they cannot get memory or afford it, they stop ordering the chip as well. Measured from Monday\u2019s close of $55.56 to that after-hours price, the stock fell 50.0%. You have to decide whether a target that far above the price gives you a margin of safety or just reflects estimates that have not caught up yet. A Fourth-Quarter Guide 36% Below Consensus Overshadowed a Record Quarter Ambarella guided fiscal fourth-quarter revenue to $70 million to $75 million after Morgan Stanley had already cut its target. The $72.5 million midpoint is about 36% below the consensus of $112.62 million. The top of that range is 35% below the quarter just reported, and the bottom is 39% below it. Ambarella guided non-GAAP gross margin to 59% to 60.25%, so pricing is holding up while unit volume drops. The third quarter set a revenue record of $115.2 million, up 6.2% year over year and 6.6% sequentially. Non-GAAP EPS of $0.28 missed the Wall Street analyst consensus of $0.31. The GAAP net loss was $12.7 million, or $0.29 a share. CEO Fermi Wang said the memory squeeze \u201chas intensified and is causing many customers to reduce their outlooks.\u201d[1] Two Drops in One Day Cut Ambarella in Half Shares fell 19.96% in Tuesday\u2019s regular session before the report. They closed at $44.47, close to a new fifty-two-week low of $44.28. After the release, the stock fell another 37.55% after hours and, at one point, was down 39.49%. After-hours trading is thin, so the price can move at Wednesday\u2019s 9:30 a.m. ET open, which comes after the 8:30 a.m. ET PCE and GDP releases. "
+    }
+   ],
+   "pond": {
+    "wave": 0.0,
+    "own": -3.3321714627408205,
+    "how": "a stone: its own news",
+    "from": [],
+    "reaches": [
+     [
+      "CEVA",
+      0.49,
+      -0.06641
+     ],
+     [
+      "AOSL",
+      0.46,
+      -0.01967
+     ],
+     [
+      "AIP",
+      0.44,
+      -0.07265
+     ],
+     [
+      "RMBS",
+      0.44,
+      -0.04014
+     ],
+     [
+      "MPWR",
+      0.44,
+      -0.04819
+     ]
+    ]
+   }
+  },
+  {
+   "t": "HPQ",
+   "company": "HP INC",
+   "move": 0.10934143628818771,
+   "z": 4.113085764451627,
+   "wave": 0.0,
+   "mover": true,
+   "score": 0.4810900422349282,
+   "parts": {
+    "surprise": 0.106,
+    "unexplained": 1.0,
+    "news": 1.0,
+    "reach": 0.373,
+    "against": 0.0,
+    "memory": 0.0,
+    "fragile": 0.673
+   },
+   "reasons": [
+    "most of the move is its own",
+    "filed its results",
+    "3 stories name it",
+    "chance of a restructuring or a write-off 2.5% against 0.3% usually"
+   ],
+   "attention": 0.045765393000007815,
+   "bars": 20,
+   "filings": [
+    {
+     "what": "results report (8-K 2.02)",
+     "at": "2026-11-24T21:17:57Z",
+     "title": "1501 Page Mill Road",
+     "url": "https://www.sec.gov/Archives/edgar/data/47217/000004721726000054/hp103126exhibit991q426.htm",
+     "key": [
+      "Net revenue and EPS results HP Inc. and its subsidiaries (\u201cHP\u201d or the \"Company\") announced fiscal 2026 net revenue of $60.5 billion, up 9.5% (up 7.8% in constant currency) from the prior-year period.",
+      "Fiscal 2026 GAAP diluted net EPS was $2.62, down from $2.65 in the prior-year and within the previously provided outlook of $2.52 to $2.62.",
+      "Fiscal 2026 non-GAAP diluted net EPS was $3.33, up from $3.12 in the prior-year and above the previously provided outlook of $3.19 to $3.29.",
+      "Fourth quarter GAAP diluted net EPS was $0.84, flat from $0.84 in the prior-year period and within the previously provided outlook of $0.74 to $0.84.",
+      "Fourth quarter non-GAAP diluted net EPS was $0.83, down from $0.93 in the prior-year period and above the previously provided outlook of $0.69 to $0.79.",
+      "When combined with the $1.1 billion of cash used to pay dividends, HP returned 70% of its free cash flow to shareholders in fiscal 2026."
+     ],
+     "text": "EX-99.1 2 hp103126exhibit991q426.htm EX-99.1 1501 Page Mill Road Palo Alto, CA 94304 hp.com Editorial contacts HP Inc. Media Relations MediaRelations@hp.com HP Inc. Investor Relations InvestorRelations@hp.com EXHIBIT 99.1 News Release HP Inc. Reports Fiscal 2026 Full Year and Fourth Quarter Results; Announces Dividend Increase PALO ALTO, Calif. \u2013 November 24, 2026 (GLOBE NEWSWIRE) \u2013 HP (NYSE: HPQ) \u2022Fiscal 2026 GAAP diluted net earnings per share (\"EPS\") of $2.62, inclusive of tariff refunds, and down 1.1% from the prior year period \u2022Fiscal 2026 non-GAAP diluted net EPS of $3.33, inclusive of tariff refunds, and up 6.7% from the prior year period \u2022Fiscal 2026 net revenue of $60.5 billion, up 9.5% from the prior year period \u2022Fiscal 2026 net cash provided by operating activities of $4.0 billion, free cash flow of $3.3 billion \u2022Fiscal 2026 returned $2.3 billion to shareholders in the form of share repurchases and dividends \u2022Fourth quarter GAAP diluted net EPS of $0.84, inclusive of tariff refunds, and flat from the prior year period \u2022Fourth quarter non-GAAP diluted net EPS of $0.83, inclusive of tariff refunds, and down 10.8% from the prior year period \u2022Fourth quarter net revenue of $16.0 billion, up 9.3% from the prior year period \u2022Fourth quarter net cash provided by operating activities of $0.9 billion, free cash flow of $0.8 billion \u2022Fourth quarter returned $0.8 billion to shareholders in the form of share repurchases and dividends \u2022HP Inc. increases quarterly dividend to $0.31 per share HP Inc.'s fiscal 2026 full-year and fourth quarter financial performance FY26 FY25 Y/Y Q4 FY26 Q4 FY25 Y/Y GAAP net revenue ($B) $ 60.5 $ 55.3 9.5 % $ 16.0 $ 14.6 9.3 % GAAP operating margin 5.1 % 5.7 % (0.6) pts 5.3 % 6.6 % (1.3) pts GAAP net earnings ($B) $ 2.43 $ 2.53 (4.1) % $ 0.77 $ 0.80 (3.3 %) GAAP diluted net EPS 2.62 $ 2.65 (1.1) % $ 0.84 $ 0.84 \u2014 % Non-GAAP operating margin 6.7 % 7.4 % (0.7) pts 6.2 % 8.0 % (1.8) pts Non-GAAP net earnings ($B) $ 3.08 $ 2.97 3.7 % $ 0.77 $ 0.88 (12.7 %) Non-GAAP diluted net EPS $ 3.33 $ 3.12 6.7 % $ 0.83 $ 0.93 (10.8 %) Net cash provided by operating activities ($B) $ 3.98 $ 3.70 7.5 % $ 0.93 $ 1.62 (42.6 %) Free cash flow ($B) $ 3.33 $ 2.93 13.5 % $ 0.80 $ 1.49 (45.9 %) Notes to table Information about HP Inc.'s use of non-GAAP financial information is provided under \"Use of non-GAAP financial information\" below. Net revenue and EPS results HP Inc. and its subsidiaries (\u201cHP\u201d or the \"Company\") announced fiscal 2026 net revenue of $60.5 billion, up 9.5% (up 7.8% in constant currency) from the prior-year period. Fiscal 2026 GAAP diluted net EPS was $2.62, down from $2.65 in the prior-year and within the previously provided outlook of $2.52 to $2.62. Fiscal 2026 non-GAAP diluted net EPS was $3.33, up from $3.12 in the prior-year and above the previously provided outlook of $3.19 to $3.29. Both GAAP and non-GAAP diluted net EPS included a $0.26 favorable impact from tariff refunds, as compared to the $0.19 impact included in the previously provided outlook. Fiscal 2026 non-GAAP net earnings and non-GAAP diluted net EPS exclude certain adjustments. Refer to \"Adjustments to GAAP Net earnings\" section in the below tables. Fourth quarter net revenue was $16.0 billion, up 9.3% (up 8.6% in constant currency) from the prior-year period. Fourth quarter GAAP diluted net EPS was $0.84, flat from $0.84 in the prior-year period and within the previously provided outlook of $0.74 to $0.84. Fourth quarter non-GAAP diluted net EPS was $0.83, down from $0.93 in the prior-year period and above the previously provided outlook of $0.69 to $0.79. Both GAAP and non-GAAP diluted net EPS included a $0.15 favorable impact from tariff refunds, as compared to the $0.08 impact included in the previously provided outlook. Fourth quarter non-GAAP net earnings and non-GAAP diluted net EPS exclude certain adjustments. Refer to \"Adjustments to GAAP Net earnings\" section in the below tables. \u201cIn the fourth quarter, we continued to grow our higher-value businesses, with AI PCs reaching nearly 60% of shipments, while taking steps to address memory and storage cost pressures,\u201d said Bruce Broussard, Interim CEO, HP Inc. \u201cAdvances in processing power and engineering are accelerating AI at the edge, enabling agentic experiences and new device form factors. We believe these innovations will drive multiple waves of device refresh and create sustained growth opportunities. With our engineering expertise, global scale, and deep customer relationships, HP is uniquely positioned to help define the next era of edge computing and create long-term value for customers and shareholders.\" \u201cWe grew FY26 revenue 9.5%, delivered on our guidance for the year, exceeded our free cash flow target and returned $2.3 billion to shareholders, despite a challenging environment,\u201d said Karen Parkhill, CFO, HP Inc. \u201cWhile our fiscal 2027 outlook reflects a prudent view of continued cost and demand pressures, we have a strong track record of addressing challenges and are confident in our ability to drive improvement in our profitability throughout the year.\u201d Asset management HP generated $4.0 billion in net cash provided by operating activities and $3.3 billion of free cash flow in fiscal 2026. Free cash flow includes net cash provided by operating activities of $4.0 billion adjusted for net investment in leases from integrated financing of $142 million and net investments in property, plant, equipment and purchased intangibles of $0.8 billion. HP utilized $1.2 billion of cash during fiscal 2026 to repurchase approximately 46.7 million shares of common stock in the open market. When combined with the $1.1 billion of cash used to pay dividends, HP returned 70% of its free cash flow to shareholders in fiscal 2026. HP's net cash provided by operating activities in the fourth quarter of fiscal 2026 was $0.9 billion. Accounts receivable ended the quarter at $7.0 billion, down 2 days quarter over quarter to 39 days. Inventory ended the qu"
+    }
+   ],
+   "pages": [
+    {
+     "url": "https://www.fool.com/earnings/call-transcripts/2026/11/25/hp-hpq-q4-2026-earnings-call-transcript/?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-25T15:23:28Z",
+     "key": [
+      "DATE Tuesday, Nov. 24, 2026 CALL PARTICIPANTS Global Treasurer and Head of Investor Relations - Alok Juyal Interim Chief Executive Officer - Bruce Dale Broussard Executive Vice President and Chief Financial Officer - Karen L.",
+      "Parkhill Head of Personal Systems - Ketan Patel TAKEAWAYS Net Revenue -- $16.0 billion, up 9.3% reflecting stronger performance in the Personal Systems segment.",
+      "Personal Systems Revenue -- $11.8 billion, increasing 14% driven by a 23% increase in commercial sales and premium category demand.",
+      "Printing Revenue -- $4.3 billion, declining 1% as lower supplies volume offset gains in industrial graphics and subscription services.",
+      "Fiscal 2027 Non-GAAP EPS Guidance -- $3.15 to $3.45, factoring in continued commodity price headwinds and cautious demand expectations.",
+      "Fiscal 2027 Free Cash Flow Guidance -- $2.9 billion to $3.1 billion, reflecting anticipated earnings growth and improved working capital management."
+     ],
+     "text": "AccessibilityHelp \u25b2 S&P 500 +---%|\u25b2 Stock Advisor +---%Join The Motley Fool Search for a company Top 10 Stocks to Buy Now \u203a Top 10 Stocks to Buy Now \u203a AccessibilityHelp S&P 500 7,116.73 -1.2% -84.36 DJI 49,931.90 -0.2% -86.80 NASDAQ 23,222.62 -2.2% -510.91 Bitcoin $59,191.00 -0.7% -$434.51 ANT $81.80 -0.1% -$0.11 SPCX $120.69 -4.1% -$5.12 AAPL $352.56 -0.4% -$1.51 AMZN $243.97 -3.3% -$8.32 GOOG $268.17 -3.0% -$8.41 META $597.29 +1.3% +$7.47 MSFT $487.81 -1.7% -$8.32 NVDA $145.47 -6.4% -$9.91 TSLA $369.54 -3.9% -$15.14 Free ArticleExplore Premium Services Earnings Call Transcript HP (HPQ) Q4 2026 Earnings Call Transcript New CEO Emma Walmsley arrives in January as AI PC shipments surge. By Motley Fool Transcribing \u2013 Nov 25, 2026 at 10:23AM EST Image source: The Motley Fool. DATE Tuesday, Nov. 24, 2026 CALL PARTICIPANTS Global Treasurer and Head of Investor Relations - Alok Juyal Interim Chief Executive Officer - Bruce Dale Broussard Executive Vice President and Chief Financial Officer - Karen L. Parkhill Head of Personal Systems - Ketan Patel TAKEAWAYS Net Revenue -- $16.0 billion, up 9.3% reflecting stronger performance in the Personal Systems segment. Non-GAAP Diluted EPS -- $0.83, down 10.8% due to higher component costs and a competitive pricing environment in the consumer market. Personal Systems Revenue -- $11.8 billion, increasing 14% driven by a 23% increase in commercial sales and premium category demand. Printing Revenue -- $4.3 billion, declining 1% as lower supplies volume offset gains in industrial graphics and subscription services. AI PC Shipments -- Nearly 60% of total shipments, exceeding management's target of 50% penetration for the quarter. Commercial Personal Systems Revenue -- Up 23%, reflecting stronger pricing and a higher mix of premium hardware configurations. Consumer Personal Systems Revenue -- Down 7%, due to softening demand and competitive pricing pressures in the latter half of the quarter. Personal Systems Operating Margin -- 3.0%, down year over year as commodity inflation and channel inventory adjustments impacted segment profitability. Printing Operating Margin -- 19.7%, benefiting from tariff refunds and disciplined pricing actions across the portfolio. Supplies Revenue -- Down 3% in constant currency, aligning with management's expectations for market-driven volume declines. Free Cash Flow -- $3.3 billion for the full fiscal year, supported by operating discipline and $0.8 billion generated in the fourth quarter. Fiscal 2027 Non-GAAP EPS Guidance -- $3.15 to $3.45, factoring in continued commodity price headwinds and cautious demand expectations. Fiscal 2027 Free Cash Flow Guidance -- $2.9 billion to $3.1 billion, reflecting anticipated earnings growth and improved working capital management. Quarterly Dividend -- Increased to $0.31 per share, representing the 11th consecutive annual increase for the company. Inventory -- $12.3 billion, up 11 days sequentially to 84 days. Accounts Payable -- $22.7 billion, up 4 days sequentially to 155 days. Workforce Experience Platform Devices -- 5.5 million managed devices, representing a 130% increase from the prior year. Industrial Graphics Revenue -- $2 billion for the full year, supported by 9% growth during the fourth quarter. Fiscal 2028 Cost Savings Target -- $1 billion in gross annualized run rate savings, driven by an AI-enabled transformation plan. PC Market Outlook -- Management projected the unit total addressable market to decline high single to low double digits in calendar year 2027. Tariff Refund Benefit -- $0.15 per share in the fourth quarter, which was $0.07 higher than management's previous signaling. Workforce Solutions Revenue -- $5.5 billion for the full year, representing double-digit growth across Personal Systems and Printing. Need a quote from a Motley Fool analyst? Email [email protected] RISKS Parkhill warned that \"guidance prudently reflects a cost environment that remains challenging with continued commodity headwinds acros"
+    },
+    {
+     "url": "https://finance.yahoo.com/markets/stocks/articles/hp-hpq-stock-10-4-150045887.html?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-25T15:00:45Z",
+     "key": [
+      "HPQ GF Value chart HPQ: $30.38 +10.4% as of 10:00 a.m.",
+      "GuruFocus reported that Barclays maintained its rating on HP and raised its price target to $24.00 on Wednesday.",
+      "GuruFocus: HPQ Maintained by Barclays -- Price Target Raised to $24.00 GuruFocus: HP Guides Fiscal Q1 2027 Adjusted EPS to $0.66 to $0.76 on Nov. 24 GuruFocus: HP Inc. (NYSE:HPQ) Reports Q4 Revenue Growth, Raises Dividend Amid Mixed Segment Results How unusual is this move for HP?",
+      "ET +10.4% S&P 500 at the same time -2.8% Typical daily move (past year) 1.6% Times its typical move 6x Last gain this big +15.2% on May 22, 2026 (Dell and HP surged after Lenovo's strong results amid AI enthusiasm) What moved HP stock before?",
+      "Company Move ANET Arista Networks -7.2% DELL Dell Technologies -7.0% STX Seagate Technology -8.7% WDC Western Digital -8.3% SNDK SanDisk -11.1% P Everpure -6.4% What does HP do?",
+      "HPQ at a glance Measure Value Price $30.38 Market cap $27.40 billion Revenue (trailing 12 months) $59.34 billion P/E 11.6 GF Score 81/100 GF V"
+     ],
+     "text": "Oops, something went wrong Skip to navigation Skip to main content Skip to right column Sign in U.S. markets close in 3h 24m US Markets Europe Markets Asia Markets Cryptocurrencies Rates Commodities Currencies U.S. markets close in 3h 24m S&P 500 7,112.15 -88.94 -1.23% Dow 30 49,949.58 -69.12 -0.14% Nasdaq 23,215.66 -517.88 -2.18% Russell 2000 2,677.81 -7.14 -0.27% 10-Yr Bond 4.8320 -0.0720 -1.47% VIX 30.21 +3.85 +14.51% Gold 3,528.90 -62.20 -1.73% Bitcoin USD 59,461.59 -569.88 -0.95% Crude Oil Jan 27 83.61 +1.56 +1.90% US Private Equity 10,696.29 0.00 0.00% ADVERTISEMENT HP (HPQ) Stock Is Up 10.4% Today: Barclays Raises Price Target to $24 GuruFocus News Wed, November 25, 2026 at 7:00 AM PST 4 min read HPQ +10.97% ^GSPC -1.48% DELL -3.88% This article first appeared on GuruFocus. HP (HPQ) stock is up 10.4% today, as of 10:00 a.m. ET on Wednesday, Nov. 25, after Barclays raised its price target to $24.00, according to GuruFocus. The shares traded at $30.38 while the S&P 500 fell 2.8% and the technology sector slid, with Dell down 7.0%. HP's gain ran against a falling market, and the analyst action was the clearest company news of the morning. Warning! GuruFocus has detected 2 Warning Sign with HPQ. Is HPQ fairly valued? Test your thesis with our free DCF calculator. HPQ GF Value chart HPQ: $30.38 +10.4% as of 10:00 a.m. ET GF Score 81/100 GF Valuation: Fairly Valued See HPQ's live quote, price chart and GF Value on its Summary page ? For HPQ's live quote, valuation and guru holdings in one place, see the HPQ Summary page. Why is HP stock up today? GuruFocus reported that Barclays maintained its rating on HP and raised its price target to $24.00 on Wednesday. HP had also guided fiscal first-quarter 2027 adjusted EPS to $0.66 to $0.76 on Nov. 24 and reported fourth-quarter revenue growth and a higher dividend, according to GuruFocus. GuruFocus: HPQ Maintained by Barclays -- Price Target Raised to $24.00 GuruFocus: HP Guides Fiscal Q1 2027 Adjusted EPS to $0.66 to $0.76 on Nov. 24 GuruFocus: HP Inc. (NYSE:HPQ) Reports Q4 Revenue Growth, Raises Dividend Amid Mixed Segment Results How unusual is this move for HP? The 10.4% gain is 6 times HP's typical daily move of 1.6%. HP has had 10 unusual jumps in the past 12 months and 55 since 2013, and most of those jumps had no identified cause, though earnings, sector news and analyst actions explain others. Its last move this big was a 15.2% gain on May 22, 2026, when Dell and HP surged after Lenovo's strong results amid AI enthusiasm. Measure Value Move as of 10:00 a.m. ET +10.4% S&P 500 at the same time -2.8% Typical daily move (past year) 1.6% Times its typical move 6x Last gain this big +15.2% on May 22, 2026 (Dell and HP surged after Lenovo's strong results amid AI enthusiasm) What moved HP stock before? Date Move What happened Oct. 30, 2026 -9.6% Intel flagged a deepening PC slump and memory shortages, hitting PC makers Oct. 22, 2026 +7.8% No cause identified Oct. 9, 2026 -6.9% No cause identified Sept. 11, 2026 +8.4% Dell, HPE and HP surged on AI enterprise demand and PC and server refresh Aug. 13, 2026 +6.9% Goldman Sachs maintained HPQ and raised its price target to $21 Aug. 4, 2026 +6.3% Industry-wide move: 5 stocks in its industry jumped the same day How did HP's peers trade? Company Move ANET Arista Networks -7.2% DELL Dell Technologies -7.0% STX Seagate Technology -8.7% WDC Western Digital -8.3% SNDK SanDisk -11.1% P Everpure -6.4% What does HP do? HP Inc. is a global technology company formed in 2015 when Hewlett-Packard split, with HP taking the personal systems and printing businesses while Hewlett Packard Enterprise took enterprise infrastructure and services. HP has trailing 12-month revenue of $59.34 billion and a market value of $27.40 billion. The stock trades at 11.6 times trailing earnings and has a GF Score of 81 out of 100. HPQ at a glance Measure Value Price $30.38 Market cap $27.40 billion Revenue (trailing 12 months) $59.34 billion P/E 11.6 GF Score 81/100 GF V"
+    }
+   ],
+   "pond": {
+    "wave": 0.0,
+    "own": 4.113085764451627,
+    "how": "a stone: its own news",
+    "from": [],
+    "reaches": [
+     [
+      "LOGI",
+      0.56,
+      -0.01098
+     ],
+     [
+      "NTAP",
+      0.46,
+      -0.0173
+     ],
+     [
+      "CDW",
+      0.46,
+      0.03332
+     ],
+     [
+      "WDAY",
+      0.39,
+      0.02014
+     ],
+     [
+      "DBX",
+      0.38,
+      0.02106
+     ]
+    ]
+   }
+  },
+  {
+   "t": "IMKTA",
+   "company": "INGLES MARKETS INC",
+   "move": -0.08490538964916305,
+   "z": -5.384401435879463,
+   "wave": 0.0,
+   "mover": true,
+   "score": 0.4249084946375678,
+   "parts": {
+    "surprise": 0.225,
+    "unexplained": 1.0,
+    "news": 1.0,
+    "reach": 0.187,
+    "against": 0.0,
+    "memory": 0.0,
+    "fragile": 0.0
+   },
+   "reasons": [
+    "most of the move is its own",
+    "filed its results",
+    "2 stories name it"
+   ],
+   "attention": 0.028655592672720564,
+   "bars": 19,
+   "filings": [
+    {
+     "what": "results report (8-K 2.02)",
+     "at": "2026-11-25T12:35:10Z",
+     "title": "Ingles Markets, Inc.",
+     "url": "https://www.sec.gov/Archives/edgar/data/50493/000143774926038232/ex_1050620.htm",
+     "key": [
+      "EX-99.1 2 ex_1050620.htm EXHIBIT 99.1 Exhibit 99.1 PRESS RELEASE Ingles Markets, Inc.",
+      "Contact: Pat Jackson, Chief Financial Officer November 25, 2026 pjackson@ingles-markets.com For Immediate Release (828) 669-2941 (Ext. 223) Ingles Markets, Incorporated Reports Results for Fourth Quarter and Fiscal Year 2026 ASHEVILLE, N.C. - Ingles Markets, Incorporated (NASDAQ: IMKTA) today reported results for the quarter and year ended September 26, 2026.",
+      "As we close the fiscal year, I am grateful for their hard work and for the loyalty of the families who shop with us.\u201d Fourth Quarter Results Net sales totaled $1.374 billion for the quarter ended September 26, 2026, compared with $1.368 billion for the quarter ended September 27, 2025.",
+      "Basic and diluted earnings per share for Class A Common Stock were $1.00 and $0.97, respectively, for the quarter ended September 26, 2026, compared with $1.38 and $1.35, respectively, for the quarter ended September 27, 2025.",
+      "Basic and diluted earnings per share for Class B Common Stock were each $0.91 for the quarter ended September 26, 2026, and $1.26 for the quarter ended September 27, 2025. -MORE- PRESS RELEASE Annual Results Net sales totaled $5.42 billion for the fiscal year ended September 26, 2026, compared with $5.33 billion for the fiscal year ended September 27, 2025.",
+      "Basic and diluted earnings per share for Class A Common Stock were $5.21 and $5.10, respectively, for the fiscal year ended September 26, 2026, as compared with $4.50 and $4.40, respectively, for the fiscal year ended September 27, 2025."
+     ],
+     "text": "EX-99.1 2 ex_1050620.htm EXHIBIT 99.1 Exhibit 99.1 PRESS RELEASE Ingles Markets, Inc. Contact: Pat Jackson, Chief Financial Officer November 25, 2026 pjackson@ingles-markets.com For Immediate Release (828) 669-2941 (Ext. 223) Ingles Markets, Incorporated Reports Results for Fourth Quarter and Fiscal Year 2026 ASHEVILLE, N.C. - Ingles Markets, Incorporated (NASDAQ: IMKTA) today reported results for the quarter and year ended September 26, 2026. Robert P. Ingle II, Executive Chairman of the Board, stated, \u201cThank you to our associates for the care they show our customers every day. As we close the fiscal year, I am grateful for their hard work and for the loyalty of the families who shop with us.\u201d Fourth Quarter Results Net sales totaled $1.374 billion for the quarter ended September 26, 2026, compared with $1.368 billion for the quarter ended September 27, 2025. Fourth quarter results for fiscal 2026 and 2025 each consisted of 13 weeks of operations. Gross profit for the fourth quarter of fiscal 2026 totaled $328.5 million, or 23.9% of sales. Gross profit for the fourth quarter of fiscal 2025 was $334.7 million, or 24.5% of sales. Operating and administrative expenses for the fourth quarter of fiscal 2026 totaled $303.9 million compared with $299.0 million for the fourth quarter of fiscal 2025. Interest expense totaled $5.0 million in both the fourth quarter of fiscal 2026 and the fourth quarter of fiscal 2025. Total debt at the end of fiscal 2026 was $497.3 million compared with $514.8 million at the end of fiscal 2025. Net income totaled $18.5 million for the fourth quarter of fiscal 2026 compared with net income of $25.7 million for the fourth quarter of fiscal 2025. Basic and diluted earnings per share for Class A Common Stock were $1.00 and $0.97, respectively, for the quarter ended September 26, 2026, compared with $1.38 and $1.35, respectively, for the quarter ended September 27, 2025. Basic and diluted earnings per share for Class B Common Stock were each $0.91 for the quarter ended September 26, 2026, and $1.26 for the quarter ended September 27, 2025. -MORE- PRESS RELEASE Annual Results Net sales totaled $5.42 billion for the fiscal year ended September 26, 2026, compared with $5.33 billion for the fiscal year ended September 27, 2025. The fiscal years ended September 26, 2026, and September 27, 2025, each consisted of 52 weeks of operations. Gross profit for the fiscal year ended September 26, 2026, totaled $1.32 billion, or 24.4% of sales. Gross profit for the fiscal year ended September 27, 2025, totaled $1.27 billion, or 23.9% of sales. Operating and administrative expenses totaled $1.19 billion for the fiscal year ended September 26, 2026, and $1.16 billion for the fiscal year ended September 27, 2025. Interest expense was $18.6 million for the fiscal year ended September 26, 2026, compared with $19.7 million for the fiscal year ended September 27, 2025. Net income totaled $96.8 million for the fiscal year ended September 26, 2026, compared with $83.6 million for the fiscal year ended September 27, 2025. Basic and diluted earnings per share for Class A Common Stock were $5.21 and $5.10, respectively, for the fiscal year ended September 26, 2026, as compared with $4.50 and $4.40, respectively, for the fiscal year ended September 27, 2025. Basic and diluted earnings per share for Class B Common Stock were each $4.73 for the fiscal year ended September 26, 2026, as compared with basic and diluted earnings per share of $4.09 for the fiscal year ended September 27, 2025. Capital expenditures for the 2026 fiscal year totaled $100.6 million compared with $114.5 million for the 2025 fiscal year. As of September 26, 2026, the Company had only a single letter of credit in the amount of $900,000 outstanding under its $150.0 million line of credit and otherwise had no borrowings outstanding thereunder. About Ingles Markets, Incorporated Ingles Markets, Incorporated is a leading grocer with operations in six southeastern states. Headquartered in Asheville, North Carolina, the Company operates 194 supermarkets. At September 26, 2026, three stores temporarily closed due to damage sustained in Hurricane Helene remained closed but are expected to reopen at various times in 2027 or in 2028. In conjunction with its supermarket operations, the Company operates neighborhood shopping centers, most of which contain an Ingles supermarket. The Company also owns a fluid dairy facility that supplies Ingles supermarkets and unaffiliated customers. To learn more about Ingles Markets visit ingles-markets.com. -MORE- PRESS RELEASE Cautionary Note Regarding Forward-Looking Statements This press release includes certain \u201cforward-looking statements\u201d within the meaning of the Private Securities Litigation Reform Act of 1995. These forward-looking statements may address, among other things, our expected financial and operational results and the related assumptions underlying our expected results. These forward-looking statements are distinguished by use of words such as \u201canticipate,\u201d \u201caim,\u201d \u201cbelieve,\u201d \u201ccontinue,\u201d \u201ccould,\u201d \u201cestimate,\u201d \u201cexpect,\u201d \u201cintends,\u201d \u201cmay,\u201d \u201cmight,\u201d \u201cplan,\u201d \u201cpossible,\u201d \u201cpotential,\u201d \u201cpredict,\u201d \u201cproject,\u201d \u201cshould,\u201d \u201cwill,\u201d \u201cwould\u201d and the negative of these terms, and similar references to future periods. These statements are based on management\u2019s current expectations and are subject to uncertainty and changes in circumstances. Actual results may differ materially from these expectations due to, among other things: business and economic conditions generally in the Company\u2019s operating area, including inflation or deflation; shortages of labor, distribution capacity, and some product shortages; inflation in food, labor and gasoline prices; the Company\u2019s ability to successfully implement our expansion and operating strategies; pricing pressures and other competitive factors, including online-based procurement of products the Company sells; sudden or significant changes in the availability of gas"
+    }
+   ],
+   "pages": [
+    {
+     "url": "https://finance.yahoo.com/markets/stocks/articles/why-ingles-markets-imkta-stock-153023965.html?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-25T15:30:23Z",
+     "key": [
+      "IMKTA GF Value chart IMKTA: $78.74 -6.4% as of 10:30 a.m.",
+      "GuruFocus: Ingles Markets Reports Q4 2026 Earnings: $1.00 EPS and $1.374 Billion in Revenue, Net Income Declines 28% Year-over-Year GuruFocus: Ingles Markets, Incorporated Reports Results for Fourth Quarter and Fiscal Year 2026 How unusual is this move for Ingles Markets?",
+      "ET -6.4% S&P 500 at the same time -2.2% Typical daily move (past year) 1.0% Times its typical move 6x Last drop this big -7.1% on Oct. 1, 2024 What moved Ingles Markets stock before?",
+      "Date Move What happened Oct. 22, 2026 +4.2% Industry-wide move: 5 stocks in its industry jumped the same day July 23, 2026 -5.3% No cause identified June 5, 2026 +4.6% No cause identified Feb. 3, 2026 +4.3% No cause identified Dec. 10, 2025 -4.2% No cause identified Aug. 12, 2025 +4.0% No cause identified How did Ingles Markets' peers trade?",
+      "Company Move KR The Kroger +1.4% ACI Albertsons Companies +1.4% SFM Sprouts Farmers Market +1.9% WMK Weis Markets -0.8% YSWY Yesway -0.9% GO Grocery Outlet Holding -0.8% What does Ingles Markets do?",
+      "IMKTA at a glance Measure Value Price $78.74 Market cap $1.46 billion Revenue (trailing 12 months) $5.42 billion P/E 14.3 GF Score 72/100 GF Value $69.63 GF Valuation Modestly Overvalued See all of IMKTAs numbers, updated live, on its Summary p"
+     ],
+     "text": "Oops, something went wrong Skip to navigation Skip to main content Skip to right column Sign in U.S. markets close in 3h 24m US Markets Europe Markets Asia Markets Cryptocurrencies Rates Commodities Currencies U.S. markets close in 3h 24m S&P 500 7,112.15 -88.94 -1.23% Dow 30 49,949.58 -69.12 -0.14% Nasdaq 23,215.66 -517.88 -2.18% Russell 2000 2,677.81 -7.14 -0.27% 10-Yr Bond 4.8320 -0.0720 -1.47% VIX 30.21 +3.85 +14.51% Gold 3,528.90 -62.20 -1.73% Bitcoin USD 59,461.59 -569.88 -0.95% Crude Oil Jan 27 83.61 +1.56 +1.90% US Private Equity 10,696.29 0.00 0.00% ADVERTISEMENT Why Ingles Markets (IMKTA) Stock Is Down 6.4% Today: Q4 Net Income Falls 28% GuruFocus News Wed, November 25, 2026 at 7:30 AM PST 3 min read IMKTA -8.88% ^GSPC -1.22% KR +0.61% WMK -0.85% This article first appeared on GuruFocus. Ingles Markets (IMKTA) stock is down 6.4% today, as of 10:30 a.m. ET on Wednesday, Nov. 25, as the supermarket chain reported Q4 results with net income down 28%. The shares were at $78.74 as the S&P 500 fell 2.2%. Grocery peers were mixed, with Kroger up 1.4% and Weis Markets down 0.8%. Warning! GuruFocus has detected 3 Warning Signs with IMKTA. Is IMKTA fairly valued? Test your thesis with our free DCF calculator. IMKTA GF Value chart IMKTA: $78.74 -6.4% as of 10:30 a.m. ET GF Score 72/100 GF Valuation: Modestly Overvalued See IMKTA's live quote, price chart and GF Value on its Summary page ? Follow IMKTA live, with its price chart, GF Value and analysts' targets, on the IMKTA Summary page. Why is Ingles Markets stock down today? Ingles reported fourth-quarter and fiscal 2026 results this morning, with earnings of $1.00 per share on $1.374 billion in revenue, according to GuruFocus. GuruFocus reported that net income declined 28% year over year, and the drop came on the same day as a broad tech-led selloff. GuruFocus: Ingles Markets Reports Q4 2026 Earnings: $1.00 EPS and $1.374 Billion in Revenue, Net Income Declines 28% Year-over-Year GuruFocus: Ingles Markets, Incorporated Reports Results for Fourth Quarter and Fiscal Year 2026 How unusual is this move for Ingles Markets? At 6 times its typical daily move of 1.0%, this drop is unusual for Ingles. The last move this large was a 7.1% drop on Oct. 1, 2024, with no cause identified. Of its 40 unusual drops since 2013, 38 have no identified cause and two came on earnings. Measure Value Move as of 10:30 a.m. ET -6.4% S&P 500 at the same time -2.2% Typical daily move (past year) 1.0% Times its typical move 6x Last drop this big -7.1% on Oct. 1, 2024 What moved Ingles Markets stock before? Date Move What happened Oct. 22, 2026 +4.2% Industry-wide move: 5 stocks in its industry jumped the same day July 23, 2026 -5.3% No cause identified June 5, 2026 +4.6% No cause identified Feb. 3, 2026 +4.3% No cause identified Dec. 10, 2025 -4.2% No cause identified Aug. 12, 2025 +4.0% No cause identified How did Ingles Markets' peers trade? Company Move KR The Kroger +1.4% ACI Albertsons Companies +1.4% SFM Sprouts Farmers Market +1.9% WMK Weis Markets -0.8% YSWY Yesway -0.9% GO Grocery Outlet Holding -0.8% What does Ingles Markets do? Ingles Markets Inc is a U.S. supermarket chain operating primarily in the southeastern United States, with stores concentrated in Georgia, North Carolina, South Carolina, Tennessee, Virginia, and Alabama. The company runs supermarkets in suburban areas, small towns, and neighborhoods, offering groceries, fresh produce, meat, dairy, frozen foods, and non-food items such as health and beauty care products, general merchandise, and pharmacy services. Ingles Markets has trailing 12-month revenue of $5.42 billion and a market value of $1.46 billion. The stock trades at 14.3 times trailing earnings and has a GF Score of 72 out of 100. IMKTA at a glance Measure Value Price $78.74 Market cap $1.46 billion Revenue (trailing 12 months) $5.42 billion P/E 14.3 GF Score 72/100 GF Value $69.63 GF Valuation Modestly Overvalued See all of IMKTAs numbers, updated live, on its Summary p"
+    },
+    {
+     "url": "https://finance.yahoo.com/markets/stocks/articles/ingles-markets-incorporated-reports-results-123000893.html?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-25T12:30:00Z",
+     "key": [
+      "Ingles Markets, Incorporated Reports Results for Fourth Quarter and Fiscal Year 2026 Business Wire Wed, November 25, 2026 at 4:30 AM PST 7 min read IMKTA -8.88% ASHEVILLE, N.C., November 25, 2026--(BUSINESS WIRE)--Ingles Markets, Incorporated (NASDAQ: IMKTA) today reported results for the quarter and year ended September 26, 2026.",
+      "As we close the fiscal year, I am grateful for their hard work and for the loyalty of the families who shop with us.\" Fourth Quarter Results Net sales totaled $1.374 billion for the quarter ended September 26, 2026, compared with $1.368 billion for the quarter ended September 27, 2025.",
+      "Gross profit for the fourth quarter of fiscal 2026 totaled $328.5 million, or 23.9% of sales.",
+      "Gross profit for the fourth quarter of fiscal 2025 was $334.7 million, or 24.5% of sales.",
+      "Basic and diluted earnings per share for Class A Common Stock were $1.00 and $0.97, respectively, for the quarter ended September 26, 2026, compared with $1.38 and $1.35, respectively, for the quarter ended September 27, 2025.",
+      "Basic and diluted earnings per share for Class A Common Stock were $5.21 and $5.10, respectively, for the fiscal year ended September 26, 2026, as compared with $4.50 and $4.40, respectively, for the fiscal year ended September 27, 2025."
+     ],
+     "text": "Oops, something went wrong Skip to navigation Skip to main content Skip to right column Sign in U.S. markets close in 3h 24m US Markets Europe Markets Asia Markets Cryptocurrencies Rates Commodities Currencies U.S. markets close in 3h 24m S&P 500 7,112.15 -88.94 -1.23% Dow 30 49,949.58 -69.12 -0.14% Nasdaq 23,215.66 -517.88 -2.18% Russell 2000 2,677.81 -7.14 -0.27% 10-Yr Bond 4.8320 -0.0720 -1.47% VIX 30.21 +3.85 +14.51% Gold 3,528.90 -62.20 -1.73% Bitcoin USD 59,461.59 -569.88 -0.95% Crude Oil Jan 27 83.61 +1.56 +1.90% US Private Equity 10,696.29 0.00 0.00% ADVERTISEMENT This is a paid press release. Contact the press release distributor directly with any inquiries. Ingles Markets, Incorporated Reports Results for Fourth Quarter and Fiscal Year 2026 Business Wire Wed, November 25, 2026 at 4:30 AM PST 7 min read IMKTA -8.88% ASHEVILLE, N.C., November 25, 2026--(BUSINESS WIRE)--Ingles Markets, Incorporated (NASDAQ: IMKTA) today reported results for the quarter and year ended September 26, 2026. Robert P. Ingle II, Executive Chairman of the Board, stated, \"Thank you to our associates for the care they show our customers every day. As we close the fiscal year, I am grateful for their hard work and for the loyalty of the families who shop with us.\" Fourth Quarter Results Net sales totaled $1.374 billion for the quarter ended September 26, 2026, compared with $1.368 billion for the quarter ended September 27, 2025. Fourth quarter results for fiscal 2026 and 2025 each consisted of 13 weeks of operations. Gross profit for the fourth quarter of fiscal 2026 totaled $328.5 million, or 23.9% of sales. Gross profit for the fourth quarter of fiscal 2025 was $334.7 million, or 24.5% of sales. Operating and administrative expenses for the fourth quarter of fiscal 2026 totaled $303.9 million compared with $299.0 million for the fourth quarter of fiscal 2025. Interest expense totaled $5.0 million in both the fourth quarter of fiscal 2026 and the fourth quarter of fiscal 2025. Total debt at the end of fiscal 2026 was $497.3 million compared with $514.8 million at the end of fiscal 2025. Net income totaled $18.5 million for the fourth quarter of fiscal 2026 compared with net income of $25.7 million for the fourth quarter of fiscal 2025. Basic and diluted earnings per share for Class A Common Stock were $1.00 and $0.97, respectively, for the quarter ended September 26, 2026, compared with $1.38 and $1.35, respectively, for the quarter ended September 27, 2025. Basic and diluted earnings per share for Class B Common Stock were each $0.91 for the quarter ended September 26, 2026, and $1.26 for the quarter ended September 27, 2025. Annual Results Net sales totaled $5.42 billion for the fiscal year ended September 26, 2026, compared with $5.33 billion for the fiscal year ended September 27, 2025. The fiscal years ended September 26, 2026, and September 27, 2025, each consisted of 52 weeks of operations. Gross profit for the fiscal year ended September 26, 2026, totaled $1.32 billion, or 24.4% of sales. Gross profit for the fiscal year ended September 27, 2025, totaled $1.27 billion, or 23.9% of sales. Operating and administrative expenses totaled $1.19 billion for the fiscal year ended September 26, 2026, and $1.16 billion for the fiscal year ended September 27, 2025. Interest expense was $18.6 million for the fiscal year ended September 26, 2026, compared with $19.7 million for the fiscal year ended September 27, 2025. Net income totaled $96.8 million for the fiscal year ended September 26, 2026, compared with $83.6 million for the fiscal year ended September 27, 2025. Basic and diluted earnings per share for Class A Common Stock were $5.21 and $5.10, respectively, for the fiscal year ended September 26, 2026, as compared with $4.50 and $4.40, respectively, for the fiscal year ended September 27, 2025. Basic and diluted earnings per share for Class B Common Stock were each $4.73 for the fiscal year ended September 26, 2026, as compared with basic an"
+    }
+   ],
+   "pond": {
+    "wave": 0.0,
+    "own": -5.384401435879463,
+    "how": "a stone: its own news",
+    "from": [],
+    "reaches": [
+     [
+      "VLGEA",
+      0.55,
+      -0.02502
+     ],
+     [
+      "NGVC",
+      0.45,
+      -0.00531
+     ],
+     [
+      "EBF",
+      0.43,
+      -0.0025
+     ],
+     [
+      "ACI",
+      0.42,
+      0.01761
+     ],
+     [
+      "BKE",
+      0.42,
+      -0.02381
+     ]
+    ]
+   }
+  }
+ ],
+ "rest": [
+  {
+   "t": "J",
+   "score": 0.3709775790307456,
+   "attention": 0.01828213464526801,
+   "reasons": [
+    "most of the move is its own",
+    "2 stories name it",
+    "moved against its wave (-2.2 usual days against a wave of +0.3)"
+   ]
+  },
+  {
+   "t": "CENT",
+   "score": 0.3609666142339102,
+   "attention": 0.016818839004727894,
+   "reasons": [
+    "most of the move is its own",
+    "2 stories name it",
+    "17 stocks moved closely with it over the year"
+   ]
+  },
+  {
+   "t": "PNNT",
+   "score": 0.35201241721960824,
+   "attention": 0.015609525221163045,
+   "reasons": [
+    "most of the move is its own",
+    "1 story names it",
+    "16 stocks moved closely with it over the year"
+   ]
+  },
+  {
+   "t": "EYPT",
+   "score": 0.34351517823812716,
+   "attention": 0.014542435974928063,
+   "reasons": [
+    "most of the move is its own, with no news found",
+    "chance of a restructuring or a write-off 8.8% against 0.3% usually",
+    "chance of a sale of new shares 3.1% against 0.9% usually",
+    "cash covers about 1.0 quarters of losses"
+   ]
+  },
+  {
+   "t": "ZNOG",
+   "score": 0.3312926320563846,
+   "attention": 0.013134159643319236,
+   "reasons": [
+    "most of the move is its own, with no news found",
+    "chance of a sale of new shares 16.0% against 0.9% usually",
+    "cash covers about 3.4 quarters of losses"
+   ]
+  },
+  {
+   "t": "DE",
+   "score": 0.32034513424135364,
+   "attention": 0.011988972802702386,
+   "reasons": [
+    "in the last note's open questions"
+   ]
+  },
+  {
+   "t": "NVDA",
+   "score": 0.28891396349915077,
+   "attention": 0.00922632555636042,
+   "reasons": [
+    "most of the move is its own",
+    "5 stories name it",
+    "in the last note's theme 'The tech sell-off spreads to the whole market'"
+   ]
+  },
+  {
+   "t": "TXN",
+   "score": 0.2851994175340325,
+   "attention": 0.008945103804467643,
+   "reasons": [
+    "25 stocks moved closely with it over the year",
+    "moved against its wave (+1.6 usual days against a wave of -0.3)"
+   ]
+  },
+  {
+   "t": "SMTC",
+   "score": 0.2812532110722583,
+   "attention": 0.00865572773576374,
+   "reasons": [
+    "86 stocks moved closely with it over the year",
+    "moved against its wave (+1.4 usual days against a wave of -0.5)"
+   ]
+  },
+  {
+   "t": "MU",
+   "score": 0.2803948188688552,
+   "attention": 0.008594031918848825,
+   "reasons": [
+    "31 stocks moved closely with it over the year",
+    "in the last note's theme 'The tech sell-off spreads to the whole market'"
+   ]
+  },
+  {
+   "t": "COKE",
+   "score": 0.2802891295059187,
+   "attention": 0.008586466103125922,
+   "reasons": [
+    "most of the move is its own",
+    "1 story names it"
+   ]
+  },
+  {
+   "t": "BPOP",
+   "score": 0.2725720531294067,
+   "attention": 0.00805166002885538,
+   "reasons": [
+    "186 stocks moved closely with it over the year",
+    "moved against its wave (+1.4 usual days against a wave of -0.3)"
+   ]
+  },
+  {
+   "t": "PWR",
+   "score": 0.2702183832420578,
+   "attention": 0.007895274131003651,
+   "reasons": [
+    "4 stories name it",
+    "95 stocks moved closely with it over the year"
+   ]
+  },
+  {
+   "t": "NPK",
+   "score": 0.26928586578454355,
+   "attention": 0.00783415789704891,
+   "reasons": [
+    "most of the move is its own",
+    "1 story names it"
+   ]
+  },
+  {
+   "t": "DAR",
+   "score": 0.26865849022783,
+   "attention": 0.007793306784454564,
+   "reasons": [
+    "23 stocks moved closely with it over the year",
+    "moved against its wave (+1.5 usual days against a wave of -0.3)"
+   ]
+  },
+  {
+   "t": "LRCX",
+   "score": 0.259578977031378,
+   "attention": 0.007225400397380618,
+   "reasons": [
+    "3 stories name it",
+    "131 stocks moved closely with it over the year"
+   ]
+  },
+  {
+   "t": "PSNL",
+   "score": 0.25860643446192433,
+   "attention": 0.007167078639347291,
+   "reasons": [
+    "most of the move is its own, with no news found",
+    "chance of a sale of new shares 3.5% against 0.9% usually"
+   ]
+  },
+  {
+   "t": "WDAY",
+   "score": 0.2558780947351945,
+   "attention": 0.007005965251788396,
+   "reasons": [
+    "173 stocks moved closely with it over the year",
+    "in the last note's theme \"Last night's reports met by sharp falls\""
+   ]
+  },
+  {
+   "t": "ADSK",
+   "score": 0.249913507298158,
+   "attention": 0.0066662472451240445,
+   "reasons": [
+    "143 stocks moved closely with it over the year",
+    "in the last note's theme \"Last night's reports met by sharp falls\""
+   ]
+  },
+  {
+   "t": "CBC",
+   "score": 0.24979144741951098,
+   "attention": 0.0066594700147432715,
+   "reasons": [
+    "136 stocks moved closely with it over the year",
+    "moved against its wave (+1.2 usual days against a wave of -0.3)"
+   ]
+  }
+ ]
+}

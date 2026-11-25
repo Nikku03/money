@@ -1,0 +1,331 @@
+{
+ "asof": "2026-11-24",
+ "at": "2026-11-25T17:35:46Z",
+ "calls": [],
+ "case_sha": "fe5d5380921e2273",
+ "check": "2026-11-25T1735Z",
+ "claims_noted": 0,
+ "evidence": {
+  "c1": {
+   "text": "movers tied together: J, PWR (J~PWR by s23)"
+  },
+  "d:10-year yield": {
+   "text": "10-year yield -0.07 pt since the close (its usual day: 0.04 pt)"
+  },
+  "e:GDRX": {
+   "text": "GDRX expected: before the report: into the report it kept close to the market: -0.8 of its usual months against the market over 21 sessions (-1.9 over 5, -0.6 over 63); 21% below its 52-week high; its usual report move 11.0%, last 9.9%; at its last eight reports it rose 50% of the time, mean -0.43 of its usual move; VIX 26.4, the market -6.1% over the last month. Of the 100 most similar past setups, 65% rose on the report session (all reports 51%), mean +1.53%; their kinds: surprise up 37, no re"
+  },
+  "e:HPQ": {
+   "text": "HPQ expected: before the report: into the report it kept close to the market: -0.8 of its usual months against the market over 21 sessions (-0.1 over 5, -0.1 over 63); 21% below its 52-week high; its usual report move 4.3%, last 2.9%; at its last eight reports it rose 50% of the time, mean -0.12 of its usual move; VIX 26.4, the market -6.1% over the last month. Of the 100 most similar past setups, 55% rose on the report session (all reports 51%), mean +0.53%; their kinds: surprise up 43, surpris"
+  },
+  "e:NTNX": {
+   "text": "NTNX expected: before the report: into the report it sold off: -1.7 of its usual months against the market over 21 sessions (-0.3 over 5, -0.5 over 63); 27% below its 52-week high; its usual report move 7.4%, last 3.6%; at its last eight reports it rose 50% of the time, mean -0.07 of its usual move; VIX 26.4, the market -6.1% over the last month. Of the 100 most similar past setups, 46% rose on the report session (all reports 51%), mean +0.62%; their kinds: relief 27, capitulation 22, no reactio"
+  },
+  "f:GDRX:1": {
+   "text": "GDRX results report (8-K 2.02) at 2026-11-24T21:32Z: GOODRX REPORTS THIRD QUARTER 2026 RESULTS AND PROVIDES UPDATE ON -- Exhibit 99.1 GOODRX REPORTS THIRD QUARTER 2026 RESULTS AND PROVIDES UPDATE ON COMPLIANCE WITH NASDAQ LISTING REQUIREMENTS Pharma Direct and Subscription Revenue Increased 93% and 41%, Respectively, Year-Over-Year Company Raises Full-Year 2026 Revenue and Adjusted EBITDA Expectations SANTA MONICA, Calif. -- (November 24, 2026) -- GoodRx Holdings, Inc. (Nasdaq: GDRX) (\"we,\" \"us,",
+   "url": "https://www.sec.gov/Archives/edgar/data/1809519/000180951926000231/gdrxq326-exx991pressrelease.htm"
+  },
+  "f:HPQ:1": {
+   "text": "HPQ results report (8-K 2.02) at 2026-11-24T21:17Z: 1501 Page Mill Road -- 1501 Page Mill Road Palo Alto, CA 94304 hp.com Editorial contacts HP Inc. Media Relations MediaRelations@hp.com HP Inc. Investor Relations InvestorRelations@hp.com EXHIBIT 99.1 News Release HP Inc. Reports Fiscal 2026 Full Year and Fourth Quarter Results; Announces Dividend Increase PALO ALTO, Calif. \u2013 November 24, 2026 (GLOBE NEWSWIRE) \u2013 HP (NYSE: HPQ) \u2022Fiscal 2026 GAAP diluted net earnings per share (\"EPS\") of $2.62, in",
+   "url": "https://www.sec.gov/Archives/edgar/data/47217/000004721726000054/hp103126exhibit991q426.htm"
+  },
+  "f:IMKTA:1": {
+   "text": "IMKTA results report (8-K 2.02) at 2026-11-25T12:35Z: Ingles Markets, Inc. -- Exhibit 99.1 PRESS RELEASE Ingles Markets, Inc. Contact: Pat Jackson, Chief Financial Officer November 25, 2026 pjackson@ingles-markets.com For Immediate Release (828) 669-2941 (Ext. 223) Ingles Markets, Incorporated Reports Results for Fourth Quarter and Fiscal Year 2026 ASHEVILLE, N.C. - Ingles Markets, Incorporated (NASDAQ: IMKTA) today reported results for the quarter and year ended September 26, 2026. Robert P. In",
+   "url": "https://www.sec.gov/Archives/edgar/data/50493/000143774926038232/ex_1050620.htm"
+  },
+  "f:NTNX:1": {
+   "text": "NTNX results report (8-K 2.02) at 2026-11-24T21:01Z: Nutanix Reports First Quarter Fiscal 2027 Financial Results -- EXHIBIT 99.1 Nutanix Reports First Quarter Fiscal 2027 Financial Results Reports 15% YoY ARR Growth and Solid Free Cash Flow Nutanix Announces CEO Succession Plan; Board Initiates Search for Next CEO SAN JOSE, Calif., Nov. 24, 2026 (GLOBE NEWSWIRE) -- Nutanix, Inc. (NASDAQ: NTNX), a hybrid cloud leader and AI platform company, today announced financial results for its first quarter",
+   "url": "https://www.sec.gov/Archives/edgar/data/1618732/000117184326007693/exh_991.htm"
+  },
+  "f:URBN:1": {
+   "text": "URBN 8-K 8.01 at 2026-11-25T16:22Z: URBAN OUTFITTERS, INC. -- Exhibit 99.1 URBAN OUTFITTERS, INC. Third Quarter Results Philadelphia, PA \u2013 November 24, 2026 For Immediate Release Contact: Oona McCullough Executive Director of Investor Relations (215) 454-4806 URBN Reports Record Q3 Sales and Profits PHILADELPHIA, PA, November 24, 2026 \u2013 Urban Outfitters, Inc. (NASDAQ:URBN), a leading lifestyle products and services company which operates a portfolio of global consumer brands including the Anthro",
+   "url": "https://www.sec.gov/Archives/edgar/data/912615/000119312526477264/urbn-ex99_1.htm"
+  },
+  "g:3674": {
+   "text": "Semiconductors & Related Devices: the median of its 59 checked stocks moved -4.1%"
+  },
+  "k": {
+   "text": "Market: S&P 500 (SPY) -1.6%, Nasdaq 100 (QQQ) -2.8%, Russell 2000 (IWM) -0.4%, S&P 500 futures -2.2%, VIX +24.2% (in session)"
+  },
+  "r:10-year yield": {
+   "text": "the stocks that moved most with 10-year yield over the year, today: TOL +2.9% (its rate implies +1.8%), DHI +2.6% (its rate implies +1.9%), MHO +0.7% (its rate implies +1.8%), RKT +4.5% (its rate implies +2.9%), PHM +2.7% (its rate implies +1.8%), MTH +2.3% (its rate implies +2.0%)"
+  },
+  "s1": {
+   "text": "2026-11-25T16:21Z www.fool.com: GoodRx: 3 Key Takeaways for Long-Term Investors -- Management expects 2027 revenue growth to stall as weight loss drug price cuts shrink Pharma Direct fees, so the long-term question is whether subscriptions can fill the gap.",
+   "url": "https://www.fool.com/earnings/takeaways/2026/11/25/goodrx-3-key-takeaways-for-long-term-investors/?.tsrc=rss"
+  },
+  "s10": {
+   "text": "2026-11-25T15:26Z finance.yahoo.com: Nutanix Stock Gets Body-Slammed on Surprise CEO Exit.  Why Some Analysts Aren\u2019t Sweating It. -- Nutanix stock heads for worst day in over two years after a surprise CEO exit announcement, disappointing guidance, and a temporary dip in bookings.",
+   "url": "https://finance.yahoo.com/m/ebb7cde4-51b3-3da8-8742-37ce38a5fd1e/nutanix-stock-gets.html?.tsrc=rss"
+  },
+  "s11": {
+   "text": "2026-11-25T15:16Z finance.yahoo.com: Nutanix stock plunges as CEO announces plans to step down -- Nutanix CEO's exit overshadows earnings beat as stock sinks double digits.",
+   "url": "https://finance.yahoo.com/markets/stocks/article/nutanix-stock-plunges-as-ceo-announces-plans-to-step-down-151611485.html?.tsrc=rss"
+  },
+  "s12": {
+   "text": "2026-11-25T15:15Z www.proactiveinvestors.com: Nutanix stock drops after earnings beat and CEO succession news -- Nutanix Inc (NASDAQ:NTNX) stock fell 19% to $44.27 in Wednesday morning trading after the cloud computing company kept its annual sales forecast steady and announced CEO succession plans alongside a quarterly revenue beat. Revenue rose 15.2% year over year to $772.4 million in the first quarter...",
+   "url": "https://www.proactiveinvestors.com/companies/news/1102448/nutanix-stock-drops-after-earnings-beat-and-ceo-succession-news-1102448.html?.tsrc=rss"
+  },
+  "s13": {
+   "text": "2026-11-25T15:30Z finance.yahoo.com: Why Ingles Markets (IMKTA) Stock Is Down 6.4% Today: Q4 Net Income Falls 28% -- On Wednesday, Nov. 25, the shares fell 6.4% as Ingles reported Q4 results showing net income down 28%",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/why-ingles-markets-imkta-stock-153023965.html?.tsrc=rss"
+  },
+  "s15": {
+   "text": "2026-11-25T16:45Z finance.yahoo.com: Impinj (PI) Stock Is Down 10.9% Today: Chip Selloff Amid AI Spending Fears -- Impinj (PI) fell 10.9% on Wednesday, Nov. 25, as chip stocks sold off on AI spending fears.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/impinj-pi-stock-down-10-164521469.html?.tsrc=rss"
+  },
+  "s17": {
+   "text": "2026-11-25T16:14Z finance.yahoo.com: Ambarella Facing Broader Memory Squeeze, BofA Securities Says -- Ambarella's (AMBA) fiscal Q4 revenue guidance came in \"well below\" consensus estimates as high memor",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/ambarella-facing-broader-memory-squeeze-161442572.html?.tsrc=rss"
+  },
+  "s18": {
+   "text": "2026-11-25T16:07Z 247wallst.com: The Memory Shortage Has a New Victim: Ambarella Stock Crashes 37% -- Ambarella just posted a record quarter, yet investors fled within hours. A scarce chip component is forcing customers to delay or cancel orders, and the company's own forecast reveals how deep the damage could run.",
+   "url": "https://247wallst.com/investing/2026/11/25/the-memory-shortage-has-a-new-victim-ambarella-stock-crashes-37/?.tsrc=rss"
+  },
+  "s2": {
+   "text": "2026-11-25T15:43Z www.fool.com: GoodRx (GDRX) Q3 2026 Earnings Call Transcript -- Restated first-half results and a 2027 unit economics warning shape the outlook.",
+   "url": "https://www.fool.com/earnings/call-transcripts/2026/11/25/goodrx-gdrx-q3-2026-earnings-call-transcript/?.tsrc=rss"
+  },
+  "s23": {
+   "text": "2026-11-25T15:30Z finance.yahoo.com: Jacobs (J) Stock Is Down 5.7% Today: AI-Led Market Selloff -- Jacobs shares fell 5.7% on Wednesday, Nov. 25, as an AI-led selloff hit the broader market, with no company-specific news behind the drop.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/jacobs-j-stock-down-5-153018697.html?.tsrc=rss"
+  },
+  "s26": {
+   "text": "2026-11-25T15:00Z finance.yahoo.com: HP (HPQ) Stock Is Up 10.4% Today: Barclays Raises Price Target to $24 -- On Wednesday, Nov. 25, the shares rose 10.4% after Barclays raised its price target to $24.00, as the S&P 500 fell 2.8%.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/hp-hpq-stock-10-4-150045887.html?.tsrc=rss"
+  },
+  "s27": {
+   "text": "2026-11-24T21:35Z finance.yahoo.com: HP (HPQ) Tops Q4 Earnings and Revenue Estimates -- HP (HPQ) delivered earnings and revenue surprises of +12.16% and +6.13%, respectively, for the quarter ended October 2026. Do the numbers hold clues to what lies ahead for the stock?",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/hp-hpq-tops-q4-earnings-213502177.html?.tsrc=rss"
+  },
+  "s3": {
+   "text": "2026-11-25T13:15Z investorshub.advfn.com: GoodRx Shares Plunge 13.3% Following Raymond James Downgrade and Concerns Over 2027 Revenue Outlook -- GoodRx Holdings Inc (NASDAQ:GDRX) shares fell 13. 3% to $2.",
+   "url": "https://investorshub.advfn.com/market-news/article/40711/goodrx-shares-plunge-13-3-following-raymond-james-downgrade-and-concerns-over-2027-revenue-outlook?.tsrc=rss"
+  },
+  "s30": {
+   "text": "2026-11-25T17:04Z stocktwits.com: Mohamed El-Erian Is Buying The Tech Dip \u2018Very Slowly,\u2019 Says Nvidia Is \u2018Too Big to Wobble\u2019 -- In an interview with CNBC, the economist said he believes the tech selloff could create a long-term buying opportunity, though rising credit stress and deteriorating market technicals could prolong volatility.",
+   "url": "https://stocktwits.com/news-articles/markets/equity/mohamed-el-erian-is-buying-the-tech-dip-very-slowly-says-nvidia-is-too-big-to-wobble/cNbHNilR9mp?.tsrc=rss"
+  },
+  "s31": {
+   "text": "2026-11-25T17:02Z finance.yahoo.com: AI Chip Stocks Extend Brutal Selloff as Nvidia, AMD and Broadcom Tumble Again -- Nvidia, AMD Shares Sink as Wall Street's AI Rally Loses Steam",
+   "url": "https://finance.yahoo.com/technology/ai/articles/ai-chip-stocks-extend-brutal-170236621.html?.tsrc=rss"
+  },
+  "s33": {
+   "text": "2026-11-25T15:45Z finance.yahoo.com: Lam Research (LRCX) Stock Is Down 10.6% Today: AI-Led Chip Selloff -- Lam Research shares fell 10.6% on Wednesday, Nov. 25, as an AI-led selloff in tech and chip stocks deepened, with no company-specific news.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/lam-research-lrcx-stock-down-154515238.html?.tsrc=rss"
+  },
+  "s37": {
+   "text": "2026-11-25T16:30Z finance.yahoo.com: Quanta Services (PWR) Stock Is Down 8.1% Today in Broad AI-Led Selloff -- On Wednesday, Nov. 25, the shares fell 8.1% with no company news behind the drop, as an AI-led selloff hit the market",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/quanta-services-pwr-stock-down-163019813.html?.tsrc=rss"
+  },
+  "s42": {
+   "text": "2026-11-25T16:43Z finance.yahoo.com: Stock Market Today: Dow Falls 700 Points, Nasdaq Off 4%; Nutanix Dives On CEO Exit (Live Coverage) -- The Dow Jones index dives 800 points Wednesday on surprise inflation data. Nvidia and Anthropic plunge.",
+   "url": "https://finance.yahoo.com/m/90407e46-3b17-34e8-8c82-527bf00b63e4/stock-market-today%3A-dow-falls.html?.tsrc=rss"
+  },
+  "s43": {
+   "text": "2026-11-25T14:57Z finance.yahoo.com: Anthropic, Nvidia, Micron, Dell, HP, Deere, and More Stocks That Explain Today\u2019s Market -- Anthropic, Nvidia, and other AI stocks take a hammering as the tech selloff gathers pace ahead of the Thanksgiving break.",
+   "url": "https://finance.yahoo.com/m/18e72c51-c6d7-33b1-aa90-ccce17a9b32f/anthropic%2C-nvidia%2C-micron%2C.html?.tsrc=rss"
+  },
+  "s6": {
+   "text": "2026-11-25T14:22Z finance.yahoo.com: URBN Q3 Earnings Beat Estimates, Sales & Margins Improve Y/Y -- Urban Outfitters delivers a Q3 earnings beat and its ninth straight quarter of record sales as segment-wide growth and margin gains offset cost pressures.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/urbn-q3-earnings-beat-estimates-142200518.html?.tsrc=rss"
+  },
+  "s7": {
+   "text": "2026-11-25T14:04Z www.proactiveinvestors.com: Urban Outfitters stock falls as comparable sales growth slows in Q3 - UPDATED -- Urban Outfitters, Inc. (NASDAQ:URBN) shares fell 12% to $75.62 in premarket trading after the retailer reported slower comparable sales growth and third-quarter revenue in line with Wall Street expectations. Revenue rose 8.9% to a record $1.67 billion, matching the S&P analyst consensus,...",
+   "url": "https://www.proactiveinvestors.com/companies/news/1102443/urban-outfitters-stock-falls-as-comparable-sales-growth-slows-in-q3-1102443.html?.tsrc=rss"
+  },
+  "t1": {
+   "text": "the last note (2026-11-25T1330Z), theme 'The tech sell-off spreads to the whole market': AI and chip stocks fall for a third session as the sell-off gathers pace before Thanksgiving (Yahoo, StockTitan); the Dow is lower too and Anthropic trades further below its offering price. The VIX rose 16.9% before the open."
+  },
+  "x:GDRX": {
+   "text": "GDRX: the market carried -2.0% (beta 1.22); its industry (Services-Computer Processing & Data Preparation, 25 stocks) moved +0.4%; left over after the market and its drivers -17.0%"
+  },
+  "x:HPQ": {
+   "text": "HPQ: the market carried -0.9% (beta 0.58); its industry (Machinery and computer equipment, group 357, 32 stocks) moved -1.8%; left over after the market and its drivers +11.9%"
+  },
+  "x:J": {
+   "text": "J: the market carried -1.1% (beta 0.72); its industry (Heavy construction (broad), 11 stocks) moved -2.3%; left over after the market and its drivers -4.3%"
+  },
+  "x:LRCX": {
+   "text": "LRCX: the market carried -5.2% (beta 3.24); its industry (Machinery and computer equipment, group 355, 11 stocks) moved -1.6%; left over after the market and its drivers -5.0%"
+  },
+  "x:NTNX": {
+   "text": "NTNX: the market carried -1.7% (beta 1.04); its industry (Services-Prepackaged Software, 104 stocks) moved -0.4%; left over after the market and its drivers -16.1%"
+  },
+  "x:NVDA": {
+   "text": "NVDA: the market carried -3.0% (beta 1.85); its industry (Semiconductors & Related Devices, 58 stocks) moved -4.1%; left over after the market and its drivers -4.6%"
+  },
+  "x:PWR": {
+   "text": "PWR: the market carried -2.8% (beta 1.76); its industry (Specialty contractors (broad), 8 stocks) moved -2.2%; left over after the market and its drivers -3.8%"
+  },
+  "x:URBN": {
+   "text": "URBN: the market carried -1.5% (beta 0.92); its industry (Apparel stores (broad), 13 stocks) moved +0.2%; left over after the market and its drivers -10.4%"
+  }
+ },
+ "note": {
+  "backdrop": "The sell-off hit its low in the late morning and partly recovered. At 11:02 a.m. ET the Nasdaq 100 fund was -4.38% and SPY -2.76% (StockTitan); at this check (12:35 p.m. ET) SPY is -1.6%, QQQ -2.8%, small caps -0.4%, and the VIX +24.2%. Three pieces of news landed at 8:30 a.m. ET and after: third-quarter growth was revised up to a 4.3% annual rate from 3.4%; the PCE price index was 3.8% higher than a year earlier (3.3% without food and energy); and the US Trade Representative proposed tariffs of up to 35% on goods from 14 economies (proposals, comments due Jan 5, 2027). Yet the 10-year yield fell 0.07 pt, almost twice its usual day, and homebuilders rose: money went to safety despite the hot inflation number (inferred from the drivers).",
+  "backdrop_evidence": [
+   "k",
+   "d:10-year yield",
+   "r:10-year yield",
+   "g:3674",
+   "s42",
+   "s43",
+   "t1",
+   "https://www.stocktitan.net/articles/stock-market-today-live-november-25-2026"
+  ],
+  "by": "agent",
+  "calls": [],
+  "check": "2026-11-25T1735Z",
+  "read": [
+   {
+    "direction": "none",
+    "published": "2026-11-25T11:58:53Z",
+    "says": "Nov 25 by 11:03 a.m. ET: QQQ -4.38% and SPY -2.76% against Tuesday's close (about 96% of Monday's QQQ gain gone); AMD -8.99%, 11.4% below Friday's close; AMD, Broadcom and Micron have lost all of Monday's jump; Lam Research -11.64%; Ambarella -18.98%; HP +10.38% (Q4 revenue $16.0 billion, +9.3%); BEA: Q3 GDP revised to 4.3% from 3.4%, October PCE prices +3.8% from a year earlier, 3.3% without food and energy; jobless claims 189,000; new home sales 701,000 annual rate; USTR proposed tariffs up to 35% (Vietnam) and 15% (EU, Japan) on 14 economies, comments due Jan 5, 2027; Deere turned higher after the open; Pharming -16.79% after pausing RUCONEST production.",
+    "tier": "reported",
+    "url": "https://www.stocktitan.net/articles/stock-market-today-live-november-25-2026"
+   }
+  ],
+  "singles": [],
+  "themes": [
+   {
+    "beneath": "Nvidia -7.6%, -4.6% of its own beyond the market. The whole of Monday's rally rested on one board decision; two and a half sessions later the group is back where it started, and the memory squeeze named by Ambarella, HPE and Dell's preview (memory and component costs) is the reason given for the doubt (s17, s18). An economist on CNBC said he is buying the dip 'very slowly' (s30, opinion).",
+    "cause": "The chip sell-off deepened after the open on AI spending fears (s15, s31, s33, s37): AMD, Broadcom and Micron have lost all of Monday's jump, and the Nasdaq 100 fund gave back about 96% of its +7.00% Monday by 11:02 a.m. ET (StockTitan).",
+    "evidence": [
+     "g:3674",
+     "x:NVDA",
+     "x:LRCX",
+     "x:PWR",
+     "x:J",
+     "s15",
+     "s17",
+     "s18",
+     "s23",
+     "s30",
+     "s31",
+     "s33",
+     "s37",
+     "c1",
+     "t1",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-25-2026"
+    ],
+    "kind": "reported",
+    "mechanism": "Semiconductors' median -4.1%; the chip-equipment makers fall with them (Lam Research -10.2%, most of it the market at its beta of 3.24), and so do the AI power and construction builders: Quanta -6.7%, Jacobs -5.5%, both with no company news (s23, s37).",
+    "members": [
+     "NVDA",
+     "LRCX",
+     "PWR",
+     "J",
+     "PI",
+     "AMBA"
+    ],
+    "name": "AI hardware gives back all of Monday",
+    "read_through": [],
+    "watch": "The close: whether chips end at the lows or recover with the market, as they did late morning."
+   },
+   {
+    "beneath": "In a market falling on fear (VIX +24.2%), safety demand for Treasuries outweighed the inflation print (inferred). The tariffs are proposals with comments due January 5, so their effect on any stock is not visible yet.",
+    "cause": "BEA revised third-quarter growth to 4.3% and put October PCE inflation at 3.8% (core 3.3%); jobless claims fell to 189,000; USTR proposed new tariffs on 14 economies.",
+    "evidence": [
+     "d:10-year yield",
+     "r:10-year yield",
+     "k",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-25-2026"
+    ],
+    "kind": "reported",
+    "mechanism": "Hot inflation would usually lift yields and press on rate-sensitive stocks; instead the 10-year yield fell 0.07 pt and the stocks most tied to it rose (Toll Brothers +2.9%, D.R. Horton +2.6%, Rocket +4.5%).",
+    "members": [
+     "TOL",
+     "DHI",
+     "RKT"
+    ],
+    "name": "Hot inflation, faster growth, new tariffs, and yields down",
+    "read_through": [],
+    "watch": "Whether yields stay lower into the close and Friday's half day."
+   },
+   {
+    "beneath": "Before their reports (the [e:] lines): GoodRx and HP kept close to the market, Nutanix had sold off; the reports, not the setups, decided these. Ingles Markets -8.5% on Q4 net income down 28% (s13).",
+    "cause": "GoodRx -19.0%: management expects 2027 revenue growth to stall as weight-loss drug price cuts shrink its Pharma Direct fees, it restated first-half results, and Raymond James downgraded it (s1, s2, s3). Nutanix -17.8% on its CEO's exit, its worst day in over two years (s10-s12). Urban Outfitters -11.9%. HP +10.9%: it beat estimates and Barclays raised its target (s26, s27).",
+    "evidence": [
+     "f:GDRX:1",
+     "e:GDRX",
+     "s1",
+     "s2",
+     "s3",
+     "f:NTNX:1",
+     "e:NTNX",
+     "s10",
+     "s11",
+     "s12",
+     "f:URBN:1",
+     "s6",
+     "s7",
+     "f:HPQ:1",
+     "e:HPQ",
+     "s26",
+     "s27",
+     "f:IMKTA:1",
+     "s13",
+     "x:GDRX",
+     "x:NTNX",
+     "x:URBN",
+     "x:HPQ"
+    ],
+    "kind": "reported",
+    "mechanism": "Each on its own report: GoodRx -17.0% of its own, Nutanix -16.1%, Urban Outfitters -10.4%, HP +11.9% against a falling group.",
+    "members": [
+     "GDRX",
+     "NTNX",
+     "URBN",
+     "HPQ",
+     "IMKTA"
+    ],
+    "name": "Reports punished, one rewarded",
+    "read_through": [],
+    "watch": "The close; Friday's half day."
+   }
+  ],
+  "threads": [
+   "Dell call 10833f5c: judged at today's close against $296.45 (4.5%+ either way, 75%).",
+   "Deere's forward card DE-2026-11-25: judged at today's close against Tuesday's $613.76; it turned higher after the open (StockTitan).",
+   "Kymera 63a7bc55: judged at Friday's 1 p.m. close.",
+   "Tariff proposals: comments due Jan 5, 2027.",
+   "Thanksgiving: closed Thursday, half day Friday."
+  ],
+  "unexplained": [
+   {
+    "t": "EYPT",
+    "tried": "+26.6%, no filing, no story in its feed; drug makers flat."
+   },
+   {
+    "t": "ZNOG",
+    "tried": "-18.9%, no filing, no story; oil +1.7%."
+   },
+   {
+    "t": "CENT",
+    "tried": "-7.5%; two stories say it fell without company news."
+   },
+   {
+    "t": "NPK",
+    "tried": "+5.3%; a story says without company news."
+   },
+   {
+    "t": "COKE",
+    "tried": "+5.8%; a story says without company news; food makers +1.4%."
+   },
+   {
+    "t": "PNNT",
+    "tried": "+8.3%; its results call was Tuesday evening, no story on today's move."
+   },
+   {
+    "t": "PSNL",
+    "tried": "-6.3%, no filing, no story; medical labs -2.1%."
+   },
+   {
+    "t": "WST",
+    "tried": "-4.1%; one opinion piece, no event."
+   }
+  ]
+ },
+ "recorded_at": "2026-11-25T17:36:53Z"
+}
