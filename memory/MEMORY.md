@@ -231,10 +231,28 @@ idea at a time, checked against the memory bank first.
   how far it can move (W1, S1, M1; the run into a report only within 14 days of it); what is not in the file yet.
 - It adds no claim of its own: each line is an existing card with its recorded verdict. Start here when the
   person asks about a company.
-- Not in it yet (the person's "every fabric"): customers and suppliers by name (10-K text), projects and what
-  they need, guidance as growth or EPS, earnings calls, any tested direction.
+- Not in it yet (the person's "every fabric"): suppliers by name and unnamed customers, projects and what they
+  need, guidance as growth or EPS, earnings calls, any tested direction.
 - Seen while building, not fixed: the brief shows NVDA's capex from fiscal 2012 (the company changed the tag;
   the file reads both tags and drops an item older than the fiscal year).
+
+## Customers: who it sells to (2026-11-26; `docs/CUSTOMERS.md`)
+
+- The person asked "who it trades with". `brain/customers.py` reads each company's latest 10-K by fixed rules:
+  a named customer and its share, the largest unnamed share and the count of 10%+ customers, the top five or
+  ten, the U.S. government's share, or the report's own "no customer brings a tenth". One `customers.major`
+  fact a report (reader 4), the sentences quoted; candidate passages cached in `var/customers/chunks/` so
+  `customers read --cached [--again]` replays a new reader without SEC. `customers build` makes the library
+  with the reverse index (who names a company). The company file's section 5 carries the card.
+- Research universe, latest reports (741 read in about 10 minutes, 0 failed): 62 name a known customer (104
+  links, 77 with a share, 96 to a listed company); 149 state a largest share (median 19%); 191 a count; 93 say
+  none; 434 nothing read. Walmart is named by 15 companies, AT&T 6, Apple 5.
+- Precision was bought by reading: reader 1 (any known name in a customer sentence) was wrong for about one
+  company in five (NASDAQ, rating agencies, brands a dealer sells, vendors, own segments). Reader 4 takes a name
+  only where a customer stands; all 104 links were read against their sentences. It misses more than it invents.
+- NOT tested: whether a customer's news reaches its supplier's stock. NEXT for that: read every year's 10-K
+  (about 10,000 reports, two hours of SEC time; `collect` reads only the latest now), so links are
+  point-in-time; then TRAIN-first, declare, run once. Small, micro and newer-listing universes not read yet.
 
 ## Open questions and offers (no answer yet)
 

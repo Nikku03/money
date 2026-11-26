@@ -15,8 +15,8 @@ the verdict of the test behind it as recorded in ``research/RESULTS.md``:
 3. What it promised and whether it delivered: the promise record (``brain/promises.py``; G1a).
 4. What it needs and what is on file: the mosaic's pieces and the chance that a share sale, late accounts or a
    restructuring comes (``brain/mosaic.py``; P1a-P3a).
-5. Who it moves with: the stocks that moved most with it over a year (``brain/connect.py``). They are not its
-   customers or suppliers.
+5. Who it sells to, as its annual report says, and who names it as a customer (``brain/customers.py``); then the
+   stocks that moved most with it over a year (``brain/connect.py``), which are not its customers or suppliers.
 6. Its dates: its last reports with how the stock took them, and a guess at the next one.
 7. How far it can move: the scan's ranges for the next five sessions and the chance of a 20%+ day (W1, S1), the size
    of its next report's move (M1) and the run into that report (X1a).
@@ -41,7 +41,7 @@ NEXT_REPORT_SLACK = 5        # a report due up to this many days ago by last yea
 LAST_REPORTS = 4
 SETUP_DAYS = 14              # the run into a report is shown when the report is guessed this close
 NOT_YET = (
-    "its customers and suppliers by name (a 10-K names a customer of 10% or more; not read yet)",
+    "its suppliers by name, and the customers its report leaves unnamed (many say only \"one customer\")",
     "its projects and plans, and what they need: spending planned against cash on hand",
     "guidance given as a growth rate or as earnings per share (section 3 reads revenue in dollars only)",
     "its earnings calls",
@@ -195,10 +195,16 @@ def needs(bank: Bank, t: str) -> tuple[list[str], list[str]]:
     return ["  " + x if not x.startswith(" ") else x for x in body], partners
 
 
+def sells_to(t: str) -> list[str]:
+    """Who it sells to and who names it as a customer, as the customers card prints them (brain/customers.py)."""
+    from brain import customers
+    return customers.render(t, customers.load())[1:]
+
+
 def moves_with(partners: list[str]) -> list[str]:
     if not partners:
         return ["  no partners: fewer than a year of prices, or outside the scanned universes"]
-    return ["  " + partners[0].split("partners ", 1)[1],
+    return ["  moves with: " + partners[0].split("partners ", 1)[1],
             "  Partners are stocks that moved together, whatever their business: not its customers or suppliers. "
             f"What a partner's move says about the days after it: {verdict('R1b', 'R1c', 'R1d')} (docs/RIPPLES.md)."]
 
@@ -306,7 +312,7 @@ def build(bank: Bank, ticker: str, asof: str | None = None) -> list[str]:
     section("2. Its accounts (as filed at the SEC)", lambda: accounts(view, t, book))
     section("3. What it promised, and whether it delivered (docs/PROMISES.md)", lambda: promised(view, t, now_iso()))
     section("4. What it needs and what is on file (the mosaic, docs/MOSAIC.md)", _needs)
-    section("5. Who it moves with", lambda: moves_with(partners))
+    section("5. Who it sells to, and who it moves with (docs/CUSTOMERS.md)", lambda: sells_to(t) + moves_with(partners))
     section("6. Its dates", _dates)
     def _how_far():
         nxt = next_report(eps, asof)

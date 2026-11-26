@@ -189,4 +189,10 @@ FAIL); "the market runs on chains of cause and effect, news and catalysts": the 
   growth in percent 215 more, EPS 262 more, at most 523 of 741 with all three (2024-2026).
 - Built `python -m brain file TICKER` (`brain/file.py`, `docs/FILE.md`, CLAUDE.md item 18, 10 tests): the
   company on one page from the existing cards, each with its verdict. 1,082 tests pass.
+- Built the customers layer (`brain/customers.py`, `docs/CUSTOMERS.md`, CLAUDE.md item 19, 24 tests): who a
+  company sells to, read from its latest 10-K. Four readers in one sitting, each checked by reading every named
+  link against its sentence; the first was wrong for one company in five, the fourth for none of its 104 links.
+  The SEC bucket is shared across processes by a lock file, so a second reader beside the release re-read is
+  safe (it only slows both).
+- The small band's release re-read finished (510 companies); the micro band's is running.
 

@@ -34,7 +34,7 @@ class Words(TempHome):
 
     def test_partners_are_not_customers(self):
         out = cf.moves_with(["  partners the stocks that moved most with it over the past year: AAA (0.41)."])
-        self.assertIn("AAA (0.41)", out[0])
+        self.assertIn("moves with: the stocks that moved most with it over the past year: AAA (0.41)", out[0])
         self.assertIn("not its customers or suppliers", out[1])
         self.assertIn("no partners", cf.moves_with([])[0])
 
