@@ -509,6 +509,29 @@ def reports(view, ticker: str, since: str = SINCE) -> list[Fact]:
     return sorted(by.values(), key=lambda f: f.known_at)
 
 
+def older_reports(bank: Bank, tickers, log=print) -> int:
+    """Add to the bank the annual reports on the older pages of each ticker's filing list at SEC. The universe
+    builds keep a list's latest page only (a thousand filings: a few weeks of a large bank's, ten years of a small
+    company's). Only the annual reports are taken: a bank's older pages hold a hundred thousand note prospectuses,
+    which the mosaic would then try to read."""
+    from brain.sources import sec
+    added = 0
+    for k, t in enumerate(x.upper() for x in tickers):
+        try:
+            cik = sec.cik_for(t)
+            data, _ = sec._get_json(sec.SUBS_URL.format(cik=cik))
+            for name in sec.older_pages(data):
+                page, at = sec._get_json(sec.SUBS_PAGE_URL.format(name=name), ttl=7 * 86400)
+                facts = [f for f in sec.parse_filings_page(t, cik, page, at) if str(f.value) in FORMS]
+                added += bank.add_many(sorted(facts, key=lambda f: (f.known_at, f.as_of)))
+        except Exception as e:  # noqa: BLE001 - one company's list must not stop the rest
+            if log:
+                log(f"{t}: older filings not read ({type(e).__name__}: {str(e)[:80]})")
+        if log and (k + 1) % 100 == 0:
+            log(f"  older filing lists: {k + 1} companies, {added} annual reports added")
+    return added
+
+
 def latest_report(view, ticker: str) -> Fact | None:
     fs = reports(view, ticker, "")
     return fs[-1] if fs else None
@@ -725,6 +748,8 @@ def _cmd(a) -> int:
     else:
         tickers = list(episodes.universe_tickers())
     if a.action == "read":
+        if a.all_years and not a.cached:
+            print(f"{older_reports(bank, tickers)} older annual reports added to the filing lists")
         res = collect(bank, tickers, cached=a.cached, again=a.again, every=a.all_years)
         print(f"{res['read']} annual reports read, {len(res['failed'])} failed")
         for w in res["failed"][:10]:

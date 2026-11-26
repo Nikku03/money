@@ -250,9 +250,17 @@ idea at a time, checked against the memory bank first.
 - Precision was bought by reading: reader 1 (any known name in a customer sentence) was wrong for about one
   company in five (NASDAQ, rating agencies, brands a dealer sells, vendors, own segments). Reader 4 takes a name
   only where a customer stands; all 104 links were read against their sentences. It misses more than it invents.
-- NOT tested: whether a customer's news reaches its supplier's stock. NEXT for that: read every year's 10-K
-  (about 10,000 reports, two hours of SEC time; `collect` reads only the latest now), so links are
-  point-in-time; then TRAIN-first, declare, run once. Small, micro and newer-listing universes not read yet.
+- NOT tested: whether a customer's news reaches its supplier's stock. For that, every year's 10-K is being
+  read (`customers read --broad --all-years`, started 2026-11-26 00:55Z, resumes if re-run; it first adds the
+  older annual reports to the filing lists), then `customers build --all-years` (the history and
+  `customers.links`, point-in-time), then `research/customers/explore_train.py` (TRAIN only, written, not run
+  yet), then declare and run once. Small, micro and newer-listing universes not read yet.
+- DO NOT run `brain ingest` or `sec.filings_for(all_pages=True)` over a universe: the older pages of the large
+  banks' filing lists hold over a hundred thousand note prospectuses (JPM 133,000 424B2), the bank's journal
+  for them grows to 75 MB, and `mosaic read` (READ_FROM 2008) would then try to fetch every one. Done by mistake
+  on 2026-11-26 for 175 companies and undone the same hour (820,818 just-added filing facts removed from the
+  local journals, originals copied first; the 3,598 older annual reports kept). `customers.older_reports` takes
+  the annual reports only. `brain ingest JPM` by itself has the same effect: a latent fault, not fixed.
 
 ## Open questions and offers (no answer yet)
 

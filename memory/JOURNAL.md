@@ -195,4 +195,9 @@ FAIL); "the market runs on chains of cause and effect, news and catalysts": the 
   The SEC bucket is shared across processes by a lock file, so a second reader beside the release re-read is
   safe (it only slows both).
 - The small band's release re-read finished (510 companies); the micro band's is running.
+- A mistake and its repair: to get older annual reports I fetched every older page of the research universe's
+  filing lists; for the large banks that added 820,818 old filings (note prospectuses) in ten minutes, which
+  would have made `mosaic read` try to fetch them all. Stopped at 175 companies, copied the journals, removed
+  only those just-added facts, kept the 3,598 older annual reports, checked the banks load as before.
+  `customers read --all-years` now adds older annual reports only.
 
