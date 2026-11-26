@@ -6,11 +6,14 @@ value for the same period is kept as a restatement.
 
 The submissions JSON lists the latest ~1,000 filings (at least a year) inline and the
 rest in older pages named under ``filings.files``. ``filings_for`` reads them all, so an
-event study can reach back to a company's first EDGAR filings.
+event study can reach back to a company's first EDGAR filings; except for a company whose
+older pages hold more than MAX_OLDER filings (a large bank's note prospectuses), which
+keeps its latest page only.
 """
 from __future__ import annotations
 
 import json
+import sys
 
 from brain import config
 from brain.bank import Fact
@@ -146,6 +149,14 @@ def parse_submissions(ticker: str, data: dict, fetched_at: str) -> tuple[list[Fa
     return facts, {k: v for k, v in identity.items() if v not in (None, "")}
 
 
+MAX_OLDER = 20000   # filings on a company's older pages beyond which filings_for keeps the latest page only
+
+
+def older_count(data: dict) -> int:
+    """How many filings the older pages of a submissions JSON hold, by its own count."""
+    return sum(int(f.get("filingCount") or 0) for f in (data.get("filings") or {}).get("files") or [])
+
+
 def older_pages(data: dict) -> list[str]:
     """File names of the older filing pages a submissions JSON points to (safe names only)."""
     out = []
@@ -169,7 +180,12 @@ def filings_for(ticker: str, all_pages: bool = True, ttl: float = 86400) -> tupl
     url = SUBS_URL.format(cik=cik)
     data, fetched_at = _get_json(url, ttl=ttl)
     facts, ident = parse_submissions(ticker, data, fetched_at)
-    if all_pages:
+    if all_pages and older_count(data) > MAX_OLDER:
+        # A large bank's older pages hold over a hundred thousand note prospectuses: the journal grows by tens of
+        # megabytes and the mosaic then tries to read every one. Its latest page is what the universe builds keep.
+        print(f"note: {ticker} lists {older_count(data):,} older filings at SEC; only its latest page is kept "
+              f"(brain.customers.older_reports adds the older annual reports)", file=sys.stderr)
+    elif all_pages:
         for name in older_pages(data):
             # Older pages change only when filings roll over from the inline block, and those are
             # in the bank already, so a week-old copy loses nothing.

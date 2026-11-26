@@ -17,6 +17,25 @@ def _cols(rows):
 
 
 class FilingPagesTest(unittest.TestCase):
+    def test_a_filer_with_a_hundred_thousand_older_filings_keeps_its_latest_page(self):
+        recent = _cols([{"accessionNumber": "0001-26-000002", "filingDate": "2026-01-30", "reportDate": "2026-01-29",
+                         "acceptanceDateTime": "2026-01-30T02:30:33.000Z", "form": "424B2", "primaryDocument": "r.htm"}])
+        data = {"cik": 7, "name": "Bank", "filings": {"recent": recent, "files": [
+            {"name": f"CIK0000000007-submissions-{k:03d}.json", "filingCount": 2000} for k in range(1, 73)]}}
+        calls = []
+
+        def fake(url, ttl=86400):
+            calls.append(url)
+            return data, "2026-10-13T00:00:00Z"
+
+        self.assertEqual(sec.older_count(data), 144000)
+        with mock.patch.object(sec, "cik_for", return_value=7), mock.patch.object(sec, "_get_json", side_effect=fake), \
+                mock.patch("sys.stderr"):
+            fil, _ = sec.filings_for("T")
+        self.assertEqual(calls, [sec.SUBS_URL.format(cik=7)])          # no older page was asked for
+        self.assertEqual(len(fil), 1)
+
+
     def test_older_pages_are_read_and_have_the_same_shape(self):
         recent = _cols([{"accessionNumber": "0001-26-000002", "filingDate": "2026-01-30", "reportDate": "2026-01-29",
                          "acceptanceDateTime": "2026-01-30T02:30:33.000Z", "form": "8-K", "primaryDocument": "r.htm",

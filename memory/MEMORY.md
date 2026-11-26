@@ -269,7 +269,8 @@ idea at a time, checked against the memory bank first.
   for them grows to 75 MB, and `mosaic read` (READ_FROM 2008) would then try to fetch every one. Done by mistake
   on 2026-11-26 for 175 companies and undone the same hour (820,818 just-added filing facts removed from the
   local journals, originals copied first; the 3,598 older annual reports kept). `customers.older_reports` takes
-  the annual reports only. `brain ingest JPM` by itself has the same effect: a latent fault, not fixed.
+  the annual reports only. Guarded since: `sec.filings_for` keeps the latest page only for a filer with more
+  than 20,000 older filings (`MAX_OLDER`), so `brain ingest JPM` is safe.
 
 ## Open questions and offers (no answer yet)
 
