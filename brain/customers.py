@@ -683,6 +683,34 @@ def named_by(lib: list[dict], ticker: str) -> list[dict]:
     return sorted(out, key=lambda r: -(r["share"] or 0))
 
 
+def line(lib: list[dict], ticker: str, move_of=None, limit: int = 6) -> str | None:
+    """One line for the desk's case file (docs/DESK.md): who ``ticker`` sells to and who names it as a customer,
+    each with its move since the close when ``move_of`` knows it. None when the library says nothing of it."""
+    t = ticker.upper()
+
+    def moved(x: str | None) -> str:
+        v = move_of(x) if (move_of and x) else None
+        return f", {v * 100:+.1f}% since the close" if v is not None else ""
+    row = next((r for r in lib if r["t"] == t), None)
+    bits = []
+    if row and row.get("named"):
+        bits.append("sells to " + "; ".join(
+            x["name"] + (f" ({x['ticker']}{moved(x['ticker'])})" if x.get("ticker") else "")
+            + (f" {x['share'] * 100:.0f}% of revenue" if x.get("share") is not None else "") for x in row["named"][:limit])
+            + f" (annual report filed {row['filed']})")
+    elif row and row.get("top") is not None:
+        n = row.get("n_major")
+        bits.append(f"its largest customer, unnamed, brings {row['top'] * 100:.0f}% of revenue"
+                    + (f" ({n} of a tenth or more)" if n and n > 1 else "") + f" (annual report filed {row['filed']})")
+    by = named_by(lib, t)
+    if by:
+        bits.append("named as a customer by " + ", ".join(
+            f"{r['t']}" + (f" ({r['share'] * 100:.0f}% of its revenue{moved(r['t'])})" if r.get("share") is not None
+                           else f" ({moved(r['t'])[2:]})" if moved(r["t"]) else "") for r in by[:limit])
+            + (f" and {len(by) - limit} more" if len(by) > limit else ""))
+    return "; ".join(bits) + ". Read from annual reports; a read-through is untested" if bits else None
+
+
 def pct(x: float | None) -> str:
     return "a share it does not state" if x is None else f"{x * 100:.0f}%"
 

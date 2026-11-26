@@ -276,6 +276,22 @@ class Library(TempHome):
                           ("SWKS", "AAPL", 0.67, "2025-11-14", "2027-02-13"),      # 456 days after its last report
                           ("OLD", "WMT", None, "2015-02-20", "2016-05-21")])
 
+    def test_the_desks_line(self):
+        lib = [{"t": "SWKS", "filed": "2026-11-10", "top": 0.61, "n_major": 1,
+                "named": [{"name": "Apple", "ticker": "AAPL", "share": 0.61}]},
+               {"t": "SMCI", "filed": "2026-08-31", "top": 0.281, "n_major": 1, "named": []},
+               {"t": "MSFT", "filed": "2026-07-29", "top": None, "n_major": None, "named": []}]
+        moves = {"AAPL": -0.032, "SWKS": -0.051}
+        self.assertEqual(cu.line(lib, "swks", moves.get),
+                         "sells to Apple (AAPL, -3.2% since the close) 61% of revenue (annual report filed "
+                         "2026-11-10). Read from annual reports; a read-through is untested")
+        self.assertEqual(cu.line(lib, "AAPL", moves.get),
+                         "named as a customer by SWKS (61% of its revenue, -5.1% since the close). Read from annual "
+                         "reports; a read-through is untested")
+        self.assertIn("its largest customer, unnamed, brings 28% of revenue", cu.line(lib, "SMCI"))
+        self.assertIsNone(cu.line(lib, "MSFT"))
+        self.assertIsNone(cu.line(lib, "ZZZZ"))
+
     def test_the_library_keeps_the_latest_reading(self):
         from brain.bank import Fact
         for known, top in (("2025-11-10", 0.67), ("2026-11-10", 0.61)):

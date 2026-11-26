@@ -288,6 +288,13 @@ def build(bank: Bank, rec: dict | None = None, moves: dict | None = None, stamp:
     for m in movers:
         for p in m["partners"]:
             p["mover"] = p["t"] in mset
+    try:                                    # who each mover sells to, and who names it (docs/CUSTOMERS.md)
+        from brain import customers
+        clib = customers.load()
+        for m in movers:
+            m["sells"] = customers.line(clib, m["t"], moves.get)
+    except Exception:  # noqa: BLE001 - a case file without the customers is still a case file
+        pass
 
     say(f"  the news feeds of {len(movers)} movers")
     feed = feed or connect.feed_items
@@ -516,6 +523,8 @@ def evidence(case: dict) -> dict[str, dict]:
             ev[f"e:{t}"] = {"text": f"{t} expected: {m['expect']}"}
         if m.get("said"):
             ev[f"g:{t}"] = {"text": f"{t} promised: {m['said']}"}
+        if m.get("sells"):
+            ev[f"c:{t}"] = {"text": f"{t} customers: {m['sells']}"}
         for f in m["filings"]:
             ev[f["id"]] = {"text": f"{t} {f['what']} at {f['at'][:16]}Z: {f['title']}"
                            + (f" -- {f['text']}" if f["text"] else ""), "url": f["url"]}
@@ -583,6 +592,8 @@ def render(case: dict, detail: list[str] | None = None) -> str:
             L.append(f"     [e:{t}] " + ev[f"e:{t}"]["text"].split(": ", 1)[1])
         if f"g:{t}" in ev:
             L.append(f"     [g:{t}] " + ev[f"g:{t}"]["text"].split(": ", 1)[1])
+        if f"c:{t}" in ev:
+            L.append(f"     [c:{t}] " + ev[f"c:{t}"]["text"].split(": ", 1)[1])
         full = bool(detail) and t in detail
         for f in m["filings"]:
             body = f["text"] if full else f["text"][:260]
