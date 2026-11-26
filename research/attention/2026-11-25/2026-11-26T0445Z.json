@@ -1,0 +1,676 @@
+{
+ "check": "2026-11-26T0445Z",
+ "asof": "2026-11-25",
+ "built_at": "2026-11-26T04:51:29Z",
+ "weights": {
+  "surprise": 0.25,
+  "unexplained": 0.2,
+  "news": 0.15,
+  "reach": 0.1,
+  "against": 0.1,
+  "memory": 0.1,
+  "fragile": 0.1
+ },
+ "temp": 0.12,
+ "candidates": 28,
+ "focus": [
+  {
+   "t": "VERA",
+   "company": "Vera Therapeutics, Inc.",
+   "move": 0.16717627118644063,
+   "z": 4.6188321683910445,
+   "wave": 0.0,
+   "mover": true,
+   "score": 0.4111869198836898,
+   "parts": {
+    "surprise": 0.287,
+    "unexplained": 0.973,
+    "news": 0.3,
+    "reach": 0.0,
+    "against": 0.0,
+    "memory": 0.0,
+    "fragile": 1.0
+   },
+   "reasons": [
+    "most of the move is its own",
+    "1 story names it",
+    "chance of a sale of new shares 6.7% against 0.9% usually",
+    "cash covers about 0.5 quarters of losses"
+   ],
+   "attention": 0.16744266398472382,
+   "bars": 23,
+   "filings": [],
+   "pages": [
+    {
+     "url": "https://stocktwits.com/news-articles/markets/equity/vrtx-tumbles-after-hours-as-fda-delays-kidney-drug-decision-rival-vera-surges/cNbHueUR9mU?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-25T22:34:19Z",
+     "key": [
+      "AI Agent Trending News Earnings DIA0.85% SPY0.23% QQQ0.23% Trending VRTX6.91% CSIQ12.14% TLT0.66% MELANIA0.68% PANW2.84% ORCL3.34% PFE0.14% OTLY18.12% CASHCAT14.37% NTLA2.00% HomeNewsMarketsEquityVRTX Tumbles After-Hours As FDA Delays Kidney Drug Decision; Rival VERA Surges Advertisement|Remove ads.",
+      "VRTX Tumbles After-Hours As FDA Delays Kidney Drug Decision; Rival VERA Surges Vertex said the FDA informed it on Tuesday that the deadline for deciding on its application seeking approval for its drug povetacicept in IgA nephropathy would be extended by up to three months.",
+      "A delayed entry for Vertex\u2019s candidate extends Vera\u2019s window to build TRUTAKNA\u2019S market share and reduces risks of head-to-head competition.",
+      "Meanwhile, Vera Therapeutics, which is marketing a drug for the same kidney disease, rose more than 17% after hours as investors cheered the lack of immediate head-to-head competition.",
+      "Read Next Bitcoin Reclaims $60,000: Micha\u00ebl Van De Poppe Eyes \u2018Great First Quarter Of 2027\u2019, While Cathie Wood Trims Crypto Exposure Aashika Suresh VRTX\u2019s Negative Regulatory Update Vertex said the FDA informed it on Tuesday that the deadline for deciding on its application seeking approval for its drug povetacicept in IgA nephropathy would be extended by up to three months.",
+      "FDA Decision\u2019s Implications For Vera Therapeutics Vera\u2019s TRUTAKNA received accelerated FDA approval in July 2026 for reducing proteinuria in adults with primary IgA nephropathy at risk of progression."
+     ],
+     "text": "AI Agent Trending News Earnings DIA0.85% SPY0.23% QQQ0.23% Trending VRTX6.91% CSIQ12.14% TLT0.66% MELANIA0.68% PANW2.84% ORCL3.34% PFE0.14% OTLY18.12% CASHCAT14.37% NTLA2.00% HomeNewsMarketsEquityVRTX Tumbles After-Hours As FDA Delays Kidney Drug Decision; Rival VERA Surges Advertisement|Remove ads. VRTX Tumbles After-Hours As FDA Delays Kidney Drug Decision; Rival VERA Surges Vertex said the FDA informed it on Tuesday that the deadline for deciding on its application seeking approval for its drug povetacicept in IgA nephropathy would be extended by up to three months. In this photo illustration, Vertex Pharmaceuticals' logo is displayed on a smartphone screen in front of a stock chart. (Photo illustration by Cheng Xin/Getty Images) Anan Ashraf\u00b7Stocktwits Published Nov 25, 2026 | 5:34 PM EST Share \u00b7 Add us on The agency classified late-cycle information submitted in response to an information request as a major amendment, requiring additional review time. Vertex stated it remains confident in the supporting data and is working with the FDA to bring the therapy to patients as quickly as possible. A delayed entry for Vertex\u2019s candidate extends Vera\u2019s window to build TRUTAKNA\u2019S market share and reduces risks of head-to-head competition. Advertisement|Remove ads. Shares of Vertex Pharmaceuticals (VRTX) dropped sharply after hours on Wednesday after the company said that the U.S. Food and Drug Administration has extended the review timeline for its experimental IgA nephropathy treatment. VRTX closed the regular session flat before sliding roughly 7% after hours. Meanwhile, Vera Therapeutics, which is marketing a drug for the same kidney disease, rose more than 17% after hours as investors cheered the lack of immediate head-to-head competition. Read Next Bitcoin Reclaims $60,000: Micha\u00ebl Van De Poppe Eyes \u2018Great First Quarter Of 2027\u2019, While Cathie Wood Trims Crypto Exposure Aashika Suresh VRTX\u2019s Negative Regulatory Update Vertex said the FDA informed it on Tuesday that the deadline for deciding on its application seeking approval for its drug povetacicept in IgA nephropathy would be extended by up to three months. The original date was November 30, 2026; it has now been shifted to no later than February 28, 2027. Advertisement|Remove ads. The agency classified late-cycle information submitted in response to an information request as a major amendment, requiring additional review time. Vertex stated it remains confident in the supporting data and is working with the FDA to bring the therapy to patients as quickly as possible. Povetacicept is a drug designed to control B-cell activity that drives IgA nephropathy, a kidney disease caused by deposits of immunoglobulin A (IgA) antibody clumps inside the kidney's filtering units, leading to inflammation and gradual scarring. Positive Week 36 interim results from the late-stage RAINIER trial showed roughly a 50% reduction in protein content in urine versus placebo, with a favorable safety profile and the potential for monthly subcutaneous dosing. Approval would mark Vertex\u2019s first commercial product in nephrology and establish a fifth franchise alongside its established cystic fibrosis, sickle cell, beta thalassemia, acute pain, and endocrine offerings. Last month, the company described the combined opportunity across its renal programs, including povetacicept and other drugs, as potentially supporting about a $10 billion renal franchise comparable to its cystic fibrosis business. Advertisement|Remove ads. FDA Decision\u2019s Implications For Vera Therapeutics Vera\u2019s TRUTAKNA received accelerated FDA approval in July 2026 for reducing proteinuria in adults with primary IgA nephropathy at risk of progression. The company has reported positive two-year ORIGIN 3 data showing slower kidney function decline and has submitted a supplemental application seeking full approval. Early commercial uptake is underway. A delayed entry for Vertex\u2019s candidate extends Vera\u2019s window to build market share and re"
+    }
+   ],
+   "memory": [
+    {
+     "at": "2026-07-30",
+     "kind": "summary",
+     "text": "...$10.00 cash + 0.500 shares, ~$50.10/share, 15% premium, ~$14.5bn) - FCFS medium \u2192 **KEPT** (record Q2, revenue +29%, EPS +58%, raised guidance) - FATN high \u2192 downgraded to medium; VERA high \u2192 downgraded to medium (FDA accelerated approval TRUTAKNA) - BMRC, BPOP, ARCB, JMSB, FNWD, XRN, NKSH medium \u2192 all downgraded to **low**..."
+    },
+    {
+     "at": "2026-10-21",
+     "kind": "me",
+     "text": "...| MIRM | AZURE-1; EXPAND positive, filing planned for H1 2027 | ## This week \u2014 ESMO, ASN Kidney Week, MSToronto | date | ticker | trial | what it is | |---|---|---|---| | Oct 22 | VERA | ORIGIN 3, atacicept in IgA nephropathy | Pivotal \u2014 final efficacy, ASN plenary late-breaker | | Oct 22 | HUMA | V012, ATEV vs AV fistula | Phase 3 interim, ASN late-breaker | | Oct 23 | ZNTL | DENALI Part 1b, ovarian cancer | Overall survival interim | ..."
+    },
+    {
+     "at": "2026-10-21",
+     "kind": "me",
+     "text": "| Oct 24 | CLYM, VERA | PrisMN / PIONEER, kidney | Phase 2, ASN orals | | **Oct 25** | **SMMT** | **HARMONi-GI1, ivonescimab in biliary cancer** | **Phase 3, ESMO Presidential Symposium \u2014 the biggest event of the week** | | Oct 25 | ANAB / GSK | AZUR-1, Jemperli in rectal canc..."
+    }
+   ],
+   "pond": {
+    "wave": 0.0,
+    "own": 4.6188321683910445,
+    "how": "a stone: its own news",
+    "from": [],
+    "reaches": [
+     [
+      "SRRK",
+      0.43,
+      0.0
+     ],
+     [
+      "VKTX",
+      0.4,
+      0.00382
+     ],
+     [
+      "SVRA",
+      0.4,
+      0.0
+     ],
+     [
+      "KYMR",
+      0.4,
+      -0.0
+     ],
+     [
+      "MAZE",
+      0.39,
+      -0.0
+     ]
+    ]
+   }
+  },
+  {
+   "t": "VRTX",
+   "company": "VERTEX PHARMACEUTICALS INC / MA",
+   "move": -0.07263560122523216,
+   "z": -4.072669642330615,
+   "wave": 0.0,
+   "mover": true,
+   "score": 0.39018969793535213,
+   "parts": {
+    "surprise": 0.296,
+    "unexplained": 1.0,
+    "news": 0.3,
+    "reach": 0.711,
+    "against": 0.0,
+    "memory": 0.0,
+    "fragile": 0.0
+   },
+   "reasons": [
+    "most of the move is its own",
+    "4 stories name it",
+    "13 stocks moved closely with it over the year"
+   ],
+   "attention": 0.1405641739417512,
+   "bars": 11,
+   "filings": [],
+   "pages": [
+    {
+     "url": "https://www.fool.com/investing/2026/11/25/vertex-pharmaceuticals-has-turned-10000-into-x-ove/?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-26T00:12:00Z",
+     "key": [
+      "The company\u2019s efforts to diversify its lineup should pay rich dividends down the road. 10 stocks we like better than Vertex Pharmaceuticals \u203a Vertex Pharmaceuticals (VRTX +0.04%), a biotech company, has been on an impressive run over the past decade.",
+      "By comparison, $10,000 invested in the S&P 500 10 years ago would be worth about $38,663 today (with dividends reinvested) -- that's not bad, but it pales in comparison to the returns you would have had with Vertex.",
+      "Vertex Pharmaceuticals could earn approval for one product in its kidney disease portfolio, povetacicept -- a medicine for IgA nephropathy -- by the end of the month.",
+      "VRTX - Vertex Pharmaceuticals $564.12+$0.20 (+0.04%) NASDAQ \u00b7 As of 4:00 PM ET 11/25/26 Premium Feature Moneyball Superscore88/100 Key data points Market capMarket cap calculated using publicly traded shares outstanding only.",
+      "Implied market cap may vary.$142.98B Day's range$550.56 - $571.75 52wk range$412.27 - $571.75 Volume1.6M Avg volume1.3M Gross margin85.61% Of course, that outcome isn't guaranteed yet, not by a long shot.",
+      "Further, thanks to a recent acquisition, Vertex Pharmaceuticals has an interesting endocrine diseases portfolio that it believes could reach more than $5 billion in annual sales."
+     ],
+     "text": "AccessibilityHelp \u25b2 S&P 500 +---%|\u25b2 Stock Advisor +---%Join The Motley Fool Search for a company Top 10 Stocks to Buy Now \u203a Top 10 Stocks to Buy Now \u203a AccessibilityHelp S&P 500 7,182.78 -0.3% -18.31 DJI 50,182.95 +0.3% +164.25 NASDAQ 23,585.80 -0.6% -147.73 Bitcoin $60,997.00 +3.4% +$1,992.04 ANT $82.79 +1.1% +$0.89 SPCX $127.44 +1.3% +$1.63 AAPL $355.58 +0.4% +$1.51 AMZN $244.43 -3.1% -$7.86 GOOG $270.98 -2.0% -$5.60 META $609.89 +3.4% +$20.07 MSFT $489.93 -1.3% -$6.20 NVDA $149.30 -3.9% -$6.08 TSLA $380.14 -1.2% -$4.54 Free ArticleExplore Premium Services Vertex Pharmaceuticals Has Turned $10,000 Into $61,660 Over 10 Years. Here's What Could Come Next Vertex's next growth wave is already in the pipeline. By Prosper Junior Bakiny \u2013 Nov 25, 2026 at 7:12PM EST Key Points Vertex's cystic fibrosis monopoly, protected into the late 2030s, still drives consistent revenue and earnings growth. The company\u2019s efforts to diversify its lineup should pay rich dividends down the road. 10 stocks we like better than Vertex Pharmaceuticals \u203a Vertex Pharmaceuticals (VRTX +0.04%), a biotech company, has been on an impressive run over the past decade. If you had invested $10,000 in the stock in 2016, you'd have about $61,660 today. By comparison, $10,000 invested in the S&P 500 10 years ago would be worth about $38,663 today (with dividends reinvested) -- that's not bad, but it pales in comparison to the returns you would have had with Vertex. That said, the past is the past. The important question is whether the drugmaker can deliver similarly impressive returns going forward. Image source: The Motley Fool. Entering a new era Vertex has crushed broader equity markets thanks to its dominance in the cystic fibrosis (CF) market. The company has very little competition in this niche, and thanks to several new launches over the past 10 years that have allowed it to treat increasingly more CF patients, revenue and earnings growth have been strong. Vertex's CF franchise should remain an important growth driver over the next decade. After all, the company's most important medicines won't lose patent exclusivity until the late 2030s. But in the meantime, Vertex should significantly diversify and expand its lineup. The company's work in kidney diseases looks particularly promising. Vertex Pharmaceuticals could earn approval for one product in its kidney disease portfolio, povetacicept -- a medicine for IgA nephropathy -- by the end of the month. This medicine has peak sales potential of around $4 billion across IgA nephropathy and other potential indications, according to some estimates. VRTX - Vertex Pharmaceuticals $564.12+$0.20 (+0.04%) NASDAQ \u00b7 As of 4:00 PM ET 11/25/26 Premium Feature Moneyball Superscore88/100 Key data points Market capMarket cap calculated using publicly traded shares outstanding only. Does not include unlisted, private, or dual-class non-traded shares. Implied market cap may vary.$142.98B Day's range$550.56 - $571.75 52wk range$412.27 - $571.75 Volume1.6M Avg volume1.3M Gross margin85.61% Of course, that outcome isn't guaranteed yet, not by a long shot. But the point is that Vertex's kidney disease pipeline, with products like povetacicept and others, including inaxaplin and VX-407, looks promising. The biotech leader could, eventually, generate close to $10 billion in peak sales from these products if all goes well. Another area where Vertex could make progress is pain treatments. It has already earned approval for Journavx, a medicine for acute pain and the first oral non-opioid pain signal inhibitor ever. Journavx is in several ongoing clinical trials and could earn key label expansions, while Vertex works on other pain treatments. Further, thanks to a recent acquisition, Vertex Pharmaceuticals has an interesting endocrine diseases portfolio that it believes could reach more than $5 billion in annual sales. We haven't even mentioned other newer launches, including Casgevy, a gene-editing medicine for a pair of rare blood disea"
+    },
+    {
+     "url": "https://stocktwits.com/news-articles/markets/equity/vrtx-tumbles-after-hours-as-fda-delays-kidney-drug-decision-rival-vera-surges/cNbHueUR9mU?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-25T22:34:19Z",
+     "key": [
+      "AI Agent Trending News Earnings DIA0.85% SPY0.23% QQQ0.23% Trending VRTX6.91% CSIQ12.14% TLT0.66% MELANIA1.12% PANW2.84% ORCL3.34% PFE0.14% OTLY18.12% CASHCAT14.24% NTLA2.00% HomeNewsMarketsEquityVRTX Tumbles After-Hours As FDA Delays Kidney Drug Decision; Rival VERA Surges Advertisement|Remove ads.",
+      "VRTX Tumbles After-Hours As FDA Delays Kidney Drug Decision; Rival VERA Surges Vertex said the FDA informed it on Tuesday that the deadline for deciding on its application seeking approval for its drug povetacicept in IgA nephropathy would be extended by up to three months.",
+      "Vertex stated it remains confident in the supporting data and is working with the FDA to bring the therapy to patients as quickly as possible.",
+      "A delayed entry for Vertex\u2019s candidate extends Vera\u2019s window to build TRUTAKNA\u2019S market share and reduces risks of head-to-head competition.",
+      "Read Next Bitcoin Reclaims $60,000: Micha\u00ebl Van De Poppe Eyes \u2018Great First Quarter Of 2027\u2019, While Cathie Wood Trims Crypto Exposure Aashika Suresh VRTX\u2019s Negative Regulatory Update Vertex said the FDA informed it on Tuesday that the deadline for deciding on its application seeking approval for its drug povetacicept in IgA nephropathy would be extended by up to three months.",
+      "Approval would mark Vertex\u2019s first commercial product in nephrology and establish a fifth franchise alongside its established cystic fibrosis, sickle cell, beta thalassemia, acute pain, and endocrine offerings."
+     ],
+     "text": "AI Agent Trending News Earnings DIA0.85% SPY0.23% QQQ0.23% Trending VRTX6.91% CSIQ12.14% TLT0.66% MELANIA1.12% PANW2.84% ORCL3.34% PFE0.14% OTLY18.12% CASHCAT14.24% NTLA2.00% HomeNewsMarketsEquityVRTX Tumbles After-Hours As FDA Delays Kidney Drug Decision; Rival VERA Surges Advertisement|Remove ads. VRTX Tumbles After-Hours As FDA Delays Kidney Drug Decision; Rival VERA Surges Vertex said the FDA informed it on Tuesday that the deadline for deciding on its application seeking approval for its drug povetacicept in IgA nephropathy would be extended by up to three months. In this photo illustration, Vertex Pharmaceuticals' logo is displayed on a smartphone screen in front of a stock chart. (Photo illustration by Cheng Xin/Getty Images) Anan Ashraf\u00b7Stocktwits Published Nov 25, 2026 | 5:34 PM EST Share \u00b7 Add us on The agency classified late-cycle information submitted in response to an information request as a major amendment, requiring additional review time. Vertex stated it remains confident in the supporting data and is working with the FDA to bring the therapy to patients as quickly as possible. A delayed entry for Vertex\u2019s candidate extends Vera\u2019s window to build TRUTAKNA\u2019S market share and reduces risks of head-to-head competition. Advertisement|Remove ads. Shares of Vertex Pharmaceuticals (VRTX) dropped sharply after hours on Wednesday after the company said that the U.S. Food and Drug Administration has extended the review timeline for its experimental IgA nephropathy treatment. VRTX closed the regular session flat before sliding roughly 7% after hours. Meanwhile, Vera Therapeutics, which is marketing a drug for the same kidney disease, rose more than 17% after hours as investors cheered the lack of immediate head-to-head competition. Read Next Bitcoin Reclaims $60,000: Micha\u00ebl Van De Poppe Eyes \u2018Great First Quarter Of 2027\u2019, While Cathie Wood Trims Crypto Exposure Aashika Suresh VRTX\u2019s Negative Regulatory Update Vertex said the FDA informed it on Tuesday that the deadline for deciding on its application seeking approval for its drug povetacicept in IgA nephropathy would be extended by up to three months. The original date was November 30, 2026; it has now been shifted to no later than February 28, 2027. Advertisement|Remove ads. The agency classified late-cycle information submitted in response to an information request as a major amendment, requiring additional review time. Vertex stated it remains confident in the supporting data and is working with the FDA to bring the therapy to patients as quickly as possible. Povetacicept is a drug designed to control B-cell activity that drives IgA nephropathy, a kidney disease caused by deposits of immunoglobulin A (IgA) antibody clumps inside the kidney's filtering units, leading to inflammation and gradual scarring. Positive Week 36 interim results from the late-stage RAINIER trial showed roughly a 50% reduction in protein content in urine versus placebo, with a favorable safety profile and the potential for monthly subcutaneous dosing. Approval would mark Vertex\u2019s first commercial product in nephrology and establish a fifth franchise alongside its established cystic fibrosis, sickle cell, beta thalassemia, acute pain, and endocrine offerings. Last month, the company described the combined opportunity across its renal programs, including povetacicept and other drugs, as potentially supporting about a $10 billion renal franchise comparable to its cystic fibrosis business. Advertisement|Remove ads. FDA Decision\u2019s Implications For Vera Therapeutics Vera\u2019s TRUTAKNA received accelerated FDA approval in July 2026 for reducing proteinuria in adults with primary IgA nephropathy at risk of progression. The company has reported positive two-year ORIGIN 3 data showing slower kidney function decline and has submitted a supplemental application seeking full approval. Early commercial uptake is underway. A delayed entry for Vertex\u2019s candidate extends Vera\u2019s window to build market share and re"
+    }
+   ],
+   "memory": [
+    {
+     "at": "2026-11-25",
+     "kind": "me",
+     "text": "...l reviewing, no new date. The stock fell 18% on the delay. A decision could come any day. | | PolyPid (PYPD) | D-PLEX100, surgical infections | Due Nov 28, a Saturday. | | Vertex (VRTX) | povetacicept, a kidney disease | Due Nov 30. | | Roche | giredestrant, early breast cancer | Due Nov 30. |..."
+    }
+   ],
+   "pond": {
+    "wave": 0.0,
+    "own": -4.072669642330615,
+    "how": "a stone: its own news",
+    "from": [],
+    "reaches": [
+     [
+      "AMGN",
+      0.62,
+      0.00055
+     ],
+     [
+      "ABBV",
+      0.57,
+      -0.00163
+     ],
+     [
+      "LLY",
+      0.53,
+      0.00231
+     ],
+     [
+      "GILD",
+      0.52,
+      0.00345
+     ],
+     [
+      "INCY",
+      0.52,
+      0.00065
+     ]
+    ]
+   }
+  },
+  {
+   "t": "KNTK",
+   "company": "Kinetik Holdings Inc.",
+   "move": 0.07093233873981086,
+   "z": 3.512903489463885,
+   "wave": 0.0,
+   "mover": true,
+   "score": 0.35208129502292757,
+   "parts": {
+    "surprise": 0.208,
+    "unexplained": 1.0,
+    "news": 0.0,
+    "reach": 1.0,
+    "against": 0.0,
+    "memory": 0.0,
+    "fragile": 0.0
+   },
+   "reasons": [
+    "most of the move is its own, with no news found",
+    "51 stocks moved closely with it over the year"
+   ],
+   "attention": 0.10231887008509276,
+   "bars": 16,
+   "filings": [],
+   "pages": [],
+   "memory": [],
+   "pond": {
+    "wave": 0.0,
+    "own": 3.512903489463885,
+    "how": "a stone: its own news",
+    "from": [],
+    "reaches": [
+     [
+      "TRGP",
+      0.71,
+      -0.03264
+     ],
+     [
+      "OKE",
+      0.71,
+      -0.00361
+     ],
+     [
+      "PR",
+      0.63,
+      0.01975
+     ],
+     [
+      "OVV",
+      0.62,
+      0.00046
+     ],
+     [
+      "WMB",
+      0.62,
+      0.0
+     ]
+    ]
+   }
+  },
+  {
+   "t": "CTO",
+   "company": "CTO Realty Growth, Inc.",
+   "move": 0.01439,
+   "z": 1.2102616096908891,
+   "wave": -0.35086366534233093,
+   "mover": false,
+   "score": 0.25289264143651596,
+   "parts": {
+    "surprise": 0.403,
+    "unexplained": 0.0,
+    "news": 0.0,
+    "reach": 1.0,
+    "against": 0.52,
+    "memory": 0.0,
+    "fragile": 0.0
+   },
+   "reasons": [
+    "42 stocks moved closely with it over the year",
+    "moved against its wave (+1.2 usual days against a wave of -0.4)"
+   ],
+   "attention": 0.04476927154358926,
+   "filings": [],
+   "pages": [],
+   "memory": [],
+   "pond": {
+    "wave": -0.35086366534233093,
+    "own": 1.2102616096908891,
+    "how": "against its wave",
+    "from": [
+     [
+      "LAMR",
+      -0.21
+     ],
+     [
+      "VERA",
+      -0.07
+     ],
+     [
+      "VRTX",
+      -0.07
+     ],
+     [
+      "KNTK",
+      -0.01
+     ]
+    ],
+    "reaches": [
+     [
+      "KIM",
+      0.64,
+      0.0
+     ],
+     [
+      "PECO",
+      0.64,
+      0.0
+     ],
+     [
+      "KRG",
+      0.61,
+      0.0
+     ],
+     [
+      "FCPT",
+      0.6,
+      0.0
+     ],
+     [
+      "OLP",
+      0.59,
+      -0.0
+     ]
+    ]
+   }
+  },
+  {
+   "t": "PWR",
+   "company": "QUANTA SERVICES, INC.",
+   "move": 0.0,
+   "z": -0.3324974866284866,
+   "wave": 0.38139405846595764,
+   "mover": false,
+   "score": 0.22770812388570721,
+   "parts": {
+    "surprise": 0.111,
+    "unexplained": 0.0,
+    "news": 0.0,
+    "reach": 1.0,
+    "against": 0.0,
+    "memory": 1.0,
+    "fragile": 0.0
+   },
+   "reasons": [
+    "89 stocks moved closely with it over the year",
+    "in the last note's theme 'AI hardware gives back all of Monday'"
+   ],
+   "attention": 0.03629394857485148,
+   "filings": [],
+   "pages": [],
+   "memory": [],
+   "pond": {
+    "wave": 0.38139405846595764,
+    "own": -0.3324974866284866,
+    "how": "with the water",
+    "from": [
+     [
+      "AVPT",
+      0.16
+     ],
+     [
+      "LAMR",
+      0.09
+     ],
+     [
+      "VRTX",
+      0.06
+     ],
+     [
+      "KNTK",
+      0.06
+     ]
+    ],
+    "reaches": [
+     [
+      "FIX",
+      0.82,
+      0.00564
+     ],
+     [
+      "EME",
+      0.81,
+      0.0
+     ],
+     [
+      "MYRG",
+      0.72,
+      0.0
+     ],
+     [
+      "MTZ",
+      0.71,
+      0.0
+     ],
+     [
+      "ECG",
+      0.7,
+      -0.0
+     ]
+    ]
+   }
+  },
+  {
+   "t": "NTNX",
+   "company": "Nutanix, Inc.",
+   "move": 0.0146,
+   "z": 0.3305824510420101,
+   "wave": -0.28655415773391724,
+   "mover": false,
+   "score": 0.2275485375868342,
+   "parts": {
+    "surprise": 0.11,
+    "unexplained": 0.0,
+    "news": 0.0,
+    "reach": 1.0,
+    "against": 0.0,
+    "memory": 1.0,
+    "fragile": 0.0
+   },
+   "reasons": [
+    "59 stocks moved closely with it over the year",
+    "in the last note's theme 'Reports punished, one rewarded'"
+   ],
+   "attention": 0.03624571384759589,
+   "filings": [],
+   "pages": [],
+   "memory": [],
+   "pond": {
+    "wave": -0.28655415773391724,
+    "own": 0.3305824510420101,
+    "how": "with the water",
+    "from": [
+     [
+      "AVPT",
+      -0.31
+     ],
+     [
+      "KNTK",
+      0.08
+     ],
+     [
+      "VERA",
+      -0.06
+     ],
+     [
+      "VRTX",
+      0.01
+     ]
+    ],
+    "reaches": [
+     [
+      "ESTC",
+      0.63,
+      -0.01989
+     ],
+     [
+      "DT",
+      0.6,
+      0.01011
+     ],
+     [
+      "NOW",
+      0.6,
+      0.00393
+     ],
+     [
+      "WDAY",
+      0.59,
+      0.00039
+     ],
+     [
+      "ZS",
+      0.58,
+      -0.00048
+     ]
+    ]
+   }
+  }
+ ],
+ "rest": [
+  {
+   "t": "TOL",
+   "score": 0.22153023169077635,
+   "attention": 0.034472730337581,
+   "reasons": [
+    "143 stocks moved closely with it over the year",
+    "in the last note's theme 'Hot inflation, faster growth, new tariffs, and yields down'"
+   ]
+  },
+  {
+   "t": "DHI",
+   "score": 0.21195247772069595,
+   "attention": 0.031828240765614565,
+   "reasons": [
+    "126 stocks moved closely with it over the year",
+    "in the last note's theme 'Hot inflation, faster growth, new tariffs, and yields down'"
+   ]
+  },
+  {
+   "t": "LRCX",
+   "score": 0.2114889397088169,
+   "attention": 0.031705531258317404,
+   "reasons": [
+    "129 stocks moved closely with it over the year",
+    "in the last note's theme 'AI hardware gives back all of Monday'"
+   ]
+  },
+  {
+   "t": "RKT",
+   "score": 0.20478889934868238,
+   "attention": 0.029983807430846644,
+   "reasons": [
+    "44 stocks moved closely with it over the year",
+    "in the last note's theme 'Hot inflation, faster growth, new tariffs, and yields down'"
+   ]
+  },
+  {
+   "t": "AVPT",
+   "score": 0.20063774218656133,
+   "attention": 0.02896431361696018,
+   "reasons": [
+    "outside its 9-in-10 range",
+    "most of the move is its own, with no news found",
+    "92 stocks moved closely with it over the year",
+    "but only 1 trade at the new price since the close: likely a stray print"
+   ]
+  },
+  {
+   "t": "DE",
+   "score": 0.17651944358678978,
+   "attention": 0.023690608069738453,
+   "reasons": [
+    "in the last note's open questions"
+   ]
+  },
+  {
+   "t": "URBN",
+   "score": 0.17053761971290865,
+   "attention": 0.02253861709460703,
+   "reasons": [
+    "in the last note's theme 'Reports punished, one rewarded'"
+   ]
+  },
+  {
+   "t": "ACIC",
+   "score": 0.16633651156064228,
+   "attention": 0.021763209765994752,
+   "reasons": [
+    "most of the move is its own, with no news found",
+    "30 stocks moved closely with it over the year",
+    "but only 1 trade at the new price since the close: likely a stray print"
+   ]
+  },
+  {
+   "t": "SVC",
+   "score": 0.165368306583188,
+   "attention": 0.021588322509199762,
+   "reasons": [
+    "most of the move is its own, with no news found",
+    "chance of a restructuring or a write-off 1.1% against 0.3% usually",
+    "cash covers about 0.3 quarters of losses",
+    "but only 1 trade at the new price since the close: likely a stray print"
+   ]
+  },
+  {
+   "t": "TRGP",
+   "score": 0.15819369280438833,
+   "attention": 0.02033541801889435,
+   "reasons": [
+    "61 stocks moved closely with it over the year",
+    "moved against its wave (-1.7 usual days against a wave of +0.5)",
+    "but only 2 trades at the new price since the close: likely a stray print"
+   ]
+  },
+  {
+   "t": "KYMR",
+   "score": 0.15807043742124605,
+   "attention": 0.02031454166091699,
+   "reasons": [
+    "an open desk call"
+   ]
+  },
+  {
+   "t": "J",
+   "score": 0.1551991494607134,
+   "attention": 0.019834236643668703,
+   "reasons": [
+    "in the last note's theme 'AI hardware gives back all of Monday'"
+   ]
+  },
+  {
+   "t": "LAMR",
+   "score": 0.14548775157105961,
+   "attention": 0.018292319131643617,
+   "reasons": [
+    "most of the move is its own, with no news found",
+    "but only 1 trade at the new price since the close: likely a stray print"
+   ]
+  },
+  {
+   "t": "AMBA",
+   "score": 0.14219743438416238,
+   "attention": 0.017797570198309385,
+   "reasons": [
+    "in the last note's theme 'AI hardware gives back all of Monday'"
+   ]
+  },
+  {
+   "t": "DELL",
+   "score": 0.1390084874683923,
+   "attention": 0.0173308367283414,
+   "reasons": [
+    "an open call to the person"
+   ]
+  },
+  {
+   "t": "HPQ",
+   "score": 0.13816032587284308,
+   "attention": 0.017208774022479334,
+   "reasons": [
+    "in the last note's theme 'Reports punished, one rewarded'"
+   ]
+  },
+  {
+   "t": "PPG",
+   "score": 0.13792890962606155,
+   "attention": 0.01717561941909568,
+   "reasons": [
+    "123 stocks moved closely with it over the year",
+    "moved against its wave (+1.4 usual days against a wave of -0.3)",
+    "but only 1 trade at the new price since the close: likely a stray print"
+   ]
+  },
+  {
+   "t": "GDRX",
+   "score": 0.1360866359387724,
+   "attention": 0.01691394825218752,
+   "reasons": [
+    "in the last note's theme 'Reports punished, one rewarded'"
+   ]
+  },
+  {
+   "t": "AXS",
+   "score": 0.13504227904961408,
+   "attention": 0.0167673852909236,
+   "reasons": [
+    "49 stocks moved closely with it over the year",
+    "moved against its wave (+1.4 usual days against a wave of -0.3)",
+    "but only 1 trade at the new price since the close: likely a stray print"
+   ]
+  },
+  {
+   "t": "IMKTA",
+   "score": 0.13017964679383215,
+   "attention": 0.016101520561555727,
+   "reasons": [
+    "in the last note's theme 'Reports punished, one rewarded'"
+   ]
+  }
+ ]
+}

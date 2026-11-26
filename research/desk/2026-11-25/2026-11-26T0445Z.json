@@ -1,0 +1,237 @@
+{
+ "asof": "2026-11-25",
+ "at": "2026-11-26T04:45:34Z",
+ "calls": [],
+ "case_sha": "8a58836b1e7a33eb",
+ "check": "2026-11-26T0445Z",
+ "claims_noted": 3,
+ "evidence": {
+  "c1": {
+   "text": "movers tied together: VRTX, VERA (VERA~VRTX by s2)"
+  },
+  "d:10-year yield": {
+   "text": "10-year yield +0.00 pt since the close (its usual day: 0.04 pt)"
+  },
+  "d:bitcoin": {
+   "text": "bitcoin +2.0% since the close (its usual day: 2.7%)"
+  },
+  "d:gold": {
+   "text": "gold +1.8% since the close (its usual day: 1.8%)"
+  },
+  "d:oil": {
+   "text": "oil +2.8% since the close (its usual day: 3.7%)"
+  },
+  "h:VRTX": {
+   "text": "VRTX against the market, last sessions: 11-19 -2.1%, 11-20 +0.6%, 11-23 +2.1%, 11-24 +4.8%, 11-25 +0.1%"
+  },
+  "k": {
+   "text": "Market: S&P 500 (SPY) +0.5%, Nasdaq 100 (QQQ) +0.4%, Russell 2000 (IWM) +0.5%, S&P 500 futures +0.4%, VIX +0.0% (after the close)"
+  },
+  "m:VERA": {
+   "text": "VERA (Vera Therapeutics, Inc.; Pharmaceutical Preparations) +16.7% since the close (after the close), outside its 2-in-3 range (-8%..+10%)"
+  },
+  "m:VRTX": {
+   "text": "VRTX (VERTEX PHARMACEUTICALS INC / MA; Pharmaceutical Preparations) -7.3% since the close (after the close), outside its 2-in-3 range (-4%..+5%)"
+  },
+  "n:VERA": {
+   "text": "VERA accounts: market value $2.1 bn; cash and equivalents $55.3 m (2026-09-30; investments not counted); long-term debt $75.4 m (2026-09-30); net income $-415.3 m over the four quarters to 2026-09-30; that cash alone covers about 0.5 quarters of such losses"
+  },
+  "n:VRTX": {
+   "text": "VRTX accounts: market value $144.0 bn; cash and equivalents $5.0 bn (2026-09-30; investments not counted); long-term debt $3.5 bn (2026-09-30); revenue $13.0 bn over the four quarters to 2026-09-30; net income $4.0 bn over the four quarters to 2026-09-30"
+  },
+  "s1": {
+   "text": "2026-11-26T00:32Z www.fool.com: Vertex Pharmaceuticals Has Turned $10,000 Into $61,660 Over 10 Years. Here's What Could Come Next -- Vertex's next growth wave is already in the pipeline.",
+   "url": "https://www.fool.com/investing/2026/11/25/vertex-pharmaceuticals-has-turned-10000-into-x-ove/?.tsrc=rss"
+  },
+  "s2": {
+   "text": "2026-11-25T22:34Z stocktwits.com: VRTX Tumbles After-Hours As FDA Delays Kidney Drug Decision; Rival VERA Surges -- Vertex said the FDA informed it on Tuesday that the deadline for deciding on its application seeking approval for its drug povetacicept in IgA nephropathy would be extended by up to three months.",
+   "url": "https://stocktwits.com/news-articles/markets/equity/vrtx-tumbles-after-hours-as-fda-delays-kidney-drug-decision-rival-vera-surges/cNbHueUR9mU?.tsrc=rss"
+  },
+  "s3": {
+   "text": "2026-11-25T21:02Z finance.yahoo.com: Vertex Announces Extension of PDUFA Target Action Date by up to Three Months as FDA Completes Review of the Biologics License Application for Povetacicept in IgA Nephropathy -- BOSTON, November 25, 2026--Vertex Pharmaceuticals Incorporated (Nasdaq: VRTX) today announced that the U.S. Food and Drug Administration (FDA) informed the company on November 24, 2026 of an extension to the Prescription Drug User Fee Act (PDUFA) target action date for the Biologics Li",
+   "url": "https://finance.yahoo.com/healthcare/articles/vertex-announces-extension-pdufa-target-210200500.html?.tsrc=rss"
+  },
+  "s4": {
+   "text": "2026-11-26T03:14Z stocktwits.com: Dow, S&P 500, Nasdaq Futures Edge Higher As Tech Rebounds After Selloff: DIS, VRTX, DE, CHTR In Focus -- U.S. stock markets closed another volatile session on Wednesday as technology stocks sold off amid declines in Nvidia and Anthropic shares, though both recovered overnight.",
+   "url": "https://stocktwits.com/news-articles/markets/equity/dow-s-and-p-500-nasdaq-futures-edge-higher-as-tech-rebounds-after-selloff-dis-vrtx-de-chtr-in-focus/cNbxeL0R9ZE?.tsrc=rss"
+  },
+  "t1": {
+   "text": "the last note (2026-11-25T1735Z), theme 'AI hardware gives back all of Monday': The chip sell-off deepened after the open on AI spending fears (s15, s31, s33, s37): AMD, Broadcom and Micron have lost all of Monday's jump, and the Nasdaq 100 fund gave back about 96% of its +7.00% Monday by 11:02 a.m. ET (StockTitan)."
+  },
+  "t2": {
+   "text": "the last note (2026-11-25T1735Z), theme 'Hot inflation, faster growth, new tariffs, and yields down': BEA revised third-quarter growth to 4.3% and put October PCE inflation at 3.8% (core 3.3%); jobless claims fell to 189,000; USTR proposed new tariffs on 14 economies."
+  },
+  "t3": {
+   "text": "the last note (2026-11-25T1735Z), theme 'Reports punished, one rewarded': GoodRx -19.0%: management expects 2027 revenue growth to stall as weight-loss drug price cuts shrink its Pharma Direct fees, it restated first-half results, and Raymond James downgraded it (s1, s2, s3). Nutanix -17.8% on its CEO's exit, its worst day in over two years (s10-s12). Urban Outfitters -11.9%. HP +10.9%: it beat estimates and Barclays raised its target (s26, s27)."
+  },
+  "x:VERA": {
+   "text": "VERA: the market carried +0.5% (beta 0.88); its industry (Pharmaceutical Preparations, 145 stocks) moved +0.0%; left over after the market and its drivers +16.3%"
+  },
+  "x:VRTX": {
+   "text": "VRTX: the market carried +0.1% (beta 0.28); 10-year yield carried -0.0% (-10.55% per point, t -4.2); its industry (Pharmaceutical Preparations, 145 stocks) moved +0.0%; left over after the market and its drivers -7.4%"
+  },
+  "z:VERA": {
+   "text": "VERA mosaic: at the close of 2026-11-25, before this move, the chance of the filing in the next 20 sessions: late or unreliable accounts 0.2% (the usual stock: 0.4%); a restructuring or a write-off 0.5% (the usual stock: 0.3%); a sale of new shares 6.7% (the usual stock: 0.9%; raised most by 4 sales of new shares opened in three years, a registration to sell securities on file). A chance that a filing comes, not a direction (tests P1a-P3b, research/RESULTS.md)"
+  }
+ },
+ "note": {
+  "backdrop": "Wednesday ended almost where Tuesday did, after a hard morning. The Nasdaq 100 fund closed -0.65% after being -4.38% at 11:02 a.m. ET; the S&P 500 fund closed -0.29% and the Dow fund +0.31% (StockTitan). After the close the funds edged up: S&P 500 fund +0.5%, Nasdaq 100 fund +0.4%, small caps +0.5%, futures +0.4% (k). Oil +2.8%, gold +1.8% and bitcoin +2.0% since the close, each inside its usual day (d:oil, d:gold, d:bitcoin). Of 2,453 stocks one is outside its 9-in-10 range and seven outside their 2-in-3 range: a thin evening before Thanksgiving, in which one piece of news moved two stocks and several others moved on a single trade. US markets are closed on Thursday and close at 1 p.m. ET on Friday.",
+  "backdrop_evidence": [
+   "k",
+   "d:oil",
+   "d:gold",
+   "d:bitcoin",
+   "s4",
+   "https://www.stocktitan.net/articles/stock-market-today-live-november-25-2026"
+  ],
+  "by": "agent",
+  "calls": [],
+  "check": "2026-11-26T0445Z",
+  "read": [
+   {
+    "direction": "none",
+    "published": "2026-11-25T11:58:53Z",
+    "says": "Nov 25 close: QQQ -0.65% (after -4.38% at 11:02 a.m. ET), SPY -0.29%, DIA +0.31%; Nvidia -3.91% to $149.30, about 40% of Monday's +31.48% given back; Micron -4.53%; AMD -1.75%, 4.3% below Friday's close; Anthropic closed at $82.79, under its $83.00 IPO price; CNBC reported S&P Global Ratings put Nvidia's credit rating on watch for a possible cut, citing how the company is managed and governed; Dell closed +0.60%; Deere closed +4.44% after forecasting fiscal 2027 net income of $4.50 to $5.25 billion against $4.860 billion this year; Pharming -23.98% after pausing production of RUCONEST; at 7:59 p.m. ET SPY +0.52% and QQQ +0.42% from the close; US markets closed Thursday, Friday closes at 1 p.m. ET; tariff comments due Jan 5, 2027.",
+    "tier": "reported",
+    "url": "https://www.stocktitan.net/articles/stock-market-today-live-november-25-2026"
+   },
+   {
+    "direction": "down",
+    "published": "2026-11-25T21:02:00Z",
+    "says": "Vertex: the FDA told it on Nov 24 that it extends the target date for its decision on povetacicept in IgA nephropathy by up to three months, from Nov 30, 2026 to no later than Feb 28, 2027; the agency asked for information late in the review and classed Vertex's reply as a major amendment; Vertex says it is confident in the data.",
+    "ticker": "VRTX",
+    "tier": "reported",
+    "url": "https://finance.yahoo.com/healthcare/articles/vertex-announces-extension-pdufa-target-210200500.html"
+   },
+   {
+    "direction": "up",
+    "published": "2026-11-25T22:34:19Z",
+    "says": "Vertex fell after hours on the FDA's delay; Vera Therapeutics, whose TRUTAKNA won accelerated approval in July 2026 for the same kidney disease, rose more than 17% after hours as head-to-head competition is put off.",
+    "ticker": "VERA",
+    "tier": "reported",
+    "url": "https://stocktwits.com/news-articles/markets/equity/vrtx-tumbles-after-hours-as-fda-delays-kidney-drug-decision-rival-vera-surges/cNbHueUR9mU"
+   },
+   {
+    "direction": "none",
+    "published": "2026-09-09T23:52:36Z",
+    "says": "Sep 9, 2026: people familiar with the matter told Bloomberg that Kinetik was in the early stages of exploring alternatives and preparing a possible sale process that could begin within weeks; no final decision; in February the Financial Times reported an approach from Western Midstream that produced no deal.",
+    "ticker": "KNTK",
+    "tier": "reported",
+    "url": "https://stocktwits.com/news-articles/markets/equity/why-is-kntk-stock-up-5-after-hours/cZt7lulRJC5"
+   }
+  ],
+  "singles": [],
+  "themes": [
+   {
+    "beneath": "In money the two moves are far apart. 7.3% of Vertex's $144.0 bn is about $10.5 bn; 16.7% of Vera's $2.1 bn is about $0.35 bn (n:VRTX, n:VERA). Three months of delay alone is small against $10.5 bn. My inference: the price holds some chance that this review does not end in approval, and gives back a run into the date: Vertex rose 4.8% against the market on Tuesday and touched its 52-week high on Wednesday (h:VRTX, s1). Vertex's release says the FDA generally takes this step when new information could settle open questions inside the same review; that is the company's reading. Vera is fragile in another way: its cash and equivalents cover about half a quarter of its losses, investments not counted, and before this jump the mosaic put a sale of new shares in the next 20 sessions at 6.7% against 0.9% for the usual stock, with a registration on file (n:VERA, z:VERA). That chance is tested as a chance (P1a PASS), not as a direction (P1b FAIL).",
+    "cause": "Vertex said at 4:02 p.m. ET that the FDA told it on Nov 24 it needs up to three more months to decide on povetacicept for IgA nephropathy: the target date moves from Nov 30, 2026 to no later than Feb 28, 2027, after a late request for information whose answer the agency classed as a major amendment (the Vertex release; s3). Vertex -7.3% after the close and Vera Therapeutics +16.7% (s2).",
+    "evidence": [
+     "s1",
+     "s2",
+     "s3",
+     "c1",
+     "m:VRTX",
+     "m:VERA",
+     "x:VRTX",
+     "x:VERA",
+     "h:VRTX",
+     "n:VRTX",
+     "n:VERA",
+     "z:VERA",
+     "https://finance.yahoo.com/healthcare/articles/vertex-announces-extension-pdufa-target-210200500.html",
+     "https://stocktwits.com/news-articles/markets/equity/vrtx-tumbles-after-hours-as-fda-delays-kidney-drug-decision-rival-vera-surges/cNbHueUR9mU"
+    ],
+    "kind": "reported",
+    "mechanism": "Vera's TRUTAKNA won accelerated approval in July 2026 for the same disease (s2): each month Vertex's drug is not on the market is a month Vera sells without it, and Vertex loses the launch expected this year. Both moves are the stocks' own: the market carried +0.1% of Vertex's and +0.5% of Vera's (x:VRTX, x:VERA), and neither one's partners moved (c1).",
+    "members": [
+     "VRTX",
+     "VERA"
+    ],
+    "name": "A kidney-drug decision is put back three months",
+    "read_through": [],
+    "watch": "Friday's half session: whether the two moves hold on regular-session volume. A decision can come any day up to Feb 28, 2027. A sale of new shares by Vera."
+   },
+   {
+    "beneath": "Of Monday's jump on the chief executive's return, Nvidia has given back about 40% ($149.30 against $165.05 on Monday and $125.53 on Friday), Micron about 94%, and AMD all of it: it closed 4.3% below Friday (StockTitan). Anthropic closed at $82.79, under its $83.00 offering price (StockTitan). Two sessions after the relief the question is no longer who runs Nvidia but what AI spending is worth: a ratings agency now names governance as a credit risk, and the memory-cost squeeze that Ambarella named on Tuesday is still there (Ambarella closed -19.77%, StockTitan). Reported: the closes and the rating watch. My inference: a rebound of one to two percent after the close is small against the two-day fall and says little.",
+    "cause": "Stocks won back most of a chip-led morning fall by the close (the Nasdaq 100 fund -0.65% after -4.38%), but chipmakers stayed lower: Nvidia -3.91%, Micron -4.53% (StockTitan; s4). In the afternoon CNBC reported that S&P Global Ratings put Nvidia's credit rating on watch for a possible cut, citing how the company is managed and governed (StockTitan).",
+    "evidence": [
+     "t1",
+     "s4",
+     "k",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-25-2026"
+    ],
+    "kind": "reported",
+    "mechanism": "The last note asked whether chips would end at the lows or recover with the market (t1). The market recovered; the chips ended off their lows and still down, so the selling stayed inside AI hardware and its builders. After the close they rose a little with the funds: Nvidia +1.3%, Micron +2.3%, Lam Research +2.2%, AMD +1.9% as the check read them (k).",
+    "members": [
+     "NVDA",
+     "LRCX",
+     "PWR",
+     "J",
+     "PI",
+     "AMBA"
+    ],
+    "name": "The market came back; the chips did not",
+    "read_through": [],
+    "watch": "Friday's half session: Nvidia against $125.53 (Friday Nov 20) and $165.05 (Monday); any action on its credit rating; Anthropic against $83.00."
+   },
+   {
+    "beneath": "Deere is the one report of the day that was taken well, and for a plain reason: next year's profit is guided flat, not down, with a one-time pension charge of $0.25 to $0.40 billion inside the range, and large farm equipment sales in the US and Canada are expected to rise 5% to 15% (StockTitan, from Deere's release). The falls have their own causes, named in the last note (t3). The 10-year yield has not moved since the close (d:10-year yield).",
+    "cause": "The reports punished in the morning stayed punished and the one rewarded stayed rewarded (t3): by the bank's closes GoodRx -20.7%, Nutanix -15.2%, Ingles -11.3%, Urban Outfitters -10.3%, HP +11.5%. Deere closed +4.44% after forecasting fiscal 2027 net income of $4.50 to $5.25 billion, whose middle is about this year's $4.860 billion, and saying it sees early signs of improvement in large farm machinery (StockTitan). The builders and lenders that rose with lower yields kept their gains (t2): Toll Brothers +3.7%, D.R. Horton +3.1%, Rocket +7.4%.",
+    "evidence": [
+     "t2",
+     "t3",
+     "d:10-year yield",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-25-2026"
+    ],
+    "kind": "reported",
+    "mechanism": "None of these names moved after the close beyond its range: the day's news was priced in the session. Dell closed +0.60% the day after its report (StockTitan), $297.06 against the $296.45 the call started from: the report moved it 0.2%, so the desk's size call on it was wrong.",
+    "members": [
+     "GDRX",
+     "NTNX",
+     "URBN",
+     "HPQ",
+     "IMKTA",
+     "TOL",
+     "DHI",
+     "RKT"
+    ],
+    "name": "The morning's other moves held to the close",
+    "read_through": [],
+    "watch": "Friday's half session; Deere's forward card is judged when its week closes."
+   }
+  ],
+  "threads": [
+   "Vertex: the FDA's decision on povetacicept is now due by Feb 28, 2027 (was Nov 30, 2026). Do Friday's regular-session prices hold the after-hours moves in Vertex and Vera?",
+   "Kinetik: is there a report behind +7.1% after hours? Targa -3.3% at the same time.",
+   "Nvidia: S&P Global Ratings' watch on its credit rating; Friday against $125.53 and $165.05.",
+   "Kymera 63a7bc55: judged at Friday's 1 p.m. close.",
+   "Deere's forward card DE-2026-11-25: the report session closed +4.44%; judged when its week closes.",
+   "Dell call 10833f5c: judged wrong (a 0.2% move against 4.5% asked, at 75%).",
+   "Tariff proposals: comments due Jan 5, 2027, hearings from Jan 25.",
+   "Friday Nov 27: a half day, closing at 1 p.m. ET."
+  ],
+  "unexplained": [
+   {
+    "t": "AVPT",
+    "tried": "-9.8% after the close, outside its 9-in-10 range, on one trade at the new price (attention: likely a stray print); no filing since the close, no story in its feed, and its partners are flat (m:AVPT, p:AVPT~RPD)."
+   },
+   {
+    "t": "KNTK",
+    "tried": "+7.1% after the close over 16 five-minute bars, so real trading, with no filing and no story tonight (m:KNTK). Context only: on Sep 9 Bloomberg reported it was preparing a possible sale (Stocktwits, read). Its closest partner Targa is -3.3% since the close (p:KNTK~TRGP). No source ties the two, and two searches found nothing dated tonight."
+   },
+   {
+    "t": "LAMR",
+    "tried": "-6.3% after the close on one trade at the new price (attention: likely a stray print); no filing, no story (m:LAMR)."
+   },
+   {
+    "t": "ACIC",
+    "tried": "-5.7% after the close on one trade at the new price (attention: likely a stray print); no filing, no story (m:ACIC)."
+   },
+   {
+    "t": "SVC",
+    "tried": "-9.3% after the close, inside its 9-in-10 range; no filing, no story (m:SVC). It was already 53% below its 52-week high with cash for a third of a quarter's losses (z:SVC, n:SVC)."
+   }
+  ]
+ },
+ "recorded_at": "2026-11-26T04:56:06Z"
+}
