@@ -263,6 +263,19 @@ class Library(TempHome):
                     "sentences": []})
         self.assertIn("its report says no customer brings a tenth of its revenue", "\n".join(cu.render("MSFT", lib)))
 
+    def test_links_are_known_from_the_filing_until_the_next_report(self):
+        def row(t, known, named):
+            return {"t": t, "filed": known[:10], "known_at": known, "named": named}
+        hist = [row("SWKS", "2024-11-15T21:00:00Z", [{"name": "Apple", "ticker": "AAPL", "share": 0.69}]),
+                row("SWKS", "2025-11-14T21:00:00Z", [{"name": "Apple", "ticker": "AAPL", "share": 0.67},
+                                                     {"name": "Samsung", "ticker": None, "share": 0.1}]),
+                row("OLD", "2015-02-20T21:00:00Z", [{"name": "Walmart", "ticker": "WMT", "share": None}])]
+        got = cu.links(hist)
+        self.assertEqual([(x["s"], x["c"], x["share"], x["known_at"][:10], x["until"][:10]) for x in got],
+                         [("SWKS", "AAPL", 0.69, "2024-11-15", "2025-11-14"),
+                          ("SWKS", "AAPL", 0.67, "2025-11-14", "2027-02-13"),      # 456 days after its last report
+                          ("OLD", "WMT", None, "2015-02-20", "2016-05-21")])
+
     def test_the_library_keeps_the_latest_reading(self):
         from brain.bank import Fact
         for known, top in (("2025-11-10", 0.67), ("2026-11-10", 0.61)):
@@ -272,6 +285,8 @@ class Library(TempHome):
                                         "top10": None, "government": None, "named": [], "sentences": []}))
         rows = cu.build(self.bank, ["swks", "none"])
         self.assertEqual([(r["t"], r["top"], r["filed"]) for r in rows], [("SWKS", 0.61, "2026-11-10")])
+        every = cu.build(self.bank, ["swks"], history=True)
+        self.assertEqual([(r["top"], r["filed"]) for r in every], [(0.67, "2025-11-10"), (0.61, "2026-11-10")])
         p = cu.save(rows, self.bank.home / "c.json.gz") if hasattr(self.bank, "home") else None
         if p:
             self.assertEqual(cu.load(p), rows)

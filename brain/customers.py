@@ -4,6 +4,8 @@
     python -m brain customers read NVDA SWKS
     python -m brain customers read --broad --cached # again from the kept passages, without SEC (a new READER)
     python -m brain customers build                 # the library, with who names whom (var/customers/)
+    python -m brain customers read --broad --all-years   # every annual report since 2010 (hours; resumes)
+    python -m brain customers build --all-years     # the history, for point-in-time links
     python -m brain customers show SWKS AAPL        # who it sells to; who names it as a customer
 
 Asked for on 2026-11-25: "who it trades with". A company must say in its annual report when one customer brings a
@@ -50,6 +52,7 @@ MAX_SENTENCES = 8          # kept per company, the ones with a named customer fi
 SENTENCE_CHARS = 420
 WORKERS = 3
 FORMS = ("10-K", "10-K405", "10-KT")
+SINCE = "2010-01-01"       # --all-years reads the annual reports filed since then
 MIN_SHARE, MAX_SHARE = 0.03, 0.99
 BELOW = -1.0               # pair(): a table's star, below the reporting threshold in the latest year
 
@@ -497,9 +500,18 @@ def read(text, table: dict, own: str | None = None) -> dict:
 
 
 # ---------- from SEC EDGAR to the bank ----------
+def reports(view, ticker: str, since: str = SINCE) -> list[Fact]:
+    """The annual reports of ``ticker`` filed since ``since``, one a filing, oldest first."""
+    by: dict[str, Fact] = {}
+    for f in view.facts(ticker.upper(), "filing"):
+        if str(f.value) in FORMS and f.known_at >= since:
+            by.setdefault(str(f.context.get("accn")), f)
+    return sorted(by.values(), key=lambda f: f.known_at)
+
+
 def latest_report(view, ticker: str) -> Fact | None:
-    fs = [f for f in view.facts(ticker.upper(), "filing") if str(f.value) in FORMS]
-    return max(fs, key=lambda f: f.known_at) if fs else None
+    fs = reports(view, ticker, "")
+    return fs[-1] if fs else None
 
 
 def settled(view, ticker: str, filing: Fact) -> bool:
@@ -537,10 +549,11 @@ def read_report(filing: Fact, table: dict, fetched_at: str | None = None, cached
 
 
 def collect(bank: Bank, tickers, log=print, workers: int = WORKERS, table: dict | None = None,
-            cached: bool = False, again: bool = False) -> dict:
+            cached: bool = False, again: bool = False, every: bool = False) -> dict:
     """Read the latest annual report of each ticker whose reading the bank does not hold yet (at this READER).
     ``cached``: from the passages kept at an earlier reading, without SEC; a report never fetched is left.
-    ``again``: also the reports already read at this READER (a reading that says the same is not kept twice)."""
+    ``again``: also the reports already read at this READER (a reading that says the same is not kept twice).
+    ``every``: each ticker's annual reports since SINCE, not only the latest (resumes where it stopped)."""
     from concurrent.futures import ThreadPoolExecutor
     if table is None:
         from brain.sources import sec
@@ -548,9 +561,9 @@ def collect(bank: Bank, tickers, log=print, workers: int = WORKERS, table: dict 
     view = bank.view()
     todo = []
     for t in [x.upper() for x in tickers]:
-        f = latest_report(view, t)
-        if f is not None and (again or not settled(view, t, f)) and (not cached or chunks_path(f).exists()):
-            todo.append(f)
+        for f in (reports(view, t) if every else [latest_report(view, t)]):
+            if f is not None and (again or not settled(view, t, f)) and (not cached or chunks_path(f).exists()):
+                todo.append(f)
 
     def one(f):
         try:
@@ -569,7 +582,7 @@ def collect(bank: Bank, tickers, log=print, workers: int = WORKERS, table: dict 
                     bank.downgrade(r.entity, f.id, f"superseded by {r.id}: read again by reader {READER}")
             c = r.context
             if log:
-                log(f"{r.entity}: " + (", ".join(x["name"] + (f" {x['share'] * 100:.0f}%" if x["share"] else "")
+                log(f"{r.entity} {r.known_at[:10]}: " + (", ".join(x["name"] + (f" {x['share'] * 100:.0f}%" if x["share"] else "")
                                                  for x in c["named"]) or "no known customer named")
                     + (f"; largest {c['top'] * 100:.0f}%" if c["top"] else ""))
             if log and (k + 1) % 100 == 0:
@@ -578,16 +591,22 @@ def collect(bank: Bank, tickers, log=print, workers: int = WORKERS, table: dict 
 
 
 # ---------- the library ----------
-def build(bank: Bank, tickers) -> list[dict]:
-    """One row a company with a reading: its latest, with the filing's date and URL."""
+def history_path() -> Path:
+    return config.ROOT / "var" / "customers" / "history.json.gz"
+
+
+def build(bank: Bank, tickers, history: bool = False) -> list[dict]:
+    """One row a company with a reading: its latest, with the filing's date and URL. ``history``: one row a
+    report read, oldest first (for point-in-time work: a row is known from ``known_at``)."""
     view = bank.view()
     out = []
     for t in sorted({x.upper() for x in tickers}):
-        fs = [f for f in view.facts(t, ATTR) if (f.context or {}).get("reader") == READER]
-        if fs:
-            f = max(fs, key=lambda f: f.known_at)
+        fs = sorted((f for f in view.facts(t, ATTR) if (f.context or {}).get("reader") == READER),
+                    key=lambda f: f.known_at)
+        for f in (fs if history else fs[-1:]):
             c = f.context
-            out.append({"t": t, "filed": f.known_at[:10], "year_end": f.as_of, "url": f.source.get("url"),
+            out.append({"t": t, "filed": f.known_at[:10], "known_at": f.known_at, "year_end": f.as_of,
+                        "url": f.source.get("url"),
                         **{k: c.get(k) for k in ("top", "n_major", "top5", "top10", "government", "named", "none",
                                                  "sentences")}})
     return out
@@ -608,6 +627,29 @@ def load(p: Path | None = None) -> list[dict]:
         return []
     with gzip.open(p, "rt") as f:
         return [json.loads(x) for x in f if x.strip()]
+
+
+LINK_DAYS = 456            # a link holds until the company's next report, or this long after its last
+
+
+def links(history: list[dict]) -> list[dict]:
+    """Point-in-time links from the history: {s (the supplier), c (its named, listed customer), share, known_at,
+    until}: known from the moment the report was filed until the supplier's next report read (or LINK_DAYS)."""
+    from datetime import date, timedelta
+    by: dict[str, list[dict]] = {}
+    for r in history:
+        by.setdefault(r["t"], []).append(r)
+    out = []
+    for t, rows in by.items():
+        rows.sort(key=lambda r: r["known_at"])
+        for i, r in enumerate(rows):
+            cap = (date.fromisoformat(r["filed"]) + timedelta(days=LINK_DAYS)).isoformat()
+            until = min(rows[i + 1]["known_at"], cap) if i + 1 < len(rows) else cap
+            for x in r.get("named") or []:
+                if x.get("ticker") and x["ticker"] != t:
+                    out.append({"s": t, "c": x["ticker"], "share": x.get("share"), "known_at": r["known_at"],
+                                "until": until})
+    return out
 
 
 def named_by(lib: list[dict], ticker: str) -> list[dict]:
@@ -683,10 +725,16 @@ def _cmd(a) -> int:
     else:
         tickers = list(episodes.universe_tickers())
     if a.action == "read":
-        res = collect(bank, tickers, cached=a.cached, again=a.again)
+        res = collect(bank, tickers, cached=a.cached, again=a.again, every=a.all_years)
         print(f"{res['read']} annual reports read, {len(res['failed'])} failed")
         for w in res["failed"][:10]:
             print(f"  failed: {w['filing']}: {w['why']}")
+        return 0
+    if a.all_years:
+        rows = build(bank, tickers, history=True)
+        p = save(rows, history_path())
+        print(f"{len(rows)} annual reports of {len({r['t'] for r in rows})} companies written to {p}; "
+              f"{len(links(rows))} point-in-time links to listed customers")
         return 0
     rows = build(bank, tickers)
     p = save(rows)
@@ -704,4 +752,6 @@ def add_cli(sub) -> None:
     p.add_argument("--cached", action="store_true",
                    help="read again from the passages kept at an earlier reading, without SEC (after a new READER)")
     p.add_argument("--again", action="store_true", help="also the reports already read by this reader")
+    p.add_argument("--all-years", action="store_true",
+                   help=f"read: every annual report since {SINCE}; build: the history (var/customers/history.json.gz)")
     p.set_defaults(fn=_cmd)
