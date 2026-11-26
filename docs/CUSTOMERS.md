@@ -64,7 +64,8 @@ The most named: Walmart (by 15 companies), AT&T (6), Apple (5), McKesson, Cencor
 - The rules were built by reading. The first reader took any known name in a customer sentence: of the 78
   companies it found, about one in five was wrong (a stock exchange, a credit-rating agency, the brands a dealer
   sells, a vendor, the company's own segment). Reader 4 was checked by reading every one of its 104 links against
-  its sentence: none of those errors is left among them.
+  its sentence: none of those errors is left among them. Reader 5 added what a sample of the older reports
+  showed (a subsidiary's share, a growth figure, a spun-off parent).
 - It misses more than it invents. A customer named but not listed in the United States (a distributor, Samsung)
   stays in the quoted sentence only. A report that says "one customer" names no one. A wording the rules do not
   know is not read: 434 of 741 reports gave nothing, and most of those have no customer of a tenth, but not all.
@@ -72,12 +73,61 @@ The most named: Walmart (by 15 companies), AT&T (6), Apple (5), McKesson, Cencor
   sentence does not say so; a company named beside a share may be a partner whose payments are revenue (Regeneron
   and Sanofi); the latest report only, so a link is as of that report's date.
 
+## Every year's report, and links by date
+
+```
+python -m brain customers read --broad --all-years    # every annual report since 2010 (about two hours; resumes)
+python -m brain customers build --all-years           # the history: one row a report (var/customers/history.json.gz)
+```
+
+- A link is known from the moment the report naming the customer was filed, until the supplier's next report (or
+  456 days). `customers.links` gives them: 2,271 links of 179 suppliers to 147 listed customers from the 12,169
+  annual reports of the research universe since 2010 (reader 5).
+- The read first adds the older annual reports to each company's filing list (`customers.older_reports`), and
+  only those: a large bank's older pages hold over a hundred thousand note prospectuses.
+- A sample of 45 pairs read against their sentences: two were not customers (a spun-off parent, a customer of
+  another sentence), three were a subsidiary's or a segment's customer. Reader 5 leaves those five out. The
+  names are those of companies listed today: a customer since bought or delisted is not in the links.
+
+## On the old years (customers' reports of 2011-2023), before any test
+
+`research/customers/explore_train.py` and its log. An event is a results report of a customer while a link holds;
+events where the supplier itself reports nearby are left out. Each number is the rank correlation of the
+customer's report-session move with what the supplier did, inside a season, averaged over the seasons.
+
+| What the supplier did | Linked suppliers | Industry peers that do not name the customer |
+|---|---|---|
+| the same session | +0.220 (t +6.6, 26 of 30 seasons) | +0.075 (t +2.2) |
+| the next 5 sessions | +0.040 (t +1.4) | -0.012 |
+| the next 21 sessions | +0.035 (t +1.3) | +0.015 |
+| its own report, 1 to 45 days later | -0.028 (t -0.9) | -0.023 |
+
+- **On the day the link is real.** After the customers' best fifth of reports (+7.32%), their suppliers moved
+  +0.61% the same session and 64% rose; after the worst fifth (-7.71%), -0.70% and 37% rose. About a tenth of the
+  customer's move.
+- **After the day, little.** The next five sessions gave +0.099 on 2011-2018 and +0.010 on 2019-2023: what was
+  there has faded.
+- The supplier's own later report: nothing (not declared).
+
+## The declared tests (`brain/research/customertest.py`)
+
+```
+python -m brain customertest declare      # after committing the code
+python -m brain customertest test         # once; then commit the ledger and research/RESULTS.md, whatever they say
+```
+
+TEST is customers' reports of 2024-01..2026-09 (1,166 before the supplier's own reports are left out; no outcome
+of those years was read before the declaration). The link set is pinned by its digest.
+
+- **C1a (the day).** A supplier that names the customer moves with its report more than its industry peers that
+  do not: the linked correlation less the peers', per season. About the same session: it says the links are real
+  and explains a move. It is not a forecast.
+- **C1b (after).** The customer's report-session move tells the supplier's next five sessions. Eleven seasons of
+  about a hundred events can tell an effect of the size seen on 2011-2018 (+0.10) from none; they cannot tell
+  +0.04 from none.
+
 ## What it is not
 
-- Not evidence of anything about a stock. Whether a customer's news reaches its supplier's stock, on the day or
-  after, is **not tested here**. The related tests on stocks that move together failed for what follows the day
-  (R1b-R1d, `docs/RIPPLES.md`).
-- Not a point-in-time history. Only each company's latest report is read. A fair test needs every year's report
-  (about 10,000 for this universe, two hours of SEC time), so that a link is known only from the day it was filed.
-  That is the next step, under the usual discipline: old years first, declare, run once.
+- The card shows each company's latest report. The history behind the tests is a separate file.
 - Suppliers are seen only from the other side: a company's suppliers are the companies that name it as a customer.
+- The small, micro and newer-listing universes are not read yet.

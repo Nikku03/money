@@ -1,0 +1,59 @@
+12169 annual reports of 741 companies; 2271 point-in-time links of 179 suppliers to 147 listed customers, filed 2010..2026; 1749 with a share
+
+TRAIN 2011-2023: 2561 reports of a customer while a link held (185 links, 74 customers); 6594 for industry peers
+ Linked suppliers (against the customer's report-session move)
+  same session                                               +0.220  t +6.6  (26 of 30 seasons positive, 1558 events)
+  next 5 sessions                                            +0.040  t +1.4  (18 of 30 seasons positive, 1558 events)
+  next 21 sessions                                           +0.035  t +1.3  (18 of 30 seasons positive, 1558 events)
+  the supplier's own report, 1-45 days later                 -0.028  t -0.9  (10 of 22 seasons positive, 1184 events)
+ By the customer's share of the supplier's revenue (608 events at a fifth or more, 1290 below, 663 not stated)
+  a fifth or more: same session                              +nan  t +nan  (0 of 1 seasons positive, 363 events)
+  a fifth or more: next 5 sessions                           +nan  t +nan  (0 of 1 seasons positive, 363 events)
+  a fifth or more: its own report                            +nan  t +nan  (0 of 1 seasons positive, 291 events)
+  below a fifth: same session                                +0.200  t +4.6  (16 of 19 seasons positive, 752 events)
+  below a fifth: next 5 sessions                             -0.034  t -0.8  (8 of 19 seasons positive, 752 events)
+ Industry peers that do not name the customer
+  same session                                               +0.075  t +2.2  (22 of 37 seasons positive, 4663 events)
+  next 5 sessions                                            -0.012  t -0.4  (15 of 37 seasons positive, 4663 events)
+  next 21 sessions                                           +0.015  t +0.6  (19 of 37 seasons positive, 4663 events)
+  the peer's own report, 1-45 days later                     -0.023  t -0.8  (11 of 30 seasons positive, 2828 events)
+  the customer's best fifth of reports: 312 events, customer +7.32%, supplier the same session +0.61% (64% rose), the next 5 sessions +0.19%
+  its worst fifth: 312 events, customer -7.71%, supplier the same session -0.70% (37% rose), the next 5 sessions -0.23%
+
+  2011-2018: 591 reports of a customer while a link held (76 links, 32 customers); 1611 for industry peers
+ Linked suppliers (against the customer's report-session move)
+  same session                                               +0.236  t +3.2  (9 of 10 seasons positive, 443 events)
+  next 5 sessions                                            +0.099  t +1.6  (8 of 10 seasons positive, 443 events)
+  next 21 sessions                                           +0.119  t +2.0  (8 of 10 seasons positive, 443 events)
+  the supplier's own report, 1-45 days later                 +nan  t +nan  (0 of 2 seasons positive, 171 events)
+ By the customer's share of the supplier's revenue (138 events at a fifth or more, 306 below, 147 not stated)
+  a fifth or more: same session                              +nan  t +nan  (0 of 0 seasons positive, 96 events)
+  a fifth or more: next 5 sessions                           +nan  t +nan  (0 of 0 seasons positive, 96 events)
+  a fifth or more: its own report                            +nan  t +nan  (0 of 0 seasons positive, 50 events)
+  below a fifth: same session                                +nan  t +nan  (0 of 2 seasons positive, 230 events)
+  below a fifth: next 5 sessions                             +nan  t +nan  (0 of 2 seasons positive, 230 events)
+ Industry peers that do not name the customer
+  same session                                               +0.068  t +1.2  (10 of 17 seasons positive, 1264 events)
+  next 5 sessions                                            +0.063  t +1.3  (9 of 17 seasons positive, 1264 events)
+  next 21 sessions                                           +0.051  t +1.1  (10 of 17 seasons positive, 1264 events)
+  the peer's own report, 1-45 days later                     -0.043  t -0.6  (3 of 10 seasons positive, 493 events)
+
+  2019-2023: 1970 reports of a customer while a link held (170 links, 69 customers); 4983 for industry peers
+ Linked suppliers (against the customer's report-session move)
+  same session                                               +0.212  t +6.0  (17 of 20 seasons positive, 1115 events)
+  next 5 sessions                                            +0.010  t +0.3  (10 of 20 seasons positive, 1115 events)
+  next 21 sessions                                           -0.007  t -0.3  (10 of 20 seasons positive, 1115 events)
+  the supplier's own report, 1-45 days later                 -0.063  t -2.7  (8 of 20 seasons positive, 1013 events)
+ By the customer's share of the supplier's revenue (470 events at a fifth or more, 984 below, 516 not stated)
+  a fifth or more: same session                              +nan  t +nan  (0 of 1 seasons positive, 267 events)
+  a fifth or more: next 5 sessions                           +nan  t +nan  (0 of 1 seasons positive, 267 events)
+  a fifth or more: its own report                            +nan  t +nan  (0 of 1 seasons positive, 241 events)
+  below a fifth: same session                                +0.204  t +4.2  (14 of 17 seasons positive, 522 events)
+  below a fifth: next 5 sessions                             -0.043  t -0.9  (7 of 17 seasons positive, 522 events)
+ Industry peers that do not name the customer
+  same session                                               +0.080  t +2.1  (12 of 20 seasons positive, 3399 events)
+  next 5 sessions                                            -0.076  t -2.0  (6 of 20 seasons positive, 3399 events)
+  next 21 sessions                                           -0.016  t -0.7  (9 of 20 seasons positive, 3399 events)
+  the peer's own report, 1-45 days later                     -0.014  t -0.6  (8 of 20 seasons positive, 2335 events)
+
+2024-01-01..2026-09-30, counts only: 1166 reports of a customer while a link held, in 11 seasons of 20+ (no outcome of those years is read here)

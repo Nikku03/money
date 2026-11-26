@@ -265,6 +265,15 @@ def is_gated_promise(r: dict) -> bool:
     return is_promise(r) and r.get("gate_type") in ("delivery", "drift")
 
 
+def is_customer(r: dict) -> bool:
+    """A customer-link test: does a customer's report reach its supplier (brain/research/customertest.py)."""
+    return r.get("kind") == "customer"
+
+
+def is_gated_customer(r: dict) -> bool:
+    return is_customer(r) and r.get("gate_type") in ("day", "after")
+
+
 def is_gated_forecast(r: dict) -> bool:
     """A forecast result with a declared gate (F1b, F1c); descriptive ones (F1a, F1d) are not."""
     return is_forecast(r) and (r.get("gate_type") == "ic" or (r.get("gate_type") is None and "p" in r))
@@ -272,7 +281,7 @@ def is_gated_forecast(r: dict) -> bool:
 
 def _bh_p(r: dict) -> float:
     if (is_forecast(r) or is_link(r) or is_event(r) or is_move(r) or is_shock(r) or is_range(r) or is_mosaic(r)
-            or is_tilt(r) or is_ripple(r) or is_earn(r) or is_promise(r)):
+            or is_tilt(r) or is_ripple(r) or is_earn(r) or is_promise(r) or is_customer(r)):
         p = r.get("p")
         return float(p) if isinstance(p, (int, float)) and math.isfinite(p) else 1.0  # no p counts as 1
     return r["test"]["perm_p"]
@@ -300,7 +309,7 @@ def _link_verdict(r: dict, q: float) -> str:
 
 def _move_verdict(r: dict, q: float) -> str:
     if not (is_gated_move(r) or is_gated_shock(r) or is_gated_range(r) or is_gated_mosaic(r) or is_gated_tilt(r)
-            or is_gated_ripple(r) or is_gated_earn(r) or is_gated_promise(r)):
+            or is_gated_ripple(r) or is_gated_earn(r) or is_gated_promise(r) or is_gated_customer(r)):
         return "REPORT"
     if not (r.get("controls") or {}).get("pass"):
         return "FAIL (controls)"
@@ -319,7 +328,8 @@ def verdicts(path=None) -> list[dict]:
     tested = {k: r for k, r in res.items()
               if is_hypothesis(r) or is_gated_forecast(r) or is_gated_link(r) or is_gated_event(r)
               or is_gated_move(r) or is_gated_shock(r) or is_gated_range(r) or is_gated_mosaic(r)
-              or is_gated_tilt(r) or is_gated_ripple(r) or is_gated_earn(r) or is_gated_promise(r)}
+              or is_gated_tilt(r) or is_gated_ripple(r) or is_gated_earn(r) or is_gated_promise(r)
+              or is_gated_customer(r)}
     q_of = dict(zip(tested, bh_adjust([_bh_p(r) for r in tested.values()])))
     rows = []
     for k, r in res.items():
@@ -333,7 +343,7 @@ def verdicts(path=None) -> list[dict]:
             rows.append({**r, "bh_q": q, "verdict": _link_verdict(r, q)})
             continue
         if (is_move(r) or is_shock(r) or is_range(r) or is_mosaic(r) or is_tilt(r) or is_ripple(r) or is_earn(r)
-                or is_promise(r)):
+                or is_promise(r) or is_customer(r)):
             rows.append({**r, "bh_q": q, "verdict": _move_verdict(r, q)})
             continue
         te = r["test"]
@@ -402,6 +412,7 @@ def report(ledger_path=None, results_path=None) -> str:
     rip = [r for r in every if is_ripple(r)]
     ern = [r for r in every if is_earn(r)]
     prm = [r for r in every if is_promise(r)]
+    cst = [r for r in every if is_customer(r)]
     led = Path(ledger_path or config.LEDGER)
     try:
         led_name = led.resolve().relative_to(config.ROOT.resolve()).as_posix()
@@ -413,7 +424,8 @@ def report(ledger_path=None, results_path=None) -> str:
                           "", *_forecast_section(forecasts), *_link_section(links, ledger_path),
                           *_event_section(evts, ledger_path), *_move_section(mvs), *_shock_section(shk),
                           *_range_section(rng), *_mosaic_section(msc), *_tilt_section(tlt),
-                          *_ripple_section(rip), *_earn_section(ern), *_promise_section(prm)]) + "\n"
+                          *_ripple_section(rip), *_earn_section(ern), *_promise_section(prm),
+                          *_customer_section(cst)]) + "\n"
         Path(results_path or config.RESULTS).write_text(text)
         return text
     by_uni: dict[str, list[dict]] = {}
@@ -449,6 +461,8 @@ def report(ledger_path=None, results_path=None) -> str:
            if any(is_gated_earn(r) for r in ern) else "")
         + (" and every gated promise test (see Promises: said and delivered)"
            if any(is_gated_promise(r) for r in prm) else "")
+        + (" and every gated customer test (see Customers: who it sells to)"
+           if any(is_gated_customer(r) for r in cst) else "")
         + ".",
         "",
         "| Hypothesis | Universe | Select | TEST net excess / mo | Annualised | Info ratio | Months won | Perm p | BH q | TRAIN net excess / mo | TRAIN p | TEST coverage | Verdict |",
@@ -537,6 +551,8 @@ def report(ledger_path=None, results_path=None) -> str:
         lines += ["", *_earn_section(ern)]
     if prm:
         lines += ["", *_promise_section(prm)]
+    if cst:
+        lines += ["", *_customer_section(cst)]
     text = "\n".join(lines) + "\n"
     Path(results_path or config.RESULTS).write_text(text)
     return text
@@ -1250,6 +1266,39 @@ def _promise_section(rows: list[dict]) -> list[str]:
               "over the seasons. Gated tests pass on a positive statistic with p < 0.05, their controls, and "
               "Benjamini–Hochberg q < 0.10 across every gated test in the ledger. G1a is about what a company "
               "delivers, not about its stock."),
+             "", "| Test | Question | Statistic | 90% interval | p | BH q | Controls | Verdict |",
+             "| --- | --- | --- | --- | --- | --- | --- | --- |"]
+    for r in sorted(rows, key=lambda x: x["id"]):
+        m, c = r.get("metrics") or {}, r.get("controls") or {}
+        q = f"{r['bh_q']:.3f}" if isinstance(r.get("bh_q"), float) and math.isfinite(r["bh_q"]) else "–"
+        iv = m.get("interval90") or [float("nan"), float("nan")]
+        p = r.get("p")
+        ps = f"{p:.4f}" if isinstance(p, (int, float)) and math.isfinite(p) else "–"
+        lines.append(f"| {r['id']} | {m.get('question', '')} | {m.get('stat', float('nan')):+.4f} | "
+                     f"{iv[0]:+.4f}..{iv[1]:+.4f} | {ps} | {q} | "
+                     f"{'passed' if c.get('pass') else 'FAILED' if c else '–'} | **{r['verdict'].split(':')[0]}** |")
+    lines.append("")
+    for r in sorted(rows, key=lambda x: x["id"]):
+        if (w := (r.get("metrics") or {}).get("words")):
+            lines.append(f"- **{r['id']}**: {w} {r['verdict'].split(':')[0]}.")
+    return lines
+
+
+def _customer_section(rows: list[dict]) -> list[str]:
+    """The customer-link tests (brain/research/customertest.py, docs/CUSTOMERS.md): when a customer reports, what
+    does the stock of a company that names it as a customer do."""
+    if not rows:
+        return []
+    lines = ["## Customers: who it sells to", "",
+             ("Declared before running (`brain/research/customertest.py`, `docs/CUSTOMERS.md`). A link is "
+              "point-in-time: a company of the research universe named a listed customer in an annual report already "
+              "filed (every report since 2010, read by fixed rules). An event is a results report of the customer "
+              "while a link holds; events where the supplier itself reports nearby are left out. TRAIN is customers' "
+              "reports of 2011-2023, TEST 2024-01..2026-09. Per reporting season the statistic is a rank correlation "
+              "with the customer's report-session move, averaged over seasons, with a one-sided sign-flip p. Gated "
+              "tests pass on a positive statistic with p < 0.05, their controls, and Benjamini–Hochberg q < 0.10 "
+              "across every gated test in the ledger. C1a is about the same session: it explains a move and is not "
+              "a forecast."),
              "", "| Test | Question | Statistic | 90% interval | p | BH q | Controls | Verdict |",
              "| --- | --- | --- | --- | --- | --- | --- | --- |"]
     for r in sorted(rows, key=lambda x: x["id"]):

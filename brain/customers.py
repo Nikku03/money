@@ -45,8 +45,9 @@ from brain.bank import Bank, Fact
 from brain.timeutil import now_iso
 
 ATTR = "customers.major"
-READER = 4            # 2: a name counts only where a customer stands; 3: homonyms, product and unit shares
-#                       out; 4: tables of names, a star is not this year's customer, "no customer brings a tenth"
+READER = 5            # 2: a name counts only where a customer stands; 3: homonyms, product and unit shares
+#                       out; 4: tables of names, a star is not this year's customer, "no customer brings a tenth";
+#                       5: a subsidiary's or a segment's share is not the company's; growth figures; spin-offs
 TOP_RANK = 2500            # a name may match one of the first this many companies of SEC's ticker list
 MAX_SENTENCES = 8          # kept per company, the ones with a named customer first, then by share
 SENTENCE_CHARS = 420
@@ -99,6 +100,7 @@ _STRONG = r"(?:accounted for|accounting for|represented|representing|comprised|c
 # where a customer stands
 _OWN_SHARE = re.compile(r"^.{0,220}?\b" + _STRONG + r"\b.{0,60}?\d{1,2}(?:\.\d{1,2})?\s?(?:%|percent\b)",
                         re.IGNORECASE)                                           # NAME ... accounted for 61%
+_OTHER_SUBJECT = re.compile(r"(?<!through )\b(?:sales to|sales of|revenues? from)\b", re.IGNORECASE)
 _SOLD_TO = re.compile(r"\b(?:sales|sold|revenues?)\b[^.;:]{0,45}?\b(?:to|from|with)\s+(?:the\s+|our\s+largest\s+"
                       r"customer,\s+)?(?:The\s+)?$", re.IGNORECASE)             # sales to NAME, revenue from NAME
 _WERE_TO = re.compile(r"\b(?:were|was|came|derived|sold)\s+(?:to|from)\s+(?:the\s+)?$", re.IGNORECASE)   # 39% were to NAME
@@ -108,11 +110,11 @@ _CELL = re.compile(r"^(?:\s(?!Segment|Products|Business)[A-Z][A-Za-z]+){0,2}"
 _IN_BRACKETS = re.compile(r"^\s?\(\s?\d{1,2}(?:\.\d{1,2})?\s?%\s?\)")       # T-Mobile (18%)
 _LIST_WORD = re.compile(r"\b(?:customers?|distributors?|wholesalers?|tenants?|retailers?|carriers?)\b", re.IGNORECASE)
 _NOT_AFTER = re.compile(r"^\W{0,3}(?:products?|brands?|acquisition|(?:reportable |operating )?segments?|Resort|World|"
-                        r"business|division|unit|platform|collaboration agreement|"
+                        r"business|division|unit|platform|collaboration agreement|members|cardholders|"
                         r"Ratings|Global Select|Stock Market|Capital Market|flow|of\s+[A-Z])\b")
 _NOT_NAMED = re.compile(r"\bbrands?\b|\bdealerships?\b|\bvendors?\b|\bproducts purchased\b|\bpurchased from\b|"
                         r"manufacturers/publishers|\bcredit ratings?\b|\btotal assets\b|\bcommon stock\b|"
-                        r"\bnet asset value\b|\bcompetitors?\b", re.IGNORECASE)
+                        r"\bnet asset value\b|\bcompetitors?\b|\bspun off\b|\bspin-?off\b", re.IGNORECASE)
 _LIST = re.compile(r".*\b(?:customers?|distributors?|wholesalers?|tenants?|retailers?|carriers?)\b"
                    r"(?:,?\s+(?:are|were|was|is|include[sd]?|including|such as|by total revenue were))?[\s,:(]+"
                    r"(?:[A-Z][^.;:]{0,90}?(?:,|\band\b)\s+)*(?:The\s+)?$", re.DOTALL)
@@ -141,12 +143,16 @@ _NOT = re.compile(r"\blocated\b|outside (?:of )?the|headquartered|geograph|\bcou
                   r"\binternational customers\b|\bin (?:Asia|China|Europe|Japan|the United States|North America)\b|"
                   r"\bno (?:other )?(?:single |one |individual )?(?:end )?customer|\bnone of\b|\bdid not\b|"
                   r"\bno customers?\b|not (?:exceed|account|represent)|\bcost of (?:sales|revenues?|goods)\b|"
-                  r"\bour purchases\b|market share|\bincrease in\b|\bdecrease in\b|\bgrowth\b|\bexisting customers\b|"
+                  r"\bour purchases\b|market share|\b(?:increase|decrease) (?:in|of)\b|\bgrowth\b|"
+                  r"\bexisting customers\b|"
                   r"\bchannel\b|\bindustry\b", re.IGNORECASE)
 # a share of a part of the company (a segment's sales) or of units sold, not of the company's revenue
 _PART = re.compile(r"\bsales volume\b|\bsegment(?:[’']s)? (?:net |operating )?(?:sales|revenues?)\b|"
                    r"\bof the (?:net )?(?:sales|revenues?) of\b|"
-                   r"[a-z]s?[’'] (?:net |operating )?(?:sales|revenues?)\b", re.IGNORECASE)
+                   r"\b(?:sales|revenues?) (?:for|of|in|from) the [\w\s&,\-]{0,40}?"
+                   r"(?:segment|business|businesses|companies|division)\b|"
+                   r"[a-z](?:[’']s|s[’']|s?[’']) (?:net |operating |annual |total )?(?:sales|revenues?)\b", re.IGNORECASE)
+_WHOLE = re.compile(r"\b(?:consolidated|total) (?:net |operating |gross )?(?:sales|revenues?)\b", re.IGNORECASE)
 # a share of one product's sales ("of total VIVITROL gross sales"), or of a subsidiary's ("Transco's largest customer was")
 _PRODUCT = re.compile(r"\bof (?:total )?(?:[A-Z]{4,}\b(?:\s+and\s+|\s+)?){1,4}(?:[A-Z]+\s+)?(?:gross |net )?(?:sales|revenues?)\b"
                       r"|\b(?!Company\b)[A-Z][A-Za-z]+[’']s largest customer (?:was|is)\b")
@@ -289,7 +295,10 @@ def customers_in(sentence: str, table: dict, own: str | None = None) -> list[tup
         listed = under_list and at > colon and not re.search(r"\b(?!and\b)[a-z]{4,}\b", sentence[colon:at])
         near = any(0 <= at - x.end() <= 130 for x in _LIST_WORD.finditer(sentence[:at]))
         known_well = len(core(nm)) > 1 or core(nm)[0] in ALIASES
-        ok = (bool(_OWN_SHARE.match(after)) or bool(_SOLD_TO.search(before)) or bool(_WERE_TO.search(before))
+        own_share = _OWN_SHARE.match(after)
+        if own_share and _OTHER_SUBJECT.search(after[:own_share.end()]):
+            own_share = None                    # "ABBOTT LABS ... Direct sales to manufacturers accounted for 46%"
+        ok = (bool(own_share) or bool(_SOLD_TO.search(before)) or bool(_WERE_TO.search(before))
               or beside or (row and (under_list or near or bool(out) or rows >= 2)) or (listed and known_well)
               or (near and known_well and bool(_LIST.match(before))))
         if ok:
@@ -328,6 +337,20 @@ def shares(sentence: str) -> list[float]:
     return [v for v, _ in shares_at(sentence)]
 
 
+def part_only(sentence: str, own_name: str | None = None) -> bool:
+    """Whether the sentence states a share of a part of the company (a segment, a subsidiary, a product, units
+    sold) and not, before that, a share of the whole. The company's own name is not a part ("12% of HP's net
+    revenue")."""
+    t = _OWN.sub("the", sentence)
+    if own_name:
+        t = re.sub(r"\b" + re.escape(own_name) + r"(?:[’']s|[’'])", "the", t, flags=re.IGNORECASE)
+    m = _PART.search(t)
+    if not m:
+        return False
+    whole = _WHOLE.search(t)
+    return not (whole and whole.start() < m.start())
+
+
 def candidates(text: str) -> list[str]:
     """The passages of a report's text that could be customer sentences: a percentage, a revenue word and a stated
     share, without their clauses about receivables. A passage that ends in a colon takes the table row after it.
@@ -343,13 +366,13 @@ def candidates(text: str) -> list[str]:
     return out
 
 
-def sentences(text, table: dict | None = None, own: str | None = None) -> list[str]:
+def sentences(text, table: dict | None = None, own: str | None = None, own_name: str | None = None) -> list[str]:
     """The customer sentences of a report (its text, or its ``candidates``), each once: a share of the company's
     revenue stated for a customer (the word, or a known company standing where a customer stands)."""
     out, seen = [], set()
     for s in (candidates(text) if isinstance(text, str) else text):
         gov = bool(_GOVERNMENT.search(s))
-        if (_NOT.search(s) and not gov) or _PART.search(_OWN.sub("the", s)) or _PRODUCT.search(s):
+        if (_NOT.search(s) and not gov) or part_only(s, own_name) or _PRODUCT.search(s):
             continue
         if not (_CUSTOMER.search(s) or gov or (table and customers_in(s, table, own))):
             continue
@@ -446,7 +469,7 @@ def pair(sentence: str, got: list[tuple], stated: list[tuple[float, int]]) -> li
     return out
 
 
-def read(text, table: dict, own: str | None = None) -> dict:
+def read(text, table: dict, own: str | None = None, own_name: str | None = None) -> dict:
     """What the report (its text, or its ``candidates``) says of its customers: {top, n_major, top5, top10,
     named: [{name, ticker, share}], government, none, sentences}. A value the report does not state is None.
     ``none`` is the report's own sentence that no customer brings a tenth of its revenue, when it says so and
@@ -456,7 +479,7 @@ def read(text, table: dict, own: str | None = None) -> dict:
     kept = []
     cands = candidates(text) if isinstance(text, str) else text
     none = next((s[m.start():][:SENTENCE_CHARS] for s in cands if (m := _NONE.search(s))), None)
-    for s in sentences(cands, table, own):
+    for s in sentences(cands, table, own, own_name):
         stated = shares_at(s)
         v = [x for x, _ in stated]
         got = customers_in(s, table, own)
@@ -548,7 +571,8 @@ def chunks_path(filing: Fact) -> Path:
     return config.ROOT / "var" / "customers" / "chunks" / f"{filing.entity}_{accn}.json.gz"
 
 
-def read_report(filing: Fact, table: dict, fetched_at: str | None = None, cached: bool = False) -> Fact:
+def read_report(filing: Fact, table: dict, fetched_at: str | None = None, cached: bool = False,
+                own_name: str | None = None) -> Fact:
     """The customers fact of one annual report: one SEC request, or none with ``cached`` (its kept passages)."""
     url = filing.source.get("url", "")
     p = chunks_path(filing)
@@ -563,7 +587,7 @@ def read_report(filing: Fact, table: dict, fetched_at: str | None = None, cached
         p.parent.mkdir(parents=True, exist_ok=True)
         with gzip.open(p, "wt") as f:
             json.dump(cands, f)
-    got = read(cands, table, own=filing.entity)
+    got = read(cands, table, own=filing.entity, own_name=own_name)
     return Fact(entity=filing.entity, attr=ATTR, value=got["top"] if got["top"] is not None else 0.0, unit="ratio",
                 as_of=filing.as_of, known_at=filing.known_at, tier="filed",
                 source={"name": f"SEC EDGAR {filing.value}", "url": url},
@@ -588,9 +612,16 @@ def collect(bank: Bank, tickers, log=print, workers: int = WORKERS, table: dict 
             if f is not None and (again or not settled(view, t, f)) and (not cached or chunks_path(f).exists()):
                 todo.append(f)
 
+    names = {}
+    for f in todo:
+        if f.entity not in names:
+            nm = view.latest(f.entity, "identity.name")
+            k = core(str(nm.value)) if nm else ()
+            names[f.entity] = k[0] if k and len(k[0]) >= 2 else None    # "HP", "Autodesk": how it names itself
+
     def one(f):
         try:
-            return read_report(f, table, cached=cached), None
+            return read_report(f, table, cached=cached, own_name=names.get(f.entity)), None
         except Exception as e:  # noqa: BLE001 - one report's trouble is recorded, the rest still run
             return None, {"filing": f.ref, "why": f"{type(e).__name__}: {str(e)[:120]}"}
     kept, failed = 0, []

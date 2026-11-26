@@ -177,6 +177,32 @@ class Reading(unittest.TestCase):
         self.assertEqual(read("Transco’s largest customer was Duke Energy Corporation, which accounted for "
                               "approximately 9 percent of its operating revenue.")["sentences"], [])
 
+    def test_a_share_of_a_part_is_not_the_companys(self):
+        for s in ("Substantially all of Garan’s products are sold to customers such as Wal-Mart, which accounted for "
+                  "over 90% of Garan’s sales in 2012, or 91%.",
+                  "Two customers, including Apple, accounted for approximately 75%, 72% and 67% of our revenue for "
+                  "the residential segment for the years ended December 31, 2019, 2018 and 2017, respectively.",
+                  "Total cash sales of SkyMiles to our customer Apple were $7.4 billion during 2024, an increase of "
+                  "approximately 8% compared to 2023."):
+            self.assertEqual(read(s)["sentences"], [], s)
+        # the whole first, a part after: the sentence stands
+        self.assertEqual(named("During fiscal 2026, Walmart Inc. and its affiliates (Walmart) accounted for 22 percent "
+                               "of our consolidated net sales and 31 percent of net sales of our North America Retail "
+                               "segment."), [("WMT", 0.22)])
+        # a company named by its own name is not a part of itself
+        self.assertEqual(cu.read("Major Customers One customer, Apple Inc., accounted for 12 % of HP’s net revenue for "
+                                 "fiscal year 2025.", TABLE, own="HPQ", own_name="HP")["top"], 0.12)
+        self.assertEqual(cu.read("Major Customers One customer, Apple Inc., accounted for 12 % of HP’s net revenue for "
+                                 "fiscal year 2025.", TABLE, own="HPQ")["top"], None)
+
+    def test_a_share_that_belongs_to_another_subject(self):
+        # a customer list, then a sentence about something else: the 46% is not Microsoft's
+        self.assertEqual(named("Our customers include TELLABS INC DRS MICROSOFT CORP Original Equipment Manufacturers "
+                               "Direct sales to original equipment manufacturers accounted for approximately 46% of our "
+                               "revenues in 2010."), [])
+        self.assertEqual(named("During fiscal 2026, Apple, through sales to multiple distributors, in the aggregate "
+                               "accounted for 61 % of the Company’s net revenue."), [("AAPL", 0.61)])
+
     def test_a_table_after_a_colon(self):
         r = read("In 2025, the Company had three automotive customers, which individually accounted for 10% or more "
                  "of consolidated net sales as follows: Toyota Motor Company Volkswagen Group General Motors 2025 "
