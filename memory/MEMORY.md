@@ -206,25 +206,26 @@ idea at a time, checked against the memory bank first.
   quarter is reported. HELD BACK for a later id (too few 2024-2026 cases in this universe): the stretch against
   the delivery (TRAIN +0.071), the change of the year's promise against the next five sessions (TRAIN +0.054).
 - Coverage: 106 of 741 companies made a quarterly dollar revenue promise on 2024-2026; 2% mismatches not graded.
-- NEXT: the small band's releases are being re-read (`releases --band small`, started 2026-11-25 21:50Z; resumes
-  if re-run; 399 of 510 at the first two-hour limit, restarted 23:46Z chained with `--band micro`), then the
-  us_watch tickers by name; then `promises build`, then `research/promises/explore_bands_train.py us_small us_micro
-  us_watch` (TRAIN only, written and checked against the broad numbers) and the held-back tests as new ids (G2).
-- For G2's design: declare it on the small, micro and newer-listing universes only. The broad universe's
-  2024-2026 week after a raise or a cut was already printed by G1b (raised +0.09%, cut +1.65%), so it is seen.
 - Seen on TRAIN (broad), new on 2026-11-26: after taking the habit out, a promise that asks for MORE delivered
   more, not less (minus the stretch against the surprise less the habit: -0.133, t -5.0, 6 of 30 seasons
   positive). The raw +0.071 came from the habit (big beaters guide low). So "asks for more, falls short" is not
   what the old years show.
-- Small band on TRAIN (`research/promises/explore_small_train.log`, 2026-11-26; its releases re-read, library
-  rebuilt: 9,761 promises of 489 companies): 1,166 quarterly promises of 120 small companies; 66% delivered
-  above the midpoint (broad 78%), 15.9% missed their own range (broad 8.9%). The habit carries there too
-  (+0.307, t +7.2, 17 of 17 seasons). Beyond the habit, asking for more again went with delivering more
-  (-0.110, t -2.2). After a raise or a cut: nothing (+0.024 for the week, t +0.6; raised +0.31%, cut +0.18%).
-  So G2, once micro and the newer listings are read: (a) the habit on the other universes (a replication),
-  (b) the stretch beyond the habit (new; unseen on every universe's 2024-2026). The week after a raise or a
-  cut has nothing on TRAIN twice: not to be declared. 2024-2026 counts for small alone: 271 habit rows in 10
-  seasons.
+- Every universe's releases are re-read with reader 3 as of 2026-11-26 (broad 741, small 510, micro 332, newer
+  listings 965; the newer listings in four batches sized to finish inside the two-hour limit). The library
+  (`promises build`): 19,547 promises of 1,016 companies.
+- TRAIN on the three other universes (`research/promises/explore_bands_train.log`): 3,993 quarterly promises of
+  405 companies; small and micro miss their own range about twice as often as large companies (16-18% against
+  8.9%); the habit +0.351 (40 of 40 seasons); beyond the habit a promise that asks for more was beaten by more
+  (+0.150), so the first "less is better" reading came from the habit itself.
+- **G2a-G2d**, declared and run once on 2026-11-26 (`brain/research/promisetest2.py`; 1,796 companies of the
+  small, micro and newer-listing universes; the research universe left out because G1b had printed its week
+  after a release): **G2a PASS** (the habit carries: +0.486, 11 of 11 seasons, 1,357 promises of 299
+  companies, p 0.0006, q 0.003; delivery a median 1.37% from the habit-moved midpoint against 2.34%).
+  **G2b FAIL** (the stretch beyond the habit +0.096, p 0.031, q 0.12: the sign held, not past the bar).
+  **G2c FAIL** (the five sessions after a release against the delivery less the habit: -0.000). **G2d FAIL**
+  (against the change in the year's promise: +0.034, p 0.11; after a cut -0.92%, after a raise +0.31%).
+  So the habit is the one promise finding, now on two sets of companies; the stock after a release follows
+  nothing tested. The card and the desk line quote all five verdicts. 70 verdicts in the ledger, 11 PASS.
 - Sized, not built (`research/promises/survey_forms.log`, loose patterns, an upper bound, 2024-2026): 199 of 741
   companies gave a dollar revenue promise; 215 others gave revenue growth in percent; 262 others gave EPS; with
   all three at most 523 of 741. EPS guidance is mostly adjusted EPS, which the accounts do not hold: its

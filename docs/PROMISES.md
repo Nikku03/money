@@ -12,7 +12,8 @@ the company file: a record, per company, of what it said and what it did.
 python -m brain releases --broad          # read every earnings release with its forward-looking passages (hours)
 python -m brain promises build            # the library, from the bank (var/promises/, under a minute)
 python -m brain promises show NVDA AMBA   # a company's card
-python -m brain promisetest declare|test  # the declared tests G1a-G1d
+python -m brain promisetest declare|test  # the declared tests G1a, G1b (the research universe)
+python -m brain promisetest2 declare|test # G2a-G2d (the small, micro and newer-listing universes)
 ```
 
 ## The promise (`brain/promises.py`)
@@ -153,13 +154,59 @@ Run once on 2026-11-25 (`research/RESULTS.md`, section "Promises: said and deliv
 - These are averages of the same day's move, known only once the release is out. They explain a move. They are not
   a forecast, and the "week after" column is not tested (after a cut it was up, not down).
 
-**Held back, for a later id.**
-- The stretch against the delivery (TRAIN +0.071) and the change of the year's promise against the next five
-  sessions (TRAIN +0.054).
-- On 2024-2026 this universe has eleven seasons of about 65 quarterly promises, and nine seasons with twenty changes
-  of a year's promise. That is too few to tell an effect of that size from none, so a FAIL would say nothing.
-- They wait for the small, micro and newer-listing universes, whose releases are being re-read
-  (`python -m brain releases --band small`, then `--band micro`, then the tickers of `universe/us_watch.json`).
+**Held back at first.** The stretch against the delivery and the change of the year's promise against the next
+five sessions had too few cases on this universe (eleven seasons of about 65 quarterly promises): a FAIL would
+have said nothing. They were tested on the other universes, below.
+
+## The other universes: G2a-G2d (`brain/research/promisetest2.py`)
+
+```
+python -m brain releases --band small     # then --band micro, then the tickers of universe/us_watch.json (hours)
+python -m brain promises build            # every universe: 19,547 promises of 1,016 companies
+python -m brain promisetest2 declare|test
+```
+
+The small, micro and newer-listing universes together (1,796 companies, none of the research universe), whose
+releases were re-read on 2026-11-25/26. The research universe is left out because G1b had printed its week after
+a release.
+
+**On promises made 2011-2023** (`research/promises/explore_bands_train.py` and its log; 3,993 quarterly promises of
+405 companies):
+
+| | Small | Micro | Newer listings | All three |
+|---|---|---|---|---|
+| quarterly promises | 1,166 | 673 | 2,154 | 3,993 |
+| delivered above the midpoint | 66% | 68% | 84% | 76% |
+| missed their own range | 15.9% | 17.9% | 6.6% | 11.1% |
+| the habit against the next surprise | +0.307 | too few a season | +0.415 | +0.351 (40 of 40 seasons) |
+| the stretch against the surprise less the habit | +0.110 | | +0.174 | +0.150 |
+| the delivery against the habit, against the next five sessions | | | | +0.074 (t +3.0) |
+| the change in the year's promise, against the next five sessions | +0.024 | | +0.070 | +0.059 (t +2.3) |
+
+- Small and micro companies miss their own range about twice as often as large ones (16% to 18% against 8.9%).
+- Beyond the habit, a promise that asks for more was beaten by more, in every universe. The first reading ("less
+  is better", +0.071) came from the habit itself: companies that beat by a lot guide low.
+
+**Run once on 2026-11-26** (`research/RESULTS.md`), promises made 2024-01..2026-09:
+
+| Test | 2024-01..2026-09 | p | BH q | Verdict |
+|---|---|---|---|---|
+| G2a the habit carries to the next promise | +0.486, positive in 11 of 11 seasons, 1,357 promises of 299 companies | 0.0006 | 0.003 | **PASS** |
+| G2b beyond the habit, asking for more is beaten by more | +0.096, 8 of 11 seasons | 0.031 | 0.12 | **FAIL** |
+| G2c the next five sessions follow the delivery against the habit | -0.000, 7 of 11 seasons | 0.50 | 0.73 | **FAIL** |
+| G2d the next five sessions follow the change in the year's promise | +0.034, 7 of 11 seasons | 0.11 | 0.30 | **FAIL** |
+
+- **G2a.** The habit carries on other companies as it did on the research universe (+0.474 there). The fifth of
+  promises with the highest habit was delivered a median +4.56% above the midpoint, the lowest fifth +0.78%. The
+  delivery was a median 2.34% from the midpoint and 1.37% from the midpoint moved by the habit. The ranges held
+  77.2% and 95.1% (cautious, as before); 4.6% missed the company's own range.
+- **G2b.** The sign held (the fifth asking for most delivered +0.29% beyond its habit, the fifth asking for least
+  -0.39%) and p was 0.031, but it did not clear the false-discovery bar across the ledger's tests. Not a finding.
+  What can be said: nothing here shows that a promise asking for more falls short.
+- **G2c, G2d.** The stock does not follow in the week after. After a raise the five sessions gave +0.31% against
+  the market (49% rose), after a cut -0.92% (44% rose), held -0.57%: the order is as expected and too weak to
+  pass. A release is priced on its session (G1b). Do not present a raise, a cut or a beat as a direction for the
+  days after.
 
 ## The card and the desk
 

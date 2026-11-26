@@ -455,13 +455,13 @@ def expected(rows: list[dict], asof: str) -> dict | None:
 
 
 def verdicts() -> dict[str, str]:
-    """The recorded verdict of the declared test G1a ("not run" when absent)."""
+    """The recorded verdicts of the declared tests G1a and G2a-G2d ("not run" when absent)."""
     try:
         from brain.research import run
         v = {r["id"]: r["verdict"].split(":")[0] for r in run.verdicts() if r.get("kind") == "promise"}
     except Exception:  # noqa: BLE001 - a card without verdicts says so
         v = {}
-    return {t: v.get(t, "not run") for t in ("G1a",)}
+    return {t: v.get(t, "not run") for t in ("G1a", "G2a", "G2b", "G2c", "G2d")}
 
 
 def after_close(known_at: str, asof: str) -> bool:
@@ -512,8 +512,9 @@ def said(view, ticker: str, asof: str) -> str | None:
         return None
     v = verdicts()
     return ("; ".join(parts) + f". Read by fixed rules from its releases (docs/PROMISES.md): check the figures "
-            f"against the release. Test: the habit carries to the next delivery G1a {v['G1a']}; what the price "
-            f"does after a raise or a cut has not been tested")
+            f"against the release. Tests: the habit carries to the next delivery (G1a {v['G1a']}, G2a "
+            f"{v['G2a']}); the stock's next five sessions follow the delivery (G2c {v['G2c']}) or the change in the "
+            f"year's promise (G2d {v['G2d']})")
 
 
 # ---------- the library ----------
@@ -584,9 +585,11 @@ def render(ticker: str, rows: list[dict], asof: str) -> list[str]:
         ch = f", {r['changed']} {r['change'] * 100:+.1f}%" if r.get("changed") else ""
         L.append(f"  {r['made']} {r['horizon']} to {r['period_end']}: promised {rng}{ch}; delivered {_usd(r['actual'])}: "
                  f"{r['grade']} ({r['surprise'] * 100:+.1f}%)")
-    L.append(f"  Test (research/RESULTS.md): the habit carries to the next delivery G1a {v['G1a']}. Not tested yet: "
-             f"whether a promise that asks for more falls short, and what the price does after the year's promise "
-             f"changes. A delivery is not a direction for the stock (docs/PROMISES.md).")
+    L.append(f"  Tests (research/RESULTS.md): the habit carries to the next delivery, G1a {v['G1a']} on the research "
+             f"universe and G2a {v['G2a']} on smaller and newer companies. Beyond the habit, a promise that asks for "
+             f"more is beaten by more: G2b {v['G2b']}. The stock's next five sessions follow the delivery (G2c "
+             f"{v['G2c']}) or the change in the year's promise (G2d {v['G2d']}). A delivery is not a direction for "
+             f"the stock (docs/PROMISES.md).")
     return L
 
 

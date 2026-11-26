@@ -206,4 +206,10 @@ FAIL); "the market runs on chains of cause and effect, news and catalysts": the 
 - Read every annual report since 2010 for customers (12,169), built point-in-time links, explored the old years,
   declared C1a and C1b, ran them once: both FAILED. A customer's results do not tell its supplier's stock on
   2024-2026: a little on the day (not enough to pass), nothing after.
+- After-close check for Nov 25 (note 2026-11-26T0445Z): the market won back a chip-led morning fall; Vertex's
+  FDA date moved from Nov 30 to Feb 28, 2027 (Vertex -7.3%, Vera +16.7% after hours); Kinetik +7.1% unexplained.
+  The Dell call was wrong (0.2% against 4.5% asked). No new call.
+- The newer listings' releases are all re-read. Declared G2a-G2d on the three other universes and ran them
+  once: G2a PASS (the habit again, 11 of 11 seasons), G2b, G2c and G2d FAIL. The stock after a release follows
+  neither the delivery nor a changed year's promise.
 
