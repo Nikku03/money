@@ -216,6 +216,15 @@ idea at a time, checked against the memory bank first.
   more, not less (minus the stretch against the surprise less the habit: -0.133, t -5.0, 6 of 30 seasons
   positive). The raw +0.071 came from the habit (big beaters guide low). So "asks for more, falls short" is not
   what the old years show.
+- Small band on TRAIN (`research/promises/explore_small_train.log`, 2026-11-26; its releases re-read, library
+  rebuilt: 9,761 promises of 489 companies): 1,166 quarterly promises of 120 small companies; 66% delivered
+  above the midpoint (broad 78%), 15.9% missed their own range (broad 8.9%). The habit carries there too
+  (+0.307, t +7.2, 17 of 17 seasons). Beyond the habit, asking for more again went with delivering more
+  (-0.110, t -2.2). After a raise or a cut: nothing (+0.024 for the week, t +0.6; raised +0.31%, cut +0.18%).
+  So G2, once micro and the newer listings are read: (a) the habit on the other universes (a replication),
+  (b) the stretch beyond the habit (new; unseen on every universe's 2024-2026). The week after a raise or a
+  cut has nothing on TRAIN twice: not to be declared. 2024-2026 counts for small alone: 271 habit rows in 10
+  seasons.
 - Sized, not built (`research/promises/survey_forms.log`, loose patterns, an upper bound, 2024-2026): 199 of 741
   companies gave a dollar revenue promise; 215 others gave revenue growth in percent; 262 others gave EPS; with
   all three at most 523 of 741. EPS guidance is mostly adjusted EPS, which the accounts do not hold: its

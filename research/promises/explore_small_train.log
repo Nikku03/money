@@ -1,0 +1,71 @@
+
+===== us_small: 510 companies, 3900 promises of 198 of them =====
+
+TRAIN 2011-2023: 1166 quarterly promises of 120 companies (1080 graded, 845 with a habit), 982 changes of a year's promise
+  graded: 66% above the midpoint; median +1.50%; missed the range 15.9%
+ A. Delivery (against the surprise on the promise)
+  its habit (median of its last 4 deliveries)                        +0.307  t +7.2  (17 of 17 seasons positive, 781 rows)
+  minus the stretch (growth asked less growth just done)             +0.124  t +3.1  (20 of 30 seasons positive, 1038 rows)
+  minus the stretch, against the surprise less the habit             -0.110  t -2.2  (6 of 17 seasons positive, 768 rows)
+ B. After a release (the week, then the month after the report session)
+  the change in its promise for the year -> post5                    +0.024  t +0.6  (14 of 22 seasons positive, 982 rows)
+  what it delivered against its last promise -> post5                -0.015  t -0.3  (9 of 17 seasons positive, 811 rows)
+  that, less the habit -> post5                                      +0.042  t +0.4  (3 of 4 seasons positive, 641 rows)
+  the stretch of the new promise -> post5                            +0.003  t +0.1  (15 of 31 seasons positive, 1078 rows)
+  the change in its promise for the year -> post21                   +0.018  t +0.5  (11 of 22 seasons positive, 982 rows)
+  what it delivered against its last promise -> post21               +0.012  t +0.2  (7 of 17 seasons positive, 811 rows)
+  that, less the habit -> post21                                     +0.127  t +1.0  (3 of 4 seasons positive, 641 rows)
+  the stretch of the new promise -> post21                           +0.053  t +1.5  (21 of 31 seasons positive, 1078 rows)
+ C. The same day (an explanation, not a forecast)
+  what it delivered against its last promise                         +0.274  t +5.5  (15 of 17 seasons positive, 811 rows)
+  that, less the habit that promise was made under                   +0.303  t +3.9  (4 of 4 seasons positive, 641 rows)
+  the change in its promise for the year                             +0.253  t +8.0  (21 of 22 seasons positive, 982 rows)
+  year's promise raised: 241 releases, report session +3.37% (62% rose), the week after +0.31%, the month after +0.35%
+  year's promise held: 541 releases, report session +0.73% (53% rose), the week after -0.24%, the month after +0.03%
+  year's promise cut: 200 releases, report session -4.44% (32% rose), the week after +0.18%, the month after -0.47%
+
+  2011-2018: 599 quarterly promises of 75 companies (567 graded, 392 with a habit), 441 changes of a year's promise
+  graded: 65% above the midpoint; median +1.42%; missed the range 16.0%
+ A. Delivery (against the surprise on the promise)
+  its habit (median of its last 4 deliveries)                        +0.261  t +2.6  (4 of 4 seasons positive, 370 rows)
+  minus the stretch (growth asked less growth just done)             +0.219  t +4.5  (10 of 12 seasons positive, 534 rows)
+  minus the stretch, against the surprise less the habit             -0.116  t -1.8  (1 of 4 seasons positive, 366 rows)
+ B. After a release (the week, then the month after the report session)
+  the change in its promise for the year -> post5                    +0.018  t +0.4  (7 of 10 seasons positive, 441 rows)
+  what it delivered against its last promise -> post5                +0.039  t +0.4  (3 of 7 seasons positive, 436 rows)
+  that, less the habit -> post5                                      +nan  t +nan  (0 of 2 seasons positive, 310 rows)
+  the stretch of the new promise -> post5                            +0.086  t +1.7  (7 of 13 seasons positive, 556 rows)
+  the change in its promise for the year -> post21                   +0.035  t +0.7  (5 of 10 seasons positive, 441 rows)
+  what it delivered against its last promise -> post21               +0.074  t +0.7  (3 of 7 seasons positive, 436 rows)
+  that, less the habit -> post21                                     +nan  t +nan  (0 of 2 seasons positive, 310 rows)
+  the stretch of the new promise -> post21                           +0.097  t +1.7  (10 of 13 seasons positive, 556 rows)
+ C. The same day (an explanation, not a forecast)
+  what it delivered against its last promise                         +0.253  t +3.4  (6 of 7 seasons positive, 436 rows)
+  that, less the habit that promise was made under                   +nan  t +nan  (0 of 2 seasons positive, 310 rows)
+  the change in its promise for the year                             +0.222  t +4.6  (9 of 10 seasons positive, 441 rows)
+
+  2019-2023: 567 quarterly promises of 91 companies (513 graded, 453 with a habit), 541 changes of a year's promise
+  graded: 68% above the midpoint; median +1.59%; missed the range 15.8%
+ A. Delivery (against the surprise on the promise)
+  its habit (median of its last 4 deliveries)                        +0.321  t +6.8  (13 of 13 seasons positive, 411 rows)
+  minus the stretch (growth asked less growth just done)             +0.061  t +1.1  (10 of 18 seasons positive, 504 rows)
+  minus the stretch, against the surprise less the habit             -0.108  t -1.7  (5 of 13 seasons positive, 402 rows)
+ B. After a release (the week, then the month after the report session)
+  the change in its promise for the year -> post5                    +0.029  t +0.5  (7 of 12 seasons positive, 541 rows)
+  what it delivered against its last promise -> post5                -0.053  t -0.7  (6 of 10 seasons positive, 375 rows)
+  that, less the habit -> post5                                      +nan  t +nan  (0 of 2 seasons positive, 331 rows)
+  the stretch of the new promise -> post5                            -0.057  t -1.3  (8 of 18 seasons positive, 522 rows)
+  the change in its promise for the year -> post21                   +0.003  t +0.1  (6 of 12 seasons positive, 541 rows)
+  what it delivered against its last promise -> post21               -0.031  t -0.5  (4 of 10 seasons positive, 375 rows)
+  that, less the habit -> post21                                     +nan  t +nan  (0 of 2 seasons positive, 331 rows)
+  the stretch of the new promise -> post21                           +0.021  t +0.5  (11 of 18 seasons positive, 522 rows)
+ C. The same day (an explanation, not a forecast)
+  what it delivered against its last promise                         +0.288  t +4.1  (9 of 10 seasons positive, 375 rows)
+  that, less the habit that promise was made under                   +nan  t +nan  (0 of 2 seasons positive, 331 rows)
+  the change in its promise for the year                             +0.279  t +6.5  (12 of 12 seasons positive, 541 rows)
+
+ D. 2024-01-01..2026-09-30, counts only: 379 quarterly promises of 65 companies, 440 changes of a year's promise of 88
+  the habit, with a graded outcome                                   271 rows, 10 seasons with 20+ (median 24 rows a season)
+  the stretch, with a graded outcome                                 331 rows, 11 seasons with 20+ (median 30 rows a season)
+  the change of a year's promise, with the week after                440 rows, 10 seasons with 20+ (median 46 rows a season)
+  a delivery against its habit, with the week after                  235 rows, 8 seasons with 20+ (median 22 rows a season)
