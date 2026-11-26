@@ -1,0 +1,132 @@
+{
+ "asof": "2026-11-25",
+ "at": "2026-11-26T17:36:14Z",
+ "calls": [],
+ "case_sha": "c63085890e6beec7",
+ "check": "2026-11-26T1736Z",
+ "claims_noted": 1,
+ "evidence": {
+  "c1": {
+   "text": "movers tied together: VRTX, VERA (VERA~VRTX by s1; VERA~VRTX by s3)"
+  },
+  "d:bitcoin": {
+   "text": "bitcoin +0.1% since the close (its usual day: 2.7%)"
+  },
+  "d:gold": {
+   "text": "gold +2.4% since the close (its usual day: 1.8%)"
+  },
+  "d:oil": {
+   "text": "oil +0.9% since the close (its usual day: 3.7%)"
+  },
+  "k": {
+   "text": "Market: S&P 500 (SPY) +0.5%, Nasdaq 100 (QQQ) +0.4%, Russell 2000 (IWM) +0.5%, S&P 500 futures +0.7%, VIX -5.3% (after the close)"
+  },
+  "m:VERA": {
+   "text": "VERA (Vera Therapeutics, Inc.; Pharmaceutical Preparations) +16.7% since the close (after the close), outside its 2-in-3 range (-8%..+10%)"
+  },
+  "m:VRTX": {
+   "text": "VRTX (VERTEX PHARMACEUTICALS INC / MA; Pharmaceutical Preparations) -7.3% since the close (after the close), outside its 2-in-3 range (-4%..+5%)"
+  },
+  "s1": {
+   "text": "2026-11-26T14:15Z finance.yahoo.com: VRTX Down as FDA Extends Review Timeline for Povetacicept BLA -- Vertex shares fell 7.3% after the FDA extended its povetacicept review by three months, delaying a key approval decision to February 2027.",
+   "url": "https://finance.yahoo.com/healthcare/articles/vrtx-down-fda-extends-review-141500196.html?.tsrc=rss"
+  },
+  "s3": {
+   "text": "2026-11-25T22:34Z stocktwits.com: VRTX Tumbles After-Hours As FDA Delays Kidney Drug Decision; Rival VERA Surges -- Vertex said the FDA informed it on Tuesday that the deadline for deciding on its application seeking approval for its drug povetacicept in IgA nephropathy would be extended by up to three months.",
+   "url": "https://stocktwits.com/news-articles/markets/equity/vrtx-tumbles-after-hours-as-fda-delays-kidney-drug-decision-rival-vera-surges/cNbHueUR9mU?.tsrc=rss"
+  },
+  "s4": {
+   "text": "2026-11-25T21:02Z finance.yahoo.com: Vertex Announces Extension of PDUFA Target Action Date by up to Three Months as FDA Completes Review of the Biologics License Application for Povetacicept in IgA Nephropathy -- BOSTON, November 25, 2026--Vertex Pharmaceuticals Incorporated (Nasdaq: VRTX) today announced that the U.S. Food and Drug Administration (FDA) informed the company on November 24, 2026 of an extension to the Prescription Drug User Fee Act (PDUFA) target action date for the Biologics Li",
+   "url": "https://finance.yahoo.com/healthcare/articles/vertex-announces-extension-pdufa-target-210200500.html?.tsrc=rss"
+  },
+  "s5": {
+   "text": "2026-11-26T12:22Z 247wallst.com: Vera Therapeutics Stock Soars After Hours as the FDA Delays Vertex\u2019s Rival Kidney Drug -- A regulatory delay handed Vera Therapeutics a three-month head start on a $143 billion rival, and traders rushed in. But the bigger threat to Vera's drug has nothing to do with the calendar, and one February deadline could undo the rally.",
+   "url": "https://247wallst.com/investing/2026/11/26/vera-therapeutics-stock-soars-after-hours-as-the-fda-delays-vertexs-rival-kidney-drug/?.tsrc=rss"
+  },
+  "t1": {
+   "text": "the last note (2026-11-26T1331Z), theme 'A kidney-drug decision is put back three months': Unchanged since last night (t1): the FDA's target date for Vertex's povetacicept moved from Nov 30, 2026 to no later than Feb 28, 2027. Vertex -7.3% and Vera +16.7% in Wednesday's late session, and neither has traded since (s2, s3). A fuller account came this morning (s4)."
+  }
+ },
+ "note": {
+  "backdrop": "US stock markets are closed today for Thanksgiving. Nothing has changed since this morning's check: no stock has traded since Wednesday's late session, S&P 500 futures are still +0.7% against Wednesday's close (k), gold is still +2.4% since the close against a usual day of 1.8% (d:gold), oil +0.9%, bitcoin +0.1% (d:oil, d:bitcoin). One stock of 2,453 is outside its 9-in-10 range and seven are outside their 2-in-3 range, as this morning and last night. Markets reopen on Friday for a half day that closes at 1 p.m. ET.",
+  "backdrop_evidence": [
+   "k",
+   "d:gold",
+   "d:oil",
+   "d:bitcoin"
+  ],
+  "by": "agent",
+  "calls": [],
+  "check": "2026-11-26T1736Z",
+  "read": [
+   {
+    "direction": "none",
+    "published": "2026-11-26T14:15:00Z",
+    "says": "Zacks: the FDA accepted Vertex's application for povetacicept in June 2026; the drug came with the purchase of Alpine in 2024; other drugs for the same kidney disease are Novartis's Fabhalta, Travere's Filspari and Calliditas's Tarpeyo. The page's price strip showed Vertex -7.23%, Vera +18.77%, Travere +0.81% and Novartis +0.60%. Vertex is up 24.4% this year against 11.9% for its industry.",
+    "ticker": "VRTX",
+    "tier": "reported",
+    "url": "https://finance.yahoo.com/healthcare/articles/vrtx-down-fda-extends-review-141500196.html"
+   }
+  ],
+  "singles": [],
+  "themes": [
+   {
+    "beneath": "My inference: the market reads the delay as a matter between two drugs of one kind (both block the same two immune signals), not as news for every treatment of the disease. That fits this morning's reading that the jump in Vera is a bet on its nearest rival being late or weaker, more than on three months of sales (t1, s5). Nothing new is reported on what the FDA asked for. Vertex is up 24.4% this year (s1), so the fall gives back a part of a strong run.",
+    "cause": "Unchanged (t1): the FDA's target date for Vertex's povetacicept moved from Nov 30, 2026 to no later than Feb 28, 2027; Vertex -7.3% and Vera +16.7% in Wednesday's late session, and neither has traded since (s3, s4). One more account came at 14:15Z (s1).",
+    "evidence": [
+     "t1",
+     "s1",
+     "s3",
+     "s4",
+     "s5",
+     "c1",
+     "m:VRTX",
+     "m:VERA",
+     "https://finance.yahoo.com/healthcare/articles/vrtx-down-fda-extends-review-141500196.html"
+    ],
+    "kind": "reported",
+    "mechanism": "The new account names the other drugs for the same disease: Novartis's Fabhalta, Travere's Filspari and Calliditas's Tarpeyo (s1). On its page Travere showed +0.81% and Novartis +0.60%, and the check has Travere at +0.4% since the close: the delay moved the one company whose drug works the way Vertex's does, not the others.",
+    "members": [
+     "VRTX",
+     "VERA"
+    ],
+    "name": "A kidney-drug decision is put back three months",
+    "read_through": [],
+    "watch": "Friday's half session: whether the late-session moves hold on regular volume, and whether Travere and Novartis stay flat."
+   }
+  ],
+  "threads": [
+   "Friday Nov 27: a half day, closing at 1 p.m. ET. Do Vertex (-7.3%) and Vera (+16.7%) hold their late-session moves? Do the single-trade moves in AvePoint, Lamar and American Coastal vanish at the open?",
+   "Gold +2.4% since Wednesday's close with US stocks shut: what is behind it, and do gold miners follow on Friday?",
+   "Kinetik: is there a report behind +7.1%? Targa -3.3% at the same time.",
+   "Nvidia: S&P Global Ratings' watch on its credit rating; Friday against $125.53 and $165.05.",
+   "Kymera 63a7bc55: judged at Friday's 1 p.m. close.",
+   "Deere's forward card DE-2026-11-25: judged when its week closes.",
+   "Vertex: the FDA's decision on povetacicept is due by Feb 28, 2027.",
+   "Tariff proposals: comments due Jan 5, 2027, hearings from Jan 25."
+  ],
+  "unexplained": [
+   {
+    "t": "AVPT",
+    "tried": "Unchanged: -9.8% on one late trade on Wednesday, outside its 9-in-10 range; no filing and no story since (m:AVPT)."
+   },
+   {
+    "t": "KNTK",
+    "tried": "Unchanged: +7.1% in Wednesday's late session on real trading; still no filing and no story (m:KNTK)."
+   },
+   {
+    "t": "LAMR",
+    "tried": "Unchanged: -6.3% on one late trade; no filing, no story (m:LAMR)."
+   },
+   {
+    "t": "ACIC",
+    "tried": "Unchanged: -5.7% on one late trade; no filing, no story (m:ACIC)."
+   },
+   {
+    "t": "SVC",
+    "tried": "Unchanged: -9.3% in the late session, inside its 9-in-10 range; no filing, no story (m:SVC)."
+   }
+  ]
+ },
+ "recorded_at": "2026-11-26T17:39:39Z"
+}
