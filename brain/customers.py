@@ -30,7 +30,8 @@ Each company's reading is kept as one ``customers.major`` fact with the filing's
 so the card quotes the report, not the reader. The reader recognises names; it does not understand sentences: a
 customer named but not listed in the United States (Samsung, a distributor) stays in the quoted sentence only, and
 a listed name beside a share may be a partner or a competitor. The library's links are for reading, not evidence:
-whether a customer's news reaches its supplier's stock is not tested here.
+the tests of whether a customer's results reach its supplier's stock (C1a the same session, C1b the next five;
+``brain/research/customertest.py``) both FAILED on 2024-2026.
 """
 from __future__ import annotations
 
@@ -714,6 +715,16 @@ def named_by(lib: list[dict], ticker: str) -> list[dict]:
     return sorted(out, key=lambda r: -(r["share"] or 0))
 
 
+def verdicts() -> str:
+    """The recorded verdicts of the declared tests of these links, as words: "C1a FAIL, C1b FAIL"."""
+    try:
+        from brain.research import run
+        v = {r["id"]: r["verdict"].split(":")[0] for r in run.verdicts() if r.get("kind") == "customer"}
+    except Exception:  # noqa: BLE001 - a card without verdicts says so
+        v = {}
+    return ", ".join(f"{t} {v.get(t, 'not run')}" for t in ("C1a", "C1b"))
+
+
 def line(lib: list[dict], ticker: str, move_of=None, limit: int = 6) -> str | None:
     """One line for the desk's case file (docs/DESK.md): who ``ticker`` sells to and who names it as a customer,
     each with its move since the close when ``move_of`` knows it. None when the library says nothing of it."""
@@ -739,7 +750,8 @@ def line(lib: list[dict], ticker: str, move_of=None, limit: int = 6) -> str | No
             f"{r['t']}" + (f" ({r['share'] * 100:.0f}% of its revenue{moved(r['t'])})" if r.get("share") is not None
                            else f" ({moved(r['t'])[2:]})" if moved(r["t"]) else "") for r in by[:limit])
             + (f" and {len(by) - limit} more" if len(by) > limit else ""))
-    return "; ".join(bits) + ". Read from annual reports; a read-through is untested" if bits else None
+    return ("; ".join(bits) + f". Read from annual reports; a read-through from a customer's results to its "
+            f"supplier's stock did not pass its tests ({verdicts()})") if bits else None
 
 
 def pct(x: float | None) -> str:
@@ -785,8 +797,9 @@ def render(ticker: str, lib: list[dict]) -> list[str]:
         L.append("  named as a customer by: " + "; ".join(f"{r['t']} ({pct(r['share'])} of its revenue)" for r in by[:12])
                  + (f"; and {len(by) - 12} more" if len(by) > 12 else ""))
     L.append("  Read by fixed rules from the report: check a figure against the quoted sentence before using it. A "
-             "name beside a share may be a partner, not a customer. Whether a customer's news reaches its supplier's "
-             "stock is not tested (docs/CUSTOMERS.md).")
+             "name beside a share may be a partner, not a customer. Tests (research/RESULTS.md): on a customer's "
+             f"report session its supplier moves with it more than industry peers, and its next five sessions follow: "
+             f"{verdicts()}. A link describes; it does not forecast (docs/CUSTOMERS.md).")
     return L
 
 

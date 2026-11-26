@@ -126,6 +126,24 @@ of those years was read before the declaration). The link set is pinned by its d
   about a hundred events can tell an effect of the size seen on 2011-2018 (+0.10) from none; they cannot tell
   +0.04 from none.
 
+Run once on 2026-11-26 (`research/RESULTS.md`, section "Customers: who it sells to"): 694 reports of a customer
+while a link held (118 links, 52 customers), eleven seasons.
+
+| Test | 2024-01..2026-09 | p | BH q | Verdict |
+|---|---|---|---|---|
+| C1a the day: the link adds to the same-session correlation | +0.062 (linked +0.109, industry peers +0.047), positive in 7 of 11 seasons | 0.10 | 0.30 | **FAIL** |
+| C1b after: the supplier's next five sessions | -0.093, positive in 2 of 11 seasons | 0.98 | 1.00 | **FAIL** |
+
+**What the two FAILs mean.**
+- **The day.** On 2011-2023 a named supplier moved with its customer's report clearly more than its industry
+  (the link added +0.156). On 2024-2026 it added +0.062 and did not clear the bar. After the customers' best
+  fifth of reports (+7.87%) their suppliers moved +0.00% the same session and 48% rose; after the worst fifth
+  (-8.34%), -0.36% and 41% rose. The read-through on the day has become small.
+- **After.** Nothing to follow: the suppliers' next five sessions went, if anything, the other way (-0.093; the
+  next 21 sessions -0.027; industry peers -0.060). That reversal was not declared and is not a finding.
+- So a link says who a company depends on. It did not say what its stock does when the customer reports.
+  Do not present a read-through from a customer to its supplier as an edge, on the day or after.
+
 ## What it is not
 
 - The card shows each company's latest report. The history behind the tests is a separate file.

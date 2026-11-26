@@ -259,11 +259,18 @@ idea at a time, checked against the memory bank first.
 - Precision was bought by reading: reader 1 (any known name in a customer sentence) was wrong for about one
   company in five (NASDAQ, rating agencies, brands a dealer sells, vendors, own segments). Reader 4 takes a name
   only where a customer stands; all 104 links were read against their sentences. It misses more than it invents.
-- NOT tested: whether a customer's news reaches its supplier's stock. For that, every year's 10-K is being
-  read (`customers read --broad --all-years`, started 2026-11-26 00:55Z, resumes if re-run; it first adds the
-  older annual reports to the filing lists), then `customers build --all-years` (the history and
-  `customers.links`, point-in-time), then `research/customers/explore_train.py` (TRAIN only, written, not run
-  yet), then declare and run once. Small, micro and newer-listing universes not read yet.
+- Every year's 10-K since 2010 was read on 2026-11-26 (12,169 reports, 0 failed; reader 5 after a sample of 45
+  pairs showed a subsidiary's share, a growth figure and a spun-off parent read as customers): 2,271
+  point-in-time links of 179 suppliers to 147 listed customers (`customers build --all-years`,
+  `customers.links`).
+- On TRAIN (customers' reports 2011-2023, `research/customers/explore_train.log`): the same session +0.220 for
+  linked suppliers against +0.075 for industry peers; the next five sessions +0.040 (+0.099 on 2011-2018, +0.010
+  on 2019-2023); the supplier's own later report -0.028 (not declared).
+- Declared and run once on 2026-11-26 (`brain/research/customertest.py`): **C1a FAIL** (the day: the link added
+  +0.062, linked +0.109 against peers +0.047, 7 of 11 seasons, p 0.10, q 0.30) and **C1b FAIL** (the next five
+  sessions -0.093, 2 of 11 seasons positive, p 0.98). The read-through on the day shrank from the old years;
+  after the day there is nothing to follow. The reversal in C1b was not declared: not a finding. The card and
+  the desk's `[c:TICKER]` line quote both verdicts. Small, micro and newer-listing universes are not read.
 - DO NOT run `brain ingest` or `sec.filings_for(all_pages=True)` over a universe: the older pages of the large
   banks' filing lists hold over a hundred thousand note prospectuses (JPM 133,000 424B2), the bank's journal
   for them grows to 75 MB, and `mosaic read` (READ_FROM 2008) would then try to fetch every one. Done by mistake

@@ -72,7 +72,8 @@ writes it.
 - **Who it sells to** (`[c:TICKER]`, for any mover the customers library knows; `docs/CUSTOMERS.md`). Its named
   customers with their share of its revenue, or its largest unnamed customer's share, and the companies that name
   it as a customer, each with its move since the close when the check read it. Read from annual reports by fixed
-  rules. A read-through from a customer to its supplier is untested: say so when a note uses one.
+  rules. A read-through from a customer's results to its supplier's stock FAILED its tests (C1a the same
+  session, C1b the next five sessions): say so when a note uses one.
 - **Its last sessions,** and the earlier checks that flagged it.
 - **Clusters.** Movers tied by a story that names one of them, or by a year of moving together and the same
   direction today. A tie is a lead. Whether the cause is shared is for the note.

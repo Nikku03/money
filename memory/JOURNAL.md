@@ -200,4 +200,10 @@ FAIL); "the market runs on chains of cause and effect, news and catalysts": the 
   would have made `mosaic read` try to fetch them all. Stopped at 175 companies, copied the journals, removed
   only those just-added facts, kept the 3,598 older annual reports, checked the banks load as before.
   `customers read --all-years` now adds older annual reports only.
+- The micro band's releases are all re-read (332 of 332); small and micro on 2011-2023 show the habit again
+  (+0.287, 31 of 33 seasons) and nothing in the week after a raise or a cut. The newer listings' re-read is under
+  way in batches sized to finish inside their time limit (29,197 releases of 947 companies).
+- Read every annual report since 2010 for customers (12,169), built point-in-time links, explored the old years,
+  declared C1a and C1b, ran them once: both FAILED. A customer's results do not tell its supplier's stock on
+  2024-2026: a little on the day (not enough to pass), nothing after.
 

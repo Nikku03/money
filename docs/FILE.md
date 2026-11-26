@@ -18,7 +18,7 @@ card prints it, with the verdict of the test behind it as recorded in `research/
 | 2. Its accounts | the latest fiscal year and quarter as filed; margins; cash and debt; P/E on the fiscal year and on the last four quarters; price to sales | SEC XBRL (`brain ingest`) | facts, not a claim |
 | 3. What it promised, and whether it delivered | its record of revenue promises, its open promises, where its habit puts the next delivery | `brain/promises.py` (`docs/PROMISES.md`) | G1a |
 | 4. What it needs and what is on file | cash against what operations use, a registration to sell shares, past sales, late filings, officer changes; the chance of a share sale, late accounts or a write-off in 20 sessions | `brain/mosaic.py` (`docs/MOSAIC.md`) | P1a, P2a, P3a (and P1b-P3b: no direction) |
-| 5. Who it sells to, and who it moves with | its customers as its annual report names them, the largest customer's share, and who names it as a customer; then the stocks that moved most with it over a year | `brain/customers.py` (`docs/CUSTOMERS.md`), `brain/connect.py` | the customers are read, not tested; R1b-R1d: what follows a partner's move |
+| 5. Who it sells to, and who it moves with | its customers as its annual report names them, the largest customer's share, and who names it as a customer; then the stocks that moved most with it over a year | `brain/customers.py` (`docs/CUSTOMERS.md`), `brain/connect.py` | C1a, C1b: a customer's report and its supplier's stock (both FAIL); R1b-R1d: what follows a partner's move |
 | 6. Its dates | its last four reports with how the stock took them; a guess at the next report; its fiscal year end | `brain/episodes.py` | the reaction's name is a description |
 | 7. How far it can move | the range for the next five sessions, the chance of a 20%+ day, the size of its next report's move, and (within 14 days of a report) the run into it | `brain/scan.py`, `brain/shocks.py`, `brain/moves.py`, `brain/expect.py` | W1a or W1b, S1a, M1a, X1a |
 | 8. Not in the file yet | what the engine does not read | | |
@@ -44,8 +44,8 @@ The person's direction is to trace every fabric of a company. Still missing:
 
 - **Suppliers by name, and unnamed customers.** Section 5 reads the customers a report names
   (`docs/CUSTOMERS.md`). Many reports say only "one customer"; a supplier is seen only when it names the company
-  as its customer. Whether a customer's news reaches its supplier's stock is not tested yet: that needs every
-  year's report, not only the latest.
+  as its customer. Whether a customer's results reach its supplier's stock was tested and FAILED (C1a the
+  same session, C1b the next five).
 - **Projects and what they need.** Spending a company has planned against the cash it has.
 - **Guidance as a growth rate or as earnings per share.** Section 3 reads revenue in dollars only. A count on
   the research universe's releases of 2024-2026 (`research/promises/survey_forms.py`; loose patterns, so an upper

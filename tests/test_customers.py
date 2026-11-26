@@ -3,6 +3,7 @@ the listed companies they name, and who names whom. The sentences are worded as 
 from __future__ import annotations
 
 import unittest
+from unittest import mock
 
 from brain import customers as cu
 from tests.util import TempHome
@@ -282,7 +283,7 @@ class Library(TempHome):
         card = "\n".join(cu.render("AAPL", lib))
         self.assertIn("its annual report has not been read", card)
         self.assertIn("named as a customer by: CRUS (91% of its revenue); SWKS (61% of its revenue)", card)
-        self.assertIn("not tested", card)
+        self.assertIn("A link describes; it does not forecast", card)
         lib.append({"t": "MSFT", "filed": "2026-07-30", "year_end": "2026-06-30", "url": "https://example.test/msft",
                     "top": None, "n_major": None, "top5": None, "top10": None, "government": None, "named": [],
                     "none": "No sales to an individual customer accounted for more than 10% of revenue.",
@@ -308,12 +309,13 @@ class Library(TempHome):
                {"t": "SMCI", "filed": "2026-08-31", "top": 0.281, "n_major": 1, "named": []},
                {"t": "MSFT", "filed": "2026-07-29", "top": None, "n_major": None, "named": []}]
         moves = {"AAPL": -0.032, "SWKS": -0.051}
-        self.assertEqual(cu.line(lib, "swks", moves.get),
-                         "sells to Apple (AAPL, -3.2% since the close) 61% of revenue (annual report filed "
-                         "2026-11-10). Read from annual reports; a read-through is untested")
-        self.assertEqual(cu.line(lib, "AAPL", moves.get),
-                         "named as a customer by SWKS (61% of its revenue, -5.1% since the close). Read from annual "
-                         "reports; a read-through is untested")
+        with mock.patch.object(cu, "verdicts", lambda: "C1a FAIL, C1b FAIL"):
+            self.assertEqual(cu.line(lib, "swks", moves.get),
+                             "sells to Apple (AAPL, -3.2% since the close) 61% of revenue (annual report filed "
+                             "2026-11-10). Read from annual reports; a read-through from a customer's results to its "
+                             "supplier's stock did not pass its tests (C1a FAIL, C1b FAIL)")
+            self.assertTrue(cu.line(lib, "AAPL", moves.get).startswith(
+                "named as a customer by SWKS (61% of its revenue, -5.1% since the close). Read from annual reports"))
         self.assertIn("its largest customer, unnamed, brings 28% of revenue", cu.line(lib, "SMCI"))
         self.assertIsNone(cu.line(lib, "MSFT"))
         self.assertIsNone(cu.line(lib, "ZZZZ"))
