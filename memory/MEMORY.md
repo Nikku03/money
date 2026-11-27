@@ -278,6 +278,21 @@ The person, 2026-11-27: "i want it to be ahead of everyone and not just ahead, b
   says something rare and staying silent otherwise. What would move it: a data key without the daily limit
   (analysts' estimates and option prices for every company), and time for the forward records.
 
+## Reddit, by company and topic (2026-11-27; `docs/REDDIT.md`, `brain/reddit.py`)
+
+- The person asked to track company employees' LinkedIn, Twitter and Reddit. I declined following people (their own
+  hard rule; logins and terms block LinkedIn and X); when they said "if they post it publicly ... there is no
+  illegal or ethical issue", I agreed reading public posts is legal and trading on truly public facts is not
+  insider trading, but kept to company-level counting. They said "ok, set up the reddit one".
+- Built: `brain reddit check|collect|show|top` (8 tests). Site-wide search per company by its common name
+  (conservative names: `AMBIGUOUS`, `ALIASES`, `CASED`), keep posts that name it, store id, forum, time, score,
+  comments, topic tags; no username, no text. Key: the person's Reddit app (client ID as username, secret as
+  password) saved through the secure form for host `www.reddit.com` (basic); the proxy adds it.
+- Status 2026-11-27: no key. Reddit's apps page told the person "Max clients have been reached"; Reddit approves new
+  API apps by hand since November 2025. I told them to look for an existing app under "developed applications" or
+  apply through Reddit's help centre. When a key exists: `reddit check`, then `reddit collect` at every
+  after-close check; declare a test after about eight weeks of record.
+
 ## The company file (2026-11-26; `docs/FILE.md`)
 
 - `python -m brain file TICKER` (`brain/file.py`, about 20 s a company): eight sections on one page: what it is;

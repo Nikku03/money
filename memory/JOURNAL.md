@@ -229,4 +229,11 @@ FAIL); "the market runs on chains of cause and effect, news and catalysts": the 
   judged after. Recorded nine companies reporting Dec 1-9.
 - `expect radar --confirmed` found no calendar for the week of Nov 30 this morning; report dates came from the
   Stocklake connector's earnings calendar (free tier: five companies a call).
+- Evening: "is it better than an analyst?" Answered from the trial (closer in 62% of 214 quarters, not a test, the
+  live record empty) and that it is not better on the stock. "ok, track it and tell me after the reports": ten
+  more lines recorded (RBRK, MRVL, NCNO, CRDO, ASAN, CRM, CXM, SIG, VSXY, PATH; 19 in all); IOT timed out; ADBE,
+  PL, JBL, MU and IOT on Nov 28; readouts scheduled for Dec 4, 11 and 18.
+- Asked to track employees' LinkedIn, Twitter and Reddit: declined following people, offered company-level reading;
+  built the Reddit reader (`brain/reddit.py`, docs/REDDIT.md, CLAUDE.md item 20). Reddit refused the person's new
+  app ("Max clients have been reached"); no key yet.
 
