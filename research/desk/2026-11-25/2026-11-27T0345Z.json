@@ -1,0 +1,176 @@
+{
+ "asof": "2026-11-25",
+ "at": "2026-11-27T03:45:59Z",
+ "calls": [],
+ "case_sha": "868d6368f7db8823",
+ "check": "2026-11-27T0345Z",
+ "claims_noted": 1,
+ "evidence": {
+  "c1": {
+   "text": "movers tied together: VRTX, VERA (VERA~VRTX by s2; VERA~VRTX by s4)"
+  },
+  "d:bitcoin": {
+   "text": "bitcoin +1.7% since the close (its usual day: 2.7%)"
+  },
+  "d:gold": {
+   "text": "gold +2.4% since the close (its usual day: 1.8%)"
+  },
+  "d:oil": {
+   "text": "oil +0.9% since the close (its usual day: 3.7%)"
+  },
+  "k": {
+   "text": "Market: S&P 500 (SPY) +0.5%, Nasdaq 100 (QQQ) +0.4%, Russell 2000 (IWM) +0.5%, S&P 500 futures +0.7%, VIX -5.3% (after the close)"
+  },
+  "m:KNTK": {
+   "text": "KNTK (Kinetik Holdings Inc.; Natural Gas Transmission) +7.1% since the close (after the close), outside its 2-in-3 range (-4%..+5%)"
+  },
+  "m:VERA": {
+   "text": "VERA (Vera Therapeutics, Inc.; Pharmaceutical Preparations) +16.7% since the close (after the close), outside its 2-in-3 range (-8%..+10%)"
+  },
+  "m:VRTX": {
+   "text": "VRTX (VERTEX PHARMACEUTICALS INC / MA; Pharmaceutical Preparations) -7.3% since the close (after the close), outside its 2-in-3 range (-4%..+5%)"
+  },
+  "n:KNTK": {
+   "text": "KNTK accounts: market value $4.4 bn; cash and equivalents $7.0 m (2026-09-30; investments not counted); long-term debt $3.7 bn (2026-09-30); revenue $2.0 bn over the four quarters to 2026-09-30; net income $213.2 m over the four quarters to 2026-09-30"
+  },
+  "p:KNTK~ET": {
+   "text": "KNTK and ET: market-adjusted daily returns correlated 0.62 over the last 250 sessions; ET +0.0% since the close"
+  },
+  "p:KNTK~OKE": {
+   "text": "KNTK and OKE: market-adjusted daily returns correlated 0.71 over the last 250 sessions; OKE -0.4% since the close"
+  },
+  "p:KNTK~TRGP": {
+   "text": "KNTK and TRGP: market-adjusted daily returns correlated 0.71 over the last 250 sessions; TRGP -3.3% since the close"
+  },
+  "p:KNTK~WMB": {
+   "text": "KNTK and WMB: market-adjusted daily returns correlated 0.62 over the last 250 sessions; WMB +0.0% since the close"
+  },
+  "s1": {
+   "text": "2026-11-26T20:36Z finance.yahoo.com: Vertex Pharmaceuticals Incorporated (VRTX) CF Dominance and Pipeline Strengthen Investment Outlook -- We just published our list, 10 Best Healthcare Stocks To Buy for 2027, and Vertex Pharmaceuticals Incorporated ranked 9th on this list. The healthcare sector is emerging as an attractive investment opportunity heading into 2027, supported by rising demand for medical services, pharmaceutical innovation, and advances in biotechnology. Growing investment in tre",
+   "url": "https://finance.yahoo.com/healthcare/articles/vertex-pharmaceuticals-incorporated-vrtx-cf-203631967.html?.tsrc=rss"
+  },
+  "s2": {
+   "text": "2026-11-26T14:15Z finance.yahoo.com: VRTX Down as FDA Extends Review Timeline for Povetacicept BLA -- Vertex shares fell 7.3% after the FDA extended its povetacicept review by three months, delaying a key approval decision to February 2027.",
+   "url": "https://finance.yahoo.com/healthcare/articles/vrtx-down-fda-extends-review-141500196.html?.tsrc=rss"
+  },
+  "s4": {
+   "text": "2026-11-25T22:34Z stocktwits.com: VRTX Tumbles After-Hours As FDA Delays Kidney Drug Decision; Rival VERA Surges -- Vertex said the FDA informed it on Tuesday that the deadline for deciding on its application seeking approval for its drug povetacicept in IgA nephropathy would be extended by up to three months.",
+   "url": "https://stocktwits.com/news-articles/markets/equity/vrtx-tumbles-after-hours-as-fda-delays-kidney-drug-decision-rival-vera-surges/cNbHueUR9mU?.tsrc=rss"
+  },
+  "s5": {
+   "text": "2026-11-26T17:42Z 247wallst.com: Targa Resources Is Reportedly Eyeing Kinetik as Data Centers Drive Gas Demand -- Kinetik jumped after hours while its rumored buyer slipped, and the market's split verdict says plenty about who pays for a deal. Two private-equity owners, two failed sale attempts, and one date to watch could decide whether this talk turns real.",
+   "url": "https://247wallst.com/investing/2026/11/26/targa-resources-is-reportedly-eyeing-kinetik-as-data-centers-drive-gas-demand/?.tsrc=rss"
+  },
+  "s6": {
+   "text": "2026-11-26T12:22Z 247wallst.com: Vera Therapeutics Stock Soars After Hours as the FDA Delays Vertex\u2019s Rival Kidney Drug -- A regulatory delay handed Vera Therapeutics a three-month head start on a $143 billion rival, and traders rushed in. But the bigger threat to Vera's drug has nothing to do with the calendar, and one February deadline could undo the rally.",
+   "url": "https://247wallst.com/investing/2026/11/26/vera-therapeutics-stock-soars-after-hours-as-the-fda-delays-vertexs-rival-kidney-drug/?.tsrc=rss"
+  },
+  "t1": {
+   "text": "the last note (2026-11-26T1736Z), theme 'A kidney-drug decision is put back three months': Unchanged (t1): the FDA's target date for Vertex's povetacicept moved from Nov 30, 2026 to no later than Feb 28, 2027; Vertex -7.3% and Vera +16.7% in Wednesday's late session, and neither has traded since (s3, s4). One more account came at 14:15Z (s1)."
+  },
+  "x:KNTK": {
+   "text": "KNTK: the market carried +0.0% (beta 0.02); 10-year yield carried +0.0% (+13.42% per point, t 4.9); its industry (Natural Gas Transmission, 11 stocks) moved +0.0%; left over after the market and its drivers +7.1%"
+  }
+ },
+ "note": {
+  "backdrop": "There was no session on Thursday: US stock markets were closed for Thanksgiving, so Wednesday's scan is still the latest and no stock has traded since Wednesday's late session. S&P 500 futures are +0.7% against Wednesday's close (k); gold is +2.4% since the close, more than its usual day of 1.8% (d:gold); oil +0.9%, bitcoin +1.7% (d:oil, d:bitcoin). One stock of 2,453 is outside its 9-in-10 range and seven are outside their 2-in-3 range, as before. Markets reopen on Friday for a half day that closes at 1 p.m. ET.",
+  "backdrop_evidence": [
+   "k",
+   "d:gold",
+   "d:oil",
+   "d:bitcoin"
+  ],
+  "by": "agent",
+  "calls": [],
+  "check": "2026-11-27T0345Z",
+  "read": [
+   {
+    "direction": "none",
+    "published": "2026-11-26T17:42:26Z",
+    "says": "Bloomberg News reported that Targa Resources is in talks to buy Kinetik and that a deal could come as soon as next week; nothing is signed and no price is reported. Kinetik closed at $54.70 on Wednesday and traded at $58.85 at 7:56 p.m. ET (+7.59%), just under its 52-week high of $58.90; Targa closed at $285.53 and traded at $280.48 (-1.77%). Blackstone holds about 48% of Kinetik and I Squared Capital about 19%. Kinetik is valued at about $9 billion against Targa's $61.24 billion; Kinetik owes $3.95 billion and Targa $19.8 billion. Kinetik was reported to weigh a sale in February and in September. On Nov 5 its management called asset prices less attractive than building its own plants. Kinetik is up 62% this year.",
+    "ticker": "KNTK",
+    "tier": "reported",
+    "url": "https://247wallst.com/investing/2026/11/26/targa-resources-is-reportedly-eyeing-kinetik-as-data-centers-drive-gas-demand/"
+   }
+  ],
+  "singles": [],
+  "themes": [
+   {
+    "beneath": "The jump is small for a takeover. Kinetik traded about 7% above its close, just under its 52-week high (s5). My inference: either the market gives the talks modest odds, or it expects a small premium, because the price already holds two earlier sale reports this year (February and September) and a 62% rise (s5). Two owners hold about two thirds of Kinetik and can refuse a low price (s5). Against that, Kinetik's own management said three weeks ago that buying assets looked less attractive than building (s5). A note on size: the case file's $4.4 bn market value counts only the listed share class; the report values the company at about $9 billion (n:KNTK, s5). Last night's note pointed at Targa from the prices alone; the report now names it.",
+    "cause": "Bloomberg News reported that Targa Resources is in talks to buy Kinetik, with a deal possible as soon as next week; nothing is signed and no price is known (s5). That is the news behind Kinetik's +7.1% in Wednesday's late session, which the last three notes listed as unexplained, and behind Targa's -3.3% at the same time (m:KNTK, p:KNTK~TRGP).",
+    "evidence": [
+     "s5",
+     "m:KNTK",
+     "x:KNTK",
+     "n:KNTK",
+     "p:KNTK~TRGP",
+     "p:KNTK~OKE",
+     "p:KNTK~WMB",
+     "p:KNTK~ET",
+     "https://247wallst.com/investing/2026/11/26/targa-resources-is-reportedly-eyeing-kinetik-as-data-centers-drive-gas-demand/"
+    ],
+    "kind": "reported",
+    "mechanism": "A target rises toward the price a buyer may pay; the buyer falls because it may overpay or pay in new shares (s5). Kinetik's move is its own: the market and its drivers carried none of it (x:KNTK). The other pipeline companies it moves with did not follow: ONEOK -0.4%, Williams and Energy Transfer flat (p:KNTK~OKE, p:KNTK~WMB, p:KNTK~ET).",
+    "members": [
+     "KNTK",
+     "TRGP"
+    ],
+    "name": "A buyer for Kinetik is reported",
+    "read_through": [],
+    "watch": "A signed merger agreement in an 8-K (the report says as soon as next week), or a denial. Friday's half session: whether Kinetik holds near $58.85 and Targa near $280 on regular volume."
+   },
+   {
+    "beneath": "Nothing new is reported on what the FDA asked for (s2, s6).",
+    "cause": "Unchanged (t1): Vertex -7.3% and Vera +16.7% from Wednesday's late session, neither traded since (s4). The only new item is a list article that adds no fact (s1).",
+    "evidence": [
+     "t1",
+     "s1",
+     "s2",
+     "s4",
+     "s6",
+     "c1",
+     "m:VRTX",
+     "m:VERA"
+    ],
+    "kind": "reported",
+    "mechanism": "As in the last note: the delay moved the one company whose drug works the way Vertex's does (t1, s2).",
+    "members": [
+     "VRTX",
+     "VERA"
+    ],
+    "name": "A kidney-drug decision is put back three months",
+    "read_through": [],
+    "watch": "Friday's half session: whether the late-session moves hold on regular volume."
+   }
+  ],
+  "threads": [
+   "Kinetik and Targa: a signed agreement in an 8-K as soon as next week, or a denial. Friday: Kinetik against $54.70 (Wednesday's close) and $58.85 (late trade); Targa against $285.53.",
+   "Friday Nov 27: a half day, closing at 1 p.m. ET. Do Vertex (-7.3%) and Vera (+16.7%) hold? Do the single-trade moves in AvePoint, Lamar and American Coastal vanish at the open?",
+   "Gold +2.4% since Wednesday's close with US stocks shut: what is behind it, and do gold miners follow on Friday?",
+   "Nvidia: S&P Global Ratings' watch on its credit rating; Friday against $125.53 and $165.05.",
+   "Kymera 63a7bc55: judged at Friday's 1 p.m. close.",
+   "Deere's forward card DE-2026-11-25: judged when its week closes.",
+   "Vertex: the FDA's decision on povetacicept is due by Feb 28, 2027.",
+   "Tariff proposals: comments due Jan 5, 2027, hearings from Jan 25."
+  ],
+  "unexplained": [
+   {
+    "t": "AVPT",
+    "tried": "Unchanged: -9.8% on one late trade on Wednesday, outside its 9-in-10 range; no filing and no story since (m:AVPT)."
+   },
+   {
+    "t": "LAMR",
+    "tried": "Unchanged: -6.3% on one late trade; no filing, no story (m:LAMR)."
+   },
+   {
+    "t": "ACIC",
+    "tried": "Unchanged: -5.7% on one late trade; no filing, no story (m:ACIC)."
+   },
+   {
+    "t": "SVC",
+    "tried": "Unchanged: -9.3% in the late session, inside its 9-in-10 range; no filing, no story (m:SVC)."
+   }
+  ]
+ },
+ "recorded_at": "2026-11-27T03:49:40Z"
+}
