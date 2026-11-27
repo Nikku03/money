@@ -138,8 +138,15 @@ idea at a time, checked against the memory bank first.
   DELL 9.5%+ (0.40). `desk score`.
 - Mosaic calls (`research/mosaic_calls.jsonl`): 75, the top 25 of each picture at the close of 2026-11-13, judged
   after 20 sessions (mid-December). `mosaic score`.
-- Against the analysts (`research/against_calls.jsonl`): 9 lines recorded 2026-11-27 for reports of Dec 1-9.
-  `against score` after `promises build`.
+- Against the analysts (`research/against_calls.jsonl`): the person asked 2026-11-27 "ok, track it and tell me
+  after the reports". 9 lines recorded 2026-11-27 morning (BOX, OKTA, NTAP, ZS, FIVE, VEEV, LULU, AVGO, PLAB), more
+  that evening and on Nov 28 (reporters Nov 30-Dec 17 with an open promise and a habit). Scheduled tasks fire into
+  this session: `trig_01UaQT7NqEhRekAZsLthoGKc` Nov 28 15:07Z (fetch and record ADBE, PL, JBL, MU and any missed);
+  readouts `trig_01KqTfqo9a7BV2DbiGyYn4K1` Dec 4 21:47Z, `trig_017xyVhRi6R3VesPZshHrHwM` Dec 11 21:47Z,
+  `trig_01XPfpqjAH9qnMberV6vTmEM` Dec 18 21:47Z. Judging needs the quarter's accounts in the bank: `brain ingest T
+  --skip filings news prices` per ticker, then `promises build` with NO tickers (with tickers it overwrites the
+  library), then `against score`. Accounts reach the bank 0-15 days after a release; until then compare with the
+  release's revenue by hand, labelled.
 - S1 calls (`research/s1_calls.jsonl`, 27), predictions (`research/predictions.jsonl`, 31), M1 calls (99).
 
 ## The neuron ladder (2026-11-20, at the person's request; `docs/NEURONS.md`)
