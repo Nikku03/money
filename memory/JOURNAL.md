@@ -213,3 +213,20 @@ FAIL); "the market runs on chains of cause and effect, news and catalysts": the 
   once: G2a PASS (the habit again, 11 of 11 seasons), G2b, G2c and G2d FAIL. The stock after a release follows
   neither the delivery nor a changed year's promise.
 
+## 2026-11-27: "ahead of everyone, opportunistic and accurate"
+
+- The person asked for it to be ahead of everyone, opportunistic and accurate. Looked for what the engine lacked
+  (what the market expects) and found the Alpha Vantage connector serves analysts' revenue estimates back to 2017
+  on a free key (25 requests a day). A subagent fetched ten companies into `var/consensus/full`; Box by hand.
+- Trial on 11 companies, 214 quarters to 2023: analysts repeat the company's midpoint (+0.21% above it); the
+  habit's guess of revenue was closer than theirs in 62% of quarters (miss 1.36% against 1.88%). The stock did not
+  rise more where the habit foresaw a larger beat: the price already expects the habit.
+- Looked on 2011-2023 for what warns that a company will break its habit (twelve things). The stock's own run
+  before the report does (+0.15) and says nothing about the report session: the price knows. One lead on the
+  session, the stretch of the promise (+0.061, t +4.2). Declared it as G3a, committed, ran it once on 2024-2026:
+  +0.038, 8 of 11 seasons, p 0.115. FAIL, recorded. 71 verdicts, 11 PASS.
+- Built `brain/against.py` (7 tests): the habit's guess beside the analysts' estimate, written before a report and
+  judged after. Recorded nine companies reporting Dec 1-9.
+- `expect radar --confirmed` found no calendar for the week of Nov 30 this morning; report dates came from the
+  Stocklake connector's earnings calendar (free tier: five companies a call).
+

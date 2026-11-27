@@ -455,13 +455,13 @@ def expected(rows: list[dict], asof: str) -> dict | None:
 
 
 def verdicts() -> dict[str, str]:
-    """The recorded verdicts of the declared tests G1a and G2a-G2d ("not run" when absent)."""
+    """The recorded verdicts of the declared tests G1a, G2a-G2d and G3a ("not run" when absent)."""
     try:
         from brain.research import run
         v = {r["id"]: r["verdict"].split(":")[0] for r in run.verdicts() if r.get("kind") == "promise"}
     except Exception:  # noqa: BLE001 - a card without verdicts says so
         v = {}
-    return {t: v.get(t, "not run") for t in ("G1a", "G2a", "G2b", "G2c", "G2d")}
+    return {t: v.get(t, "not run") for t in ("G1a", "G2a", "G2b", "G2c", "G2d", "G3a")}
 
 
 def after_close(known_at: str, asof: str) -> bool:
@@ -588,8 +588,9 @@ def render(ticker: str, rows: list[dict], asof: str) -> list[str]:
     L.append(f"  Tests (research/RESULTS.md): the habit carries to the next delivery, G1a {v['G1a']} on the research "
              f"universe and G2a {v['G2a']} on smaller and newer companies. Beyond the habit, a promise that asks for "
              f"more is beaten by more: G2b {v['G2b']}. The stock's next five sessions follow the delivery (G2c "
-             f"{v['G2c']}) or the change in the year's promise (G2d {v['G2d']}). A delivery is not a direction for "
-             f"the stock (docs/PROMISES.md).")
+             f"{v['G2c']}) or the change in the year's promise (G2d {v['G2d']}). A promise that asks for more is "
+             f"followed by a better report session three months on: G3a {v['G3a']}. A delivery is not a direction "
+             f"for the stock, and neither is what a promise asks for (docs/PROMISES.md).")
     return L
 
 

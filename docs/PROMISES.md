@@ -14,6 +14,8 @@ python -m brain promises build            # the library, from the bank (var/prom
 python -m brain promises show NVDA AMBA   # a company's card
 python -m brain promisetest declare|test  # the declared tests G1a, G1b (the research universe)
 python -m brain promisetest2 declare|test # G2a-G2d (the small, micro and newer-listing universes)
+python -m brain promisetest3 declare|test # G3a (what a promise asks for, against the report day that delivers it)
+python -m brain against add|show|score   # the habit's guess against the analysts', recorded before a report
 ```
 
 ## The promise (`brain/promises.py`)
@@ -207,6 +209,83 @@ a release.
   the market (49% rose), after a cut -0.92% (44% rose), held -0.57%: the order is as expected and too weak to
   pass. A release is priced on its session (G1b). Do not present a raise, a cut or a beat as a direction for the
   days after.
+
+## What warns of a broken habit: G3a (`brain/research/promisetest3.py`)
+
+Asked for on 2026-11-27: "i want it to be ahead of everyone and not just ahead, but opportunistic and accurate".
+G1b had said why a stock moves on the day it reports: the delivery against the habit, and the change in the year's
+promise. To be ahead, something known before the report has to say whether the company will deliver more or less
+than its habit. Twelve things known beforehand were held against that, and against the report session itself, on
+report sessions of 2011-2023 only (`research/promises/explore_break_train.py` and its log; 5,101 deliveries of 486
+companies of the four universes, 3,668 with a habit):
+
+| Known before the report | against the delivery beyond the habit | against the report session |
+|---|---|---|
+| the stock's run over the 63 sessions before | +0.152 (t +7.0) | +0.031 |
+| the stock's run over the 21 sessions before | +0.116 (t +6.4) | +0.013 |
+| the stock's run over the 5 sessions before | +0.095 (t +4.3) | -0.019 |
+| the stretch of the promise | +0.133 (t +5.0) | **+0.061 (t +4.2, 33 of 47 seasons)** |
+| its last break (the delivery before, less the habit then) | +0.095 (t +3.2) | -0.020 |
+| the 21 sessions after its last report | +0.065 (t +2.9) | +0.023 |
+| the width of the promised range | +0.028 | -0.034 (t -2.1) |
+| the change in the year's promise | +0.038 | -0.022 |
+| the season so far, in its industry | -0.000 | -0.011 |
+
+- **The price knows.** A stock that has run up before its report then delivers more than its habit, and one that
+  has fallen delivers less: the market is ahead of the report. And the run says nothing about the session, because
+  it is already in the price.
+- The season so far (companies that reported earlier) follows the season's mood across seasons (the third of
+  deliveries after the best seasons so far came in +0.22% beyond the habit, after the worst -0.75%) and the session
+  did not follow (+0.41% against +0.40%): priced as well.
+- One thing said something about the session: the stretch. Looked at closely (`explore_stretch_train.py`): both
+  halves (+0.070, +0.050), each universe (+0.049, +0.081, +0.057), with the run held apart; the third of promises
+  asking for least was followed by a report session of -0.19% (48% rose), the third asking for most by +0.82% (52%
+  rose). Declared as G3a on that.
+
+**Run once on 2026-11-27** (`research/RESULTS.md`), report sessions of 2024-01..2026-09, the four universes:
+
+| Test | 2024-01..2026-09 | p | BH q | Verdict |
+|---|---|---|---|---|
+| G3a a promise that asks for more is followed by a better report session | +0.038, positive in 8 of 11 seasons, 2,352 promised quarters of 374 companies | 0.115 | 0.31 | **FAIL** |
+
+- The sign held and the size fell by a third: the third asking for least -0.57% (46% rose), the middle +1.20%
+  (52%), the third asking for most +0.90% (49%). Not a finding. Do not present what a promise asks for as a
+  direction for its report day.
+
+## Against the analysts (`brain/against.py`)
+
+What the engine lacked was what the market expects. The Alpha Vantage connector gives analysts' revenue estimates
+per fiscal quarter back to 2017 (its key is a free one: 25 requests a day). A trial on eleven companies with long
+promise records, quarters ending by 2023 (`research/promises/trial_analysts_train.py` and its log; the estimates
+stay outside git in `var/consensus`):
+
+| 214 quarters of 11 companies, 2017-2023 | |
+|---|---|
+| the analysts' estimate against the company's midpoint (median) | +0.21% |
+| the habit, against the midpoint (median) | +2.12% |
+| revenue beat the analysts | 81% of quarters |
+| median miss: the midpoint, the analysts, the midpoint moved by the habit | 2.48%, 1.88%, 1.36% |
+| the habit's guess closer than the analysts' | 62% of quarters (8 of 11 companies at or above half) |
+| the report session, with the delivery against the habit | +0.31 |
+| the report session, with the beat against the analysts | +0.28 |
+| the report session, with the beat the habit foresaw | -0.07 (larger foreseen beat: +0.04%, 47% rose; smaller: +1.77%, 64% rose) |
+
+- Analysts mostly repeat the company's own number. The habit says how much the company usually beats it, so the
+  engine's guess of the revenue was the closer one. The engine's guess was fixed three months earlier than the
+  analysts' last estimate.
+- The stock already expects the habit: the session followed the delivery against the habit a little better than
+  the beat against the analysts, and a beat the habit foresaw brought nothing. Ahead of the published estimate is
+  not ahead of the price.
+- Eleven companies is a trial, not a test, and nothing here was declared. It needs a data key without the daily
+  limit to become one.
+
+**The forward record.** `python -m brain against add TICKER --analysts X --report YYYY-MM-DD [--n N] [--source S]`
+writes, before a report, where the habit puts the delivery, its two ranges and the analysts' estimate the agent
+read, to `research/against_calls.jsonl`. It is refused once the report date has come. `against show` lists the
+lines still waiting; `against score` (after `promises build`) says who was closer, counting only lines written
+before the release that delivered the quarter became known, and says nothing under 30 judged lines. Nine
+companies reporting from 2026-12-01 to 2026-12-09 were recorded on 2026-11-27. It is about what a company
+delivers, not a direction.
 
 ## The card and the desk
 

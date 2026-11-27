@@ -84,6 +84,12 @@ Updated 2026-11-16 (three sessions in the memory bank; the diagnosis; step 2 tes
 - **FAIL (every direction test):** H1-H8 (momentum, value, insider buying, earnings surprise), L1 (cause → effect
   links next month), E1/E2 (news drift), S2a/S2b (fade after a jump), S3a (calibration), P1b-P3b (mosaic-flagged
   stocks did not lag). No test of which way a stock goes has passed.
+- **FAIL (2026-11-26/27), more direction tests:** C1a, C1b (a customer's results and its supplier's stock),
+  G2c, G2d (the week after a release), G3a (what a promise asks for, against the report day that delivers it:
+  +0.038 on 2024-2026, p 0.115). 71 verdicts in the ledger, 11 PASS.
+- **The price knows (2011-2023, not declared):** before a report the stock's own run says how the delivery
+  will come against the habit (+0.15) and says nothing about the report session. The market is ahead of the
+  report; what is public is in the price.
 - **Exploratory, not declared:** partners' results and late reports say almost nothing about a stock's own report
   (`research/MOSAIC-2026-11.md`); smart-money footprints (politicians, 13D copying, volume) did not pay
   (`research/HISTORY-SMART-MONEY-2026-11.md`, `research/PRECURSORS-2026-11.md`); dynamic trading and trading less
@@ -132,6 +138,8 @@ idea at a time, checked against the memory bank first.
   DELL 9.5%+ (0.40). `desk score`.
 - Mosaic calls (`research/mosaic_calls.jsonl`): 75, the top 25 of each picture at the close of 2026-11-13, judged
   after 20 sessions (mid-December). `mosaic score`.
+- Against the analysts (`research/against_calls.jsonl`): 9 lines recorded 2026-11-27 for reports of Dec 1-9.
+  `against score` after `promises build`.
 - S1 calls (`research/s1_calls.jsonl`, 27), predictions (`research/predictions.jsonl`, 31), M1 calls (99).
 
 ## The neuron ladder (2026-11-20, at the person's request; `docs/NEURONS.md`)
@@ -233,6 +241,36 @@ idea at a time, checked against the memory bank first.
 - The desk's case file now carries `[g:TICKER]` for a reporting mover (first live use: the next check with
   reporters). `promisetest` does not pin `research/run.py`.
 
+## Ahead of whom? Analysts, the price, and G3a (2026-11-27; `docs/PROMISES.md`)
+
+The person, 2026-11-27: "i want it to be ahead of everyone and not just ahead, but oppotunistic and accurate".
+
+- **Against the analysts (a trial, not a test).** The Alpha Vantage connector's `EARNINGS_ESTIMATES` gives
+  analysts' revenue and EPS estimates per fiscal quarter back to 2017 (a free key: 25 requests a day, one a
+  second; each answer is about 12,000 tokens, so fetch through a fresh subagent that writes
+  `var/consensus/full/TICKER.json`). On 11 companies and 214 quarters ending by 2023: analysts sit +0.21% above
+  the company's midpoint (they repeat it), the habit says +2.12%, revenue beat the analysts in 81%; median miss
+  1.88% for the analysts against 1.36% for the midpoint moved by the habit; the habit's guess was closer in 62%.
+  The report session followed the delivery against the habit (+0.31) a little better than the beat against the
+  analysts (+0.28), and a beat the habit foresaw brought nothing (-0.07). Ahead of the analysts is not ahead of
+  the price. `research/promises/trial_analysts_train.py`.
+- **What warns of a broken habit (2011-2023, `research/promises/explore_break_train.py`).** Twelve things known
+  before a report. The stock's run says how the delivery comes against the habit and nothing about the session
+  (priced). The season so far: priced. One lead on the session: the stretch (+0.061, t +4.2).
+- **G3a FAIL (declared and run 2026-11-27, `brain/research/promisetest3.py`).** The stretch against the report
+  session that delivers the promise, the four universes, 2024-01..2026-09: +0.038, 8 of 11 seasons, p 0.115,
+  q 0.31. The third asking for least -0.57% (46% rose), the middle +1.20%, the most +0.90%. Not a finding.
+- **The forward record (`brain/against.py`, `research/against_calls.jsonl`).** `against add TICKER --analysts X
+  --report D` before a report; `against score` after `promises build`; under 30 judged lines it says nothing.
+  Recorded 2026-11-27: BOX, OKTA, NTAP (Dec 1), ZS, FIVE (Dec 2), VEEV (Dec 3), LULU (Dec 8), AVGO, PLAB (Dec 9).
+  OXM and ZUMZ had no report date yet; their estimates are in `var/consensus/full`. Each week: fetch the
+  estimates of the companies about to report that have an open promise and a habit, and record them.
+- **What I told the person:** ahead of the news and of the price: no test supports it; ahead of the analysts'
+  published number on what a company delivers: the trial says yes; accurate: the sizes are (the ranges hold their
+  odds), my direction calls are a coin flip (13 of 25); opportunistic means speaking only when a tested piece
+  says something rare and staying silent otherwise. What would move it: a data key without the daily limit
+  (analysts' estimates and option prices for every company), and time for the forward records.
+
 ## The company file (2026-11-26; `docs/FILE.md`)
 
 - `python -m brain file TICKER` (`brain/file.py`, about 20 s a company): eight sections on one page: what it is;
@@ -286,6 +324,9 @@ idea at a time, checked against the memory bank first.
   broke when the earnings kind was added, so they would be refused at judgment; the restart loses 3 recorded
   sessions. (2) Which companies does the person care about most (a short list for deep files)? (3) Can they get a
   data key for analyst forecasts and option prices?
+  Said again 2026-11-27: the attached Alpha Vantage connector works for analysts' estimates but its key is a
+  free one (25 requests a day); a paid plan on that same connector, or a key saved in the environment's
+  settings (never pasted into the chat), would let the trial become a test on every company.
 
 - Asked 2026-11-14: add `mosaic read` and `mosaic radar --record` to the after-close check? (Without it the
   mosaic's prospectuses and accounts go stale.)
