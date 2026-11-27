@@ -1,0 +1,716 @@
+{
+ "check": "2026-11-27T1737Z",
+ "asof": "2026-11-25",
+ "built_at": "2026-11-27T17:41:14Z",
+ "weights": {
+  "surprise": 0.25,
+  "unexplained": 0.2,
+  "news": 0.15,
+  "reach": 0.1,
+  "against": 0.1,
+  "memory": 0.1,
+  "fragile": 0.1
+ },
+ "temp": 0.12,
+ "candidates": 27,
+ "focus": [
+  {
+   "t": "KNTK",
+   "company": "Kinetik Holdings Inc.",
+   "move": 0.09360143695105627,
+   "z": 4.659073739469529,
+   "wave": 0.0,
+   "mover": true,
+   "score": 0.5144876439646561,
+   "parts": {
+    "surprise": 0.381,
+    "unexplained": 0.871,
+    "news": 0.3,
+    "reach": 1.0,
+    "against": 0.0,
+    "memory": 1.0,
+    "fragile": 0.0
+   },
+   "reasons": [
+    "outside its 9-in-10 range",
+    "most of the move is its own",
+    "2 stories name it",
+    "51 stocks moved closely with it over the year",
+    "in the last note's theme 'A buyer for Kinetik is reported'"
+   ],
+   "attention": 0.17939546614563343,
+   "bars": 36,
+   "filings": [],
+   "pages": [
+    {
+     "url": "https://finance.yahoo.com/markets/stocks/articles/why-kinetik-kntk-stock-7-150019677.html?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-27T15:00:19Z",
+     "key": [
+      "Kinetik (KNTK) stock is up 7.5% today, as of 10:00 a.m.",
+      "KNTK GF Value chart KNTK: $58.81 +7.5% as of 10:00 a.m.",
+      "ET +7.5% S&P 500 at the same time +0.7% Typical daily move (past year) 1.3% Times its typical move 6x Last gain this big +8.0% on Feb. 26, 2026 (Earnings results (Q4 FY2025)) What moved Kinetik stock before?",
+      "Company Move WMB Williams Companies +1.1% EPD Enterprise Products Partners +0.7% KMI Kinder Morgan +1.5% LNG Cheniere Energy +1.3% TRGP Targa Resources -1.4% MPLX MPLX +1.6% What does Kinetik do?",
+      "Kinetik has trailing 12-month revenue of $1.96 billion and a market value of $4.85 billion.",
+      "KNTK at a glance Measure Value Price $58.81 Market cap $4.85 billion Revenue (trailing 12 months) $1.96 billion P/E 19.6 GF Score 84/100 GF Value $45.39 GF Valuation Modestly Overvalued See all of KNTKs numbers, updated live, on its Summary page Is Kinetik stock overvalued?"
+     ],
+     "text": "Oops, something went wrong Skip to navigation Skip to main content Skip to right column Sign in U.S. markets close in 22m US Markets Europe Markets Asia Markets Cryptocurrencies Rates Commodities Currencies U.S. markets close in 22m S&P 500 7,282.47 +99.69 +1.39% Dow 30 50,761.23 +578.28 +1.15% Nasdaq 24,024.40 +438.59 +1.86% Russell 2000 2,745.88 +41.82 +1.55% 10-Yr Bond 4.9340 +0.0860 +1.77% VIX 24.57 -2.23 -8.32% Gold 3,664.30 +99.70 +2.80% Bitcoin USD 59,631.96 -823.45 -1.36% Crude Oil Jan 27 82.71 -0.97 -1.16% US Private Equity 10,606.85 0.00 0.00% ADVERTISEMENT Why Kinetik (KNTK) Stock Is Up 7.5% Today: Targa Acquisition Interest GuruFocus News Fri, November 27, 2026 at 7:00 AM PST 3 min read KNTK +9.27% TRGP -1.75% ^GSPC +1.41% This article first appeared on GuruFocus. Kinetik (KNTK) stock is up 7.5% today, as of 10:00 a.m. ET on Friday, Nov. 27, as shares rallied on potential acquisition interest from Targa Resources, according to GuruFocus. The shares were priced at $58.81, while the S&P 500 rose 0.7%. GuruFocus reported the rally on the potential interest, and Targa Resources Corp. (TRGP) fell 1.4% today. Warning! GuruFocus has detected 15 Warning Signs with KNTK. Is KNTK fairly valued? Test your thesis with our free DCF calculator. KNTK GF Value chart KNTK: $58.81 +7.5% as of 10:00 a.m. ET GF Score 84/100 GF Valuation: Modestly Overvalued See KNTK's live quote, price chart and GF Value on its Summary page ? Track how KNTK trades the rest of the day, and where it stands against its GF Value, on the KNTK Summary page. Why is Kinetik stock up today? According to GuruFocus, Kinetik shares rallied on potential acquisition interest from Targa Resources. Targa Resources Corp. (TRGP), a peer, fell 1.4% over the same period. Kinetik Holdings (NYSE:KNTK) Shares Rally on Potential Targa Resources Acquisition Interest How unusual is this move for Kinetik? The 7.5% move is 6 times the stock's typical daily move of 1.3%. Its last move this big was an 8.0% jump on Feb. 26, 2026, on earnings for Q4 FY2025. Of its 9 unusual jumps since 2013, 5 had no identified cause, 3 came on earnings and 1 on an analyst upgrade. Measure Value Move as of 10:00 a.m. ET +7.5% S&P 500 at the same time +0.7% Typical daily move (past year) 1.3% Times its typical move 6x Last gain this big +8.0% on Feb. 26, 2026 (Earnings results (Q4 FY2025)) What moved Kinetik stock before? Date Move What happened Nov. 2, 2026 -5.4% Industry-wide move: 14 stocks in its industry fell the same day Feb. 26, 2026 +8.0% Earnings results (Q4 FY2025) Feb. 18, 2026 +8.7% No cause identified Nov. 6, 2025 -8.1% Earnings results (Q3 FY2025) Oct. 22, 2025 +6.7% Wolfe Research upgraded Kinetik Holdings to Outperform from Peer Perform April 21, 2025 -6.7% No cause identified How did Kinetik's peers trade? Company Move WMB Williams Companies +1.1% EPD Enterprise Products Partners +0.7% KMI Kinder Morgan +1.5% LNG Cheniere Energy +1.3% TRGP Targa Resources -1.4% MPLX MPLX +1.6% What does Kinetik do? Kinetik Holdings Inc. is a midstream energy company operating primarily in the Permian Basin of West Texas and southeastern New Mexico. It provides gathering, transportation, compression, processing, and treating services for natural gas, along with natural gas liquids (NGL) stabilization and transportation, produced water gathering and disposal, and crude oil gathering, stabilization, storage, and transportation. Kinetik has trailing 12-month revenue of $1.96 billion and a market value of $4.85 billion. The stock trades at 19.6 times trailing earnings and has a GF Score of 84 out of 100. KNTK at a glance Measure Value Price $58.81 Market cap $4.85 billion Revenue (trailing 12 months) $1.96 billion P/E 19.6 GF Score 84/100 GF Value $45.39 GF Valuation Modestly Overvalued See all of KNTKs numbers, updated live, on its Summary page Is Kinetik stock overvalued? GF Valuation rates Kinetik Modestly Overvalued. At $58.81, the shares trade 29.6% above their GF Value of $45.39, a price-to-GF-Value"
+    },
+    {
+     "url": "https://247wallst.com/investing/2026/11/26/targa-resources-is-reportedly-eyeing-kinetik-as-data-centers-drive-gas-demand/?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-26T17:42:26Z",
+     "key": [
+      "Kinetik's stock gained 62% this year, so a collapse in talks after two earlier sale efforts would likely send shares back toward $55.",
+      "Kinetik closed at $54.70, up 1.50%, then traded at $58.85 at 7:56 p.m.",
+      "Targa closed at $285.53, up 0.83%, before falling to $280.48 after hours, down 1.77%.",
+      "Blackstone holds roughly 48% of Kinetik, and I Squared Capital about 19%, so two private-equity owners seeking an exit control most of the vote and can hold out for a full price.",
+      "Targa produced $1.504 billion of adjusted EBITDA in the same quarter, up 18%, and expects at least $6.0 billion for 2026.",
+      "Kinetik, valued at about $9 billion, would be a meaningful but manageable add to a $61.24 billion company whose Permian Delaware volumes rose 20%[1]."
+     ],
+     "text": "Skip to content Authoritative Financial News \u00b7 Since 2006 AI Investor Podcast Menu \u25cf Markets open At close S&P 5007,288.10+0.89% Dow Jones50,793.40+0.75% Nasdaq 10026,594.40+1.59% Russell 20002,743.53+0.96% S&P 5007,288.10+0.89% Dow Jones50,793.40+0.75% Nasdaq 10026,594.40+1.59% Russell 20002,743.53+0.96% S&P 5007,288.10+0.89% Dow Jones50,793.40+0.75% Nasdaq 10026,594.40+1.59% Russell 20002,743.53+0.96% S&P 5007,288.10+0.89% Dow Jones50,793.40+0.75% Nasdaq 10026,594.40+1.59% Russell 20002,743.53+0.96% S&P 5007,288.10+0.89% Dow Jones50,793.40+0.75% Nasdaq 10026,594.40+1.59% Russell 20002,743.53+0.96% S&P 5007,288.10+0.89% Dow Jones50,793.40+0.75% Nasdaq 10026,594.40+1.59% Russell 20002,743.53+0.96% Investing Targa Resources Is Reportedly Eyeing Kinetik as Data Centers Drive Gas Demand By Omor Ibne Ehsan Published November 26, 2026, 12:42pm ET \u00b7 3 min read \ud835\udd4f f Quick Read Kinetik jumped 8% after hours while Targa slipped 2% on a Bloomberg report that Targa is in talks to acquire the Permian pipeline operator. Blackstone and I Squared Capital control most of Kinetik's vote, so the two private-equity owners seeking an exit can hold out for a full price. Kinetik's stock gained 62% this year, so a collapse in talks after two earlier sale efforts would likely send shares back toward $55. Read: Building a portfolio and living off one are two completely different skills, and almost nobody teaches the second. This problem is what The Definitive Guide to Retirement Income helps with, and it is free today. Read more here. This post may contain links from our sponsors and affiliates, and Flywheel Publishing may receive compensation for actions taken through them. \u00a9 Wikimedia Commons Kinetik (NYSE:KNTK) shares rose in thin after-hours trading on Wednesday, November 25, 2026, after Bloomberg News reported that Targa Resources (NYSE:TRGP | TRGP Price Prediction) is in talks to acquire the Permian Basin pipeline operator backed by Blackstone (NYSE:BX). People familiar with the matter said a deal could come as soon as next week. Kinetik closed at $54.70, up 1.50%, then traded at $58.85 at 7:56 p.m. ET, up 7.59% and just under its 52-week high of $58.90. Targa closed at $285.53, up 0.83%, before falling to $280.48 after hours, down 1.77%. That split is typical, because traders price takeover odds into a target and charge the likely buyer a premium and a possible share issue. Nothing is signed, and no price, structure, or deal value has been reported. U.S. markets are closed November 26 for Thanksgiving and reopen for a half session November 27, so these quotes can change at the open. What Has Been Reported No final decision has been made. Kinetik could stay independent, and another bidder could come out. Kinetik declined to comment, and Blackstone and Targa did not immediately respond. Blackstone holds roughly 48% of Kinetik, and I Squared Capital about 19%, so two private-equity owners seeking an exit control most of the vote and can hold out for a full price. Kinetik reportedly considered a sale in February after an approach from Western Midstream Partners (NYSE:WES). On September 9, 2026, it was reported to be exploring a sale with advisors. What Targa Would Actually Get Kinetik runs more than 4,600 miles of Delaware Basin pipelines. Third-quarter adjusted EBITDA (earnings before interest, taxes, depreciation, and amortization, a rough gauge of cash profit) was $278.1 million on record processed gas volumes of 1.94 Bcf/d (billion cubic feet per day). Targa produced $1.504 billion of adjusted EBITDA in the same quarter, up 18%, and expects at least $6.0 billion for 2026. Kinetik, valued at about $9 billion, would be a meaningful but manageable add to a $61.24 billion company whose Permian Delaware volumes rose 20%[1]. Targa carried $19.8 billion of debt at September 30, while Kinetik owes $3.95 billion at 3.70x leverage, above Targa\u2019s pro forma 3.4x[2]. Paying partly in stock would protect Targa\u2019s balance sheet but dilute its holders, which may"
+    }
+   ],
+   "memory": [
+    {
+     "at": "2026-11-26",
+     "kind": "me",
+     "text": "...surges](https://stocktwits.com/news-articles/markets/equity/vrtx-tumbles-after-hours-as-fda-delays-kidney-drug-decision-rival-vera-surges/cNbHueUR9mU) - [Stocktwits, Sep 9: Why is KNTK stock up 5% after-hours?](https://stocktwits.com/news-articles/markets/equity/why-is-kntk-stock-up-5-after-hours/cZt7lulRJC5)..."
+    }
+   ],
+   "pond": {
+    "wave": 0.0,
+    "own": 4.659073739469529,
+    "how": "a stone: its own news",
+    "from": [],
+    "reaches": [
+     [
+      "TRGP",
+      0.71,
+      -0.01784
+     ],
+     [
+      "OKE",
+      0.71,
+      0.01238
+     ],
+     [
+      "PR",
+      0.63,
+      0.00962
+     ],
+     [
+      "OVV",
+      0.62,
+      0.01016
+     ],
+     [
+      "WMB",
+      0.62,
+      0.01151
+     ]
+    ]
+   }
+  },
+  {
+   "t": "VERA",
+   "company": "Vera Therapeutics, Inc.",
+   "move": 0.1579660965224443,
+   "z": 4.095559038068422,
+   "wave": 0.0,
+   "mover": true,
+   "score": 0.4934920534173752,
+   "parts": {
+    "surprise": 0.253,
+    "unexplained": 0.927,
+    "news": 0.3,
+    "reach": 0.0,
+    "against": 0.0,
+    "memory": 1.0,
+    "fragile": 1.0
+   },
+   "reasons": [
+    "most of the move is its own",
+    "5 stories name it",
+    "in the last note's theme 'A kidney-drug decision is put back three months'",
+    "chance of a sale of new shares 6.7% against 0.9% usually",
+    "cash covers about 0.5 quarters of losses"
+   ],
+   "attention": 0.1506003173232682,
+   "bars": 50,
+   "filings": [],
+   "pages": [
+    {
+     "url": "https://finance.yahoo.com/markets/stocks/articles/vertex-stock-drops-fda-delays-143053529.html?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-27T14:30:53Z",
+     "key": [
+      "Why Vera Therapeutics Is Soaring Nauman Khan Fri, November 27, 2026 at 6:30 AM PST 1 min read VERA +16.15% VRTX -5.96% This article first appeared on GuruFocus.",
+      "Vertex Pharmaceuticals (NASDAQ:VRTX) shares fell about 8% early Friday after the U.S.",
+      "Food and Drug Administration pushed back its decision on a competing kidney disease treatment, giving Vera Therapeutics more time to build its position in the market.",
+      "The FDA moved the review deadline for povetacicept, a treatment for IgA nephropathy, to Feb. 28, 2027, from the previously scheduled Nov. 30 date.",
+      "VRTX GF Value chart The delay changes the near-term competitive outlook for Vertex, which has been developing its position in the IgA nephropathy market.",
+      "On the other hand, Vera Therapeutics (VERA) shares rose about 15% at the same time."
+     ],
+     "text": "Oops, something went wrong Skip to navigation Skip to main content Skip to right column Sign in U.S. markets close in 22m US Markets Europe Markets Asia Markets Cryptocurrencies Rates Commodities Currencies U.S. markets close in 22m S&P 500 7,281.95 +99.17 +1.38% Dow 30 50,758.77 +575.82 +1.15% Nasdaq 24,024.94 +439.13 +1.86% Russell 2000 2,745.77 +41.71 +1.54% 10-Yr Bond 4.9340 +0.0860 +1.77% VIX 24.50 -2.30 -8.56% Gold 3,664.70 +100.10 +2.81% Bitcoin USD 59,579.76 -875.65 -1.45% Crude Oil Jan 27 82.68 -1.00 -1.20% US Private Equity 10,606.85 0.00 0.00% ADVERTISEMENT Vertex Stock Drops After FDA Delays Rival Drug. Why Vera Therapeutics Is Soaring Nauman Khan Fri, November 27, 2026 at 6:30 AM PST 1 min read VERA +16.15% VRTX -5.96% This article first appeared on GuruFocus. Vertex Pharmaceuticals (NASDAQ:VRTX) shares fell about 8% early Friday after the U.S. Food and Drug Administration pushed back its decision on a competing kidney disease treatment, giving Vera Therapeutics more time to build its position in the market. The FDA moved the review deadline for povetacicept, a treatment for IgA nephropathy, to Feb. 28, 2027, from the previously scheduled Nov. 30 date. The agency requested additional information, which the drug's developer has already submitted. Regulators classified the submission as a major amendment, extending the review period by three months. Warning! GuruFocus has detected 7 Warning Signs with VRTX. Is VRTX fairly valued? Test your thesis with our free DCF calculator. VRTX GF Value chart The delay changes the near-term competitive outlook for Vertex, which has been developing its position in the IgA nephropathy market. A later regulatory decision for povetacicept could give competing treatments more time to gain traction. On the other hand, Vera Therapeutics (VERA) shares rose about 15% at the same time. The company received accelerated U.S. approval for Trutakna, also known as atacicept, in July, making the treatment an approved option for patients with IgA nephropathy. Terms and Privacy Policy Your Privacy Choices CA Privacy Notice More Info Recommended Stories Edit your Dock Hang tight, restoring your last session ADVERTISEMENT More News Terms and Privacy Policy Your Privacy Choices CA Privacy Notice Ad Terms Feedback More Info"
+    },
+    {
+     "url": "https://finance.yahoo.com/healthcare/articles/zacks-analyst-blog-highlights-vera-064400990.html?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-27T06:44:00Z",
+     "key": [
+      "Stocks recently featured in the blog include: Vera Therapeutics VERA, BridgeBio Pharma BBIO, Revolution Medicines RVMD, Agios Pharmaceuticals AGIO and Stoke Therapeutics STOK.",
+      "Here are highlights from Thursday's Analyst Blog: 5 Biotech Stocks to Watch as $41B Sanofi/Insmed Deal Revives M&A Hopes Sanofi's agreement to acquire Insmed has renewed investor interest in biotechnology, helping fuel a broader sector rally and speculation about potential takeover targets.",
+      "Sanofi will acquire Insmed for $175 per share in cash, valuing its equity at approximately $41 billion.",
+      "Funded through cash and debt, the transaction is expected to close in the first half of 2027, subject to Insmed shareholder approval, regulatory clearances and other customary conditions.",
+      "Renewed speculation about potential biotech takeovers puts Vera Therapeutics, BridgeBio Pharma, Revolution Medicines, Agios Pharmaceuticals and Stoke Therapeutics on the watchlist.",
+      "All five stocks closed higher on Nov. 24 amid broader biotech strength, with potential takeover interest among several factors that may have supported sentiment."
+     ],
+     "text": "Oops, something went wrong Skip to navigation Skip to main content Skip to right column Sign in U.S. markets close in 22m US Markets Europe Markets Asia Markets Cryptocurrencies Rates Commodities Currencies U.S. markets close in 22m S&P 500 7,281.95 +99.17 +1.38% Dow 30 50,758.77 +575.82 +1.15% Nasdaq 24,024.94 +439.13 +1.86% Russell 2000 2,745.77 +41.71 +1.54% 10-Yr Bond 4.9340 +0.0860 +1.77% VIX 24.50 -2.30 -8.56% Gold 3,664.70 +100.10 +2.81% Bitcoin USD 59,579.76 -875.65 -1.45% Crude Oil Jan 27 82.68 -1.00 -1.20% US Private Equity 10,606.85 0.00 0.00% ADVERTISEMENT The Zacks Analyst Blog Highlights Vera Therapeutics, BridgeBio Pharma, Revolution Medicines, Agios Pharmaceuticals and Stoke Therapeutics Zacks Equity Research Thu, November 26, 2026 at 10:44 PM PST 6 min read BBIO +1.36% VERA +16.00% RVMD -0.53% AGIO +1.05% STOK +3.28% For Immediate Release Chicago, IL \u2013 November 27, 2026 \u2013 Zacks.com announces the list of stocks featured in the Analyst Blog. Every day the Zacks Equity Research analysts discuss the latest news and events impacting stocks and the financial markets. Stocks recently featured in the blog include: Vera Therapeutics VERA, BridgeBio Pharma BBIO, Revolution Medicines RVMD, Agios Pharmaceuticals AGIO and Stoke Therapeutics STOK. Here are highlights from Thursday's Analyst Blog: 5 Biotech Stocks to Watch as $41B Sanofi/Insmed Deal Revives M&A Hopes Sanofi's agreement to acquire Insmed has renewed investor interest in biotechnology, helping fuel a broader sector rally and speculation about potential takeover targets. The deal highlights the strategic value of differentiated medicines and promising pipelines that could strengthen larger drugmakers' growth prospects. It has also brought other biotech companies with established products or advanced drug candidates into focus as potential acquisition opportunities. The agreement marks the biggest pharma and biotech deal of 2026 so far. Sanofi will acquire Insmed for $175 per share in cash, valuing its equity at approximately $41 billion. The acquisition would add Insmed's commercial respiratory medicines Brinsupri and Arikayce, alongside phase III candidate treprostinil palmitil inhalation powder, with potential across multiple rare respiratory diseases to Sanofi's portfolio. Funded through cash and debt, the transaction is expected to close in the first half of 2027, subject to Insmed shareholder approval, regulatory clearances and other customary conditions. Sanofi expects the acquisition to add to business earnings per share by the end of 2028. Renewed speculation about potential biotech takeovers puts Vera Therapeutics, BridgeBio Pharma, Revolution Medicines, Agios Pharmaceuticals and Stoke Therapeutics on the watchlist. All five stocks closed higher on Nov. 24 amid broader biotech strength, with potential takeover interest among several factors that may have supported sentiment. Their shared appeal lies in differentiated medicines for diseases with substantial unmet needs, supported by commercial launches or advanced clinical programs. These attributes could offer larger drugmakers new sources of growth. However, they do not establish that takeover negotiations are underway. RVMD currently has a Zacks Rank #2 (Buy), while VERA, BBIO and AGIO have a Zacks Rank #3 (Hold) at present. On the other hand, STOK currently carries a Zacks Rank #4 (Sell). You can see the complete list of today's Zacks #1 Rank (Strong Buy) stocks here. What Makes VERA, BBIO, RVMD, AGIO & STOK Potential Buyout Picks? These biotech companies could appeal to larger drugmakers seeking to expand their portfolios with medicines that could reach more patients through the buyer's established sales networks and global presence. Marketed products offer an immediate revenue base, while additional indications and related pipeline programs can extend a franchise's commercial life. Acquiring an established development platform may also provide opportunities beyond the lead asset. The investment ca"
+    }
+   ],
+   "memory": [
+    {
+     "at": "2026-11-26",
+     "kind": "me",
+     "text": "- [Stocktwits: VRTX tumbles after hours, rival VERA surges](https://stocktwits.com/news-articles/markets/equity/vrtx-tumbles-after-hours-as-fda-delays-kidney-drug-decision-rival-vera-surges/cNbHueUR9mU) - [Stocktwits, Sep 9: Why is KNTK stock up 5% after-hours?](https://stocktwits.com/news-articles/markets..."
+    }
+   ],
+   "pond": {
+    "wave": 0.0,
+    "own": 4.095559038068422,
+    "how": "a stone: its own news",
+    "from": [],
+    "reaches": [
+     [
+      "SRRK",
+      0.43,
+      0.00564
+     ],
+     [
+      "VKTX",
+      0.4,
+      -0.00319
+     ],
+     [
+      "SVRA",
+      0.4,
+      0.01852
+     ],
+     [
+      "KYMR",
+      0.4,
+      0.00895
+     ],
+     [
+      "MAZE",
+      0.39,
+      0.01054
+     ]
+    ]
+   }
+  },
+  {
+   "t": "NWBO",
+   "company": "NORTHWEST BIOTHERAPEUTICS INC",
+   "move": 0.3438735487500131,
+   "z": 7.398030374390059,
+   "wave": 0.0,
+   "mover": true,
+   "score": 0.4542535785829741,
+   "parts": {
+    "surprise": 0.617,
+    "unexplained": 1.0,
+    "news": 0.0,
+    "reach": 0.0,
+    "against": 0.0,
+    "memory": 0.0,
+    "fragile": 1.0
+   },
+   "reasons": [
+    "outside its 9-in-10 range",
+    "most of the move is its own, with no news found",
+    "chance of late or unreliable accounts 1.7% against 0.4% usually",
+    "chance of a sale of new shares 12.1% against 0.9% usually",
+    "cash covers about 0.1 quarters of losses"
+   ],
+   "attention": 0.10859682074214541,
+   "bars": 23,
+   "filings": [],
+   "pages": [],
+   "memory": [],
+   "pond": {
+    "wave": 0.0,
+    "own": 7.398030374390059,
+    "how": "a stone: its own news",
+    "from": [],
+    "reaches": []
+   }
+  },
+  {
+   "t": "VRTX",
+   "company": "VERTEX PHARMACEUTICALS INC / MA",
+   "move": -0.055112327126651484,
+   "z": -3.33637829387286,
+   "wave": 0.0,
+   "mover": true,
+   "score": 0.4321251725223655,
+   "parts": {
+    "surprise": 0.145,
+    "unexplained": 0.9,
+    "news": 0.3,
+    "reach": 0.711,
+    "against": 0.0,
+    "memory": 1.0,
+    "fragile": 0.0
+   },
+   "reasons": [
+    "most of the move is its own",
+    "8 stories name it",
+    "13 stocks moved closely with it over the year",
+    "in the last note's theme 'A kidney-drug decision is put back three months'"
+   ],
+   "attention": 0.09030914675840176,
+   "bars": 36,
+   "filings": [],
+   "pages": [
+    {
+     "url": "https://finance.yahoo.com/healthcare/articles/vertex-shares-drop-fda-delays-160450096.html?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-27T16:04:50Z",
+     "key": [
+      "Finance readers: 55% off for Black Friday, plus an extra 15% at checkout.",
+      "Subscribe today! \u00bb The FDA requested additional information from Vertex near the end of its review cycle.",
+      "Vertex said it responded promptly, but the agency classified the new submission as a major amendment to the application.",
+      "Baird analyst Brian Skorney said the delay carries risks beyond a simple sales postponement. \"The delayed FDA accelerated approval decision for povetacicept is worse than moving back sales by 3mo.",
+      "Pove will also be launching closer to when both competitors receive full approval & labels including eGFR slope and kidney outcomes data, with Vertex's comparable 104wk data still likely over a year out.",
+      "Vertex shares had gained 24% for the year through Wednesday's close before Friday's decline."
+     ],
+     "text": "Oops, something went wrong Skip to navigation Skip to main content Skip to right column Sign in U.S. markets close in 20m US Markets Europe Markets Asia Markets Cryptocurrencies Rates Commodities Currencies U.S. markets close in 20m S&P 500 7,276.14 +93.36 +1.30% Dow 30 50,730.45 +547.50 +1.09% Nasdaq 24,001.26 +415.46 +1.76% Russell 2000 2,745.29 +41.23 +1.52% 10-Yr Bond 4.9320 +0.0840 +1.73% VIX 24.44 -2.36 -8.80% Gold 3,665.40 +100.80 +2.83% Bitcoin USD 59,530.92 -924.49 -1.53% Crude Oil Jan 27 82.69 -0.99 -1.18% US Private Equity 10,606.85 0.00 0.00% ADVERTISEMENT Vertex shares drop after FDA delays kidney drug decision Vlad Schepkov Fri, November 27, 2026 at 8:04 AM PST 2 min read VRTX -6.00% Investing.com -- Vertex Pharmaceuticals shares fell 7% Friday morning in New York after the U.S. Food and Drug Administration pushed back its decision on the company's chronic kidney disease treatment by up to three months. Our AI stock portfolio is beating the S&P 500 by 118%. Discover the stocks we're buying and the opportunities we're watching next. Exclusive for Yahoo! Finance readers: 55% off for Black Friday, plus an extra 15% at checkout. Subscribe today! \u00bb The FDA requested additional information from Vertex near the end of its review cycle. Vertex said it responded promptly, but the agency classified the new submission as a major amendment to the application. The FDA's new decision deadline is Feb. 28, 2027. Stop chasing stocks after they've already rallied. Find your next investment opportunity with AI stock picks, earnings insights, and market-moving news. Yahoo! Finance readers get an extra 15% off on top of the 55% off Black Friday price. Join today! \u00bb The drug in question, povetacicept, is being developed to treat IgA nephropathy, a kidney condition caused by a buildup of antibodies that damage the kidneys. Baird analyst Brian Skorney said the delay carries risks beyond a simple sales postponement. \"The delayed FDA accelerated approval decision for povetacicept is worse than moving back sales by 3mo. It gives both Otsuka/Vera time to entrench their directly competitive, approved drugs, Voyxact/Trutakna, in the IgAN market. Pove will also be launching closer to when both competitors receive full approval & labels including eGFR slope and kidney outcomes data, with Vertex's comparable 104wk data still likely over a year out. In a worst case scenario, the FDA request is looking closer at potential need for IgG monitoring for povetacicept.\" Otsuka Pharmaceutical and Vera Therapeutics have both launched competing drugs in the IgA nephropathy market within the past year. Vertex shares had gained 24% for the year through Wednesday's close before Friday's decline. Original Article Vertex shares drop after FDA delays kidney drug decision Anthropic short interest climbs as IPO lockup expiry nears Wall Street rallies as investors return to beaten-down AI stocks, eyes strong week Terms and Privacy Policy Your Privacy Choices CA Privacy Notice More Info Recommended Stories Edit your Dock Hang tight, restoring your last session ADVERTISEMENT More News Terms and Privacy Policy Your Privacy Choices CA Privacy Notice Ad Terms Feedback More Info"
+    },
+    {
+     "url": "https://stocktwits.com/news-articles/markets/equity/citi-says-vertex-s-povetacicept-delay-is-not-thesis-changing-maintains-its-buy-rating/cNbCUsZR9Ve?.tsrc=rss",
+     "title": null,
+     "published": "2026-11-27T15:52:56Z",
+     "key": [
+      "AI Agent Trending News Earnings DIA1.17% SPY1.41% QQQ2.01% Trending VRTX6.00% TSLA4.99% EXK10.59% EWZ9.78% WDC5.01% AMP0.02% GDXU18.37% NVDL0.74% MPC4.47% TGTX0.18% HomeNewsMarketsEquityCiti Says Vertex\u2019s Povetacicept Delay Is \u2018Not Thesis Changing,\u2019 Maintains Its \u2018Buy\u2019 Rating Advertisement|Remove ads.",
+      "Citi Says Vertex\u2019s Povetacicept Delay Is \u2018Not Thesis Changing,\u2019 Maintains Its \u2018Buy\u2019 Rating Citi maintained its \u2018Buy\u2019 rating and $585 price target on Vertex Pharmaceuticals, according to The Fly.",
+      "Shares of Vertex (VRTX) came under pressure on Friday, following the FDA delay in reviewing its investigational kidney disease drug povetacicept.",
+      "According to The Fly, Citi maintained its \u2018Buy\u2019 rating and $585 price target on Vertex, acknowledging that the delay introduces regulatory uncertainty.",
+      "Read Next ADBE Stock On Track For 4-Day Rally: Adobe Reports Surge In AI Traffic, $7.1B Thanksgiving Sales Shashank Nayar VRTX shares traded 6.4% lower at the time of writing, reversing gains from the previous three sessions.",
+      "What Investors Need To Know About The FDA Delay Vertex announced on November 25 that the FDA had extended its review of povetacicept by up to three months."
+     ],
+     "text": "AI Agent Trending News Earnings DIA1.17% SPY1.41% QQQ2.01% Trending VRTX6.00% TSLA4.99% EXK10.59% EWZ9.78% WDC5.01% AMP0.02% GDXU18.37% NVDL0.74% MPC4.47% TGTX0.18% HomeNewsMarketsEquityCiti Says Vertex\u2019s Povetacicept Delay Is \u2018Not Thesis Changing,\u2019 Maintains Its \u2018Buy\u2019 Rating Advertisement|Remove ads. Citi Says Vertex\u2019s Povetacicept Delay Is \u2018Not Thesis Changing,\u2019 Maintains Its \u2018Buy\u2019 Rating Citi maintained its \u2018Buy\u2019 rating and $585 price target on Vertex Pharmaceuticals, according to The Fly. In this photo illustration, Vertex Pharmaceuticals' logo is displayed on a smartphone screen in front of a stock chart. (Photo illustration by Cheng Xin/Getty Images) Heera Hari\u00b7Stocktwits Published Nov 27, 2026 | 10:52 AM EST Share \u00b7 Add us on The firm said the delay introduces regulatory uncertainty but described povetacicept as one of the most compelling commercial opportunities in IgA nephropathy. The FDA extended its review of povetacicept by up to three months, moving the target action date to no later than Feb. 28, 2027. The extension followed the FDA's classification of additional information submitted by Vertex late in the review cycle as a major amendment. Advertisement|Remove ads. Shares of Vertex (VRTX) came under pressure on Friday, following the FDA delay in reviewing its investigational kidney disease drug povetacicept. According to The Fly, Citi maintained its \u2018Buy\u2019 rating and $585 price target on Vertex, acknowledging that the delay introduces regulatory uncertainty. However, the analyst said povetacicept remains one of the most compelling commercial opportunities in IgA nephropathy. Read Next ADBE Stock On Track For 4-Day Rally: Adobe Reports Surge In AI Traffic, $7.1B Thanksgiving Sales Shashank Nayar VRTX shares traded 6.4% lower at the time of writing, reversing gains from the previous three sessions. Advertisement|Remove ads. Twenty-six out of 32 analysts covering the stock rate it \u2018Buy\u2019 or \u2018Strong Buy\u2019, five rate the stock \u2018Hold\u2019, and one rates \u2018Sell\u2019, according to Koyfin data. What Investors Need To Know About The FDA Delay Vertex announced on November 25 that the FDA had extended its review of povetacicept by up to three months. The agency moved the target action date from Nov. 30, 2026, to no later than Feb. 28, 2027. The extension followed an FDA information request late in the review cycle. Vertex submitted additional information, which the agency classified as a major amendment, indicating that it needed more time to complete its review. Advertisement|Remove ads. Vertex said it remains confident in the data supporting the application and is working with the FDA to bring povetacicept to patients as quickly as possible. Povetacicept is an investigational treatment for immunoglobulin A nephropathy (IgAN), a serious, progressive kidney disease. It is a dual inhibitor of BAFF and APRIL cytokines, which promote B-cell activation, differentiation and/or survival, according to the company. Vertex's application is supported by interim results from the Phase 3 RAINIER trial. At Week 36, patients receiving povetacicept recorded a 52% reduction from baseline in urine protein-to-creatinine ratio (UPCR), compared with a 4.3% reduction in the placebo group. The placebo-adjusted reduction was 49.8%. If approved, povetacicept would become the first commercialized therapy in Vertex's emerging nephrology franchise. Advertisement|Remove ads. How Retail Views VRTX Retail sentiment towards the stock on Stocktwits remained in the \u2018extremely bullish\u2019 territory over the past 24 hours, with \u2018extremely high\u2019 message volumes. VRTX was also one of the platform's trending tickers at the time of writing. VRTX shares gained approximately 15% year-to-date. Advertisement|Remove ads. Also read: Dan Ives Calls Nvidia's China Risk 'Containable', While Gene Munster Says AI Trade Is In The 'Penalty Box' For updates and corrections, email newsroom[at]stocktwits[dot]com. Comments Share your thoughts... Comments posted here will also appear on symbol "
+    }
+   ],
+   "memory": [
+    {
+     "at": "2026-11-26",
+     "kind": "me",
+     "text": "Source: [Zacks via Yahoo Finance: VRTX down as FDA extends review timeline](https://finance.yahoo.com/healthcare/articles/vrtx-down-fda-extends-review-141500196.html)..."
+    },
+    {
+     "at": "2026-11-26",
+     "kind": "me",
+     "text": "- [Stocktwits: VRTX tumbles after hours, rival VERA surges](https://stocktwits.com/news-articles/markets/equity/vrtx-tumbles-after-hours-as-fda-delays-kidney-drug-decision-rival-vera-surges/cNbHueUR9mU) - [Stocktwits, Sep 9: Why is KNTK stock up 5% after-hours?](https://stoc..."
+    },
+    {
+     "at": "2026-11-25",
+     "kind": "me",
+     "text": "...l reviewing, no new date. The stock fell 18% on the delay. A decision could come any day. | | PolyPid (PYPD) | D-PLEX100, surgical infections | Due Nov 28, a Saturday. | | Vertex (VRTX) | povetacicept, a kidney disease | Due Nov 30. | | Roche | giredestrant, early breast cancer | Due Nov 30. |..."
+    }
+   ],
+   "pond": {
+    "wave": 0.0,
+    "own": -3.33637829387286,
+    "how": "a stone: its own news",
+    "from": [],
+    "reaches": [
+     [
+      "AMGN",
+      0.62,
+      0.01106
+     ],
+     [
+      "ABBV",
+      0.57,
+      -0.00598
+     ],
+     [
+      "LLY",
+      0.53,
+      0.00129
+     ],
+     [
+      "GILD",
+      0.52,
+      0.00255
+     ],
+     [
+      "INCY",
+      0.52,
+      0.00695
+     ]
+    ]
+   }
+  },
+  {
+   "t": "IP",
+   "company": "INTERNATIONAL PAPER CO /NEW/",
+   "move": 0.06266,
+   "z": 1.9612674410518627,
+   "wave": -0.31916144490242004,
+   "mover": false,
+   "score": 0.33945325162159584,
+   "parts": {
+    "surprise": 0.654,
+    "unexplained": 0.0,
+    "news": 0.0,
+    "reach": 1.0,
+    "against": 0.76,
+    "memory": 0.0,
+    "fragile": 0.0
+   },
+   "reasons": [
+    "54 stocks moved closely with it over the year",
+    "moved against its wave (+2.0 usual days against a wave of -0.3)"
+   ],
+   "attention": 0.04171967085802192,
+   "bars": 11,
+   "filings": [
+    {
+     "what": "8-K 5.02, 8.01",
+     "at": "2026-11-25T21:09:41Z",
+     "title": "Skip to Main Content",
+     "url": "https://www.sec.gov/Archives/edgar/data/51434/000162828026075971/",
+     "key": [],
+     "text": "Search Options Skip to Main Content About What We Do Commissioners Securities Laws Reports Careers Contact Divisions Corporation Finance Enforcement Investment Management Risk, Strategy and Innovation Trading and Markets National Exam Program All Divisions and Offices Enforcement Litigation Releases Administrative Proceedings Opinions and Adjudicatory Orders Accounting and Auditing Trading Suspensions How Investigations Work Administrative Law Judges Regulation Proposed Rules Final Rules Interim Final Temporary Rules Other Orders and Notices Self-Regulatory Organizations Staff Interpretations Education Investor.gov Check Out a Broker or Adviser Investor Alerts and Bulletins Fast Answers File a Tip or Complaint Publications Filings Quick EDGAR Tutorial Company Filings Search Descriptions of SEC Forms Requesting Public Documents News Press Releases What's New Upcoming Events News Digest Webcasts Special Studies Speeches and Public Statements Testimony Directory Listing /Archives/edgar/data/51434/000162828026075971 Parent Directory Name Size Last Modified 0001628280-26-075971-index-headers.html 2026-11-25 16:09:41 0001628280-26-075971-index.html 2026-11-25 16:09:41 0001628280-26-075971.txt 2026-11-25 16:09:41 0001628280-26-075971-xbrl.zip 15388 2026-11-25 16:09:41 exhibit101-8xktermloan.htm 79670 2026-11-25 16:09:41 FilingSummary.xml 1620 2026-11-25 16:09:41 internationalpaper.jpg 14228 2026-11-25 16:09:41 ip-20261122.htm 41262 2026-11-25 16:09:41 ip-20261122.xsd 1809 2026-11-25 16:09:41 ip-20261122_htm.xml 2726 2026-11-25 16:09:41 ip-20261122_lab.xml 21615 2026-11-25 16:09:41 ip-20261122_pre.xml 12528 2026-11-25 16:09:41 MetaLinks.json 17113 2026-11-25 16:09:41 R1.htm 38067 2026-11-25 16:09:41 report.css 2766 2026-11-25 16:09:41 Show.js 1085 2026-11-25 16:09:41 Site Map Accessibility Contracts Privacy Inspector General Careers Contact FOIA No FEAR Act & EEO Data Open Government Plain Writing Links Investor.gov USA.gov"
+    }
+   ],
+   "pages": [],
+   "memory": [
+    {
+     "at": "2026-07-29",
+     "kind": "me",
+     "text": "Two warnings in the script because they'll bite: **set a real `--user-agent`** (the SEC blocks anonymous scrapers, and the block hits the whole IP, not the request), and **don't run multiple shards in one notebook** \u2014 they share the IP, and you'll earn a 403 that doesn't clear quickly. The pre-registered test on the 341-name data is running now. I'll report it whatever it shows \u2014 `docs/PREREGISTRATION..."
+    },
+    {
+     "at": "2026-07-29",
+     "kind": "me",
+     "text": "Yahoo has now hard-blocked intraday from this IP \u2014 0 bars. Let me check if it's temporary, but there's a better approach I overlooked that uses data I already have...."
+    },
+    {
+     "at": "2026-07-29",
+     "kind": "me",
+     "text": "**4. Intraday 1h bars.** Yahoo hard-blocked this IP after ~40 tickers. A fresh Colab IP handles it fine, and it would let the cascade study run at hourly resolution instead of the daily open/close split I fell back to. ## The parallelism, honestly Here's the thing that changes your design: **the limit is 10 ..."
+    }
+   ],
+   "pond": {
+    "wave": -0.31916144490242004,
+    "own": 1.9612674410518627,
+    "how": "against its wave",
+    "from": [
+     [
+      "VRTX",
+      -0.13
+     ],
+     [
+      "IVR",
+      -0.09
+     ],
+     [
+      "NWBO",
+      -0.06
+     ],
+     [
+      "KNTK",
+      -0.04
+     ]
+    ],
+    "reaches": [
+     [
+      "SW",
+      0.76,
+      0.04286
+     ],
+     [
+      "PKG",
+      0.72,
+      0.01355
+     ],
+     [
+      "AMCR",
+      0.61,
+      0.00594
+     ],
+     [
+      "AVY",
+      0.59,
+      0.00394
+     ],
+     [
+      "GEF",
+      0.58,
+      0.02364
+     ]
+    ]
+   }
+  },
+  {
+   "t": "TRGP",
+   "company": "Targa Resources Corp.",
+   "move": -0.01784,
+   "z": -0.9030680189984515,
+   "wave": 0.5267366170883179,
+   "mover": false,
+   "score": 0.32025566824987095,
+   "parts": {
+    "surprise": 0.301,
+    "unexplained": 0.0,
+    "news": 0.3,
+    "reach": 1.0,
+    "against": 0.0,
+    "memory": 1.0,
+    "fragile": 0.0
+   },
+   "reasons": [
+    "2 stories name it",
+    "61 stocks moved closely with it over the year",
+    "in the last note's theme 'A buyer for Kinetik is reported'"
+   ],
+   "attention": 0.03555187435604218,
+   "bars": 13,
+   "filings": [],
+   "pages": [],
+   "memory": [],
+   "pond": {
+    "wave": 0.5267366170883179,
+    "own": -0.9030680189984515,
+    "how": "with the water",
+    "from": [
+     [
+      "KNTK",
+      0.4
+     ],
+     [
+      "IVR",
+      0.06
+     ],
+     [
+      "NWBO",
+      0.04
+     ],
+     [
+      "VRTX",
+      0.02
+     ]
+    ],
+    "reaches": [
+     [
+      "OKE",
+      0.76,
+      0.01238
+     ],
+     [
+      "KMI",
+      0.74,
+      0.0112
+     ],
+     [
+      "KNTK",
+      0.71,
+      0.0936
+     ],
+     [
+      "WMB",
+      0.71,
+      0.01151
+     ],
+     [
+      "AM",
+      0.67,
+      0.00145
+     ]
+    ]
+   }
+  }
+ ],
+ "rest": [
+  {
+   "t": "TE",
+   "score": 0.3157932719056952,
+   "attention": 0.03425409923225569,
+   "reasons": [
+    "most of the move is its own",
+    "1 story names it",
+    "chance of a restructuring or a write-off 1.5% against 0.3% usually",
+    "cash covers about 0.8 quarters of losses"
+   ]
+  },
+  {
+   "t": "CMCO",
+   "score": 0.31199997648036054,
+   "attention": 0.03318823507630277,
+   "reasons": [
+    "most of the move is its own",
+    "2 stories name it",
+    "cash covers about 1.3 quarters of losses"
+   ]
+  },
+  {
+   "t": "OPK",
+   "score": 0.2841653611611567,
+   "attention": 0.026317663251782517,
+   "reasons": [
+    "most of the move is its own",
+    "2 stories name it"
+   ]
+  },
+  {
+   "t": "TRUP",
+   "score": 0.2819778662787037,
+   "attention": 0.025842261547382818,
+   "reasons": [
+    "most of the move is its own, with no news found"
+   ]
+  },
+  {
+   "t": "UPBD",
+   "score": 0.2723889572496462,
+   "attention": 0.02385761899474968,
+   "reasons": [
+    "86 stocks moved closely with it over the year",
+    "moved against its wave (+1.4 usual days against a wave of -0.4)"
+   ]
+  },
+  {
+   "t": "NVDA",
+   "score": 0.2644742019253806,
+   "attention": 0.02233482962598845,
+   "reasons": [
+    "moved against its wave (-1.3 usual days against a wave of +0.3)",
+    "in the last note's theme 'Chips lead a rebound before the half day'"
+   ]
+  },
+  {
+   "t": "S",
+   "score": 0.2571605209668089,
+   "attention": 0.02101423332119043,
+   "reasons": [
+    "38 stocks moved closely with it over the year",
+    "in the last note's open questions"
+   ]
+  },
+  {
+   "t": "ET",
+   "score": 0.25569661033182184,
+   "attention": 0.02075943267320915,
+   "reasons": [
+    "43 stocks moved closely with it over the year",
+    "in the last note's open questions"
+   ]
+  },
+  {
+   "t": "DE",
+   "score": 0.25310095763495466,
+   "attention": 0.02031521862031599,
+   "reasons": [
+    "in the last note's open questions"
+   ]
+  },
+  {
+   "t": "GRND",
+   "score": 0.25123448972731655,
+   "attention": 0.020001682433146713,
+   "reasons": [
+    "most of the move is its own",
+    "1 story names it"
+   ]
+  },
+  {
+   "t": "SW",
+   "score": 0.24191372921094395,
+   "attention": 0.01850689540751465,
+   "reasons": [
+    "75 stocks moved closely with it over the year",
+    "moved against its wave (+1.1 usual days against a wave of -0.4)"
+   ]
+  },
+  {
+   "t": "MU",
+   "score": 0.22894358700222348,
+   "attention": 0.016610896056249373,
+   "reasons": [
+    "32 stocks moved closely with it over the year",
+    "in the last note's theme 'Chips lead a rebound before the half day'"
+   ]
+  },
+  {
+   "t": "AMD",
+   "score": 0.227950229023176,
+   "attention": 0.016473958902139468,
+   "reasons": [
+    "51 stocks moved closely with it over the year",
+    "in the last note's theme 'Chips lead a rebound before the half day'"
+   ]
+  },
+  {
+   "t": "FIGS",
+   "score": 0.2160495800838281,
+   "attention": 0.014918600816317556,
+   "reasons": [
+    "most of the move is its own, with no news found"
+   ]
+  },
+  {
+   "t": "ABNB",
+   "score": 0.21159773753201983,
+   "attention": 0.014375280842744696,
+   "reasons": [
+    "10 stocks moved closely with it over the year",
+    "moved against its wave (+1.2 usual days against a wave of -0.3)"
+   ]
+  },
+  {
+   "t": "AN",
+   "score": 0.20614275545724953,
+   "attention": 0.013736437029159625,
+   "reasons": [
+    "13 stocks moved closely with it over the year",
+    "moved against its wave (+1.1 usual days against a wave of -0.3)"
+   ]
+  },
+  {
+   "t": "AESI",
+   "score": 0.19215914354134167,
+   "attention": 0.012225474397426826,
+   "reasons": [
+    "moved against its wave (-1.0 usual days against a wave of +0.3)"
+   ]
+  },
+  {
+   "t": "DELL",
+   "score": 0.17853396823073142,
+   "attention": 0.010913261624895346,
+   "reasons": [
+    "an open call to the person"
+   ]
+  },
+  {
+   "t": "P",
+   "score": 0.17489846395793848,
+   "attention": 0.010587592996953154,
+   "reasons": [
+    "in the last note's open questions"
+   ]
+  },
+  {
+   "t": "KYMR",
+   "score": 0.1631382585215505,
+   "attention": 0.009599213150502219,
+   "reasons": [
+    "an open desk call"
+   ]
+  }
+ ]
+}

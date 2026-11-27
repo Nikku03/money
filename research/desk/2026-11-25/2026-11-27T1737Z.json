@@ -1,0 +1,311 @@
+{
+ "asof": "2026-11-25",
+ "at": "2026-11-27T17:37:03Z",
+ "calls": [],
+ "case_sha": "6fee90658b4eb373",
+ "check": "2026-11-27T1737Z",
+ "claims_noted": 3,
+ "evidence": {
+  "c1": {
+   "text": "movers tied together: VERA, VRTX (VERA~VRTX by s3; VERA~VRTX by s5; VERA~VRTX by s6; VERA~VRTX by s9)"
+  },
+  "d:10-year yield": {
+   "text": "10-year yield +0.09 pt since the close (its usual day: 0.04 pt)"
+  },
+  "d:bitcoin": {
+   "text": "bitcoin -1.3% since the close (its usual day: 2.7%)"
+  },
+  "d:gold": {
+   "text": "gold +3.6% since the close (its usual day: 1.8%)"
+  },
+  "d:oil": {
+   "text": "oil -1.1% since the close (its usual day: 3.7%)"
+  },
+  "g:1040": {
+   "text": "Gold and Silver Ores: the median of its 10 checked stocks moved +5.1%"
+  },
+  "g:3674": {
+   "text": "Semiconductors & Related Devices: the median of its 59 checked stocks moved +3.9%"
+  },
+  "h:TE": {
+   "text": "TE against the market, last sessions: 11-19 +0.1%, 11-20 -1.5%, 11-23 -7.3%, 11-24 -7.1%, 11-25 +2.2%"
+  },
+  "k": {
+   "text": "Market: S&P 500 (SPY) +1.3%, Nasdaq 100 (QQQ) +2.0%, Russell 2000 (IWM) +1.5%, S&P 500 futures +1.3%, VIX -13.1% (in session)"
+  },
+  "m:FIGS": {
+   "text": "FIGS (FIGS, Inc.; Apparel & Other Finishd Prods of  Fabrics & Similar Matl) +7.1% since the close (in session), outside its 2-in-3 range (-6%..+7%)"
+  },
+  "m:KNTK": {
+   "text": "KNTK (Kinetik Holdings Inc.; Natural Gas Transmission) +9.4% since the close (in session), OUTSIDE its 9-in-10 range (-4%..+5%)"
+  },
+  "m:TRUP": {
+   "text": "TRUP (TRUPANION, INC.; Hospital & Medical Service Plans) +6.4% since the close (in session), outside its 2-in-3 range (-5%..+6%)"
+  },
+  "m:VERA": {
+   "text": "VERA (Vera Therapeutics, Inc.; Pharmaceutical Preparations) +15.8% since the close (in session), outside its 2-in-3 range (-8%..+10%)"
+  },
+  "m:VRTX": {
+   "text": "VRTX (VERTEX PHARMACEUTICALS INC / MA; Pharmaceutical Preparations) -5.5% since the close (in session), outside its 2-in-3 range (-4%..+5%)"
+  },
+  "n:VRTX": {
+   "text": "VRTX accounts: market value $144.0 bn; cash and equivalents $5.0 bn (2026-09-30; investments not counted); long-term debt $3.5 bn (2026-09-30); revenue $13.0 bn over the four quarters to 2026-09-30; net income $4.0 bn over the four quarters to 2026-09-30"
+  },
+  "p:KNTK~KMI": {
+   "text": "KNTK and KMI: market-adjusted daily returns correlated 0.61 over the last 250 sessions; KMI +1.1% since the close"
+  },
+  "p:KNTK~OKE": {
+   "text": "KNTK and OKE: market-adjusted daily returns correlated 0.71 over the last 250 sessions; OKE +1.2% since the close"
+  },
+  "p:KNTK~TRGP": {
+   "text": "KNTK and TRGP: market-adjusted daily returns correlated 0.71 over the last 250 sessions; TRGP -1.8% since the close"
+  },
+  "p:KNTK~WMB": {
+   "text": "KNTK and WMB: market-adjusted daily returns correlated 0.62 over the last 250 sessions; WMB +1.2% since the close"
+  },
+  "p:TE~RDW": {
+   "text": "TE and RDW: market-adjusted daily returns correlated 0.42 over the last 250 sessions; RDW +7.9% since the close"
+  },
+  "p:TE~SMR": {
+   "text": "TE and SMR: market-adjusted daily returns correlated 0.38 over the last 250 sessions; SMR +6.6% since the close"
+  },
+  "r:10-year yield": {
+   "text": "the stocks that moved most with 10-year yield over the year, today: TOL -0.1% (its rate implies -2.4%), DHI -0.2% (its rate implies -2.5%), RKT -0.5% (its rate implies -3.8%), MHO +1.1% (its rate implies -2.3%), PHM -0.5% (its rate implies -2.3%), MTH -0.3% (its rate implies -2.6%)"
+  },
+  "r:gold": {
+   "text": "the stocks that moved most with gold over the year, today: RGLD +4.1% (its rate implies +2.1%), NEM +4.6% (its rate implies +2.3%), HL +6.3% (its rate implies +3.2%), MUX +5.2% (its rate implies +2.9%), DC +8.0% (its rate implies +2.9%), CDE +6.8% (its rate implies +2.9%)"
+  },
+  "s1": {
+   "text": "2026-11-27T15:00Z finance.yahoo.com: Why Kinetik (KNTK) Stock Is Up 7.5% Today: Targa Acquisition Interest -- On Friday, Nov. 27, Kinetik shares rose 7.5% on potential acquisition interest from Targa Resources, according to GuruFocus.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/why-kinetik-kntk-stock-7-150019677.html?.tsrc=rss"
+  },
+  "s10": {
+   "text": "2026-11-27T15:45Z finance.yahoo.com: OPKO Health (OPK) Stock Is Up 6.3% Today Without Company News -- On Friday, Nov. 27, OPKO Health shares rose 6.3% without company-specific news, as the broader market rallied.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/opko-health-opk-stock-6-154514597.html?.tsrc=rss"
+  },
+  "s12": {
+   "text": "2026-11-27T17:15Z finance.yahoo.com: T1 Energy (TE) Stock Is Up 21.4% Today Without Company News -- On Friday, Nov. 27, T1 Energy shares rose 21.4% without company-specific news as the broader market rallied.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/t1-energy-te-stock-21-171519888.html?.tsrc=rss"
+  },
+  "s13": {
+   "text": "2026-11-27T17:15Z finance.yahoo.com: Columbus McKinnon (CMCO) Stock Is Up 8.6% Today in Broad Market Rally -- Columbus McKinnon shares rose 8.6% on Friday, Nov. 27, as the S&P 500 gained 1.5% and industrial peers rose, without company-specific news.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/columbus-mckinnon-cmco-stock-8-171509187.html?.tsrc=rss"
+  },
+  "s15": {
+   "text": "2026-11-27T16:15Z finance.yahoo.com: Grindr (GRND) Stock Is Up 6.5% Today Without Company News -- On Friday, Nov. 27, Grindr shares rose 6.5% without company-specific news as stocks rallied.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/grindr-grnd-stock-6-5-161516744.html?.tsrc=rss"
+  },
+  "s2": {
+   "text": "2026-11-26T17:42Z 247wallst.com: Targa Resources Is Reportedly Eyeing Kinetik as Data Centers Drive Gas Demand -- Kinetik jumped after hours while its rumored buyer slipped, and the market's split verdict says plenty about who pays for a deal. Two private-equity owners, two failed sale attempts, and one date to watch could decide whether this talk turns real.",
+   "url": "https://247wallst.com/investing/2026/11/26/targa-resources-is-reportedly-eyeing-kinetik-as-data-centers-drive-gas-demand/?.tsrc=rss"
+  },
+  "s7": {
+   "text": "2026-11-27T16:04Z finance.yahoo.com: Vertex shares drop after FDA delays kidney drug decision -- Investing.com -- Vertex Pharmaceuticals shares fell 7% Friday morning in New York after the U.S. Food and Drug Administration pushed back its decision on the company's chronic kidney disease treatment by up to three months.",
+   "url": "https://finance.yahoo.com/healthcare/articles/vertex-shares-drop-fda-delays-160450096.html?.tsrc=rss"
+  },
+  "s8": {
+   "text": "2026-11-27T15:52Z stocktwits.com: Citi Says Vertex\u2019s Povetacicept Delay Is \u2018Not Thesis Changing,\u2019 Maintains Its \u2018Buy\u2019 Rating -- Citi maintained its \u2018Buy\u2019 rating and $585 price target on Vertex Pharmaceuticals, according to The Fly.",
+   "url": "https://stocktwits.com/news-articles/markets/equity/citi-says-vertex-s-povetacicept-delay-is-not-thesis-changing-maintains-its-buy-rating/cNbCUsZR9Ve?.tsrc=rss"
+  },
+  "t2": {
+   "text": "the last note (2026-11-27T1332Z), theme 'A kidney-drug decision is put back three months': Unchanged cause (t2). New this morning: the late-session moves held into Friday's pre-market. Vertex traded at $522.99, -7.3% (s1; -7.33% at 6:16 a.m. ET, StockTitan), and a page's price strip had Vera +15.08% when read (the Zacks page). The case file's own figures are still Wednesday's (m:VRTX, m:VERA)."
+  },
+  "t3": {
+   "text": "the last note (2026-11-27T1332Z), theme 'A buyer for Kinetik is reported': Unchanged (t1): Bloomberg News reported talks for Targa Resources to buy Kinetik; nothing is signed, no price is known, and no filing has come since (s7, m:KNTK)."
+  }
+ },
+ "note": {
+  "backdrop": "This check read real trades again (12:37 p.m. ET, 23 minutes before the 1 p.m. close). The S&P 500 fund is +1.3%, the Nasdaq 100 fund +2.0% and small caps +1.5% against Wednesday's close, with the VIX down 13% (k). The rise is broad: 84% of the 2,453 stocks checked are up and the median stock is +1.1% (the check's list). It was not a straight line: the S&P 500 fund was +1.71% before the open, +0.45% at 10:01 a.m. ET and +1.15% at 11:01 a.m. ET (StockTitan). Chips lead again (the median chip stock +3.9%, g:3674). Two things moved more than twice their usual day and no report I found explains either: gold +3.6% (d:gold) and the 10-year yield +0.09 point (d:10-year yield). Oil is -1.1% and bitcoin -1.3% (d:oil, d:bitcoin). Two stocks are outside their 9-in-10 range and ten outside their 2-in-3 range, far fewer than a usual week ends with. The four falls that rested on a single late trade on Wednesday are gone: AvePoint +2.4%, Lamar +0.3%, American Coastal +1.8%, Service Properties +1.5% against Wednesday's close (the check's list), so they were stray prints, as the attention step had marked them.",
+  "backdrop_evidence": [
+   "k",
+   "g:3674",
+   "d:gold",
+   "d:10-year yield",
+   "d:oil",
+   "d:bitcoin",
+   "https://www.stocktitan.net/articles/stock-market-today-live-november-27-2026"
+  ],
+  "by": "agent",
+  "calls": [],
+  "check": "2026-11-27T1737Z",
+  "read": [
+   {
+    "direction": "none",
+    "published": "2026-11-27T12:01:53Z",
+    "says": "Updated 11:08 a.m. ET. Against Wednesday's close: QQQ +2.18% at 9:01 a.m. ET, +0.51% at 10:01 and +1.68% at 11:01 ($644.57; about three fifths of its two-day fall won back); SPY +1.52%, +0.45%, then +1.15% ($724.96, above Monday's $722.29). Nvidia -2.18% at 10:01 and -1.28% at 11:01 ($147.39, 10.7% below Monday's close). CNBC reported, citing Bloomberg, that Nvidia Blackwell chips barred from shipment to China were installed at a Shanghai data center, at a site linked to a firm under scrutiny over chips diverted to China. CNBC: Meta and Amazon up about 3% each. SanDisk +13.16%, Micron +5.57%, Broadcom +3.22%, AMD +2.17% at 11:01; Anthropic $89.81 against its $83.00 IPO price. Vera +13.05% at 10:01; Vertex -5.81% at 11:01. The Brazil fund EWZ +10.41%; Bradesco confirmed in a filing at 7:40 a.m. ET that its chairman accepted the post of finance minister from 2027. Alvotech -15.23% at 11:01 after the injunction. Altria said on Thursday it is considering a possible cash offer for Imperial Brands. No US economic reports today.",
+    "tier": "reported",
+    "url": "https://www.stocktitan.net/articles/stock-market-today-live-november-27-2026"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-27T15:00:19Z",
+    "says": "GuruFocus: Kinetik was $58.81, +7.5%, at 10:00 a.m. ET on Friday on potential acquisition interest from Targa Resources; Targa -1.4%; the move is 6 times Kinetik's typical day of 1.3%; other pipeline companies rose about 1%.",
+    "ticker": "KNTK",
+    "tier": "reported",
+    "url": "https://finance.yahoo.com/markets/stocks/articles/why-kinetik-kntk-stock-7-150019677.html"
+   },
+   {
+    "direction": "down",
+    "published": "2026-11-27T16:04:50Z",
+    "says": "Investing.com: Vertex fell 7% on Friday morning. A Baird analyst said the delay is worse than moving sales back three months: it gives Otsuka and Vera time to entrench their approved rival drugs, Voyxact and Trutakna; Vertex's drug would launch closer to when both rivals get full approval with kidney-outcome data, while Vertex's comparable two-year data is likely more than a year away; and in a worst case the FDA is looking at a need to monitor an antibody level in patients. Otsuka and Vera both launched within the past year. Vertex was up 24% this year through Wednesday.",
+    "ticker": "VRTX",
+    "tier": "opinion",
+    "url": "https://finance.yahoo.com/healthcare/articles/vertex-shares-drop-fda-delays-160450096.html"
+   },
+   {
+    "direction": "up",
+    "published": "2026-11-27T15:52:56Z",
+    "says": "Citi kept its Buy rating and $585 target on Vertex and called the delay 'not thesis changing', while saying it adds regulatory uncertainty; 26 of 32 analysts rate the stock a buy; Vertex was -6.4% at the time.",
+    "ticker": "VRTX",
+    "tier": "opinion",
+    "url": "https://stocktwits.com/news-articles/markets/equity/citi-says-vertex-s-povetacicept-delay-is-not-thesis-changing-maintains-its-buy-rating/cNbCUsZR9Ve"
+   }
+  ],
+  "singles": [],
+  "themes": [
+   {
+    "beneath": "Reported: the moves and the report about the chips. My inference: Nvidia now carries two risks that are its own and not the industry's: a ratings agency's watch over how it is governed (the Wednesday note), and a report that barred chips reached China, which is a matter of export rules. Neither is about demand for its products, which is why Micron and Broadcom can rise without it. One more thing under the day: the 10-year yield is up 0.09 point, more than twice its usual day, and the stocks that follow rates most closely did not fall (Toll Brothers -0.1% where its usual rate implies -2.4%; r:10-year yield). So the bond move reads as money leaving safety on a strong day, in a thin market that closes at 2 p.m. ET, more than as a rates scare. That last part is inference.",
+    "cause": "Stocks are up across the board in the half session (k), led by chips: Micron +6.4%, Broadcom +3.4%, AMD +3.1% and the median chip stock +3.9% by the check (g:3674), with Amazon +3.9% and Meta +3.2%. Nvidia is flat against Wednesday's close by the check after being +3.3% before the open and -2.18% at 10:01 a.m. ET (StockTitan). CNBC reported, citing Bloomberg, that Nvidia chips barred from shipment to China were found installed at a Shanghai data center (StockTitan).",
+    "evidence": [
+     "k",
+     "g:3674",
+     "d:10-year yield",
+     "r:10-year yield",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-27-2026"
+    ],
+    "kind": "reported",
+    "mechanism": "This morning's note read the market as separating the AI trade from Nvidia's own open question. A second Nvidia-only item then arrived, and the stock gave up its whole pre-market gain while the other chipmakers kept theirs. At 11:01 a.m. ET Nvidia was 10.7% below Monday's close while the S&P 500 fund was above its own (StockTitan).",
+    "members": [
+     "NVDA",
+     "MU",
+     "AVGO",
+     "AMD",
+     "AMZN",
+     "META"
+    ],
+    "name": "A broad rebound that Nvidia sits out",
+    "read_through": [],
+    "watch": "The 1 p.m. close: Nvidia against $149.30 (Wednesday) and $165.05 (Monday). A statement from Nvidia or the US government on the chips in Shanghai; any action on its credit rating."
+   },
+   {
+    "beneath": "The argument is about what the FDA asked for, and nobody outside knows. The bear case, as the Baird analyst put it (opinion): the rivals get time to dig in; Vertex would launch about when they receive full approval with kidney-outcome data, while its own comparable two-year data is likely more than a year away; and at worst the agency is weighing a monitoring requirement for patients, which would make the drug harder to use (s7). The bull case (opinion): nothing about the drug's promise has changed (s8). In money, Vertex's fall is now about $7.9 bn (5.5% of $144.0 bn; n:VRTX), down from about $10.5 bn before the open. My inference: the price sits between the two views, closer to the bears, and the session moved it a quarter of the way back.",
+    "cause": "The moves held on real volume, and Vertex's narrowed: -5.5% by the check against -7.3% before the open; Vera +15.8% (m:VRTX, m:VERA, t2). Banks took sides this morning: Citi kept its Buy and called the delay not thesis changing (s8); a Baird analyst called it worse than three months of lost sales (s7).",
+    "evidence": [
+     "t2",
+     "s7",
+     "s8",
+     "c1",
+     "m:VRTX",
+     "m:VERA",
+     "n:VRTX",
+     "https://finance.yahoo.com/healthcare/articles/vertex-shares-drop-fda-delays-160450096.html",
+     "https://stocktwits.com/news-articles/markets/equity/citi-says-vertex-s-povetacicept-delay-is-not-thesis-changing-maintains-its-buy-rating/cNbCUsZR9Ve"
+    ],
+    "kind": "reported",
+    "mechanism": "A correction to the earlier notes, which said the delay left Vera's drug alone on the market. It does not: Otsuka's Voyxact is approved too, and both rivals launched within the past year (s7). So the delay helps two rivals, and Vera is the one that is listed and small enough to move 16%.",
+    "members": [
+     "VRTX",
+     "VERA"
+    ],
+    "name": "A kidney-drug decision is put back three months",
+    "read_through": [],
+    "watch": "The close. Any word from Vertex on what the FDA asked for. A decision can come any day up to Feb 28, 2027. A sale of new shares by Vera after its jump."
+   },
+   {
+    "beneath": "At +9.4% Kinetik is above Wednesday night's $58.85 and above the 52-week high of $58.90 that Thursday's report named, so the first full session raised the bet. In money, by the report's values: Kinetik's rise is about $0.85 bn (9.4% of about $9 bn) and Targa's fall about $1.1 bn (1.8% of $61.24 bn). My inference: the market has taken more from the buyer than it has given the target, which says it expects Targa to pay up, with two owners holding about two thirds of Kinetik able to refuse a low price. Nothing is signed and no price is reported.",
+    "cause": "Kinetik added to its late-Wednesday jump in regular trading: +9.4% by the check, outside its 9-in-10 range, against +7.1% on Wednesday night; it was $58.81 at 10 a.m. ET (s1, m:KNTK). Targa is -1.8% on real trades (p:KNTK~TRGP). Still no filing from either company (t3).",
+    "evidence": [
+     "t3",
+     "s1",
+     "s2",
+     "m:KNTK",
+     "p:KNTK~TRGP",
+     "p:KNTK~OKE",
+     "p:KNTK~WMB",
+     "p:KNTK~KMI",
+     "https://finance.yahoo.com/markets/stocks/articles/why-kinetik-kntk-stock-7-150019677.html"
+    ],
+    "kind": "reported",
+    "mechanism": "The other pipeline companies rose about 1% with the market (ONEOK +1.2%, Williams +1.2%, Kinder Morgan +1.1%), so both moves are the deal's (p:KNTK~OKE, p:KNTK~WMB, p:KNTK~KMI). A correction to this morning's note: it called Targa's Wednesday fall a likely stray print because it rested on two trades; today's regular trades put Targa about where that print was, so the fall is real.",
+    "members": [
+     "KNTK",
+     "TRGP"
+    ],
+    "name": "A buyer for Kinetik is reported",
+    "read_through": [],
+    "watch": "A signed agreement in an 8-K, with a price, or a denial. The report said as soon as next week."
+   },
+   {
+    "beneath": "What can be ruled out from the tape, as inference: it is not a flight to safety (the VIX is down 13% and 84% of stocks are up; k), not lower rates (the 10-year yield is up 0.09 point; d:10-year yield) and not a weaker dollar (+0.3%). So the cause is something about gold itself that I have not found. It stays open.",
+    "cause": "Gold is +3.6% since Wednesday's close, twice its usual day (d:gold), and the median gold and silver miner is +5.1% (g:1040): Newmont +4.6%, Hecla +6.3%, Coeur +6.8% (r:gold). I found no report that names a cause: two searches and the day's market page say nothing about it.",
+    "evidence": [
+     "d:gold",
+     "g:1040",
+     "r:gold",
+     "k",
+     "d:10-year yield"
+    ],
+    "kind": "inferred",
+    "mechanism": "The miners moved about twice what their usual rate with gold implies (Newmont +4.6% where its rate implies +2.3%; r:gold), part of which is the broad day (k).",
+    "members": [
+     "NEM",
+     "HL",
+     "CDE",
+     "RGLD"
+    ],
+    "name": "Gold and its miners jump with no report behind them",
+    "read_through": [],
+    "watch": "A report that names the cause; whether gold holds after the bond market's 2 p.m. ET close."
+   },
+   {
+    "beneath": "T1 Energy is the largest and has a plain reading, as inference: it fell 7.3% and 7.1% on Monday and Tuesday and is rebounding with other high-risk names it moves with (Redwire +7.9%, NuScale +6.6%; h:TE, p:TE~RDW, p:TE~SMR). None of these is news.",
+    "cause": "Six stocks sit just outside their 2-in-3 ranges with no company news, each on a page that says so or with an empty feed: OPKO +8.4%, T1 Energy +18.2%, Trupanion +6.4%, Columbus McKinnon +8.5%, Grindr +7.3%, FIGS +7.1% (s10, s12, s13, s15, m:TRUP, m:FIGS).",
+    "evidence": [
+     "k",
+     "s10",
+     "s12",
+     "s13",
+     "s15",
+     "m:TRUP",
+     "m:FIGS",
+     "h:TE",
+     "p:TE~RDW",
+     "p:TE~SMR"
+    ],
+    "kind": "inferred",
+    "mechanism": "On a day when the median stock is +1.1% (k), a handful land just past the edge of a range by chance. Ten of 2,453 are outside a 2-in-3 range; over a full week about a third end outside.",
+    "members": [
+     "OPK",
+     "TE",
+     "TRUP",
+     "CMCO",
+     "GRND",
+     "FIGS"
+    ],
+    "name": "Small stocks carried just past their ranges by a broad day",
+    "read_through": [],
+    "watch": "Nothing to confirm: the next close's scan re-reads their ranges."
+   }
+  ],
+  "threads": [
+   "The 1 p.m. close and the after-close scan: does the rebound hold; Nvidia against $149.30 and $165.05.",
+   "Nvidia: the report of barred chips installed in Shanghai (a statement from the company or the government); S&P Global Ratings' watch on its credit rating.",
+   "Gold +3.6% and the 10-year yield +0.09 point, each more than twice its usual day, with no report found for either.",
+   "Northwest Biotherapeutics +34%, about +76% in four sessions, with no filing and no story: what is behind it?",
+   "Kinetik and Targa: a signed agreement in an 8-K with a price, or a denial.",
+   "Vertex: what the FDA asked for; the decision is due by Feb 28, 2027. Vera: a sale of new shares after its jump.",
+   "Kymera 63a7bc55: judged at today's 1 p.m. close.",
+   "Deere's forward card DE-2026-11-25: judged when its week closes.",
+   "Next week's reports with a recorded guess against the analysts: Box, Okta, NetApp (Dec 1), Zscaler, Five Below (Dec 2), Veeva (Dec 3).",
+   "Brazil: US-listed Brazilian stocks jumped on the finance minister's naming; they are outside the scan.",
+   "Tariff proposals: comments due Jan 5, 2027, hearings from Jan 25."
+  ],
+  "unexplained": [
+   {
+    "t": "NWBO",
+    "tried": "+34.4%, outside its 9-in-10 range, after +9.8%, +14.0% and +4.6% in the three sessions before: about +76% in four sessions (h:NWBO). No filing since the close, no story in its feed, and a search found no report (m:NWBO). It trades over the counter. Its cash was $725,000 at September 30 against losses of about $10 m a quarter, and before today the mosaic put a sale of new shares in the next 20 sessions at 12.1% against 0.9% for the usual stock (n:NWBO, z:NWBO); that is a chance of a filing, not a direction."
+   }
+  ]
+ },
+ "recorded_at": "2026-11-27T17:43:49Z"
+}
