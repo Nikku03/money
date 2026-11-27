@@ -1,0 +1,208 @@
+{
+ "asof": "2026-11-25",
+ "at": "2026-11-27T13:32:39Z",
+ "calls": [],
+ "case_sha": "37185947a8d1c76f",
+ "check": "2026-11-27T1332Z",
+ "claims_noted": 2,
+ "evidence": {
+  "c1": {
+   "text": "movers tied together: VRTX, VERA (VERA~VRTX by s3; VERA~VRTX by s6)"
+  },
+  "d:10-year yield": {
+   "text": "10-year yield +0.00 pt since the close (its usual day: 0.04 pt)"
+  },
+  "d:bitcoin": {
+   "text": "bitcoin +1.6% since the close (its usual day: 2.7%)"
+  },
+  "d:gold": {
+   "text": "gold +2.4% since the close (its usual day: 1.8%)"
+  },
+  "d:oil": {
+   "text": "oil +0.9% since the close (its usual day: 3.7%)"
+  },
+  "h:VERA": {
+   "text": "VERA against the market, last sessions: 11-19 +6.8%, 11-20 -0.7%, 11-23 +1.0%, 11-24 +7.6%, 11-25 +2.1%; flagged before: 11-26 04:45Z +16.7%; 11-26 13:31Z +16.7%; 11-26 17:36Z +16.7%; 11-27 03:45Z +16.7%"
+  },
+  "k": {
+   "text": "Market: S&P 500 (SPY) +0.5%, Nasdaq 100 (QQQ) +0.4%, Russell 2000 (IWM) +0.5%, S&P 500 futures +0.7%, VIX -10.9% (overnight)"
+  },
+  "m:KNTK": {
+   "text": "KNTK (Kinetik Holdings Inc.; Natural Gas Transmission) +7.1% since the close (overnight), outside its 2-in-3 range (-4%..+5%)"
+  },
+  "m:VERA": {
+   "text": "VERA (Vera Therapeutics, Inc.; Pharmaceutical Preparations) +16.7% since the close (overnight), outside its 2-in-3 range (-8%..+10%)"
+  },
+  "m:VRTX": {
+   "text": "VRTX (VERTEX PHARMACEUTICALS INC / MA; Pharmaceutical Preparations) -7.3% since the close (overnight), outside its 2-in-3 range (-4%..+5%)"
+  },
+  "n:VRTX": {
+   "text": "VRTX accounts: market value $144.0 bn; cash and equivalents $5.0 bn (2026-09-30; investments not counted); long-term debt $3.5 bn (2026-09-30); revenue $13.0 bn over the four quarters to 2026-09-30; net income $4.0 bn over the four quarters to 2026-09-30"
+  },
+  "p:KNTK~TRGP": {
+   "text": "KNTK and TRGP: market-adjusted daily returns correlated 0.71 over the last 250 sessions; TRGP -3.3% since the close"
+  },
+  "s1": {
+   "text": "2026-11-27T11:43Z investorshub.advfn.com: Why Is Vertex Pharmaceuticals Stock Falling Today? -- Shares of Vertex Pharmaceuticals (NASDAQ:VRTX) fell 7. 3% to $522.",
+   "url": "https://investorshub.advfn.com/market-news/article/40779/why-is-vertex-pharmaceuticals-stock-falling-today?.tsrc=rss"
+  },
+  "s5": {
+   "text": "2026-11-27T06:44Z finance.yahoo.com: The Zacks Analyst Blog Highlights Vera Therapeutics, BridgeBio Pharma, Revolution Medicines, Agios Pharmaceuticals and Stoke Therapeutics -- Sanofi's $41B Insmed deal reignites biotech M&A hopes, putting five stocks with differentiated medicines and promising pipelines in the takeover spotlight.",
+   "url": "https://finance.yahoo.com/healthcare/articles/zacks-analyst-blog-highlights-vera-064400990.html?.tsrc=rss"
+  },
+  "s7": {
+   "text": "2026-11-26T17:42Z 247wallst.com: Targa Resources Is Reportedly Eyeing Kinetik as Data Centers Drive Gas Demand -- Kinetik jumped after hours while its rumored buyer slipped, and the market's split verdict says plenty about who pays for a deal. Two private-equity owners, two failed sale attempts, and one date to watch could decide whether this talk turns real.",
+   "url": "https://247wallst.com/investing/2026/11/26/targa-resources-is-reportedly-eyeing-kinetik-as-data-centers-drive-gas-demand/?.tsrc=rss"
+  },
+  "s8": {
+   "text": "2026-11-27T12:15Z finance.yahoo.com: Vertex (VRTX) Stock Falls 7.3% Premarket Without Company News -- Vertex shares fell 7.3% in premarket trading on Friday, Nov. 27, without company-specific news, while the broader market rose.",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/vertex-vrtx-stock-falls-7-121533478.html?.tsrc=rss"
+  },
+  "t1": {
+   "text": "the last note (2026-11-27T0345Z), theme 'A buyer for Kinetik is reported': Bloomberg News reported that Targa Resources is in talks to buy Kinetik, with a deal possible as soon as next week; nothing is signed and no price is known (s5). That is the news behind Kinetik's +7.1% in Wednesday's late session, which the last three notes listed as unexplained, and behind Targa's -3.3% at the same time (m:KNTK, p:KNTK~TRGP)."
+  },
+  "t2": {
+   "text": "the last note (2026-11-27T0345Z), theme 'A kidney-drug decision is put back three months': Unchanged (t1): Vertex -7.3% and Vera +16.7% from Wednesday's late session, neither traded since (s4). The only new item is a list article that adds no fact (s1)."
+  }
+ },
+ "note": {
+  "backdrop": "This check could not read this morning's trades. The price source's five-minute bars end on Wednesday night, so every stock move in the case file is Wednesday's late session again and its market line (S&P 500 futures +0.7%) is two days old (k). What the pages and the source's live quotes say instead: at 6:37 a.m. ET the S&P 500 fund was +1.71% and the Nasdaq 100 fund +2.27% against Wednesday's close (StockTitan). Read separately at 13:26Z, the engine's quotes had S&P 500 futures +1.6% and Nasdaq 100 futures +2.3% above Wednesday's close, gold +4.0% (its usual day is 1.8%; the case file's +2.4% is stale, d:gold), the 10-year yield +0.05 pt (usual day 0.04 pt; d:10-year yield), oil +1.3% (d:oil), bitcoin +1.6% (d:bitcoin), and the VIX at 25.2, down 11%. By the scan's own rule (futures 1.5% from the close) that is a market-wide move, which the watch did not flag. Chip and AI stocks lead the rise. Outside the scan, US-listed Brazilian stocks jumped most (the Brazil fund +12.73%, XP +19.74%, Bradesco +18.11%) after Bloomberg reported that the chairman of the bank Bradesco was named Brazil's finance minister, and Alvotech was -8.79% after a US court granted Janssen a preliminary injunction over its copy of the drug Simponi (StockTitan). Today is a half day: stocks close at 1 p.m. ET.",
+  "backdrop_evidence": [
+   "k",
+   "d:gold",
+   "d:10-year yield",
+   "d:oil",
+   "d:bitcoin",
+   "https://www.stocktitan.net/articles/stock-market-today-live-november-27-2026"
+  ],
+  "by": "agent",
+  "calls": [],
+  "check": "2026-11-27T1332Z",
+  "read": [
+   {
+    "direction": "none",
+    "published": "2026-11-27T12:01:53Z",
+    "says": "Before Friday's open (6:37 a.m. ET, against Wednesday's close): QQQ +2.27% at $648.34 (closes: $651.03 Monday, $633.93 Wednesday; about 84% of the two-day fall won back), SPY +1.71% at $728.98 (above Monday's $722.29); Nvidia $154.30 (closes: $165.05 Monday, $149.30 Wednesday; about a third won back, 6.5% below Monday); SanDisk +10.01%, Micron +5.99%, AMD and Broadcom higher; Anthropic $85.81 against its $83.00 IPO price; CNBC reported Chinese chip stocks' biggest one-day gain on record, tied to a state media summary of a government meeting; the Brazil fund EWZ +12.73%, XP +19.74%, Bradesco +18.11% after Bloomberg reported the Bradesco chairman was named Brazil's finance minister; Vertex -7.33% at 6:16 a.m. ET; Alvotech -8.79% after a US court granted Janssen a preliminary injunction over its proposed copy of Simponi, resting on one patent for a manufacturing step, and it will appeal; stocks close at 1 p.m. ET; no US economic reports today.",
+    "tier": "reported",
+    "url": "https://www.stocktitan.net/articles/stock-market-today-live-november-27-2026"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-27T11:43:09Z",
+    "says": "Vertex fell 7.3% to $522.99 in pre-market trading on Friday after the FDA extended its review of povetacicept to no later than Feb 28, 2027; its 52-week high was $571.75; JPMorgan kept its Overweight rating and $570 target, called the delay disappointing and estimates peak sales of $3.4 billion for the drug in IgA nephropathy; a Form 144 notice of a proposed insider share sale was filed on Nov 26.",
+    "ticker": "VRTX",
+    "tier": "reported",
+    "url": "https://investorshub.advfn.com/market-news/article/40779/why-is-vertex-pharmaceuticals-stock-falling-today"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-27T06:44:00Z",
+    "says": "Zacks: Sanofi agreed to buy Insmed for $175 a share in cash, about $41 billion, the largest pharma and biotech deal of 2026 so far, expected to close in the first half of 2027; it puts Vera, BridgeBio, Revolution Medicines, Agios and Stoke on a list of possible takeover targets, says all five closed higher on Nov 24, and says nothing establishes that talks are under way. The page's price strip when read (about 13:37Z) showed Vera +15.08%, S&P futures +1.60%, Nasdaq futures +2.27% and gold +3.08% on the day.",
+    "ticker": "VERA",
+    "tier": "opinion",
+    "url": "https://finance.yahoo.com/healthcare/articles/zacks-analyst-blog-highlights-vera-064400990.html"
+   }
+  ],
+  "singles": [],
+  "themes": [
+   {
+    "beneath": "The last chip note asked whether the selling was about who runs Nvidia or about what AI spending is worth. My inference from this morning: the market is separating the two. The wider chip trade is nearly back to Monday's level, with the memory makers in front, while the one stock with its own open question lags: S&P Global Ratings' watch on Nvidia's credit rating, which named how the company is governed, is still open. Two cautions. These are pre-market trades on the morning after a holiday, in thin volume, and the engine could not read them itself (k is two days old). And the 10-year yield is up about 0.05 point with stocks up, so this is not a rally on lower rates (d:10-year yield).",
+    "cause": "Before the open the Nasdaq 100 fund was +2.27% and the S&P 500 fund +1.71% against Wednesday's close, led by the AI and chip stocks that fell on Tuesday and Wednesday: SanDisk +10.01%, Micron +5.99%, AMD and Broadcom higher (StockTitan). CNBC reported that Chinese chip stocks had their biggest one-day gain on record on Friday, after a state media summary of a government meeting (StockTitan).",
+    "evidence": [
+     "k",
+     "d:10-year yield",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-27-2026"
+    ],
+    "kind": "reported",
+    "mechanism": "The Nasdaq 100 fund at $648.34 had won back about 84% of its two-day fall ($651.03 on Monday, $633.93 on Wednesday) and the S&P 500 fund stood above Monday's close. Nvidia at $154.30 had won back about a third of its own fall and was still 6.5% below Monday's $165.05 (StockTitan).",
+    "members": [
+     "NVDA",
+     "MU",
+     "AMD",
+     "AVGO"
+    ],
+    "name": "Chips lead a rebound before the half day",
+    "read_through": [],
+    "watch": "The 1 p.m. close: the Nasdaq 100 fund against $651.03 (Monday) and Nvidia against $165.05; any action on Nvidia's credit rating."
+   },
+   {
+    "beneath": "Two numbers put Vertex's fall in proportion. It has lost about $10.5 bn of market value (7.3% of $144.0 bn; n:VRTX). JPMorgan estimates peak sales of $3.4 bn a year for this drug in this disease (s1; one bank's estimate). My inference: a fall of about three times one estimate of the drug's best year is more than three months of delay can cost, so the price holds some chance of a later or narrower approval, as the last notes read it. For Vera there are now two things in the price, and neither is sales: a rival's delay (reported) and takeover hope (opinion). Zacks lists Vera among five biotechs named as possible targets after Sanofi agreed to buy Insmed for $175 a share in cash, about $41 bn, and says all five rose on Nov 24; that is the day Vera rose 7.6%, before any Vertex news (s5, h:VERA). The same page says nothing shows talks are under way.",
+    "cause": "Unchanged cause (t2). New this morning: the late-session moves held into Friday's pre-market. Vertex traded at $522.99, -7.3% (s1; -7.33% at 6:16 a.m. ET, StockTitan), and a page's price strip had Vera +15.08% when read (the Zacks page). The case file's own figures are still Wednesday's (m:VRTX, m:VERA).",
+    "evidence": [
+     "t2",
+     "s1",
+     "s5",
+     "s8",
+     "c1",
+     "m:VRTX",
+     "m:VERA",
+     "n:VRTX",
+     "h:VERA",
+     "https://investorshub.advfn.com/market-news/article/40779/why-is-vertex-pharmaceuticals-stock-falling-today",
+     "https://finance.yahoo.com/healthcare/articles/zacks-analyst-blog-highlights-vera-064400990.html",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-27-2026"
+    ],
+    "kind": "reported",
+    "mechanism": "Vertex is falling while the market rises about 1.7%, so against the market its fall is now near 9% (s8, StockTitan). JPMorgan kept its Overweight rating and $570 target and called the delay disappointing (s1; an opinion).",
+    "members": [
+     "VRTX",
+     "VERA"
+    ],
+    "name": "A kidney-drug decision is put back three months",
+    "read_through": [],
+    "watch": "The regular session to 1 p.m. ET: whether both moves hold on real volume. A decision can come any day up to Feb 28, 2027."
+   },
+   {
+    "beneath": "Nothing new is reported. No trade of today was read for either stock.",
+    "cause": "Unchanged (t1): Bloomberg News reported talks for Targa Resources to buy Kinetik; nothing is signed, no price is known, and no filing has come since (s7, m:KNTK).",
+    "evidence": [
+     "t1",
+     "s7",
+     "m:KNTK",
+     "p:KNTK~TRGP"
+    ],
+    "kind": "reported",
+    "mechanism": "As in the last note (t1). One correction to it: the check's -3.3% for Targa rests on two trades at that price, likely a stray print; the report itself had Targa at $280.48, -1.77%, at 7:56 p.m. ET on Wednesday (s7, p:KNTK~TRGP).",
+    "members": [
+     "KNTK",
+     "TRGP"
+    ],
+    "name": "A buyer for Kinetik is reported",
+    "read_through": [],
+    "watch": "A signed agreement in an 8-K, or a denial. Friday's session: Kinetik against $54.70 (Wednesday's close) and $58.85 (late trade); Targa against $285.53."
+   }
+  ],
+  "threads": [
+   "The watch read no trade of Friday: the price source's five-minute bars ended on Wednesday night. The midday check should see the regular session; if it does not, say so again.",
+   "Friday Nov 27, a half day closing at 1 p.m. ET: does the chip rebound hold (the Nasdaq 100 fund against $651.03, Nvidia against $165.05)? Do Vertex (-7.3%) and Vera (about +15%) hold? Do the single-trade moves in AvePoint, Lamar and American Coastal vanish?",
+   "Gold +4.0% since Wednesday's close, more than twice its usual day, with stocks and the 10-year yield both up: no report found that explains it. Do the gold miners follow?",
+   "Kinetik and Targa: a signed agreement in an 8-K as soon as next week, or a denial.",
+   "Nvidia: S&P Global Ratings' watch on its credit rating.",
+   "Brazil: US-listed Brazilian stocks jumped on the finance minister's naming; they are outside the scan.",
+   "Kymera 63a7bc55: judged at Friday's 1 p.m. close.",
+   "Deere's forward card DE-2026-11-25: judged when its week closes.",
+   "Next week's reports with a recorded guess against the analysts: Box, Okta, NetApp (Dec 1), Zscaler, Five Below (Dec 2), Veeva (Dec 3).",
+   "Vertex: the FDA's decision on povetacicept is due by Feb 28, 2027.",
+   "Tariff proposals: comments due Jan 5, 2027, hearings from Jan 25."
+  ],
+  "unexplained": [
+   {
+    "t": "AVPT",
+    "tried": "Unchanged: -9.8% on one late trade on Wednesday, outside its 9-in-10 range; no filing and no story since, and no trade of today was read (m:AVPT)."
+   },
+   {
+    "t": "LAMR",
+    "tried": "Unchanged: -6.3% on one late trade on Wednesday; no filing, no story, no trade of today read (m:LAMR)."
+   },
+   {
+    "t": "ACIC",
+    "tried": "Unchanged: -5.7% on one late trade on Wednesday; no filing, no story, no trade of today read (m:ACIC)."
+   },
+   {
+    "t": "SVC",
+    "tried": "Unchanged: -9.3% in Wednesday's late session, inside its 9-in-10 range; no filing, no story, no trade of today read (m:SVC)."
+   }
+  ]
+ },
+ "recorded_at": "2026-11-27T13:38:12Z"
+}
