@@ -15,7 +15,8 @@ python -m brain promises show NVDA AMBA   # a company's card
 python -m brain promisetest declare|test  # the declared tests G1a, G1b (the research universe)
 python -m brain promisetest2 declare|test # G2a-G2d (the small, micro and newer-listing universes)
 python -m brain promisetest3 declare|test # G3a (what a promise asks for, against the report day that delivers it)
-python -m brain against add|show|score   # the habit's guess against the analysts', recorded before a report
+python -m brain promisetest4 declare|test # G4a, G4b (the second guess: a pulled-in habit, ranges by own spread)
+python -m brain against add|second|show|score  # the guesses against the analysts', recorded before a report
 ```
 
 ## The promise (`brain/promises.py`)
@@ -284,8 +285,52 @@ writes, before a report, where the habit puts the delivery, its two ranges and t
 read, to `research/against_calls.jsonl`. It is refused once the report date has come. `against show` lists the
 lines still waiting; `against score` (after `promises build`) says who was closer, counting only lines written
 before the release that delivered the quarter became known, and says nothing under 30 judged lines. Nine
-companies reporting from 2026-12-01 to 2026-12-09 were recorded on 2026-11-27. It is about what a company
-delivers, not a direction.
+companies reporting from 2026-12-01 to 2026-12-09 were recorded on 2026-11-27, and 24 stood recorded by
+2026-11-28 (reports to 2026-12-17). It is about what a company delivers, not a direction.
+
+Since 2026-11-28 a line also carries the second guess. `against second` added it to the 24 lines already written,
+each stamped with the time it was added and before any of them had reported; a line whose report date has come is
+refused. `against score` judges the plain habit and the second guess against the analysts side by side.
+
+## The second guess: G4a, G4b (`brain/research/promisetest4.py`)
+
+Asked on 2026-11-28: "how can we make it better?" The forward record against the analysts had just put Micron's
+delivery 16% over its own promise, on a habit made of four quarters of a memory-price boom. Promises made
+2011-2023 (`research/promises/explore_guess_train.py` and its log; 3,872 promises of 279 companies, fitted on
+2011-2018 and checked on 2019-2023) showed two flaws in the first guess:
+
+| Habit when the promise was made | Promises | Median habit | Median delivery | Delivered less than the habit |
+|---|---|---|---|---|
+| below 0% | 585 | -1.12% | +0.58% | 26% |
+| 0% to 1% | 632 | +0.56% | +0.57% | 49% |
+| 1% to 2% | 665 | +1.53% | +1.45% | 52% |
+| 2% to 4% | 993 | +2.85% | +2.28% | 60% |
+| 4% to 8% | 788 | +5.47% | +3.91% | 66% |
+| over 8% | 209 | +9.77% | +5.05% | 85% |
+
+- **A large habit overshoots, and a negative one undershoots.** The second guess pulls the habit in:
+  `PULL`, the delivery against the midpoint is +1.0% + 0.50 x habit. On 2019-2023 it missed by a mean 3.09%
+  against 3.33% for the plain habit, and by less in every year from 2012 to 2023.
+- **The fixed ranges fit no one.** They held 90% of the time for the steadiest companies and 45% for the most
+  erratic where they promise 2 in 3. The second guess's ranges follow the company's own spread (the standard
+  deviation of the four surprises its habit is made of), `BAND2`: 2 in 3 from the guess less (2.0% + 0.5 x spread)
+  to the guess plus (1.75% + 0.6 x spread); 9 in 10 from less (4.0% + 0.9 x spread) to plus (3.75% + 1.1 x spread).
+
+**Run once on 2026-11-28** (`research/RESULTS.md`), promises made 2024-01..2026-09, the four universes:
+
+| Test | 2024-01..2026-09 | p | BH q | Verdict |
+|---|---|---|---|---|
+| G4a the pulled-in habit is a closer guess than the plain habit | mean miss 2.33% against 2.48%; in its favour in 11 of 11 seasons; 2,009 promised quarters of 269 companies | 0.0009 | 0.004 | **PASS** |
+| G4b how often the delivery fell inside the second guess's ranges | 78.9% and 94.2% (the fixed ranges 77.3% and 95.4%) | | | reported |
+
+- **G4a.** The gain is small for the usual company (median miss 1.29% against 1.39%; closer in 52% of promises)
+  and large where the habit is large: with a habit over 8%, a median miss of 3.46% against 4.60%.
+- **G4b.** By the company's own spread, the 2-in-3 range held 87%, 77%, 71% and 74% from the steadiest to the most
+  erratic companies, where the fixed ranges held 94%, 80%, 64% and 39%. The ranges now mean about the same thing
+  for every company, and they run wide: deliveries of 2024-2026 were tighter than those the ranges were fitted on.
+  Quote them as "at least 2 in 3", not as exact odds.
+- The card prints both guesses, each with its verdict. This is still about what a company delivers. It is not a
+  direction for its stock.
 
 ## The card and the desk
 

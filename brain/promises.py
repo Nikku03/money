@@ -485,13 +485,26 @@ def expected(rows: list[dict], asof: str) -> dict | None:
 
 
 def verdicts() -> dict[str, str]:
-    """The recorded verdicts of the declared tests G1a, G2a-G2d and G3a ("not run" when absent)."""
+    """The recorded verdicts of the declared tests G1a, G2a-G2d, G3a and G4a ("not run" when absent)."""
     try:
         from brain.research import run
         v = {r["id"]: r["verdict"].split(":")[0] for r in run.verdicts() if r.get("kind") == "promise"}
     except Exception:  # noqa: BLE001 - a card without verdicts says so
         v = {}
-    return {t: v.get(t, "not run") for t in ("G1a", "G2a", "G2b", "G2c", "G2d", "G3a")}
+    return {t: v.get(t, "not run") for t in ("G1a", "G2a", "G2b", "G2c", "G2d", "G3a", "G4a")}
+
+
+def ranges_held() -> str:
+    """How often the second guess's ranges held on 2024-2026, as G4b recorded it ("" when it has not run)."""
+    try:
+        from brain.research import run
+        m = next(((r.get("metrics") or {}).get("all") for r in run.verdicts() if r.get("id") == "G4b"), None)
+    except Exception:  # noqa: BLE001 - a card without the record says nothing
+        m = None
+    if not m:
+        return ""
+    return (f"; on 2024-2026 these ranges held {m['in68'] * 100:.1f}% and {m['in90'] * 100:.1f}%, so they run wide "
+            f"(G4b, reported)")
 
 
 def after_close(known_at: str, asof: str) -> bool:
@@ -610,6 +623,11 @@ def render(ticker: str, rows: list[dict], asof: str) -> list[str]:
                  f"the midpoint) puts the delivery near {_usd(e['point'])}: 2 in 3 between {_usd(e['lo68'])} and "
                  f"{_usd(e['hi68'])}, 9 in 10 between {_usd(e['lo90'])} and {_usd(e['hi90'])} (ranges from "
                  f"2011-2023's promises; the habit's test G1a {v['G1a']}, research/RESULTS.md)")
+        g = e["second"]
+        L.append(f"  the second guess (a large habit overshoots, so the habit is pulled in to {g['usual'] * 100:+.1f}%; "
+                 f"G4a {v['G4a']}) puts it near {_usd(g['point'])}: 2 in 3 between {_usd(g['lo68'])} and "
+                 f"{_usd(g['hi68'])}, 9 in 10 between {_usd(g['lo90'])} and {_usd(g['hi90'])} (ranges by the company's "
+                 f"own spread of {g['spread'] * 100:.1f}%{ranges_held()})")
     for r in [r for r in rows if r.get("grade")][-6:]:
         rng = _usd(r["low"]) if r["point"] else f"{_usd(r['low'])} to {_usd(r['high'])}"
         ch = f", {r['changed']} {r['change'] * 100:+.1f}%" if r.get("changed") else ""
@@ -619,7 +637,8 @@ def render(ticker: str, rows: list[dict], asof: str) -> list[str]:
              f"universe and G2a {v['G2a']} on smaller and newer companies. Beyond the habit, a promise that asks for "
              f"more is beaten by more: G2b {v['G2b']}. The stock's next five sessions follow the delivery (G2c "
              f"{v['G2c']}) or the change in the year's promise (G2d {v['G2d']}). A promise that asks for more is "
-             f"followed by a better report session three months on: G3a {v['G3a']}. A delivery is not a direction "
+             f"followed by a better report session three months on: G3a {v['G3a']}. The pulled-in habit is a "
+             f"closer guess of the delivery than the plain habit: G4a {v['G4a']}. A delivery is not a direction "
              f"for the stock, and neither is what a promise asks for (docs/PROMISES.md).")
     return L
 

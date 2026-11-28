@@ -237,3 +237,13 @@ FAIL); "the market runs on chains of cause and effect, news and catalysts": the 
   built the Reddit reader (`brain/reddit.py`, docs/REDDIT.md, CLAUDE.md item 20). Reddit refused the person's new
   app ("Max clients have been reached"); no key yet.
 
+
+## 2026-11-28: the last lines recorded; the second guess
+
+- After Friday's close: scan recorded and scored (9 scans judged: 62.1% and 88.1%), the Kymera call judged right
+  (4 of 4 desk calls; says nothing under 30). Saturday: Samsara, Adobe, Planet Labs, Jabil and Micron recorded
+  against the analysts: 24 lines.
+- "how can we make it better?": found on 2011-2023 that a large habit overshoots and the fixed ranges misfit;
+  built the second guess (habit pulled in, ranges by own spread), declared G4a and G4b, ran them once on
+  2024-2026: G4a PASS (2.33% against 2.48%, 11 of 11 seasons), G4b reported (78.9% and 94.2%, wide but even
+  across companies). The card prints both guesses; the 24 recorded lines carry both.

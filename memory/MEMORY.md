@@ -272,6 +272,17 @@ The person, 2026-11-27: "i want it to be ahead of everyone and not just ahead, b
   Recorded 2026-11-27: BOX, OKTA, NTAP (Dec 1), ZS, FIVE (Dec 2), VEEV (Dec 3), LULU (Dec 8), AVGO, PLAB (Dec 9).
   OXM and ZUMZ had no report date yet; their estimates are in `var/consensus/full`. Each week: fetch the
   estimates of the companies about to report that have an open promise and a habit, and record them.
+- **The second guess, G4a PASS (2026-11-28; `brain/research/promisetest4.py`, `promises.guess2`).** The person
+  asked "how can we make it better?". On 2011-2023 a large habit overshoots (over 8%: delivered under the habit's
+  guess 85% of the time) and the fixed ranges misfit steady and erratic companies. The second guess: delivery =
+  +1.0% + 0.50 x habit; ranges by the company's own spread (`BAND2`). On 2024-2026: mean miss 2.33% against 2.48%,
+  11 of 11 seasons, p 0.0009, q 0.004; over 8% habits 3.46% against 4.60%. G4b (reported): ranges held 78.9% and
+  94.2% (wide), and 87/77/71/74% across spreads where the fixed ones held 94/80/64/39%. 73 verdicts, 12 PASS.
+  The card prints both guesses; `against second` added the second guess to all 24 recorded lines on 2026-11-28,
+  before any report (Micron: $67.2 bn against the plain habit's $71.6 bn and the analysts' $61.8 bn).
+- **What I offered next (2026-11-28), not started:** read guidance given as growth rates and as earnings per share
+  (today only revenue in dollars, about 1 company in 7); a paid data plan for analysts' estimates and option
+  prices on every company (needs the person).
 - **What I told the person:** ahead of the news and of the price: no test supports it; ahead of the analysts'
   published number on what a company delivers: the trial says yes; accurate: the sizes are (the ranges hold their
   odds), my direction calls are a coin flip (13 of 25); opportunistic means speaking only when a tested piece

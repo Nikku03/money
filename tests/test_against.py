@@ -50,6 +50,58 @@ class Line(unittest.TestCase):
             self.assertEqual(against.read_calls(Path(d) / "none.jsonl"), [])
 
 
+class Second(unittest.TestCase):
+    def test_a_line_carries_the_second_guess(self):
+        c = against.line(rows(0.10), "AAA", 100.5, "2021-11-09", now=NOW)
+        self.assertAlmostEqual(c["point"], 110.0)                               # the plain habit: +10%
+        self.assertAlmostEqual(c["second"]["point"], 106.0)                     # pulled in: +1% + half of 10%
+        self.assertLess(c["second"]["lo68"], 106.0)
+        self.assertIn("The second guess (the habit pulled in to +6.0%)", against.words(c))
+
+    def test_added_later_to_an_earlier_line_and_refused_after_the_report_date(self):
+        old = against.line(rows(0.10), "AAA", 100.5, "2021-11-09", now=NOW)
+        old.pop("second")
+        g = against.second_for(old, rows(0.10), now="2021-09-01T00:00:00Z")
+        self.assertEqual((g["type"], g["id"], g["at"]), ("second", "AAA-2021-08-10", "2021-09-01T00:00:00Z"))
+        self.assertAlmostEqual(g["point"], 106.0)
+        with self.assertRaises(SystemExit):
+            against.second_for(old, rows(0.10), now="2021-11-09T01:00:00Z")      # the report date has come
+        with self.assertRaises(SystemExit):
+            against.second_for(dict(old, made="2021-05-10"), rows(0.10), now="2021-09-01T00:00:00Z")
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d) / "calls.jsonl"
+            against.add(old, p)
+            against.add_second(g, p)
+            with self.assertRaises(SystemExit):
+                against.add_second(g, p)                                        # once
+            self.assertEqual(len(against.read_calls(p)), 1)                      # the line, not the addition
+            self.assertEqual(list(against.read_seconds(p)), ["AAA-2021-08-10"])
+
+    def test_judged_from_the_time_it_was_written(self):
+        old = against.line(rows(0.10), "AAA", 100.5, "2021-11-09", now=NOW)
+        old.pop("second")
+        done = rows(0.10)[:-1] + [promise("AAA", "2021-08-10", 0.055, period_end="2021-09-28",
+                                          outcome_known="2021-11-12T12:00:00Z")]
+        eps = [{"t": "AAA", "date": "2021-11-10", "known_at": "2021-11-09T21:05:00Z", "r1": 0.0}]
+        early = against.second_for(old, rows(0.10), now="2021-09-01T00:00:00Z")
+        j, = against.judge(done, [old], eps, {old["id"]: early})
+        self.assertTrue(j["second_valid"])
+        self.assertEqual(j["second_closer"], "second")                # 106.0 against 100.5, delivered 105.5
+        self.assertAlmostEqual(j["second_miss"], abs(105.5 / 106.0 - 1))
+        self.assertTrue(j["second_in68"])
+        late = dict(early, at="2021-11-10T00:00:00Z")                  # written after the release: not counted
+        j, = against.judge(done, [old], eps, {old["id"]: late})
+        self.assertFalse(j["second_valid"])
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d) / "calls.jsonl"
+            against.add(old, p)
+            against.add_second(early, p)
+            s = against.score(done, p, eps)
+        self.assertEqual(s["second"]["judged"], 1)
+        self.assertEqual(s["second"]["closer"], 1.0)
+        self.assertIn("The second guess (the habit pulled in), 1 lines", " ".join(against.score_words(s)))
+
+
 class Judge(unittest.TestCase):
     def setUp(self):
         self.call = against.line(rows(), "AAA", 100.5, "2021-11-09", now=NOW)
