@@ -247,3 +247,8 @@ FAIL); "the market runs on chains of cause and effect, news and catalysts": the 
   built the second guess (habit pulled in, ranges by own spread), declared G4a and G4b, ran them once on
   2024-2026: G4a PASS (2.33% against 2.48%, 11 of 11 seasons), G4b reported (78.9% and 94.2%, wide but even
   across companies). The card prints both guesses; the 24 recorded lines carry both.
+- "i want to predict every moonshots ... or atleast most of them": measured on 2011-2023 what can be said. Where
+  jumps come from: yes (top 20% of stocks holds 82%). Which way: no (a jump-only model adds nothing; crashes sit
+  beside jumps). Buying the list: positive on paper, not trusted (survivorship, costs); in the nine live scans it
+  lost. Built `brain moonshots list|score` (5 tests), docs/MOONSHOTS.md, CLAUDE.md item 21.
+

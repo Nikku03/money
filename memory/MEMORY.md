@@ -304,6 +304,24 @@ The person, 2026-11-27: "i want it to be ahead of everyone and not just ahead, b
   apply through Reddit's help centre. When a key exists: `reddit check`, then `reddit collect` at every
   after-close check; declare a test after about eight weeks of record.
 
+## Moonshots (2026-11-28; `docs/MOONSHOTS.md`, `brain/moonshots.py`)
+
+- The person: "i don't need just the revenue guess, i want to predict every moonshots before they happen or atleast
+  most of them." A moonshot: a session 20%+ above SPY.
+- Measured on 2011-2023 only (`research/moonshots/`, 1,058,157 stock-weeks; S1 refitted on 2011-2019, read on
+  2020-2023): the top 5/10/20% of stocks each week held 53/68/82% of jumps; a jump-only model ranks no better than
+  S1 (not declared); jumps and crashes cannot be told apart (about 2 jumps to 1 crash in every list). 44% of jumps
+  are in stocks under $5, 15% in drug companies, 9% in results weeks, 41% in none of these.
+- Buying the top 5% weekly: mean +0.77% (2011-2019) and +1.14% (2020-2023) a week against SPY on paper, median pick
+  -0.8%, 46% rose, positive every year. NOT trusted: survivorship (the bank holds only companies listed today) and
+  trading costs on penny stocks. A lead for the forward record, never an edge.
+- Built `moonshots list` (the latest scan's likeliest names with tags) and `moonshots score` (recorded scans only:
+  jumps and crashes held, paper return). First nine scans (Nov 9-19): top 20% held 49 of 62 jumps (79%); the top
+  5% lost a mean 6.2% a reading. Reading fixed 2026-11-28: week-end scans from 2026-12-04, top 5%, mean return
+  against SPY; 30 weekly readings before it says anything, then declare and judge once.
+- Old-years rows are kept outside git: `var/moon_train.npz` (features, outcomes) and `var/moon_train_fwd.npz`.
+- Not built, offered: dated events (FDA decisions, trial results); option prices and short interest (paid data).
+
 ## The company file (2026-11-26; `docs/FILE.md`)
 
 - `python -m brain file TICKER` (`brain/file.py`, about 20 s a company): eight sections on one page: what it is;

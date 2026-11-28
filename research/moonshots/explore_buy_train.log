@@ -1,0 +1,26 @@
+1. Buying each week's list in equal parts, the next five sessions against SPY
+ 2020-2023 (not fitted here)
+  top 1%            3135 stock-weeks: mean +2.74%, median -1.09%, rose 45%; a jump in 15.0%, a crash in 9.7%; by week: mean +2.74% (t +4.5), 58% of 209 weeks above zero, worst week -14.2%, best +52.5%
+  top 5%           16302 stock-weeks: mean +1.14%, median -0.82%, rose 46%; a jump in 6.1%, a crash in 3.0%; by week: mean +1.14% (t +3.6), 57% of 209 weeks above zero, worst week -13.7%, best +18.8%
+  top 10%          32604 stock-weeks: mean +0.81%, median -0.55%, rose 47%; a jump in 3.9%, a crash in 1.9%; by week: mean +0.81% (t +3.0), 58% of 209 weeks above zero, worst week -13.7%, best +17.6%
+  top 20%          65208 stock-weeks: mean +0.50%, median -0.36%, rose 48%; a jump in 2.4%, a crash in 1.2%; by week: mean +0.50% (t +2.3), 57% of 209 weeks above zero, worst week -11.6%, best +14.3%
+  the other 80%   260914 stock-weeks: mean -0.01%, median -0.08%, rose 49%; a jump in 0.1%, a crash in 0.1%; by week: mean -0.01% (t -0.1), 51% of 209 weeks above zero, worst week -5.0%, best +4.1%
+  every stock     326122 stock-weeks: mean +0.09%, median -0.11%, rose 49%; a jump in 0.6%, a crash in 0.3%; by week: mean +0.09% (t +0.8), 56% of 209 weeks above zero, worst week -6.3%, best +5.9%
+  inside the top 5%: the weeks with a jump returned a mean +32.3%, the weeks with a crash -28.5%, the rest -0.31%
+  top 5% by year (mean a week): 2020:+2.39 2021:+1.09 2022:+0.24 2023:+0.79
+ 2011-2019 (fitted here)
+  top 1%            7035 stock-weeks: mean +2.41%, median -0.72%, rose 44%; a jump in 23.1%, a crash in 18.2%; by week: mean +2.41% (t +6.2), 58% of 469 weeks above zero, worst week -13.0%, best +56.5%
+  top 5%           36571 stock-weeks: mean +0.77%, median -0.70%, rose 45%; a jump in 7.7%, a crash in 5.0%; by week: mean +0.77% (t +5.8), 59% of 469 weeks above zero, worst week -7.5%, best +13.0%
+  top 10%          73153 stock-weeks: mean +0.47%, median -0.55%, rose 46%; a jump in 4.4%, a crash in 2.8%; by week: mean +0.47% (t +4.7), 58% of 469 weeks above zero, worst week -6.6%, best +9.9%
+  top 20%         146317 stock-weeks: mean +0.25%, median -0.35%, rose 47%; a jump in 2.4%, a crash in 1.5%; by week: mean +0.25% (t +3.4), 57% of 469 weeks above zero, worst week -5.1%, best +7.4%
+  the other 80%   585718 stock-weeks: mean +0.01%, median -0.03%, rose 49%; a jump in 0.0%, a crash in 0.0%; by week: mean +0.01% (t +0.4), 51% of 469 weeks above zero, worst week -2.1%, best +3.4%
+  every stock     732035 stock-weeks: mean +0.06%, median -0.07%, rose 49%; a jump in 0.5%, a crash in 0.3%; by week: mean +0.06% (t +1.7), 53% of 469 weeks above zero, worst week -2.1%, best +4.0%
+  inside the top 5%: the weeks with a jump returned a mean +26.6%, the weeks with a crash -30.4%, the rest -0.50%
+  top 5% by year (mean a week): 2011:+0.93 2012:+0.98 2013:+1.14 2014:+0.31 2015:+0.32 2016:+0.89 2017:+1.02 2018:+0.66 2019:+0.72
+
+3. Where the jumps are (2011-2023)
+  5572 stock-weeks with a jump, 0.53% of all
+  under $5                               6.1% of stock-weeks,  44.1% of jumps; a jump in 3.79% of them
+  drug and biotech companies             5.0% of stock-weeks,  15.4% of jumps; a jump in 1.61% of them
+  a results report due in the window     4.8% of stock-weeks,   8.6% of jumps; a jump in 0.94% of them
+  none of the three                     85.4% of stock-weeks,  41.4% of jumps; a jump in 0.26% of them

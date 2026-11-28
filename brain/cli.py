@@ -21,7 +21,7 @@ PLUGINS = ("brain.sources.insiders", "brain.sources.aviation", "brain.sources.sh
            "brain.research.promisetest", "brain.file", "brain.customers", "brain.research.customertest",
            "brain.research.promisetest2", "brain.research.promisetest3", "brain.research.promisetest4",
            "brain.against",
-           "brain.reddit")
+           "brain.reddit", "brain.moonshots")
 
 
 def _bank():
