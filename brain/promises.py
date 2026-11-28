@@ -56,6 +56,12 @@ MIN_RECORD = 4
 READER_MIN = 3               # releases read with their forward-looking passages (releases.READER)
 HABIT = 4                    # deliveries in a company's habit: the median surprise of its last four
 OPEN_DAYS = 130              # an open promise older than this is no longer the one in force
+# The second guess (2026-11-28, research/promises/explore_guess_train.py; fitted on promises made 2011-2018 and
+# checked on 2019-2023): a large habit overshoots, so the habit is pulled in, and the ranges follow the company's
+# own spread (the standard deviation of the surprises its habit is the median of).
+PULL = (0.010, 0.50)         # the delivery against the midpoint: PULL[0] + PULL[1] x habit
+BAND2 = {"lo90": (-0.0400, -0.9), "lo68": (-0.0200, -0.5), "hi68": (0.0175, 0.6), "hi90": (0.0375, 1.1)}
+#                              each edge, against the guess: BAND2[k][0] + BAND2[k][1] x spread
 # Where the delivery falls around the promise's midpoint moved by the habit: the surprise less the habit, pooled
 # over the promises made in 2011-2023 (research/promises/explore_train.log, section E): the middle 2 in 3 and the
 # middle 9 in 10.
@@ -424,13 +430,33 @@ def habit(rows: list[dict], made: str) -> float | None:
     before ``made`` (the release that makes a promise reports the quarter before; the bank holds that figure from
     the accounts filed days later, which state the same revenue). A quarter promised twice counts once, by its
     last promise. None with fewer than HABIT."""
+    got = recent(rows, made)
+    return float(np.median(got)) if got else None
+
+
+def recent(rows: list[dict], made: str) -> list[float] | None:
+    """The surprises a habit is made of: its last HABIT quarterly deliveries whose quarter ended before ``made`` (a
+    quarter promised twice counts once, by its last promise). None with fewer."""
     last: dict[str, dict] = {}
     for r in rows:
         if (r["horizon"] == "quarter" and r.get("grade") and r.get("period_end") and r["period_end"] < made
                 and (r["period_end"] not in last or r["known_at"] > last[r["period_end"]]["known_at"])):
             last[r["period_end"]] = r
     got = [last[k]["surprise"] for k in sorted(last)][-HABIT:]
-    return float(np.median(got)) if len(got) >= HABIT else None
+    return got if len(got) >= HABIT else None
+
+
+def spread(rows: list[dict], made: str) -> float | None:
+    """The company's own spread when a promise is made: the standard deviation of the surprises of its habit."""
+    got = recent(rows, made)
+    return float(np.std(got)) if got else None
+
+
+def guess2(habit_: float, spread_: float) -> dict:
+    """The second guess of a delivery against the midpoint: the habit pulled in (PULL), with ranges that follow the
+    company's own spread (BAND2). Fractions of the midpoint."""
+    u = PULL[0] + PULL[1] * habit_
+    return {"usual": u, **{k: u + a + b * spread_ for k, (a, b) in BAND2.items()}}
 
 
 def expected(rows: list[dict], asof: str) -> dict | None:
@@ -449,9 +475,13 @@ def expected(rows: list[dict], asof: str) -> dict | None:
     if u is None:
         return None
     mid = r["mid"]
+    known = [x for x in rows if x.get("outcome_known", "") <= asof]
+    g = guess2(u, spread(known, r["made"]))
     return {"made": r["made"], "mid": mid, "usual": u, "point": mid * (1 + u),
             "lo68": mid * (1 + u + BAND68[0]), "hi68": mid * (1 + u + BAND68[1]),
-            "lo90": mid * (1 + u + BAND90[0]), "hi90": mid * (1 + u + BAND90[1])}
+            "lo90": mid * (1 + u + BAND90[0]), "hi90": mid * (1 + u + BAND90[1]),
+            "second": {"usual": g["usual"], "spread": spread(known, r["made"]), "point": mid * (1 + g["usual"]),
+                       **{k: mid * (1 + g[k]) for k in BAND2}}}
 
 
 def verdicts() -> dict[str, str]:
