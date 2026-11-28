@@ -1,0 +1,584 @@
+{
+ "check": "2026-11-28T0418Z",
+ "asof": "2026-11-27",
+ "built_at": "2026-11-28T04:22:33Z",
+ "weights": {
+  "surprise": 0.25,
+  "unexplained": 0.2,
+  "news": 0.15,
+  "reach": 0.1,
+  "against": 0.1,
+  "memory": 0.1,
+  "fragile": 0.1
+ },
+ "temp": 0.12,
+ "candidates": 31,
+ "focus": [
+  {
+   "t": "RVTY",
+   "company": "REVVITY, INC.",
+   "move": 0.19827788197850515,
+   "z": 8.405666697791387,
+   "wave": 0.0,
+   "mover": true,
+   "score": 0.26053259883222557,
+   "parts": {
+    "surprise": 1.0,
+    "unexplained": 1.0,
+    "news": 0.0,
+    "reach": 0.711,
+    "against": 0.0,
+    "memory": 0.0,
+    "fragile": 0.0
+   },
+   "reasons": [
+    "outside its 9-in-10 range",
+    "most of the move is its own, with no news found",
+    "13 stocks moved closely with it over the year",
+    "but only 0 trades at the new price since the close: likely a stray print"
+   ],
+   "attention": 0.07460434033186121,
+   "bars": 0,
+   "filings": [],
+   "pages": [],
+   "memory": [],
+   "pond": {
+    "wave": 0.0,
+    "own": 8.405666697791387,
+    "how": "a stone: its own news",
+    "from": [],
+    "reaches": [
+     [
+      "TMO",
+      0.67,
+      0.00375
+     ],
+     [
+      "WAT",
+      0.63,
+      0.00308
+     ],
+     [
+      "A",
+      0.62,
+      0.0
+     ],
+     [
+      "CRL",
+      0.58,
+      3e-05
+     ],
+     [
+      "AVTR",
+      0.57,
+      0.00836
+     ]
+    ]
+   }
+  },
+  {
+   "t": "TXG",
+   "company": "10x Genomics, Inc.",
+   "move": -0.03839,
+   "z": -1.1489190707550014,
+   "wave": 0.37373119592666626,
+   "mover": false,
+   "score": 0.2085028508584671,
+   "parts": {
+    "surprise": 0.383,
+    "unexplained": 0.0,
+    "news": 0.0,
+    "reach": 0.62,
+    "against": 0.508,
+    "memory": 0.0,
+    "fragile": 0.0
+   },
+   "reasons": [
+    "moved against its wave (-1.1 usual days against a wave of +0.4)"
+   ],
+   "attention": 0.04835731261508515,
+   "filings": [],
+   "pages": [],
+   "memory": [],
+   "pond": {
+    "wave": 0.37373119592666626,
+    "own": -1.1489190707550014,
+    "how": "against its wave",
+    "from": [
+     [
+      "RVTY",
+      0.25
+     ],
+     [
+      "YUMC",
+      0.08
+     ],
+     [
+      "SLM",
+      0.04
+     ],
+     [
+      "QSR",
+      0.0
+     ]
+    ],
+    "reaches": [
+     [
+      "BRKR",
+      0.57,
+      -0.0
+     ],
+     [
+      "TWST",
+      0.56,
+      0.01684
+     ],
+     [
+      "ILMN",
+      0.55,
+      -0.00355
+     ],
+     [
+      "A",
+      0.51,
+      0.0
+     ],
+     [
+      "TMO",
+      0.49,
+      0.00375
+     ]
+    ]
+   }
+  },
+  {
+   "t": "NEM",
+   "company": "NEWMONT Corp /DE/",
+   "move": -0.00306,
+   "z": -0.3452009182174779,
+   "wave": 0.0,
+   "mover": false,
+   "score": 0.201689798196498,
+   "parts": {
+    "surprise": 0.115,
+    "unexplained": 0.0,
+    "news": 0.0,
+    "reach": 0.729,
+    "against": 0.0,
+    "memory": 1.0,
+    "fragile": 0.0
+   },
+   "reasons": [
+    "14 stocks moved closely with it over the year",
+    "in the last note's theme 'Gold and its miners jump with no report behind them'"
+   ],
+   "attention": 0.04568828936963486,
+   "filings": [],
+   "pages": [],
+   "memory": [],
+   "pond": {
+    "wave": 0.0,
+    "own": -0.3452009182174779,
+    "how": "with the water",
+    "from": [],
+    "reaches": [
+     [
+      "RGLD",
+      0.84,
+      0.00462
+     ],
+     [
+      "CDE",
+      0.78,
+      -0.00042
+     ],
+     [
+      "HL",
+      0.78,
+      0.0033
+     ],
+     [
+      "MUX",
+      0.77,
+      -0.03269
+     ],
+     [
+      "SSRM",
+      0.76,
+      -0.00298
+     ]
+    ]
+   }
+  },
+  {
+   "t": "TRGP",
+   "company": "Targa Resources Corp.",
+   "move": 0.0,
+   "z": 0.01688160884365365,
+   "wave": 0.0,
+   "mover": false,
+   "score": 0.20140680073697115,
+   "parts": {
+    "surprise": 0.006,
+    "unexplained": 0.0,
+    "news": 0.0,
+    "reach": 1.0,
+    "against": 0.0,
+    "memory": 1.0,
+    "fragile": 0.0
+   },
+   "reasons": [
+    "60 stocks moved closely with it over the year",
+    "in the last note's theme 'A buyer for Kinetik is reported'"
+   ],
+   "attention": 0.045580669072127426,
+   "filings": [],
+   "pages": [],
+   "memory": [],
+   "pond": {
+    "wave": 0.0,
+    "own": 0.01688160884365365,
+    "how": "with the water",
+    "from": [],
+    "reaches": [
+     [
+      "OKE",
+      0.75,
+      0.0
+     ],
+     [
+      "KMI",
+      0.73,
+      -0.00156
+     ],
+     [
+      "WMB",
+      0.7,
+      0.0
+     ],
+     [
+      "KNTK",
+      0.68,
+      -0.02142
+     ],
+     [
+      "AM",
+      0.67,
+      0.0
+     ]
+    ]
+   }
+  },
+  {
+   "t": "CDE",
+   "company": "Coeur Mining, Inc.",
+   "move": -0.00042,
+   "z": -0.29079720075905807,
+   "wave": 0.0,
+   "mover": false,
+   "score": 0.197156155074963,
+   "parts": {
+    "surprise": 0.097,
+    "unexplained": 0.0,
+    "news": 0.0,
+    "reach": 0.729,
+    "against": 0.0,
+    "memory": 1.0,
+    "fragile": 0.0
+   },
+   "reasons": [
+    "14 stocks moved closely with it over the year",
+    "in the last note's theme 'Gold and its miners jump with no report behind them'"
+   ],
+   "attention": 0.04399436931426144,
+   "filings": [],
+   "pages": [],
+   "memory": [],
+   "pond": {
+    "wave": 0.0,
+    "own": -0.29079720075905807,
+    "how": "with the water",
+    "from": [],
+    "reaches": [
+     [
+      "HL",
+      0.86,
+      0.0033
+     ],
+     [
+      "MUX",
+      0.82,
+      -0.03269
+     ],
+     [
+      "PPTA",
+      0.78,
+      -0.00956
+     ],
+     [
+      "NEM",
+      0.78,
+      -0.00306
+     ],
+     [
+      "RGLD",
+      0.76,
+      0.00462
+     ]
+    ]
+   }
+  },
+  {
+   "t": "TRUP",
+   "company": "TRUPANION, INC.",
+   "move": -0.01186,
+   "z": -0.3769946952596369,
+   "wave": -0.2832501232624054,
+   "mover": false,
+   "score": 0.19058363910155163,
+   "parts": {
+    "surprise": 0.126,
+    "unexplained": 0.0,
+    "news": 0.0,
+    "reach": 0.592,
+    "against": 0.0,
+    "memory": 1.0,
+    "fragile": 0.0
+   },
+   "reasons": [
+    "in the last note's theme 'Small stocks carried just past their ranges by a broad day'"
+   ],
+   "attention": 0.041649555202908466,
+   "filings": [],
+   "pages": [],
+   "memory": [],
+   "pond": {
+    "wave": -0.2832501232624054,
+    "own": -0.3769946952596369,
+    "how": "with the water",
+    "from": [
+     [
+      "QSR",
+      -0.14
+     ],
+     [
+      "YUMC",
+      -0.08
+     ],
+     [
+      "SLM",
+      -0.08
+     ],
+     [
+      "RVTY",
+      0.02
+     ]
+    ],
+    "reaches": [
+     [
+      "BRO",
+      0.5,
+      -0.00396
+     ],
+     [
+      "AJG",
+      0.49,
+      0.00014
+     ],
+     [
+      "ADP",
+      0.48,
+      0.00401
+     ],
+     [
+      "PAYX",
+      0.48,
+      -0.00398
+     ],
+     [
+      "MRSH",
+      0.47,
+      0.0
+     ]
+    ]
+   }
+  }
+ ],
+ "rest": [
+  {
+   "t": "HL",
+   "score": 0.18620588166922383,
+   "attention": 0.040157506215097234,
+   "reasons": [
+    "14 stocks moved closely with it over the year",
+    "in the last note's theme 'Gold and its miners jump with no report behind them'"
+   ]
+  },
+  {
+   "t": "P",
+   "score": 0.18003769314561724,
+   "attention": 0.03814550041401712,
+   "reasons": [
+    "in the last note's open questions"
+   ]
+  },
+  {
+   "t": "RGLD",
+   "score": 0.17243716306672946,
+   "attention": 0.03580437367117136,
+   "reasons": [
+    "13 stocks moved closely with it over the year",
+    "in the last note's theme 'Gold and its miners jump with no report behind them'"
+   ]
+  },
+  {
+   "t": "VRTX",
+   "score": 0.17232650490045384,
+   "attention": 0.03577137183706103,
+   "reasons": [
+    "10 stocks moved closely with it over the year",
+    "in the last note's theme 'A kidney-drug decision is put back three months'"
+   ]
+  },
+  {
+   "t": "DE",
+   "score": 0.16710662922125705,
+   "attention": 0.03424871138317088,
+   "reasons": [
+    "in the last note's open questions"
+   ]
+  },
+  {
+   "t": "YUMC",
+   "score": 0.16323892165440113,
+   "attention": 0.033162444429548806,
+   "reasons": [
+    "outside its 9-in-10 range",
+    "most of the move is its own, with no news found",
+    "but only 0 trades at the new price since the close: likely a stray print"
+   ]
+  },
+  {
+   "t": "AVGO",
+   "score": 0.15545067600096604,
+   "attention": 0.03107849175992465,
+   "reasons": [
+    "in the last note's theme 'A broad rebound that Nvidia sits out'"
+   ]
+  },
+  {
+   "t": "CMCO",
+   "score": 0.1551189058816158,
+   "attention": 0.03099268613916594,
+   "reasons": [
+    "in the last note's theme 'Small stocks carried just past their ranges by a broad day'"
+   ]
+  },
+  {
+   "t": "KYMR",
+   "score": 0.15483974061024544,
+   "attention": 0.03092066926055568,
+   "reasons": [
+    "an open desk call"
+   ]
+  },
+  {
+   "t": "MTD",
+   "score": 0.15334943135279028,
+   "attention": 0.030539032654418454,
+   "reasons": [
+    "most of the move is its own, with no news found",
+    "12 stocks moved closely with it over the year",
+    "but only 0 trades at the new price since the close: likely a stray print"
+   ]
+  },
+  {
+   "t": "QSR",
+   "score": 0.1514629036185642,
+   "attention": 0.03006268074419959,
+   "reasons": [
+    "most of the move is its own, with no news found",
+    "but only 1 trade at the new price since the close: likely a stray print"
+   ]
+  },
+  {
+   "t": "NVDA",
+   "score": 0.15075912127743823,
+   "attention": 0.029886883561780164,
+   "reasons": [
+    "in the last note's theme 'A broad rebound that Nvidia sits out'"
+   ]
+  },
+  {
+   "t": "SLM",
+   "score": 0.14963623060897985,
+   "attention": 0.029608523769123814,
+   "reasons": [
+    "most of the move is its own, with no news found",
+    "but only 0 trades at the new price since the close: likely a stray print"
+   ]
+  },
+  {
+   "t": "KNTK",
+   "score": 0.1422616802368922,
+   "attention": 0.02784372699951157,
+   "reasons": [
+    "50 stocks moved closely with it over the year",
+    "in the last note's theme 'A buyer for Kinetik is reported'",
+    "but only 0 trades at the new price since the close: likely a stray print"
+   ]
+  },
+  {
+   "t": "VTR",
+   "score": 0.12138846141111576,
+   "attention": 0.02339831961359432,
+   "reasons": [
+    "40 stocks moved closely with it over the year",
+    "moved against its wave (+1.1 usual days against a wave of -0.3)",
+    "but only 1 trade at the new price since the close: likely a stray print"
+   ]
+  },
+  {
+   "t": "VERA",
+   "score": 0.12137388410390079,
+   "attention": 0.023395477415451785,
+   "reasons": [
+    "in the last note's theme 'A kidney-drug decision is put back three months'"
+   ]
+  },
+  {
+   "t": "OPK",
+   "score": 0.12080591105062113,
+   "attention": 0.023285005719458948,
+   "reasons": [
+    "in the last note's theme 'Small stocks carried just past their ranges by a broad day'"
+   ]
+  },
+  {
+   "t": "AMD",
+   "score": 0.12003027212741559,
+   "attention": 0.02313498477741651,
+   "reasons": [
+    "51 stocks moved closely with it over the year",
+    "in the last note's theme 'A broad rebound that Nvidia sits out'",
+    "but only 0 trades at the new price since the close: likely a stray print"
+   ]
+  },
+  {
+   "t": "META",
+   "score": 0.11726972514122672,
+   "attention": 0.02260884962932936,
+   "reasons": [
+    "in the last note's theme 'A broad rebound that Nvidia sits out'"
+   ]
+  },
+  {
+   "t": "TE",
+   "score": 0.11308481109597666,
+   "attention": 0.021833972370895422,
+   "reasons": [
+    "in the last note's theme 'Small stocks carried just past their ranges by a broad day'"
+   ]
+  }
+ ]
+}

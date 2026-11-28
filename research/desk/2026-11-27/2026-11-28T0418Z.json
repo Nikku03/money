@@ -1,0 +1,184 @@
+{
+ "asof": "2026-11-27",
+ "at": "2026-11-28T04:18:12Z",
+ "calls": [],
+ "case_sha": "d8aaef649bc9f2fe",
+ "check": "2026-11-28T0418Z",
+ "claims_noted": 1,
+ "evidence": {
+  "d:gold": {
+   "text": "gold +0.3% since the close (its usual day: 1.8%)"
+  },
+  "k": {
+   "text": "Market: S&P 500 (SPY) +0.4%, Nasdaq 100 (QQQ) -0.1%, Russell 2000 (IWM) +0.5%, S&P 500 futures +0.0%, VIX +0.0% (after the close)"
+  },
+  "m:RVTY": {
+   "text": "RVTY (REVVITY, INC.; Laboratory Analytical Instruments) +19.8% since the close (after the close), OUTSIDE its 9-in-10 range (-5%..+6%)"
+  },
+  "m:YUMC": {
+   "text": "YUMC (Yum China Holdings, Inc.; Retail-Eating  Places) -8.6% since the close (after the close), OUTSIDE its 9-in-10 range (-4%..+4%)"
+  },
+  "t1": {
+   "text": "the last note (2026-11-27T1737Z), theme 'A broad rebound that Nvidia sits out': Stocks are up across the board in the half session (k), led by chips: Micron +6.4%, Broadcom +3.4%, AMD +3.1% and the median chip stock +3.9% by the check (g:3674), with Amazon +3.9% and Meta +3.2%. Nvidia is flat against Wednesday's close by the check after being +3.3% before the open and -2.18% at 10:01 a.m. ET (StockTitan). CNBC reported, citing Bloomberg, that Nvidia chips barred from shipment to China were found"
+  },
+  "t2": {
+   "text": "the last note (2026-11-27T1737Z), theme 'A kidney-drug decision is put back three months': The moves held on real volume, and Vertex's narrowed: -5.5% by the check against -7.3% before the open; Vera +15.8% (m:VRTX, m:VERA, t2). Banks took sides this morning: Citi kept its Buy and called the delay not thesis changing (s8); a Baird analyst called it worse than three months of lost sales (s7)."
+  },
+  "t3": {
+   "text": "the last note (2026-11-27T1737Z), theme 'A buyer for Kinetik is reported': Kinetik added to its late-Wednesday jump in regular trading: +9.4% by the check, outside its 9-in-10 range, against +7.1% on Wednesday night; it was $58.81 at 10 a.m. ET (s1, m:KNTK). Targa is -1.8% on real trades (p:KNTK~TRGP). Still no filing from either company (t3)."
+  },
+  "t4": {
+   "text": "the last note (2026-11-27T1737Z), theme 'Gold and its miners jump with no report behind them': Gold is +3.6% since Wednesday's close, twice its usual day (d:gold), and the median gold and silver miner is +5.1% (g:1040): Newmont +4.6%, Hecla +6.3%, Coeur +6.8% (r:gold). I found no report that names a cause: two searches and the day's market page say nothing about it."
+  },
+  "x:RVTY": {
+   "text": "RVTY: the market carried +0.4% (beta 0.96); its industry (Laboratory Analytical Instruments, 10 stocks) moved -0.0%; left over after the market and its drivers +19.4%"
+  },
+  "x:YUMC": {
+   "text": "YUMC: the market carried +0.1% (beta 0.29); its industry (Retail-Eating  Places, 21 stocks) moved -0.0%; left over after the market and its drivers -8.7%"
+  }
+ },
+ "note": {
+  "backdrop": "Friday's half session closed higher: the S&P 500 fund +1.62%, the Nasdaq 100 fund +2.69% and small caps +1.83% against Wednesday's close. For the holiday week the Nasdaq 100 fund gained about 7.0% and the S&P 500 fund about 5.6%; CNBC said the S&P 500 was headed for its best week since April 2025 (StockTitan). The Nasdaq 100 fund closed at $650.99, a cent or so below Monday's $651.03, so it won back nearly all of Tuesday's and Wednesday's fall. Gold futures closed +3.75% and the 10-year yield rose to 4.94% from 4.85% (Yahoo closes read by the engine). After the 1 p.m. close the market was quiet (k: S&P 500 fund +0.4%, futures flat), and the five stocks flagged outside their ranges each rest on one or two after-hours prices (the engine's trade counter from 1 p.m. ET: Revvity 1, Yum China 1, SLM 1, Restaurant Brands 1, Mettler-Toledo 2), so they are stray prints on a holiday afternoon, not news. Markets reopen on Monday for a full session.",
+  "backdrop_evidence": [
+   "k",
+   "d:gold",
+   "https://www.stocktitan.net/articles/stock-market-today-live-november-27-2026"
+  ],
+  "by": "agent",
+  "calls": [],
+  "check": "2026-11-28T0418Z",
+  "read": [
+   {
+    "direction": "none",
+    "published": "2026-11-27T12:01:53Z",
+    "says": "Updated 5:10 p.m. ET Nov 27. At the 1 p.m. close against Wednesday's: QQQ +2.69% ($650.99 against $651.03 Monday), SPY +1.62% ($728.32, above Monday's $722.29), DIA +1.26%, IWM +1.83%; for the week QQQ about +7.0% and SPY about +5.6% from Nov 20 ($608.45, $689.81); CNBC: the S&P 500 headed for its best week since April 2025. Nvidia closed +0.80% at $150.49, 8.8% below Monday's $165.05; SanDisk +15.96%, Micron +7.60%, AMD and Broadcom higher; Anthropic $91.88 against its $83.00 IPO price. Vertex -5.24%. XP +18.07%, Bradesco +15.23%, EWZ +9.81%, Inter&Co +16.21%. Alvotech -12.35%. Markets reopen Monday Nov 30 for a full session; the job openings survey is Tuesday Dec 1 at 10 a.m. ET.",
+    "tier": "reported",
+    "url": "https://www.stocktitan.net/articles/stock-market-today-live-november-27-2026"
+   },
+   {
+    "direction": "none",
+    "published": "2026-11-27T15:00:19Z",
+    "says": "GuruFocus: Kinetik was $58.81, +7.5%, at 10:00 a.m. ET on Friday on potential acquisition interest from Targa Resources; Targa -1.4%.",
+    "ticker": "KNTK",
+    "tier": "reported",
+    "url": "https://finance.yahoo.com/markets/stocks/articles/why-kinetik-kntk-stock-7-150019677.html"
+   }
+  ],
+  "singles": [
+   {
+    "beneath": "One trade, no news, on the thinnest afternoon of the year: a stray print. Attention discounted it on the same count.",
+    "cause": "+19.8% after the close, outside its 9-in-10 range, on a single after-hours price on a holiday afternoon; no filing and no story; it closed the session +0.3% at $151.27 (m:RVTY, Yahoo close).",
+    "evidence": [
+     "m:RVTY",
+     "x:RVTY"
+    ],
+    "kind": "inferred",
+    "t": "RVTY"
+   },
+   {
+    "beneath": "A stray print, like the four single-trade moves of Wednesday night that were gone by Friday's open.",
+    "cause": "-8.6% after the close, outside its 9-in-10 range, on a single after-hours price; no filing and no story; it closed the session +0.7% at $52.72 (m:YUMC, Yahoo close).",
+    "evidence": [
+     "m:YUMC",
+     "x:YUMC"
+    ],
+    "kind": "inferred",
+    "t": "YUMC"
+   }
+  ],
+  "themes": [
+   {
+    "beneath": "The week in one line: Monday's 31% jump on the chief executive's return, two days of selling AI hardware and its builders, and a Friday that put the index back where Monday left it. Reported: the closes. My inference, as at midday: the market treats Nvidia's two open matters (S&P Global Ratings' watch over how it is governed, and Friday's report that barred chips were installed in Shanghai) as Nvidia's own, separate from demand for AI hardware, which the memory makers' gains say is still strong. Gold and the 10-year yield rose on the same day as stocks (+3.75%, +0.09 point), so it was not a rally on falling rates or on fear going away from bonds; the cause of gold's move is still not found.",
+    "cause": "The broad rise of the morning held: the Nasdaq 100 fund ended almost exactly at Monday's close and the S&P 500 fund above it (StockTitan, k). Chips led to the end: SanDisk +15.96%, Micron +7.60% (to $646.95), AMD +4.56%, Broadcom +3.82%. Nvidia closed +0.80% at $150.49 (StockTitan; Yahoo closes).",
+    "evidence": [
+     "k",
+     "t1",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-27-2026"
+    ],
+    "kind": "reported",
+    "mechanism": "Measured from Wednesday's close, the rest of the chip trade won back its whole two-day fall; Nvidia won back about 8% of its own ($150.49 against $149.30 Wednesday and $165.05 Monday; StockTitan).",
+    "members": [
+     "NVDA",
+     "MU",
+     "AMD",
+     "AVGO"
+    ],
+    "name": "The rebound holds to the close; Nvidia sits it out",
+    "read_through": [],
+    "watch": "Monday's full session: whether the week's gains hold; Nvidia against $149.30 and $165.05; any word on the chips in Shanghai or on Nvidia's credit rating."
+   },
+   {
+    "beneath": "Vertex recovered about a quarter of its pre-market fall (-7.3% to -5.2%), about $7.5 bn of market value lost by the close (5.24% of $144.0 bn). Vera gained about $0.34 bn (16.1% of $2.1 bn). The bank's view and the bears' view of what the FDA asked for (t2) are both still opinions; nothing new is reported.",
+    "cause": "The day settled the question the last three notes asked: both moves held on a full half session. Vertex closed -5.24% at $534.57 and Vera +16.14% at $34.26 (StockTitan; Yahoo closes; t2).",
+    "evidence": [
+     "t2",
+     "https://www.stocktitan.net/articles/stock-market-today-live-november-27-2026"
+    ],
+    "kind": "reported",
+    "mechanism": "Unchanged (t2): the delay helps the two approved rivals, Otsuka's and Vera's, and Vera is the small listed one.",
+    "members": [
+     "VRTX",
+     "VERA"
+    ],
+    "name": "A kidney-drug decision is put back three months",
+    "read_through": [],
+    "watch": "What the FDA asked for; the decision is due by Feb 28, 2027. A sale of new shares by Vera after its jump."
+   },
+   {
+    "beneath": "Kinetik closed above Wednesday night's $58.85 and above the $58.90 52-week high that Thursday's report named: the first full session raised the bet rather than fading it. Nothing is signed and no price is reported.",
+    "cause": "Kinetik closed +9.25% at $59.76 and Targa -1.74% at $280.55 (Yahoo closes; t3). GuruFocus tied the session's rise to the reported interest from Targa (the GuruFocus page). No filing from either company and no new report.",
+    "evidence": [
+     "t3",
+     "https://finance.yahoo.com/markets/stocks/articles/why-kinetik-kntk-stock-7-150019677.html"
+    ],
+    "kind": "reported",
+    "mechanism": "Unchanged (t3): the target up toward a possible price, the buyer down on what it may pay.",
+    "members": [
+     "KNTK",
+     "TRGP"
+    ],
+    "name": "A buyer for Kinetik is reported",
+    "read_through": [],
+    "watch": "A signed agreement in an 8-K with a price, or a denial; the report said as soon as next week."
+   },
+   {
+    "beneath": "Ruled out from the tape, as inference: not fear (stocks rose), not lower rates (the 10-year yield rose 0.09 point), not a weaker dollar. It stays open.",
+    "cause": "Gold futures closed +3.75% on the day and the miners more: Newmont +5.35%, Hecla +7.45%, Coeur +8.60%, Barrick +3.47% (Yahoo closes; t4). After the close gold was +0.3% (d:gold). I still found no report that names a cause.",
+    "evidence": [
+     "t4",
+     "d:gold"
+    ],
+    "kind": "inferred",
+    "mechanism": "As at midday (t4): the miners moved about twice gold's move.",
+    "members": [
+     "NEM",
+     "HL",
+     "CDE",
+     "GOLD"
+    ],
+    "name": "Gold and its miners jump with no report behind them",
+    "read_through": [],
+    "watch": "A report naming the cause; Monday's session."
+   }
+  ],
+  "threads": [
+   "Monday Nov 30, a full session: do the week's gains hold? Nvidia against $149.30 and $165.05.",
+   "Nvidia: the chips reported installed in Shanghai; S&P Global Ratings' watch on its credit rating.",
+   "Gold +3.75% on Friday with its miners up 3-9%: no report found for the cause.",
+   "Kinetik and Targa: a signed agreement in an 8-K with a price, or a denial.",
+   "Vertex: what the FDA asked for; decision due by Feb 28, 2027. Vera: a sale of new shares.",
+   "Against the analysts: Rubrik reports Monday after the close; Box, Okta, NetApp, Marvell, nCino, Credo, Asana Tuesday; readout Dec 4.",
+   "Northwest Biotherapeutics: +76% in four sessions to $0.24 with no news.",
+   "Deere's forward card DE-2026-11-25: judged when its week closes.",
+   "The job openings survey, Tuesday Dec 1 at 10 a.m. ET.",
+   "Tariff proposals: comments due Jan 5, 2027, hearings from Jan 25."
+  ],
+  "unexplained": [
+   {
+    "t": "NWBO",
+    "tried": "+33% on Friday to $0.24, about +76% in four sessions, with no filing, no story and no report found by search (the midday note). It is not in this check's movers."
+   }
+  ]
+ },
+ "recorded_at": "2026-11-28T04:24:55Z"
+}
